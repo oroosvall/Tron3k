@@ -1,43 +1,47 @@
-# Windows image file caches
-Thumbs.db
-ehthumbs.db
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
 
-# Folder config file
-Desktop.ini
+# Visual Studio files
+*.sdu
+*.sdf
+*.opensdf
 
-# Recycle Bin used on file shares
-$RECYCLE.BIN/
+# Precompiled Headers
+*.gch
+*.pch
 
-# Windows Installer files
-*.cab
-*.msi
-*.msm
-*.msp
+# Compiled Dynamic libraries
+*.so
+*.dylib
+#*.dll
 
-# Windows shortcuts
-*.lnk
+# Fortran module files
+*.mod
 
-# =========================
-# Operating System Files
-# =========================
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+#*.lib
 
-# OSX
-# =========================
+# Executables
+#*.exe
+*.out
+*.app
 
-.DS_Store
-.AppleDouble
-.LSOverride
+#debug files
+*.pdb
+*.ilk
 
-# Thumbnails
-._*
-
-# Files that might appear on external disk
-.Spotlight-V100
-.Trashes
-
-# Directories potentially created on remote AFP share
-.AppleDB
-.AppleDesktop
-Network Trash Folder
-Temporary Items
-.apdisk
+.\Spelprojekt\Spelprojekt\Debug
+.\Spelprojekt\Spelprojekt\Releae
+Spelprojekt/Spelprojekt/Debug/Spelprojekt.log
+*.sdf
+*.v12.suo
+*.tlog
+*.log
+*.lastbuildstate
+*.idb
