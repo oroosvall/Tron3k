@@ -146,6 +146,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Core\Animation.h" />
+    <ClInclude Include="Core\Core.h" />
+    <ClInclude Include="Core\Game.h" />
+    <ClInclude Include="Core\GameObject.h" />
+    <ClInclude Include="Core\Input.h" />
+    <ClInclude Include="Core\Player.h" />
+    <ClInclude Include="Engine\Engine.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Core\Input.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
