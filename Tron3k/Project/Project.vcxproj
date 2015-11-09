@@ -21,16 +21,10 @@
   <ItemGroup>
     <ClCompile Include="Core\Input.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Network\Client.cpp" />
-    <ClCompile Include="Network\Server.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Core.h" />
     <ClInclude Include="Core\Input.h" />
-    <ClInclude Include="Network\Client.h" />
-    <ClInclude Include="Network\Connection.h" />
-    <ClInclude Include="Network\Server.h" />
-    <ClInclude Include="Network\Topology.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{93453B35-651C-43D5-958F-5A97A3830548}</ProjectGuid>
@@ -85,6 +79,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(SolutionDir)\Dependencies\SFML;$(SolutionDir)\Dependencies\GLFW\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\Dependencies\SFML\lib;$(SolutionDir)\Debug;$(SolutionDir)\Dependencies\GLFW\lib-vc2015;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -107,6 +103,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>Engine.lib;sfml-system-d.lib;sfml-network-d.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

@@ -1,13 +1,17 @@
 #include <iostream>
 #include <ctime>
 
-#include "Network\Client.h"
-#include "Network\Server.h"
+#include <sfml\Network.hpp>
+
+#include "../Engine/Engine.h"
 
 using namespace std;
 
 int main()
 {
+
+	test();
+
 	cout << "[1] Client" << endl;
 	cout << "[2] Server" << endl;
 	cout << "[3] Exit" << endl;
@@ -18,14 +22,14 @@ int main()
 	if (in != '1' && in != '2')
 		return 0;
 
-	Topology* _t;
-
-	if (in == '1')
-		_t = new Client();
-	else
-		_t = new Server();
-
-	_t->init();
+	//Topology* _t;
+	//
+	//if (in == '1')
+	//	_t = new Client();
+	//else
+	//	_t = new Server();
+	//
+	//_t->init();
 
 	double dt = 0.0f;
 	float timePass = 0.0f;
@@ -34,7 +38,7 @@ int main()
 
 	while (true)
 	{
-		_t->update(dt);
+		//_t->update(dt);
 
 		unsigned int temp = clock();
 		dt = unsigned int(temp - start) / double(1000);

@@ -25,6 +25,9 @@
     <ClInclude Include="Game\GameObject.h" />
     <ClInclude Include="Game\Player.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Engine.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4C8943B6-EA0A-4D22-88D9-70EE3E4EBE56}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -78,6 +81,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(SolutionDir)\Dependencies\glm;$(SolutionDir)\Dependencies\GLFW\include;$(SolutionDir)\Dependencies\glew-1.11.0\include;$(SolutionDir)\Dependencies\SFML\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\Dependencies\glew-1.11.0\lib\Release\Win32;$(SolutionDir)\Dependencies\GLFW\lib-vc2015;$(SolutionDir)\Dependencies\SFML\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -100,6 +105,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>sfml-audio-d.lib;ogg.lib;openal32.lib;glfw3.lib;glew32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

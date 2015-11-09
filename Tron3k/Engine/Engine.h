@@ -1,14 +1,21 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
-#include "../Core/Core.h"
+#ifdef ENGINE_EXPORTS
+#define ENGINE_API __declspec( dllexport)
+#else
+#define ENGINE_API __declspec( dllimport  )
+#endif
+
 
 class Engine
 {
 private:
 
 public:
-	void reneder(Core*);
+	void reneder() {};
 };
+
+extern "C" void ENGINE_API test();
 
 #endif
