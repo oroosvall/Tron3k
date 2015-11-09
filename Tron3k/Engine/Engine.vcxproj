@@ -19,14 +19,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="dllInclude.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="Game\Animation.h" />
     <ClInclude Include="Game\Game.h" />
     <ClInclude Include="Game\GameObject.h" />
+    <ClInclude Include="Game\IGame.h" />
     <ClInclude Include="Game\Player.h" />
+    <ClInclude Include="IEngine.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DllMain.cpp" />
     <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="Game\Game.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4C8943B6-EA0A-4D22-88D9-70EE3E4EBE56}</ProjectGuid>

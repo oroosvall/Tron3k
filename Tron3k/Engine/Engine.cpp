@@ -1,9 +1,9 @@
 #include "Engine.h"
 #include <iostream>
 
-void test()
+void Engine::release()
 {
-	Engine* e = new Engine();
-	std::cout << "hej!" << std::endl;
-	delete e;
+	// place delete code here
+
+	delete this; // yes this is safe
 }

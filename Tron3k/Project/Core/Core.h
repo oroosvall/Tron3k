@@ -8,15 +8,15 @@
 #include "../Network/Client.h"
 #include "../Network/Server.h"
 
-#include "../../Engine/Engine.h"
-#include "../../Engine/Game/Game.h"
+#include "../../Engine/IEngine.h"
+#include "../../Engine/Game/IGame.h"
 
 class Core
 {
 private:
 	Topology* top;
-	Game* game;
-	Engine* engine;
+	IGame* game;
+	IEngine* engine;
 
 public:
 	void init();

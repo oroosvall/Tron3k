@@ -1,21 +1,16 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
-#ifdef ENGINE_EXPORTS
-#define ENGINE_API __declspec( dllexport)
-#else
-#define ENGINE_API __declspec( dllimport  )
-#endif
+#include "IEngine.h"
 
-
-class Engine
+class Engine : public IEngine
 {
 private:
 
 public:
+	virtual void release();
 	void reneder() {};
 };
 
-extern "C" void ENGINE_API test();
 
 #endif
