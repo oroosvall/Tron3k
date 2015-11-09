@@ -18,6 +18,13 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Engine.h" />
+    <ClInclude Include="Game\Animation.h" />
+    <ClInclude Include="Game\Game.h" />
+    <ClInclude Include="Game\GameObject.h" />
+    <ClInclude Include="Game\Player.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4C8943B6-EA0A-4D22-88D9-70EE3E4EBE56}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -145,18 +152,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="Core\Animation.h" />
-    <ClInclude Include="Core\Core.h" />
-    <ClInclude Include="Core\Game.h" />
-    <ClInclude Include="Core\GameObject.h" />
-    <ClInclude Include="Core\Input.h" />
-    <ClInclude Include="Core\Player.h" />
-    <ClInclude Include="Engine\Engine.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Core\Input.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

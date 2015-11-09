@@ -13,33 +13,45 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\Core">
+      <UniqueIdentifier>{524e8623-301a-407a-b458-6a8c92ddee14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Network">
+      <UniqueIdentifier>{7f9c91fb-e560-44f7-94d2-a334817c7a4e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Input.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
     <ClCompile Include="Network\Client.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Network</Filter>
     </ClCompile>
     <ClCompile Include="Network\Server.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Network</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Network\Client.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Network\Connection.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Network\Server.h">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files\Network</Filter>
     </ClInclude>
     <ClInclude Include="Network\Topology.h">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files\Network</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Game.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Network\Connection.h">
+      <Filter>Source Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\Client.h">
+      <Filter>Source Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Input.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Core.h">
+      <Filter>Source Files\Core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -18,6 +18,20 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Core\Input.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Network\Client.cpp" />
+    <ClCompile Include="Network\Server.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Core\Core.h" />
+    <ClInclude Include="Core\Input.h" />
+    <ClInclude Include="Network\Client.h" />
+    <ClInclude Include="Network\Connection.h" />
+    <ClInclude Include="Network\Server.h" />
+    <ClInclude Include="Network\Topology.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{93453B35-651C-43D5-958F-5A97A3830548}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -145,18 +159,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Network\Client.cpp" />
-    <ClCompile Include="Network\Server.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Core\Game.h" />
-    <ClInclude Include="Network\Client.h" />
-    <ClInclude Include="Network\Connection.h" />
-    <ClInclude Include="Network\Server.h" />
-    <ClInclude Include="Network\Topology.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
