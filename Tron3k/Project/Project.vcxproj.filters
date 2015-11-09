@@ -19,12 +19,30 @@
     <Filter Include="Source Files\Network">
       <UniqueIdentifier>{7f9c91fb-e560-44f7-94d2-a334817c7a4e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Core\sound">
+      <UniqueIdentifier>{cf395fb5-d0d5-4dad-b772-e62a1bcbfd02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\ui">
+      <UniqueIdentifier>{cfd55ae1-25ab-4d06-a9ad-6147e281e652}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Core\Input.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Network\Client.cpp">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Network\Connection.cpp">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Network\Server.cpp">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Core.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
   </ItemGroup>
@@ -34,6 +52,27 @@
     </ClInclude>
     <ClInclude Include="Core\Core.h">
       <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\Client.h">
+      <Filter>Source Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\Connection.h">
+      <Filter>Source Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\NetIndex.h">
+      <Filter>Source Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\Server.h">
+      <Filter>Source Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\Topology.h">
+      <Filter>Source Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\ui\Ui.h">
+      <Filter>Source Files\Core\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\sound\Sound.h">
+      <Filter>Source Files\Core\sound</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -7,7 +7,7 @@
 class Player : public GameObject
 {
 private:
-	Animation* animation;
+	
 public:
 };
 
