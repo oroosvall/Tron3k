@@ -89,9 +89,6 @@
     <ClInclude Include="Core\Game\GameObject.h">
       <Filter>Source Files\Core\Game</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Game\IGame.h">
-      <Filter>Source Files\Core\Game</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Game\Player.h">
       <Filter>Source Files\Core\Game</Filter>
     </ClInclude>

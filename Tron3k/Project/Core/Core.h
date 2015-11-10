@@ -9,7 +9,7 @@
 #include "../Network/Server.h"
 
 #include "../../Engine/IEngine.h"
-#include "../../Engine/Game/IGame.h"
+#include "Game\Game.h"
 
 enum Gamestate
 {
@@ -25,7 +25,7 @@ class Core
 {
 private:
 	Topology* top;
-	IGame* game;
+	Game* game;
 	IEngine* engine;
 
 	//gamestates

@@ -32,7 +32,6 @@
     <ClInclude Include="Core\Game\Animation.h" />
     <ClInclude Include="Core\Game\Game.h" />
     <ClInclude Include="Core\Game\GameObject.h" />
-    <ClInclude Include="Core\Game\IGame.h" />
     <ClInclude Include="Core\Game\Player.h" />
     <ClInclude Include="Core\Input.h" />
     <ClInclude Include="Core\sound\Sound.h" />

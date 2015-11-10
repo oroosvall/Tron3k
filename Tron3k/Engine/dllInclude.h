@@ -8,10 +8,8 @@
 #endif
 
 #include "IEngine.h"
-#include "Game\IGame.h"
 
 extern "C" ENGINE_API IEngine* CraeteEningeObject();
-extern "C" ENGINE_API IGame* CreateGameObject();
 
 
 #endif

@@ -7,3 +7,8 @@ void Engine::release()
 
 	delete this; // yes this is safe
 }
+
+void Engine::render()
+{
+
+}
