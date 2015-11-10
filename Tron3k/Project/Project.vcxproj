@@ -22,6 +22,7 @@
     <ClCompile Include="Core\Core.cpp" />
     <ClCompile Include="Core\Game\Game.cpp" />
     <ClCompile Include="Core\Input.cpp" />
+    <ClCompile Include="Core\sound\SoundPlayer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Network\Client.cpp" />
     <ClCompile Include="Network\Connection.cpp" />
@@ -34,7 +35,7 @@
     <ClInclude Include="Core\Game\GameObject.h" />
     <ClInclude Include="Core\Game\Player.h" />
     <ClInclude Include="Core\Input.h" />
-    <ClInclude Include="Core\sound\Sound.h" />
+    <ClInclude Include="Core\sound\SoundPlayer.h" />
     <ClInclude Include="Core\ui\Ui.h" />
     <ClInclude Include="Network\Client.h" />
     <ClInclude Include="Network\Connection.h" />

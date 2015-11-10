@@ -2,7 +2,7 @@
 #define SOUND_H
 #include<sfml/Audio.hpp>
 
-class Sound
+class SoundPlayer
 {
 private:
 	sf::Sound soundPlayer;	//Loads small sound files into the memory
@@ -11,8 +11,8 @@ private:
 	sf::SoundBuffer soundBuffer;
 
 public:
-	Sound();
-	~Sound();
+	SoundPlayer();
+	~SoundPlayer();
 
 	int playSound(int sound);
 	int playMusic(int music);
