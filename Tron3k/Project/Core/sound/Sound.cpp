@@ -10,12 +10,26 @@ Sound::~Sound()
 
 }
 
-void Sound::playSound(int sound)
+int Sound::playSound(int sound)
 {
+	if (!soundBuffer.loadFromFile("tester.ogg"))
+	{
+		return -1;
+	}
 
+	soundPlayer.setBuffer(soundBuffer);
+
+	return 0;
 }
 
-void Sound::playMusic(int music)
+int Sound::playMusic(int music)
 {
+	if (!musicPlayer.openFromFile("musicTester.ogg"));
+	{
+		return -1;
+	}
 
+	musicPlayer.play();
+
+	return 0;
 }
