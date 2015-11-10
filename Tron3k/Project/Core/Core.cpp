@@ -12,7 +12,7 @@ void Core::init()
 	glfwWindowHint(GLFW_RESIZABLE, false);
 
 	win = glfwCreateWindow(
-		100, 100, "ASUM PROJECT", NULL, NULL);
+		200, 200, "ASUM PROJECT", NULL, NULL);
 
 	Input* i = Input::getInput();
 	i->setupCallbacks(win);
@@ -20,6 +20,8 @@ void Core::init()
 	glfwShowWindow(win);
 
 	//musicPlayer.playMusic(1234);	// **** TEMP ****
+
+	current = Gamestate::START;
 
 }
 
@@ -58,6 +60,9 @@ void Core::upStart(float dt)
 	//client -> MENU
 
 	//return exit
+
+	//current = Gamestate::CLIENT;
+	current = Gamestate::SERVER;
 }
 
 void Core::upMenu(float dt)
@@ -97,17 +102,105 @@ void Core::upClient(float dt)
 	//wait for server start event
 
 	//return MENU
+
+
+	switch (subState)
+	{
+	case 0: //create client object
+
+		if (top)
+			delete top;
+		top = new Client();
+		top->init();
+
+		//fill the server address and port to use
+
+		subState = 1;
+		break;
+	case 1: //attempt to connect
+
+		if (top->new_connection())
+		{
+			//success
+		}
+		else
+		{
+			current = MENU;	
+			subState = 0;
+			delete top;		
+			top = 0;
+			return;
+		}
+
+		break;
+	case 2: //map valid check, load
+
+		//wait for map reply
+
+		//can i load?
+		// if not  -> menu
+		
+
+		subState = 3;
+		break;
+	case 3: //get full server info
+
+		break;
+	case 4: //main client loop
+
+
+		break;
+	}
+
 }
 
 void Core::upServer(float dt)
 {
-	//SERVER
-	//bind port ?
-	//pick map
-	//load map
-	//run
-	//look for clinets
-	//network in / out
+	switch (subState)
+	{
+	case 0:  //create server object
 
-	//return START
+		if (top)
+			delete top;
+		top = new Server();
+		top->init();
+		
+		subState = 1;
+		break;
+	case 1: //configure port & select map
+		
+		//TODO
+
+		subState = 2;  
+		break;
+	case 2: //atempting mapload & bind
+
+		//load map
+
+		//bind port
+		if (top->bind())
+		{
+			//successful bind
+		}
+		else
+		{
+			subState = 1;
+			return;
+		}
+		
+		subState = 3;
+		break;
+	case 3: //main server loop
+
+		//look for clients
+		top->network_IN(dt);
+
+		//update game
+
+		//network out
+		top->network_OUT(dt);
+		break;
+	default:
+		break;
+	}
 }

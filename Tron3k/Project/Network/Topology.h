@@ -10,29 +10,30 @@ using namespace std;
 
 
 #define MAX_CONNECT 20
-#define PORT_START 18180
+
 
 class Topology
 {
 private:
 
 protected:
+	int PORT = 18180;
 	Connection* con = 0;
-
 	bool isClient;
 
 public:
+	Topology() {};
+	virtual void init() = 0;
 	~Topology()
 	{
 		if (con)
 			delete[] con;
 	}
-
-	virtual void init() = 0;
+	virtual bool bind() { return false; };
 	virtual void update(float dt) = 0;
 	virtual void network_IN(float dt) = 0;
 	virtual void network_OUT(float dt) = 0;
-	virtual void new_connection() = 0;
+	virtual bool new_connection() = 0;
 
 	void in_ping(Packet* rec, Uint8 conID) {};
 	virtual void in_new_connection(Packet* rec, Uint8 conID) = 0;

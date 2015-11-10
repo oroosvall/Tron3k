@@ -18,7 +18,7 @@ public:
 	void update(float dt);
 	void network_IN(float dt);
 	void network_OUT(float dt);
-	void new_connection();
+	bool new_connection();
 
 	void in_new_connection(Packet* rec, Uint8 conID);
 	void in_event(Packet* rec, Uint8 conID);
