@@ -127,7 +127,12 @@ void Input::setupCallbacks(GLFWwindow* wnd)
 	glfwSetCursorPosCallback(wnd, callbackCursorPos);
 	glfwSetScrollCallback(wnd, callbackScroll);
 }
+/*
 
+All callback functions work in the same way: bool <Button> = (bool)action. This is because GLFW_RELEASE = 0 and GLFW_PRESS = 1, which simulates false/true nicely.
+We entirely ignore GLFW_REPEAT, since it is uninteresting for our game.
+
+*/
 void Input::callbackKeyboard(GLFWwindow* wnd, int key, int scancode, int action, int modkeys)
 {
 	switch (key)
