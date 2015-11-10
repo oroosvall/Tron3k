@@ -19,7 +19,7 @@ void Core::init()
 
 	glfwShowWindow(win);
 
-	musicPlayer.playMusic(1234);	// **** TEMP ****
+	//musicPlayer.playMusic(1234);	// **** TEMP ****
 
 }
 

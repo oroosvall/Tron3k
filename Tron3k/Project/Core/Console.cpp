@@ -28,10 +28,18 @@ void Console::update()
 			{
 				ch = tolower(ch);
 			}
-
+			
 			msg += ch;
 
 			printf("%c", ch);
+		}
+	}
+	if (i->justReleased(GLFW_KEY_BACKSPACE))
+	{
+		if (msg.size() > 0)
+		{
+			msg = msg.substr(0, msg.size() - 1);
+			printConsole();
 		}
 	}
 	if (i->justReleased(GLFW_KEY_ENTER))
@@ -44,7 +52,7 @@ void Console::update()
 		printConsole();
 	}
 }
-
+#include <Windows.h>
 void Console::printConsole()
 {
 	system("cls");
@@ -56,4 +64,6 @@ void Console::printConsole()
 		counter = counter%MAXHISTORY;
 	}
 	printf("********************************\n");
+	printf("%s", msg.c_str());
+
 }
