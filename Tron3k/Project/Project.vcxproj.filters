@@ -19,10 +19,13 @@
     <Filter Include="Source Files\Network">
       <UniqueIdentifier>{7f9c91fb-e560-44f7-94d2-a334817c7a4e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Core\sound">
+    <Filter Include="Source Files\Core\Game">
+      <UniqueIdentifier>{017d875f-ed63-4a08-b5fc-1565028b3503}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\Sound">
       <UniqueIdentifier>{cf395fb5-d0d5-4dad-b772-e62a1bcbfd02}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Core\ui">
+    <Filter Include="Source Files\Core\Ui">
       <UniqueIdentifier>{cfd55ae1-25ab-4d06-a9ad-6147e281e652}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -44,6 +47,9 @@
     </ClCompile>
     <ClCompile Include="Core\Core.cpp">
       <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Game\Game.cpp">
+      <Filter>Source Files\Core\Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -69,10 +75,25 @@
       <Filter>Source Files\Network</Filter>
     </ClInclude>
     <ClInclude Include="Core\ui\Ui.h">
-      <Filter>Source Files\Core\ui</Filter>
+      <Filter>Source Files\Core\Ui</Filter>
     </ClInclude>
     <ClInclude Include="Core\sound\Sound.h">
-      <Filter>Source Files\Core\sound</Filter>
+      <Filter>Source Files\Core\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Animation.h">
+      <Filter>Source Files\Core\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Game.h">
+      <Filter>Source Files\Core\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\GameObject.h">
+      <Filter>Source Files\Core\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\IGame.h">
+      <Filter>Source Files\Core\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Player.h">
+      <Filter>Source Files\Core\Game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

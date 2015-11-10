@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Core.cpp" />
+    <ClCompile Include="Core\Game\Game.cpp" />
     <ClCompile Include="Core\Input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Network\Client.cpp" />
@@ -28,6 +29,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Core.h" />
+    <ClInclude Include="Core\Game\Animation.h" />
+    <ClInclude Include="Core\Game\Game.h" />
+    <ClInclude Include="Core\Game\GameObject.h" />
+    <ClInclude Include="Core\Game\IGame.h" />
+    <ClInclude Include="Core\Game\Player.h" />
     <ClInclude Include="Core\Input.h" />
     <ClInclude Include="Core\sound\Sound.h" />
     <ClInclude Include="Core\ui\Ui.h" />
