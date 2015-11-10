@@ -14,6 +14,9 @@ void Core::init()
 	win = glfwCreateWindow(
 		100, 100, "ASUM PROJECT", NULL, NULL);
 
+	Input* i = Input::getInput();
+	i->setupCallbacks(win);
+
 	glfwShowWindow(win);
 
 }
@@ -23,6 +26,8 @@ void Core::update(float dt)
 	//update I/O
 
 	glfwPollEvents();
+
+	console.update();
 
 	switch (current)
 	{
@@ -39,6 +44,9 @@ void Core::update(float dt)
 		//update ui & sound
 		//update engine
 	}
+
+	Input* i = Input::getInput();
+	i->clearOnRelease();
 }
 
 void Core::upStart(float dt)

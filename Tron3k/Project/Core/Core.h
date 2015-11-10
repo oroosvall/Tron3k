@@ -13,6 +13,9 @@
 #include "../../Engine/IEngine.h"
 #include "Game\Game.h"
 
+#include "Input.h"
+#include "Console.h"
+
 enum Gamestate
 {
 	START,
@@ -32,6 +35,8 @@ private:
 	Topology* top;
 	Game* game;
 	IEngine* engine;
+
+	Console console;
 
 	//gamestates
 	Gamestate current;

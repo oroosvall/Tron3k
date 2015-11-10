@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Core\Console.cpp" />
     <ClCompile Include="Core\Core.cpp" />
     <ClCompile Include="Core\Game\Game.cpp" />
     <ClCompile Include="Core\Input.cpp" />
@@ -28,6 +29,7 @@
     <ClCompile Include="Network\Server.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Core\Console.h" />
     <ClInclude Include="Core\Core.h" />
     <ClInclude Include="Core\Game\Animation.h" />
     <ClInclude Include="Core\Game\Game.h" />

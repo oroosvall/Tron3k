@@ -1,7 +1,7 @@
 #include "dllInclude.h"
 #include "Engine.h"
 
-IEngine* CreateEngine()
+IEngine* CraeteEningeObject()
 {
 	return new Engine();
 }

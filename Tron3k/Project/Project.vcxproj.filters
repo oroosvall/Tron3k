@@ -51,6 +51,9 @@
     <ClCompile Include="Core\Game\Game.cpp">
       <Filter>Source Files\Core\Game</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Console.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Input.h">
@@ -91,6 +94,9 @@
     </ClInclude>
     <ClInclude Include="Core\Game\Player.h">
       <Filter>Source Files\Core\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Console.h">
+      <Filter>Source Files\Core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
