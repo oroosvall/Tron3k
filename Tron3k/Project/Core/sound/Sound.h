@@ -6,6 +6,11 @@ class Sound
 private:
 
 public:
+	Sound();
+	~Sound();
+
+	void playSound(int sound);
+	void playMusic(int music);
 };
 
 #endif
