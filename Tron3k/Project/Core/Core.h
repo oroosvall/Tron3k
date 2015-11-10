@@ -5,6 +5,8 @@
 #include "sound\Sound.h"
 #include "ui\Ui.h"
 
+#include <GLFW\glfw3.h>
+
 #include "../Network/Client.h"
 #include "../Network/Server.h"
 
@@ -24,6 +26,9 @@ enum Gamestate
 class Core
 {
 private:
+
+	GLFWwindow* win;
+
 	Topology* top;
 	Game* game;
 	IEngine* engine;
