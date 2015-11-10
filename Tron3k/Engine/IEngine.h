@@ -5,6 +5,7 @@ class IEngine
 {
 public:
 	virtual void release() = 0;
+	virtual void render() = 0;
 
 };
 

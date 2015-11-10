@@ -9,7 +9,7 @@ private:
 
 public:
 	virtual void release();
-	void reneder() {};
+	virtual void render();
 };
 
 
