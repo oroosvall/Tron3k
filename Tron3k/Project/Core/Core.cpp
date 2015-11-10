@@ -19,6 +19,8 @@ void Core::init()
 
 	glfwShowWindow(win);
 
+	musicPlayer.playMusic(1234);	// **** TEMP ****
+
 }
 
 void Core::update(float dt)

@@ -54,6 +54,9 @@
     <ClCompile Include="Core\Console.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
+    <ClCompile Include="Core\sound\SoundPlayer.cpp">
+      <Filter>Source Files\Core\Sound</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Input.h">
@@ -80,9 +83,6 @@
     <ClInclude Include="Core\ui\Ui.h">
       <Filter>Source Files\Core\Ui</Filter>
     </ClInclude>
-    <ClInclude Include="Core\sound\Sound.h">
-      <Filter>Source Files\Core\Sound</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Game\Animation.h">
       <Filter>Source Files\Core\Game</Filter>
     </ClInclude>
@@ -97,6 +97,9 @@
     </ClInclude>
     <ClInclude Include="Core\Console.h">
       <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\sound\SoundPlayer.h">
+      <Filter>Source Files\Core\Sound</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

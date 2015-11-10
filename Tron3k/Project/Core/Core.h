@@ -2,7 +2,7 @@
 #define CORE_H
 
 #include "Input.h"
-#include "sound\Sound.h"
+#include "sound\SoundPlayer.h"
 #include "ui\Ui.h"
 
 #include <GLFW\glfw3.h>
@@ -50,6 +50,8 @@ private:
 	void upRoam(float dt);
 	void upClient(float dt);
 	void upServer(float dt);
+
+	SoundPlayer musicPlayer;
 public:
 	void init();
 	void update(float dt);
