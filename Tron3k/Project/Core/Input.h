@@ -13,14 +13,14 @@ private:
 		SHIFT,CTRL,ALT,SPACE,ESC, ENTER,
 		NUM1,NUM2,NUM3,NUM4,NUM5,NUM6,NUM7,NUM8,NUM9,NUM0,
 		DOT,COMMA, BACKSPACE; //Button is pressed right now
-	static bool rQ, rW, rE, rR, rT, rY, rU, rI, rO, rP, rA, rS, rD, rF, rG, rH, rJ, rK, rL, rZ, rX, rC, rV, rB, rN, rM,
-		rSHIFT, rCTRL, rALT, rSPACE, rESC, rENTER,
-		rNUM1, rNUM2, rNUM3, rNUM4, rNUM5, rNUM6, rNUM7, rNUM8, rNUM9, rNUM0,
-		rDOT, rCOMMA, rBACKSPACE; //Button was released this frame
+	static bool pQ, pW, pE, pR, pT, pY, pU, pI, pO, pP, pA, pS, pD, pF, pG, pH, pJ, pK, pL, pZ, pX, pC, pV, pB, pN, pM,
+		pSHIFT, pCTRL, pALT, pSPACE, pESC, pENTER,
+		pNUM1, pNUM2, pNUM3, pNUM4, pNUM5, pNUM6, pNUM7, pNUM8, pNUM9, pNUM0,
+		pDOT, pCOMMA, pBACKSPACE; //Button was pressed this frame
 	static void callbackKeyboard(GLFWwindow* wnd, int key, int scancode, int action, int modkeys);
 
 	static bool LMB, RMB, MMB; //Mouse button is pressed right now
-	static bool rLMB, rRMB, rMMB; //Mouse button was released this frame
+	static bool pLMB, pRMB, pMMB; //Mouse button was pressed this frame
 	static double cursorX, cursorY; //Current cursor position
 	static void callbackMouseButton(GLFWwindow* wnd, int button, int action, int mods);
 	static void callbackCursorPos(GLFWwindow* wnd, double x, double y);
@@ -33,13 +33,13 @@ public:
 	void setupCallbacks(GLFWwindow* wnd); //Must call this when window is created to make GLFW callback functions work!
 
 	bool getKeyInfo(int key); //Used for both keyboard and mouse
-	bool justReleased(int key); //Used for both keyboard and mouse
+	bool justPressed(int key); //Used for both keyboard and mouse
 
 	void getCursor(double &x, double &y);
 
 	double getScrollValue();
 
-	void clearOnRelease(); //Must be called at the end of each frame!
+	void clearOnPress(); //Must be called at the end of each frame!
 
 	static void release(); //Must be called at the termination of the game
 

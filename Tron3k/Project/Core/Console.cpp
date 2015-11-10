@@ -20,7 +20,7 @@ void Console::update()
 
 	for (int c = 0; c < VALIDKEYS; c++)
 	{
-		if (i->justReleased(validKeyboardInputs[c]))
+		if (i->justPressed(validKeyboardInputs[c]))
 		{
 			char ch = i->keyToChar(validKeyboardInputs[c]);
 			
@@ -34,7 +34,7 @@ void Console::update()
 			printf("%c", ch);
 		}
 	}
-	if (i->justReleased(GLFW_KEY_BACKSPACE))
+	if (i->justPressed(GLFW_KEY_BACKSPACE))
 	{
 		if (msg.size() > 0)
 		{
@@ -42,7 +42,7 @@ void Console::update()
 			printConsole();
 		}
 	}
-	if (i->justReleased(GLFW_KEY_ENTER))
+	if (i->justPressed(GLFW_KEY_ENTER))
 	{
 		latestMsg++;
 		latestMsg = latestMsg%MAXHISTORY;

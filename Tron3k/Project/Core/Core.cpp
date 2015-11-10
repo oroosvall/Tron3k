@@ -48,7 +48,7 @@ void Core::update(float dt)
 	}
 
 	Input* i = Input::getInput();
-	i->clearOnRelease();
+	i->clearOnPress();
 }
 
 void Core::upStart(float dt)
