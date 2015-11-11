@@ -24,7 +24,7 @@ void Core::init()
 
 	//musicPlayer.playMusic(1234);	// **** TEMP ****
 
-	current = Gamestate::ROAM;
+	current = Gamestate::START;
 
 }
 
@@ -103,20 +103,40 @@ void Core::update(float dt)
 
 void Core::upStart(float dt)
 {
-	printf("[1] Client \n");
-	printf("[2] Server \n");
-	printf("[3] Roam \n");
-	
-	Input* i = Input::getInput();
+	switch (subState)
+	{
+	case 0:
+		printf("[1] Client \n");
+		printf("[2] Server \n");
+		printf("[3] Roam \n");
+		subState++;
+		break;
 
-	//START
-	//server -> SERVER
-	//client -> MENU
+	case 1:
+	{
+		Input* i = Input::getInput();
 
-	//return exit
+		if (i->justPressed(GLFW_KEY_1))
+		{
+			current = Gamestate::CLIENT;
+			subState = 0;
+		}
 
-	//current = Gamestate::CLIENT;
-	current = Gamestate::SERVER;
+		else if (i->justPressed(GLFW_KEY_2))
+		{
+			current = Gamestate::SERVER;
+			subState = 0;
+		}
+
+		else if (i->justPressed(GLFW_KEY_3))
+		{
+			current = Gamestate::ROAM;
+			subState = 0;
+		}
+
+		break;
+	}
+	}
 }
 
 void Core::upMenu(float dt)
@@ -168,28 +188,29 @@ void Core::upClient(float dt)
 		top = new Client();
 		top->init();
 
-		subState = 1;
+		subState++;
 		break;
 	case 1: //fill the server address and port to use
 
 		//todo
 
-		subState = 2;
+		subState++;
 		break;
 		
 	case 2: //attempt to connect
 
 		for (int n = 0; n < 3; n++)
 		{
-			//connecting...
+			console.printMsg("Connecting...");
 			if (top->new_connection())
 			{
-				//success
-				subState = 3;
+				console.printMsg("Connecting Succsessfull");
+				subState++;
 				return;
 			}
 		}
-		//failed
+
+		console.printMsg("Connection Failed");
 		current = MENU;
 		subState = 0;
 		delete top;
@@ -205,7 +226,7 @@ void Core::upClient(float dt)
 		{
 			//can i load?
 			// if not  -> menu
-			subState = 4;
+			subState++;
 		}
 		
 		break;
@@ -243,10 +264,11 @@ void Core::upServer(float dt)
 		//bind port
 		if (top->bind())
 		{
-			//successful bind
+			console.printMsg("Port bound");
 		}
 		else
 		{
+			console.printMsg("Port bind failed");
 			subState = 1;
 			return;
 		}
