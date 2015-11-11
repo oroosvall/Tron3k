@@ -11,23 +11,60 @@ void Core::init()
 
 	glfwWindowHint(GLFW_RESIZABLE, false);
 
-	win = glfwCreateWindow(
-		200, 200, "ASUM PROJECT", NULL, NULL);
+	//glfwWindowHint(GLFW_DECORATED, false); borderless toggle
+
+	recreate = false;
+	fullscreen = false;
+	winX = winY = 200;
+	
+	createWindow(winX, winY, fullscreen);
+
+	//musicPlayer.playMusic(1234);	// **** TEMP ****
+
+	current = Gamestate::ROAM;
+
+}
+
+void Core::createWindow(int x, int y, bool fullscreen)
+{
+	if (win != 0)
+	{
+		removeWindow();
+	}
+	if (!fullscreen)
+	{
+		win = glfwCreateWindow(
+			x, y, "ASUM PROJECT", NULL, NULL);
+	}
+	else
+	{
+		win = glfwCreateWindow(
+			x, y, "ASUM PROJECT", glfwGetPrimaryMonitor(), NULL);
+	}
 
 	Input* i = Input::getInput();
 	i->setupCallbacks(win);
 
 	glfwShowWindow(win);
 
-	//musicPlayer.playMusic(1234);	// **** TEMP ****
+	recreate = false;
+}
 
-	current = Gamestate::START;
-
+void Core::removeWindow()
+{
+	glfwHideWindow(win);
+	glfwDestroyWindow(win);
+	win = nullptr;
 }
 
 void Core::update(float dt)
 {
 	//update I/O
+	if (recreate)
+	{
+		createWindow(winX, winY, fullscreen);
+	}
+
 	glfwPollEvents();
 
 	console.update();
@@ -49,7 +86,11 @@ void Core::update(float dt)
 	}
 
 	Input* i = Input::getInput();
-	i->clearOnRelease();
+	i->clearOnPress();
+
+	glfwSwapBuffers(win);
+
+	
 }
 
 void Core::upStart(float dt)
@@ -86,6 +127,21 @@ void Core::upMenu(float dt)
 
 void Core::upRoam(float dt)
 {
+	Input* i = Input::getInput();
+
+	if (i->justPressed(GLFW_KEY_0))
+	{
+		fullscreen = !fullscreen;
+		recreate = true;
+	}
+
+	if (i->justPressed(GLFW_KEY_9))
+	{
+		winX = 720;
+		winY = 640;
+		recreate = true;
+	}
+
 	//ROAM
 	//load
 	//run
