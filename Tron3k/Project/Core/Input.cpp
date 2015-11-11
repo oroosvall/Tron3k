@@ -328,16 +328,19 @@ void Input::callbackKeyboard(GLFWwindow* wnd, int key, int scancode, int action,
 		break;
 
 	case GLFW_KEY_LEFT_SHIFT:
+	case GLFW_KEY_RIGHT_SHIFT:
 		SHIFT = (bool)action;
 		if (action == GLFW_PRESS)
 			pSHIFT = true;
 		break;
 	case GLFW_KEY_LEFT_CONTROL:
+	case GLFW_KEY_RIGHT_CONTROL:
 		CTRL = (bool)action;
 		if (action == GLFW_PRESS)
 			pCTRL = true;
 		break;
 	case GLFW_KEY_LEFT_ALT:
+	case GLFW_KEY_RIGHT_ALT:
 		ALT = (bool)action;
 		if (action == GLFW_PRESS)
 			pALT = true;
@@ -509,10 +512,13 @@ bool Input::getKeyInfo(int key)
 		return NUM0;
 
 	case GLFW_KEY_LEFT_SHIFT:
+	case GLFW_KEY_RIGHT_SHIFT:
 		return SHIFT;
 	case GLFW_KEY_LEFT_CONTROL:
+	case GLFW_KEY_RIGHT_CONTROL:
 		return CTRL;
 	case GLFW_KEY_LEFT_ALT:
+	case GLFW_KEY_RIGHT_ALT:
 		return ALT;
 	case GLFW_KEY_SPACE:
 		return SPACE;
@@ -623,10 +629,13 @@ bool Input::justPressed(int key)
 		return pNUM0;
 
 	case GLFW_KEY_LEFT_SHIFT:
+	case GLFW_KEY_RIGHT_SHIFT:
 		return pSHIFT;
 	case GLFW_KEY_LEFT_CONTROL:
+	case GLFW_KEY_RIGHT_CONTROL:
 		return pCTRL;
 	case GLFW_KEY_LEFT_ALT:
+	case GLFW_KEY_RIGHT_ALT:
 		return pALT;
 	case GLFW_KEY_SPACE:
 		return pSPACE;

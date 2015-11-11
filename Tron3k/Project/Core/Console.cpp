@@ -31,22 +31,36 @@ bool Console::update()
 			}
 			else
 			{
-				if (ch == '7')
-					ch = '/';
-				if (ch == '-')
-					ch = '_';
-				if (ch == '\'')
-					ch = '*';
-				if (ch == '+')
-					ch = '?';
+				if (ch == '1')
+					ch = '!';
+				if (ch == '2')
+					ch = '\"';
+				if (ch == '3')
+					ch = '#';
+				if (ch == '4')
+					ch = '$';
+				if (ch == '5')
+					ch = '%';
 				if (ch == '6')
 					ch = '&';
+				if (ch == '7')
+					ch = '/';
 				if (ch == '8')
 					ch = '(';
 				if (ch == '9')
 					ch = ')';
 				if (ch == '0')
 					ch = '=';
+				if (ch == '-')
+					ch = '_';
+				if (ch == '\'')
+					ch = '*';
+				if (ch == '+')
+					ch = '?';
+				if (ch == '.')
+					ch = ':';
+				if (ch == ',')
+					ch = ';';
 			}
 			
 			msg += ch;
