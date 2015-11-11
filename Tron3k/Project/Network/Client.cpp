@@ -10,9 +10,11 @@ void Client::init()
 	isClient = true;
 
 	firstPackageSent = false;
-	firstPackageRecieved = false;
+	packageRecieved = false;
 	mapLoaded = false;
 	joined = false;
+
+	conID = -1;
 
 	con = new Connection();
 	con->init();
@@ -20,22 +22,19 @@ void Client::init()
 
 void Client::update(float dt)
 {
-	network_IN(dt);
+	//network_IN(dt);
 
-	network_OUT(dt);
+	//network_OUT(dt);
 }
 
 void Client::network_IN(float dt)
 {
-	if (con->isConnected() == false)
-		new_connection();
-	if (firstPackageSent == true)
-		IN(con, Uint8(0));
+	IN(con, conID);
 }
 
 void Client::network_OUT(float dt)
 {
-	if (firstPackageSent == false)
+	if (packageRecieved == false)
 	{
 		Packet* out;
 		out = new Packet();
@@ -45,7 +44,7 @@ void Client::network_OUT(float dt)
 
 		firstPackageSent = true;
 	}
-	else if (firstPackageRecieved)
+	else if (packageRecieved)
 	{
 		Packet* out;
 		out = new Packet();
@@ -59,25 +58,15 @@ bool Client::new_connection()
 {
 	// test connect
 	if (con->isConnected() == false)
-	{
-		for (int n = 0; n < 5; n++)
-		{
-			if (con->connect(IpAddress::LocalHost, PORT))
-			{
-				printf("Connected to server\n");
-				return true;
-			}
-			printf("Connection failed...");
-		}
-
-		return false;
-	}
+		if (con->connect(IpAddress::LocalHost, PORT))
+			return true;
+		return false; //failed
 	return true; //??? already connected
 }
 
 void Client::in_new_connection(Packet* rec, Uint8 _conID)
 {
-	firstPackageRecieved = true;
+	packageRecieved = true;
 
 	Uint8 index_short;
 	//conid already clasmember
@@ -86,9 +75,9 @@ void Client::in_new_connection(Packet* rec, Uint8 _conID)
 	*rec >> conID;
 	*rec >> map;
 
-	cout << "My connection ID :" << conID << endl;
+	printf("My connection ID : d% \n", conID);
 	//can i load this map?
-	cout << "Map in use : " << map << endl;
+	printf("Map in use : s% \n", map);
 
 }
 

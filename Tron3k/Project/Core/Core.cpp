@@ -28,7 +28,6 @@ void Core::init()
 void Core::update(float dt)
 {
 	//update I/O
-
 	glfwPollEvents();
 
 	console.update();
@@ -55,6 +54,12 @@ void Core::update(float dt)
 
 void Core::upStart(float dt)
 {
+	printf("[1] Client \n");
+	printf("[2] Server \n");
+	printf("[3] Roam \n");
+	
+	Input* i = Input::getInput();
+
 	//START
 	//server -> SERVER
 	//client -> MENU
@@ -90,64 +95,60 @@ void Core::upRoam(float dt)
 
 void Core::upClient(float dt)
 {
-	//CLIENT
-	//connect
-	//map valid ?
-	//load
-	//get full server info
-	//run
-	//network in / out
-	//spectator
-	//pick team
-	//wait for server start event
-
-	//return MENU
-
-
 	switch (subState)
 	{
-	case 0: //create client object
+	case 0: //setup client object
 
 		if (top)
 			delete top;
 		top = new Client();
 		top->init();
 
-		//fill the server address and port to use
-
 		subState = 1;
 		break;
-	case 1: //attempt to connect
+	case 1: //fill the server address and port to use
 
-		if (top->new_connection())
-		{
-			//success
-		}
-		else
-		{
-			current = MENU;	
-			subState = 0;
-			delete top;		
-			top = 0;
-			return;
-		}
+		//todo
 
+		subState = 2;
 		break;
-	case 2: //map valid check, load
-
-		//wait for map reply
-
-		//can i load?
-		// if not  -> menu
 		
+	case 2: //attempt to connect
 
-		subState = 3;
+		for (int n = 0; n < 3; n++)
+		{
+			//connecting...
+			if (top->new_connection())
+			{
+				//success
+				subState = 3;
+				return;
+			}
+		}
+		//failed
+		current = MENU;
+		subState = 0;
+		delete top;
+		top = 0;
+		return;
+
 		break;
-	case 3: //get full server info
+	case 3: //get full server info & map check
 
+		top->network_IN(dt);
+
+		if (top->firstPackageRecieved()) 
+		{
+			//can i load?
+			// if not  -> menu
+			subState = 4;
+		}
+		
 		break;
 	case 4: //main client loop
 
+		top->network_IN(dt);
+		top->network_OUT(dt);
 
 		break;
 	}
@@ -175,8 +176,6 @@ void Core::upServer(float dt)
 		break;
 	case 2: //atempting mapload & bind
 
-		//load map
-
 		//bind port
 		if (top->bind())
 		{
@@ -188,6 +187,8 @@ void Core::upServer(float dt)
 			return;
 		}
 		
+		//load map
+
 		subState = 3;
 		break;
 	case 3: //main server loop

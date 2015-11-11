@@ -27,13 +27,21 @@ public:
 	~Topology()
 	{
 		if (con)
-			delete[] con;
+		{	
+			if (isClient)
+				delete con;
+			else
+				delete[] con;
+		}
 	}
-	virtual bool bind() { return false; };
 	virtual void update(float dt) = 0;
 	virtual void network_IN(float dt) = 0;
 	virtual void network_OUT(float dt) = 0;
 	virtual bool new_connection() = 0;
+	//client only
+	virtual bool firstPackageRecieved() { return false; };
+	//server only
+	virtual bool bind() { return false; };
 
 	void in_ping(Packet* rec, Uint8 conID) {};
 	virtual void in_new_connection(Packet* rec, Uint8 conID) = 0;

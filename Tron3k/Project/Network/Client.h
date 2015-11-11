@@ -8,7 +8,7 @@ class Client : public Topology
 private:
 	Uint8 conID;
 	bool firstPackageSent;
-	bool firstPackageRecieved;
+	bool packageRecieved;
 	bool mapLoaded;
 	bool joined;
 public:
@@ -23,6 +23,8 @@ public:
 	void in_new_connection(Packet* rec, Uint8 conID);
 	void in_event(Packet* rec, Uint8 conID);
 	void in_frame(Packet* rec, Uint8 conID);
+
+	virtual bool firstPackageRecieved() { return packageRecieved; };
 };
 
 #endif
