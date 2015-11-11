@@ -73,7 +73,6 @@ void Core::update(float dt)
 	if (console.update()) //Someone wrote a command
 	{
 		string cmd = console.getCommand();
-		console.printMsg("Someone just wrote a command line! It was:");
 		console.printMsg(cmd);
 	}
 
@@ -95,6 +94,7 @@ void Core::update(float dt)
 
 	Input* i = Input::getInput();
 	i->clearOnPress();
+	console.discardCommand();
 
 	glfwSwapBuffers(win);
 
@@ -106,32 +106,34 @@ void Core::upStart(float dt)
 	switch (subState)
 	{
 	case 0:
-		printf("[1] Client \n");
-		printf("[2] Server \n");
-		printf("[3] Roam \n");
+		printf("[/1] Client \n");
+		printf("[/2] Server \n");
+		printf("[/3] Roam \n");
 		subState++;
 		break;
 
 	case 1:
 	{
-		Input* i = Input::getInput();
-
-		if (i->justPressed(GLFW_KEY_1))
+		if (console.commandReady())
 		{
-			current = Gamestate::CLIENT;
-			subState = 0;
-		}
+			string cmd = console.getCommand();
+			if (cmd == "/1")
+			{
+				current = Gamestate::CLIENT;
+				subState = 0;
+			}
 
-		else if (i->justPressed(GLFW_KEY_2))
-		{
-			current = Gamestate::SERVER;
-			subState = 0;
-		}
+			else if (cmd == "/2")
+			{
+				current = Gamestate::SERVER;
+				subState = 0;
+			}
 
-		else if (i->justPressed(GLFW_KEY_3))
-		{
-			current = Gamestate::ROAM;
-			subState = 0;
+			else if (cmd == "/3")
+			{
+				current = Gamestate::ROAM;
+				subState = 0;
+			}
 		}
 
 		break;

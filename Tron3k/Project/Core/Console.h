@@ -36,7 +36,10 @@ public:
 
 	void printMsg(string m); //Immediately prints a message to history without affecting message being written
 
+	bool commandReady();
 	string getCommand();
+
+	void discardCommand();
 };
 
 #endif

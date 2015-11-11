@@ -105,8 +105,18 @@ void Console::printMsg(string m)
 	addMsg(m);
 }
 
+bool Console::commandReady()
+{
+	return cmdReady;
+}
+
 string Console::getCommand()
 {
-	cmdReady = false;
 	return cmd;
+}
+
+void Console::discardCommand()
+{
+	cmd = "";
+	cmdReady = false;
 }
