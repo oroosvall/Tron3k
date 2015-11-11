@@ -19,12 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="dllInclude.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="IEngine.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DllMain.cpp" />
     <ClCompile Include="Engine.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

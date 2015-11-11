@@ -30,13 +30,17 @@ class Core
 {
 private:
 
-	GLFWwindow* win;
-
 	Topology* top;
 	Game* game;
 	IEngine* engine;
 
 	Console console;
+
+	// window
+	GLFWwindow* win;
+	bool recreate;
+	bool fullscreen;
+	int winX, winY;
 
 	//gamestates
 	Gamestate current;
@@ -50,6 +54,9 @@ private:
 	void upRoam(float dt);
 	void upClient(float dt);
 	void upServer(float dt);
+
+	void createWindow(int x, int y, bool fullscreen);
+	void removeWindow();
 
 	SoundPlayer musicPlayer;
 public:
