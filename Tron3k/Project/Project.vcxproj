@@ -24,12 +24,15 @@
     <ClCompile Include="Core\Game\Game.cpp" />
     <ClCompile Include="Core\Input.cpp" />
     <ClCompile Include="Core\sound\SoundPlayer.cpp" />
+    <ClCompile Include="Geometry.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Network\Client.cpp" />
     <ClCompile Include="Network\Connection.cpp" />
     <ClCompile Include="Network\Server.cpp" />
+    <ClCompile Include="Physics.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CollideMesh.h" />
     <ClInclude Include="Core\Console.h" />
     <ClInclude Include="Core\Core.h" />
     <ClInclude Include="Core\Game\Animation.h" />
@@ -39,11 +42,13 @@
     <ClInclude Include="Core\Input.h" />
     <ClInclude Include="Core\sound\SoundPlayer.h" />
     <ClInclude Include="Core\ui\Ui.h" />
+    <ClInclude Include="Geometry.h" />
     <ClInclude Include="Network\Client.h" />
     <ClInclude Include="Network\Connection.h" />
     <ClInclude Include="Network\NetIndex.h" />
     <ClInclude Include="Network\Server.h" />
     <ClInclude Include="Network\Topology.h" />
+    <ClInclude Include="Physics.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{93453B35-651C-43D5-958F-5A97A3830548}</ProjectGuid>
