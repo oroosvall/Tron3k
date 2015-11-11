@@ -45,59 +45,65 @@ bool Input::NUM8 = false;
 bool Input::NUM9 = false;
 bool Input::NUM0 = false;
 bool Input::BACKSPACE = false;
+bool Input::PLUS = false;
+bool Input::APOSTROPHE = false;
+bool Input::DASH = false;
 
-bool Input::rQ = false;
-bool Input::rW = false;
-bool Input::rE = false;
-bool Input::rR = false;
-bool Input::rT = false;
-bool Input::rY = false;
-bool Input::rU = false;
-bool Input::rI = false;
-bool Input::rO = false;
-bool Input::rP = false;
-bool Input::rA = false;
-bool Input::rS = false;
-bool Input::rD = false;
-bool Input::rF = false;
-bool Input::rG = false;
-bool Input::rH = false;
-bool Input::rJ = false;
-bool Input::rK = false;
-bool Input::rL = false;
-bool Input::rZ = false;
-bool Input::rX = false;
-bool Input::rC = false;
-bool Input::rV = false;
-bool Input::rB = false;
-bool Input::rN = false;
-bool Input::rM = false;
-bool Input::rSHIFT = false;
-bool Input::rCTRL = false;
-bool Input::rALT = false;
-bool Input::rSPACE = false;
-bool Input::rESC = false;
-bool Input::rENTER = false;
-bool Input::rDOT = false;
-bool Input::rCOMMA = false;
-bool Input::rNUM1 = false;
-bool Input::rNUM2 = false;
-bool Input::rNUM3 = false;
-bool Input::rNUM4 = false;
-bool Input::rNUM5 = false;
-bool Input::rNUM6 = false;
-bool Input::rNUM7 = false;
-bool Input::rNUM8 = false;
-bool Input::rNUM9 = false;
-bool Input::rNUM0 = false;
-bool Input::rBACKSPACE = false;
+bool Input::pQ = false;
+bool Input::pW = false;
+bool Input::pE = false;
+bool Input::pR = false;
+bool Input::pT = false;
+bool Input::pY = false;
+bool Input::pU = false;
+bool Input::pI = false;
+bool Input::pO = false;
+bool Input::pP = false;
+bool Input::pA = false;
+bool Input::pS = false;
+bool Input::pD = false;
+bool Input::pF = false;
+bool Input::pG = false;
+bool Input::pH = false;
+bool Input::pJ = false;
+bool Input::pK = false;
+bool Input::pL = false;
+bool Input::pZ = false;
+bool Input::pX = false;
+bool Input::pC = false;
+bool Input::pV = false;
+bool Input::pB = false;
+bool Input::pN = false;
+bool Input::pM = false;
+bool Input::pSHIFT = false;
+bool Input::pCTRL = false;
+bool Input::pALT = false;
+bool Input::pSPACE = false;
+bool Input::pESC = false;
+bool Input::pENTER = false;
+bool Input::pDOT = false;
+bool Input::pCOMMA = false;
+bool Input::pNUM1 = false;
+bool Input::pNUM2 = false;
+bool Input::pNUM3 = false;
+bool Input::pNUM4 = false;
+bool Input::pNUM5 = false;
+bool Input::pNUM6 = false;
+bool Input::pNUM7 = false;
+bool Input::pNUM8 = false;
+bool Input::pNUM9 = false;
+bool Input::pNUM0 = false;
+bool Input::pBACKSPACE = false;
+bool Input::pPLUS = false;
+bool Input::pAPOSTROPHE = false;
+bool Input::pDASH = false;
 
 bool Input::LMB = false;
 bool Input::RMB = false;
 bool Input::MMB = false;
-bool Input::rLMB = false;
-bool Input::rRMB = false;
-bool Input::rMMB = false;
+bool Input::pLMB = false;
+bool Input::pRMB = false;
+bool Input::pMMB = false;
 double Input::cursorX = 0.0;
 double Input::cursorY = 0.0;
 
@@ -141,230 +147,246 @@ void Input::callbackKeyboard(GLFWwindow* wnd, int key, int scancode, int action,
 	{
 	case GLFW_KEY_Q:
 		Q = (bool)action;
-		if (action == GLFW_RELEASE)
-			rQ = true;
+		if (action == GLFW_PRESS)
+			pQ = true;
 		break;
 	case GLFW_KEY_W:
 		W = (bool)action;
-		if (action == GLFW_RELEASE)
-			rW = true;
+		if (action == GLFW_PRESS)
+			pW = true;
 		break;
 	case GLFW_KEY_E:
 		E = action;
-		if (action == GLFW_RELEASE)
-			rE = true;
+		if (action == GLFW_PRESS)
+			pE = true;
 		break;
 	case GLFW_KEY_R:
 		R = (bool)action;
-		if (action == GLFW_RELEASE)
-			rR = true;
+		if (action == GLFW_PRESS)
+			pR = true;
 		break;
 	case GLFW_KEY_T:
 		T = (bool)action;
-		if (action == GLFW_RELEASE)
-			rT = true;
+		if (action == GLFW_PRESS)
+			pT = true;
 		break;
 	case GLFW_KEY_Y:
 		Y = (bool)action;
-		if (action == GLFW_RELEASE)
-			rY = true;
+		if (action == GLFW_PRESS)
+			pY = true;
 		break;
 	case GLFW_KEY_U:
 		U = (bool)action;
-		if (action == GLFW_RELEASE)
-			rU = true;
+		if (action == GLFW_PRESS)
+			pU = true;
 		break;
 	case GLFW_KEY_I:
 		I = (bool)action;
-		if (action == GLFW_RELEASE)
-			rI = true;
+		if (action == GLFW_PRESS)
+			pI = true;
 		break;
 	case GLFW_KEY_O:
 		O = (bool)action;
-		if (action == GLFW_RELEASE)
-			rO = true;
+		if (action == GLFW_PRESS)
+			pO = true;
 		break;
 	case GLFW_KEY_P:
 		P = (bool)action;
-		if (action == GLFW_RELEASE)
-			rP = true;
+		if (action == GLFW_PRESS)
+			pP = true;
 		break;
 	case GLFW_KEY_A:
 		A = (bool)action;
-		if (action == GLFW_RELEASE)
-			rA = true;
+		if (action == GLFW_PRESS)
+			pA = true;
 		break;
 	case GLFW_KEY_S:
 		S = (bool)action;
-		if (action == GLFW_RELEASE)
-			rS = true;
+		if (action == GLFW_PRESS)
+			pS = true;
 		break;
 	case GLFW_KEY_D:
 		D = (bool)action;
-		if (action == GLFW_RELEASE)
-			rD = true;
+		if (action == GLFW_PRESS)
+			pD = true;
 		break;
 	case GLFW_KEY_F:
 		F = (bool)action;
-		if (action == GLFW_RELEASE)
-			rF = true;
+		if (action == GLFW_PRESS)
+			pF = true;
 		break;
 	case GLFW_KEY_G:
 		G = (bool)action;
-		if (action == GLFW_RELEASE)
-			rG = true;
+		if (action == GLFW_PRESS)
+			pG = true;
 		break;
 	case GLFW_KEY_H:
 		H = (bool)action;
-		if (action == GLFW_RELEASE)
-			rH = true;
+		if (action == GLFW_PRESS)
+			pH = true;
 		break;
 	case GLFW_KEY_J:
 		J = (bool)action;
-		if (action == GLFW_RELEASE)
-			rJ = true;
+		if (action == GLFW_PRESS)
+			pJ = true;
 		break;
 	case GLFW_KEY_K:
 		K = (bool)action;
-		if (action == GLFW_RELEASE)
-			rK = true;
+		if (action == GLFW_PRESS)
+			pK = true;
 		break;
 	case GLFW_KEY_L:
 		L = (bool)action;
-		if (action == GLFW_RELEASE)
-			rL = true;
+		if (action == GLFW_PRESS)
+			pL = true;
 		break;
 	case GLFW_KEY_Z:
 		Z = (bool)action;
-		if (action == GLFW_RELEASE)
-			rZ = true;
+		if (action == GLFW_PRESS)
+			pZ = true;
 		break;
 	case GLFW_KEY_X:
 		X = (bool)action;
-		if (action == GLFW_RELEASE)
-			rX = true;
+		if (action == GLFW_PRESS)
+			pX = true;
 		break;
 	case GLFW_KEY_C:
 		C = (bool)action;
-		if (action == GLFW_RELEASE)
-			rC = true;
+		if (action == GLFW_PRESS)
+			pC = true;
 		break;
 	case GLFW_KEY_V:
 		V = (bool)action;
-		if (action == GLFW_RELEASE)
-			rV = true;
+		if (action == GLFW_PRESS)
+			pV = true;
 		break;
 	case GLFW_KEY_B:
 		B = (bool)action;
-		if (action == GLFW_RELEASE)
-			rB = true;
+		if (action == GLFW_PRESS)
+			pB = true;
 		break;
 	case GLFW_KEY_N:
 		N = (bool)action;
-		if (action == GLFW_RELEASE)
-			rN = true;
+		if (action == GLFW_PRESS)
+			pN = true;
 		break;
 	case GLFW_KEY_M:
 		M = (bool)action;
-		if (action == GLFW_RELEASE)
-			rM = true;
+		if (action == GLFW_PRESS)
+			pM = true;
 		break;
 
 	case GLFW_KEY_1:
 		NUM1 = (bool)action;
-		if (action == GLFW_RELEASE)
-			rNUM1 = true;
+		if (action == GLFW_PRESS)
+			pNUM1 = true;
 		break;
 	case GLFW_KEY_2:
 		NUM2 = (bool)action;
-		if (action == GLFW_RELEASE)
-			rNUM2 = true;
+		if (action == GLFW_PRESS)
+			pNUM2 = true;
 		break;
 	case GLFW_KEY_3:
 		NUM3 = (bool)action;
-		if (action == GLFW_RELEASE)
-			rNUM3 = true;
+		if (action == GLFW_PRESS)
+			pNUM3 = true;
 		break;
 	case GLFW_KEY_4:
 		NUM4 = (bool)action;
-		if (action == GLFW_RELEASE)
-			rNUM4 = true;
+		if (action == GLFW_PRESS)
+			pNUM4 = true;
 		break;
 	case GLFW_KEY_5:
 		NUM5 = (bool)action;
-		if (action == GLFW_RELEASE)
-			rNUM5 = true;
+		if (action == GLFW_PRESS)
+			pNUM5 = true;
 		break;
 	case GLFW_KEY_6:
 		NUM6 = (bool)action;
-		if (action == GLFW_RELEASE)
-			rNUM6 = true;
+		if (action == GLFW_PRESS)
+			pNUM6 = true;
 		break;
 	case GLFW_KEY_7:
 		NUM7 = (bool)action;
-		if (action == GLFW_RELEASE)
-			rNUM7 = true;
+		if (action == GLFW_PRESS)
+			pNUM7 = true;
 		break;
 	case GLFW_KEY_8:
 		NUM8 = (bool)action;
-		if (action == GLFW_RELEASE)
-			rNUM8 = true;
+		if (action == GLFW_PRESS)
+			pNUM8 = true;
 		break;
 	case GLFW_KEY_9:
 		NUM9 = (bool)action;
-		if (action == GLFW_RELEASE)
-			rNUM9 = true;
+		if (action == GLFW_PRESS)
+			pNUM9 = true;
 		break;
 	case GLFW_KEY_0:
 		NUM0 = (bool)action;
-		if (action == GLFW_RELEASE)
-			rNUM0 = true;
+		if (action == GLFW_PRESS)
+			pNUM0 = true;
 		break;
 
 	case GLFW_KEY_LEFT_SHIFT:
 		SHIFT = (bool)action;
-		if (action == GLFW_RELEASE)
-			rSHIFT = true;
+		if (action == GLFW_PRESS)
+			pSHIFT = true;
 		break;
 	case GLFW_KEY_LEFT_CONTROL:
 		CTRL = (bool)action;
-		if (action == GLFW_RELEASE)
-			rCTRL = true;
+		if (action == GLFW_PRESS)
+			pCTRL = true;
 		break;
 	case GLFW_KEY_LEFT_ALT:
 		ALT = (bool)action;
-		if (action == GLFW_RELEASE)
-			rALT = true;
+		if (action == GLFW_PRESS)
+			pALT = true;
 		break;
 	case GLFW_KEY_SPACE:
 		SPACE = (bool)action;
-		if (action == GLFW_RELEASE)
-			rSPACE = true;
+		if (action == GLFW_PRESS)
+			pSPACE = true;
 		break;
 	case GLFW_KEY_ENTER:
 		ENTER = (bool)action;
-		if (action == GLFW_RELEASE)
-			rENTER = true;
+		if (action == GLFW_PRESS)
+			pENTER = true;
 		break;
 	case GLFW_KEY_ESCAPE:
 		ESC = (bool)action;
-		if (action == GLFW_RELEASE)
-			rESC = true;
+		if (action == GLFW_PRESS)
+			pESC = true;
 		break;
 	case GLFW_KEY_PERIOD:
 		DOT = (bool)action;
-		if (action == GLFW_RELEASE)
-			rDOT = true;
+		if (action == GLFW_PRESS)
+			pDOT = true;
 		break;
 	case GLFW_KEY_COMMA:
 		COMMA = (bool)action;
-		if (action == GLFW_RELEASE)
-			rCOMMA = true;
+		if (action == GLFW_PRESS)
+			pCOMMA = true;
 		break;
 	case GLFW_KEY_BACKSPACE:
 		BACKSPACE = (bool)action;
-		if (action == GLFW_RELEASE)
-			rBACKSPACE = true;
+		if (action == GLFW_PRESS)
+			pBACKSPACE = true;
+		break;
+		//Here begins the cheating! Check the defines in .h for info
+	case SWE_KEY_APOSTROPHE: //Apostrophe/Asterisk
+		APOSTROPHE = (bool)action;
+		if (action == GLFW_PRESS)
+			pAPOSTROPHE = true;
+		break;
+	case SWE_KEY_PLUS: //Plus/Questionmark
+		PLUS = (bool)action;
+		if (action == GLFW_PRESS)
+			pPLUS = true;
+		break;
+	case SWE_KEY_DASH: //Dash/Underscore
+		DASH = (bool)action;
+		if (action == GLFW_PRESS)
+			pDASH = true;
 		break;
 	}
 }
@@ -375,18 +397,18 @@ void Input::callbackMouseButton(GLFWwindow* wnd, int button, int action, int mod
 	{
 	case GLFW_MOUSE_BUTTON_LEFT:
 		LMB = (bool)action;
-		if (action == GLFW_RELEASE)
-			rLMB = true;
+		if (action == GLFW_PRESS)
+			pLMB = true;
 		break;
 	case GLFW_MOUSE_BUTTON_RIGHT:
 		RMB = (bool)action;
-		if (action == GLFW_RELEASE)
-			rRMB = true;
+		if (action == GLFW_PRESS)
+			pRMB = true;
 		break;
 	case GLFW_MOUSE_BUTTON_MIDDLE:
 		MMB = (bool)action;
-		if (action == GLFW_RELEASE)
-			rMMB = true;
+		if (action == GLFW_PRESS)
+			pMMB = true;
 		break;
 	}
 }
@@ -504,6 +526,12 @@ bool Input::getKeyInfo(int key)
 		return COMMA;
 	case GLFW_KEY_BACKSPACE:
 		return BACKSPACE;
+	case SWE_KEY_APOSTROPHE: //Apostrophe/Asterisk
+		return APOSTROPHE;
+	case SWE_KEY_PLUS: //Plus/Questionmark
+		return PLUS;
+	case SWE_KEY_DASH: //Dash/Underscore
+		return DASH;
 
 	case GLFW_MOUSE_BUTTON_LEFT:
 		return LMB;
@@ -516,165 +544,174 @@ bool Input::getKeyInfo(int key)
 	}
 }
 
-bool Input::justReleased(int key)
+bool Input::justPressed(int key)
 {
 	switch (key)
 	{
 	case GLFW_KEY_Q:
-		return rQ;
+		return pQ;
 	case GLFW_KEY_W:
-		return rW;
+		return pW;
 	case GLFW_KEY_E:
-		return rE;
+		return pE;
 	case GLFW_KEY_R:
-		return rR;
+		return pR;
 	case GLFW_KEY_T:
-		return rT;
+		return pT;
 	case GLFW_KEY_Y:
-		return rY;
+		return pY;
 	case GLFW_KEY_U:
-		return rU;
+		return pU;
 	case GLFW_KEY_I:
-		return rI;
+		return pI;
 	case GLFW_KEY_O:
-		return rO;
+		return pO;
 	case GLFW_KEY_P:
-		return rP;
+		return pP;
 	case GLFW_KEY_A:
-		return rA;
+		return pA;
 	case GLFW_KEY_S:
-		return rS;
+		return pS;
 	case GLFW_KEY_D:
-		return rD;
+		return pD;
 	case GLFW_KEY_F:
-		return rF;
+		return pF;
 	case GLFW_KEY_G:
-		return rG;
+		return pG;
 	case GLFW_KEY_H:
-		return rH;
+		return pH;
 	case GLFW_KEY_J:
-		return rJ;
+		return pJ;
 	case GLFW_KEY_K:
-		return rK;
+		return pK;
 	case GLFW_KEY_L:
-		return rL;
+		return pL;
 	case GLFW_KEY_Z:
-		return rZ;
+		return pZ;
 	case GLFW_KEY_X:
-		return rX;
+		return pX;
 	case GLFW_KEY_C:
-		return rC;
+		return pC;
 	case GLFW_KEY_V:
-		return rV;
+		return pV;
 	case GLFW_KEY_B:
-		return rB;
+		return pB;
 	case GLFW_KEY_N:
-		return rN;
+		return pN;
 	case GLFW_KEY_M:
-		return rM;
+		return pM;
 
 	case GLFW_KEY_1:
-		return rNUM1;
+		return pNUM1;
 	case GLFW_KEY_2:
-		return rNUM2;
+		return pNUM2;
 	case GLFW_KEY_3:
-		return rNUM3;
+		return pNUM3;
 	case GLFW_KEY_4:
-		return rNUM4;
+		return pNUM4;
 	case GLFW_KEY_5:
-		return rNUM5;
+		return pNUM5;
 	case GLFW_KEY_6:
-		return rNUM6;
+		return pNUM6;
 	case GLFW_KEY_7:
-		return rNUM7;
+		return pNUM7;
 	case GLFW_KEY_8:
-		return rNUM8;
+		return pNUM8;
 	case GLFW_KEY_9:
-		return rNUM9;
+		return pNUM9;
 	case GLFW_KEY_0:
-		return rNUM0;
+		return pNUM0;
 
 	case GLFW_KEY_LEFT_SHIFT:
-		return rSHIFT;
+		return pSHIFT;
 	case GLFW_KEY_LEFT_CONTROL:
-		return rCTRL;
+		return pCTRL;
 	case GLFW_KEY_LEFT_ALT:
-		return rALT;
+		return pALT;
 	case GLFW_KEY_SPACE:
-		return rSPACE;
+		return pSPACE;
 	case GLFW_KEY_ENTER:
-		return rENTER;
+		return pENTER;
 	case GLFW_KEY_ESCAPE:
-		return rESC;
+		return pESC;
 	case GLFW_KEY_PERIOD:
-		return rDOT;
+		return pDOT;
 	case GLFW_KEY_COMMA:
-		return rCOMMA;
+		return pCOMMA;
 	case GLFW_KEY_BACKSPACE:
-		return rBACKSPACE;
+		return pBACKSPACE;
+	case SWE_KEY_APOSTROPHE: //Apostrophe/Asterisk
+		return pAPOSTROPHE;
+	case SWE_KEY_PLUS: //Plus/Questionmark
+		return pPLUS;
+	case SWE_KEY_DASH: //Dash/Underscore
+		return pDASH;
 
 	case GLFW_MOUSE_BUTTON_LEFT:
-		return rLMB;
+		return pLMB;
 	case GLFW_MOUSE_BUTTON_RIGHT:
-		return rRMB;
+		return pRMB;
 	case GLFW_MOUSE_BUTTON_MIDDLE:
-		return rMMB;
+		return pMMB;
 	default:
 		return false;
 	}
 }
 
-void Input::clearOnRelease()
+void Input::clearOnPress()
 {
-	rQ = false;
-	rW = false;
-	rE = false;
-	rR = false;
-	rT = false;
-	rY = false;
-	rU = false;
-	rI = false;
-	rO = false;
-	rP = false;
-	rA = false;
-	rS = false;
-	rD = false;
-	rF = false;
-	rG = false;
-	rH = false;
-	rJ = false;
-	rK = false;
-	rL = false;
-	rZ = false;
-	rX = false;
-	rC = false;
-	rV = false;
-	rB = false;
-	rN = false;
-	rM = false;
-	rSHIFT = false;
-	rCTRL = false;
-	rALT = false;
-	rSPACE = false;
-	rESC = false;
-	rENTER = false;
-	rDOT = false;
-	rCOMMA = false;
-	rBACKSPACE = false;
-	rNUM1 = false;
-	rNUM2 = false;
-	rNUM3 = false;
-	rNUM4 = false;
-	rNUM5 = false;
-	rNUM6 = false;
-	rNUM7 = false;
-	rNUM8 = false;
-	rNUM9 = false;
-	rNUM0 = false;
-
-	rLMB = false;
-	rRMB = false;
-	rMMB = false;
+	pQ = false;
+	pW = false;
+	pE = false;
+	pR = false;
+	pT = false;
+	pY = false;
+	pU = false;
+	pI = false;
+	pO = false;
+	pP = false;
+	pA = false;
+	pS = false;
+	pD = false;
+	pF = false;
+	pG = false;
+	pH = false;
+	pJ = false;
+	pK = false;
+	pL = false;
+	pZ = false;
+	pX = false;
+	pC = false;
+	pV = false;
+	pB = false;
+	pN = false;
+	pM = false;
+	pSHIFT = false;
+	pCTRL = false;
+	pALT = false;
+	pSPACE = false;
+	pESC = false;
+	pENTER = false;
+	pDOT = false;
+	pCOMMA = false;
+	pBACKSPACE = false;
+	pAPOSTROPHE = false;
+	pPLUS = false;
+	pDASH = false;
+	pNUM1 = false;
+	pNUM2 = false;
+	pNUM3 = false;
+	pNUM4 = false;
+	pNUM5 = false;
+	pNUM6 = false;
+	pNUM7 = false;
+	pNUM8 = false;
+	pNUM9 = false;
+	pNUM0 = false;
+	
+	pLMB = false;
+	pRMB = false;
+	pMMB = false;
 
 	scrollVal = 0.0;
 }
@@ -768,6 +805,12 @@ char Input::keyToChar(int key)
 		return '.';
 	case GLFW_KEY_COMMA:
 		return ',';
+	case SWE_KEY_APOSTROPHE: //Apostrophe/Asterisk
+		return '\'';
+	case SWE_KEY_PLUS: //Plus/Questionmark
+		return '+';
+	case SWE_KEY_DASH: //Dash/Underscore
+		return '-';
 
 	default:
 		return '\0';

@@ -87,9 +87,11 @@ void Core::update(float dt)
 	}
 
 	Input* i = Input::getInput();
-	i->clearOnRelease();
+	i->clearOnPress();
 
 	glfwSwapBuffers(win);
+
+	
 }
 
 void Core::upStart(float dt)
@@ -122,13 +124,13 @@ void Core::upRoam(float dt)
 {
 	Input* i = Input::getInput();
 
-	if (i->justReleased(GLFW_KEY_0))
+	if (i->justPressed(GLFW_KEY_0))
 	{
 		fullscreen = !fullscreen;
 		recreate = true;
 	}
 
-	if (i->justReleased(GLFW_KEY_9))
+	if (i->justPressed(GLFW_KEY_9))
 	{
 		winX = 720;
 		winY = 640;
