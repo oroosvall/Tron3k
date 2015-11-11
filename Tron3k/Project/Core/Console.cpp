@@ -69,6 +69,11 @@ bool Console::update()
 			cmd = msg;
 			cmdReady = true;
 		}
+		else
+		{
+			lastMsg = msg;
+			msgReady = true;
+		}
 		addMsg(msg);
 	}
 
@@ -115,8 +120,21 @@ string Console::getCommand()
 	return cmd;
 }
 
-void Console::discardCommand()
+void Console::discardCommandAndLastMsg()
 {
 	cmd = "";
 	cmdReady = false;
+
+	lastMsg = "";
+	msgReady = false;
+}
+
+bool Console::messageReady()
+{
+	return msgReady;
+}
+
+string Console::getMessage()
+{
+	return lastMsg;
 }

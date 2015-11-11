@@ -70,11 +70,8 @@ void Core::update(float dt)
 
 	glfwPollEvents();
 
-	if (console.update()) //Someone wrote a command
-	{
-		string cmd = console.getCommand();
-		console.printMsg(cmd);
-	}
+	console.update(); //Someone wrote a command
+
 
 	switch (current)
 	{
@@ -94,7 +91,7 @@ void Core::update(float dt)
 
 	Input* i = Input::getInput();
 	i->clearOnPress();
-	console.discardCommand();
+	console.discardCommandAndLastMsg();
 
 	glfwSwapBuffers(win);
 

@@ -21,11 +21,15 @@ private:
 		GLFW_KEY_Z, GLFW_KEY_X, GLFW_KEY_C, GLFW_KEY_V, GLFW_KEY_B, GLFW_KEY_N, GLFW_KEY_M, GLFW_KEY_COMMA, GLFW_KEY_PERIOD, GLFW_KEY_SPACE,
 		GLFW_KEY_1, GLFW_KEY_2, GLFW_KEY_3, GLFW_KEY_4, GLFW_KEY_5, GLFW_KEY_6, GLFW_KEY_7, GLFW_KEY_8, GLFW_KEY_9, GLFW_KEY_0, SWE_KEY_APOSTROPHE, SWE_KEY_DASH, SWE_KEY_PLUS};
 	string msg;
+
 	string history[MAXHISTORY];
 	int latestMsg = MAXHISTORY-1;
 
 	void printConsole(); //Reprints the console window
 	void addMsg(string &m); //Adds a message to the history
+
+	string lastMsg;
+	bool msgReady = false;
 
 	string cmd;
 	bool cmdReady;
@@ -36,10 +40,13 @@ public:
 
 	void printMsg(string m); //Immediately prints a message to history without affecting message being written
 
+	bool messageReady();
+	string getMessage();
+
 	bool commandReady();
 	string getCommand();
 
-	void discardCommand();
+	void discardCommandAndLastMsg();
 };
 
 #endif
