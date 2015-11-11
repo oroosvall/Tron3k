@@ -111,7 +111,6 @@ void Core::upStart(float dt)
 		break;
 
 	case 1:
-	{
 		if (console.commandReady())
 		{
 			string cmd = console.getCommand();
@@ -135,7 +134,6 @@ void Core::upStart(float dt)
 		}
 
 		break;
-	}
 	}
 }
 
@@ -205,6 +203,8 @@ void Core::upClient(float dt)
 			if (top->new_connection())
 			{
 				console.printMsg("Connecting Succsessfull");
+				//send "new connection" event to server
+				top->new_connection_packet();
 				subState++;
 				return;
 			}
@@ -232,8 +232,21 @@ void Core::upClient(float dt)
 		break;
 	case 4: //main client loop
 
+
+		if (console.messageReady())
+		{
+			top->msg_out = console.getMessage();
+			top->scope_out = Uint8(ALL);
+		}
+
 		top->network_IN(dt);
 		top->network_OUT(dt);
+
+		if (top->msg_in != "")
+		{
+			console.printMsg(top->msg_in);
+			top->msg_in = "";
+		}
 
 		break;
 	}

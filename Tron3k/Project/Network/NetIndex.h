@@ -35,7 +35,7 @@ enum NET_MESSAGE
 {
 	ALL = int('A'),
 	TEAM = int('T'),
-	PRIVATE = int('P')
+	WHISPER = int('W')
 };
 
 #endif

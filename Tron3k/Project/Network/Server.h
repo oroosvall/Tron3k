@@ -9,11 +9,13 @@ private:
 	TcpListener listener;
 	int nrConnected = 0;
 	int nrConnectedRot = 0;
+
 public:
 	void init();
 	~Server();
 
 	virtual bool bind();
+	virtual void bounce(Packet* rec, Uint8 conID);
 
 	void update(float dt);
 	void network_IN(float dt);
@@ -23,6 +25,7 @@ public:
 	void in_new_connection(Packet* rec, Uint8 conID);
 	void in_event(Packet* rec, Uint8 conID);
 	void in_frame(Packet* rec, Uint8 conID);
+	void in_message(Packet* rec, Uint8 conID);
 };
 
 #endif

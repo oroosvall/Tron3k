@@ -25,6 +25,18 @@ bool Server::bind()
 	return true;
 }
 
+void Server::bounce(Packet* rec, Uint8 conID)
+{
+	//send to all other clients
+	for (int n = 0; n < MAX_CONNECT; n++)
+	{
+		if (con[n].isConnected() && n != conID)
+		{
+			con[n].send(rec);
+		}
+	}
+}
+
 void Server::update(float dt)
 {
 	network_IN(dt);
@@ -102,7 +114,7 @@ void Server::in_new_connection(Packet* rec, Uint8 conID)
 	*out << conID;
 
 	//mapname used
-	*out << "tempMap";
+	*out << string("tempMap");
 
 	//reply to the connection
 	con[conID].send(out);
@@ -119,4 +131,18 @@ void Server::in_event(Packet* rec, Uint8 conID)
 void Server::in_frame(Packet* rec, Uint8 conID)
 {
 
+}
+
+void Server::in_message(Packet* rec, Uint8 conID)
+{
+	Uint8 scope;
+	*rec >> conID;
+	*rec >> scope;
+	*rec >> msg_in;
+
+	printf("%d > ", conID);
+	printf("%s\n", msg_in.c_str());
+
+	if(scope == NET_MESSAGE::ALL)
+		bounce(rec, conID);
 }
