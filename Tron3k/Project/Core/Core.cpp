@@ -67,7 +67,12 @@ void Core::update(float dt)
 
 	glfwPollEvents();
 
-	console.update();
+	if (console.update()) //Someone wrote a command
+	{
+		string cmd = console.getCommand();
+		console.printMsg("Someone just wrote a command line! It was:");
+		console.printMsg(cmd);
+	}
 
 	switch (current)
 	{

@@ -6,6 +6,7 @@ Console::Console()
 	{
 		history[c] = "";
 	}
+	cmdReady = false;
 	printConsole();
 }
 
@@ -14,7 +15,7 @@ Console::~Console()
 
 }
 
-void Console::update()
+bool Console::update()
 {
 	Input* i = Input::getInput();
 
@@ -63,8 +64,15 @@ void Console::update()
 	}
 	if (i->justPressed(GLFW_KEY_ENTER))
 	{
+		if (msg[0] == '/')
+		{
+			cmd = msg;
+			cmdReady = true;
+		}
 		addMsg(msg);
 	}
+
+	return cmdReady;
 }
 #include <Windows.h>
 void Console::printConsole()
@@ -95,4 +103,10 @@ void Console::addMsg(string &m)
 void Console::printMsg(string m)
 {
 	addMsg(m);
+}
+
+string Console::getCommand()
+{
+	cmdReady = false;
+	return cmd;
 }

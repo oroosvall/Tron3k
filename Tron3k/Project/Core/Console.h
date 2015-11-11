@@ -26,12 +26,17 @@ private:
 
 	void printConsole(); //Reprints the console window
 	void addMsg(string &m); //Adds a message to the history
+
+	string cmd;
+	bool cmdReady;
 public:
 	Console();
 	~Console();
-	void update();
+	bool update();
 
 	void printMsg(string m); //Immediately prints a message to history without affecting message being written
+
+	string getCommand();
 };
 
 #endif
