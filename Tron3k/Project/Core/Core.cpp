@@ -22,7 +22,8 @@ void Core::init()
 	
 	createWindow(winX, winY, fullscreen);
 
-	//musicPlayer.playMusic(1234);	// **** TEMP ****
+	musicPlayer.enableSounds(false); // **** TEMP ****
+	musicPlayer.playMusic(1234);
 
 	current = Gamestate::START;
 

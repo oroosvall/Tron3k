@@ -1,10 +1,13 @@
 #ifndef SOUND_H
 #define SOUND_H
 #include<sfml/Audio.hpp>
+#include<glm/glm.hpp>
 
 class SoundPlayer
 {
 private:
+	bool soundEnabler;
+
 	sf::Sound soundPlayer;	//Loads small sound files into the memory
 	sf::Music musicPlayer;	//Streams big sound files
 
@@ -14,8 +17,15 @@ public:
 	SoundPlayer();
 	~SoundPlayer();
 
-	int playSound(int sound);
+	void enableSounds(bool sound);
+
+	void setVolumeMusic(int volume);
+	void setVolumeSound(int volume);
+
 	int playMusic(int music);
+
+	int SoundPlayer::playExternalSound(int sound, glm::vec3 soundOrigin);
+	int SoundPlayer::playUserGeneratedSound(int sound);
 };
 
 #endif
