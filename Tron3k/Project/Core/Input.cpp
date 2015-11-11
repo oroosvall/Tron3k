@@ -45,6 +45,9 @@ bool Input::NUM8 = false;
 bool Input::NUM9 = false;
 bool Input::NUM0 = false;
 bool Input::BACKSPACE = false;
+bool Input::PLUS = false;
+bool Input::APOSTROPHE = false;
+bool Input::DASH = false;
 
 bool Input::pQ = false;
 bool Input::pW = false;
@@ -91,6 +94,9 @@ bool Input::pNUM8 = false;
 bool Input::pNUM9 = false;
 bool Input::pNUM0 = false;
 bool Input::pBACKSPACE = false;
+bool Input::pPLUS = false;
+bool Input::pAPOSTROPHE = false;
+bool Input::pDASH = false;
 
 bool Input::LMB = false;
 bool Input::RMB = false;
@@ -366,6 +372,22 @@ void Input::callbackKeyboard(GLFWwindow* wnd, int key, int scancode, int action,
 		if (action == GLFW_PRESS)
 			pBACKSPACE = true;
 		break;
+		//Here begins the cheating! Check the defines in .h for info
+	case SWE_KEY_APOSTROPHE: //Apostrophe/Asterisk
+		APOSTROPHE = (bool)action;
+		if (action == GLFW_PRESS)
+			pAPOSTROPHE = true;
+		break;
+	case SWE_KEY_PLUS: //Plus/Questionmark
+		PLUS = (bool)action;
+		if (action == GLFW_PRESS)
+			pPLUS = true;
+		break;
+	case SWE_KEY_DASH: //Dash/Underscore
+		DASH = (bool)action;
+		if (action == GLFW_PRESS)
+			pDASH = true;
+		break;
 	}
 }
 
@@ -504,6 +526,12 @@ bool Input::getKeyInfo(int key)
 		return COMMA;
 	case GLFW_KEY_BACKSPACE:
 		return BACKSPACE;
+	case SWE_KEY_APOSTROPHE: //Apostrophe/Asterisk
+		return APOSTROPHE;
+	case SWE_KEY_PLUS: //Plus/Questionmark
+		return PLUS;
+	case SWE_KEY_DASH: //Dash/Underscore
+		return DASH;
 
 	case GLFW_MOUSE_BUTTON_LEFT:
 		return LMB;
@@ -612,6 +640,12 @@ bool Input::justPressed(int key)
 		return pCOMMA;
 	case GLFW_KEY_BACKSPACE:
 		return pBACKSPACE;
+	case SWE_KEY_APOSTROPHE: //Apostrophe/Asterisk
+		return pAPOSTROPHE;
+	case SWE_KEY_PLUS: //Plus/Questionmark
+		return pPLUS;
+	case SWE_KEY_DASH: //Dash/Underscore
+		return pDASH;
 
 	case GLFW_MOUSE_BUTTON_LEFT:
 		return pLMB;
@@ -661,6 +695,9 @@ void Input::clearOnPress()
 	pDOT = false;
 	pCOMMA = false;
 	pBACKSPACE = false;
+	pAPOSTROPHE = false;
+	pPLUS = false;
+	pDASH = false;
 	pNUM1 = false;
 	pNUM2 = false;
 	pNUM3 = false;
@@ -768,6 +805,12 @@ char Input::keyToChar(int key)
 		return '.';
 	case GLFW_KEY_COMMA:
 		return ',';
+	case SWE_KEY_APOSTROPHE: //Apostrophe/Asterisk
+		return '\'';
+	case SWE_KEY_PLUS: //Plus/Questionmark
+		return '+';
+	case SWE_KEY_DASH: //Dash/Underscore
+		return '-';
 
 	default:
 		return '\0';

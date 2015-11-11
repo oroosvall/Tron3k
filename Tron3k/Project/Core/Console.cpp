@@ -28,6 +28,25 @@ void Console::update()
 			{
 				ch = tolower(ch);
 			}
+			else
+			{
+				if (ch == '7')
+					ch = '/';
+				if (ch == '-')
+					ch = '_';
+				if (ch == '\'')
+					ch = '*';
+				if (ch == '+')
+					ch = '?';
+				if (ch == '6')
+					ch = '&';
+				if (ch == '8')
+					ch = '(';
+				if (ch == '9')
+					ch = ')';
+				if (ch == '0')
+					ch = '=';
+			}
 			
 			msg += ch;
 
