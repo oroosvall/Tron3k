@@ -13,6 +13,9 @@ void Core::init()
 
 	//glfwWindowHint(GLFW_DECORATED, false); borderless toggle
 
+	win = nullptr;
+	engine = nullptr;
+
 	recreate = false;
 	fullscreen = false;
 	winX = winY = 200;

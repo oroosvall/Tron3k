@@ -8,7 +8,9 @@ class Engine : public IEngine
 private:
 
 public:
+	virtual void init();
 	virtual void release();
+	virtual void update();
 	virtual void render();
 };
 

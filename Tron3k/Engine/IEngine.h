@@ -12,10 +12,11 @@ class IEngine
 public:
 	virtual void init() = 0;
 	virtual void release() = 0;
+	virtual void update() = 0;
 	virtual void render() = 0;
 
 };
 
-extern "C" ENGINE_API IEngine* CraeteEningeObject();
+extern "C" ENGINE_API IEngine* CreateEngine();
 
 #endif
