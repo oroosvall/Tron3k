@@ -24,11 +24,14 @@ private:
 	string history[MAXHISTORY];
 	int latestMsg = MAXHISTORY-1;
 
-	void printConsole();
+	void printConsole(); //Reprints the console window
+	void addMsg(string &m); //Adds a message to the history
 public:
 	Console();
 	~Console();
 	void update();
+
+	void printMsg(string m); //Immediately prints a message to history without affecting message being written
 };
 
 #endif

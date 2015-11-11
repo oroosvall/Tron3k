@@ -63,12 +63,7 @@ void Console::update()
 	}
 	if (i->justPressed(GLFW_KEY_ENTER))
 	{
-		latestMsg++;
-		latestMsg = latestMsg%MAXHISTORY;
-
-		history[latestMsg] = msg;
-		msg = "";
-		printConsole();
+		addMsg(msg);
 	}
 }
 #include <Windows.h>
@@ -85,4 +80,19 @@ void Console::printConsole()
 	printf("********************************\n");
 	printf("%s", msg.c_str());
 
+}
+
+void Console::addMsg(string &m)
+{
+	latestMsg++;
+	latestMsg = latestMsg%MAXHISTORY;
+
+	history[latestMsg] = m;
+	m = "";
+	printConsole();
+}
+
+void Console::printMsg(string m)
+{
+	addMsg(m);
 }
