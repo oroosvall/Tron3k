@@ -9,7 +9,7 @@
 #include "Input.h"
 
 #define MAXHISTORY 25
-#define VALIDKEYS 43
+#define VALIDKEYS 42
 
 using namespace std;
 
