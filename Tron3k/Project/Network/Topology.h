@@ -47,7 +47,10 @@ public:
 			Packet* rec = new Packet();
 			connection->receive(rec);
 			if (rec->getDataSize() == 0) // no more messages to handle
+			{
+				delete rec;
 				break;
+			}
 
 			//extract net index
 			Uint8 index_short;
