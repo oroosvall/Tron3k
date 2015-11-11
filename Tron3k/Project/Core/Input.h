@@ -25,6 +25,8 @@ private:
 		pSHIFT, pCTRL, pALT, pSPACE, pESC, pENTER,
 		pNUM1, pNUM2, pNUM3, pNUM4, pNUM5, pNUM6, pNUM7, pNUM8, pNUM9, pNUM0,
 		pDOT, pCOMMA, pBACKSPACE, pPLUS, pAPOSTROPHE, pDASH; //Button was pressed this frame
+
+	static bool keyPressedThisFrame; //Checks if at least one key was pressed this frame, if false then no clear is done and justPressed returns false automatically
 	static void callbackKeyboard(GLFWwindow* wnd, int key, int scancode, int action, int modkeys);
 
 	static bool LMB, RMB, MMB; //Mouse button is pressed right now
@@ -40,8 +42,8 @@ public:
 	static Input* getInput();
 	void setupCallbacks(GLFWwindow* wnd); //Must call this when window is created to make GLFW callback functions work!
 
-	bool getKeyInfo(int key); //Used for both keyboard and mouse
-	bool justPressed(int key); //Used for both keyboard and mouse
+	bool getKeyInfo(int key); //Used for both keyboard and mouse, returns whether a key is currently active
+	bool justPressed(int key); //Used for both keyboard and mouse, returns whether a key was pressed this frame
 
 	void getCursor(double &x, double &y);
 
@@ -51,7 +53,7 @@ public:
 
 	static void release(); //Must be called at the termination of the game
 
-	char keyToChar(int key);
+	char keyToChar(int key); //Translates a key's assigned character to an actual char
 };
 
 #endif
