@@ -2,18 +2,17 @@
 
 Client::~Client()
 {
-
+	
 }
 
 void Client::init()
 {
 	isClient = true;
+
 	firstPackageSent = false;
 	firstPackageRecieved = false;
 	mapLoaded = false;
 	joined = false;
-
-	conID = -1;
 
 	con = new Connection();
 	con->init();
@@ -56,46 +55,24 @@ void Client::network_OUT(float dt)
 	}
 }
 
-void Client::new_connection()
+bool Client::new_connection()
 {
 	// test connect
 	if (con->isConnected() == false)
 	{
-		system("cls");
-		cout << "Connect to server" << endl;
-		cout << "[1] Local Host" << endl;
-		cout << "[2] Server Address 00.00.00.00 " << endl;
-		cout << "port used : " << PORT_START << endl;
-		char in;
-		cin >> in;
+		for (int n = 0; n < 5; n++)
+		{
+			if (con->connect(IpAddress::LocalHost, PORT))
+			{
+				printf("Connected to server\n");
+				return true;
+			}
+			printf("Connection failed...");
+		}
 
-		if (in == '1')
-		{
-			for (int n = 0; n < 5; n++)
-			{
-				cout << "connecting..." << endl;
-				if (con->connect(IpAddress::LocalHost, PORT_START))
-				{
-					cout << "succsessfull" << endl;
-					break;
-				}
-				cout << "failed" << endl;
-			}
-		}
-		else if (in == '2')
-		{
-			for (int n = 0; n < 5; n++)
-			{
-				cout << "connecting..." << endl;
-				if (con->connect(IpAddress("00.00.00.00"), PORT_START))
-				{
-					cout << "succsessfull" << endl;
-					break;
-				}
-				cout << "failed" << endl;
-			}
-		}
+		return false;
 	}
+	return true; //??? already connected
 }
 
 void Client::in_new_connection(Packet* rec, Uint8 _conID)

@@ -2,25 +2,27 @@
 
 Server::~Server()
 {
-
+	
 }
 
 void Server::init()
 {
-	listener.setBlocking(false);
-	if (listener.listen(PORT_START) != sf::Socket::Done)
-	{
-		cout << "Port blocked by another aplication" << endl;
-		char l; cin >> l;
-		exit(0);
-	}
-
 	isClient = false;
 
 	con = new Connection[MAX_CONNECT];
 
 	for (int n = 0; n < MAX_CONNECT; n++)
 		con[n].init();
+}
+
+bool Server::bind()
+{
+	listener.setBlocking(false);
+	if (listener.listen(PORT) != sf::Socket::Done)
+	{
+		return false;
+	}
+	return true;
 }
 
 void Server::update(float dt)
@@ -46,7 +48,7 @@ void Server::network_OUT(float dt)
 
 }
 
-void Server::new_connection()
+bool Server::new_connection()
 {
 	//look for new player connections
 	if (nrConnected < MAX_CONNECT)
@@ -83,6 +85,8 @@ void Server::new_connection()
 			}
 		}
 	}
+
+	return true;  //isnt used when on server
 }
 
 void Server::in_new_connection(Packet* rec, Uint8 conID)
