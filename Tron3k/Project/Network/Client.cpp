@@ -2,12 +2,14 @@
 
 Client::~Client()
 {
-	
+	if (package)
+		delete package;
 }
 
 void Client::init()
 {
-	multipacket = 0;
+	package = new Packet();
+	*package << Uint8(NET_INDEX::FRAME);
 
 	isClient = true;
 
@@ -63,6 +65,11 @@ void Client::new_connection_packet()
 	*out << "ClientName";
 	con->send(out);
 	delete out;
+}
+
+void Client::package_clear()
+{
+
 }
 
 void Client::in_new_connection(Packet* rec, Uint8 _conID)

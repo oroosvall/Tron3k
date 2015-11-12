@@ -2,12 +2,14 @@
 
 Server::~Server()
 {
-	
+	if (package)
+		delete package;
 }
 
 void Server::init()
 {
-	multipacket = 0;
+	package = new Packet();
+	*package << Uint8(NET_INDEX::FRAME);
 
 	isClient = false;
 
@@ -100,6 +102,11 @@ bool Server::new_connection()
 	}
 
 	return true;  //isnt used when on server
+}
+
+void Server::package_clear()
+{
+
 }
 
 void Server::in_new_connection(Packet* rec, Uint8 conID)

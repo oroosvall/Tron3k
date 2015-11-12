@@ -23,7 +23,7 @@ protected:
 	Connection* con = 0;
 	bool isClient;
 
-	Packet* multipacket;
+	Packet* package;
 
 	Game* gamePtr;
 public:
@@ -48,30 +48,36 @@ public:
 				delete[] con;
 		}
 	}
+
+	//Core->Topology com
 	virtual void network_IN(float dt) = 0;
 	virtual void network_OUT(float dt) = 0;
 	virtual bool new_connection() = 0;
+	virtual int getConId() = 0;
 	virtual void setPort(int port) { PORT = port; };
 	virtual void setPortDefault() { PORT = PORT_DEFAULT; };
+	virtual void setGamePtr(Game*& ptr) { gamePtr = ptr; };
+	virtual bool is_client() { return isClient; };
+	
 	//client only
 	virtual void setIP(IpAddress addr) { };
 	virtual bool firstPackageRecieved() { return false; };
 	virtual void new_connection_packet() {};
+
 	//server only
 	virtual bool bind() { return false; };
 	virtual void branch(Packet* rec, Uint8 condID) {};
 
+	//package
+	virtual void package_fill(Packet* fill) { *package << *fill; };
+	virtual void package_clear() = 0;
+
+	//in
 	void in_ping(Packet* rec, Uint8 conID) {};
 	virtual void in_new_connection(Packet* rec, Uint8 conID) = 0;
 	virtual void in_event(Packet* rec, Uint8 conID) = 0;
 	virtual void in_frame(Packet* rec, Uint8 conID) = 0;
 	virtual void in_message(Packet* rec, Uint8 conID) = 0;
-
-	virtual int getConId() = 0; 
-
-	virtual void setGamePtr(Game*& ptr) { gamePtr = ptr; };
-
-	virtual bool is_client() { return isClient; };
 
 	void IN(Connection* connection, Uint8 conID)
 	{
@@ -104,7 +110,6 @@ public:
 			delete rec;
 		}
 	}
-
 };
 
 #endif
