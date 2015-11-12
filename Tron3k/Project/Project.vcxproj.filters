@@ -28,9 +28,6 @@
     <Filter Include="Source Files\Core\Ui">
       <UniqueIdentifier>{cfd55ae1-25ab-4d06-a9ad-6147e281e652}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Core\Physics">
-      <UniqueIdentifier>{118c3365-3dfb-4669-a8fc-2cad7171ed46}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -59,12 +56,6 @@
     </ClCompile>
     <ClCompile Include="Core\sound\SoundPlayer.cpp">
       <Filter>Source Files\Core\Sound</Filter>
-    </ClCompile>
-    <ClCompile Include="Geometry.cpp">
-      <Filter>Source Files\Core\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="Physics.cpp">
-      <Filter>Source Files\Core\Physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -109,15 +100,6 @@
     </ClInclude>
     <ClInclude Include="Core\sound\SoundPlayer.h">
       <Filter>Source Files\Core\Sound</Filter>
-    </ClInclude>
-    <ClInclude Include="Physics.h">
-      <Filter>Source Files\Core\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="Geometry.h">
-      <Filter>Source Files\Core\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="CollideMesh.h">
-      <Filter>Source Files\Core\Physics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
