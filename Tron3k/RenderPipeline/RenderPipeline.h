@@ -2,6 +2,7 @@
 #define ENGINE_H
 
 #include "IRenderPipeline.h"
+#include "Text\TextObject.h"
 
 enum SETTING_INPUT
 {
@@ -23,7 +24,12 @@ private:
 
 	SETTING_INPUT getType(PIPELINE_SETTINGS type) const;
 
+	TextObject* test;
+
 public:
+
+	RenderPipeline() {};
+
 	virtual bool init();
 	virtual void release();
 	virtual void update();

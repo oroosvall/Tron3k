@@ -10,6 +10,7 @@ bool RenderPipeline::init()
 		return false;
 	}
 
+	test = new TextObject("Swag", 11, glm::vec2(10, 10));
 
 	return true;
 }
@@ -17,6 +18,8 @@ bool RenderPipeline::init()
 void RenderPipeline::release()
 {
 	// place delete code here
+
+	delete test;
 
 	delete this; // yes this is safe
 }

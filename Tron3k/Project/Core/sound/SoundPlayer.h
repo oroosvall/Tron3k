@@ -24,8 +24,10 @@ public:
 
 	int playMusic(int music);
 
-	int SoundPlayer::playExternalSound(int sound, glm::vec3 soundOrigin);
+	int SoundPlayer::playExternalSound(int sound, sf::Vector3f soundOrigin);
 	int SoundPlayer::playUserGeneratedSound(int sound);
+
+	void SoundPlayer::rotate(float deltaTime);
 };
 
 #endif

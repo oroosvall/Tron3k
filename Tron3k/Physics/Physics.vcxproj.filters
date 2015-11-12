@@ -13,36 +13,30 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\Text">
-      <UniqueIdentifier>{bbe8cf02-2bdc-4431-8b55-281fc917ffdd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Buffers">
-      <UniqueIdentifier>{be95b5bd-7528-41db-8131-c148de519c11}</UniqueIdentifier>
+    <Filter Include="Source Files\Collision">
+      <UniqueIdentifier>{5a0cba8c-d892-43d4-8951-fd07104d80ce}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="RenderPipeline.cpp">
+    <ClInclude Include="Collision\CollideMesh.h">
+      <Filter>Source Files\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision\Geometry.h">
+      <Filter>Source Files\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics.h">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Text\TextObject.cpp">
-      <Filter>Source Files\Text</Filter>
-    </ClCompile>
-    <ClCompile Include="ResourceManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="IRenderPipeline.h">
+    <ClCompile Include="Collision\Geometry.cpp">
+      <Filter>Source Files\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics.cpp">
       <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderPipeline.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Text\TextObject.h">
-      <Filter>Source Files\Text</Filter>
-    </ClInclude>
-    <ClInclude Include="ResourceManager.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
+    </ClCompile>
+    <ClCompile Include="Collision\CollideMesh.cpp">
+      <Filter>Source Files\Collision</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

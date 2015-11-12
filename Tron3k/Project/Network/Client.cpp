@@ -39,8 +39,6 @@ void Client::network_OUT(float dt)
 
 		msg_out = "";
 	}
-
-
 }
 
 bool Client::new_connection()

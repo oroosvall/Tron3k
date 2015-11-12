@@ -5,12 +5,15 @@
 #include "sound\SoundPlayer.h"
 #include "ui\Ui.h"
 
+#undef APIENTRY
+
 #include <GLFW\glfw3.h>
 
 #include "../Network/Client.h"
 #include "../Network/Server.h"
 
 #include "../../RenderPipeline/IRenderPipeline.h"
+#include "../../Physics/Physics.h"
 #include "Game\Game.h"
 
 #include "Input.h"
@@ -29,10 +32,12 @@ enum Gamestate
 class Core
 {
 private:
+	float timepass;	//temp
 
 	Topology* top;
 	Game* game;
 	IRenderPipeline* renderPipe;
+	Physics* physics;
 
 	Console console;
 
@@ -63,6 +68,7 @@ private:
 	void removeWindow();
 
 	void initPipeline();
+	void initPhysics();
 
 	SoundPlayer musicPlayer;
 public:

@@ -21,13 +21,13 @@ void Core::init()
 	winX = winY = 200;
 	
 	createWindow(winX, winY, fullscreen);
-
-	musicPlayer.enableSounds(false); // **** TEMP ****
-	musicPlayer.playMusic(1234);
-
+	//******************* TEMP *************************
+	musicPlayer.enableSounds(false); 
+	musicPlayer.playExternalSound(1, sf::Vector3f(10.0f, 0.0f, 0.0f));
+	timepass = 0.0f;
+	//**************************************************
 	current = Gamestate::START;
 	tick_timer = 0;
-
 }
 
 Core::~Core()
@@ -40,6 +40,10 @@ Core::~Core()
 
 void Core::update(float dt)
 {
+	//*******TEMP**********
+	timepass += dt;
+	musicPlayer.rotate(timepass);
+	//*********************
 	//update I/O
 	if (recreate)
 	{
@@ -54,7 +58,7 @@ void Core::update(float dt)
 			renderPipe->setSetting(PIPELINE_SETTINGS::VIEWPORT, pv);
 			if (!renderPipe->setSetting(PIPELINE_SETTINGS::VIEWPORT, pv))
 			{
-				console.printMsg("Error: failed to set pipeline setting: VIEWPORT", "Server", 'S');
+				console.printMsg("Error: failed to set pipeline setting: VIEWPORT", "System", 'S');
 			}
 		}
 	}
