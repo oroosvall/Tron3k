@@ -7,7 +7,7 @@
 #define ENGINE_API __declspec( dllimport  )
 #endif
 
-enum SETTING_TYPE
+enum PIPELINE_SETTINGS
 {
 	CLEAR_COLOR,
 	GLOW,
@@ -19,7 +19,7 @@ enum SETTING_TYPE
 	DOF_VALUE
 };
 
-struct SettingsValue
+struct PipelineValues
 {
 	enum {INT2, BOOL, FLOAT, FLOAT3} type;
 	union
@@ -39,11 +39,11 @@ public:
 	virtual void update() = 0;
 	virtual void render() = 0;
 
-	SettingsValue getSettings(SETTING_TYPE type);
-	bool setSetting(SETTING_TYPE type, SettingsValue value);
+	PipelineValues getSettings(PIPELINE_SETTINGS type);
+	virtual bool setSetting(PIPELINE_SETTINGS type, PipelineValues value) = 0;
 
 };
 
-extern "C" ENGINE_API IRenderPipeline* CreateEngine();
+extern "C" ENGINE_API IRenderPipeline* CreatePipeline();
 
 #endif

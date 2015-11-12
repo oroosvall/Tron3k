@@ -30,44 +30,25 @@ void Core::init()
 
 }
 
-void Core::createWindow(int x, int y, bool fullscreen)
-{
-	if (win != 0)
-	{
-		removeWindow();
-	}
-	if (!fullscreen)
-	{
-		win = glfwCreateWindow(
-			x, y, "ASUM PROJECT", NULL, NULL);
-	}
-	else
-	{
-		win = glfwCreateWindow(
-			x, y, "ASUM PROJECT", glfwGetPrimaryMonitor(), NULL);
-	}
-
-	Input* i = Input::getInput();
-	i->setupCallbacks(win);
-
-	glfwShowWindow(win);
-
-	recreate = false;
-}
-
-void Core::removeWindow()
-{
-	glfwHideWindow(win);
-	glfwDestroyWindow(win);
-	win = nullptr;
-}
-
 void Core::update(float dt)
 {
 	//update I/O
 	if (recreate)
 	{
 		createWindow(winX, winY, fullscreen);
+
+		if (renderPipe)
+		{
+			PipelineValues pv;
+			pv.type = pv.INT2;
+			pv.xy[0] = winX;
+			pv.xy[1] = winY;
+			renderPipe->setSetting(PIPELINE_SETTINGS::VIEWPORT, pv);
+			if (!renderPipe->setSetting(PIPELINE_SETTINGS::VIEWPORT, pv))
+			{
+				console.printMsg("Error: failed to set pipeline setting: VIEWPORT");
+			}
+		}
 	}
 
 	glfwPollEvents();
@@ -87,8 +68,14 @@ void Core::update(float dt)
 
 	if (current != START && current != SERVER)
 	{
+		if (renderPipe)
+		{
+			renderPipe->update();
+			renderPipe->render();
+		}
+
 		//update ui & sound
-		//update engine
+		//update renderPipeline
 	}
 
 	Input* i = Input::getInput();
@@ -119,6 +106,7 @@ void Core::upStart(float dt)
 			{
 				current = Gamestate::CLIENT;
 				subState = 0;
+				initPipeline();
 			}
 
 			else if (cmd == "/2")
@@ -131,6 +119,7 @@ void Core::upStart(float dt)
 			{
 				current = Gamestate::ROAM;
 				subState = 0;
+				initPipeline();
 			}
 		}
 
@@ -154,21 +143,6 @@ void Core::upMenu(float dt)
 
 void Core::upRoam(float dt)
 {
-	Input* i = Input::getInput();
-
-	if (i->justPressed(GLFW_KEY_0))
-	{
-		fullscreen = !fullscreen;
-		recreate = true;
-	}
-
-	if (i->justPressed(GLFW_KEY_9))
-	{
-		winX = 720;
-		winY = 640;
-		recreate = true;
-	}
-
 	//ROAM
 	//load
 	//run
@@ -329,5 +303,64 @@ void Core::upServer(float dt)
 		break;
 	default:
 		break;
+	}
+}
+
+
+void Core::createWindow(int x, int y, bool fullscreen)
+{
+	if (win != 0)
+	{
+		removeWindow();
+	}
+	if (!fullscreen)
+	{
+		win = glfwCreateWindow(
+			x, y, "ASUM PROJECT", NULL, NULL);
+	}
+	else
+	{
+		win = glfwCreateWindow(
+			x, y, "ASUM PROJECT", glfwGetPrimaryMonitor(), NULL);
+	}
+
+	Input* i = Input::getInput();
+	i->setupCallbacks(win);
+
+	glfwShowWindow(win);
+
+	glfwMakeContextCurrent(win);
+
+	recreate = false;
+}
+
+void Core::removeWindow()
+{
+	glfwMakeContextCurrent(NULL);
+	glfwHideWindow(win);
+	glfwDestroyWindow(win);
+	win = nullptr;
+}
+
+void Core::initPipeline()
+{
+	renderPipe = CreatePipeline();
+	if (!renderPipe->init())
+	{
+		console.printMsg("Error: Pipeline could not be created!");
+		renderPipe->release();
+		renderPipe = nullptr;
+	}
+	else
+	{
+
+		PipelineValues pv;
+		pv.type = pv.INT2;
+		pv.xy[0] = winX;
+		pv.xy[1] = winY;
+		if (!renderPipe->setSetting(PIPELINE_SETTINGS::VIEWPORT, pv))
+		{
+			console.printMsg("Error: Failed to set pipeline setting: VIEWPORT");
+		}
 	}
 }

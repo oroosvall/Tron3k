@@ -13,10 +13,16 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\Text">
+      <UniqueIdentifier>{bbe8cf02-2bdc-4431-8b55-281fc917ffdd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RenderPipeline.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Text\TextObject.cpp">
+      <Filter>Source Files\Text</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -25,6 +31,9 @@
     </ClInclude>
     <ClInclude Include="RenderPipeline.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Text\TextObject.h">
+      <Filter>Source Files\Text</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

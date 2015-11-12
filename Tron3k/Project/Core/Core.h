@@ -59,6 +59,8 @@ private:
 	void createWindow(int x, int y, bool fullscreen);
 	void removeWindow();
 
+	void initPipeline();
+
 	SoundPlayer musicPlayer;
 public:
 	void init();
