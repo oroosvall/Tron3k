@@ -110,5 +110,8 @@
     <ClInclude Include="Core\sound\SoundPlayer.h">
       <Filter>Source Files\Core\Sound</Filter>
     </ClInclude>
+    <ClInclude Include="Core\sound\SoundList.h">
+      <Filter>Source Files\Core\Sound</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -22,8 +22,8 @@ void Core::init()
 	
 	createWindow(winX, winY, fullscreen);
 	//******************* TEMP *************************
-	musicPlayer.enableSounds(false); 
-	musicPlayer.playExternalSound(1, sf::Vector3f(10.0f, 0.0f, 0.0f));
+	musicPlayer.enableSounds(false);
+	musicPlayer.playExternalSound(SOUNDS::gunshot, sf::Vector3f(10.0f, 0.0f, 0.0f));
 	timepass = 0.0f;
 	//**************************************************
 	current = Gamestate::START;

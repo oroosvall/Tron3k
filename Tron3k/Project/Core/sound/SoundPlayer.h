@@ -2,11 +2,18 @@
 #define SOUND_H
 #include<sfml/Audio.hpp>
 #include<glm/glm.hpp>
+#include<vector>
+#include"SoundList.h"
+
+using namespace std;
 
 class SoundPlayer
 {
 private:
 	bool soundEnabler;
+	
+	sf::SoundBuffer sounds[SOUNDS::nrOfSounds];
+	string musicList[MUSIC::nrOfMusic];
 
 	sf::Sound soundPlayer;	//Loads small sound files into the memory
 	sf::Music musicPlayer;	//Streams big sound files

@@ -5,6 +5,11 @@ SoundPlayer::SoundPlayer()
 {
 	soundPlayer.setAttenuation(10.0f); //NEW! Sets the global attenuation of all the sounds.
 	soundEnabler = true;
+
+	sounds[SOUNDS::gunshot].loadFromFile("soundEffectGunshot.ogg");
+	sounds[SOUNDS::firstBlood].loadFromFile("voiceFirstBlood.ogg");
+
+	musicList[MUSIC::mainMenu] = "musicMainMenu.ogg";
 }
 
 SoundPlayer::~SoundPlayer()
@@ -31,13 +36,9 @@ int SoundPlayer::playUserGeneratedSound(int sound)
 {
 	if (soundEnabler)
 	{
+		soundPlayer.setPosition(0.0f, 0.0f, 0.0f);
 
-		if (!soundBuffer.loadFromFile("tester.ogg"))
-		{
-			return -1;
-		}
-
-		soundPlayer.setBuffer(soundBuffer);
+		soundPlayer.setBuffer(sounds[sound]);
 		soundPlayer.play();
 	}
 
@@ -52,7 +53,7 @@ int SoundPlayer::playExternalSound(int sound, sf::Vector3f soundOrigin)
 	if (soundEnabler)
 	{
 
-		if (!soundBuffer.loadFromFile("tester2.ogg"))
+		if (!soundBuffer.loadFromFile("soundEffectGunshots.ogg"))
 		{
 			return -1;
 		}
@@ -71,7 +72,7 @@ int SoundPlayer::playMusic(int music)
 	if (soundEnabler)
 	{
 
-		if (!musicPlayer.openFromFile("musicTester1.ogg"))
+		if (!musicPlayer.openFromFile("musicMainMenu.ogg"))
 		{
 			return -1;
 		}

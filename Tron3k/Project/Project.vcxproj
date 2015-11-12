@@ -38,6 +38,7 @@
     <ClInclude Include="Core\Game\GameObject.h" />
     <ClInclude Include="Core\Game\Player.h" />
     <ClInclude Include="Core\Input.h" />
+    <ClInclude Include="Core\sound\SoundList.h" />
     <ClInclude Include="Core\sound\SoundPlayer.h" />
     <ClInclude Include="Core\ui\Ui.h" />
     <ClInclude Include="Network\Client.h" />
