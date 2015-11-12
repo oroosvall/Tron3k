@@ -21,17 +21,21 @@ void Core::init()
 	winX = winY = 200;
 	
 	createWindow(winX, winY, fullscreen);
-
-	musicPlayer.enableSounds(false); // **** TEMP ****
-	musicPlayer.playMusic(1234);
-
+	//******************* TEMP *************************
+	musicPlayer.enableSounds(false); 
+	musicPlayer.playExternalSound(1, sf::Vector3f(10.0f, 0.0f, 0.0f));
+	timepass = 0.0f;
+	//**************************************************
 	current = Gamestate::START;
 	tick_timer = 0;
-
 }
 
 void Core::update(float dt)
 {
+	//*******TEMP**********
+	timepass += dt;
+	musicPlayer.rotate(timepass);
+	//*********************
 	//update I/O
 	if (recreate)
 	{

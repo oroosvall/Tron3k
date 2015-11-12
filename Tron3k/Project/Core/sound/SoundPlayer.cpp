@@ -44,21 +44,21 @@ int SoundPlayer::playUserGeneratedSound(int sound)
 	return 0;
 }
 
-int SoundPlayer::playExternalSound(int sound, glm::vec3 soundOrigin)
+int SoundPlayer::playExternalSound(int sound, sf::Vector3f soundOrigin)
 {
-	//sf::Listener::setPosition(x, y, z);			Set the position of the player
-	//sf::Listener::setDirection(x, y, z);			Set the direction of the player
+	//sf::Listener::setPosition(playerPosX, playerPosY, playerPosZ);			//Set the position of the player
+	sf::Listener::setDirection(0.0f, 0.0f, -10.0f);			//Set the direction of the player
 
 	if (soundEnabler)
 	{
 
-		if (!soundBuffer.loadFromFile("tester.ogg"))
+		if (!soundBuffer.loadFromFile("tester2.ogg"))
 		{
 			return -1;
 		}
 
-		//soundPlayer.setMinDistance(parameter);		Set the sound's distance it travels before it starts to attenuate. Could be passed in through a parameter.
-		//soundPlayer.setPosition(soundOrigin):			Set the sound's position in the world. Could be passed in through a parameter.
+		soundPlayer.setMinDistance(10.0f);		//Set the sound's distance it travels before it starts to attenuate. Could be passed in through a parameter.
+		soundPlayer.setPosition(soundOrigin);			//Set the sound's position in the world. Could be passed in through a parameter.
 		soundPlayer.setBuffer(soundBuffer);
 		soundPlayer.play();
 	}
@@ -79,4 +79,9 @@ int SoundPlayer::playMusic(int music)
 		musicPlayer.play();
 	}
 	return 0;
+}
+
+void SoundPlayer::rotate(float deltaTime)
+{
+	sf::Listener::setDirection(cos(deltaTime), 0.0f, sin(deltaTime));
 }

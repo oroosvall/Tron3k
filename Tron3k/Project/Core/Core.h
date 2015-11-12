@@ -32,6 +32,7 @@ enum Gamestate
 class Core
 {
 private:
+	float timepass;	//temp
 
 	Topology* top;
 	Game* game;
