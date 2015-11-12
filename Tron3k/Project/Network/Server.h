@@ -25,6 +25,8 @@ public:
 	void in_event(Packet* rec, Uint8 conID);
 	void in_frame(Packet* rec, Uint8 conID);
 	void in_message(Packet* rec, Uint8 conID);
+
+	int getConId() { return 'S'; };
 };
 
 #endif

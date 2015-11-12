@@ -52,8 +52,11 @@ void Core::update(float dt)
 	}
 
 	glfwPollEvents();
-
-	console.update(); //Someone wrote a command
+	stringstream name;
+	name << "temp ";
+	if (top != nullptr)
+		name << to_string(top->getConId());
+	console.update(name.str(), 'A'); //Someone wrote a command
 
 
 	switch (current)
@@ -174,10 +177,10 @@ void Core::upClient(float dt)
 
 		for (int n = 0; n < 3; n++)
 		{
-			console.printMsg("Connecting...");
+			console.printMsg("Connecting...", "Server", 'S');
 			if (top->new_connection())
 			{
-				console.printMsg("Connecting Succsessfull");
+				console.printMsg("Connecting Succsessfull", "Server", 'S');
 				//send "new connection" event to server
 				top->new_connection_packet();
 				subState++;
@@ -185,7 +188,7 @@ void Core::upClient(float dt)
 			}
 		}
 
-		console.printMsg("Connection Failed");
+		console.printMsg("Connection Failed", "Server", 'S');
 		current = START;
 		subState = 0;
 		delete top;
@@ -223,7 +226,10 @@ void Core::upClient(float dt)
 
 			if (top->msg_in != "")
 			{
-				console.printMsg(top->msg_in);
+				stringstream name;
+				name << "temp ";
+				name << to_string(top->conID_in);
+				console.printMsg(top->msg_in, name.str(), top->scope_in);
 				top->msg_in = "";
 			}
 			tick_timer = 0;
@@ -257,11 +263,11 @@ void Core::upServer(float dt)
 		//bind port
 		if (top->bind())
 		{
-			console.printMsg("Port bound");
+			console.printMsg("Port bound", "Server", 'S');
 		}
 		else
 		{
-			console.printMsg("Port bind failed");
+			console.printMsg("Port bind failed", "Server", 'S');
 			subState = 1;
 			return;
 		}
@@ -295,7 +301,10 @@ void Core::upServer(float dt)
 
 			if (top->msg_in != "")
 			{
-				console.printMsg(top->msg_in);
+				stringstream name;
+				name << "temp ";
+				name << to_string(top->conID_in);
+				console.printMsg(top->msg_in, name.str(), top->scope_in);
 				top->msg_in = "";
 			}
 		}

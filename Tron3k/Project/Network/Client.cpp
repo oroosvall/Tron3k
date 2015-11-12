@@ -46,7 +46,7 @@ bool Client::new_connection()
 	// test connect
 	if (con->isConnected() == false)
 	{
-		if (con->connect(IpAddress("192.168.1.67"), PORT))
+		if (con->connect(IpAddress::LocalHost, PORT))
 		{
 			return true;
 		}
@@ -91,13 +91,7 @@ void Client::in_frame(Packet* rec, Uint8 conID)
 
 void Client::in_message(Packet* rec, Uint8 conID)
 {
-	Uint8 _conid; //from what client
-	*rec >> _conid;
+	*rec >> conID_in;
 	*rec >> scope_in;
 	*rec >> msg_in;
-
-	if(_conid == 'S') //if server
-		msg_in = "Server > " + msg_in;
-	else
-		msg_in = to_string(_conid) + " > " + msg_in;
 }

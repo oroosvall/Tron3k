@@ -15,7 +15,7 @@ Console::~Console()
 
 }
 
-bool Console::update()
+bool Console::update(string clientName, char scope)
 {
 	Input* i = Input::getInput();
 
@@ -88,7 +88,7 @@ bool Console::update()
 			lastMsg = msg;
 			msgReady = true;
 		}
-		addMsg(msg);
+		addMsg(msg, clientName, scope);
 	}
 
 	return cmdReady;
@@ -109,19 +109,32 @@ void Console::printConsole()
 
 }
 
-void Console::addMsg(string &m)
+void Console::addMsg(string &m, string n, char s)
 {
 	latestMsg++;
 	latestMsg = latestMsg%MAXHISTORY;
 
-	history[latestMsg] = m;
+	stringstream ss;
+	ss << n;
+	ss << "[";
+	ss << s;
+	ss << "] : ";
+	ss << m;
+
+	string newmsg = ss.str();
+
+	//m = n + "[" + s + "] : " + m;
+
+	history[latestMsg] = newmsg;
+
 	m = "";
+
 	printConsole();
 }
 
-void Console::printMsg(string m)
+void Console::printMsg(string m, string n, char s)
 {
-	addMsg(m);
+	addMsg(m, n, s);
 }
 
 bool Console::commandReady()

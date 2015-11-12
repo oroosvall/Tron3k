@@ -4,7 +4,7 @@
 #include <GLFW\glfw3.h>
 
 #include <string>
-#include <vector>
+#include <sstream>
 
 #include "Input.h"
 
@@ -26,7 +26,7 @@ private:
 	int latestMsg = MAXHISTORY-1;
 
 	void printConsole(); //Reprints the console window
-	void addMsg(string &m); //Adds a message to the history
+	void addMsg(string &m, string n, char s); //Adds a message to the history
 
 	string lastMsg;
 	bool msgReady = false;
@@ -36,9 +36,9 @@ private:
 public:
 	Console();
 	~Console();
-	bool update();
+	bool update(string clientName, char scope);
 
-	void printMsg(string m); //Immediately prints a message to history without affecting message being written
+	void printMsg(string m, string n, char scope); //Immediately prints a message to history without affecting message being written
 
 	bool messageReady();
 	string getMessage();

@@ -29,6 +29,8 @@ public:
 	virtual bool firstPackageRecieved() { return packageRecieved; };
 	virtual void new_connection_packet();
 	virtual void setIP(IpAddress addr) { address = addr; };
+
+	int getConId() { return conID; };
 };
 
 #endif

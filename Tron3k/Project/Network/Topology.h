@@ -28,6 +28,7 @@ public:
 	//chat test
 	string msg_in;
 	Uint8 scope_in;
+	Uint8 conID_in;
 	string msg_out;
 	Uint8 scope_out;
 	//--------
@@ -62,6 +63,8 @@ public:
 	virtual void in_event(Packet* rec, Uint8 conID) = 0;
 	virtual void in_frame(Packet* rec, Uint8 conID) = 0;
 	virtual void in_message(Packet* rec, Uint8 conID) = 0;
+
+	virtual int getConId() = 0; 
 
 	void IN(Connection* connection, Uint8 conID)
 	{

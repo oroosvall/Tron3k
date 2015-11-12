@@ -136,13 +136,10 @@ void Server::in_frame(Packet* rec, Uint8 conID)
 
 void Server::in_message(Packet* rec, Uint8 conID)
 {
-	Uint8 scope;
-	*rec >> conID;
-	*rec >> scope;
+	*rec >> conID_in;
+	*rec >> scope_in;
 	*rec >> msg_in;
 
-	if(scope == NET_MESSAGE::ALL)
+	if(scope_in == NET_MESSAGE::ALL)
 		branch(rec, conID);
-
-	msg_in = to_string(conID) + " > " + msg_in;
 }
