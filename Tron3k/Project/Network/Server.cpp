@@ -54,7 +54,7 @@ void Server::network_OUT(float dt)
 		Packet* out;
 		out = new Packet();
 		*out << Uint8(NET_INDEX::MESSAGE) << Uint8('S') << scope_out << msg_out;
-		con->send(out);
+		branch(out, -1); //-1 sends to all clients
 		delete out;
 
 		msg_out = "";
@@ -104,8 +104,9 @@ bool Server::new_connection()
 
 void Server::in_new_connection(Packet* rec, Uint8 conID)
 {
-	Uint8 index_short;
-	*rec >> index_short;
+	string pName;
+	*rec >> pName;
+
 	Packet* out = new Packet();
 
 	//type of NET_ID
@@ -117,11 +118,44 @@ void Server::in_new_connection(Packet* rec, Uint8 conID)
 	//mapname used
 	*out << string("tempMap");
 
+	Player* p = nullptr;
+	for (Uint8 c = 0; c < MAX_CONNECT; c++)
+	{
+		p = gamePtr->getPlayer(c);
+		if (p != nullptr)
+		{
+			*out << Uint8(1);
+			*out << p->getName();
+		}
+		else
+		{
+			*out << Uint8(0);
+			if (c == conID)
+			{
+				Player* temp = new Player();
+				temp->init(pName, glm::vec3(0, 0, 0));
+				gamePtr->createPlayer(temp, conID);
+				delete temp;
+			}
+		}
+	}
+
 	//reply to the connection
 	con[conID].send(out);
 	delete out;
 
-	cout << "sent new connection data to" << to_string(conID) << endl;
+
+
+	p = gamePtr->getPlayer(conID);
+	Packet* b = new Packet;
+	*b << Uint8(NET_INDEX::EVENT) << Uint8(NET_EVENT::PLAYER_JOINED);
+	*b << conID << p->getName();
+
+	branch(b, conID); //Send information about joined player to all others
+
+	delete b;
+
+	cout << "sent new connection data to " << to_string(conID) << endl;
 }
 
 void Server::in_event(Packet* rec, Uint8 conID)

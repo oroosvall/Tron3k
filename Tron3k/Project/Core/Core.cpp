@@ -30,6 +30,14 @@ void Core::init()
 
 }
 
+Core::~Core()
+{
+	if (game != nullptr)
+		delete game;
+	if (top != nullptr)
+		delete top;
+}
+
 void Core::update(float dt)
 {
 	//update I/O
@@ -46,17 +54,28 @@ void Core::update(float dt)
 			renderPipe->setSetting(PIPELINE_SETTINGS::VIEWPORT, pv);
 			if (!renderPipe->setSetting(PIPELINE_SETTINGS::VIEWPORT, pv))
 			{
-				console.printMsg("Error: failed to set pipeline setting: VIEWPORT");
+				console.printMsg("Error: failed to set pipeline setting: VIEWPORT", "Server", 'S');
 			}
 		}
 	}
 
 	glfwPollEvents();
-	stringstream name;
-	name << "temp ";
+	string name = "Temp";
 	if (top != nullptr)
-		name << to_string(top->getConId());
-	console.update(name.str(), 'A'); //Someone wrote a command
+	{
+		if (game != nullptr)
+		{
+			if (top->is_client())
+			{
+				Player* p = game->getPlayer(top->getConId());
+				if (p != nullptr)
+					name = p->getName();
+			}
+			else
+				name = "Server";
+		}
+	}
+	console.update(name, 'A'); //Someone wrote a command
 
 
 	switch (current)
@@ -95,9 +114,9 @@ void Core::upStart(float dt)
 	switch (subState)
 	{
 	case 0:
-		printf("[/1] Client \n");
-		printf("[/2] Server \n");
-		printf("[/3] Roam \n");
+		console.printMsg("[/1] Client", "System", 'S');
+		console.printMsg("[/2] Server", "System", 'S');
+		console.printMsg("[/3] Roam", "System", 'S');
 		subState++;
 		break;
 
@@ -177,18 +196,25 @@ void Core::upClient(float dt)
 
 		for (int n = 0; n < 3; n++)
 		{
-			console.printMsg("Connecting...", "Server", 'S');
+			console.printMsg("Connecting...", "System", 'S');
 			if (top->new_connection())
 			{
-				console.printMsg("Connecting Succsessfull", "Server", 'S');
+				console.printMsg("Connecting Succsessfull", "System", 'S');
 				//send "new connection" event to server
 				top->new_connection_packet();
+				
+				if (game != nullptr)
+					delete game;
+				game = new Game();
+				game->init(MAX_CONNECT);
+				top->setGamePtr(game);
+
 				subState++;
 				return;
 			}
 		}
 
-		console.printMsg("Connection Failed", "Server", 'S');
+		console.printMsg("Connection Failed", "System", 'S');
 		current = START;
 		subState = 0;
 		delete top;
@@ -203,6 +229,7 @@ void Core::upClient(float dt)
 		if (top->firstPackageRecieved()) 
 		{
 			//can i load?
+
 			// if not  -> menu
 			subState++;
 		}
@@ -226,18 +253,47 @@ void Core::upClient(float dt)
 
 			if (top->msg_in != "")
 			{
-				stringstream name;
-				name << "temp ";
-				name << to_string(top->conID_in);
-				console.printMsg(top->msg_in, name.str(), top->scope_in);
+				string name;
+				if (top->conID_in < MAX_CONNECT)
+				{
+					Player* p = game->getPlayer(top->conID_in);
+					name = p->getName();
+				}
+				else
+					name = "Server";
+				console.printMsg(top->msg_in, name, top->scope_in);
 				top->msg_in = "";
 			}
 			tick_timer = 0;
 		}
 		break;
 	}
-
 }
+
+void Core::clientHandleCmds(float dt)
+{
+	if (console.commandReady())
+	{
+		string token;
+		istringstream ss = istringstream(console.getCommand());
+		ss >> token;
+		if (token == "/name")
+		{
+			ss >> token;
+			if (token == "")
+			{
+				console.printMsg("No name found. Use /name <new Name>", "System", 'S');
+			}
+			else
+			{
+				/* To do: Check for illegal names */
+				Player* me = game->getPlayer(top->getConId());
+				me->setName(token);
+			}
+		}
+	}
+}
+
 
 void Core::upServer(float dt)
 {
@@ -263,15 +319,22 @@ void Core::upServer(float dt)
 		//bind port
 		if (top->bind())
 		{
-			console.printMsg("Port bound", "Server", 'S');
+			console.printMsg("Port bound", "System", 'S');
 		}
 		else
 		{
-			console.printMsg("Port bind failed", "Server", 'S');
+			console.printMsg("Port bind failed", "System", 'S');
 			subState = 1;
 			return;
 		}
 		
+		if (game != nullptr)
+			delete game;
+		game = new Game();
+		game->init(MAX_CONNECT);
+
+		top->setGamePtr(game);
+
 		//load map
 
 		subState = 3;
@@ -301,10 +364,9 @@ void Core::upServer(float dt)
 
 			if (top->msg_in != "")
 			{
-				stringstream name;
-				name << "temp ";
-				name << to_string(top->conID_in);
-				console.printMsg(top->msg_in, name.str(), top->scope_in);
+				Player* p = game->getPlayer(top->conID_in);
+				string name = p->getName();
+				console.printMsg(top->msg_in, name, top->scope_in);
 				top->msg_in = "";
 			}
 		}
@@ -356,7 +418,7 @@ void Core::initPipeline()
 	renderPipe = CreatePipeline();
 	if (!renderPipe->init())
 	{
-		console.printMsg("Error: Pipeline could not be created!");
+		console.printMsg("Error: Pipeline could not be created!", "System", 'S');
 		renderPipe->release();
 		renderPipe = nullptr;
 	}
@@ -369,7 +431,7 @@ void Core::initPipeline()
 		pv.xy[1] = winY;
 		if (!renderPipe->setSetting(PIPELINE_SETTINGS::VIEWPORT, pv))
 		{
-			console.printMsg("Error: Failed to set pipeline setting: VIEWPORT");
+			console.printMsg("Error: Failed to set pipeline setting: VIEWPORT", "System", 'S');
 		}
 	}
 }

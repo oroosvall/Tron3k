@@ -66,6 +66,9 @@
     <ClCompile Include="Physics.cpp">
       <Filter>Source Files\Core\Physics</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Game\Player.cpp">
+      <Filter>Source Files\Core\Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Input.h">

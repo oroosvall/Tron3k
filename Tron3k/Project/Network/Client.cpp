@@ -39,6 +39,8 @@ void Client::network_OUT(float dt)
 
 		msg_out = "";
 	}
+
+
 }
 
 bool Client::new_connection()
@@ -60,6 +62,7 @@ void Client::new_connection_packet()
 	Packet* out;
 	out = new Packet();
 	*out << Uint8(NET_INDEX::NEW_CONNECTION);
+	*out << "ClientName";
 	con->send(out);
 	delete out;
 }
@@ -70,8 +73,28 @@ void Client::in_new_connection(Packet* rec, Uint8 _conID)
 
 	string map;
 	*rec >> conID;
-	Uint32 size;
 	*rec >> map;
+
+	Uint8 pExists;
+	string pName;
+	Player* temp;
+	for (int c = 0; c < MAX_CONNECT; c++)
+	{
+		*rec >> pExists;
+		if (pExists == 1)
+		{
+			temp = new Player();
+			*rec >> pName;
+			temp->init(pName, glm::vec3(0, 0, 0));
+			gamePtr->createPlayer(temp, c);
+			delete temp;
+		}
+	}
+
+	temp = new Player();
+	temp->init("ClientName", glm::vec3(0, 0, 0));
+	gamePtr->createPlayer(temp, conID);
+	delete temp;
 	
 	printf("My connection ID : %d \n", conID);
 	//can i load this map?
@@ -81,12 +104,37 @@ void Client::in_new_connection(Packet* rec, Uint8 _conID)
 
 void Client::in_event(Packet* rec, Uint8 _conID)
 {
-
+	Uint8 event_type;
+	*rec >> event_type;
+	switch (event_type)
+	{
+	case NET_EVENT::PLAYER_JOINED:
+		Player* temp = new Player;
+		Uint8 p_conID;
+		string pName;
+		*rec >> p_conID;
+		*rec >> pName;
+		temp->init(pName, glm::vec3(0, 0, 0));
+		gamePtr->createPlayer(temp, p_conID);
+		break;
+	}
 }
 
 void Client::in_frame(Packet* rec, Uint8 conID)
 {
-
+	Uint8 event_type;
+	*rec >> event_type;
+	switch (event_type)
+	{
+	case NET_FRAME::NAME_CHANGE:
+		Uint8 p_conID;
+		string pNewName;
+		*rec >> p_conID;
+		*rec >> pNewName;
+		Player* p = gamePtr->getPlayer(p_conID);
+		p->setName(pNewName);
+		break;
+	}
 }
 
 void Client::in_message(Packet* rec, Uint8 conID)

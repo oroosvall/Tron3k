@@ -2,8 +2,10 @@
 #define TOPOLOGY_H
 
 #include "Connection.h"
+#include "../Core/Game/Game.h"
 
 #include <iostream>
+#include <glm/glm.hpp>
 #include <string>
 
 using namespace std;
@@ -23,6 +25,7 @@ protected:
 
 	Packet* multipacket;
 
+	Game* gamePtr;
 public:
 
 	//chat test
@@ -65,6 +68,10 @@ public:
 	virtual void in_message(Packet* rec, Uint8 conID) = 0;
 
 	virtual int getConId() = 0; 
+
+	virtual void setGamePtr(Game*& ptr) { gamePtr = ptr; };
+
+	virtual bool is_client() { return isClient; };
 
 	void IN(Connection* connection, Uint8 conID)
 	{

@@ -22,6 +22,7 @@
     <ClCompile Include="Core\Console.cpp" />
     <ClCompile Include="Core\Core.cpp" />
     <ClCompile Include="Core\Game\Game.cpp" />
+    <ClCompile Include="Core\Game\Player.cpp" />
     <ClCompile Include="Core\Input.cpp" />
     <ClCompile Include="Core\sound\SoundPlayer.cpp" />
     <ClCompile Include="Geometry.cpp" />

@@ -54,6 +54,9 @@ private:
 	void upMenu(float dt);
 	void upRoam(float dt);
 	void upClient(float dt);
+
+	void clientHandleCmds(float dt); //Handles clientside /-commands
+
 	void upServer(float dt);
 
 	void createWindow(int x, int y, bool fullscreen);
@@ -65,6 +68,8 @@ private:
 public:
 	void init();
 	void update(float dt);
+
+	~Core();
 };
 
 #endif
