@@ -20,7 +20,7 @@ public:
 	void network_IN(float dt);
 	void network_OUT(float dt);
 	bool new_connection();
-	int getConId() { return conID; };
+	Uint8 getConId() { return conID; };
 
 	//client only
 	virtual void setIP(IpAddress addr) { address = addr; };

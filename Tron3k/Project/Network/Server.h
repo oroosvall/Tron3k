@@ -18,7 +18,7 @@ public:
 	void network_IN(float dt);
 	void network_OUT(float dt);
 	bool new_connection();
-	int getConId() { return 'S'; };
+	Uint8 getConId() { return 'S'; };
 
 	//server only
 	virtual bool bind();

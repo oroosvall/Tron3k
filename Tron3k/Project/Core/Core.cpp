@@ -250,6 +250,8 @@ void Core::upClient(float dt)
 			top->scope_out = Uint8(ALL);
 		}
 
+		clientHandleCmds(dt);
+
 		tick_timer += dt;
 		if (tick_timer > tick)
 		{
@@ -290,9 +292,12 @@ void Core::clientHandleCmds(float dt)
 			}
 			else
 			{
-				/* To do: Check for illegal names */
+				/* Todo: Check for illegal names */
 				Player* me = game->getPlayer(top->getConId());
 				me->setName(token);
+
+				//send new name
+				top->frame_name_change(top->getConId(), token);
 			}
 		}
 	}
