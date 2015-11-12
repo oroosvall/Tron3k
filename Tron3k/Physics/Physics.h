@@ -20,6 +20,9 @@ public:
 	Physics();
 	~Physics();
 
+	virtual bool init();
+	virtual bool release();
+
 	bool checkCollision(Geometry* obj1, Geometry* obj2);
 };
 
