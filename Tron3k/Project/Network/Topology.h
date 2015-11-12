@@ -9,16 +9,19 @@
 using namespace std;
 
 #define MAX_CONNECT 20
-
+#define PORT_DEFAULT 18180
+#define tick 0.050f
 
 class Topology
 {
 private:
 
 protected:
-	int PORT = 18180;
+	int PORT = PORT_DEFAULT;
 	Connection* con = 0;
 	bool isClient;
+
+	Packet* multipacket;
 
 public:
 
@@ -41,16 +44,18 @@ public:
 				delete[] con;
 		}
 	}
-	virtual void update(float dt) = 0;
 	virtual void network_IN(float dt) = 0;
 	virtual void network_OUT(float dt) = 0;
 	virtual bool new_connection() = 0;
+	virtual void setPort(int port) { PORT = port; };
+	virtual void setPortDefault() { PORT = PORT_DEFAULT; };
 	//client only
+	virtual void setIP(IpAddress addr) { };
 	virtual bool firstPackageRecieved() { return false; };
 	virtual void new_connection_packet() {};
 	//server only
 	virtual bool bind() { return false; };
-	virtual void bounce(Packet* rec, Uint8 condID) {};
+	virtual void branch(Packet* rec, Uint8 condID) {};
 
 	void in_ping(Packet* rec, Uint8 conID) {};
 	virtual void in_new_connection(Packet* rec, Uint8 conID) = 0;

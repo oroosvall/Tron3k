@@ -26,6 +26,7 @@ void Core::init()
 	musicPlayer.playMusic(1234);
 
 	current = Gamestate::START;
+	tick_timer = 0;
 
 }
 
@@ -211,7 +212,7 @@ void Core::upClient(float dt)
 		}
 
 		console.printMsg("Connection Failed");
-		current = MENU;
+		current = START;
 		subState = 0;
 		delete top;
 		top = 0;
@@ -232,6 +233,8 @@ void Core::upClient(float dt)
 		break;
 	case 4: //main client loop
 
+		//fetch new network data
+		top->network_IN(dt);
 
 		if (console.messageReady())
 		{
@@ -239,15 +242,18 @@ void Core::upClient(float dt)
 			top->scope_out = Uint8(ALL);
 		}
 
-		top->network_IN(dt);
-		top->network_OUT(dt);
-
-		if (top->msg_in != "")
+		tick_timer += dt;
+		if (tick_timer > tick)
 		{
-			console.printMsg(top->msg_in);
-			top->msg_in = "";
-		}
+			top->network_OUT(dt);
 
+			if (top->msg_in != "")
+			{
+				console.printMsg(top->msg_in);
+				top->msg_in = "";
+			}
+			tick_timer = 0;
+		}
 		break;
 	}
 
@@ -292,13 +298,34 @@ void Core::upServer(float dt)
 		break;
 	case 3: //main server loop
 
-		//look for clients
+		//get data
 		top->network_IN(dt);
 
 		//update game
 
-		//network out
-		top->network_OUT(dt);
+		if (console.messageReady())
+		{
+			top->msg_out = console.getMessage();
+			top->scope_out = Uint8(ALL);
+		}
+
+		tick_timer += dt;
+		if (tick_timer > tick)
+		{
+			//look for clients
+			top->new_connection();
+
+			//network out
+			top->network_OUT(dt);
+			tick_timer = 0;
+
+			if (top->msg_in != "")
+			{
+				console.printMsg(top->msg_in);
+				top->msg_in = "";
+			}
+		}
+		
 		break;
 	default:
 		break;

@@ -15,9 +15,8 @@ public:
 	~Server();
 
 	virtual bool bind();
-	virtual void bounce(Packet* rec, Uint8 conID);
+	virtual void branch(Packet* rec, Uint8 conID);
 
-	void update(float dt);
 	void network_IN(float dt);
 	void network_OUT(float dt);
 	bool new_connection();

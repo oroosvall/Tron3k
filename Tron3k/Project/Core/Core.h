@@ -47,6 +47,7 @@ private:
 	Gamestate last;
 	int subState;
 	int lastSubState;
+	float tick_timer;
 
 	//gamestate update functions
 	void upStart(float dt);

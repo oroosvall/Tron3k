@@ -7,6 +7,8 @@ Server::~Server()
 
 void Server::init()
 {
+	multipacket = 0;
+
 	isClient = false;
 
 	con = new Connection[MAX_CONNECT];
@@ -25,7 +27,7 @@ bool Server::bind()
 	return true;
 }
 
-void Server::bounce(Packet* rec, Uint8 conID)
+void Server::branch(Packet* rec, Uint8 conID)
 {
 	//send to all other clients
 	for (int n = 0; n < MAX_CONNECT; n++)
@@ -37,18 +39,8 @@ void Server::bounce(Packet* rec, Uint8 conID)
 	}
 }
 
-void Server::update(float dt)
-{
-	network_IN(dt);
-
-	network_OUT(dt);
-}
-
 void Server::network_IN(float dt)
 {
-	//look for new connections
-	new_connection(); //shoudlnt do this every frame
-
 	//fetch packages from all clients
 	for (int n = 0; n < MAX_CONNECT; n++)
 		IN(&con[n], n);
@@ -57,7 +49,16 @@ void Server::network_IN(float dt)
 
 void Server::network_OUT(float dt)
 {
+	if (msg_out != "")
+	{
+		Packet* out;
+		out = new Packet();
+		*out << Uint8(NET_INDEX::MESSAGE) << Uint8('S') << scope_out << msg_out;
+		con->send(out);
+		delete out;
 
+		msg_out = "";
+	}
 }
 
 bool Server::new_connection()
@@ -140,9 +141,8 @@ void Server::in_message(Packet* rec, Uint8 conID)
 	*rec >> scope;
 	*rec >> msg_in;
 
-	printf("%d > ", conID);
-	printf("%s\n", msg_in.c_str());
-
 	if(scope == NET_MESSAGE::ALL)
-		bounce(rec, conID);
+		branch(rec, conID);
+
+	msg_in = to_string(conID) + " > " + msg_in;
 }

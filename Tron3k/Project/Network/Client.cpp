@@ -7,6 +7,8 @@ Client::~Client()
 
 void Client::init()
 {
+	multipacket = 0;
+
 	isClient = true;
 
 	firstPackageSent = false;
@@ -20,11 +22,6 @@ void Client::init()
 	con->init();
 }
 
-void Client::update(float dt)
-{
-
-}
-
 void Client::network_IN(float dt)
 {
 	IN(con, conID);
@@ -32,21 +29,15 @@ void Client::network_IN(float dt)
 
 void Client::network_OUT(float dt)
 {
-	delta += dt;
-
-	if (delta > 0.100)
+	if (msg_out != "")
 	{
-		if (msg_out != "")
-		{
-			Packet* out;
-			out = new Packet();
-			*out << Uint8(NET_INDEX::MESSAGE) << conID << scope_out << msg_out;
-				con->send(out);
-			delete out;
+		Packet* out;
+		out = new Packet();
+		*out << Uint8(NET_INDEX::MESSAGE) << conID << scope_out << msg_out;
+			con->send(out);
+		delete out;
 
-			msg_out = "";
-			delta = 0;
-		}
+		msg_out = "";
 	}
 }
 
@@ -105,5 +96,8 @@ void Client::in_message(Packet* rec, Uint8 conID)
 	*rec >> scope_in;
 	*rec >> msg_in;
 
-	msg_in = to_string(_conid) + " > " + msg_in;
+	if(_conid == 'S') //if server
+		msg_in = "Server > " + msg_in;
+	else
+		msg_in = to_string(_conid) + " > " + msg_in;
 }

@@ -6,18 +6,16 @@
 class Client : public Topology
 {
 private:
+	IpAddress address;
 	Uint8 conID;
 	bool firstPackageSent;
 	bool packageRecieved;
 	bool mapLoaded;
 	bool joined;
-
-	float delta = 0.0f;
 public:
 	~Client();
 	void init();
 
-	void update(float dt);
 	void network_IN(float dt);
 	void network_OUT(float dt);
 	bool new_connection();
@@ -30,6 +28,7 @@ public:
 
 	virtual bool firstPackageRecieved() { return packageRecieved; };
 	virtual void new_connection_packet();
+	virtual void setIP(IpAddress addr) { address = addr; };
 };
 
 #endif
