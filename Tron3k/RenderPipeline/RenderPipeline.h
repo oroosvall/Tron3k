@@ -35,7 +35,15 @@ public:
 	virtual void update();
 	virtual void render();
 
+	virtual std::string getStatus() { return ""; };
+
 	virtual bool setSetting(PIPELINE_SETTINGS type, PipelineValues value);
+
+	virtual void forceReset() {};
+	virtual unsigned int createText(float x, float y, float z, std::string text) { return 0; };
+	virtual void removeText(unsigned int textID) {};
+	void setText(unsigned int id, std::string text) {};
+	void setTextPos(unsigned int, float x, float y, float z) {};
 
 };
 

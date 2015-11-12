@@ -3,6 +3,9 @@
 
 #include <string>
 
+#define KB 1024
+#define MB KB*KB
+
 class ResourceManager
 {
 private:
@@ -13,7 +16,7 @@ private:
 	void readConfig();
 
 public:
-	
+	 
 	ResourceManager();
 	std::string getStatus();
 

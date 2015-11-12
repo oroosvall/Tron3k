@@ -7,6 +7,8 @@
 #define ENGINE_API __declspec( dllimport  )
 #endif
 
+#include <string>
+
 enum PIPELINE_SETTINGS
 {
 	CLEAR_COLOR,
@@ -39,8 +41,16 @@ public:
 	virtual void update() = 0;
 	virtual void render() = 0;
 
+	virtual std::string getStatus() = 0;
+
 	PipelineValues getSettings(PIPELINE_SETTINGS type);
 	virtual bool setSetting(PIPELINE_SETTINGS type, PipelineValues value) = 0;
+
+	virtual void forceReset() = 0;
+	virtual unsigned int createText(float x, float y, float z, std::string text) = 0;
+	virtual void removeText(unsigned int textID) = 0;
+	virtual void setText(unsigned int id, std::string text) = 0;
+	virtual void setTextPos(unsigned int, float x, float y, float z) = 0;
 
 };
 
