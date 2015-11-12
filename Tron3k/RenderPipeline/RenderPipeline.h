@@ -1,14 +1,14 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
-#include "IEngine.h"
+#include "IRenderPipeline.h"
 
-class Engine : public IEngine
+class RenderPipeline : public IRenderPipeline
 {
 private:
 
 public:
-	virtual void init();
+	virtual bool init();
 	virtual void release();
 	virtual void update();
 	virtual void render();

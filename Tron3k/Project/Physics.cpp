@@ -12,5 +12,5 @@ Physics::~Physics()
 
 bool Physics::checkCollision(Geometry* geo1, Geometry* geo2)
 {
-
+	return false;
 }

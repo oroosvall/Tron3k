@@ -10,7 +10,7 @@
 #include "../Network/Client.h"
 #include "../Network/Server.h"
 
-#include "../../Engine/IEngine.h"
+#include "../../RenderPipeline/IRenderPipeline.h"
 #include "Game\Game.h"
 
 #include "Input.h"
@@ -32,7 +32,7 @@ private:
 
 	Topology* top;
 	Game* game;
-	IEngine* engine;
+	IRenderPipeline* renderPipe;
 
 	Console console;
 
