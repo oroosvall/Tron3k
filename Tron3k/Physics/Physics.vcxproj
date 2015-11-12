@@ -18,6 +18,16 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Collision\CollideMesh.h" />
+    <ClInclude Include="Collision\Geometry.h" />
+    <ClInclude Include="Physics.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Collision\CollideMesh.cpp" />
+    <ClCompile Include="Collision\Geometry.cpp" />
+    <ClCompile Include="Physics.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{AD290168-EA43-4596-9A73-2BB300D44BAA}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -145,15 +155,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="..\Project\CollideMesh.h" />
-    <ClInclude Include="..\Project\Geometry.h" />
-    <ClInclude Include="..\Project\Physics.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\Project\Geometry.cpp" />
-    <ClCompile Include="..\Project\Physics.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

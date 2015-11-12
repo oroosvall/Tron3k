@@ -18,21 +18,24 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Project\Physics.h">
+    <ClInclude Include="Collision\CollideMesh.h">
+      <Filter>Source Files\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision\Geometry.h">
+      <Filter>Source Files\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics.h">
       <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Project\CollideMesh.h">
-      <Filter>Source Files\Collision</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Project\Geometry.h">
-      <Filter>Source Files\Collision</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Project\Physics.cpp">
+    <ClCompile Include="Collision\Geometry.cpp">
+      <Filter>Source Files\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Project\Geometry.cpp">
+    <ClCompile Include="Collision\CollideMesh.cpp">
       <Filter>Source Files\Collision</Filter>
     </ClCompile>
   </ItemGroup>

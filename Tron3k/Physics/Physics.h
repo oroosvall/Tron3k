@@ -1,8 +1,14 @@
 #ifndef PHYSICS_H
 #define PHYSICS_H
 
-#include "Geometry.h"
-#include "CollideMesh.h"
+#ifdef PHYSICS_EXPORTS
+#define PHYSICS_API __declspec( dllexport)
+#else
+#define PHYSICS_API __declspec( dllimport  )
+#endif
+
+#include "Collision\Geometry.h"
+#include "Collision\CollideMesh.h"
 
 class Physics
 {
@@ -16,4 +22,7 @@ public:
 
 	bool checkCollision(Geometry* obj1, Geometry* obj2);
 };
+
+extern "C" PHYSICS_API Physics* CreatePhysics();
+
 #endif
