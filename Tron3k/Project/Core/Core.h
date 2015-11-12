@@ -5,6 +5,8 @@
 #include "sound\SoundPlayer.h"
 #include "ui\Ui.h"
 
+#undef APIENTRY
+
 #include <GLFW\glfw3.h>
 
 #include "../Network/Client.h"

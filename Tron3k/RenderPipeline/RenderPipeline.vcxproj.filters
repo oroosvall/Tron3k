@@ -16,6 +16,9 @@
     <Filter Include="Source Files\Text">
       <UniqueIdentifier>{bbe8cf02-2bdc-4431-8b55-281fc917ffdd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Buffers">
+      <UniqueIdentifier>{be95b5bd-7528-41db-8131-c148de519c11}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RenderPipeline.cpp">
@@ -23,6 +26,9 @@
     </ClCompile>
     <ClCompile Include="Text\TextObject.cpp">
       <Filter>Source Files\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -34,6 +40,9 @@
     </ClInclude>
     <ClInclude Include="Text\TextObject.h">
       <Filter>Source Files\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

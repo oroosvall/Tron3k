@@ -150,11 +150,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="RenderPipeline.cpp" />
+    <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Text\TextObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IRenderPipeline.h" />
     <ClInclude Include="RenderPipeline.h" />
+    <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Text\TextObject.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

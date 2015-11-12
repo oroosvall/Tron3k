@@ -46,7 +46,7 @@ void Core::update(float dt)
 			renderPipe->setSetting(PIPELINE_SETTINGS::VIEWPORT, pv);
 			if (!renderPipe->setSetting(PIPELINE_SETTINGS::VIEWPORT, pv))
 			{
-				console.printMsg("Error: failed to set pipeline setting: VIEWPORT");
+				console.printMsg("Error: failed to set pipeline setting: VIEWPORT", "System", 'S');
 			}
 		}
 	}
@@ -356,7 +356,7 @@ void Core::initPipeline()
 	renderPipe = CreatePipeline();
 	if (!renderPipe->init())
 	{
-		console.printMsg("Error: Pipeline could not be created!");
+		console.printMsg("Error: Pipeline could not be created!", "System", 'S');
 		renderPipe->release();
 		renderPipe = nullptr;
 	}
@@ -369,7 +369,7 @@ void Core::initPipeline()
 		pv.xy[1] = winY;
 		if (!renderPipe->setSetting(PIPELINE_SETTINGS::VIEWPORT, pv))
 		{
-			console.printMsg("Error: Failed to set pipeline setting: VIEWPORT");
+			console.printMsg("Error: failed to set pipeline setting: VIEWPORT", "System", 'S');
 		}
 	}
 }
