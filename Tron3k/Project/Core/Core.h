@@ -36,7 +36,7 @@ private:
 	Topology* top;
 	Game* game;
 	IRenderPipeline* renderPipe;
-	Physics* physics
+	Physics* physics;
 
 	Console console;
 
@@ -64,7 +64,7 @@ private:
 	void removeWindow();
 
 	void initPipeline();
-	void initPhysics
+	void initPhysics();
 
 	SoundPlayer musicPlayer;
 public:
