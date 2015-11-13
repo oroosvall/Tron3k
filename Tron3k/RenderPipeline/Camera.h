@@ -18,8 +18,8 @@ public:
 
 	void changeFoV(float newFoV);
 
-	void setProjMat(GLuint shaderLocation);
-	void setViewMat(GLuint shaderLocation);
+	void setProjMat(GLuint shader, GLuint shaderLocation);
+	void setViewMat(GLuint shader, GLuint shaderLocation);
 
 };
 

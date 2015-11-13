@@ -71,6 +71,8 @@ bool RenderPipeline::init()
 		return false;
 	}
 
+	cam.init();
+
 	test = new TextObject("Swag", 11, glm::vec2(10, 10));
 
 
@@ -90,6 +92,13 @@ bool RenderPipeline::init()
 	GLenum shaderTypes[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
 
 	CreateProgram(testShader, shaderNames, shaderTypes, 2);
+
+	worldMat = glGetUniformLocation(testShader, "worldMat");
+	projMat = glGetUniformLocation(testShader, "project");
+	viewMat = glGetUniformLocation(testShader, "view");
+
+	cam.setProjMat(testShader, projMat);
+	cam.setViewMat(testShader, viewMat);
 
 	testMesh.make();
 
@@ -113,6 +122,8 @@ void RenderPipeline::update()
 void RenderPipeline::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	//glProgramUniformMatrix4fv(testShader, worldMat, 1, GL_FALSE, &); // todo fix..
 
 	glBindBuffer(GL_ARRAY_BUFFER, testMesh.vbuffer);
 	glBindVertexArray(testMesh.vao);

@@ -4,7 +4,7 @@
 #include "IRenderPipeline.h"
 #include "ResourceManager.h"
 #include "Text\TextObject.h"
-
+#include "Camera.h"
 #include "SimpleShit.h"
 
 enum SETTING_INPUT
@@ -34,7 +34,12 @@ private:
 
 	TestMesh testMesh;
 
+	Camera cam;
+
 	GLuint testShader;
+	GLuint worldMat;
+	GLuint projMat;
+	GLuint viewMat;
 
 	float rotation;
 

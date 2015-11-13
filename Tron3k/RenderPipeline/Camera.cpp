@@ -13,14 +13,14 @@ void Camera::update(glm::mat4* mat)
 
 }
 
-void Camera::setProjMat(GLuint shaderLocation)
+void Camera::setProjMat(GLuint shader, GLuint shaderLocation)
 {
-
+	glProgramUniformMatrix4fv(shader, shaderLocation, 1, GL_FALSE, &projMat[0][0]);
 }
 
-void Camera::setViewMat(GLuint shaderLocation)
+void Camera::setViewMat(GLuint shader, GLuint shaderLocation)
 {
-
+	glProgramUniformMatrix4fv(shader, shaderLocation, 1, GL_FALSE, &viewMat[0][0]);
 }
 
 void Camera::changeFoV(float newFov)
