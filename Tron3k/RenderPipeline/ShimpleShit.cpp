@@ -16,14 +16,6 @@ void TestMesh::make()
 	loadVert(string("testBoat.v"));
 	loadBMP(string("boat.bmp"));
 
-	//bind
-	glActiveTexture(GL_TEXTURE0 );
-	glBindTexture(GL_TEXTURE_2D, textureId);
-	glBindVertexArray(vao);
-	glBindBuffer(GL_ARRAY_BUFFER, vbuffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index);
-
-
 	//glGenBuffers(1, &vbuffer);
 	//glBindBuffer(GL_ARRAY_BUFFER, vbuffer);
 	//
