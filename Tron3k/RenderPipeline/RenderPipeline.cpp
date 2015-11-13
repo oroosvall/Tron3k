@@ -123,16 +123,28 @@ void RenderPipeline::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	//glProgramUniformMatrix4fv(testShader, worldMat, 1, GL_FALSE, &); // todo fix..
+	//temp mat
+	glm::mat4 mat;
+
+	//scale
+	mat[0].x = 0.02f;
+	mat[1].y = 0.02f;
+	mat[2].z = 0.02f;
+
+	//set temp objects worldmat
+	glProgramUniformMatrix4fv(testShader, worldMat, 1, GL_FALSE, &mat[0][0]); // todo fix..
+
+	//set camera matrixes
+	cam.setProjMat(testShader, projMat);
+	cam.setViewMat(testShader, viewMat);
 
 	glBindBuffer(GL_ARRAY_BUFFER, testMesh.vbuffer);
 	glBindVertexArray(testMesh.vao);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, testMesh.index);
+	glBindTexture(GL_TEXTURE_2D, 0);
 
-	glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
-	
-
-
+	//glDrawElements(GL_TRIANGLES, testMesh.faceCount * 3, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, testMesh.faceCount * 3, GL_UNSIGNED_SHORT, 0);
 }
 
 bool RenderPipeline::setSetting(PIPELINE_SETTINGS type, PipelineValues value)

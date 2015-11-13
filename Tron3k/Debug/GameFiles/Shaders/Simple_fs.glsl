@@ -1,8 +1,11 @@
 #version 430
 
+layout(location = 0) in vec2 UV;
+
+uniform sampler2D textureSample;
 out vec4 fragment_color;
 
-void main ()
+void main () 
 {
-	fragment_color = vec4(1, 1, 1, 1);
+	fragment_color = texture(textureSample, vec2(UV.s, UV.t));
 }
