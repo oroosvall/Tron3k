@@ -13,7 +13,6 @@
 #include "../Network/Server.h"
 
 #include "../../RenderPipeline/IRenderPipeline.h"
-#include "../../Physics/Physics.h"
 #include "Game\Game.h"
 
 #include "Input.h"
@@ -37,7 +36,6 @@ private:
 	Topology* top;
 	Game* game;
 	IRenderPipeline* renderPipe;
-	Physics* physics;
 
 	Console console;
 
@@ -68,7 +66,7 @@ private:
 	void removeWindow();
 
 	void initPipeline();
-	void initPhysics();
+	
 
 	SoundPlayer musicPlayer;
 public:

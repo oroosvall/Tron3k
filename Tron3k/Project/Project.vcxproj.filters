@@ -57,12 +57,6 @@
     <ClCompile Include="Core\sound\SoundPlayer.cpp">
       <Filter>Source Files\Core\Sound</Filter>
     </ClCompile>
-    <ClCompile Include="Geometry.cpp">
-      <Filter>Source Files\Core\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="Physics.cpp">
-      <Filter>Source Files\Core\Physics</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Game\Player.cpp">
       <Filter>Source Files\Core\Game</Filter>
     </ClCompile>

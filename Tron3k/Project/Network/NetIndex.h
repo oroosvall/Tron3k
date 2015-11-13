@@ -20,7 +20,7 @@ enum NET_EVENT
 	EMPTY = int('E'),
 	SERVER_STATUS = int('S'),
 	PLAYER_JOINED = int('J'),
-		PLAYER_LEFT = int('L'),
+	PLAYER_LEFT = int('L'),
 	DAMAGE = int('D')
 };
 

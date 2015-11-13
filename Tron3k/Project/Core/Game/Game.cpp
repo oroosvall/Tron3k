@@ -17,9 +17,34 @@ void Game::init(int max_connections)
 {
 	max_con = max_connections;
 
+	initPhysics();
+
 	playerList = new Player*[max_con];
 	for (int c = 0; c < max_con; c++)
 		playerList[c] = nullptr;
+}
+
+void Game::initPhysics()
+{
+	physics = CreatePhysics();
+	if (!physics->init())
+	{
+		//console.printMsg("Error: Pipeline could not be created!", "System", 'S');
+		physics->release();
+		physics = nullptr;
+	}
+	else
+	{
+
+		/*PipelineValues pv;
+		pv.type = pv.INT2;
+		pv.xy[0] = winX;
+		pv.xy[1] = winY;
+		if (!renderPipe->setSetting(PIPELINE_SETTINGS::VIEWPORT, pv))
+		{
+			console.printMsg("Error: Failed to set pipeline setting: VIEWPORT", "System", 'S');
+		}*/
+	}
 }
 
 Player* Game::getPlayer(int conID)

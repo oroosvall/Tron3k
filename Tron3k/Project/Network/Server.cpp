@@ -2,12 +2,14 @@
 
 Server::~Server()
 {
-	
+	if (package)
+		delete package;
 }
 
 void Server::init()
 {
-	multipacket = 0;
+	package = new Packet();
+	*package << Uint8(NET_INDEX::FRAME);
 
 	isClient = false;
 
@@ -59,6 +61,10 @@ void Server::network_OUT(float dt)
 
 		msg_out = "";
 	}
+
+	if (package->getDataSize() > 1) //only send if contains data
+		con->send(package);
+	package_clear();
 }
 
 bool Server::new_connection()
@@ -100,6 +106,14 @@ bool Server::new_connection()
 	}
 
 	return true;  //isnt used when on server
+}
+
+void Server::package_clear()
+{
+	if (package)
+		delete package;
+	package = new Packet();
+	*package << Uint8(NET_INDEX::EVENT);
 }
 
 void Server::in_new_connection(Packet* rec, Uint8 conID)
@@ -165,7 +179,27 @@ void Server::in_event(Packet* rec, Uint8 conID)
 
 void Server::in_frame(Packet* rec, Uint8 conID)
 {
+	Uint8 event_type;
+	while (!rec->endOfPacket())
+	{
+		*rec >> event_type;
+		switch (event_type)
+		{
+			case NET_FRAME::NAME_CHANGE:
+			{
+				Uint8 p_conID;
+				string pNewName;
+				*rec >> p_conID;
+				*rec >> pNewName;
+				Player* p = gamePtr->getPlayer(p_conID);
+				p->setName(pNewName);
+				break;
+			}
+		}
+	}
 
+	//branch frame
+	branch(rec, conID);
 }
 
 void Server::in_message(Packet* rec, Uint8 conID)
