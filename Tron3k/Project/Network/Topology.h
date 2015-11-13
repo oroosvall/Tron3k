@@ -3,6 +3,7 @@
 
 #include "Connection.h"
 #include "../Core/Game/Game.h"
+#include "../Core/Console.h"
 
 #include <iostream>
 #include <glm/glm.hpp>
@@ -26,22 +27,20 @@ protected:
 	Packet* package;
 
 	Game* gamePtr;
+	Console* consolePtr;
 public:
 
 	//chat test
-	string msg_in;
-	Uint8 scope_in;
-	Uint8 conID_in;
 	string msg_out;
 	Uint8 scope_out;
 	//--------
 
 	Topology() {};
-	virtual void init() = 0;
+	virtual void init(Console* console) = 0;
 	~Topology()
 	{
 		if (con)
-		{	
+		{
 			if (isClient)
 				delete con;
 			else
@@ -58,7 +57,7 @@ public:
 	virtual void setPortDefault() { PORT = PORT_DEFAULT; };
 	virtual void setGamePtr(Game*& ptr) { gamePtr = ptr; };
 	virtual bool is_client() { return isClient; };
-	
+
 	//client only
 	virtual void setIP(IpAddress addr) { };
 	virtual bool firstPackageRecieved() { return false; };
@@ -110,16 +109,31 @@ public:
 	//package
 	virtual void package_clear() = 0;
 
-	//Event package
+	//Event package FROM SERVER
 
-	//Frame package
+	//Frame package FROM CLIENT
 	virtual void frame_pos() { };
 	virtual void frame_jump() { };
 	virtual void frame_fire() { };
 
-	virtual void frame_name_change(Uint8 conid, string name) 
+	virtual void frame_name_change(Uint8 conid, string name)
 	{
-		*package << Uint8(NAME_CHANGE) << conid << name; 
+		*package << Uint8(NAME_CHANGE) << conid << name;
+	}
+
+	virtual void in_frame_name_change(Packet* rec)
+	{
+		Uint8 p_conID;
+		string pNewName;
+		*rec >> p_conID >> pNewName;
+		Player* p = gamePtr->getPlayer(p_conID);
+		if (p != nullptr)
+		{
+			consolePtr->printMsg("Player (" + p->getName() + ") changed name to (" + pNewName + ")", "System", 'S');
+			p->setName(pNewName);
+		}
+		else
+			consolePtr->printMsg("ERROR in_frame_name", "System", 'S');
 	}
 };
 

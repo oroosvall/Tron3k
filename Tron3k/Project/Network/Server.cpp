@@ -6,8 +6,10 @@ Server::~Server()
 		delete package;
 }
 
-void Server::init()
+void Server::init(Console* console)
 {
+	consolePtr = console;
+
 	package = new Packet();
 	*package << Uint8(NET_INDEX::FRAME);
 
@@ -179,22 +181,13 @@ void Server::in_event(Packet* rec, Uint8 conID)
 
 void Server::in_frame(Packet* rec, Uint8 conID)
 {
-	Uint8 event_type;
+	Uint8 frame_type;
 	while (!rec->endOfPacket())
 	{
-		*rec >> event_type;
-		switch (event_type)
+		*rec >> frame_type;
+		switch (frame_type)
 		{
-			case NET_FRAME::NAME_CHANGE:
-			{
-				Uint8 p_conID;
-				string pNewName;
-				*rec >> p_conID;
-				*rec >> pNewName;
-				Player* p = gamePtr->getPlayer(p_conID);
-				p->setName(pNewName);
-				break;
-			}
+		case NET_FRAME::NAME_CHANGE: in_frame_name_change(rec); break;
 		}
 	}
 
@@ -204,10 +197,33 @@ void Server::in_frame(Packet* rec, Uint8 conID)
 
 void Server::in_message(Packet* rec, Uint8 conID)
 {
+	string msg_in;
+	Uint8 scope_in;
+	Uint8 conID_in;
+
 	*rec >> conID_in;
 	*rec >> scope_in;
 	*rec >> msg_in;
 
-	if(scope_in == NET_MESSAGE::ALL)
-		branch(rec, conID);
+	string name;
+	bool error = false;
+	if (conID_in < MAX_CONNECT)
+	{
+		Player* p = gamePtr->getPlayer(conID_in);
+		if (p == nullptr)
+			error = true;
+		else
+			name = p->getName();
+	}
+	else
+		name = "Server";
+
+	if (error == false)
+	{
+		consolePtr->printMsg(msg_in, name, scope_in);
+		if (scope_in == NET_MESSAGE::ALL)
+			branch(rec, conID);
+	}
+	else
+		consolePtr->printMsg("ERROR in_message", "System", 'S');
 }

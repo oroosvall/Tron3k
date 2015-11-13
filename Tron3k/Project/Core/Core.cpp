@@ -185,7 +185,7 @@ void Core::upClient(float dt)
 		if (top)
 			delete top;
 		top = new Client();
-		top->init();
+		top->init(&console);
 
 		subState++;
 		break;
@@ -257,19 +257,6 @@ void Core::upClient(float dt)
 		{
 			top->network_OUT(dt);
 
-			if (top->msg_in != "")
-			{
-				string name;
-				if (top->conID_in < MAX_CONNECT)
-				{
-					Player* p = game->getPlayer(top->conID_in);
-					name = p->getName();
-				}
-				else
-					name = "Server";
-				console.printMsg(top->msg_in, name, top->scope_in);
-				top->msg_in = "";
-			}
 			tick_timer = 0;
 		}
 		break;
@@ -294,8 +281,9 @@ void Core::clientHandleCmds(float dt)
 			{
 				/* Todo: Check for illegal names */
 				Player* me = game->getPlayer(top->getConId());
+				
 				me->setName(token);
-
+				console.printMsg("You changed name to (" + token + ")", "System", 'S');
 				//send new name
 				top->frame_name_change(top->getConId(), token);
 			}
@@ -313,7 +301,7 @@ void Core::upServer(float dt)
 		if (top)
 			delete top;
 		top = new Server();
-		top->init();
+		top->init(&console);
 		
 		subState = 1;
 		break;
@@ -370,14 +358,6 @@ void Core::upServer(float dt)
 			//network out
 			top->network_OUT(dt);
 			tick_timer = 0;
-
-			if (top->msg_in != "")
-			{
-				Player* p = game->getPlayer(top->conID_in);
-				string name = p->getName();
-				console.printMsg(top->msg_in, name, top->scope_in);
-				top->msg_in = "";
-			}
 		}
 		
 		break;
