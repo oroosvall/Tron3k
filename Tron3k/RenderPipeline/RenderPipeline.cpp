@@ -73,7 +73,7 @@ bool RenderPipeline::init()
 
 	cam.init();
 
-	test = new TextObject("Swag", 11, glm::vec2(10, 10));
+	//test = new TextObject("Swag", 11, glm::vec2(10, 10));
 
 
 #ifdef _DEBUG
@@ -94,8 +94,8 @@ bool RenderPipeline::init()
 	CreateProgram(testShader, shaderNames, shaderTypes, 2);
 
 	worldMat = glGetUniformLocation(testShader, "worldMat");
-	projMat = glGetUniformLocation(testShader, "project");
 	viewMat = glGetUniformLocation(testShader, "view");
+	projMat = glGetUniformLocation(testShader, "project");
 
 	cam.setProjMat(testShader, projMat);
 	cam.setViewMat(testShader, viewMat);
@@ -121,18 +121,33 @@ void RenderPipeline::update()
 
 void RenderPipeline::render()
 {
+	glUseProgram(testShader);
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	//glProgramUniformMatrix4fv(testShader, worldMat, 1, GL_FALSE, &); // todo fix..
-
-	glBindBuffer(GL_ARRAY_BUFFER, testMesh.vbuffer);
+	//bind
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, testMesh.textureId);
 	glBindVertexArray(testMesh.vao);
+	glBindBuffer(GL_ARRAY_BUFFER, testMesh.vbuffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, testMesh.index);
 
-	glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
-	
+	//temp mat
+	glm::mat4 mat;
 
+	//scale
+	mat[0].x = 0.02f;
+	mat[1].y = 0.02f;
+	mat[2].z = 0.02f;
 
+	//set temp objects worldmat
+	glProgramUniformMatrix4fv(testShader, worldMat, 1, GL_FALSE, &mat[0][0]);
+
+	//set camera matrixes
+	//cam.setProjMat(testShader, projMat);
+	cam.setViewMat(testShader, viewMat);
+
+	glDrawElements(GL_TRIANGLES, testMesh.faceCount * 3, GL_UNSIGNED_SHORT, 0);
 }
 
 bool RenderPipeline::setSetting(PIPELINE_SETTINGS type, PipelineValues value)

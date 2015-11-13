@@ -18,7 +18,7 @@ void Core::init()
 
 	recreate = false;
 	fullscreen = false;
-	winX = winY = 200;
+	winX = winY = 800;
 	
 	createWindow(winX, winY, fullscreen);
 	//******************* TEMP *************************
