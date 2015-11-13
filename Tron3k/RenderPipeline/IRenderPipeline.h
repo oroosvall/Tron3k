@@ -18,7 +18,8 @@ enum PIPELINE_SETTINGS
 	VIEWPORT,
 	REDUCEPARTICLES,
 	DOF,
-	DOF_VALUE
+	DOF_VALUE,
+	FOV
 };
 
 struct PipelineValues
@@ -51,6 +52,13 @@ public:
 	virtual void removeText(unsigned int textID) = 0;
 	virtual void setText(unsigned int id, std::string text) = 0;
 	virtual void setTextPos(unsigned int, float x, float y, float z) = 0;
+
+	virtual unsigned int createTexture(std::string fileName) = 0;
+	virtual unsigned int createTextureFromMemory(unsigned int size, void* data) = 0;
+	virtual void removeTexture(unsigned int) = 0;
+
+	virtual unsigned int createMesh(...) = 0;
+	virtual void removeMesh(unsigned int id) = 0;
 
 };
 

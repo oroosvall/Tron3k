@@ -2,6 +2,7 @@
 #define RESOURCEMANAGER_H
 
 #include <string>
+#include <GL\glew.h>
 
 #define KB 1024
 #define MB KB*KB
@@ -20,6 +21,8 @@ public:
 	ResourceManager();
 	std::string getStatus();
 
+	GLuint allocateBuffer(unsigned int size);
+	void freeBuffer(GLuint bufferID);
 
 
 };
