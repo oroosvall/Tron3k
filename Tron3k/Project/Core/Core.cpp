@@ -104,6 +104,7 @@ void Core::update(float dt)
 		//update renderPipeline
 	}
 
+	//shouldnt get the ref every frame
 	Input* i = Input::getInput();
 	i->clearOnPress();
 	console.discardCommandAndLastMsg();
