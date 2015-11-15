@@ -424,3 +424,9 @@ void Core::initPipeline()
 		}
 	}
 }
+
+void Core::setfps(int fps)
+{
+	if(win != nullptr)
+		glfwSetWindowTitle(win, to_string(fps).c_str());
+}

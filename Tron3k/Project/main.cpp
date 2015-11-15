@@ -29,6 +29,7 @@ int main()
 
 		if (timePass > 1.0f)
 		{
+			core.setfps(fps);
 			timePass = 0.0f; //timePass -= 1.0f;
 			fps = 0;
 		}

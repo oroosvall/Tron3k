@@ -73,6 +73,8 @@ public:
 	void init();
 	void update(float dt);
 
+	void setfps(int fps);
+
 	~Core();
 };
 
