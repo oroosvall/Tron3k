@@ -112,13 +112,17 @@ public:
 	//Event package FROM SERVER
 
 	//Frame package FROM CLIENT
-	virtual void frame_pos() { };
 	virtual void frame_jump() { };
 	virtual void frame_fire() { };
 
 	virtual void frame_name_change(Uint8 conid, string name)
 	{
 		*package << Uint8(NAME_CHANGE) << conid << name;
+	}
+
+	virtual void frame_pos(Uint8 conid, glm::vec3 cPos)
+	{
+		*package << Uint8(NET_FRAME::POS) << conid << cPos.x << cPos.y << cPos.z;
 	}
 
 	virtual void in_frame_name_change(Packet* rec)
@@ -134,6 +138,31 @@ public:
 		}
 		else
 			consolePtr->printMsg("ERROR in_frame_name", "System", 'S');
+	}
+
+	virtual void in_frame_pos(Packet* rec)
+	{
+		Uint8 p_conID;
+		glm::vec3 p_pos;
+		*rec >> p_conID;
+		*rec >> p_pos.x >> p_pos.y >> p_pos.z;
+
+		Player* p = gamePtr->getPlayer(p_conID);
+		if (p != nullptr) //Justincase
+		{
+			//TO DO: Player function to interpolate for 50ms to new position
+			glm::vec3 oldpos = p->getPos();
+			if (p_pos != oldpos)
+			{
+				p->setGoalPos(p_pos);
+				oldpos = p->getPos();
+				stringstream ss;
+				ss << "Player (" << p->getName() << ") has new position (" << oldpos.x << "," << oldpos.y << "," << oldpos.z << ")";
+				consolePtr->printMsg(ss.str(), "System", 'S');
+			}
+		}
+		else
+			consolePtr->printMsg("ERROR in_frame_current_pos", "System", 'S');
 	}
 };
 

@@ -210,7 +210,7 @@ void Core::upClient(float dt)
 			console.printMsg("Connecting...", "System", 'S');
 			if (top->new_connection())
 			{
-				console.printMsg("Connecting Succsessfull", "System", 'S');
+				console.printMsg("Connecting Successfull", "System", 'S');
 				//send "new connection" event to server
 				top->new_connection_packet();
 				
@@ -248,6 +248,9 @@ void Core::upClient(float dt)
 		break;
 	case 4: //main client loop
 
+
+		game->update(dt);
+
 		//fetch new network data
 		top->network_IN(dt);
 
@@ -262,6 +265,17 @@ void Core::upClient(float dt)
 		tick_timer += dt;
 		if (tick_timer > tick)
 		{
+			/*
+			Fetch current player position
+			Add to topology packet
+			*/
+
+			Player* local = game->getPlayer(top->getConId());
+			glm::vec3 lPos = local->getPos();
+
+			top->frame_pos(top->getConId(), lPos);
+
+
 			top->network_OUT(dt);
 
 			tick_timer = 0;

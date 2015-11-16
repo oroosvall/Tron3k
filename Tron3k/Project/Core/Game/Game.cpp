@@ -47,6 +47,15 @@ void Game::initPhysics()
 	}
 }
 
+void Game::update(float dt)
+{
+	for (int c = 0; c < max_con; c++)
+	{
+		if (playerList[c] != nullptr)
+			playerList[c]->update(dt);
+	}
+}
+
 Player* Game::getPlayer(int conID)
 {
 	if (conID < max_con)

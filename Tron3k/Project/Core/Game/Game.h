@@ -22,6 +22,8 @@ public:
 
 	Player* getPlayer(int conID);
 	void createPlayer(Player* p, int conID);
+
+	void update(float dt);
 };
 
 #endif
