@@ -16,6 +16,10 @@ void CameraInput::init(glm::mat4* view)
 	setCam(vec3(0, 0, 25), vec3(0, -0.5, -1));
 }
 
+CameraInput::~CameraInput()
+{
+}
+
 void CameraInput::update(float dt)
 {
 	i->getCursor(x_new, y_new);

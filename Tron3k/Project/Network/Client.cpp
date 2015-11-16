@@ -2,6 +2,8 @@
 
 Client::~Client()
 {
+	if (con)
+		delete con;
 	if (package)
 		delete package;
 }
@@ -131,6 +133,7 @@ void Client::in_event(Packet* rec, Uint8 _conID)
 		temp->init(pName, glm::vec3(0, 0, 0));
 		gamePtr->createPlayer(temp, p_conID);
 		consolePtr->printMsg("Player (" + pName + ") joined the server", "System", 'S');
+		delete temp;
 		break;
 	}
 }

@@ -18,7 +18,7 @@ struct TriangleVertex
 class TestMesh
 {
 public:
-
+	~TestMesh();
 	GLuint vbuffer;
 	GLuint vao;
 	GLuint index;

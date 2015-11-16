@@ -1,5 +1,10 @@
 #include "Connection.h"
 
+Connection::~Connection()
+{
+	
+}
+
 void Connection::init()
 {
 	socket.setBlocking(false);

@@ -7,6 +7,11 @@ struct Index
 	unsigned int f1, f2, f3;
 };
 
+TestMesh::~TestMesh()
+{
+	
+}
+
 void TestMesh::make()
 {
 	loadVert(string("testBoat.v"));
