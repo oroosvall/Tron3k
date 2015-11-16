@@ -108,24 +108,25 @@ void Core::update(float dt)
 		if (game)
 		{
 			game->update(dt);
-		}
-
-		if (renderPipe)
-		{
-			renderPipe->update();
-			//render players
-			for (size_t i = 0; i < MAX_CONNECT; i++)
+			if (renderPipe)
 			{
-				Player* p = game->getPlayer(i);
-				if (p)
+				renderPipe->update();
+				//render players
+				for (size_t i = 0; i < MAX_CONNECT; i++)
 				{
-					renderPipe->renderPlayer(0, p->getWorldMat());
+					Player* p = game->getPlayer(i);
+					if (p)
+					{
+						renderPipe->renderPlayer(0, p->getWorldMat());
+					}
 				}
+
+				//renderPipe->render();
 			}
-			
-			//renderPipe->render();
+
 		}
 
+		
 		//update ui & sound
 		//update renderPipeline
 	}
