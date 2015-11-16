@@ -16,6 +16,7 @@ private:
 	bool connected;
 
 public:
+	~Connection();
 	void init();
 	bool connect(IpAddress _address, Int32 _port);
 	bool connect(TcpListener* listener);

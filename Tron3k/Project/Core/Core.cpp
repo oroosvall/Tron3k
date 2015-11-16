@@ -34,10 +34,17 @@ void Core::init()
 
 Core::~Core()
 {
+	game->release();
 	if (game != nullptr)
 		delete game;
 	if (top != nullptr)
 		delete top;
+	if (win != nullptr)
+		delete win;
+	if (renderPipe != nullptr)
+		delete renderPipe;
+	
+	musicPlayer.~SoundPlayer();
 }
 
 void Core::update(float dt)

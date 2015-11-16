@@ -14,12 +14,14 @@ SoundPlayer::SoundPlayer()
 
 SoundPlayer::~SoundPlayer()
 {
-
+	soundBuffer.~SoundBuffer();
+	sounds->~Sound();
 }
 
 void SoundPlayer::enableSounds(bool enabler)
 {
 	soundEnabler = enabler;
+	
 }
 
 void SoundPlayer::setVolumeMusic(int volume)

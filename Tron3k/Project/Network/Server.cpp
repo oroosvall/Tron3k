@@ -2,6 +2,12 @@
 
 Server::~Server()
 {
+	if (con)
+	{
+		delete con;
+	}
+	
+
 	if (package)
 		delete package;
 }

@@ -2,7 +2,7 @@
 
 Player::Player()
 {
-
+	
 }
 
 void Player::init(std::string pName, glm::vec3 initPos)
