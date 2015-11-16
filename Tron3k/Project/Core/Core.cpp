@@ -83,7 +83,7 @@ void Core::update(float dt)
 				name = "Server";
 		}
 	}
-	console.update(name, 'A'); //Someone wrote a command
+	console.update(name, 'A'); //Updates to check for new messages and commands
 
 
 	switch (current)
@@ -100,8 +100,6 @@ void Core::update(float dt)
 	{
 		if (renderPipe)
 		{
-			camIn.update(dt);
-
 			renderPipe->update();
 			renderPipe->render();
 		}
@@ -210,7 +208,7 @@ void Core::upClient(float dt)
 			console.printMsg("Connecting...", "System", 'S');
 			if (top->new_connection())
 			{
-				console.printMsg("Connecting Successfull", "System", 'S');
+				console.printMsg("Connecting Successful", "System", 'S');
 				//send "new connection" event to server
 				top->new_connection_packet();
 				
@@ -250,6 +248,7 @@ void Core::upClient(float dt)
 
 
 		game->update(dt);
+		Player* local = game->getPlayer(top->getConId());
 
 		//fetch new network data
 		top->network_IN(dt);
@@ -269,8 +268,6 @@ void Core::upClient(float dt)
 			Fetch current player position
 			Add to topology packet
 			*/
-
-			Player* local = game->getPlayer(top->getConId());
 			glm::vec3 lPos = local->getPos();
 
 			top->frame_pos(top->getConId(), lPos);
@@ -440,7 +437,8 @@ void Core::initPipeline()
 		pv.xy[0] = winX;
 		pv.xy[1] = winY;
 
-		camIn.init((glm::mat4*)renderPipe->getView());
+		CameraInput* cam = CameraInput::getCam();
+		cam->init((glm::mat4*)renderPipe->getView());
 
 		if (!renderPipe->setSetting(PIPELINE_SETTINGS::VIEWPORT, pv))
 		{
