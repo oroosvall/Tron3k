@@ -3,12 +3,11 @@
 
 SoundPlayer::SoundPlayer()
 {
-	soundPlayer.setPosition(0.0f, 0.0f, 0.0f);
-	soundPlayer.setAttenuation(10.0f); //NEW! Sets the global attenuation of all the sounds.
+	nrOfSoundsPlaying = 0;
 	soundEnabler = true;
 
-	sounds[SOUNDS::gunshot].loadFromFile("soundEffectGunshots.ogg");
-	sounds[SOUNDS::firstBlood].loadFromFile("voiceFirstBlood.ogg");
+	soundList[SOUNDS::gunshot].loadFromFile("soundEffectGunshots.ogg");
+	soundList[SOUNDS::firstBlood].loadFromFile("voiceFirstBlood.ogg");
 
 	musicList[MUSIC::mainMenu] = "musicMainMenu.ogg";
 }
@@ -37,10 +36,9 @@ int SoundPlayer::playUserGeneratedSound(int sound)
 {
 	if (soundEnabler)
 	{
-		soundPlayer.setPosition(0.0f, 0.0f, 0.0f);
-
-		soundPlayer.setBuffer(sounds[sound]);
-		soundPlayer.play();
+		sounds[nrOfSoundsPlaying].setBuffer(soundList[sound]);
+		sounds[nrOfSoundsPlaying].play();
+		nrOfSoundsPlaying++;
 	}
 
 	return 0;
@@ -53,10 +51,11 @@ int SoundPlayer::playExternalSound(int sound, sf::Vector3f soundOrigin)
 
 	if (soundEnabler)
 	{
-		soundPlayer.setMinDistance(10.0f);		//Set the sound's distance it travels before it starts to attenuate. Could be passed in through a parameter.
-		soundPlayer.setPosition(soundOrigin);			//Set the sound's position in the world. Could be passed in through a parameter.
-		soundPlayer.setBuffer(sounds[sound]);
-		soundPlayer.play();
+		sounds[nrOfSoundsPlaying].setMinDistance(10.0f);		//Set the sound's distance it travels before it starts to attenuate. Could be passed in through a parameter.
+		sounds[nrOfSoundsPlaying].setPosition(soundOrigin);			//Set the sound's position in the world. Could be passed in through a parameter.
+		sounds[nrOfSoundsPlaying].setBuffer(soundList[sound]);
+		sounds[nrOfSoundsPlaying].play();
+		nrOfSoundsPlaying++;
 	}
 
 	return 0;
@@ -80,4 +79,16 @@ int SoundPlayer::playMusic(int music)
 void SoundPlayer::rotate(float deltaTime)
 {
 	sf::Listener::setDirection(cos(deltaTime), 0.0f, sin(deltaTime));
+}
+
+void SoundPlayer::update()
+{
+	for (int i = 0; i < nrOfSoundsPlaying; i++)
+	{
+		if(sounds[i].getStatus() == sf::Sound::Stopped)
+		{
+			sounds[nrOfSoundsPlaying] = sounds[i];
+			nrOfSoundsPlaying--;
+		}
+	}
 }

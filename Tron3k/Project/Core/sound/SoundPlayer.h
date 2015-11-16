@@ -11,11 +11,12 @@ class SoundPlayer
 {
 private:
 	bool soundEnabler;
+	int nrOfSoundsPlaying;
 	
-	sf::SoundBuffer sounds[SOUNDS::nrOfSounds];
+	sf::Sound sounds[20];
+	sf::SoundBuffer soundList[SOUNDS::nrOfSounds];
 	string musicList[MUSIC::nrOfMusic];
 
-	sf::Sound soundPlayer;	//Loads small sound files into the memory
 	sf::Music musicPlayer;	//Streams big sound files
 
 	sf::SoundBuffer soundBuffer;
@@ -31,10 +32,12 @@ public:
 
 	int playMusic(int music);
 
-	int SoundPlayer::playExternalSound(int sound, sf::Vector3f soundOrigin);
-	int SoundPlayer::playUserGeneratedSound(int sound);
+	int playExternalSound(int sound, sf::Vector3f soundOrigin);
+	int playUserGeneratedSound(int sound);
 
-	void SoundPlayer::rotate(float deltaTime);
+	void rotate(float deltaTime);
+
+	void update();
 };
 
 #endif

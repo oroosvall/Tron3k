@@ -24,6 +24,8 @@ void Core::init()
 	//******************* TEMP *************************
 	musicPlayer.enableSounds(false);
 	musicPlayer.playExternalSound(SOUNDS::gunshot, sf::Vector3f(10.0f, 0.0f, 0.0f));
+	musicPlayer.playUserGeneratedSound(SOUNDS::firstBlood);
+	musicPlayer.playMusic(MUSIC::mainMenu);
 	timepass = 0.0f;
 	//**************************************************
 	current = Gamestate::START;
@@ -43,6 +45,7 @@ void Core::update(float dt)
 	//*******TEMP**********
 	timepass += dt;
 	musicPlayer.rotate(timepass);
+	musicPlayer.update();
 	//*********************
 	//update I/O
 	if (recreate)
