@@ -13,7 +13,7 @@ private:
 	bool soundEnabler;
 	int nrOfSoundsPlaying;
 	
-	sf::Sound sounds[20];
+	sf::Sound sounds[30];
 	sf::SoundBuffer soundList[SOUNDS::nrOfSounds];
 	string musicList[MUSIC::nrOfMusic];
 

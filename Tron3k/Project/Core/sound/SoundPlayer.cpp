@@ -34,11 +34,18 @@ void SoundPlayer::setVolumeSound(int volume)
 
 int SoundPlayer::playUserGeneratedSound(int sound)
 {
-	if (soundEnabler)
+	if (soundEnabler && nrOfSoundsPlaying < 29)
 	{
 		sounds[nrOfSoundsPlaying].setBuffer(soundList[sound]);
 		sounds[nrOfSoundsPlaying].play();
 		nrOfSoundsPlaying++;
+	}
+	else if (nrOfSoundsPlaying >= 30)
+	{
+		sounds[0].setMinDistance(10.0f);
+		sounds[0].setPosition(0.0f, 0.0f, 0.0f);
+		sounds[0].setBuffer(soundList[sound]);
+		sounds[0].play();
 	}
 
 	return 0;
@@ -49,13 +56,20 @@ int SoundPlayer::playExternalSound(int sound, sf::Vector3f soundOrigin)
 	//sf::Listener::setPosition(playerPosX, playerPosY, playerPosZ);			//Set the position of the player
 	sf::Listener::setDirection(0.0f, 0.0f, -10.0f);			//Set the direction of the player
 
-	if (soundEnabler)
+	if (soundEnabler && nrOfSoundsPlaying < 29)
 	{
 		sounds[nrOfSoundsPlaying].setMinDistance(10.0f);		//Set the sound's distance it travels before it starts to attenuate. Could be passed in through a parameter.
 		sounds[nrOfSoundsPlaying].setPosition(soundOrigin);			//Set the sound's position in the world. Could be passed in through a parameter.
 		sounds[nrOfSoundsPlaying].setBuffer(soundList[sound]);
 		sounds[nrOfSoundsPlaying].play();
 		nrOfSoundsPlaying++;
+	}
+	else if (nrOfSoundsPlaying >= 30)
+	{
+		sounds[0].setMinDistance(10.0f);		
+		sounds[0].setPosition(soundOrigin);			
+		sounds[0].setBuffer(soundList[sound]);
+		sounds[0].play();
 	}
 
 	return 0;
@@ -65,6 +79,10 @@ int SoundPlayer::playMusic(int music)
 {
 	if (soundEnabler)
 	{
+		if (musicPlayer.getStatus() == sf::Sound::Playing)
+		{
+			musicPlayer.stop();
+		}
 
 		if (!musicPlayer.openFromFile(musicList[music]))
 		{
@@ -72,6 +90,7 @@ int SoundPlayer::playMusic(int music)
 		}
 
 		musicPlayer.play();
+		musicPlayer.setLoop(true);
 	}
 	return 0;
 }
