@@ -52,6 +52,8 @@ public:
 	virtual void update();
 	virtual void render();
 
+	virtual void* getView();
+
 	virtual std::string getStatus() { return ""; };
 
 	virtual bool setSetting(PIPELINE_SETTINGS type, PipelineValues value);

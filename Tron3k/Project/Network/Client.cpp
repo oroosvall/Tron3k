@@ -130,6 +130,7 @@ void Client::in_event(Packet* rec, Uint8 _conID)
 		*rec >> pName;
 		temp->init(pName, glm::vec3(0, 0, 0));
 		gamePtr->createPlayer(temp, p_conID);
+		consolePtr->printMsg("Player (" + pName + ") joined the server", "System", 'S');
 		break;
 	}
 }

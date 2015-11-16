@@ -42,6 +42,8 @@ public:
 	virtual void update() = 0;
 	virtual void render() = 0;
 
+	virtual void* getView() = 0;
+
 	virtual std::string getStatus() = 0;
 
 	PipelineValues getSettings(PIPELINE_SETTINGS type);

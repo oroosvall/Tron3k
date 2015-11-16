@@ -116,7 +116,6 @@ void RenderPipeline::release()
 
 void RenderPipeline::update()
 {
-
 }
 
 void RenderPipeline::render()
@@ -144,10 +143,14 @@ void RenderPipeline::render()
 	glProgramUniformMatrix4fv(testShader, worldMat, 1, GL_FALSE, &mat[0][0]);
 
 	//set camera matrixes
-	//cam.setProjMat(testShader, projMat);
-	cam.setViewMat(testShader, viewMat);
+	cam.setViewProjMat(testShader, viewMat);
 
 	glDrawElements(GL_TRIANGLES, testMesh.faceCount * 3, GL_UNSIGNED_SHORT, 0);
+}
+
+void* RenderPipeline::getView()
+{
+	return (void*)cam.getViewMat();
 }
 
 bool RenderPipeline::setSetting(PIPELINE_SETTINGS type, PipelineValues value)

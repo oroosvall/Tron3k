@@ -37,9 +37,8 @@
 *.pdb
 *.ilk
 
-.\Spelprojekt\Spelprojekt\Debug
-.\Spelprojekt\Spelprojekt\Releae
-Spelprojekt/Spelprojekt/Debug/Spelprojekt.log
+*.exp
+
 *.sdf
 *.v12.suo
 *.tlog

@@ -171,7 +171,7 @@ void Server::in_new_connection(Packet* rec, Uint8 conID)
 
 	delete b;
 
-	cout << "sent new connection data to " << to_string(conID) << endl;
+	consolePtr->printMsg("Player (" + pName + ") joined the server", "System", 'S');
 }
 
 void Server::in_event(Packet* rec, Uint8 conID)
