@@ -42,7 +42,6 @@ private:
 	void keypan(float dt);
 
 public:
-
 	static CameraInput* getCam();
 
 	void init(glm::mat4* viewMat);

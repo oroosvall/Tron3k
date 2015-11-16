@@ -8,7 +8,7 @@ class Game
 {
 private:
 	
-	virtual void release();
+	
 
 	int max_con;
 	Player** playerList;
@@ -18,6 +18,7 @@ private:
 public:
 
 	Game();
+	void release();
 	void init(int max_connections);
 
 	Player* getPlayer(int conID);

@@ -4,6 +4,7 @@
 #include<glm/glm.hpp>
 #include<vector>
 #include"SoundList.h"
+#include "../Input.h"
 
 using namespace std;
 
@@ -12,6 +13,8 @@ class SoundPlayer
 private:
 	bool soundEnabler;
 	int nrOfSoundsPlaying;
+	float soundVolume;
+	float musicVolume;
 	
 	sf::Sound sounds[30];
 	sf::SoundBuffer soundList[SOUNDS::nrOfSounds];
@@ -25,10 +28,10 @@ public:
 	SoundPlayer();
 	~SoundPlayer();
 
-	void enableSounds(bool sound);
+	void enableSounds();
 
-	void setVolumeMusic(int volume);
-	void setVolumeSound(int volume);
+	void setVolumeMusic(float volume);
+	void setVolumeSound(float volume);
 
 	int playMusic(int music);
 

@@ -22,7 +22,6 @@ void Core::init()
 	
 	createWindow(winX, winY, fullscreen);
 	//******************* TEMP *************************
-	musicPlayer.enableSounds(false);
 	musicPlayer.playExternalSound(SOUNDS::gunshot, sf::Vector3f(10.0f, 0.0f, 0.0f));
 	musicPlayer.playUserGeneratedSound(SOUNDS::firstBlood);
 	musicPlayer.playMusic(MUSIC::mainMenu);
@@ -34,19 +33,21 @@ void Core::init()
 
 Core::~Core()
 {
+	game->release();
 	if (game != nullptr)
 		delete game;
 	if (top != nullptr)
 		delete top;
+	if (win != nullptr)
+		delete win;
+	if (renderPipe != nullptr)
+		delete renderPipe;
+	
+	musicPlayer.~SoundPlayer();
 }
 
 void Core::update(float dt)
 {
-	//*******TEMP**********
-	timepass += dt;
-	musicPlayer.rotate(timepass);
-	musicPlayer.update();
-	//*********************
 	//update I/O
 	if (recreate)
 	{
@@ -107,6 +108,12 @@ void Core::update(float dt)
 		//update ui & sound
 		//update renderPipeline
 	}
+
+	//*******TEMP**********
+	timepass += dt;
+	musicPlayer.rotate(timepass);
+	musicPlayer.update();
+	//*********************
 
 	//shouldnt get the ref every frame
 	Input* i = Input::getInput();

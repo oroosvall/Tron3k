@@ -18,7 +18,7 @@ Console::~Console()
 bool Console::update(string clientName, char scope)
 {
 	Input* i = Input::getInput();
-
+	
 	for (int c = 0; c < VALIDKEYS; c++)
 	{
 		if (i->justPressed(validKeyboardInputs[c]))
