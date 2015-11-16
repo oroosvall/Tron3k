@@ -73,6 +73,10 @@ private:
 	
 
 	SoundPlayer musicPlayer;
+
+	//TEMPORARY
+	void givePlayerBoatExtremes();
+
 public:
 	void init();
 	void update(float dt);

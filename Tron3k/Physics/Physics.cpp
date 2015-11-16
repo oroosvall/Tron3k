@@ -45,6 +45,13 @@ bool Physics::checkCollision(CollideMesh* obj1, CollideMesh* obj2)
 	return false;
 }
 
+//TEMPORARY
+void Physics::getBoatExtremes(glm::vec3 minVals, glm::vec3 maxVals)
+{
+	minExtremes = minVals;
+	maxExtremes = maxVals;
+}
+
 Physics* CreatePhysics()
 {
 	return new Physics();

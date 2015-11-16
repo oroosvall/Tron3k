@@ -193,6 +193,17 @@ SETTING_INPUT RenderPipeline::getType(PIPELINE_SETTINGS type) const
 	return SETTING_INPUT::NONE_IN;
 }
 
+void* RenderPipeline::getMinExtremes()
+{
+	vec3* ret = new vec3(testMesh.minX, testMesh.minY, testMesh.minZ);
+	return (void*)ret;
+}
+
+void* RenderPipeline::getMaxExtremes()
+{
+	vec3* ret = new vec3(testMesh.maxX, testMesh.maxY, testMesh.maxZ);
+	return (void*)ret;
+}
 
 IRenderPipeline* CreatePipeline()
 {

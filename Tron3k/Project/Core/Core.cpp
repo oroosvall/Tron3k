@@ -22,7 +22,7 @@ void Core::init()
 	
 	createWindow(winX, winY, fullscreen);
 	//******************* TEMP *************************
-	musicPlayer.enableSounds(false);
+	musicPlayer.enableSounds(true);
 	musicPlayer.playExternalSound(SOUNDS::gunshot, sf::Vector3f(10.0f, 0.0f, 0.0f));
 	musicPlayer.playUserGeneratedSound(SOUNDS::firstBlood);
 	musicPlayer.playMusic(MUSIC::mainMenu);
@@ -117,7 +117,8 @@ void Core::update(float dt)
 
 	glfwSwapBuffers(win);
 
-	
+	if (game != nullptr)
+		givePlayerBoatExtremes();
 }
 
 void Core::upStart(float dt)
@@ -453,4 +454,20 @@ void Core::setfps(int fps)
 {
 	if(win != nullptr)
 		glfwSetWindowTitle(win, to_string(fps).c_str());
+}
+
+//TEMPORARY
+void Core::givePlayerBoatExtremes()
+{
+	//to avoid leaks
+	vec3* minExtremes = (vec3*)renderPipe->getMinExtremes();
+	vec3* maxExtremes = (vec3*)renderPipe->getMaxExtremes();
+
+	vec3 minEx = *minExtremes;
+	vec3 maxEx = *maxExtremes;
+
+	delete minExtremes;
+	delete maxExtremes;
+
+	game->getBoatCoordsFromCore(minEx, maxEx);
 }

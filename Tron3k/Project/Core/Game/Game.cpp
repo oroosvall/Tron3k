@@ -68,3 +68,14 @@ void Game::createPlayer(Player* p, int conID, bool isLocal)
 	playerList[conID] = new Player();
 	playerList[conID]->init(p->getName(), p->getPos(), isLocal);
 }
+
+//TEMPORARY
+void Game::getBoatCoordsFromCore(glm::vec3 minVals, glm::vec3 maxVals)
+{
+	sendBoatCoordsToPhysics(minVals, maxVals);
+}
+
+void Game::sendBoatCoordsToPhysics(glm::vec3 minVals, glm::vec3 maxVals)
+{
+	physics->getBoatExtremes(minVals, maxVals);
+}
