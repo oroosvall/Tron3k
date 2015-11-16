@@ -13,6 +13,10 @@ class CameraInput
 {
 
 private:
+	static CameraInput* singleton;
+	CameraInput();
+
+
 
 	Input* i;
 
@@ -20,6 +24,7 @@ private:
 
 	vec3 pos;
 	vec3 dir;
+	vec3 start;
 
 	float angleH;
 	float angleV;
@@ -33,15 +38,20 @@ private:
 	double x_new, y_new;
 	double x_last, y_last;
 
-public:
-
-	void init(glm::mat4* viewMat);
-
-	void update(float df);
-
 	void mousepan(float x, float y);
 	void keypan(float dt);
 
+public:
+	static CameraInput* getCam();
+
+	void init(glm::mat4* viewMat);
+
+	void update(float dt);
+
+	glm::vec3 getDir() { return dir; };
+	void setCam(vec3 _pos, vec3 _dir);
+
+	static void release();
 };
 
 #endif

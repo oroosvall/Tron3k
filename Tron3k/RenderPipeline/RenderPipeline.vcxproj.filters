@@ -44,6 +44,9 @@
     </ClCompile>
     <ClCompile Include="ContentManager.cpp">
       <Filter>Source Files</Filter>
+	</ClCompile>
+    <ClCompile Include="GBuffer.cpp">
+      <Filter>Source Files\Buffers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -70,6 +73,9 @@
     </ClInclude>
     <ClInclude Include="ContentManager.h">
       <Filter>Source Files\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="GBuffer.h">
+      <Filter>Source Files\Buffers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

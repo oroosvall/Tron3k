@@ -3,7 +3,11 @@
 void Game::release()
 {
 	// delete code goes here
-
+	for (int i = 0; i < max_con; i++)
+	{
+		delete playerList[i];
+	}
+	delete[]playerList;
 
 	delete this; // yes this is safe
 }
@@ -12,6 +16,7 @@ Game::Game()
 {
 
 }
+
 
 void Game::init(int max_connections)
 {
@@ -63,8 +68,8 @@ Player* Game::getPlayer(int conID)
 	return nullptr;
 }
 
-void Game::createPlayer(Player* p, int conID)
+void Game::createPlayer(Player* p, int conID, bool isLocal)
 {
 	playerList[conID] = new Player();
-	playerList[conID]->init(p->getName(), p->getPos());
+	playerList[conID]->init(p->getName(), p->getPos(), isLocal);
 }

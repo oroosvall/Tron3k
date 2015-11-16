@@ -12,7 +12,7 @@ using namespace std;
 class TestMesh
 {
 public:
-
+	~TestMesh();
 	GLuint vbuffer;
 	GLuint vao;
 	GLuint index;

@@ -22,10 +22,9 @@ void Core::init()
 	
 	createWindow(winX, winY, fullscreen);
 	//******************* TEMP *************************
-	musicPlayer.enableSounds(false);
-	musicPlayer.playExternalSound(SOUNDS::gunshot, sf::Vector3f(10.0f, 0.0f, 0.0f));
-	musicPlayer.playUserGeneratedSound(SOUNDS::firstBlood);
-	musicPlayer.playMusic(MUSIC::mainMenu);
+	//musicPlayer.playExternalSound(SOUNDS::gunshot, sf::Vector3f(10.0f, 0.0f, 0.0f));
+	//musicPlayer.playUserGeneratedSound(SOUNDS::firstBlood);
+	//musicPlayer.playMusic(MUSIC::mainMenu);
 	timepass = 0.0f;
 	//**************************************************
 	current = Gamestate::START;
@@ -34,19 +33,27 @@ void Core::init()
 
 Core::~Core()
 {
+	game->release();
 	if (game != nullptr)
 		delete game;
 	if (top != nullptr)
 		delete top;
+	if (win != nullptr)
+		delete win;
+	if (renderPipe != nullptr)
+		delete renderPipe;
+	
+	musicPlayer.~SoundPlayer();
+
+	Input* i = Input::getInput();
+	i->release();
+
+	CameraInput* cam = CameraInput::getCam();
+	cam->release();
 }
 
 void Core::update(float dt)
 {
-	//*******TEMP**********
-	timepass += dt;
-	musicPlayer.rotate(timepass);
-	musicPlayer.update();
-	//*********************
 	//update I/O
 	if (recreate)
 	{
@@ -83,7 +90,7 @@ void Core::update(float dt)
 				name = "Server";
 		}
 	}
-	console.update(name, 'A'); //Someone wrote a command
+	console.update(name, 'A'); //Updates to check for new messages and commands
 
 
 	switch (current)
@@ -105,8 +112,6 @@ void Core::update(float dt)
 
 		if (renderPipe)
 		{
-			camIn.update(dt);
-
 			renderPipe->update();
 			//render players
 			for (size_t i = 0; i < MAX_CONNECT; i++)
@@ -124,6 +129,12 @@ void Core::update(float dt)
 		//update ui & sound
 		//update renderPipeline
 	}
+
+	//*******TEMP**********
+	timepass += dt;
+	musicPlayer.rotate(timepass);
+	musicPlayer.update();
+	//*********************
 
 	//shouldnt get the ref every frame
 	Input* i = Input::getInput();
@@ -176,7 +187,7 @@ void Core::upStart(float dt)
 				
 				p->init("Roam", glm::vec3(0, 0, 0));
 				
-				game->createPlayer(p, 0);
+				game->createPlayer(p, 0, true);
 				
 				delete p;
 				
@@ -245,7 +256,7 @@ void Core::upClient(float dt)
 			console.printMsg("Connecting...", "System", 'S');
 			if (top->new_connection())
 			{
-				console.printMsg("Connecting Successfull", "System", 'S');
+				console.printMsg("Connecting Successful", "System", 'S');
 				//send "new connection" event to server
 				top->new_connection_packet();
 				
@@ -285,6 +296,7 @@ void Core::upClient(float dt)
 
 
 		game->update(dt);
+		Player* local = game->getPlayer(top->getConId());
 
 		//fetch new network data
 		top->network_IN(dt);
@@ -304,8 +316,6 @@ void Core::upClient(float dt)
 			Fetch current player position
 			Add to topology packet
 			*/
-
-			Player* local = game->getPlayer(top->getConId());
 			glm::vec3 lPos = local->getPos();
 
 			top->frame_pos(top->getConId(), lPos);
@@ -474,7 +484,8 @@ void Core::initPipeline()
 		pv.xy[0] = winX;
 		pv.xy[1] = winY;
 
-		camIn.init((glm::mat4*)renderPipe->getView());
+		CameraInput* cam = CameraInput::getCam();
+		cam->init((glm::mat4*)renderPipe->getView());
 
 		if (!renderPipe->setSetting(PIPELINE_SETTINGS::VIEWPORT, pv))
 		{
