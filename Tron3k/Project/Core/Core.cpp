@@ -44,6 +44,12 @@ Core::~Core()
 		delete renderPipe;
 	
 	musicPlayer.~SoundPlayer();
+
+	Input* i = Input::getInput();
+	i->release();
+
+	CameraInput* cam = CameraInput::getCam();
+	cam->release();
 }
 
 void Core::update(float dt)
