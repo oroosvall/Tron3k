@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Core\CameraInput.cpp" />
     <ClCompile Include="Core\Console.cpp" />
     <ClCompile Include="Core\Core.cpp" />
     <ClCompile Include="Core\Game\Game.cpp" />
@@ -31,6 +32,7 @@
     <ClCompile Include="Network\Server.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Core\CameraInput.h" />
     <ClInclude Include="Core\Console.h" />
     <ClInclude Include="Core\Core.h" />
     <ClInclude Include="Core\Game\Animation.h" />

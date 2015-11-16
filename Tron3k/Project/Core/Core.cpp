@@ -60,6 +60,7 @@ void Core::update(float dt)
 			{
 				console.printMsg("Error: failed to set pipeline setting: VIEWPORT", "System", 'S');
 			}
+
 		}
 	}
 
@@ -96,6 +97,8 @@ void Core::update(float dt)
 	{
 		if (renderPipe)
 		{
+			camIn.update(dt);
+
 			renderPipe->update();
 			renderPipe->render();
 		}
@@ -419,6 +422,9 @@ void Core::initPipeline()
 		pv.type = pv.INT2;
 		pv.xy[0] = winX;
 		pv.xy[1] = winY;
+
+		camIn.init((glm::mat4*)renderPipe->getView());
+
 		if (!renderPipe->setSetting(PIPELINE_SETTINGS::VIEWPORT, pv))
 		{
 			console.printMsg("Error: Failed to set pipeline setting: VIEWPORT", "System", 'S');

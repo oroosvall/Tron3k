@@ -18,6 +18,8 @@
 #include "Input.h"
 #include "Console.h"
 
+#include "CameraInput.h"
+
 enum Gamestate
 {
 	START,
@@ -36,6 +38,8 @@ private:
 	Topology* top;
 	Game* game;
 	IRenderPipeline* renderPipe;
+
+	CameraInput camIn;
 
 	Console console;
 
