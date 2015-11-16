@@ -98,12 +98,27 @@ void Core::update(float dt)
 
 	if (current != START && current != SERVER)
 	{
+		if (game)
+		{
+			game->update(dt);
+		}
+
 		if (renderPipe)
 		{
 			camIn.update(dt);
 
 			renderPipe->update();
-			renderPipe->render();
+			//render players
+			for (size_t i = 0; i < MAX_CONNECT; i++)
+			{
+				Player* p = game->getPlayer(i);
+				if (p)
+				{
+					renderPipe->renderPlayer(0, p->getWorldMat());
+				}
+			}
+			
+			//renderPipe->render();
 		}
 
 		//update ui & sound
@@ -153,6 +168,26 @@ void Core::upStart(float dt)
 				current = Gamestate::ROAM;
 				subState = 0;
 				initPipeline();
+
+				game = new Game();
+				game->init(MAX_CONNECT);
+
+				Player* p = new Player();
+				
+				p->init("Roam", glm::vec3(0, 0, 0));
+				
+				game->createPlayer(p, 0);
+				
+				delete p;
+				
+				p = new Player();
+				
+				p->init("Roam2", glm::vec3(0, 10, 0));
+				
+				game->createPlayer(p, 1);
+				
+				delete p;
+				
 			}
 		}
 
@@ -311,7 +346,6 @@ void Core::clientHandleCmds(float dt)
 		}
 	}
 }
-
 
 void Core::upServer(float dt)
 {

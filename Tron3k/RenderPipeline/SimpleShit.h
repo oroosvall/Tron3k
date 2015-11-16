@@ -18,6 +18,16 @@ public:
 	GLuint index;
 
 	void make();
+	void take(GLuint &vbuffer,
+		GLuint &vao,
+		GLuint &index,
+		int &faceCount)
+	{
+		vbuffer = this->vbuffer;
+		vao = this->vao;
+		index = this->index;
+		faceCount = this->faceCount;
+	}
 
 	//added
 	#define BUFFER_OFFSET(i) ((char *)nullptr + (i))

@@ -2,10 +2,10 @@
 #define ENGINE_H
 
 #include "IRenderPipeline.h"
-#include "ResourceManager.h"
 #include "Text\TextObject.h"
 #include "Camera.h"
 #include "SimpleShit.h"
+#include "ContentManager.h"
 
 enum SETTING_INPUT
 {
@@ -28,9 +28,9 @@ private:
 
 	SETTING_INPUT getType(PIPELINE_SETTINGS type) const;
 
-	TextObject* test;
+	ContentManager contMan;
 
-	ResourceManager resMan;
+	TextObject* test;
 
 	TestMesh testMesh;
 
@@ -53,6 +53,8 @@ public:
 	virtual void render();
 
 	virtual void* getView();
+
+	virtual void renderPlayer(int playerID, void* world);
 
 	virtual std::string getStatus() { return ""; };
 

@@ -150,6 +150,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="ContentManager.cpp" />
     <ClCompile Include="RenderPipeline.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="ShimpleShit.cpp" />
@@ -157,6 +158,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="ContentManager.h" />
     <ClInclude Include="IRenderPipeline.h" />
     <ClInclude Include="RenderPipeline.h" />
     <ClInclude Include="ResourceManager.h" />
