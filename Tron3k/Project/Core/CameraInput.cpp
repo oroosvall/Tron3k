@@ -23,7 +23,7 @@ void CameraInput::init(glm::mat4* view)
 	setCam(vec3(0, 0, 25), vec3(0, -0.5, -1));
 }
 
-void CameraInput::update(float dt)
+void CameraInput::update(float dt, bool freeCam)
 {
 	i->getCursor(x_new, y_new);
 	
@@ -34,7 +34,8 @@ void CameraInput::update(float dt)
 		mousepan(x, y);
 	}
 	
-	keypan(dt);
+	if(freeCam)
+		keypan(dt);
 	
 	*viewMat = lookAt(pos, pos + dir, vec3(0, 1, 0));
 	

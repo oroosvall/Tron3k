@@ -18,8 +18,8 @@ TestMesh::~TestMesh()
 
 void TestMesh::make()
 {
-	loadVert(string("testBoat.v"));
-	loadBMP(string("boat.bmp"));
+	loadVert(string("GhostBoss1.v"));
+	//loadBMP(string("boat.bmp"));
 
 	//glGenBuffers(1, &vbuffer);
 	//glBindBuffer(GL_ARRAY_BUFFER, vbuffer);

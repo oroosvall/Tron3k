@@ -46,7 +46,7 @@ public:
 
 	void init(glm::mat4* viewMat);
 
-	void update(float dt);
+	void update(float dt, bool freeCam);
 
 	glm::vec3 getDir() { return dir; };
 	void setCam(vec3 _pos, vec3 _dir);

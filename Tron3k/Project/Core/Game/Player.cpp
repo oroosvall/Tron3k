@@ -9,10 +9,6 @@ void Player::init(std::string pName, glm::vec3 initPos, bool isLocal)
 {
 	name = pName;
 	pos = initPos;
-	
-	worldMat[0].x = 0.02;
-	worldMat[1].y = 0.02;
-	worldMat[2].z = 0.02;
 
 	isLocalPlayer = isLocal;
 
@@ -38,7 +34,7 @@ void Player::update(float dt)
 		pos.z += 1.0f*dt;*/
 	if (isLocalPlayer)
 	{
-		cam->update(dt);
+		cam->update(dt, false);
 		dir = cam->getDir();
 
 		if (i->getKeyInfo(GLFW_KEY_W))
@@ -64,7 +60,7 @@ void Player::update(float dt)
 	}
 	
 	worldMat[0].w = pos.x;
-	worldMat[1].w = pos.y - 10;
+	worldMat[1].w = pos.y - 2;
 	worldMat[2].w = pos.z;
 	
 }

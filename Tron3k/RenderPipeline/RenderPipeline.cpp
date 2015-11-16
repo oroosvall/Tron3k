@@ -91,6 +91,10 @@ bool RenderPipeline::init()
 	std::string shaderNames[] = { "GameFiles/Shaders/simple_vs.glsl", "GameFiles/Shaders/simple_fs.glsl" };
 	GLenum shaderTypes[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
 
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
+	glDepthMask(GL_TRUE);
+
 	CreateProgram(testShader, shaderNames, shaderTypes, 2);
 
 	worldMat = glGetUniformLocation(testShader, "worldMat");
