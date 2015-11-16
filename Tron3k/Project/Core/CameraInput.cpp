@@ -3,6 +3,13 @@
 
 #include <iostream>
 
+CameraInput* CameraInput::singleton = nullptr;
+
+CameraInput::CameraInput()
+{
+
+}
+
 void CameraInput::init(glm::mat4* view)
 {
 	viewMat = view;
@@ -14,10 +21,6 @@ void CameraInput::init(glm::mat4* view)
 	dir = start;
 
 	setCam(vec3(0, 0, 25), vec3(0, -0.5, -1));
-}
-
-CameraInput::~CameraInput()
-{
 }
 
 void CameraInput::update(float dt)
@@ -87,9 +90,9 @@ void CameraInput::mousepan(float x, float y)
 	vec3 view = start;
 	rotateRad = toRADIAN * angleV;
 
-	rotV = mat3(cos(rotateRad), -sin(rotateRad), 0.0f,
-		sin(rotateRad), cos(rotateRad), 0.0f,
-		0.0f, 0.0f, 1.0f);
+	rotV = mat3(	cos(rotateRad),		-sin(rotateRad),	0.0f,
+					sin(rotateRad),		cos(rotateRad),		0.0f,
+					0.0f,				0.0f,				1.0f);
 	view = rotV * view;
 	view = normalize(view);
 
@@ -121,4 +124,17 @@ void CameraInput::setCam(vec3 _pos, vec3 _dir)
 
 	pos = _pos;
 	dir = _dir;
+}
+
+CameraInput* CameraInput::getCam()
+{
+	if (singleton == nullptr)
+		singleton = new CameraInput();
+	return singleton;
+}
+
+void CameraInput::release()
+{
+	if (singleton != nullptr)
+		delete singleton;
 }

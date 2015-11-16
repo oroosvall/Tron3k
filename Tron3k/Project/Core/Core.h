@@ -39,8 +39,6 @@ private:
 	Game* game;
 	IRenderPipeline* renderPipe;
 
-	CameraInput camIn;
-
 	Console console;
 
 	// window

@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include "Animation.h"
 #include "../Input.h"
+#include "../CameraInput.h"
 
 #include <glm/glm.hpp>
 #include <string>
@@ -18,6 +19,9 @@ private:
 	glm::vec3 goalpos; //Used by non-local players to move smoothly
 
 	bool isLocalPlayer;
+
+	Input* i;
+	CameraInput* cam;
 public:
 	Player();
 	void init(std::string name, glm::vec3 pos, bool isLocal = false);
