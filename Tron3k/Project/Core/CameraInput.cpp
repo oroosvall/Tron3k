@@ -1,6 +1,8 @@
 #include "CameraInput.h"
 #include <glm\gtc\matrix_transform.hpp>
 
+#include <iostream>
+
 void CameraInput::init(glm::mat4* view)
 {
 	viewMat = view;
@@ -8,8 +10,10 @@ void CameraInput::init(glm::mat4* view)
 	i = Input::getInput();
 	i->getCursor(x_last, y_last);
 
-	pos = vec3(0, 0, 25);
-	dir = vec3(0, 0, -1);
+	start = vec3(-1, 0, 0);
+	dir = start;
+
+	setCam(vec3(0, 0, 25), vec3(0, -0.5, -1));
 }
 
 CameraInput::~CameraInput()
@@ -21,7 +25,11 @@ void CameraInput::update(float dt)
 	i->getCursor(x_new, y_new);
 	
 	if (i->getKeyInfo(GLFW_KEY_LEFT_SHIFT))
-		mousepan(float (x_new - x_last), float (y_new - y_last));
+	{
+		int x = x_new - x_last;
+		int y = y_new - y_last;
+		mousepan(x, y);
+	}
 	
 	keypan(dt);
 	
@@ -76,7 +84,7 @@ void CameraInput::mousepan(float x, float y)
 
 	//rotate vertically around x
 	float rotateRad;
-	vec3 view = vec3(1.0f, 0.0f, 0.0f);
+	vec3 view = start;
 	rotateRad = toRADIAN * angleV;
 
 	rotV = mat3(cos(rotateRad), -sin(rotateRad), 0.0f,
@@ -91,7 +99,26 @@ void CameraInput::mousepan(float x, float y)
 		0.0f, 1.0f, 0.0f,
 		sin(rotateRad), 0.0f, cos(rotateRad));
 	view = rotH * view;
-	view = normalize(view);
+	dir = normalize(view);
 
-	dir = pos - view;
+}
+
+void CameraInput::setCam(vec3 _pos, vec3 _dir)
+{
+	_dir = normalize(_dir);
+
+	float angleXZ = atan2(_dir.x, _dir.z) - atan2(dir.x, dir.z);
+	angleH += angleXZ * toDEGREE;
+
+
+	float angleYold = dot( dir, vec3(0, 1, 0) );
+	float angleYnew = dot( _dir, vec3(0, 1, 0) );
+
+	float diff = angleYold - angleYnew;
+	diff *= toDEGREE;
+
+	angleV -= diff;
+
+	pos = _pos;
+	dir = _dir;
 }

@@ -68,8 +68,8 @@ Player* Game::getPlayer(int conID)
 	return nullptr;
 }
 
-void Game::createPlayer(Player* p, int conID)
+void Game::createPlayer(Player* p, int conID, bool isLocal)
 {
 	playerList[conID] = new Player();
-	playerList[conID]->init(p->getName(), p->getPos());
+	playerList[conID]->init(p->getName(), p->getPos(), isLocal);
 }

@@ -39,6 +39,9 @@
     <ClCompile Include="ShimpleShit.cpp">
       <Filter>Source Files\Buffers</Filter>
     </ClCompile>
+    <ClCompile Include="GBuffer.cpp">
+      <Filter>Source Files\Buffers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IRenderPipeline.h">
@@ -60,6 +63,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="SimpleShit.h">
+      <Filter>Source Files\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="GBuffer.h">
       <Filter>Source Files\Buffers</Filter>
     </ClInclude>
   </ItemGroup>

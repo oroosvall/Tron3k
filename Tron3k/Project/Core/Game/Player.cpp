@@ -5,10 +5,11 @@ Player::Player()
 	
 }
 
-void Player::init(std::string pName, glm::vec3 initPos)
+void Player::init(std::string pName, glm::vec3 initPos, bool isLocal)
 {
 	name = pName;
 	pos = initPos;
+	isLocalPlayer = isLocal;
 }
 
 void Player::setName(std::string newName)
@@ -24,7 +25,11 @@ void Player::setGoalPos(glm::vec3 newPos)
 
 void Player::update(float dt)
 {
-	/*Input* i = Input::getInput();
-	if (i->getKeyInfo(GLFW_KEY_W))
-		pos.z += 1.0f*dt;*/
+	if (isLocalPlayer)
+	{
+		Input* i = Input::getInput();
+		if (i->getKeyInfo(GLFW_KEY_W))
+			pos.z += 1.0f*dt;
+	}
+	
 }
