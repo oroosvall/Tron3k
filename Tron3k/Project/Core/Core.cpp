@@ -124,6 +124,7 @@ void Core::update(float dt)
 
 	glfwSwapBuffers(win);
 
+	//TEMPORARY
 	if (game != nullptr)
 		givePlayerBoatExtremes();
 }
