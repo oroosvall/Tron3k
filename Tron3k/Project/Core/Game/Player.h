@@ -13,11 +13,14 @@ class Player : public GameObject
 private:
 	std::string name;
 	glm::vec3 pos;
+	glm::vec3 dir; //Current viewing direction
 
 	glm::vec3 goalpos; //Used by non-local players to move smoothly
+
+	bool isLocalPlayer;
 public:
 	Player();
-	void init(std::string name, glm::vec3 pos);
+	void init(std::string name, glm::vec3 pos, bool isLocal = false);
 
 	void update(float dt);
 
