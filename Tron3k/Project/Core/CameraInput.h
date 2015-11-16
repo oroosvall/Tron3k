@@ -20,6 +20,7 @@ private:
 
 	vec3 pos;
 	vec3 dir;
+	vec3 start;
 
 	float angleH;
 	float angleV;
@@ -42,6 +43,7 @@ public:
 	void mousepan(float x, float y);
 	void keypan(float dt);
 
+	void setCam(vec3 _pos, vec3 _dir);
 };
 
 #endif
