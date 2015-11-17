@@ -79,6 +79,8 @@ public:
 	void init();
 	void update(float dt);
 
+	bool windowVissible() const;
+
 	void setfps(int fps);
 
 	~Core();

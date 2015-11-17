@@ -153,7 +153,6 @@
     <ClCompile Include="ContentManager.cpp" />
     <ClCompile Include="GBuffer.cpp" />
     <ClCompile Include="RenderPipeline.cpp" />
-    <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="ShimpleShit.cpp" />
     <ClCompile Include="Text\TextObject.cpp" />
   </ItemGroup>
@@ -162,8 +161,8 @@
     <ClInclude Include="ContentManager.h" />
     <ClInclude Include="GBuffer.h" />
     <ClInclude Include="IRenderPipeline.h" />
+    <ClInclude Include="Mesh.h" />
     <ClInclude Include="RenderPipeline.h" />
-    <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SimpleShit.h" />
     <ClInclude Include="Text\TextObject.h" />

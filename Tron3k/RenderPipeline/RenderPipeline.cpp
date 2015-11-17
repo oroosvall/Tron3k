@@ -135,6 +135,7 @@ void RenderPipeline::update()
 void RenderPipeline::render()
 {
 	
+
 }
 
 void* RenderPipeline::getView()
@@ -144,19 +145,12 @@ void* RenderPipeline::getView()
 
 void RenderPipeline::renderPlayer(int playerID, void* world)
 {
-	//bind
-	//glActiveTexture(GL_TEXTURE0);
-	//glBindTexture(GL_TEXTURE_2D, testMesh.textureId);
-	//glBindVertexArray(testMesh.vao);
-	//glBindBuffer(GL_ARRAY_BUFFER, testMesh.vbuffer);
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, testMesh.index);
+
 
 	//set temp objects worldmat
 	glProgramUniformMatrix4fv(testShader, worldMat, 1, GL_FALSE, (GLfloat*)world);
 
 	contMan.renderPlayer(0, *(glm::mat4*)world);
-
-	//glDrawElements(GL_TRIANGLES, testMesh.faceCount * 3, GL_UNSIGNED_SHORT, 0);
 
 }
 
