@@ -28,9 +28,7 @@ void Core::init()
 	theSound->playUserGeneratedSound(SOUNDS::firstBlood);
 	theSound->playMusic(MUSIC::mainMenu);
 	//******************* TEMP *************************
-	//musicPlayer.playExternalSound(SOUNDS::gunshot, sf::Vector3f(10.0f, 0.0f, 0.0f));
-	//musicPlayer.playUserGeneratedSound(SOUNDS::firstBlood);
-	//musicPlayer.playMusic(MUSIC::mainMenu);
+	
 	timepass = 0.0f;
 	//**************************************************
 	current = Gamestate::START;
@@ -52,7 +50,7 @@ Core::~Core()
 		renderPipe->release();
 	
 	SoundPlayer* theSound = SoundPlayer::getSound();
-	SoundPlayer::release();
+	theSound->release();
 
 	Input* i = Input::getInput();
 	i->release();
