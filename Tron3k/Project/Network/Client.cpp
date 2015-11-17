@@ -1,5 +1,11 @@
 #include "Client.h"
 
+void Client::disconnected(Uint8 _conID)
+{
+	consolePtr->printMsg("Server Disconnected", "System", 'S');
+	con[_conID].disconnect();
+}
+
 Client::~Client()
 {
 	if (con)

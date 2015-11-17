@@ -11,7 +11,7 @@
 
 using namespace std;
 
-#define MAX_CONNECT 20
+#define MAX_CONNECT 2
 #define PORT_DEFAULT 18180
 #define tick 0.050f
 
@@ -28,8 +28,10 @@ protected:
 
 	Game* gamePtr;
 	Console* consolePtr;
-public:
 
+	virtual void disconnected(Uint8 _conID) {};
+public:
+	
 	//chat test
 	string msg_out;
 	Uint8 scope_out;
@@ -79,7 +81,9 @@ public:
 		while (true)
 		{
 			Packet* rec = new Packet();
-			connection->receive(rec);
+			if(connection->receive(rec) == false && connection->isConnected())
+				disconnected(conID);
+
 			if (rec->getDataSize() == 0) // no more messages to handle
 			{
 				delete rec;

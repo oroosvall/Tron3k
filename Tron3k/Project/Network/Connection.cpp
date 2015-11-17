@@ -38,10 +38,16 @@ bool Connection::connect(TcpListener* listener)
 	return connected;
 }
 
+void Connection::disconnect()
+{
+	socket.disconnect();
+	connected = false;
+}
+
 bool Connection::receive(Packet* ret)
 {
 	status = socket.receive(*ret);
-	if (status != sf::Socket::Done)
+	if (status == sf::Socket::Disconnected)
 		return false;
 
 	return true;

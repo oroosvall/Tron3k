@@ -12,6 +12,8 @@ private:
 	bool packageRecieved;
 	bool mapLoaded;
 	bool joined;
+
+	void disconnected(Uint8 _conID);
 public:
 	void init(Console* console, int port, IpAddress addrs);
 	~Client();

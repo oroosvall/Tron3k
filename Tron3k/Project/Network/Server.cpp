@@ -1,13 +1,23 @@
 #include "Server.h"
 
+void Server::disconnected(Uint8 _conID)
+{
+	Player* p = gamePtr->getPlayer(_conID);
+	if (p != nullptr)
+	{
+		consolePtr->printMsg("Player (" + p->getName() + ") Disconnected", "System", 'S');
+	}
+	else
+		consolePtr->printMsg("ERROR Disconnect", "System", 'S');
+
+	con[_conID].disconnect();
+	nrConnected--;
+}
+
 Server::~Server()
 {
 	if (con)
-	{
 		delete con;
-	}
-	
-
 	if (package)
 		delete package;
 }
@@ -52,10 +62,12 @@ void Server::branch(Packet* rec, Uint8 conID)
 
 void Server::network_IN(float dt)
 {
-	//fetch packages from all clients
+	//fetch packages from all clients and check for disconnected clients
 	for (int n = 0; n < MAX_CONNECT; n++)
-		IN(&con[n], n);
-
+	{
+		if (con[n].isConnected())
+			IN(&con[n], n);
+	}
 }
 
 void Server::network_OUT(float dt)
@@ -72,7 +84,9 @@ void Server::network_OUT(float dt)
 	}
 
 	if (package->getDataSize() > 1) //only send if contains data
+	{
 		con->send(package);
+	}
 	package_clear();
 }
 
@@ -110,6 +124,7 @@ bool Server::new_connection()
 			{
 				cout << "new connection established" << endl;
 				open->setConnected(true);
+				nrConnected++;
 			}
 		}
 	}
@@ -166,8 +181,6 @@ void Server::in_new_connection(Packet* rec, Uint8 conID)
 	//reply to the connection
 	con[conID].send(out);
 	delete out;
-
-
 
 	p = gamePtr->getPlayer(conID);
 	Packet* b = new Packet;
@@ -236,3 +249,4 @@ void Server::in_message(Packet* rec, Uint8 conID)
 	else
 		consolePtr->printMsg("ERROR in_message", "System", 'S');
 }
+

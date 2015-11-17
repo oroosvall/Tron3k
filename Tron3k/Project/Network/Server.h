@@ -10,6 +10,7 @@ private:
 	int nrConnected = 0;
 	int nrConnectedRot = 0;
 
+	void disconnected(Uint8 _conID);
 public:
 	void init(Console* console, int port, IpAddress addrs);
 	~Server();
@@ -21,8 +22,8 @@ public:
 	Uint8 getConId() { return 'S'; };
 
 	//server only
-	virtual bool bind();
-	virtual void branch(Packet* rec, Uint8 conID);
+	bool bind();
+	void branch(Packet* rec, Uint8 conID);
 
 	//package
 	void package_clear();

@@ -22,7 +22,7 @@ public:
 	bool connect(TcpListener* listener);
 	bool receive(Packet* ret);
 	bool send(Packet* out);
-
+	void disconnect();
 	bool isConnected() { return connected; };
 	void setConnected(bool set) { connected = set; };
 
