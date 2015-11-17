@@ -2,12 +2,19 @@
 
 Server::~Server()
 {
+	if (con)
+	{
+		delete con;
+	}
+	
+
 	if (package)
 		delete package;
 }
 
-void Server::init(Console* console)
+void Server::init(Console* console, int port, IpAddress addrs)
 {
+	PORT = port;
 	consolePtr = console;
 
 	package = new Packet();
@@ -188,6 +195,7 @@ void Server::in_frame(Packet* rec, Uint8 conID)
 		switch (frame_type)
 		{
 		case NET_FRAME::NAME_CHANGE: in_frame_name_change(rec); break;
+		case NET_FRAME::POS: in_frame_pos(rec); break;
 		}
 	}
 

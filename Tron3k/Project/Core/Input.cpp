@@ -115,7 +115,7 @@ Input* Input::singleton = nullptr;
 
 Input* Input::getInput()
 {
-	if (singleton == 0)
+	if (singleton == nullptr)
 		singleton = new Input();
 	return singleton;
 }

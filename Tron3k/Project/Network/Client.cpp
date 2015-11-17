@@ -2,12 +2,16 @@
 
 Client::~Client()
 {
+	if (con)
+		delete con;
 	if (package)
 		delete package;
 }
 
-void Client::init(Console* console)
+void Client::init(Console* console, int port, IpAddress addrs)
 {
+	address = addrs;
+	PORT = port;
 	consolePtr = console;
 
 	package = new Packet();
@@ -54,7 +58,7 @@ bool Client::new_connection()
 	// test connect
 	if (con->isConnected() == false)
 	{
-		if (con->connect(IpAddress::LocalHost, PORT))
+		if (con->connect(address, PORT))
 		{
 			return true;
 		}
@@ -131,6 +135,7 @@ void Client::in_event(Packet* rec, Uint8 _conID)
 		temp->init(pName, glm::vec3(0, 0, 0));
 		gamePtr->createPlayer(temp, p_conID);
 		consolePtr->printMsg("Player (" + pName + ") joined the server", "System", 'S');
+		delete temp;
 		break;
 	}
 }

@@ -1,14 +1,20 @@
+#define _CRTDBG_MAP_ALLOC
 #include <iostream>
 #include <ctime>
 
 #include <sfml\Network.hpp>
 
+#include <stdlib.h>
+#include <crtdbg.h>
 #include "Core\Core.h"
+
+//#include <vld.h>
 
 using namespace std;
 
 int main()
 {
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	double dt = 0.0f;
 	float timePass = 0.0f;
 	int fps = 0;
@@ -17,7 +23,7 @@ int main()
 	Core core;
 	core.init();
 
-	while (true)
+	while (core.windowVisible())
 	{
 		core.update(dt);
 

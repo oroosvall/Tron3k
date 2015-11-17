@@ -9,20 +9,40 @@
 #include <vector>
 using namespace std;
 
+struct TriangleVertex
+{
+	float x, y, z;
+	float u, v;
+};
+
 class TestMesh
 {
 public:
-
+	~TestMesh();
 	GLuint vbuffer;
 	GLuint vao;
 	GLuint index;
 
 	void make();
+	void take(GLuint &vbuffer,
+		GLuint &vao,
+		GLuint &index,
+		int &faceCount)
+	{
+		vbuffer = this->vbuffer;
+		vao = this->vao;
+		index = this->index;
+		faceCount = this->faceCount;
+	}
 
 	//added
 	#define BUFFER_OFFSET(i) ((char *)nullptr + (i))
 	GLuint textureId;
 	int faceCount;
+
+	float minX, minY, minZ, maxX, maxY, maxZ;
+	void setMaxAndMinPos(std::vector<TriangleVertex> verts);
+
 	bool loadVert(string path);
 	bool loadBMP(string path);
 };

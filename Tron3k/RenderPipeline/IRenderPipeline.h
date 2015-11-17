@@ -45,6 +45,8 @@ public:
 
 	virtual void* getView() = 0;
 
+	virtual void renderPlayer(int playerID, void* world) = 0;
+
 	virtual std::string getStatus() = 0;
 
 	PipelineValues getSettings(PIPELINE_SETTINGS type);
@@ -64,6 +66,9 @@ public:
 	virtual void removeMesh(unsigned int id) = 0;
 
 	virtual void setGBufferWin(unsigned int WindowWidth, unsigned int WindowHeight) = 0;
+
+	virtual void* getMinExtremes() = 0;
+	virtual void* getMaxExtremes() = 0;
 
 };
 

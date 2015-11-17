@@ -1,19 +1,20 @@
 #include "SimpleShit.h"
 
-struct TriangleVertex
-{
-	float x, y, z;
-	float u, v;
-};
+
 
 struct Index
 {
 	unsigned int f1, f2, f3;
 };
 
+TestMesh::~TestMesh()
+{
+	
+}
+
 void TestMesh::make()
 {
-	loadVert(string("testBoat.v"));
+	loadVert(string("GhostBoss1.v"));
 	//loadBMP(string("boat.bmp"));
 
 	//glGenBuffers(1, &vbuffer);
@@ -129,6 +130,8 @@ bool TestMesh::loadVert(string path)
 			}
 		}
 
+		setMaxAndMinPos(vert);
+
 		glGenBuffers(1, &vbuffer);
 		glBindBuffer(GL_ARRAY_BUFFER, vbuffer);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vert[0])* vert.size(), &vert[0], GL_STATIC_DRAW);
@@ -211,4 +214,44 @@ bool TestMesh::loadBMP(string imagepath)
 	delete[] data;
 
 	return true;
+}
+
+void TestMesh::setMaxAndMinPos(std::vector<TriangleVertex> verts)
+{
+	//finds the extreme points of the mesh so we can manufacture a bounding box
+	minX = FLT_MAX;
+	minY = FLT_MAX;
+	minZ = FLT_MAX;
+	maxX = -FLT_MAX;
+	maxY = -FLT_MAX;
+	maxZ = -FLT_MAX;
+	for (int i = 0; i < verts.size(); i++)
+	{
+		if (verts[i].x <= minX)
+		{
+			minX = verts[i].x;
+		}
+		if (verts[i].x >= maxX)
+		{
+			maxX = verts[i].x;
+		}
+
+		if (verts[i].y <= minY)
+		{
+			minY = verts[i].y;
+		}
+		if (verts[i].y >= maxY)
+		{
+			maxY = verts[i].y;
+		}
+
+		if (verts[i].z <= minZ)
+		{
+			minZ = verts[i].z;
+		}
+		if (verts[i].z >= maxZ)
+		{
+			maxZ = verts[i].z;
+		}
+	}
 }

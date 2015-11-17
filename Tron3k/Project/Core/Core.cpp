@@ -21,11 +21,14 @@ void Core::init()
 	winX = winY = 800;
 	
 	createWindow(winX, winY, fullscreen);
+
+	SoundPlayer* theSound = SoundPlayer::getSound();
+	//theSound->init();
+	//theSound->playExternalSound(SOUNDS::gunshot, sf::Vector3f(10.0f, 0.0f, 0.0f));
+	//theSound->playUserGeneratedSound(SOUNDS::firstBlood);
+	//theSound->playMusic(MUSIC::mainMenu);
 	//******************* TEMP *************************
-	musicPlayer.enableSounds(false);
-	musicPlayer.playExternalSound(SOUNDS::gunshot, sf::Vector3f(10.0f, 0.0f, 0.0f));
-	musicPlayer.playUserGeneratedSound(SOUNDS::firstBlood);
-	musicPlayer.playMusic(MUSIC::mainMenu);
+	
 	timepass = 0.0f;
 	//**************************************************
 	current = Gamestate::START;
@@ -35,18 +38,31 @@ void Core::init()
 Core::~Core()
 {
 	if (game != nullptr)
-		delete game;
+		game->release();
 	if (top != nullptr)
 		delete top;
+	if (win != nullptr)
+	{
+		glfwDestroyWindow(win);
+		win = nullptr;
+	}
+	if (renderPipe != nullptr)
+		renderPipe->release();
+	
+	SoundPlayer* theSound = SoundPlayer::getSound();
+	theSound->release();
+
+	Input* i = Input::getInput();
+	i->release();
+
+	CameraInput* cam = CameraInput::getCam();
+	cam->release();
+
+	saveSettings();
 }
 
 void Core::update(float dt)
 {
-	//*******TEMP**********
-	timepass += dt;
-	musicPlayer.rotate(timepass);
-	musicPlayer.update();
-	//*********************
 	//update I/O
 	if (recreate)
 	{
@@ -83,7 +99,7 @@ void Core::update(float dt)
 				name = "Server";
 		}
 	}
-	console.update(name, 'A'); //Someone wrote a command
+	console.update(name, 'A'); //Updates to check for new messages and commands
 
 
 	switch (current)
@@ -98,18 +114,44 @@ void Core::update(float dt)
 
 	if (current != START && current != SERVER)
 	{
-		if (renderPipe)
+		if (game)
 		{
-			camIn.update(dt);
+			game->update(dt);
+			if (renderPipe)
+			{
+				renderPipe->update();
+				renderPipe->renderIni(); 
+				
+				//render players
+				for (size_t i = 0; i < MAX_CONNECT; i++)
+				{
+					Player* p = game->getPlayer(i);
+					if (p)
+					{
+						renderPipe->renderPlayer(0, p->getWorldMat());
+					}
+				}
+				std::vector<Bullet*> bullets = game->getBullets();
+				for (int i = 0; i < bullets.size(); i++)
+				{
+					renderPipe->renderPlayer(0, bullets[i]->getWorldMat());
+				}
 
-			renderPipe->update();
-			renderPipe->renderIni();
-			renderPipe->render();
+				renderPipe->render();
+			}
+
 		}
 
+		
 		//update ui & sound
 		//update renderPipeline
 	}
+
+	//*******TEMP**********
+	timepass += dt;
+	//musicPlayer.rotate(timepass);
+	//musicPlayer.update();
+	//*********************
 
 	//shouldnt get the ref every frame
 	Input* i = Input::getInput();
@@ -118,7 +160,13 @@ void Core::update(float dt)
 
 	glfwSwapBuffers(win);
 
-	
+	//TEMPORARY
+	static bool given = false;
+	if (game != nullptr && !given)
+	{
+		givePlayerBoatExtremes();
+		given = true;
+	}
 }
 
 void Core::upStart(float dt)
@@ -129,34 +177,14 @@ void Core::upStart(float dt)
 		console.printMsg("[/1] Client", "System", 'S');
 		console.printMsg("[/2] Server", "System", 'S');
 		console.printMsg("[/3] Roam", "System", 'S');
+
+		loadSettings();
 		subState++;
 		break;
 
 	case 1:
-		if (console.commandReady())
-		{
-			string cmd = console.getCommand();
-			if (cmd == "/1")
-			{
-				current = Gamestate::CLIENT;
-				subState = 0;
-				initPipeline();
-			}
-
-			else if (cmd == "/2")
-			{
-				current = Gamestate::SERVER;
-				subState = 0;
-			}
-
-			else if (cmd == "/3")
-			{
-				current = Gamestate::ROAM;
-				subState = 0;
-				initPipeline();
-			}
-		}
-
+		//start console commands
+		startHandleCmds(dt);
 		break;
 	}
 }
@@ -193,7 +221,7 @@ void Core::upClient(float dt)
 		if (top)
 			delete top;
 		top = new Client();
-		top->init(&console);
+		top->init(&console, _port, _addrs);
 
 		subState++;
 		break;
@@ -211,7 +239,7 @@ void Core::upClient(float dt)
 			console.printMsg("Connecting...", "System", 'S');
 			if (top->new_connection())
 			{
-				console.printMsg("Connecting Successfull", "System", 'S');
+				console.printMsg("Connecting Successful", "System", 'S');
 				//send "new connection" event to server
 				top->new_connection_packet();
 				
@@ -220,7 +248,6 @@ void Core::upClient(float dt)
 				game = new Game();
 				game->init(MAX_CONNECT);
 				top->setGamePtr(game);
-
 				subState++;
 				return;
 			}
@@ -243,6 +270,9 @@ void Core::upClient(float dt)
 			//can i load?
 
 			// if not  -> menu
+			top->frame_name_change(top->getConId(), _name);
+			Player* me = game->getPlayer(top->getConId());
+			me->setName(_name);
 			subState++;
 		}
 		
@@ -251,6 +281,7 @@ void Core::upClient(float dt)
 
 
 		game->update(dt);
+		Player* local = game->getPlayer(top->getConId());
 
 		//fetch new network data
 		top->network_IN(dt);
@@ -270,11 +301,10 @@ void Core::upClient(float dt)
 			Fetch current player position
 			Add to topology packet
 			*/
-
-			Player* local = game->getPlayer(top->getConId());
 			glm::vec3 lPos = local->getPos();
+			glm::vec3 lDir = local->getDir();
 
-			top->frame_pos(top->getConId(), lPos);
+			top->frame_pos(top->getConId(), lPos, lDir);
 
 
 			top->network_OUT(dt);
@@ -285,6 +315,92 @@ void Core::upClient(float dt)
 	}
 }
 
+void Core::startHandleCmds(float dt)
+{
+	if (console.commandReady())
+	{
+		string token;
+		istringstream ss = istringstream(console.getCommand());
+		ss >> token;
+		if (token == "/help")
+		{
+			console.printMsg("Console comands", "", ' ');
+			console.printMsg("/name " + _name, "", ' ');
+			console.printMsg("/ip " + _addrs.toString(), "", ' ');
+			console.printMsg("/port " + to_string(_port), "", ' ');
+		}
+		else if (token == "/name")
+		{
+			ss >> token;
+
+			if (token == "/name") //Same token = no more found
+				console.printMsg("No name found. Use /name <new Name>", "System", 'S');
+			else
+			{
+				/* Todo: Check for illegal names */
+					_name = token;
+					console.printMsg("You changed name to (" + token + ")", "System", 'S');
+			}
+		}
+		else if (token == "/ip")
+		{
+			ss >> token;
+			_addrs = IpAddress(token);
+			console.printMsg("IP address set to: " + _addrs.toString(), "System", 'S');
+
+		}
+		else if (token == "/port")
+		{
+			ss >> token;
+			if(token == "/port")
+				console.printMsg("No port found. Use /port <new Port>", "System", 'S');
+			else
+			{
+				_port = atoi(token.c_str());
+				console.printMsg("Port set to: " + to_string(_port), "System", 'S');
+			}
+		}
+		else if (token == "/1")
+		{
+			current = Gamestate::CLIENT;
+			subState = 0;
+			initPipeline();
+		}
+
+		else if (token == "/2")
+		{
+			current = Gamestate::SERVER;
+			subState = 0;
+		}
+
+		else if (token == "/3")
+		{
+			current = Gamestate::ROAM;
+			subState = 0;
+			initPipeline();
+
+			game = new Game();
+			game->init(MAX_CONNECT);
+
+			Player* p = new Player();
+
+			p->init("Roam", glm::vec3(0, 0, 0));
+
+			game->createPlayer(p, 0, true);
+
+			delete p;
+
+			p = new Player();
+
+			p->init("Roam2", glm::vec3(0, 10, 0));
+
+			game->createPlayer(p, 1);
+
+			delete p;
+		}
+	}
+}
+
 void Core::clientHandleCmds(float dt)
 {
 	if (console.commandReady())
@@ -292,13 +408,16 @@ void Core::clientHandleCmds(float dt)
 		string token;
 		istringstream ss = istringstream(console.getCommand());
 		ss >> token;
-		if (token == "/name")
+		if (token == "/help")
+		{
+			console.printMsg("Console comands", "", ' ');
+			console.printMsg("/name " + _name, "", ' ');
+		}
+		else if (token == "/name")
 		{
 			ss >> token;
-			if (token == "")
-			{
+			if (token == "/name")
 				console.printMsg("No name found. Use /name <new Name>", "System", 'S');
-			}
 			else
 			{
 				/* Todo: Check for illegal names */
@@ -313,7 +432,6 @@ void Core::clientHandleCmds(float dt)
 	}
 }
 
-
 void Core::upServer(float dt)
 {
 	switch (subState)
@@ -323,7 +441,7 @@ void Core::upServer(float dt)
 		if (top)
 			delete top;
 		top = new Server();
-		top->init(&console);
+		top->init(&console, _port, _addrs);
 		
 		subState = 1;
 		break;
@@ -388,6 +506,51 @@ void Core::upServer(float dt)
 	}
 }
 
+void Core::saveSettings()
+{
+	fstream file;
+	file.open("settings.txt", fstream::trunc | fstream::out);
+
+	if (file.is_open())
+	{
+		file << "Name: " << _name << endl;
+		file << "IP: " << _addrs.toString() << endl;
+		file << "Port: " << _port;
+	}
+}
+
+void Core::loadSettings()
+{
+	fstream file("settings.txt");
+
+	//default values
+	_name = "ClientName";
+	_port = PORT_DEFAULT;
+	_addrs = IpAddress::LocalHost;
+
+	if (file.is_open())
+	{
+		string in;
+		string in2;
+		while (getline(file, in))
+		{
+			stringstream ss(in);
+			ss >> in;
+			ss >> in2;
+			if (in == "Name:")
+				_name = in2;
+			else if (in == "IP:")
+				_addrs = IpAddress(in2);
+			else if (in == "Port:")
+				_port = atoi(in2.c_str());
+		}
+	}
+	else
+	{
+		saveSettings(); //save file with default values
+	}
+
+}
 
 void Core::createWindow(int x, int y, bool fullscreen)
 {
@@ -441,7 +604,8 @@ void Core::initPipeline()
 		pv.xy[0] = winX;
 		pv.xy[1] = winY;
 
-		camIn.init((glm::mat4*)renderPipe->getView());
+		CameraInput* cam = CameraInput::getCam();
+		cam->init((glm::mat4*)renderPipe->getView());
 
 		if (!renderPipe->setSetting(PIPELINE_SETTINGS::VIEWPORT, pv))
 		{
@@ -454,4 +618,30 @@ void Core::setfps(int fps)
 {
 	if(win != nullptr)
 		glfwSetWindowTitle(win, to_string(fps).c_str());
+}
+
+//TEMPORARY
+void Core::givePlayerBoatExtremes()
+{
+	if (renderPipe != nullptr)
+	{
+		//to avoid leaks
+		vec3* minExtremes = (vec3*)renderPipe->getMinExtremes();
+		vec3* maxExtremes = (vec3*)renderPipe->getMaxExtremes();
+
+		vec3 minEx = *minExtremes;
+		vec3 maxEx = *maxExtremes;
+
+		delete minExtremes;
+		delete maxExtremes;
+
+		game->getBoatCoordsFromCore(minEx, maxEx);
+	}
+	else
+	game->getBoatCoordsFromCore(vec3(0,0,0), vec3(0,0,0));
+}
+
+bool Core::windowVisible() const
+{
+	return !glfwWindowShouldClose(win);
 }

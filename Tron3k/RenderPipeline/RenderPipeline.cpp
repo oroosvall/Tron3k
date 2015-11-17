@@ -103,6 +103,12 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	std::string shaderNamesPreDe[] = { "GameFiles/Shaders/PreDeffered_vs.glsl", "GameFiles/Shaders/PreDeffered_gs.glsl", "GameFiles/Shaders/PreDeffered_fs.glsl" };
 	GLenum shaderTypesPreDe[] = { GL_VERTEX_SHADER, GL_GEOMETRY_SHADER, GL_FRAGMENT_SHADER };
 
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
+	glDepthMask(GL_TRUE);
+
+	//CreateProgram(testShader, shaderNames, shaderTypes, 2);
+
 	CreateProgram(preDefferedShader, shaderNamesPreDe, shaderTypesPreDe, 3);
 
 	worldMat = glGetUniformLocation(preDefferedShader, "WorldMatrix"); //worldMat
@@ -115,13 +121,17 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 	testMesh.make();
 
+	contMan.init();
+	
+	glEnable(GL_CULL_FACE); //TEMPORARY PLZ MOVE THIS SOMEWHERE APPROPRIATE OR DELETE THIS
+
 	return true;
 }
 
 void RenderPipeline::release()
 {
 	// place delete code here
-
+	
 	delete test;
 
 	delete gBuffer;
@@ -131,6 +141,7 @@ void RenderPipeline::release()
 
 void RenderPipeline::update()
 {
+	
 }
 
 
@@ -145,6 +156,8 @@ void RenderPipeline::render()
 {
 	glUseProgram(preDefferedShader);
 
+	contMan.renderChunks(preDefferedShader, worldMat);
+	
 	//bind
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, testMesh.textureId);
@@ -172,11 +185,25 @@ void RenderPipeline::render()
 	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
 
 	gBuffer->render();
+	//glUseProgram(testShader);
+
+	//set camera matrixes
+	//cam.setViewProjMat(testShader, viewMat);
 }
 
 void* RenderPipeline::getView()
 {
 	return (void*)cam.getViewMat();
+}
+
+void RenderPipeline::renderPlayer(int playerID, void* world)
+{
+
+	//set temp objects worldmat
+	glProgramUniformMatrix4fv(preDefferedShader, worldMat, 1, GL_FALSE, (GLfloat*)world);
+
+	contMan.renderPlayer(0, *(glm::mat4*)world);
+
 }
 
 bool RenderPipeline::setSetting(PIPELINE_SETTINGS type, PipelineValues value)
@@ -219,6 +246,17 @@ SETTING_INPUT RenderPipeline::getType(PIPELINE_SETTINGS type) const
 	return SETTING_INPUT::NONE_IN;
 }
 
+void* RenderPipeline::getMinExtremes()
+{
+	vec3* ret = new vec3(testMesh.minX, testMesh.minY, testMesh.minZ);
+	return (void*)ret;
+}
+
+void* RenderPipeline::getMaxExtremes()
+{
+	vec3* ret = new vec3(testMesh.maxX, testMesh.maxY, testMesh.maxZ);
+	return (void*)ret;
+}
 
 IRenderPipeline* CreatePipeline()
 {

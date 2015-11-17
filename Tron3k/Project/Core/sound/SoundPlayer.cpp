@@ -1,40 +1,88 @@
 #include "SoundPlayer.h"
 
+int SoundPlayer::nrOfSoundsPlaying = 0;
+float SoundPlayer::soundVolume = 100.0f;
+float SoundPlayer::musicVolume = 100.0f;
+bool SoundPlayer::soundEnabler = false;
+
+
+SoundPlayer* SoundPlayer::singleton = nullptr;
+
+SoundPlayer* SoundPlayer::getSound()
+{
+	if (singleton == nullptr)
+	{
+		singleton = new SoundPlayer();
+	}
+	return singleton;
+}
+
+void SoundPlayer::release()
+{
+	if (singleton)
+	{
+		delete singleton;
+	}
+}
+
+void SoundPlayer::init()
+{
+	if (singleton)
+	{
+		singleton->soundList[SOUNDS::gunshot].loadFromFile("soundEffectGunshots.ogg");
+		singleton->soundList[SOUNDS::firstBlood].loadFromFile("voiceFirstBlood.ogg");
+		singleton->musicList[MUSIC::mainMenu] = "musicMainMenu.ogg";
+	}
+	
+
+	
+}
 
 SoundPlayer::SoundPlayer()
 {
-	nrOfSoundsPlaying = 0;
-	soundEnabler = true;
 
-	soundList[SOUNDS::gunshot].loadFromFile("soundEffectGunshots.ogg");
-	soundList[SOUNDS::firstBlood].loadFromFile("voiceFirstBlood.ogg");
-
-	musicList[MUSIC::mainMenu] = "musicMainMenu.ogg";
 }
 
 SoundPlayer::~SoundPlayer()
 {
-
+	
 }
 
-void SoundPlayer::enableSounds(bool enabler)
+void SoundPlayer::enableSounds()
 {
-	soundEnabler = enabler;
+	if (!soundEnabler)
+	{
+		for (int i = 0; i < nrOfSoundsPlaying; i++)
+		{
+			sounds[i].setVolume(0.0);
+		}
+		musicPlayer.setVolume(0.0);
+		soundEnabler = true;
+	}
+	else
+	{
+		for (int i = 0; i < nrOfSoundsPlaying; i++)
+		{
+			sounds[i].setVolume(soundVolume);
+		}
+		musicPlayer.setVolume(musicVolume);
+		soundEnabler = false;
+	}
 }
 
-void SoundPlayer::setVolumeMusic(int volume)
+void SoundPlayer::setVolumeMusic(float volume)
 {
 	musicPlayer.setVolume(volume);
 }
 
-void SoundPlayer::setVolumeSound(int volume)
+void SoundPlayer::setVolumeSound(float volume)
 {
 	musicPlayer.setVolume(volume);
 }
 
 int SoundPlayer::playUserGeneratedSound(int sound)
 {
-	if (soundEnabler && nrOfSoundsPlaying < 29)
+	if (nrOfSoundsPlaying < 29)
 	{
 		sounds[nrOfSoundsPlaying].setBuffer(soundList[sound]);
 		sounds[nrOfSoundsPlaying].play();
@@ -56,7 +104,7 @@ int SoundPlayer::playExternalSound(int sound, sf::Vector3f soundOrigin)
 	//sf::Listener::setPosition(playerPosX, playerPosY, playerPosZ);			//Set the position of the player
 	sf::Listener::setDirection(0.0f, 0.0f, -10.0f);			//Set the direction of the player
 
-	if (soundEnabler && nrOfSoundsPlaying < 29)
+	if (nrOfSoundsPlaying < 29)
 	{
 		sounds[nrOfSoundsPlaying].setMinDistance(10.0f);		//Set the sound's distance it travels before it starts to attenuate. Could be passed in through a parameter.
 		sounds[nrOfSoundsPlaying].setPosition(soundOrigin);			//Set the sound's position in the world. Could be passed in through a parameter.
@@ -77,21 +125,20 @@ int SoundPlayer::playExternalSound(int sound, sf::Vector3f soundOrigin)
 
 int SoundPlayer::playMusic(int music)
 {
-	if (soundEnabler)
+
+	if (musicPlayer.getStatus() == sf::Sound::Playing)
 	{
-		if (musicPlayer.getStatus() == sf::Sound::Playing)
-		{
-			musicPlayer.stop();
-		}
-
-		if (!musicPlayer.openFromFile(musicList[music]))
-		{
-			return -1;
-		}
-
-		musicPlayer.play();
-		musicPlayer.setLoop(true);
+		musicPlayer.stop();
 	}
+
+	if (!musicPlayer.openFromFile(musicList[music]))
+	{
+		return -1;
+	}
+
+	musicPlayer.play();
+	musicPlayer.setLoop(true);
+
 	return 0;
 }
 
@@ -109,5 +156,11 @@ void SoundPlayer::update()
 			sounds[nrOfSoundsPlaying] = sounds[i];
 			nrOfSoundsPlaying--;
 		}
+	}
+
+	Input* i = Input::getInput();
+	if (i->justPressed(GLFW_KEY_M))
+	{
+		enableSounds();
 	}
 }

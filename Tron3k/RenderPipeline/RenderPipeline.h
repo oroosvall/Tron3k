@@ -2,12 +2,12 @@
 #define ENGINE_H
 
 #include "IRenderPipeline.h"
-#include "ResourceManager.h"
 #include "Text\TextObject.h"
 #include "Camera.h"
 #include "SimpleShit.h"
 #include "GBuffer.h"
 
+#include "ContentManager.h"
 
 enum SETTING_INPUT
 {
@@ -30,9 +30,9 @@ private:
 
 	SETTING_INPUT getType(PIPELINE_SETTINGS type) const;
 
-	TextObject* test;
+	ContentManager contMan;
 
-	ResourceManager resMan;
+	TextObject* test;
 
 	TestMesh testMesh;
 
@@ -61,6 +61,8 @@ public:
 
 	virtual void* getView();
 
+	virtual void renderPlayer(int playerID, void* world);
+
 	virtual std::string getStatus() { return ""; };
 
 	virtual bool setSetting(PIPELINE_SETTINGS type, PipelineValues value);
@@ -79,6 +81,9 @@ public:
 	virtual void removeMesh(unsigned int id) {};
 
 	virtual void setGBufferWin(unsigned int WindowWidth, unsigned int WindowHeight);
+	virtual void* getMinExtremes();
+	virtual void* getMaxExtremes();
+
 };
 
 
