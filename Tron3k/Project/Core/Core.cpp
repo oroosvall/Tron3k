@@ -596,15 +596,19 @@ void Core::setfps(int fps)
 //TEMPORARY
 void Core::givePlayerBoatExtremes()
 {
-	//to avoid leaks
-	vec3* minExtremes = (vec3*)renderPipe->getMinExtremes();
-	vec3* maxExtremes = (vec3*)renderPipe->getMaxExtremes();
+	if (renderPipe != nullptr)
+	{
+		//to avoid leaks
+		vec3* minExtremes = (vec3*)renderPipe->getMinExtremes();
+		vec3* maxExtremes = (vec3*)renderPipe->getMaxExtremes();
 
-	vec3 minEx = *minExtremes;
-	vec3 maxEx = *maxExtremes;
+		vec3 minEx = *minExtremes;
+		vec3 maxEx = *maxExtremes;
 
-	delete minExtremes;
-	delete maxExtremes;
+		delete minExtremes;
+		delete maxExtremes;
 
-	game->getBoatCoordsFromCore(minEx, maxEx);
+		game->getBoatCoordsFromCore(minEx, maxEx);
+	}
+	game->getBoatCoordsFromCore(vec3(0,0,0), vec3(0,0,0));
 }
