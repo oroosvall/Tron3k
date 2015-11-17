@@ -47,7 +47,12 @@ PLAYERMSG Player::update(float dt)
 	if (isLocalPlayer)
 	{
 		if (i->justPressed(GLFW_KEY_ENTER))
-			lockControls = !lockControls;
+		{
+			if (lockControls)
+				lockControls = false;
+			else
+				lockControls = true;
+		}
 		if (!lockControls)
 		{
 			vec3 olddir = cam->getDir();

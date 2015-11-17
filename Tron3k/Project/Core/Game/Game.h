@@ -11,6 +11,14 @@ private:
 	
 	std::vector<Bullet*> bullets;
 
+	std::vector<int> teamSpectators; //Team vectors hold connection IDs
+	std::vector<int> teamOne;
+	std::vector<int> teamTwo;
+
+	int maxTeamSize = 5;
+	int maxSpec = 5;
+	void removeConIDfromTeams(int conID);
+
 	int max_con;
 	Player** playerList;
 	Physics* physics;
@@ -36,6 +44,10 @@ public:
 	//TEMPORARY
 	void sendBoatCoordsToPhysics(glm::vec3 minVals, glm::vec3 maxVals);
 	void checkCollision();
+
+	void addPlayerToTeam(int p_conID, int team);
+	int getPlayersOnTeam(int team);
+	int getMaxTeamSize(bool spec = false) { if (spec) return maxSpec; return maxTeamSize; };
 };
 
 #endif

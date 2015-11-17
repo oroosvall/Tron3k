@@ -29,7 +29,8 @@ enum NET_FRAME
 	POS = int('P'),
 	JUMP = int('J'),
 	FIRE = int('F'),
-	NAME_CHANGE = int('N')
+	NAME_CHANGE = int('N'),
+	TEAM_CHANGE = int('T')
 };
 
 enum NET_MESSAGE
