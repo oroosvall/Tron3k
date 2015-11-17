@@ -103,6 +103,7 @@ void Core::update(float dt)
 			camIn.update(dt);
 
 			renderPipe->update();
+			renderPipe->renderIni();
 			renderPipe->render();
 		}
 
@@ -426,7 +427,7 @@ void Core::removeWindow()
 void Core::initPipeline()
 {
 	renderPipe = CreatePipeline();
-	if (!renderPipe->init())
+	if (!renderPipe->init(winX, winY))
 	{
 		console.printMsg("Error: Pipeline could not be created!", "System", 'S');
 		renderPipe->release();

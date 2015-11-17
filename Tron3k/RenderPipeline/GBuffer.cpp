@@ -1,97 +1,163 @@
 #include "GBuffer.h"
 
-GBuffer::GBuffer()
+Gbuffer::Gbuffer()
 {
-	fbo = 0;
-	depthTexture = 0;
-	textures[GBUFFER_NUM_TEXTURES];
-	for (int n = 0; n < GBUFFER_NUM_TEXTURES; n++)
+	targetId = 0;
+	initialized = false;
+	blitQuads = nullptr;
+	pos = nullptr;
+}
+
+void Gbuffer::init(int x, int y, int nrTex, bool depth)
+{
+
+	if (renderQuad == 0)
 	{
-		textures[n] = 0;
-	}
-}
-
-GBuffer::~GBuffer()
-{
-	if (fbo != 0) {
-		glDeleteFramebuffers(1, &fbo);
+		genQuad();
 	}
 
-	if (textures[0] != 0) {
-		glDeleteTextures(GBUFFER_NUM_TEXTURES, textures);
+	// gbuffer
+
+	glGenFramebuffers(1, &targetId);
+	bind(GL_FRAMEBUFFER);
+	this->depth = depth;
+	nrTextures = nrTex;
+
+	generate(x, y);
+
+
+	GLenum* DrawBuffers = new GLenum[nrTextures];
+	
+	for (int i = 0; i < nrTextures; i++)
+	{
+		if (i == 0 && depth)
+		{
+			glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, rTexture[i].getTargetId(), 0);
+			DrawBuffers[i] = GL_NONE;
+		}
+		else
+		{
+			glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, rTexture[i].getTargetId(), 0);
+			DrawBuffers[i] = (GL_COLOR_ATTACHMENT0 + i);
+		}
 	}
 
-	if (depthTexture != 0) {
-		glDeleteTextures(1, &depthTexture);
-	}
-}
+	glDrawBuffers(nrTextures, DrawBuffers);
 
-
-bool GBuffer::Init(unsigned int WindowWidth, unsigned int WindowHeight)
-{
-	// Create the FBO
-	glGenFramebuffers(1, &fbo);
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-	// Create the gbuffer textures
-	glGenTextures(GBUFFER_NUM_TEXTURES, textures);
-	glGenTextures(1, &depthTexture);
-
-	for (unsigned int i = 0; i < GBUFFER_NUM_TEXTURES; i++) {
-		glBindTexture(GL_TEXTURE_2D, textures[i]);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, WindowWidth, WindowHeight, 0, GL_RGB, GL_FLOAT, NULL);
-		glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, textures[i], 0);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	}
-
-	//depth
-	glBindTexture(GL_TEXTURE_2D, depthTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, WindowWidth, WindowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-	glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture, 0);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-	GLenum DrawBuffers[] = { GL_COLOR_ATTACHMENT0,
-		GL_COLOR_ATTACHMENT1,
-		GL_COLOR_ATTACHMENT2,
-		GL_COLOR_ATTACHMENT3 };
-
-	glDrawBuffers(GBUFFER_NUM_TEXTURES, DrawBuffers);
+	delete[] DrawBuffers;
 
 	GLenum Status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
 	if (Status != GL_FRAMEBUFFER_COMPLETE) {
-		int x = 0;
+		throw;
 	}
-	// restore default FBO
+
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
-#ifdef _DEBUG
-	{GLenum err = glGetError(); if (err)
-		int x = 0; }
-#endif
-	return true;
+	
+	if (!shaderPtr)
+	{
+		throw;
+	}
+
+	pos = new GLuint[nrTextures];
+
+	if (depth)
+	{
+		pos[4] = glGetUniformLocation(*shaderPtr, "Depth");;
+	}
+	pos[0] = glGetUniformLocation(*shaderPtr, "Position");
+	pos[1] = glGetUniformLocation(*shaderPtr, "Diffuse");
+	pos[2] = glGetUniformLocation(*shaderPtr, "Normal");
+	pos[3] = glGetUniformLocation(*shaderPtr, "UVcord");;
+	pos[5] = glGetUniformLocation(*shaderPtr, "Use");
+
+	blitQuads = new BlitQuad[6];
+	blitQuads[0].Init(shaderPtr, vec2(-1, -1), vec2(-0.6, -0.6));
+	blitQuads[1].Init(shaderPtr, vec2(-0.6, -1), vec2(-0.2, -0.6));
+	blitQuads[2].Init(shaderPtr, vec2(-0.2, -1), vec2(0.2, -0.6));
+	blitQuads[3].Init(shaderPtr, vec2(0.2, -1), vec2(0.6, -0.6));
+	blitQuads[4].Init(shaderPtr, vec2(0.6, -1), vec2(1, -0.6));
+	blitQuads[5].Init(shaderPtr, vec2(-1, -1), vec2(1, 1));
+
+	initialized = true;
 }
 
-void GBuffer::BindForWriting()
+Gbuffer::~Gbuffer()
 {
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
-
-	for (int n = 0; n < 10; n++)
+	delete[] rTexture;
+	delete[] pos;
+	delete[] blitQuads;
+	if (initialized)
 	{
-		glActiveTexture(GL_TEXTURE0 + n);
-		glBindTexture(GL_TEXTURE_2D, 0);
+		glDeleteFramebuffers(1, &targetId);
+		//Debug::DebugOutput("Deleting gbuffer target\n");
+	}
+}
+
+void Gbuffer::resize(int x, int y)
+{
+	for (int i = 0; i < nrTextures; i++)
+	{
+		rTexture[i].resize(x, y);
+	}
+}
+
+void Gbuffer::bind(GLuint target)
+{
+	glBindFramebuffer(target, targetId);
+}
+
+void Gbuffer::render()
+{
+	// bind shader
+	glUseProgram(*shaderPtr);
+
+	// bind textures
+	for (int i = 1; i < nrTextures; i++)
+	{
+		glActiveTexture(GL_TEXTURE0 + i);
+		glBindTexture(GL_TEXTURE_2D, rTexture[i].getTargetId());
+		glProgramUniform1i(*shaderPtr, pos[i], i);
+	}
+	
+	// bind buffer
+	glBindBuffer(GL_ARRAY_BUFFER, renderQuad);
+	glBindVertexArray(renderVao);
+
+	glProgramUniform1i(*shaderPtr, pos[0], 0);
+	glProgramUniform1i(*shaderPtr, pos[1], 1);
+	glProgramUniform1i(*shaderPtr, pos[2], 2);
+	glProgramUniform1i(*shaderPtr, pos[3], 3);
+	glProgramUniform1i(*shaderPtr, pos[4], 4);
+
+	blitQuads[5].BindVertData();
+	glProgramUniform1i(*shaderPtr, pos[5], 5);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+	//each blit
+	for (int n = 0; n < 5; n++)
+	{
+		blitQuads[n].BindVertData();
+		glProgramUniform1i(*shaderPtr, pos[5], n);
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	}
 }
 
 
-void GBuffer::BindForReading()
+void Gbuffer::generate(int x, int y)
 {
-	for (int n = 0; n < 4; n++)
+	rTexture = new RenderTarget[nrTextures];
+	for (int i = 0; i < nrTextures; i++)
 	{
-		glActiveTexture(GL_TEXTURE0 + n);
-		glBindTexture(GL_TEXTURE_2D, textures[n]);
+		if (i == 0 && depth)
+		{
+			rTexture[i].init(x, y, 0, true);
+		}
+		else
+		{
+			rTexture[i].init(x, y, 0, false);
+		}
+		
 	}
-	glActiveTexture(GL_TEXTURE0 + 4);
-	glBindTexture(GL_TEXTURE_2D, depthTexture);
 }

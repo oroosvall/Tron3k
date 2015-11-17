@@ -1,4 +1,4 @@
-#verison 430
+#version 410
 layout (location = 0) in vec2 UV;
 
 uniform int Use;

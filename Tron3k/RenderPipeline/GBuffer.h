@@ -1,40 +1,37 @@
 #ifndef GBUFFER_H
-#define	GBUFFER_H
+#define GBUFFER_H
 
-#include <gl/glew.h>
-#include <gl/GL.h>
 #include <glm\glm.hpp>
+#include <glm\gtc\matrix_transform.hpp>
+#include "RenderTarget.h"
 
-#define GBUFFER_POSITION_TEXTURE_UNIT 0
-#define GBUFFER_DIFFUSE_TEXTURE_UNIT  1
-#define GBUFFER_NORMAL_TEXTURE_UNIT   2
-#define GBUFFER_TEXCOORD_TEXTURE_UNIT 3
+#include "BlitQuad.h"
 
-class GBuffer
+class Gbuffer : public RenderTarget
 {
 public:
-	enum GBUFFER_TEXTURE_TYPE {
-		GBUFFER_TEXTURE_TYPE_POSITION,
-		GBUFFER_TEXTURE_TYPE_DIFFUSE,
-		GBUFFER_TEXTURE_TYPE_NORMAL,
-		GBUFFER_TEXTURE_TYPE_TEXCOORD,
-		GBUFFER_NUM_TEXTURES
-	};
+	Gbuffer();
+	~Gbuffer();
 
-	GBuffer();
-	~GBuffer();
+	void init(int x, int y, int nrTex, bool depth);
+	void resize(int x, int y);
 
-	bool Init(unsigned int WindowWidth, unsigned int WindowHeight);
+	void bind(GLuint index);
 
-	void BindForWriting();
-	void BindForReading();
+	void render();
 
-	void SetReadBuffer(GBUFFER_TEXTURE_TYPE TextureType);
-
+	GLuint* shaderPtr;
 private:
-	GLuint fbo;
-	GLuint textures[GBUFFER_NUM_TEXTURES];
-	GLuint depthTexture;
+
+	bool initialized;
+
+	void generate(int x, int y);
+
+	RenderTarget* rTexture;
+
+	GLuint* pos;
+
+	BlitQuad* blitQuads;
 };
 
 #endif

@@ -37,9 +37,10 @@ struct PipelineValues
 class IRenderPipeline
 {
 public:
-	virtual bool init() = 0;
+	virtual bool init(unsigned int WindowWidth, unsigned int WindowHeight) = 0;
 	virtual void release() = 0;
 	virtual void update() = 0;
+	virtual void renderIni() = 0;
 	virtual void render() = 0;
 
 	virtual void* getView() = 0;
@@ -61,6 +62,8 @@ public:
 
 	virtual unsigned int createMesh(...) = 0;
 	virtual void removeMesh(unsigned int id) = 0;
+
+	virtual void setGBufferWin(unsigned int WindowWidth, unsigned int WindowHeight) = 0;
 
 };
 

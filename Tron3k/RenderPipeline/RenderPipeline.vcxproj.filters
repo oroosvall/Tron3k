@@ -39,7 +39,13 @@
     <ClCompile Include="ShimpleShit.cpp">
       <Filter>Source Files\Buffers</Filter>
     </ClCompile>
+    <ClCompile Include="BlitQuad.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="GBuffer.cpp">
+      <Filter>Source Files\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTarget.cpp">
       <Filter>Source Files\Buffers</Filter>
     </ClCompile>
   </ItemGroup>
@@ -65,7 +71,13 @@
     <ClInclude Include="SimpleShit.h">
       <Filter>Source Files\Buffers</Filter>
     </ClInclude>
+    <ClInclude Include="BlitQuad.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
     <ClInclude Include="GBuffer.h">
+      <Filter>Source Files\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTarget.h">
       <Filter>Source Files\Buffers</Filter>
     </ClInclude>
   </ItemGroup>

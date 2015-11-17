@@ -1,4 +1,4 @@
-#version 430
+#version 410
 layout (location = 0) in vec3 Position;                                                                  
 layout (location = 1) in vec2 UV;                                                                  
 layout (location = 2) in vec3 Normal;    
@@ -13,7 +13,7 @@ layout (location = 3) out vec3 TexCoordOut;
 void main()									
 {											
 	WorldPosOut	= Position;					
-	DiffuseOut	= vec4( UV.x, UV.y, 1);//texture(textureSample, UV).xyz;	
+	DiffuseOut	= vec3( UV.x, UV.y, 1);//texture(textureSample, UV).xyz;	
 	NormalOut = Normal;					
 	TexCoordOut = vec3(UV, 0.0);				
 }

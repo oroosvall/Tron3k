@@ -6,6 +6,8 @@
 #include "Text\TextObject.h"
 #include "Camera.h"
 #include "SimpleShit.h"
+#include "GBuffer.h"
+
 
 enum SETTING_INPUT
 {
@@ -36,7 +38,11 @@ private:
 
 	Camera cam;
 
-	GLuint testShader;
+	Gbuffer* gBuffer;
+
+	GLuint preDefferedShader;
+	GLuint defferedShader;
+	//GLuint testShader;
 	GLuint worldMat;
 	GLuint projMat;
 	GLuint viewMat;
@@ -47,9 +53,10 @@ public:
 
 	RenderPipeline() {};
 
-	virtual bool init();
+	virtual bool init(unsigned int WindowWidth, unsigned int WindowHeight);
 	virtual void release();
 	virtual void update();
+	virtual void renderIni();
 	virtual void render();
 
 	virtual void* getView();
@@ -71,6 +78,7 @@ public:
 	virtual unsigned int createMesh(...) { return 0; }; // fix parameters
 	virtual void removeMesh(unsigned int id) {};
 
+	virtual void setGBufferWin(unsigned int WindowWidth, unsigned int WindowHeight);
 };
 
 

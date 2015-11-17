@@ -14,7 +14,7 @@ struct Index
 void TestMesh::make()
 {
 	loadVert(string("testBoat.v"));
-	loadBMP(string("boat.bmp"));
+	//loadBMP(string("boat.bmp"));
 
 	//glGenBuffers(1, &vbuffer);
 	//glBindBuffer(GL_ARRAY_BUFFER, vbuffer);

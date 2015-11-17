@@ -63,7 +63,7 @@ extern "C"
 }
 #endif
 
-bool RenderPipeline::init()
+bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 {
 	GLenum result = glewInit();
 	if (result != GLEW_OK)
@@ -73,8 +73,10 @@ bool RenderPipeline::init()
 
 	cam.init();
 
-	//test = new TextObject("Swag", 11, glm::vec2(10, 10));
+	gBuffer = new Gbuffer();
+	gBuffer->shaderPtr = new GLuint();
 
+	//test = new TextObject("Swag", 11, glm::vec2(10, 10));
 
 #ifdef _DEBUG
 	if (glDebugMessageCallback) {
@@ -88,17 +90,28 @@ bool RenderPipeline::init()
 		printf("glDebugMessageCallback not available\n");
 #endif
 
-	std::string shaderNames[] = { "GameFiles/Shaders/simple_vs.glsl", "GameFiles/Shaders/simple_fs.glsl" };
-	GLenum shaderTypes[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
+	//std::string shaderNames[] = { "GameFiles/Shaders/simple_vs.glsl", "GameFiles/Shaders/simple_fs.glsl" };
+	//GLenum shaderTypes[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
+	//
+	//CreateProgram(testShader, shaderNames, shaderTypes, 2);
 
-	CreateProgram(testShader, shaderNames, shaderTypes, 2);
+	std::string shaderNamesDeffered[] = { "GameFiles/Shaders/Deffered_vs.glsl", "GameFiles/Shaders/Deffered_fs.glsl" };
+	GLenum shaderTypesDeffered[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
+	
+	CreateProgram(*gBuffer->shaderPtr, shaderNamesDeffered, shaderTypesDeffered, 2);
 
-	worldMat = glGetUniformLocation(testShader, "worldMat");
-	viewMat = glGetUniformLocation(testShader, "view");
-	projMat = glGetUniformLocation(testShader, "project");
+	std::string shaderNamesPreDe[] = { "GameFiles/Shaders/PreDeffered_vs.glsl", "GameFiles/Shaders/PreDeffered_gs.glsl", "GameFiles/Shaders/PreDeffered_fs.glsl" };
+	GLenum shaderTypesPreDe[] = { GL_VERTEX_SHADER, GL_GEOMETRY_SHADER, GL_FRAGMENT_SHADER };
 
-	cam.setProjMat(testShader, projMat);
-	cam.setViewMat(testShader, viewMat);
+	CreateProgram(preDefferedShader, shaderNamesPreDe, shaderTypesPreDe, 3);
+
+	worldMat = glGetUniformLocation(preDefferedShader, "WorldMatrix"); //worldMat
+	viewMat = glGetUniformLocation(preDefferedShader, "ViewProjMatrix"); //view
+
+	cam.setProjMat(preDefferedShader, projMat);
+	cam.setViewMat(preDefferedShader, viewMat);
+	
+	gBuffer->init(WindowWidth, WindowHeight, 5, true);
 
 	testMesh.make();
 
@@ -111,6 +124,8 @@ void RenderPipeline::release()
 
 	delete test;
 
+	delete gBuffer;
+
 	delete this; // yes this is safe
 }
 
@@ -118,11 +133,17 @@ void RenderPipeline::update()
 {
 }
 
+
+void RenderPipeline::renderIni()
+{
+	glUseProgram(preDefferedShader);
+	gBuffer->bind(GL_FRAMEBUFFER);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
 void RenderPipeline::render()
 {
-	glUseProgram(testShader);
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glUseProgram(preDefferedShader);
 
 	//bind
 	glActiveTexture(GL_TEXTURE0);
@@ -140,12 +161,17 @@ void RenderPipeline::render()
 	mat[2].z = 0.02f;
 
 	//set temp objects worldmat
-	glProgramUniformMatrix4fv(testShader, worldMat, 1, GL_FALSE, &mat[0][0]);
+	glProgramUniformMatrix4fv(preDefferedShader, worldMat, 1, GL_FALSE, &mat[0][0]);
 
 	//set camera matrixes
-	cam.setViewProjMat(testShader, viewMat);
+	cam.setViewProjMat(preDefferedShader, viewMat);
 
 	glDrawElements(GL_TRIANGLES, testMesh.faceCount * 3, GL_UNSIGNED_SHORT, 0);
+
+	//GBuffer Render
+	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
+
+	gBuffer->render();
 }
 
 void* RenderPipeline::getView()
@@ -197,4 +223,9 @@ SETTING_INPUT RenderPipeline::getType(PIPELINE_SETTINGS type) const
 IRenderPipeline* CreatePipeline()
 {
 	return new RenderPipeline();
+}
+
+void RenderPipeline::setGBufferWin(unsigned int WindowWidth, unsigned int WindowHeight)
+{
+	gBuffer->resize(WindowWidth, WindowHeight);
 }
