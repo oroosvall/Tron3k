@@ -397,7 +397,12 @@ void Core::clientHandleCmds(float dt)
 		string token;
 		istringstream ss = istringstream(console.getCommand());
 		ss >> token;
-		if (token == "/name")
+		if (token == "/help")
+		{
+			console.printMsg("Console comands", "", ' ');
+			console.printMsg("/name " + _name, "", ' ');
+		}
+		else if (token == "/name")
 		{
 			ss >> token;
 			if (token == "/name")
