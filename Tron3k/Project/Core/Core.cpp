@@ -116,7 +116,6 @@ void Core::update(float dt)
 	{
 		if (game)
 		{
-			game->update(dt);
 			if (renderPipe)
 			{
 				renderPipe->update();
@@ -206,6 +205,8 @@ void Core::upRoam(float dt)
 	//ROAM
 	//load
 	//run
+
+	game->update(dt);
 
 	//return MENU
 }
@@ -426,6 +427,19 @@ void Core::clientHandleCmds(float dt)
 				//send new name
 				top->frame_name_change(top->getConId(), token);
 			}
+		}
+		if (token == "/team")
+		{
+			ss >> token;
+			int team = atoi(token.c_str());
+			if (team == 0  || team == 1 || team == 2)
+			{
+				top->frame_team_change(top->getConId(), team);
+				game->addPlayerToTeam(top->getConId(), team);
+				console.printMsg("You changed team to (" + token + ")", "System", 'S');
+			}
+			else
+				console.printMsg("Invalid team. Use /team <1/2/3>", "System", 'S');
 		}
 	}
 }

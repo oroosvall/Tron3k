@@ -150,6 +150,7 @@ void Client::in_frame(Packet* rec, Uint8 conID)
 		{
 		case NET_FRAME::NAME_CHANGE: in_frame_name_change(rec); break;
 		case NET_FRAME::POS: in_frame_pos(rec); break;
+		case NET_FRAME::TEAM_CHANGE: in_frame_team_change(rec); break;
 		}
 	}
 }

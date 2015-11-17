@@ -174,3 +174,73 @@ void Game::createBullet(Player* p)
 		bullets.push_back(b);
 	}
 }
+
+int Game::getPlayersOnTeam(int team)
+{
+	switch (team)
+	{
+	case 0: return teamSpectators.size();
+	case 1: return teamOne.size();
+	case 2: return teamTwo.size();
+	}
+}
+
+void Game::removeConIDfromTeams(int conID)
+{
+	for (int c = 0; c < teamSpectators.size(); c++)
+	{
+		if (teamSpectators[c] == conID)
+		{
+			teamSpectators[c] = teamSpectators[teamSpectators.size() - 1];
+			teamSpectators.pop_back();
+			return;
+		}
+	}
+	for (int c = 0; c < teamOne.size(); c++)
+	{
+		if (teamOne[c] == conID)
+		{
+			teamOne[c] = teamOne[teamOne.size() - 1];
+			teamOne.pop_back();
+			return;
+		}
+	}
+	for (int c = 0; c < teamTwo.size(); c++)
+	{
+		if (teamTwo[c] == conID)
+		{
+			teamTwo[c] = teamTwo[teamTwo.size() - 1];
+			teamTwo.pop_back();
+			return;
+		}
+	}
+}
+
+void Game::addPlayerToTeam(int p_conID, int team)
+{
+	/*
+	TO DO
+	Create new Player when a user switches team, or simply remove the Player when joining spectators
+	*/
+	switch (team)
+	{
+	case 0:
+		removeConIDfromTeams(p_conID);
+		//if (playerList[p_conID] != nullptr)
+		//	delete playerList[p_conID];
+		teamSpectators.push_back(p_conID);
+		break;
+	case 1: 
+		removeConIDfromTeams(p_conID);
+		//if (playerList[p_conID] != nullptr)
+		//	delete playerList[p_conID];
+		teamOne.push_back(p_conID);
+		break;
+	case 2: 
+		removeConIDfromTeams(p_conID);
+		//if (playerList[p_conID] != nullptr)
+		//	delete playerList[p_conID];
+		teamTwo.push_back(p_conID);
+		break;
+	}
+}

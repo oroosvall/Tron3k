@@ -125,6 +125,11 @@ public:
 		*package << Uint8(NET_FRAME::POS) << conid << cPos.x << cPos.y << cPos.z << cDir.x << cDir.y << cDir.z;
 	}
 
+	virtual void frame_team_change(Uint8 conid, Uint8 team)
+	{
+		*package << Uint8(NET_FRAME::TEAM_CHANGE) << conid << team;
+	}
+
 	virtual void in_frame_name_change(Packet* rec)
 	{
 		Uint8 p_conID;
@@ -158,6 +163,26 @@ public:
 		}
 		else
 			consolePtr->printMsg("ERROR in_frame_current_pos", "System", 'S');
+	}
+
+	virtual void in_frame_team_change(Packet* rec)
+	{
+		Uint8 p_conID;
+		Uint8 team;
+		*rec >> p_conID >> team;
+
+		Player* p = gamePtr->getPlayer(p_conID);
+		
+		if (gamePtr->getPlayersOnTeam(team) + 1 < gamePtr->getMaxTeamSize())
+		{
+			gamePtr->addPlayerToTeam(p_conID, team);
+			if (team == 0)
+				consolePtr->printMsg("Player (" + p->getName() + ") joined team Spectators", "System", 'S');
+			if (team == 1)
+				consolePtr->printMsg("Player (" + p->getName() + ") joined team One", "System", 'S');
+			if (team == 2)
+				consolePtr->printMsg("Player (" + p->getName() + ") joined team Two", "System", 'S');
+		}
 	}
 };
 
