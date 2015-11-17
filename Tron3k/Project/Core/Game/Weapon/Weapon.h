@@ -18,7 +18,7 @@ class Weapon
 		~Weapon();
 
 		void init(int maxClipSize, int weaponType, float firingSpeed);
-		void shoot();
+		bool shoot();
 		bool reload();
 
 		void update(float deltaTime);

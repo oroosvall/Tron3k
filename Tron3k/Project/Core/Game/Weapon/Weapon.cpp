@@ -19,13 +19,18 @@ void Weapon::init(int maxClipSize, int weaponType, float firingSpeed)
 	currentDelay = firingSpeed;
 }
 
-void Weapon::shoot()
+bool Weapon::shoot()
 {
+	bool ableToShoot = false;
+
 	if (currentDelay <= 0 && currentClipAmmo > 0)
 	{
 		currentClipAmmo--;
 		currentDelay = firingSpeed;
+		ableToShoot = true;
 	}
+
+	return ableToShoot;
 }
 
 bool Weapon::reload()

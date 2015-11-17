@@ -7,7 +7,7 @@ Player::Player()
 
 void Player::init(std::string pName, glm::vec3 initPos, bool isLocal)
 {
-	mainWeapon.init(36, 0, 0.1);
+	mainWeapon.init(36, 0, 0.5);
 
 	name = pName;
 	pos = initPos;
@@ -42,6 +42,7 @@ void Player::setGoalDir(glm::vec3 newDir)
 PLAYERMSG Player::update(float dt)
 {
 	PLAYERMSG msg = NONE;
+	bool ableToShoot = false;
 
 	if (isLocalPlayer)
 	{
@@ -72,10 +73,15 @@ PLAYERMSG Player::update(float dt)
 				left = normalize(left);
 				pos += left * dt;
 			}
+			if (i->getKeyInfo(GLFW_KEY_R))
+			{
+				mainWeapon.reload();
+			}
 
 			if (i->getKeyInfo(GLFW_MOUSE_BUTTON_LEFT))		//Temp
 			{
-				mainWeapon.shoot();
+				ableToShoot = mainWeapon.shoot();
+				if(ableToShoot)
 				msg = SHOOT;
 			}
 

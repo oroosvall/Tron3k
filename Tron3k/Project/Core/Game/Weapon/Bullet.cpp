@@ -29,5 +29,11 @@ Bullet::~Bullet()
 
 int Bullet::update(float dt)
 {
+	pos += direction * velocity * dt;
+
+	worldMat[0].w = pos.x;
+	worldMat[1].w = pos.y;
+	worldMat[2].w = pos.z;
+
 	return 0;
 }

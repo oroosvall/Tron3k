@@ -170,7 +170,7 @@ void Game::createBullet(Player* p)
 	p->getWeaponData(wpntype);
 	if (wpntype == 0)
 	{
-		Bullet* b = new Bullet(p->getPos(), p->getDir(), 10, 0);	//add to release
+		Bullet* b = new Bullet(p->getPos(), p->getDir(), 0.1, 0);	//add to release
 		bullets.push_back(b);
 	}
 }
