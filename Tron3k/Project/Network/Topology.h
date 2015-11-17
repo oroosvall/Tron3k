@@ -36,7 +36,7 @@ public:
 	//--------
 
 	Topology() {};
-	virtual void init(Console* console) = 0;
+	virtual void init(Console* console, int port, IpAddress addrs) = 0;
 	~Topology()
 	{
 		if (con)

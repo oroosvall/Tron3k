@@ -8,8 +8,10 @@ Client::~Client()
 		delete package;
 }
 
-void Client::init(Console* console)
+void Client::init(Console* console, int port, IpAddress addrs)
 {
+	address = addrs;
+	PORT = port;
 	consolePtr = console;
 
 	package = new Packet();

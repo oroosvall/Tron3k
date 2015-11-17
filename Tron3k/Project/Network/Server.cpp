@@ -12,8 +12,9 @@ Server::~Server()
 		delete package;
 }
 
-void Server::init(Console* console)
+void Server::init(Console* console, int port, IpAddress addrs)
 {
+	PORT = port;
 	consolePtr = console;
 
 	package = new Packet();

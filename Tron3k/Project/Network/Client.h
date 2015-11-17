@@ -13,7 +13,7 @@ private:
 	bool mapLoaded;
 	bool joined;
 public:
-	void init(Console* console);
+	void init(Console* console, int port, IpAddress addrs);
 	~Client();
 	
 	//Core->Topology com
