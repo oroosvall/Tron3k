@@ -39,8 +39,10 @@ void Player::setGoalDir(glm::vec3 newDir)
 	dir = newDir; //Temporary 
 }
 
-void Player::update(float dt)
+PLAYERMSG Player::update(float dt)
 {
+	PLAYERMSG msg = NONE;
+
 	if (isLocalPlayer)
 	{
 		vec3 olddir = cam->getDir();
@@ -67,8 +69,11 @@ void Player::update(float dt)
 			pos += left * dt;
 		}
 
-		if (i->getKeyInfo(GLFW_MOUSE_BUTTON_LEFT))		//Temp
+		/*if (i->getKeyInfo(GLFW_MOUSE_BUTTON_LEFT))		//Temp
+		{
 			mainWeapon.shoot();
+			msg = SHOOT;
+		}*/
 
 		cam->setCam(pos, dir);
 		if (olddir != dir)
@@ -78,6 +83,8 @@ void Player::update(float dt)
 	worldMat[0].w = pos.x;
 	worldMat[1].w = pos.y-0.6f;
 	worldMat[2].w = pos.z;
+
+	return msg;
 }
 
 void Player::rotatePlayer(vec3 olddir, vec3 newdir)
@@ -88,4 +95,9 @@ void Player::rotatePlayer(vec3 olddir, vec3 newdir)
 	//float angle = (dot(oldIgnoreY, newIgnoreY)) / (oldIgnoreY.length() * newIgnoreY.length());
 	float angle = atan2(newdir.x, newdir.z) - atan2(olddir.x, olddir.z);
 	rotate(0, -angle, 0);
+}
+
+void Player::getWeaponData(int &wpntype)
+{
+	wpntype = mainWeapon.getType();
 }

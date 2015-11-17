@@ -3,18 +3,21 @@
 
 #include "Player.h"
 #include "../../../Physics/Physics.h"
+#include <vector>
 
 class Game
 {
 private:
 	
-	
+	std::vector<Bullet*> bullets;
 
 	int max_con;
 	Player** playerList;
 	Physics* physics;
 
 	void initPhysics();
+
+	void createBullet(Player* p);
 
 public:
 
