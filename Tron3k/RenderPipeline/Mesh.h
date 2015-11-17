@@ -1,6 +1,9 @@
 #ifndef MESH_H
 #define MESH_H
 
+#include <GL\glew.h>
+#include <glm\glm.hpp>
+
 struct Vertex
 {
 	float x, y, z;
@@ -29,9 +32,15 @@ private:
 	GLuint vao;
 	GLuint ibo;
 	
+	glm::mat4 world;
+
 public:
 
+	void init();
 
+	void load(char* file);
+
+	//void 
 
 };
 

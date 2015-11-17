@@ -1,6 +1,8 @@
 #ifndef INPUT_H
 #define INPUT_H
 
+#undef APIENTRY
+
 #include <GLFW\glfw3.h>
 
 /*

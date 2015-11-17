@@ -2,26 +2,8 @@
 #define CONTENTMANAGER_H
 
 #include <glm\glm.hpp>
-
+#include "Mesh.h"
 #include <GL\glew.h>
-
-struct Object
-{
-	GLuint meshID;
-	GLuint textureID;
-	GLuint normalID;
-};
-
-struct Chunk
-{
-	unsigned int objectCount;
-	struct ObjectList
-	{
-		unsigned int objectID;
-		unsigned int nrObjects;
-		glm::mat4* worldMatPtr;
-	} ;
-};
 
 struct PlayerObject
 {
@@ -36,10 +18,8 @@ class ContentManager
 {
 
 private:
-	
-	Object* objects;
-	Chunk* chunks;
-	
+
+	Mesh* meshes;
 	PlayerObject* playerModels;
 
 public:

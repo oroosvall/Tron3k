@@ -1,6 +1,8 @@
 #ifndef CONSOLE_H
 #define CONSOLE_H
 
+#undef APIENTRY
+
 #include <GLFW\glfw3.h>
 
 #include <string>

@@ -39,15 +39,17 @@ void Core::init()
 
 Core::~Core()
 {
-	game->release();
 	if (game != nullptr)
-		delete game;
+		game->release();
 	if (top != nullptr)
 		delete top;
 	if (win != nullptr)
-		delete win;
+	{
+		glfwDestroyWindow(win);
+		win = nullptr;
+	}
 	if (renderPipe != nullptr)
-		delete renderPipe;
+		renderPipe->release();
 	
 	SoundPlayer* theSound = SoundPlayer::getSound();
 	SoundPlayer::release();
