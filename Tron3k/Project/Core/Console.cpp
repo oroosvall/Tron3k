@@ -18,77 +18,87 @@ Console::~Console()
 bool Console::update(string clientName, char scope)
 {
 	Input* i = Input::getInput();
-	
-	for (int c = 0; c < VALIDKEYS; c++)
+	if (inChatMode)
 	{
-		if (i->justPressed(validKeyboardInputs[c]))
+		for (int c = 0; c < VALIDKEYS; c++)
 		{
-			char ch = i->keyToChar(validKeyboardInputs[c]);
-			
-			if (!i->getKeyInfo(GLFW_KEY_LEFT_SHIFT))
+			if (i->justPressed(validKeyboardInputs[c]))
 			{
-				ch = tolower(ch);
+				char ch = i->keyToChar(validKeyboardInputs[c]);
+
+				if (!i->getKeyInfo(GLFW_KEY_LEFT_SHIFT))
+				{
+					ch = tolower(ch);
+				}
+				else
+				{
+					if (ch == '1')
+						ch = '!';
+					if (ch == '2')
+						ch = '\"';
+					if (ch == '3')
+						ch = '#';
+					if (ch == '4')
+						ch = '$';
+					if (ch == '5')
+						ch = '%';
+					if (ch == '6')
+						ch = '&';
+					if (ch == '7')
+						ch = '/';
+					if (ch == '8')
+						ch = '(';
+					if (ch == '9')
+						ch = ')';
+					if (ch == '0')
+						ch = '=';
+					if (ch == '-')
+						ch = '_';
+					if (ch == '\'')
+						ch = '*';
+					if (ch == '+')
+						ch = '?';
+					if (ch == '.')
+						ch = ':';
+					if (ch == ',')
+						ch = ';';
+				}
+
+				msg += ch;
+
+				printf("%c", ch);
+			}
+		}
+		if (i->justPressed(GLFW_KEY_BACKSPACE))
+		{
+			if (msg.size() > 0)
+			{
+				msg = msg.substr(0, msg.size() - 1);
+				printConsole();
+			}
+		}
+		if (i->justPressed(GLFW_KEY_ENTER))
+		{
+			if (msg[0] == '/')
+			{
+				cmd = msg;
+				cmdReady = true;
 			}
 			else
 			{
-				if (ch == '1')
-					ch = '!';
-				if (ch == '2')
-					ch = '\"';
-				if (ch == '3')
-					ch = '#';
-				if (ch == '4')
-					ch = '$';
-				if (ch == '5')
-					ch = '%';
-				if (ch == '6')
-					ch = '&';
-				if (ch == '7')
-					ch = '/';
-				if (ch == '8')
-					ch = '(';
-				if (ch == '9')
-					ch = ')';
-				if (ch == '0')
-					ch = '=';
-				if (ch == '-')
-					ch = '_';
-				if (ch == '\'')
-					ch = '*';
-				if (ch == '+')
-					ch = '?';
-				if (ch == '.')
-					ch = ':';
-				if (ch == ',')
-					ch = ';';
+				lastMsg = msg;
+				msgReady = true;
 			}
-			
-			msg += ch;
-
-			printf("%c", ch);
+			addMsg(msg, clientName, scope);
+			inChatMode = false;
 		}
 	}
-	if (i->justPressed(GLFW_KEY_BACKSPACE))
+	else
 	{
-		if (msg.size() > 0)
+		if (i->justPressed(GLFW_KEY_ENTER))
 		{
-			msg = msg.substr(0, msg.size() - 1);
-			printConsole();
+			inChatMode = true;
 		}
-	}
-	if (i->justPressed(GLFW_KEY_ENTER))
-	{
-		if (msg[0] == '/')
-		{
-			cmd = msg;
-			cmdReady = true;
-		}
-		else
-		{
-			lastMsg = msg;
-			msgReady = true;
-		}
-		addMsg(msg, clientName, scope);
 	}
 
 	return cmdReady;

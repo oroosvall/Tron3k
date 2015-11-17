@@ -20,7 +20,7 @@ private:
 	Input();
 
 	static bool Q,W,E,R,T,Y,U,I,O,P,A,S,D,F,G,H,J,K,L,Z,X,C,V,B,N,M,
-		SHIFT,CTRL,ALT,SPACE,ESC, ENTER,
+		SHIFT,CTRL,ALT,SPACE,ESC,ENTER,
 		NUM1,NUM2,NUM3,NUM4,NUM5,NUM6,NUM7,NUM8,NUM9,NUM0,
 		DOT,COMMA, BACKSPACE, PLUS, APOSTROPHE, DASH; //Button is pressed right now
 	static bool pQ, pW, pE, pR, pT, pY, pU, pI, pO, pP, pA, pS, pD, pF, pG, pH, pJ, pK, pL, pZ, pX, pC, pV, pB, pN, pM,

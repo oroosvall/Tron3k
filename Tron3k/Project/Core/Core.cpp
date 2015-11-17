@@ -321,7 +321,7 @@ void Core::startHandleCmds(float dt)
 		else if (token == "/name")
 		{
 			ss >> token;
-			if (token == "")
+			if (token == "/name") //Same token = no more found
 			{
 				console.printMsg("No name found. Use /name <new Name>", "System", 'S');
 			}

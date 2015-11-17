@@ -35,6 +35,8 @@ private:
 
 	string cmd;
 	bool cmdReady;
+
+	bool inChatMode = false;
 public:
 	Console();
 	~Console();

@@ -45,39 +45,44 @@ PLAYERMSG Player::update(float dt)
 
 	if (isLocalPlayer)
 	{
-		vec3 olddir = cam->getDir();
-		cam->update(dt, false);
-		mainWeapon.update(dt);		//Temp;
-		dir = cam->getDir();
-
-		if (i->getKeyInfo(GLFW_KEY_W))
-			pos += dir * dt;
-
-		if (i->getKeyInfo(GLFW_KEY_S))
-			pos -= dir * dt;
-
-		if (i->getKeyInfo(GLFW_KEY_A))
+		if (i->justPressed(GLFW_KEY_ENTER))
+			lockControls = !lockControls;
+		if (!lockControls)
 		{
-			vec3 left = cross(vec3(0, 1, 0), dir);
-			left = normalize(left);
-			pos += left * dt;
+			vec3 olddir = cam->getDir();
+			cam->update(dt, false);
+			mainWeapon.update(dt);		//Temp;
+			dir = cam->getDir();
+
+			if (i->getKeyInfo(GLFW_KEY_W))
+				pos += dir * dt;
+
+			if (i->getKeyInfo(GLFW_KEY_S))
+				pos -= dir * dt;
+
+			if (i->getKeyInfo(GLFW_KEY_A))
+			{
+				vec3 left = cross(vec3(0, 1, 0), dir);
+				left = normalize(left);
+				pos += left * dt;
+			}
+			if (i->getKeyInfo(GLFW_KEY_D))
+			{
+				vec3 left = cross(dir, vec3(0, 1, 0));
+				left = normalize(left);
+				pos += left * dt;
+			}
+
+			/*if (i->getKeyInfo(GLFW_MOUSE_BUTTON_LEFT))		//Temp
+			{
+				mainWeapon.shoot();
+				msg = SHOOT;
+			}*/
+
+			cam->setCam(pos, dir);
+			if (olddir != dir)
+				rotatePlayer(olddir, dir);
 		}
-		if (i->getKeyInfo(GLFW_KEY_D))
-		{
-			vec3 left = cross(dir, vec3(0, 1, 0));
-			left = normalize(left);
-			pos += left * dt;
-		}
-
-		/*if (i->getKeyInfo(GLFW_MOUSE_BUTTON_LEFT))		//Temp
-		{
-			mainWeapon.shoot();
-			msg = SHOOT;
-		}*/
-
-		cam->setCam(pos, dir);
-		if (olddir != dir)
-			rotatePlayer(olddir, dir);
 	}
 	
 	worldMat[0].w = pos.x;
