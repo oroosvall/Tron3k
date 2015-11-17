@@ -196,7 +196,7 @@ void Core::upStart(float dt)
 				
 				p = new Player();
 				
-				p->init("Roam2", glm::vec3(0, 0, 0));
+				p->init("Roam2", glm::vec3(0, 10, 0));
 				
 				game->createPlayer(p, 1);
 				
