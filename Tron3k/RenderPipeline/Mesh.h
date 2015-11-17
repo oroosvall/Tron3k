@@ -49,8 +49,6 @@ public:
 
 	float* getWorld();
 
-	//void 
-
 };
 
 #endif
