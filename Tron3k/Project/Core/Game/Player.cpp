@@ -7,6 +7,8 @@ Player::Player()
 
 void Player::init(std::string pName, glm::vec3 initPos, bool isLocal)
 {
+	mainWeapon.init(36, 0, 0.1);
+
 	name = pName;
 	pos = initPos;
 
@@ -43,6 +45,7 @@ void Player::update(float dt)
 	{
 		vec3 olddir = cam->getDir();
 		cam->update(dt, false);
+		mainWeapon.update(dt);		//Temp;
 		dir = cam->getDir();
 
 		if (i->getKeyInfo(GLFW_KEY_W))
@@ -63,6 +66,9 @@ void Player::update(float dt)
 			left = normalize(left);
 			pos += left * dt;
 		}
+
+		if (i->getKeyInfo(GLFW_MOUSE_BUTTON_LEFT))		//Temp
+			mainWeapon.shoot();
 
 		cam->setCam(pos, dir);
 		if (olddir != dir)

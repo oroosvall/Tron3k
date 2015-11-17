@@ -7,11 +7,15 @@
 #include "../CameraInput.h"
 
 #include <glm/glm.hpp>
+#include "Weapon/Weapon.h"
 #include <string>
 
 class Player : public GameObject
 {
 private:
+
+	Weapon mainWeapon;
+
 	std::string name;
 	glm::vec3 pos;
 	glm::vec3 dir; //Current viewing direction

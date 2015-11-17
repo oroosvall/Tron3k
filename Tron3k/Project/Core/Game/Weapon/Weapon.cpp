@@ -1,1 +1,44 @@
 #include "Weapon.h"
+
+Weapon::Weapon()
+{
+	maxClipSize = 36;
+	currentClipAmmo = maxClipSize;
+	weaponType = 0;
+}
+
+Weapon::~Weapon()
+{}
+
+void Weapon::init(int maxClipSize, int weaponType, float firingSpeed)
+{
+	this->maxClipSize = maxClipSize;
+	currentClipAmmo = maxClipSize;
+	this->weaponType = weaponType;
+	this->firingSpeed = firingSpeed;
+	currentDelay = firingSpeed;
+}
+
+void Weapon::shoot()
+{
+	if (currentDelay <= 0 && currentClipAmmo > 0)
+	{
+		currentClipAmmo--;
+		currentDelay = firingSpeed;
+	}
+}
+
+bool Weapon::reload()
+{
+	currentClipAmmo = maxClipSize;
+	
+	return true;
+}
+
+void Weapon::update(float deltaTime)
+{
+	if (currentDelay > 0)
+	{
+		currentDelay -= deltaTime;
+	}
+}
