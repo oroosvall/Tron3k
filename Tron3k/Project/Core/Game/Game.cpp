@@ -5,7 +5,10 @@ void Game::release()
 	// delete code goes here
 	for (int i = 0; i < max_con; i++)
 	{
-		delete playerList[i];
+		if (playerList[i])
+		{
+			delete playerList[i];
+		}
 	}
 	delete[]playerList;
 

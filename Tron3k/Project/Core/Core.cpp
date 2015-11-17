@@ -22,9 +22,9 @@ void Core::init()
 	
 	createWindow(winX, winY, fullscreen);
 	//******************* TEMP *************************
-	//musicPlayer.playExternalSound(SOUNDS::gunshot, sf::Vector3f(10.0f, 0.0f, 0.0f));
-	//musicPlayer.playUserGeneratedSound(SOUNDS::firstBlood);
-	//musicPlayer.playMusic(MUSIC::mainMenu);
+	musicPlayer.playExternalSound(SOUNDS::gunshot, sf::Vector3f(10.0f, 0.0f, 0.0f));
+	musicPlayer.playUserGeneratedSound(SOUNDS::firstBlood);
+	musicPlayer.playMusic(MUSIC::mainMenu);
 	timepass = 0.0f;
 	//**************************************************
 	current = Gamestate::START;
@@ -33,17 +33,18 @@ void Core::init()
 
 Core::~Core()
 {
-	game->release();
+	
 	if (game != nullptr)
-		delete game;
+		game->release();
 	if (top != nullptr)
 		delete top;
 	if (win != nullptr)
-		delete win;
+	{
+		glfwDestroyWindow(win);
+		win = nullptr;
+	}
 	if (renderPipe != nullptr)
 		delete renderPipe;
-	
-	musicPlayer.~SoundPlayer();
 
 	Input* i = Input::getInput();
 	i->release();
@@ -573,13 +574,17 @@ void Core::saveSettings()
 {
 	fstream file;
 	file.open("settings.txt", fstream::trunc);
-	
+
 	if (file.is_open())
 	{
 		file << "Name: " << _name << endl;
 		file << "IP: " << _addrs.toString() << endl;
 		file << "Port: " << _port;
 	}
+}
+bool Core::windowVissible() const
+{
+	return !glfwWindowShouldClose(win);
 }
 
 void Core::setfps(int fps)
