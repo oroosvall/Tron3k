@@ -20,6 +20,9 @@
 
 #include "CameraInput.h"
 
+#include <fstream> //load settings
+#include <sstream>
+
 enum Gamestate
 {
 	START,
@@ -59,15 +62,22 @@ private:
 	void upMenu(float dt);
 	void upRoam(float dt);
 	void upClient(float dt);
-
-	void clientHandleCmds(float dt); //Handles clientside /-commands
-
 	void upServer(float dt);
+
+	void startHandleCmds(float dt);
+	void clientHandleCmds(float dt); //Handles clientside /-commands
 
 	void createWindow(int x, int y, bool fullscreen);
 	void removeWindow();
 
 	void initPipeline();
+
+	//load from file
+	IpAddress _addrs;
+	int _port;
+	string _name;
+	void loadSettings();
+	void saveSettings();
 
 	//TEMPORARY
 	void givePlayerBoatExtremes();
@@ -75,6 +85,8 @@ private:
 public:
 	void init();
 	void update(float dt);
+
+	bool windowVisible() const;
 
 	void setfps(int fps);
 

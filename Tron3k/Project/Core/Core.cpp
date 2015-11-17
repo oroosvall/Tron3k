@@ -164,54 +164,14 @@ void Core::upStart(float dt)
 		console.printMsg("[/1] Client", "System", 'S');
 		console.printMsg("[/2] Server", "System", 'S');
 		console.printMsg("[/3] Roam", "System", 'S');
+
+		loadSettings();
 		subState++;
 		break;
 
 	case 1:
-		if (console.commandReady())
-		{
-			string cmd = console.getCommand();
-			if (cmd == "/1")
-			{
-				current = Gamestate::CLIENT;
-				subState = 0;
-				initPipeline();
-			}
-
-			else if (cmd == "/2")
-			{
-				current = Gamestate::SERVER;
-				subState = 0;
-			}
-
-			else if (cmd == "/3")
-			{
-				current = Gamestate::ROAM;
-				subState = 0;
-				initPipeline();
-
-				game = new Game();
-				game->init(MAX_CONNECT);
-
-				Player* p = new Player();
-				
-				p->init("Roam", glm::vec3(0, 0, 0));
-				
-				game->createPlayer(p, 0, true);
-				
-				delete p;
-				
-				p = new Player();
-				
-				p->init("Roam2", glm::vec3(0, 10, 0));
-				
-				game->createPlayer(p, 1);
-				
-				delete p;
-				
-			}
-		}
-
+		//start console commands
+		startHandleCmds(dt);
 		break;
 	}
 }
@@ -248,7 +208,7 @@ void Core::upClient(float dt)
 		if (top)
 			delete top;
 		top = new Client();
-		top->init(&console);
+		top->init(&console, _port, _addrs);
 
 		subState++;
 		break;
@@ -340,6 +300,82 @@ void Core::upClient(float dt)
 	}
 }
 
+void Core::startHandleCmds(float dt)
+{
+	if (console.commandReady())
+	{
+		string token;
+		istringstream ss = istringstream(console.getCommand());
+		ss >> token;
+		if (token == "/help")
+		{
+			console.printMsg("Console comands:", "", ' ');
+			console.printMsg("/name <name>", "", ' ');
+			console.printMsg("/ip 000.000.000.000", "", ' ');
+			console.printMsg("/port <portnr>  NOT IMPLEMENTTED", "", ' ');
+		}
+		else if (token == "/name")
+		{
+			ss >> token;
+			if (token == "")
+			{
+				console.printMsg("No name found. Use /name <new Name>", "System", 'S');
+			}
+			else
+			{
+				/* Todo: Check for illegal names */
+				_name = token;
+				console.printMsg("You changed name to (" + token + ")", "System", 'S');
+			}
+		}
+		else if (token == "/ip")
+		{
+			ss >> token;
+			_addrs = IpAddress(token);
+			console.printMsg("IP address set to: " + _addrs.toString(), "System", 'S');
+
+		}
+		else if (token == "/1")
+		{
+			current = Gamestate::CLIENT;
+			subState = 0;
+			initPipeline();
+		}
+
+		else if (token == "/2")
+		{
+			current = Gamestate::SERVER;
+			subState = 0;
+		}
+
+		else if (token == "/3")
+		{
+			current = Gamestate::ROAM;
+			subState = 0;
+			initPipeline();
+
+			game = new Game();
+			game->init(MAX_CONNECT);
+
+			Player* p = new Player();
+
+			p->init("Roam", glm::vec3(0, 0, 0));
+
+			game->createPlayer(p, 0, true);
+
+			delete p;
+
+			p = new Player();
+
+			p->init("Roam2", glm::vec3(0, 10, 0));
+
+			game->createPlayer(p, 1);
+
+			delete p;
+		}
+	}
+}
+
 void Core::clientHandleCmds(float dt)
 {
 	if (console.commandReady())
@@ -377,7 +413,7 @@ void Core::upServer(float dt)
 		if (top)
 			delete top;
 		top = new Server();
-		top->init(&console);
+		top->init(&console, _port, _addrs);
 		
 		subState = 1;
 		break;
@@ -442,6 +478,51 @@ void Core::upServer(float dt)
 	}
 }
 
+void Core::saveSettings()
+{
+	fstream file;
+	file.open("settings.txt", fstream::trunc);
+
+	if (file.is_open())
+	{
+		file << "Name: " << _name << endl;
+		file << "IP: " << _addrs.toString() << endl;
+		file << "Port: " << _port;
+	}
+}
+
+void Core::loadSettings()
+{
+	fstream file("settings.txt");
+
+	//default values
+	_name = "ClientName";
+	_port = PORT_DEFAULT;
+	_addrs = IpAddress::LocalHost;
+
+	if (file.is_open())
+	{
+		string in;
+		string in2;
+		while (getline(file, in))
+		{
+			stringstream ss(in);
+			ss >> in;
+			ss >> in2;
+			if (in == "Name:")
+				_name = in2;
+			else if (in == "IP:")
+				_addrs = IpAddress(in2);
+			else if (in == "Port:")
+				_port = stoi(in2);
+		}
+	}
+	else
+	{
+		saveSettings(); //save file with default values
+	}
+
+}
 
 void Core::createWindow(int x, int y, bool fullscreen)
 {
@@ -529,4 +610,9 @@ void Core::givePlayerBoatExtremes()
 		game->getBoatCoordsFromCore(minEx, maxEx);
 	}
 	game->getBoatCoordsFromCore(vec3(0,0,0), vec3(0,0,0));
+}
+
+bool Core::windowVisible() const
+{
+	return !glfwWindowShouldClose(win);
 }
