@@ -28,9 +28,7 @@ void Core::init()
 	theSound->playUserGeneratedSound(SOUNDS::firstBlood);
 	theSound->playMusic(MUSIC::mainMenu);
 	//******************* TEMP *************************
-	//musicPlayer.playExternalSound(SOUNDS::gunshot, sf::Vector3f(10.0f, 0.0f, 0.0f));
-	//musicPlayer.playUserGeneratedSound(SOUNDS::firstBlood);
-	//musicPlayer.playMusic(MUSIC::mainMenu);
+	
 	timepass = 0.0f;
 	//**************************************************
 	current = Gamestate::START;
@@ -52,13 +50,15 @@ Core::~Core()
 		renderPipe->release();
 	
 	SoundPlayer* theSound = SoundPlayer::getSound();
-	SoundPlayer::release();
+	theSound->release();
 
 	Input* i = Input::getInput();
 	i->release();
 
 	CameraInput* cam = CameraInput::getCam();
 	cam->release();
+
+	saveSettings();
 }
 
 void Core::update(float dt)
@@ -313,10 +313,10 @@ void Core::startHandleCmds(float dt)
 		ss >> token;
 		if (token == "/help")
 		{
-			console.printMsg("Console comands:", "", ' ');
-			console.printMsg("/name <name>", "", ' ');
-			console.printMsg("/ip 000.000.000.000", "", ' ');
-			console.printMsg("/port <portnr>  NOT IMPLEMENTTED", "", ' ');
+			console.printMsg("Console comands", "", ' ');
+			console.printMsg("/name " + _name, "", ' ');
+			console.printMsg("/ip " + _addrs.toString(), "", ' ');
+			console.printMsg("/port " + to_string(_port), "", ' ');
 		}
 		else if (token == "/name")
 		{
@@ -328,8 +328,8 @@ void Core::startHandleCmds(float dt)
 			else
 			{
 				/* Todo: Check for illegal names */
-				_name = token;
-				console.printMsg("You changed name to (" + token + ")", "System", 'S');
+					_name = token;
+					console.printMsg("You changed name to (" + token + ")", "System", 'S');
 			}
 		}
 		else if (token == "/ip")
@@ -485,7 +485,7 @@ void Core::upServer(float dt)
 void Core::saveSettings()
 {
 	fstream file;
-	file.open("settings.txt", fstream::trunc);
+	file.open("settings.txt", fstream::trunc | fstream::out);
 
 	if (file.is_open())
 	{
