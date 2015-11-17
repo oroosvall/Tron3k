@@ -237,7 +237,6 @@ void Core::upClient(float dt)
 				game = new Game();
 				game->init(MAX_CONNECT);
 				top->setGamePtr(game);
-
 				subState++;
 				return;
 			}
@@ -260,6 +259,9 @@ void Core::upClient(float dt)
 			//can i load?
 
 			// if not  -> menu
+			top->frame_name_change(top->getConId(), _name);
+			Player* me = game->getPlayer(top->getConId());
+			me->setName(_name);
 			subState++;
 		}
 		
