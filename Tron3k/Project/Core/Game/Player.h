@@ -23,6 +23,8 @@ private:
 
 	Input* i;
 	CameraInput* cam;
+
+	void rotatePlayer(vec3 olddir, vec3 newdir);
 public:
 	Player();
 	void init(std::string name, glm::vec3 pos, bool isLocal = false);

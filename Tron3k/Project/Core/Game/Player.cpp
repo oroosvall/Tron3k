@@ -14,6 +14,9 @@ void Player::init(std::string pName, glm::vec3 initPos, bool isLocal)
 
 	i = Input::getInput();
 	cam = CameraInput::getCam();
+
+	if (isLocal)
+		rotate(0, -3.141592654f, 0);
 }
 
 void Player::setName(std::string newName)
@@ -30,16 +33,15 @@ void Player::setGoalPos(glm::vec3 newPos)
 void Player::setGoalDir(glm::vec3 newDir)
 {
 	goaldir = newDir;
-	pos = newDir; //Temporary 
+	rotatePlayer(dir, goaldir);
+	dir = newDir; //Temporary 
 }
 
 void Player::update(float dt)
 {
-	/*Input* i = Input::getInput();
-	if (i->getKeyInfo(GLFW_KEY_W))
-		pos.z += 1.0f*dt;*/
 	if (isLocalPlayer)
 	{
+		vec3 olddir = cam->getDir();
 		cam->update(dt, false);
 		dir = cam->getDir();
 
@@ -63,10 +65,21 @@ void Player::update(float dt)
 		}
 
 		cam->setCam(pos, dir);
+		if (olddir != dir)
+			rotatePlayer(olddir, dir);
 	}
 	
 	worldMat[0].w = pos.x;
-	worldMat[1].w = pos.y - 2;
+	worldMat[1].w = pos.y - 1.5f;
 	worldMat[2].w = pos.z;
-	
+}
+
+void Player::rotatePlayer(vec3 olddir, vec3 newdir)
+{
+	//vec3 oldIgnoreY = vec3(olddir.x, 0, olddir.z);
+	//vec3 newIgnoreY = vec3(newdir.x, 0, newdir.z);
+
+	//float angle = (dot(oldIgnoreY, newIgnoreY)) / (oldIgnoreY.length() * newIgnoreY.length());
+	float angle = atan2(newdir.x, newdir.z) - atan2(olddir.x, olddir.z);
+	rotate(0, -angle, 0);
 }
