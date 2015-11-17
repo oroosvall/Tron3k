@@ -318,8 +318,9 @@ void Core::upClient(float dt)
 			Add to topology packet
 			*/
 			glm::vec3 lPos = local->getPos();
+			glm::vec3 lDir = local->getDir();
 
-			top->frame_pos(top->getConId(), lPos);
+			top->frame_pos(top->getConId(), lPos, lDir);
 
 
 			top->network_OUT(dt);

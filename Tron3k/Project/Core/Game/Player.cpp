@@ -27,7 +27,7 @@ void Player::setGoalPos(glm::vec3 newPos)
 	pos = newPos; //Temporary
 }
 
-void Player::setGoalPos(glm::vec3 newDir)
+void Player::setGoalDir(glm::vec3 newDir)
 {
 	goaldir = newDir;
 	pos = newDir; //Temporary 

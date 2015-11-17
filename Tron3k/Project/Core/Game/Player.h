@@ -35,6 +35,7 @@ public:
 
 	std::string getName() { return name; };
 	glm::vec3 getPos() { return pos; };
+	glm::vec3 getDir() { return dir; };
 };
 
 #endif
