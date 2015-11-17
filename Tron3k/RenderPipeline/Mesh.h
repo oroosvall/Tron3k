@@ -4,6 +4,11 @@
 #include <GL\glew.h>
 #include <glm\glm.hpp>
 
+#include <string>
+#include <sstream>
+#include <fstream>
+#include <vector>
+
 struct Vertex
 {
 	float x, y, z;
@@ -38,7 +43,7 @@ public:
 
 	void init();
 
-	void load(char* file);
+	void load(std::string file);
 
 	//void 
 
