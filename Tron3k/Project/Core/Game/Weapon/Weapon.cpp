@@ -2,7 +2,7 @@
 
 Weapon::Weapon()
 {
-	maxClipSize = 36;
+	maxClipSize = 0;
 	currentClipAmmo = maxClipSize;
 	weaponType = 0;
 }

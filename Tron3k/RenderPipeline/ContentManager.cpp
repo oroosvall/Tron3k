@@ -11,12 +11,21 @@ void ContentManager::init()
 	temp.make();
 	temp.take(playerModels[0].meshID, playerModels[0].vao, playerModels[0].index, playerModels[0].facecount);
 
+	tempMesh.init(0, 0, 0);
+	tempMesh.load("GameFiles/TestFiles/cube.v");
+
 }
 
-void ContentManager::renderChunks()
+void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation)
 {
 
+	glProgramUniformMatrix4fv(shader, shaderLocation, 1, GL_FALSE, (GLfloat*)tempMesh.getWorld());
 
+	glBindVertexArray(tempMesh.vao);
+	glBindBuffer(GL_ARRAY_BUFFER, tempMesh.vbo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, tempMesh.ibo);
+
+	glDrawElements(GL_TRIANGLES, tempMesh.faceCount * 3, GL_UNSIGNED_SHORT, 0);
 
 }
 

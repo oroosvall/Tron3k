@@ -32,18 +32,22 @@ private:
 	unsigned int fileOffsetPtr;
 	bool loaded;
 	bool onGPU;
-
-	GLuint vbo;
-	GLuint vao;
-	GLuint ibo;
 	
 	glm::mat4 world;
 
 public:
 
-	void init();
+	GLuint vbo;
+	GLuint vao;
+	GLuint ibo;
+
+	int faceCount;
+
+	void init(float x, float y, float z);
 
 	void load(std::string file);
+
+	float* getWorld();
 
 	//void 
 

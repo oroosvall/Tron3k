@@ -73,11 +73,11 @@ PLAYERMSG Player::update(float dt)
 				pos += left * dt;
 			}
 
-			/*if (i->getKeyInfo(GLFW_MOUSE_BUTTON_LEFT))		//Temp
+			if (i->getKeyInfo(GLFW_MOUSE_BUTTON_LEFT))		//Temp
 			{
 				mainWeapon.shoot();
 				msg = SHOOT;
-			}*/
+			}
 
 			cam->setCam(pos, dir);
 			if (olddir != dir)

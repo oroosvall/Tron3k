@@ -11,6 +11,14 @@ void Game::release()
 		}
 	}
 	delete[]playerList;
+	
+	for (int i = 0; i < bullets.size(); i++)
+	{
+		if (bullets[i] != nullptr)
+		{
+			delete bullets[i];
+		}
+	}
 
 	delete this; // yes this is safe
 }
@@ -88,6 +96,11 @@ Player* Game::getPlayer(int conID)
 	return nullptr;
 }
 
+std::vector<Bullet*> Game::getBullets()
+{
+	return bullets;
+}
+
 void Game::createPlayer(Player* p, int conID, bool isLocal)
 {
 	playerList[conID] = new Player();
@@ -157,6 +170,7 @@ void Game::createBullet(Player* p)
 	p->getWeaponData(wpntype);
 	if (wpntype == 0)
 	{
-		Bullet* b = new Bullet(p->getPos(), p->getDir(), 10);
+		Bullet* b = new Bullet(p->getPos(), p->getDir(), 10, 0);	//add to release
+		bullets.push_back(b);
 	}
 }
