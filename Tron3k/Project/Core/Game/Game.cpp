@@ -129,6 +129,22 @@ void Game::checkCollision()
 			{
 				//here we can do things when two objects, collide, cause now we know i and j collided.
 				int x = 0;
+				vec3 inBetween = pPos[i] - pPos[j];
+				if (pPos[i].x < pPos[j].x)
+				{
+					inBetween.x = abs(inBetween.x);
+				}
+				if (pPos[i].y < pPos[j].y)
+				{
+					inBetween.y = abs(inBetween.y);
+				}
+				if (pPos[i].z < pPos[j].z)
+				{
+					inBetween.z = abs(inBetween.z);
+				}
+				playerList[i]->setGoalPos(pPos[i] - inBetween);
+				playerList[j]->setGoalPos(pPos[j] + inBetween);
+				
 			}
 		}
 	}
