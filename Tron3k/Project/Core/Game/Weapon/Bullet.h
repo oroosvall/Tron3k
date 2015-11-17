@@ -2,16 +2,18 @@
 #define BULLET_H
 
 #include <glm/glm.hpp>
+#include "../GameObject.h"
 
-class Bullet
+class Bullet : public GameObject
 {
-	private:
+	public:
 		glm::vec3 pos;
 		glm::vec3 direction;
 		float velocity;
-	public:
+		int teamId;
+
 		Bullet();
-		Bullet(glm::vec3 pos, glm::vec3 direction, float velocity);
+		Bullet(glm::vec3 pos, glm::vec3 direction, float velocity, int teamID);
 		~Bullet();
 
 		int update(float dt);

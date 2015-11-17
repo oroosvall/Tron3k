@@ -26,6 +26,7 @@ public:
 	void init(int max_connections);
 
 	Player* getPlayer(int conID);
+	std::vector<Bullet*> getBullets();
 	void createPlayer(Player* p, int conID, bool isLocal = false);
 
 	void update(float dt);
