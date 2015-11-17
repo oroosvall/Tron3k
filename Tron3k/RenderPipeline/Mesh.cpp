@@ -134,7 +134,7 @@ void Mesh::load(std::string path)
 			}
 		}
 
-	}
+	
 		//setMaxAndMinPos(vert);
 
 		glGenBuffers(1, &vbo);
