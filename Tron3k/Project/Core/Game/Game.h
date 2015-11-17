@@ -31,7 +31,7 @@ public:
 	void getBoatCoordsFromCore(glm::vec3 minVals, glm::vec3 maxVals);
 	//TEMPORARY
 	void sendBoatCoordsToPhysics(glm::vec3 minVals, glm::vec3 maxVals);
-
+	void checkCollision();
 };
 
 #endif

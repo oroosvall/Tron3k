@@ -59,6 +59,8 @@ void Game::update(float dt)
 		if (playerList[c] != nullptr)
 			playerList[c]->update(dt);
 	}
+
+	checkCollision();
 }
 
 Player* Game::getPlayer(int conID)
@@ -83,4 +85,19 @@ void Game::getBoatCoordsFromCore(glm::vec3 minVals, glm::vec3 maxVals)
 void Game::sendBoatCoordsToPhysics(glm::vec3 minVals, glm::vec3 maxVals)
 {
 	physics->getBoatExtremes(minVals, maxVals);
+}
+
+void Game::checkCollision()
+{
+	//TEMPORARY
+	vec3 pPos[20];
+	for (int i = 0; i < max_con; i++)
+	{
+		if (playerList[i] != nullptr)
+			pPos[i] = playerList[i]->getPos();
+		else
+			pPos[i] = glm::vec3(-1, -1, -1);
+	}
+
+	physics->checkCollision(pPos, 20);
 }
