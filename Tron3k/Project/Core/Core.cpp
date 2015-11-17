@@ -57,6 +57,8 @@ Core::~Core()
 
 	CameraInput* cam = CameraInput::getCam();
 	cam->release();
+
+	saveSettings();
 }
 
 void Core::update(float dt)
@@ -311,23 +313,23 @@ void Core::startHandleCmds(float dt)
 		ss >> token;
 		if (token == "/help")
 		{
-			console.printMsg("Console comands:", "", ' ');
-			console.printMsg("/name <name>", "", ' ');
-			console.printMsg("/ip 000.000.000.000", "", ' ');
-			console.printMsg("/port <portnr>  NOT IMPLEMENTTED", "", ' ');
+			console.printMsg("Console comands", "", ' ');
+			console.printMsg("/name " + _name, "", ' ');
+			console.printMsg("/ip " + _addrs.toString(), "", ' ');
+			console.printMsg("/port " + to_string(_port), "", ' ');
 		}
 		else if (token == "/name")
 		{
 			ss >> token;
-			if (token == "")
+			if (token == "/name")
 			{
 				console.printMsg("No name found. Use /name <new Name>", "System", 'S');
 			}
 			else
 			{
 				/* Todo: Check for illegal names */
-				_name = token;
-				console.printMsg("You changed name to (" + token + ")", "System", 'S');
+					_name = token;
+					console.printMsg("You changed name to (" + token + ")", "System", 'S');
 			}
 		}
 		else if (token == "/ip")
@@ -483,7 +485,7 @@ void Core::upServer(float dt)
 void Core::saveSettings()
 {
 	fstream file;
-	file.open("settings.txt", fstream::trunc);
+	file.open("settings.txt", fstream::trunc | fstream::out);
 
 	if (file.is_open())
 	{
