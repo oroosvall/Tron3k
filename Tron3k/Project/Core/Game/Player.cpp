@@ -24,7 +24,13 @@ void Player::setName(std::string newName)
 void Player::setGoalPos(glm::vec3 newPos)
 {
 	goalpos = newPos;
-	pos = newPos; //Temporary to print new positions
+	pos = newPos; //Temporary
+}
+
+void Player::setGoalPos(glm::vec3 newDir)
+{
+	goaldir = newDir;
+	pos = newDir; //Temporary 
 }
 
 void Player::update(float dt)

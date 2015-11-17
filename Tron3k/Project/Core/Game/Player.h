@@ -17,6 +17,7 @@ private:
 	glm::vec3 dir; //Current viewing direction
 
 	glm::vec3 goalpos; //Used by non-local players to move smoothly
+	glm::vec3 goaldir; //Used by non-locals to turn smoothly
 
 	bool isLocalPlayer;
 
@@ -30,6 +31,7 @@ public:
 
 	void setName(std::string newName);
 	void setGoalPos(glm::vec3 newPos);
+	void setGoalDir(glm::vec3 newDir);
 
 	std::string getName() { return name; };
 	glm::vec3 getPos() { return pos; };
