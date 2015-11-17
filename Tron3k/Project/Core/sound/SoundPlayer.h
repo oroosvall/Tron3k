@@ -11,11 +11,15 @@ using namespace std;
 class SoundPlayer
 {
 private:
-	bool soundEnabler;
-	int nrOfSoundsPlaying;
-	float soundVolume;
-	float musicVolume;
-	
+	SoundPlayer();
+	static SoundPlayer* singleton;
+	static bool soundEnabler;
+	static int nrOfSoundsPlaying;
+	static float soundVolume;
+	static float musicVolume;
+	~SoundPlayer();
+
+
 	sf::Sound sounds[30];
 	sf::SoundBuffer soundList[SOUNDS::nrOfSounds];
 	string musicList[MUSIC::nrOfMusic];
@@ -25,9 +29,9 @@ private:
 	sf::SoundBuffer soundBuffer;
 
 public:
-	SoundPlayer();
-	~SoundPlayer();
-
+	static void release();
+	static void init();
+	static SoundPlayer* getSound();
 	void enableSounds();
 
 	void setVolumeMusic(float volume);

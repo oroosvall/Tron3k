@@ -68,9 +68,6 @@ private:
 	void removeWindow();
 
 	void initPipeline();
-	
-
-	SoundPlayer musicPlayer;
 
 	//TEMPORARY
 	void givePlayerBoatExtremes();

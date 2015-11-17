@@ -1,22 +1,51 @@
 #include "SoundPlayer.h"
 
+int SoundPlayer::nrOfSoundsPlaying = 0;
+float SoundPlayer::soundVolume = 100.0f;
+float SoundPlayer::musicVolume = 100.0f;
+bool SoundPlayer::soundEnabler = false;
+
+
+SoundPlayer* SoundPlayer::singleton = nullptr;
+
+SoundPlayer* SoundPlayer::getSound()
+{
+	if (singleton == nullptr)
+	{
+		singleton = new SoundPlayer();
+	}
+	return singleton;
+}
+
+void SoundPlayer::release()
+{
+	if (singleton)
+	{
+		delete singleton;
+	}
+}
+
+void SoundPlayer::init()
+{
+	if (singleton)
+	{
+		singleton->soundList[SOUNDS::gunshot].loadFromFile("soundEffectGunshots.ogg");
+		singleton->soundList[SOUNDS::firstBlood].loadFromFile("voiceFirstBlood.ogg");
+		singleton->musicList[MUSIC::mainMenu] = "musicMainMenu.ogg";
+	}
+	
+
+	
+}
 
 SoundPlayer::SoundPlayer()
 {
-	nrOfSoundsPlaying = 0;
-	soundVolume = 100.0f;
-	musicVolume = 100.0f;
-	soundEnabler = false;
 
-	soundList[SOUNDS::gunshot].loadFromFile("soundEffectGunshots.ogg");
-	soundList[SOUNDS::firstBlood].loadFromFile("voiceFirstBlood.ogg");
-
-	musicList[MUSIC::mainMenu] = "musicMainMenu.ogg";
 }
 
 SoundPlayer::~SoundPlayer()
 {
-
+	
 }
 
 void SoundPlayer::enableSounds()

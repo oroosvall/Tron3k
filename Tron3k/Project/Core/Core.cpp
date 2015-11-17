@@ -21,6 +21,12 @@ void Core::init()
 	winX = winY = 800;
 	
 	createWindow(winX, winY, fullscreen);
+
+	SoundPlayer* theSound = SoundPlayer::getSound();
+	theSound->init();
+	theSound->playExternalSound(SOUNDS::gunshot, sf::Vector3f(10.0f, 0.0f, 0.0f));
+	theSound->playUserGeneratedSound(SOUNDS::firstBlood);
+	theSound->playMusic(MUSIC::mainMenu);
 	//******************* TEMP *************************
 	//musicPlayer.playExternalSound(SOUNDS::gunshot, sf::Vector3f(10.0f, 0.0f, 0.0f));
 	//musicPlayer.playUserGeneratedSound(SOUNDS::firstBlood);
@@ -43,7 +49,8 @@ Core::~Core()
 	if (renderPipe != nullptr)
 		delete renderPipe;
 	
-	musicPlayer.~SoundPlayer();
+	SoundPlayer* theSound = SoundPlayer::getSound();
+	SoundPlayer::release();
 
 	Input* i = Input::getInput();
 	i->release();
@@ -133,8 +140,8 @@ void Core::update(float dt)
 
 	//*******TEMP**********
 	timepass += dt;
-	musicPlayer.rotate(timepass);
-	musicPlayer.update();
+	//musicPlayer.rotate(timepass);
+	//musicPlayer.update();
 	//*********************
 
 	//shouldnt get the ref every frame
