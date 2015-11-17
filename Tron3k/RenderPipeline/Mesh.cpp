@@ -119,10 +119,11 @@ void Mesh::load(std::string path)
 						vert[indexVERT].v = uv[indexUV].v;
 						Indices[count * 3 + n] = indexVERT;
 					}
-					
+
 				}
 				count++;
 			}
 		}
 
+	}
 }

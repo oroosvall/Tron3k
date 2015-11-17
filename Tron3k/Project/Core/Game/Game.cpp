@@ -128,7 +128,7 @@ void Game::checkCollision()
 			if (collides)
 			{
 				//here we can do things when two objects, collide, cause now we know i and j collided.
-				int x = 0;
+				//int x = 0;
 				vec3 inBetween = pPos[i] - pPos[j];
 				if (pPos[i].x < pPos[j].x)
 				{
@@ -148,6 +148,7 @@ void Game::checkCollision()
 			}
 		}
 	}
+	
 }
 
 void Game::createBullet(Player* p)

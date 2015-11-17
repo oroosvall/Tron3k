@@ -154,8 +154,12 @@ void Core::update(float dt)
 	glfwSwapBuffers(win);
 
 	//TEMPORARY
-	if (game != nullptr)
+	static bool given = false;
+	if (game != nullptr && !given)
+	{
 		givePlayerBoatExtremes();
+		given = true;
+	}
 }
 
 void Core::upStart(float dt)
@@ -626,6 +630,7 @@ void Core::givePlayerBoatExtremes()
 
 		game->getBoatCoordsFromCore(minEx, maxEx);
 	}
+	else
 	game->getBoatCoordsFromCore(vec3(0,0,0), vec3(0,0,0));
 }
 
