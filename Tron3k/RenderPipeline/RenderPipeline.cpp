@@ -135,7 +135,7 @@ void RenderPipeline::update()
 void RenderPipeline::render()
 {
 	
-
+	contMan.renderChunks(testShader, worldMat);
 }
 
 void* RenderPipeline::getView()

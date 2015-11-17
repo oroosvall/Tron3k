@@ -22,11 +22,13 @@ private:
 	Mesh* meshes;
 	PlayerObject* playerModels;
 
+	Mesh tempMesh;
+
 public:
 
 	void init();
 
-	void renderChunks();
+	void renderChunks(GLuint shader, GLuint shaderLocation);
 
 	void renderPlayer(int playerID, glm::mat4 world);
 

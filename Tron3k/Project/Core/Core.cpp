@@ -135,7 +135,7 @@ void Core::update(float dt)
 					renderPipe->renderPlayer(0, bullets[i]->getWorldMat());
 				}
 
-				//renderPipe->render();
+				renderPipe->render();
 			}
 
 		}
