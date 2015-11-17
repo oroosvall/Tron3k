@@ -73,6 +73,9 @@ public:
 	virtual unsigned int createMesh(...) { return 0; }; // fix parameters
 	virtual void removeMesh(unsigned int id) {};
 
+	virtual void* getMinExtremes();
+	virtual void* getMaxExtremes();
+
 };
 
 

@@ -64,6 +64,9 @@ public:
 	virtual unsigned int createMesh(...) = 0;
 	virtual void removeMesh(unsigned int id) = 0;
 
+	virtual void* getMinExtremes() = 0;
+	virtual void* getMaxExtremes() = 0;
+
 };
 
 extern "C" ENGINE_API IRenderPipeline* CreatePipeline();

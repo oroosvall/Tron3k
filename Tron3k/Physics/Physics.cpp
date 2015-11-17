@@ -45,6 +45,30 @@ bool Physics::checkCollision(CollideMesh* obj1, CollideMesh* obj2)
 	return false;
 }
 
+bool Physics::checkCollision(glm::vec3 playerPos1, glm::vec3 playerPos2)
+{
+
+	Geometry obj1 = Geometry(playerPos1, this->size);
+	Geometry obj2 = Geometry(playerPos2, this->size);
+	bool collide = checkCollision(&obj1, &obj2);
+
+	return collide;
+
+
+}
+
+//TEMPORARY
+void Physics::getBoatExtremes(glm::vec3 minVals, glm::vec3 maxVals)
+{
+	minExtremes = minVals;
+	maxExtremes = maxVals;
+	size = glm::vec3(abs(minExtremes.x) + abs(maxExtremes.x), abs(minExtremes.y) + abs(maxExtremes.y), abs(minExtremes.z) + abs(maxExtremes.z));
+
+	size.x = size.x / 2;
+	size.y = size.y / 2;
+	size.z = size.z / 2;
+}
+
 Physics* CreatePhysics()
 {
 	return new Physics();

@@ -144,7 +144,9 @@ void Core::update(float dt)
 
 	glfwSwapBuffers(win);
 
-	
+	//TEMPORARY
+	if (game != nullptr)
+		givePlayerBoatExtremes();
 }
 
 void Core::upStart(float dt)
@@ -194,7 +196,7 @@ void Core::upStart(float dt)
 				
 				p = new Player();
 				
-				p->init("Roam2", glm::vec3(0, 10, 0));
+				p->init("Roam2", glm::vec3(0, 0, 0));
 				
 				game->createPlayer(p, 1);
 				
@@ -500,4 +502,20 @@ void Core::setfps(int fps)
 {
 	if(win != nullptr)
 		glfwSetWindowTitle(win, to_string(fps).c_str());
+}
+
+//TEMPORARY
+void Core::givePlayerBoatExtremes()
+{
+	//to avoid leaks
+	vec3* minExtremes = (vec3*)renderPipe->getMinExtremes();
+	vec3* maxExtremes = (vec3*)renderPipe->getMaxExtremes();
+
+	vec3 minEx = *minExtremes;
+	vec3 maxEx = *maxExtremes;
+
+	delete minExtremes;
+	delete maxExtremes;
+
+	game->getBoatCoordsFromCore(minEx, maxEx);
 }

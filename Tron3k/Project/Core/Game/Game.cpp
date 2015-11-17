@@ -59,6 +59,8 @@ void Game::update(float dt)
 		if (playerList[c] != nullptr)
 			playerList[c]->update(dt);
 	}
+
+	checkCollision();
 }
 
 Player* Game::getPlayer(int conID)
@@ -72,4 +74,44 @@ void Game::createPlayer(Player* p, int conID, bool isLocal)
 {
 	playerList[conID] = new Player();
 	playerList[conID]->init(p->getName(), p->getPos(), isLocal);
+}
+
+//TEMPORARY
+void Game::getBoatCoordsFromCore(glm::vec3 minVals, glm::vec3 maxVals)
+{
+	sendBoatCoordsToPhysics(minVals, maxVals);
+}
+
+void Game::sendBoatCoordsToPhysics(glm::vec3 minVals, glm::vec3 maxVals)
+{
+	physics->getBoatExtremes(minVals, maxVals);
+}
+
+void Game::checkCollision()
+{
+	//TEMPORARY
+	vec3 pPos[20];
+	for (int i = 0; i < max_con; i++)
+	{
+		if (playerList[i] != nullptr)
+			pPos[i] = playerList[i]->getPos();
+		else
+			pPos[i] = glm::vec3(-1, -1, -1);
+	}
+
+	for (int i = 0; i < max_con; i++)
+	{
+		for (int j = i + 1; j < max_con; j++)
+		{
+			bool collides = false;
+			if (playerList[i] != nullptr && playerList[j] != nullptr)
+				collides = physics->checkCollision(pPos[i], pPos[j]);
+
+			if (collides)
+			{
+				//here we can do things when two objects, collide, cause now we know i and j collided.
+				int x = 0;
+			}
+		}
+	}
 }
