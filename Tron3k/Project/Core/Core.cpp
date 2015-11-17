@@ -322,9 +322,7 @@ void Core::startHandleCmds(float dt)
 		{
 			ss >> token;
 			if (token == "/name")
-			{
 				console.printMsg("No name found. Use /name <new Name>", "System", 'S');
-			}
 			else
 			{
 				/* Todo: Check for illegal names */
@@ -338,6 +336,17 @@ void Core::startHandleCmds(float dt)
 			_addrs = IpAddress(token);
 			console.printMsg("IP address set to: " + _addrs.toString(), "System", 'S');
 
+		}
+		else if (token == "/port")
+		{
+			ss >> token;
+			if(token == "/port")
+				console.printMsg("No port found. Use /port <new Port>", "System", 'S');
+			else
+			{
+				_port = atoi(token.c_str());
+				console.printMsg("Port set to: " + to_string(_port), "System", 'S');
+			}
 		}
 		else if (token == "/1")
 		{
@@ -390,10 +399,8 @@ void Core::clientHandleCmds(float dt)
 		if (token == "/name")
 		{
 			ss >> token;
-			if (token == "")
-			{
+			if (token == "/name")
 				console.printMsg("No name found. Use /name <new Name>", "System", 'S');
-			}
 			else
 			{
 				/* Todo: Check for illegal names */
@@ -518,7 +525,7 @@ void Core::loadSettings()
 			else if (in == "IP:")
 				_addrs = IpAddress(in2);
 			else if (in == "Port:")
-				_port = stoi(in2);
+				_port = atoi(in2.c_str());
 		}
 	}
 	else
