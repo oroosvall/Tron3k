@@ -1,7 +1,6 @@
 #ifndef CONTENTMANAGER_H
 #define CONTENTMANAGER_H
 
-#include "ResourceManager.h"
 #include <glm\glm.hpp>
 
 #include <GL\glew.h>
@@ -46,6 +45,8 @@ private:
 public:
 
 	void init();
+
+	void renderChunks();
 
 	void renderPlayer(int playerID, glm::mat4 world);
 

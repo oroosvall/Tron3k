@@ -6,11 +6,17 @@ Bullet::Bullet()
 	velocity = 0.0f;
 }
 
-Bullet::Bullet(glm::vec3 direction, float velocity)
+Bullet::Bullet(glm::vec3 position, glm::vec3 direction, float velocity)
 {
+	pos = position;
 	this->direction = direction;
 	this->velocity = velocity;
 }
 
 Bullet::~Bullet()
 {}
+
+int Bullet::update(float dt)
+{
+	return 0;
+}

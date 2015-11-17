@@ -22,5 +22,7 @@ class Weapon
 		bool reload();
 
 		void update(float deltaTime);
+
+		int getType() { return weaponType; };
 };
 #endif

@@ -13,6 +13,12 @@ void ContentManager::init()
 
 }
 
+void ContentManager::renderChunks()
+{
+
+
+
+}
 
 void ContentManager::renderPlayer(int playerID, glm::mat4 world)
 {

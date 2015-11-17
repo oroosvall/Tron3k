@@ -10,6 +10,8 @@
 #include "Weapon/Weapon.h"
 #include <string>
 
+enum PLAYERMSG { NONE, SHOOT };
+
 class Player : public GameObject
 {
 private:
@@ -33,7 +35,7 @@ public:
 	Player();
 	void init(std::string name, glm::vec3 pos, bool isLocal = false);
 
-	void update(float dt);
+	PLAYERMSG update(float dt);
 
 	void setName(std::string newName);
 	void setGoalPos(glm::vec3 newPos);
@@ -42,6 +44,8 @@ public:
 	std::string getName() { return name; };
 	glm::vec3 getPos() { return pos; };
 	glm::vec3 getDir() { return dir; };
+
+	void getWeaponData(int &wpntype);
 };
 
 #endif

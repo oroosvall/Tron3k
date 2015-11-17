@@ -11,7 +11,7 @@ private:
 	int nrConnectedRot = 0;
 
 public:
-	void init(Console* console);
+	void init(Console* console, int port, IpAddress addrs);
 	~Server();
 
 	//Core->Topology com

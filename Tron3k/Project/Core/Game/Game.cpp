@@ -5,7 +5,10 @@ void Game::release()
 	// delete code goes here
 	for (int i = 0; i < max_con; i++)
 	{
-		delete playerList[i];
+		if (playerList[i])
+		{
+			delete playerList[i];
+		}
 	}
 	delete[]playerList;
 
@@ -57,7 +60,22 @@ void Game::update(float dt)
 	for (int c = 0; c < max_con; c++)
 	{
 		if (playerList[c] != nullptr)
-			playerList[c]->update(dt);
+		{
+			PLAYERMSG msg = playerList[c]->update(dt);
+			if (msg == PLAYERMSG::SHOOT)
+			{
+				createBullet(playerList[c]);
+			}
+		}
+	}
+
+	for (int c = 0; c < bullets.size(); c++)
+	{
+		int msg = bullets[c]->update(dt);
+		if (msg == 1)
+		{
+			delete bullets[c];
+		}
 	}
 
 	checkCollision();
@@ -113,5 +131,15 @@ void Game::checkCollision()
 				int x = 0;
 			}
 		}
+	}
+}
+
+void Game::createBullet(Player* p)
+{
+	int wpntype;
+	p->getWeaponData(wpntype);
+	if (wpntype == 0)
+	{
+		Bullet* b = new Bullet(p->getPos(), p->getDir(), 10);
 	}
 }

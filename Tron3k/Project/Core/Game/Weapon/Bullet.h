@@ -6,12 +6,15 @@
 class Bullet
 {
 	private:
+		glm::vec3 pos;
 		glm::vec3 direction;
 		float velocity;
 	public:
 		Bullet();
-		Bullet(glm::vec3 direction, float velocity);
+		Bullet(glm::vec3 pos, glm::vec3 direction, float velocity);
 		~Bullet();
+
+		int update(float dt);
 
 };
 #endif
