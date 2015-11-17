@@ -99,5 +99,19 @@ void Game::checkCollision()
 			pPos[i] = glm::vec3(-1, -1, -1);
 	}
 
-	physics->checkCollision(pPos, 20);
+	for (int i = 0; i < max_con; i++)
+	{
+		for (int j = i + 1; j < max_con; j++)
+		{
+			bool collides = false;
+			if (playerList[i] != nullptr && playerList[j] != nullptr)
+				collides = physics->checkCollision(pPos[i], pPos[j]);
+
+			if (collides)
+			{
+				//here we can do things when two objects, collide, cause now we know i and j collided.
+				int x = 0;
+			}
+		}
+	}
 }
