@@ -15,6 +15,8 @@ enum PLAYERMSG { NONE, SHOOT };
 class Player : public GameObject
 {
 private:
+	bool lockControls = false;
+
 
 	Weapon mainWeapon;
 
