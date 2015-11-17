@@ -58,7 +58,7 @@ bool Client::new_connection()
 	// test connect
 	if (con->isConnected() == false)
 	{
-		if (con->connect(IpAddress::LocalHost, PORT))
+		if (con->connect(address, PORT))
 		{
 			return true;
 		}
