@@ -107,6 +107,8 @@ bool RenderPipeline::init()
 	testMesh.make();
 
 	contMan.init();
+	
+	glEnable(GL_CULL_FACE); //TEMPORARY PLZ MOVE THIS SOMEWHERE APPROPRIATE OR DELETE THIS
 
 	return true;
 }

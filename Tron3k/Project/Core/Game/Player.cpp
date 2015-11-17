@@ -76,7 +76,7 @@ void Player::update(float dt)
 	}
 	
 	worldMat[0].w = pos.x;
-	worldMat[1].w = pos.y - 1.5f;
+	worldMat[1].w = pos.y-0.6f;
 	worldMat[2].w = pos.z;
 }
 
