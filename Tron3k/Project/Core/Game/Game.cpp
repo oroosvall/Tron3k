@@ -172,6 +172,7 @@ void Game::createBullet(Player* p)
 	{
 		lastBulletFired = new Bullet(p->getPos(), p->getDir(), 0.1, 0);	//add to release
 		//bullets.push_back(b);
+		getNewBullet(); //Temporary until I can fix networking
 	}
 }
 
