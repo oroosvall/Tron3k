@@ -156,7 +156,7 @@ void Game::checkCollision()
 	bool collides = false;
 	for (int i = 0; i < max_con; i++)
 	{
-
+		collides = false;
 		if (playerList[i] != nullptr)
 			collides = physics->checkPlayerCollision(localPPos, pPos[i]);
 
