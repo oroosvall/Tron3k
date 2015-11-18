@@ -107,6 +107,13 @@ void Game::createPlayer(Player* p, int conID, bool isLocal)
 	playerList[conID]->init(p->getName(), p->getPos(), isLocal);
 }
 
+void Game::removePlayer(int conID)
+{
+	delete playerList[conID];
+	playerList[conID] = nullptr;
+	removeConIDfromTeams(conID);
+}
+
 //TEMPORARY
 void Game::getBoatCoordsFromCore(glm::vec3 minVals, glm::vec3 maxVals)
 {

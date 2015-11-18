@@ -38,7 +38,8 @@ void Client::init(Console* console, int port, IpAddress addrs)
 
 void Client::network_IN(float dt)
 {
-	IN(con, conID);
+	if(con->isConnected)
+		IN(con, conID);
 }
 
 void Client::network_OUT(float dt)
@@ -129,20 +130,14 @@ void Client::in_new_connection(Packet* rec, Uint8 _conID)
 void Client::in_event(Packet* rec, Uint8 _conID)
 {
 	Uint8 event_type;
-	*rec >> event_type;
-	switch (event_type)
+	while (!rec->endOfPacket())
 	{
-	case NET_EVENT::PLAYER_JOINED:
-		Player* temp = new Player;
-		Uint8 p_conID;
-		string pName;
-		*rec >> p_conID;
-		*rec >> pName;
-		temp->init(pName, glm::vec3(0, 0, 0));
-		gamePtr->createPlayer(temp, p_conID);
-		consolePtr->printMsg("Player (" + pName + ") joined the server", "System", 'S');
-		delete temp;
-		break;
+		*rec >> event_type;
+		switch (event_type)
+		{
+		case NET_EVENT::PLAYER_JOINED:	in_event_player_joined(rec);	break;
+		case NET_EVENT::PLAYER_LEFT: in_event_player_left(rec); break;
+		}
 	}
 }
 

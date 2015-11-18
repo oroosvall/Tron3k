@@ -114,6 +114,34 @@ public:
 	virtual void package_clear() = 0;
 
 	//Event package FROM SERVER
+	virtual void in_event_player_joined(Packet* rec)
+	{
+		Player* temp = new Player;
+		Uint8 p_conID;
+		string pName;
+		*rec >> p_conID;
+		*rec >> pName;
+		temp->init(pName, glm::vec3(0, 0, 0));
+		gamePtr->createPlayer(temp, p_conID);
+		consolePtr->printMsg("Player (" + pName + ") joined the server", "System", 'S');
+		delete temp;
+	}
+
+	virtual void in_event_player_left(Packet* rec)
+	{
+		Uint8 p_conID;
+		*rec >> p_conID;
+		Player* temp;
+		temp = gamePtr->getPlayer(p_conID);
+		if (temp != nullptr)
+		{
+			consolePtr->printMsg("Player (" + temp->getName() + ") Left the server", "System", 'S');
+			gamePtr->removePlayer(p_conID);
+		}
+		else
+			consolePtr->printMsg("ERROR in_event_player_left" , "System", 'S');
+	}
+
 
 	//Frame package FROM CLIENT
 	virtual void frame_jump() { };

@@ -38,6 +38,7 @@ public:
 	Player* getPlayer(int conID);
 	std::vector<Bullet*> getBullets();
 	void createPlayer(Player* p, int conID, bool isLocal = false);
+	void removePlayer(int conID);
 
 	void update(float dt);
 

@@ -10,11 +10,6 @@ enum NET_INDEX
 	MESSAGE = int('M')
 };
 
-enum NET_NEW
-{
-
-};
-
 enum NET_EVENT
 {
 	EMPTY = int('E'),

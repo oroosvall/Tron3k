@@ -5,13 +5,19 @@ void Server::disconnected(Uint8 _conID)
 	Player* p = gamePtr->getPlayer(_conID);
 	if (p != nullptr)
 	{
+		con[_conID].disconnect();
+		nrConnected--;
+
 		consolePtr->printMsg("Player (" + p->getName() + ") Disconnected", "System", 'S');
+		gamePtr->removePlayer(_conID);
+
+		Packet* out = new Packet();
+		*out << Uint8(NET_INDEX::EVENT) << Uint8(NET_EVENT::PLAYER_LEFT) << _conID;
+		branch(out, _conID);
+		delete out;
 	}
 	else
 		consolePtr->printMsg("ERROR Disconnect", "System", 'S');
-
-	con[_conID].disconnect();
-	nrConnected--;
 }
 
 Server::~Server()
