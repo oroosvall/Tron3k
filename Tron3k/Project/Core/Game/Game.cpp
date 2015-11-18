@@ -283,11 +283,9 @@ Bullet* Game::addBulletToList(Bullet* temp)
 	/*
 	TO DO: Add logic to find appropriate Bullet vector in the future
 	*/
-	Bullet* b = new Bullet();
-	b->teamId = temp->teamId;
-	b->pos = temp->pos;
-	b->direction = temp->direction;
-	b->velocity = temp->velocity;
+	Bullet* b = new Bullet(temp->pos, temp->direction, temp->velocity, temp->teamId);
+	
 	bullets.push_back(b);
+	
 	return b;
 }
