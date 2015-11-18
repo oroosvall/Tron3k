@@ -26,6 +26,8 @@ private:
 	void initPhysics();
 
 	void createBullet(Player* p);
+	Bullet* lastBulletFired;
+	bool bulletReady = false;
 
 public:
 
@@ -48,6 +50,10 @@ public:
 	void addPlayerToTeam(int p_conID, int team);
 	int getPlayersOnTeam(int team);
 	int getMaxTeamSize(bool spec = false) { if (spec) return maxSpec; return maxTeamSize; };
+
+	void addBulletToList(Bullet* b);
+	bool isBulletReady() { return bulletReady; };
+	Bullet* getNewBullet();
 };
 
 #endif

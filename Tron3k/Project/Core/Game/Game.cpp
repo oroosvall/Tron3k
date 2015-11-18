@@ -170,8 +170,8 @@ void Game::createBullet(Player* p)
 	p->getWeaponData(wpntype);
 	if (wpntype == 0)
 	{
-		Bullet* b = new Bullet(p->getPos(), p->getDir(), 0.1, 0);	//add to release
-		bullets.push_back(b);
+		lastBulletFired = new Bullet(p->getPos(), p->getDir(), 0.1, 0);	//add to release
+		//bullets.push_back(b);
 	}
 }
 
@@ -243,4 +243,20 @@ void Game::addPlayerToTeam(int p_conID, int team)
 		teamTwo.push_back(p_conID);
 		break;
 	}
+}
+
+Bullet* Game::getNewBullet()
+{
+	addBulletToList(lastBulletFired);
+	Bullet* b = lastBulletFired;
+	lastBulletFired = nullptr;
+	return b;
+}
+
+void Game::addBulletToList(Bullet* b)
+{
+	/*
+	TO DO: Add logic to find appropriate Bullet vector in the future
+	*/
+	bullets.push_back(b);
 }
