@@ -47,6 +47,8 @@ public:
 	glm::vec3 getPos() { return pos; };
 	glm::vec3 getDir() { return dir; };
 
+	bool isLocal() { return isLocalPlayer; };
+
 	void getWeaponData(int &wpntype);
 };
 

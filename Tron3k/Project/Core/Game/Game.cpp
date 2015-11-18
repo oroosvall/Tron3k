@@ -11,7 +11,7 @@ void Game::release()
 		}
 	}
 	delete[]playerList;
-	
+
 	for (int i = 0; i < bullets.size(); i++)
 	{
 		if (bullets[i] != nullptr)
@@ -129,46 +129,64 @@ void Game::checkCollision()
 {
 	//TEMPORARY
 	vec3 pPos[20];
+	vec3 localPPos = vec3(0, 0, 0);
+	int localP = -1;
+	int localPTeam = -1;
 	for (int i = 0; i < max_con; i++)
 	{
 		if (playerList[i] != nullptr)
-			pPos[i] = playerList[i]->getPos();
-		else
-			pPos[i] = glm::vec3(-1, -1, -1);
-	}
-
-	for (int i = 0; i < max_con; i++)
-	{
-		for (int j = i + 1; j < max_con; j++)
 		{
-			bool collides = false;
-			if (playerList[i] != nullptr && playerList[j] != nullptr)
-				collides = physics->checkCollision(pPos[i], pPos[j]);
-
-			if (collides)
+			if (!playerList[i]->isLocal())
+				pPos[i] = playerList[i]->getPos();
+			else
 			{
-				//here we can do things when two objects, collide, cause now we know i and j collided.
-				//int x = 0;
-				vec3 inBetween = pPos[i] - pPos[j];
-				if (pPos[i].x < pPos[j].x)
-				{
-					inBetween.x = abs(inBetween.x);
-				}
-				if (pPos[i].y < pPos[j].y)
-				{
-					inBetween.y = abs(inBetween.y);
-				}
-				if (pPos[i].z < pPos[j].z)
-				{
-					inBetween.z = abs(inBetween.z);
-				}
-				playerList[i]->setGoalPos(pPos[i] - inBetween);
-				playerList[j]->setGoalPos(pPos[j] + inBetween);
-				
+				localPPos = playerList[i]->getPos();
+				localP = i;
+				//localPTeam = playerList[i]->getTeam();
 			}
 		}
+		else
+		{
+
+		}
 	}
-	
+
+	//Checks collision between players
+	//TODO: improve so it just checks between ourselves and all other players, we don't care if two other players collided
+	bool collides = false;
+	for (int i = 0; i < max_con; i++)
+	{
+
+		if (playerList[i] != nullptr)
+			collides = physics->checkPlayerCollision(localPPos, pPos[i]);
+
+		if (collides)
+		{
+			//here we can do things when two objects, collide, cause now we know i and j collided.
+			//int x = 0;
+			//TODO: Add separated collision places for friendly vs hostile
+			vec3 inBetween = localPPos - pPos[i];
+			if (localPPos.x < pPos[i].x)
+			{
+				inBetween.x = abs(inBetween.x);
+			}
+			if (localPPos.y < pPos[i].y)
+			{
+				inBetween.y = abs(inBetween.y);
+			}
+			if (localPPos.z < pPos[i].z)
+			{
+				inBetween.z = abs(inBetween.z);
+			}
+			playerList[localP]->setGoalPos(pPos[localP] - inBetween);
+			playerList[i]->setGoalPos(pPos[i] + inBetween);
+
+		}
+
+		//TODO: Add bullet collision
+
+	}
+
 }
 
 void Game::createBullet(Player* p)
@@ -238,13 +256,13 @@ void Game::addPlayerToTeam(int p_conID, int team)
 		//	delete playerList[p_conID];
 		teamSpectators.push_back(p_conID);
 		break;
-	case 1: 
+	case 1:
 		removeConIDfromTeams(p_conID);
 		//if (playerList[p_conID] != nullptr)
 		//	delete playerList[p_conID];
 		teamOne.push_back(p_conID);
 		break;
-	case 2: 
+	case 2:
 		removeConIDfromTeams(p_conID);
 		//if (playerList[p_conID] != nullptr)
 		//	delete playerList[p_conID];
