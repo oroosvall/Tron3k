@@ -29,6 +29,8 @@ private:
 
 	bool isLocalPlayer;
 
+	int currentTeam;
+
 	Input* i;
 	CameraInput* cam;
 
@@ -49,7 +51,10 @@ public:
 
 	bool isLocal() { return isLocalPlayer; };
 
-	void getWeaponData(int &wpntype);
+	void getWeaponData(WEAPON_TYPE &wpntype);
+
+	void setTeam(int teamid) { currentTeam = teamid; };
+	int getTeam() { return currentTeam; };
 };
 
 #endif

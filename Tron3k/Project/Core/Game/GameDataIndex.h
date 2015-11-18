@@ -1,0 +1,16 @@
+#ifndef GAME_DATA_INDEX_H
+#define GAME_DATA_INDEX_H
+
+enum WEAPON_TYPE
+{
+	PULSE_RIFLE,
+	NROFWEAPONS
+};
+
+enum BULLET_TYPE
+{
+	PULSE_SHOT,
+	NROFBULLETS
+};
+
+#endif

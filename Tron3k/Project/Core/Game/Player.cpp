@@ -7,7 +7,7 @@ Player::Player()
 
 void Player::init(std::string pName, glm::vec3 initPos, bool isLocal)
 {
-	mainWeapon.init(36, 0, 0.5);
+	mainWeapon.init(36, WEAPON_TYPE::PULSE_RIFLE, 0.5);
 
 	name = pName;
 	pos = initPos;
@@ -113,7 +113,7 @@ void Player::rotatePlayer(vec3 olddir, vec3 newdir)
 	rotate(0, -angle, 0);
 }
 
-void Player::getWeaponData(int &wpntype)
+void Player::getWeaponData(WEAPON_TYPE &wpntype)
 {
 	wpntype = mainWeapon.getType();
 }

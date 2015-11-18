@@ -307,13 +307,11 @@ void Core::upClient(float dt)
 
 			top->frame_pos(top->getConId(), lPos, lDir);
 
-			if (game->isBulletReady())
+			if (game->fireEventReady())
 			{
-				Bullet* b = game->getNewBullet();
-				if (b != nullptr)
-				{
-					top->frame_fire(b);
-				}
+				WEAPON_TYPE wt = game->getLatestWeaponFired(top->getConId());
+				int team = local->getTeam();
+				top->frame_fire(wt, team, lPos, lDir);
 			}
 
 			top->network_OUT(dt);

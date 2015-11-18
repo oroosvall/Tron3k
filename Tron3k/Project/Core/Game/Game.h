@@ -1,6 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include "GameDataIndex.h"
 #include "Player.h"
 #include "../../../Physics/Physics.h"
 #include <vector>
@@ -25,9 +26,11 @@ private:
 
 	void initPhysics();
 
-	void createBullet(Player* p);
-	Bullet* lastBulletFired;
-	bool bulletReady = false;
+	void registerWeapon(Player* p);
+	void addBulletToList(Bullet* temp);
+
+	WEAPON_TYPE weaponShotWith;
+	bool shotsFired = false;
 
 public:
 
@@ -52,9 +55,10 @@ public:
 	int getPlayersOnTeam(int team);
 	int getMaxTeamSize(bool spec = false) { if (spec) return maxSpec; return maxTeamSize; };
 
-	Bullet* addBulletToList(Bullet* b);
-	bool isBulletReady() { return bulletReady; };
-	Bullet* getNewBullet();
+	bool fireEventReady() { return shotsFired; };
+	WEAPON_TYPE getLatestWeaponFired(int localPlayer);
+
+	void handleWeaponFire(int team, WEAPON_TYPE weapontype, glm::vec3 pos, glm::vec3 dir);
 };
 
 #endif

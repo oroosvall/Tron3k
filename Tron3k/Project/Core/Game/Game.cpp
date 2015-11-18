@@ -72,7 +72,7 @@ void Game::update(float dt)
 			PLAYERMSG msg = playerList[c]->update(dt);
 			if (msg == PLAYERMSG::SHOOT)
 			{
-				createBullet(playerList[c]);
+				registerWeapon(playerList[c]);
 			}
 		}
 	}
@@ -189,16 +189,10 @@ void Game::checkCollision()
 
 }
 
-void Game::createBullet(Player* p)
+void Game::registerWeapon(Player* p)
 {
-	int wpntype;
-	p->getWeaponData(wpntype);
-	if (wpntype == 0)
-	{
-		lastBulletFired = new Bullet(p->getPos(), p->getDir(), 5.0f, 0);	//add to release
-		//bullets.push_back(b);
-		bulletReady = true;
-	}
+	p->getWeaponData(weaponShotWith);
+	shotsFired = true;
 }
 
 int Game::getPlayersOnTeam(int team)
@@ -255,31 +249,34 @@ void Game::addPlayerToTeam(int p_conID, int team)
 		//if (playerList[p_conID] != nullptr)
 		//	delete playerList[p_conID];
 		teamSpectators.push_back(p_conID);
+		playerList[p_conID]->setTeam(0);
 		break;
 	case 1:
 		removeConIDfromTeams(p_conID);
 		//if (playerList[p_conID] != nullptr)
 		//	delete playerList[p_conID];
 		teamOne.push_back(p_conID);
+		playerList[p_conID]->setTeam(1);
 		break;
 	case 2:
 		removeConIDfromTeams(p_conID);
 		//if (playerList[p_conID] != nullptr)
 		//	delete playerList[p_conID];
 		teamTwo.push_back(p_conID);
+		playerList[p_conID]->setTeam(2);
 		break;
 	}
 }
 
-Bullet* Game::getNewBullet()
+WEAPON_TYPE Game::getLatestWeaponFired(int localPlayer)
 {
-	bulletReady = false;
-	Bullet* b = addBulletToList(lastBulletFired);
-	delete lastBulletFired;
-	return b;
+	shotsFired = false;
+	Player* p = playerList[localPlayer];
+	handleWeaponFire(p->getTeam(), weaponShotWith, p->getPos(), p->getDir());
+	return weaponShotWith;
 }
 
-Bullet* Game::addBulletToList(Bullet* temp)
+void Game::addBulletToList(Bullet* temp)
 {
 	/*
 	TO DO: Add logic to find appropriate Bullet vector in the future
@@ -287,6 +284,17 @@ Bullet* Game::addBulletToList(Bullet* temp)
 	Bullet* b = new Bullet(temp->pos, temp->direction, temp->velocity, temp->teamId);
 	
 	bullets.push_back(b);
-	
-	return b;
+}
+
+void Game::handleWeaponFire(int team, WEAPON_TYPE weapontype, glm::vec3 pos, glm::vec3 dir)
+{
+	switch (weapontype)
+	{
+	case WEAPON_TYPE::PULSE_RIFLE:
+		//To do: Automate generation of bullets
+		Bullet* b = new Bullet(pos, dir, 5.0f, team);
+		addBulletToList(b);
+		delete b;
+		break;
+	}
 }
