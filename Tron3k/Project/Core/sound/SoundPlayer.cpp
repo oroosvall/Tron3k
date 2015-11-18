@@ -29,9 +29,9 @@ void SoundPlayer::init()
 {
 	if (singleton)
 	{
-		singleton->soundList[SOUNDS::gunshot].loadFromFile("soundEffectGunshots.ogg");
-		singleton->soundList[SOUNDS::firstBlood].loadFromFile("voiceFirstBlood.ogg");
-		singleton->musicList[MUSIC::mainMenu] = "musicMainMenu.ogg";
+		singleton->soundList[SOUNDS::gunshot].loadFromFile("/GameFiles/Sound/soundEffectGunshots.ogg");
+		singleton->soundList[SOUNDS::firstBlood].loadFromFile("/GameFiles/Sound/voiceFirstBlood.ogg");
+		singleton->musicList[MUSIC::mainMenu] = "/GameFiles/Sound/musicMainMenu.ogg";
 	}
 	
 
