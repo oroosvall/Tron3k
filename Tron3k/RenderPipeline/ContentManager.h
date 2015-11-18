@@ -5,6 +5,8 @@
 #include "Mesh.h"
 #include <GL\glew.h>
 
+#include <vector>
+
 struct PlayerObject
 {
 	GLuint meshID;
@@ -19,10 +21,8 @@ class ContentManager
 
 private:
 
-	Mesh* meshes;
+	std::vector<Mesh> meshes;
 	PlayerObject* playerModels;
-
-	Mesh tempMesh;
 
 public:
 

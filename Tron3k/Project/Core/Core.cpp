@@ -384,19 +384,11 @@ void Core::startHandleCmds(float dt)
 			game->init(MAX_CONNECT);
 
 			Player* p = new Player();
-
+			
 			p->init("Roam", glm::vec3(0, 0, 0));
-
+			
 			game->createPlayer(p, 0, true);
-
-			delete p;
-
-			p = new Player();
-
-			p->init("Roam2", glm::vec3(0, 10, 0));
-
-			game->createPlayer(p, 1);
-
+			
 			delete p;
 		}
 	}
