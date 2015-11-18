@@ -17,7 +17,7 @@ void Mesh::load(std::string path)
 	if (myfile.is_open())
 	{
 		std::vector<Vertex> vert;
-		//std::vector<Vertex> normal;
+		std::vector<Vertex> normal;
 		std::vector<Vertex> uv;
 		std::vector<GLushort> Indices;
 
@@ -62,32 +62,32 @@ void Mesh::load(std::string path)
 				uv[count].v = std::stof(sub);
 				count++;
 			}
-			else if (line[0] == 'v' && line[1] == 'n') {} // normals
-			//{
-			//	if (state != 2)
-			//	{
-			//		state = 2;
-			//		count = 0;
-			//	}
-			//	normal.push_back(Vertex());
-			//	std::istringstream iss(line);
-			//	std::string sub;
-			//	iss >> sub; // discard 'vn'
-			//	iss >> sub;
-			//	normal[count].n1 = std::stof(sub);
-			//	iss >> sub;
-			//	normal[count].n2 = std::stof(sub);
-			//	iss >> sub;
-			//	normal[count].n3 = std::stof(sub);
-			//	normal[count].u = -1.0f;
-			//	normal[count].v = -1.0f;
-			//	count++;
-			//}
-			else if (line[0] == 'f') // face
+			else if (line[0] == 'v' && line[1] == 'n')  // normals
 			{
 				if (state != 2)
 				{
 					state = 2;
+					count = 0;
+				}
+				normal.push_back(Vertex());
+				std::istringstream iss(line);
+				std::string sub;
+				iss >> sub; // discard 'vn'
+				iss >> sub;
+				normal[count].n1 = std::stof(sub);
+				iss >> sub;
+				normal[count].n2 = std::stof(sub);
+				iss >> sub;
+				normal[count].n3 = std::stof(sub);
+				normal[count].u = -1.0f;
+				normal[count].v = -1.0f;
+				count++;
+			}
+			else if (line[0] == 'f') // face
+			{
+				if (state != 3)
+				{
+					state = 3;
 					count = 0;
 				}
 				std::istringstream iss(line);
@@ -104,8 +104,10 @@ void Mesh::load(std::string path)
 					std::string norm;
 					iss >> pos; // vertex index
 					iss >> sub; // uv index
+					iss >> norm; // normal index
 					int indexVERT = std::stoi(pos) - 1;
 					int indexUV = std::stoi(sub) - 1;
+					int indexNORM = std::stoi(norm) - 1;
 					if (vert[indexVERT].u < 0)
 					{
 						Indices[count * 3 + n] = indexVERT; // set vertex index
@@ -121,14 +123,14 @@ void Mesh::load(std::string path)
 						vert[indexVERT].u = uv[indexUV].u;
 						vert[indexVERT].v = uv[indexUV].v;
 
-						//vert[indexVERT].n1 = normal[indexNORM].n1;
-						//vert[indexVERT].n2 = normal[indexNORM].n2;
-						//vert[indexVERT].n3 = normal[indexNORM].n3;
+						vert[indexVERT].n1 = normal[indexNORM].n1;
+						vert[indexVERT].n2 = normal[indexNORM].n2;
+						vert[indexVERT].n3 = normal[indexNORM].n3;
 
 						Indices[count * 3 + n] = indexVERT;
 					}
 
-					iss >> norm; // normal index
+					
 				}
 				count++;
 			}
