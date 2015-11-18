@@ -167,7 +167,9 @@ public:
 	virtual void in_frame_fire(Packet* rec)
 	{
 		Bullet* newB = new Bullet();
-		*rec >> newB->teamId;
+		Uint8 team;
+		*rec >> team;
+		newB->teamId = team;
 		*rec >> newB->pos.x >> newB->pos.y >> newB->pos.z;
 		*rec >> newB->direction.x >> newB->direction.y >> newB->direction.z;
 		*rec >> newB->velocity;

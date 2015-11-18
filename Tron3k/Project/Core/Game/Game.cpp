@@ -158,7 +158,7 @@ void Game::checkCollision()
 	{
 		collides = false;
 		if (playerList[i] != nullptr)
-			collides = physics->checkPlayerCollision(localPPos, pPos[i]);
+			//collides = physics->checkPlayerCollision(localPPos, pPos[i]);
 
 		if (collides)
 		{
@@ -197,7 +197,7 @@ void Game::createBullet(Player* p)
 	{
 		lastBulletFired = new Bullet(p->getPos(), p->getDir(), 0.1, 0);	//add to release
 		//bullets.push_back(b);
-		getNewBullet(); //Temporary until I can fix networking
+		bulletReady = true;
 	}
 }
 
@@ -273,6 +273,7 @@ void Game::addPlayerToTeam(int p_conID, int team)
 
 Bullet* Game::getNewBullet()
 {
+	bulletReady = false;
 	Bullet* b = addBulletToList(lastBulletFired);
 	delete lastBulletFired;
 	return b;
