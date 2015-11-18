@@ -144,12 +144,14 @@ public:
 
 
 	//Frame package FROM CLIENT
-	virtual void frame_jump() { };
-	virtual void frame_fire() { };
+	virtual void frame_fire(Bullet* b) 
+	{ 
+		*package << Uint8(NET_FRAME::FIRE) << Uint8(b->teamId) << b->pos.x << b->pos.y << b->pos.z << b->direction.x << b->direction.y << b->direction.z << b->velocity;
+	};
 
 	virtual void frame_name_change(Uint8 conid, string name)
 	{
-		*package << Uint8(NAME_CHANGE) << conid << name;
+		*package << Uint8(NET_FRAME::NAME_CHANGE) << conid << name;
 	}
 
 	virtual void frame_pos(Uint8 conid, glm::vec3 cPos, glm::vec3 cDir)
@@ -160,6 +162,17 @@ public:
 	virtual void frame_team_change(Uint8 conid, Uint8 team)
 	{
 		*package << Uint8(NET_FRAME::TEAM_CHANGE) << conid << team;
+	}
+
+	virtual void in_frame_fire(Packet* rec)
+	{
+		Bullet* newB = new Bullet();
+		*rec >> newB->teamId;
+		*rec >> newB->pos.x >> newB->pos.y >> newB->pos.z;
+		*rec >> newB->direction.x >> newB->direction.y >> newB->direction.z;
+		*rec >> newB->velocity;
+		gamePtr->addBulletToList(newB);
+		delete newB;
 	}
 
 	virtual void in_frame_name_change(Packet* rec)

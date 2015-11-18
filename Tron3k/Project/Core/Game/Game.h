@@ -52,7 +52,7 @@ public:
 	int getPlayersOnTeam(int team);
 	int getMaxTeamSize(bool spec = false) { if (spec) return maxSpec; return maxTeamSize; };
 
-	void addBulletToList(Bullet* b);
+	Bullet* addBulletToList(Bullet* b);
 	bool isBulletReady() { return bulletReady; };
 	Bullet* getNewBullet();
 };

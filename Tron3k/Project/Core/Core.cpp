@@ -307,6 +307,14 @@ void Core::upClient(float dt)
 
 			top->frame_pos(top->getConId(), lPos, lDir);
 
+			if (game->isBulletReady())
+			{
+				Bullet* b = game->getNewBullet();
+				if (b != nullptr)
+				{
+					top->frame_fire(b);
+				}
+			}
 
 			top->network_OUT(dt);
 

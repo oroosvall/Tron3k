@@ -273,16 +273,21 @@ void Game::addPlayerToTeam(int p_conID, int team)
 
 Bullet* Game::getNewBullet()
 {
-	addBulletToList(lastBulletFired);
-	Bullet* b = lastBulletFired;
-	lastBulletFired = nullptr;
+	Bullet* b = addBulletToList(lastBulletFired);
+	delete lastBulletFired;
 	return b;
 }
 
-void Game::addBulletToList(Bullet* b)
+Bullet* Game::addBulletToList(Bullet* temp)
 {
 	/*
 	TO DO: Add logic to find appropriate Bullet vector in the future
 	*/
+	Bullet* b = new Bullet();
+	b->teamId = temp->teamId;
+	b->pos = temp->pos;
+	b->direction = temp->direction;
+	b->velocity = temp->velocity;
 	bullets.push_back(b);
+	return b;
 }
