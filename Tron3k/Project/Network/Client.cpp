@@ -38,7 +38,7 @@ void Client::init(Console* console, int port, IpAddress addrs)
 
 void Client::network_IN(float dt)
 {
-	if(con->isConnected)
+	if(con->isConnected())
 		IN(con, conID);
 }
 
