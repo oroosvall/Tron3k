@@ -22,6 +22,10 @@ Bullet::Bullet(glm::vec3 position, glm::vec3 direction, float velocity, int team
 	worldMat[0].x = 0.2f;
 	worldMat[1].y = 0.2f;
 	worldMat[2].z = 0.2f;
+
+	float angleY = atan2(direction.x, direction.z) - atan2(0, 0);
+	
+	rotate(0, -angleY, 0);
 }
 
 Bullet::~Bullet()
