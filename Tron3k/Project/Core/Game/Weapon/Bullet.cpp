@@ -19,9 +19,9 @@ Bullet::Bullet(glm::vec3 position, glm::vec3 direction, float velocity, int team
 	worldMat[1].w = pos.y;
 	worldMat[2].w = pos.z;
 	//set scale
-	worldMat[0].x = 0.03f;
-	worldMat[1].y = 0.03f;
-	worldMat[2].z = 0.03f;
+	worldMat[0].x = 0.2f;
+	worldMat[1].y = 0.2f;
+	worldMat[2].z = 0.2f;
 }
 
 Bullet::~Bullet()

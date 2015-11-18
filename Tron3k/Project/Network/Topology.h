@@ -11,7 +11,7 @@
 
 using namespace std;
 
-#define MAX_CONNECT 2
+#define MAX_CONNECT 20
 #define PORT_DEFAULT 18180
 #define tick 0.050f
 

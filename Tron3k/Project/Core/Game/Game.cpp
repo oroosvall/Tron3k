@@ -195,7 +195,7 @@ void Game::createBullet(Player* p)
 	p->getWeaponData(wpntype);
 	if (wpntype == 0)
 	{
-		lastBulletFired = new Bullet(p->getPos(), p->getDir(), 0.1, 0);	//add to release
+		lastBulletFired = new Bullet(p->getPos(), p->getDir(), 5.0f, 0);	//add to release
 		//bullets.push_back(b);
 		bulletReady = true;
 	}
