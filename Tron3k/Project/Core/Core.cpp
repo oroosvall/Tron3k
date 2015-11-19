@@ -504,6 +504,7 @@ void Core::clientHandleCmds(float dt)
 			console.printMsg("Console comands", "", ' ');
 			console.printMsg("/name " + _name, "", ' ');
 			console.printMsg("/team " + to_string(game->getPlayer(top->getConId())->getTeam()), "", ' ');
+			console.printMsg("/players", "", ' ');
 			console.printMsg("/disconnect", "", ' ');
 		}
 		else if (token == "/name")
@@ -535,6 +536,19 @@ void Core::clientHandleCmds(float dt)
 			else
 				console.printMsg("Invalid team. Use /team <1/2/3>", "System", 'S');
 		}
+		else if (token == "/players")
+		{
+			for (int n = 0; n < MAX_CONNECT; n++)
+			{
+				Player* p = game->getPlayer(n);
+				if (p != nullptr)
+				{
+					string print;
+					print += "ConID: " + to_string(n) + " Team: " + to_string(p->getTeam()) + " Name: " + p->getName();
+					console.printMsg(print, "", ' ');
+				}
+			}
+		}
 		else if (token == "/disconnect")
 			disconnect();
 	}
@@ -550,7 +564,21 @@ void Core::serverHandleCmds(float dt)
 		if (token == "/help")
 		{
 			console.printMsg("Console comands", "", ' ');
+			console.printMsg("/players", "", ' ');
 			console.printMsg("/disconnect", "", ' ');
+		}
+		else if (token == "/players")
+		{
+			for (int n = 0; n < MAX_CONNECT; n++)
+			{
+				Player* p = game->getPlayer(n);
+				if (p != nullptr)
+				{
+					string print;
+					print += "ConID: " + to_string(n) + " Team: " + to_string(p->getTeam()) + " Name: " + p->getName();
+					console.printMsg(print, "", ' ');
+				}
+			}
 		}
 		else if (token == "/disconnect")
 			disconnect();
