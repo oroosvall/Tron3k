@@ -151,6 +151,11 @@ public:
 			dir.x << dir.y << dir.z;
 	};
 
+	virtual void frame_weapon_switch(int conID, WEAPON_TYPE ws)
+	{
+		*package << Uint8(NET_FRAME::WPN_SWITCH) << Uint8(conID) << Uint8(ws);
+	}
+
 	virtual void frame_name_change(Uint8 conid, string name)
 	{
 		*package << Uint8(NET_FRAME::NAME_CHANGE) << conid << name;
@@ -176,6 +181,20 @@ public:
 		*rec >> pos.x >> pos.y >> pos.z;
 		*rec >> dir.x >> dir.y >> dir.z;
 		gamePtr->handleWeaponFire(team, WEAPON_TYPE(weapontype), pos, dir);
+	}
+
+	virtual void in_frame_weapon_switch(Packet* rec)
+	{
+		Uint8 p_conID;
+		Uint8 weapontype;
+		*rec >> p_conID >> weapontype;
+
+		gamePtr->handleWeaponSwitch(p_conID, WEAPON_TYPE(weapontype));
+
+		if (weapontype == WEAPON_TYPE::PULSE_RIFLE)
+			consolePtr->printMsg(gamePtr->getPlayer(p_conID)->getName() + " switched weapon to Pulse Rifle!", "System", 'S');
+		if (weapontype == WEAPON_TYPE::POOP_GUN)
+			consolePtr->printMsg(gamePtr->getPlayer(p_conID)->getName() + " switched weapon to Poop Gun!", "System", 'S');
 	}
 
 	virtual void in_frame_name_change(Packet* rec)

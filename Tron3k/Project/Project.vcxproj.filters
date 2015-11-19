@@ -99,6 +99,9 @@
     <ClCompile Include="Core\Game\Weapon\BulletTypes\BulletPulseShot.cpp">
       <Filter>Source Files\Core\Game\Weapon\BulletTypes</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Game\Weapon\BulletTypes\BulletPoop.cpp">
+      <Filter>Source Files\Core\Game\Weapon\BulletTypes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Input.h">
@@ -177,6 +180,9 @@
       <Filter>Source Files\Core\Game\Weapon\BulletTypes</Filter>
     </ClInclude>
     <ClInclude Include="Core\Game\Weapon\BulletTypes\AllBullets.h">
+      <Filter>Source Files\Core\Game\Weapon\BulletTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Weapon\BulletTypes\BulletPoop.h">
       <Filter>Source Files\Core\Game\Weapon\BulletTypes</Filter>
     </ClInclude>
   </ItemGroup>

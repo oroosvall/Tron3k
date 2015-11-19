@@ -25,6 +25,7 @@ enum NET_FRAME
 	POS = int('P'),
 	JUMP = int('J'),
 	FIRE = int('F'),
+	WPN_SWITCH = int('W'),
 	NAME_CHANGE = int('N'),
 	TEAM_CHANGE = int('T')
 };
