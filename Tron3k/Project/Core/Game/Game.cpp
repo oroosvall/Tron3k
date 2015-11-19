@@ -12,11 +12,14 @@ void Game::release()
 	}
 	delete[]playerList;
 
-	for (int i = 0; i < bullets.size(); i++)
+	for (int c = 0; c < BULLET_TYPE::NROFBULLETS; c++)
 	{
-		if (bullets[i] != nullptr)
+		for (int i = 0; i < bullets[c].size(); i++)
 		{
-			delete bullets[i];
+			if (bullets[c][i] != nullptr)
+			{
+				delete bullets[c][i];
+			}
 		}
 	}
 
@@ -72,17 +75,20 @@ void Game::update(float dt)
 			PLAYERMSG msg = playerList[c]->update(dt);
 			if (msg == PLAYERMSG::SHOOT)
 			{
-				createBullet(playerList[c]);
+				registerWeapon(playerList[c]);
 			}
 		}
 	}
 
-	for (int c = 0; c < bullets.size(); c++)
+	for (int i = 0; i < BULLET_TYPE::NROFBULLETS; i++)
 	{
-		int msg = bullets[c]->update(dt);
-		if (msg == 1)
+		for (int c = 0; c < bullets[i].size(); c++)
 		{
-			delete bullets[c];
+			int msg = bullets[i][c]->update(dt);
+			if (msg == 1)
+			{
+				delete bullets[i][c];
+			}
 		}
 	}
 
@@ -96,9 +102,9 @@ Player* Game::getPlayer(int conID)
 	return nullptr;
 }
 
-std::vector<Bullet*> Game::getBullets()
+std::vector<Bullet*> Game::getBullets(BULLET_TYPE type)
 {
-	return bullets;
+	return bullets[type];
 }
 
 void Game::createPlayer(Player* p, int conID, bool isLocal)
@@ -189,16 +195,10 @@ void Game::checkCollision()
 
 }
 
-void Game::createBullet(Player* p)
+void Game::registerWeapon(Player* p)
 {
-	int wpntype;
-	p->getWeaponData(wpntype);
-	if (wpntype == 0)
-	{
-		lastBulletFired = new Bullet(p->getPos(), p->getDir(), 5.0f, 0);	//add to release
-		//bullets.push_back(b);
-		bulletReady = true;
-	}
+	p->getWeaponData(weaponShotWith);
+	shotsFired = true;
 }
 
 int Game::getPlayersOnTeam(int team)
@@ -255,38 +255,55 @@ void Game::addPlayerToTeam(int p_conID, int team)
 		//if (playerList[p_conID] != nullptr)
 		//	delete playerList[p_conID];
 		teamSpectators.push_back(p_conID);
+		playerList[p_conID]->setTeam(0);
 		break;
 	case 1:
 		removeConIDfromTeams(p_conID);
 		//if (playerList[p_conID] != nullptr)
 		//	delete playerList[p_conID];
 		teamOne.push_back(p_conID);
+		playerList[p_conID]->setTeam(1);
 		break;
 	case 2:
 		removeConIDfromTeams(p_conID);
 		//if (playerList[p_conID] != nullptr)
 		//	delete playerList[p_conID];
 		teamTwo.push_back(p_conID);
+		playerList[p_conID]->setTeam(2);
 		break;
 	}
 }
 
-Bullet* Game::getNewBullet()
+WEAPON_TYPE Game::getLatestWeaponFired(int localPlayer)
 {
-	bulletReady = false;
-	Bullet* b = addBulletToList(lastBulletFired);
-	delete lastBulletFired;
-	return b;
+	shotsFired = false;
+	Player* p = playerList[localPlayer];
+	handleWeaponFire(p->getTeam(), weaponShotWith, p->getPos(), p->getDir());
+	return weaponShotWith;
 }
 
-Bullet* Game::addBulletToList(Bullet* temp)
+void Game::addBulletToList(int team, BULLET_TYPE bt, glm::vec3 pos, glm::vec3 dir)
 {
-	/*
-	TO DO: Add logic to find appropriate Bullet vector in the future
-	*/
-	Bullet* b = new Bullet(temp->pos, temp->direction, temp->velocity, temp->teamId);
+	Bullet* b = nullptr;
+
+	switch (bt)
+	{
+	case BULLET_TYPE::PULSE_SHOT:
+		b = new Bullet(pos, dir, 5.0f, team);
+		break;
+	}
 	
-	bullets.push_back(b);
+	bullets[bt].push_back(b);
 	
-	return b;
+}
+
+void Game::handleWeaponFire(int team, WEAPON_TYPE weapontype, glm::vec3 pos, glm::vec3 dir)
+{
+	switch (weapontype)
+	{
+	case WEAPON_TYPE::PULSE_RIFLE:
+		//To do: Automate generation of bullets
+		addBulletToList(team, BULLET_TYPE::PULSE_SHOT, pos, dir);
+		break;
+	}
 }

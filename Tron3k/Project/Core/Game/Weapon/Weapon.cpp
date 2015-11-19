@@ -4,13 +4,13 @@ Weapon::Weapon()
 {
 	maxClipSize = 0;
 	currentClipAmmo = maxClipSize;
-	weaponType = 0;
+	weaponType = WEAPON_TYPE::PULSE_RIFLE;
 }
 
 Weapon::~Weapon()
 {}
 
-void Weapon::init(int maxClipSize, int weaponType, float firingSpeed)
+void Weapon::init(int maxClipSize, WEAPON_TYPE weaponType, float firingSpeed)
 {
 	this->maxClipSize = maxClipSize;
 	currentClipAmmo = maxClipSize;

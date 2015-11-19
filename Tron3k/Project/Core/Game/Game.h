@@ -1,6 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include "GameDataIndex.h"
 #include "Player.h"
 #include "../../../Physics/Physics.h"
 #include <vector>
@@ -8,8 +9,8 @@
 class Game
 {
 private:
-	
-	std::vector<Bullet*> bullets;
+
+	std::vector<Bullet*> bullets[BULLET_TYPE::NROFBULLETS];
 
 	std::vector<int> teamSpectators; //Team vectors hold connection IDs
 	std::vector<int> teamOne;
@@ -25,9 +26,11 @@ private:
 
 	void initPhysics();
 
-	void createBullet(Player* p);
-	Bullet* lastBulletFired;
-	bool bulletReady = false;
+	void registerWeapon(Player* p);
+	void addBulletToList(int team, BULLET_TYPE bt, glm::vec3 pos, glm::vec3 dir);
+
+	WEAPON_TYPE weaponShotWith;
+	bool shotsFired = false;
 
 public:
 
@@ -36,7 +39,7 @@ public:
 	void init(int max_connections);
 
 	Player* getPlayer(int conID);
-	std::vector<Bullet*> getBullets();
+	std::vector<Bullet*> getBullets(BULLET_TYPE type);
 	void createPlayer(Player* p, int conID, bool isLocal = false);
 	void removePlayer(int conID);
 
@@ -52,9 +55,10 @@ public:
 	int getPlayersOnTeam(int team);
 	int getMaxTeamSize(bool spec = false) { if (spec) return maxSpec; return maxTeamSize; };
 
-	Bullet* addBulletToList(Bullet* b);
-	bool isBulletReady() { return bulletReady; };
-	Bullet* getNewBullet();
+	bool fireEventReady() { return shotsFired; };
+	WEAPON_TYPE getLatestWeaponFired(int localPlayer);
+
+	void handleWeaponFire(int team, WEAPON_TYPE weapontype, glm::vec3 pos, glm::vec3 dir);
 };
 
 #endif

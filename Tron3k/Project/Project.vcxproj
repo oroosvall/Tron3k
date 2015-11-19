@@ -47,6 +47,7 @@
     <ClInclude Include="Core\Game\ActiveEffects\Special.h" />
     <ClInclude Include="Core\Game\Animation.h" />
     <ClInclude Include="Core\Game\Game.h" />
+    <ClInclude Include="Core\Game\GameDataIndex.h" />
     <ClInclude Include="Core\Game\GameObject.h" />
     <ClInclude Include="Core\Game\Player.h" />
     <ClInclude Include="Core\Game\PlayerEffects\Effect.h" />

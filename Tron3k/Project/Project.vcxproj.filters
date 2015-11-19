@@ -164,5 +164,8 @@
     <ClInclude Include="Core\Game\ActiveEffects\Ability.h">
       <Filter>Source Files\Core\Game\ActiveEffects</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Game\GameDataIndex.h">
+      <Filter>Source Files\Core\Game</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
