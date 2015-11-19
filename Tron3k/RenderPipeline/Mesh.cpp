@@ -113,6 +113,11 @@ void Mesh::load(std::string path)
 						Indices[count * 3 + n] = indexVERT; // set vertex index
 						vert[indexVERT].u = uv[indexUV].u;
 						vert[indexVERT].v = uv[indexUV].v;
+
+						vert[indexVERT].n1 = normal[indexNORM].n1;
+						vert[indexVERT].n2 = normal[indexNORM].n2;
+						vert[indexVERT].n3 = normal[indexNORM].n3;
+
 					}
 					else
 					{

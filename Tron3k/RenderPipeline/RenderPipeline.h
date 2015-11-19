@@ -46,10 +46,11 @@ private:
 	GLuint defferedShader;
 	//GLuint testShader;
 	GLuint worldMat;
-	GLuint projMat;
+	GLuint viewProjMat;
 	GLuint viewMat;
 
 	GLuint uniformTextureLocation;
+	GLuint uniformnNormalLocation;
 
 	float rotation;
 

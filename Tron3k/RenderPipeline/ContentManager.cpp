@@ -25,12 +25,18 @@ void ContentManager::init()
 	tex.textureName = "GameFiles/TestFiles/Diffuse.png";
 	textures.push_back(tex);
 
+	tex.loaded = false;
+	tex.textureID = 0;
+	tex.fileTexID = 1;
+	tex.textureName = "GameFiles/TestFiles/sphere_n.png";
+	textures.push_back(tex);
+
 	Mesh m;
-	m.init(0, 0, 0);
+	m.init(0, 5, 0);
 	m.load("GameFiles/TestFiles/cube.v");
 
 	Mesh m2;
-	m2.init(0, 5, 0);
+	m2.init(0, 0, 0);
 	m2.load("GameFiles/TestFiles/sphere.v");
 
 	meshes.push_back(m);
@@ -41,11 +47,9 @@ void ContentManager::init()
 		textures[i].textureID = loadTexture(textures[i].textureName);
 		textures[i].loaded = true;
 	}
-
-	for (size_t i = 0; i < meshes.size(); i++)
-	{
-		meshes[i].setTexture(textures[i].textureID);
-	}
+	
+	meshes[0].setTexture(textures[1].textureID);
+	meshes[1].setTexture(textures[1].textureID);
 
 }
 
@@ -74,15 +78,19 @@ ContentManager::~ContentManager()
 
 }
 
-void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint textureLocation)
+void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint textureLocation, GLuint normalLocation)
 {
 	for (size_t i = 0; i < meshes.size(); i++)
 	{
 		glProgramUniformMatrix4fv(shader, shaderLocation, 1, GL_FALSE, (GLfloat*)meshes[i].getWorld());
 
 		glProgramUniform1i(shader, textureLocation, 0);
+		glProgramUniform1i(shader, normalLocation, 1);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, meshes[i].textureID);
+
+		glActiveTexture(GL_TEXTURE0+1);
+		glBindTexture(GL_TEXTURE_2D, textures[2].textureID);
 
 		glBindVertexArray(meshes[i].vao);
 		glBindBuffer(GL_ARRAY_BUFFER, meshes[i].vbo);
