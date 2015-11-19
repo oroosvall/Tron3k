@@ -120,7 +120,7 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	cam.setProjMat(preDefferedShader, projMat);
 	cam.setViewMat(preDefferedShader, viewMat);
 	
-	gBuffer->init(WindowWidth, WindowHeight, 6, true);
+	gBuffer->init(WindowWidth, WindowHeight, 5, true);
 
 	testMesh.make();
 

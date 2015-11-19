@@ -5,10 +5,10 @@ layout (location = 2) in vec3 Normal;
 
 uniform sampler2D textureSample;
 
-layout (location = 0) out vec3 WorldPosOut;   
-layout (location = 1) out vec3 DiffuseOut;     
-layout (location = 2) out vec3 NormalOut;     
-layout (location = 3) out vec3 TexCoordOut;
+layout (location = 1) out vec3 WorldPosOut;   
+layout (location = 2) out vec3 DiffuseOut;     
+layout (location = 3) out vec3 NormalOut;     
+layout (location = 4) out vec3 TexCoordOut;
 
 
 void main()									

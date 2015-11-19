@@ -30,6 +30,7 @@ private:
 	RenderTarget* rTexture;
 
 	GLuint* pos;
+	GLuint useLoc;
 
 	BlitQuad* blitQuads;
 };

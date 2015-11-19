@@ -64,13 +64,13 @@ void Gbuffer::init(int x, int y, int nrTex, bool depth)
 
 	if (depth)
 	{
-		pos[4] = glGetUniformLocation(*shaderPtr, "Depth");;
+		pos[0] = glGetUniformLocation(*shaderPtr, "Depth");;
 	}
-	pos[0] = glGetUniformLocation(*shaderPtr, "Position");
-	pos[1] = glGetUniformLocation(*shaderPtr, "Diffuse");
-	pos[2] = glGetUniformLocation(*shaderPtr, "Normal");
-	pos[3] = glGetUniformLocation(*shaderPtr, "UVcord");;
-	pos[5] = glGetUniformLocation(*shaderPtr, "Use");
+	pos[1] = glGetUniformLocation(*shaderPtr, "Position");
+	pos[2] = glGetUniformLocation(*shaderPtr, "Diffuse");
+	pos[3] = glGetUniformLocation(*shaderPtr, "Normal");
+	pos[4] = glGetUniformLocation(*shaderPtr, "UVcord");;
+	useLoc = glGetUniformLocation(*shaderPtr, "Use");
 
 	blitQuads = new BlitQuad[6];
 	blitQuads[0].Init(shaderPtr, vec2(-1, -1), vec2(-0.6, -0.6));
@@ -128,21 +128,15 @@ void Gbuffer::render()
 	glBindBuffer(GL_ARRAY_BUFFER, renderQuad);
 	glBindVertexArray(renderVao);
 
-	glProgramUniform1i(*shaderPtr, pos[0], 0);
-	glProgramUniform1i(*shaderPtr, pos[1], 1);
-	glProgramUniform1i(*shaderPtr, pos[2], 2);
-	glProgramUniform1i(*shaderPtr, pos[3], 3);
-	glProgramUniform1i(*shaderPtr, pos[4], 4);
-
 	blitQuads[5].BindVertData();
-	glProgramUniform1i(*shaderPtr, pos[5], 5);
+	glProgramUniform1i(*shaderPtr, useLoc, 5);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
 	//each blit
 	for (int n = 0; n < 5; n++)
 	{
 		blitQuads[n].BindVertData();
-		glProgramUniform1i(*shaderPtr, pos[5], n);
+		glProgramUniform1i(*shaderPtr, useLoc, n);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	}
 }
