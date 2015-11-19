@@ -14,18 +14,15 @@ out vec4 fragment_color;
 void main()
 {
 	//fragment_color = texture(Diffuse, vec2(UV.x, UV.y));
-	
 	if(Use == 0)
 	{
 		float Depth = texture(Depth, vec2(UV.x, UV.y)).x;
-		Depth = 1.0 - (1.0 - Depth) * 25.0; 
-		fragment_color = vec4(Depth);
+		fragment_color = vec4(1.0 - (1.0 - Depth) * 25.0); 
+		//fragment_color = vec4(Depth);
 	}
 	else if(Use == 1)
-	{
-		vec4 tempcolor = texture(Position, vec2(UV.x, UV.y));
-		fragment_color = tempcolor * 0.25f;
-	}
+		fragment_color = texture(Position, vec2(UV.x, UV.y)) * 0.25;
+	//fragment_color = tempcolor * 0.25f;
 	else if(Use == 2)	 
 		fragment_color = texture(Diffuse, vec2(UV.x, UV.y));
 	else if(Use == 3)	 
