@@ -42,8 +42,7 @@ private:
 
 	Gbuffer* gBuffer;
 
-	GLuint preDefferedShader;
-	GLuint defferedShader;
+	GLuint regularShader;
 	//GLuint testShader;
 	GLuint worldMat;
 	GLuint viewProjMat;

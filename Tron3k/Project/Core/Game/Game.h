@@ -40,10 +40,15 @@ private:
 	void initPhysics();
 
 	void registerWeapon(Player* p);
+	void registerSwitch(Player* p);
+
 	void addBulletToList(int team, BULLET_TYPE bt, glm::vec3 pos, glm::vec3 dir);
 
 	WEAPON_TYPE weaponShotWith;
 	bool shotsFired = false;
+
+	WEAPON_TYPE weaponSwitchedTo;
+	bool wpnSwitched = false;
 
 public:
 
@@ -64,16 +69,20 @@ public:
 	void sendBoatCoordsToPhysics(glm::vec3 minVals, glm::vec3 maxVals);
 	void checkPvPCollision();
 
-	void checkBulletCollision();
+	void checkPlayerVBulletCollision();
 
 	void addPlayerToTeam(int p_conID, int team);
 	int getPlayersOnTeam(int team);
 	int getMaxTeamSize(bool spec = false) { if (spec) return maxSpec; return maxTeamSize; };
 
+	bool weaponSwitchReady() { return wpnSwitched; };
+
 	bool fireEventReady() { return shotsFired; };
 	WEAPON_TYPE getLatestWeaponFired(int localPlayer);
-
 	void handleWeaponFire(int team, WEAPON_TYPE weapontype, glm::vec3 pos, glm::vec3 dir);
+
+	WEAPON_TYPE getWpnSwitch() { wpnSwitched = false; return weaponSwitchedTo; };
+	void handleWeaponSwitch(int conID, WEAPON_TYPE ws);
 };
 
 #endif

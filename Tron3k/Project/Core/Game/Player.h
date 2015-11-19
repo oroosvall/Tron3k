@@ -2,6 +2,7 @@
 #define PLAYER_H
 
 #include "GameObject.h"
+#include "../sound/SoundPlayer.h"	//??
 #include "Animation.h"
 #include "../Input.h"
 #include "../CameraInput.h"
@@ -10,7 +11,7 @@
 #include "Weapon/Weapon.h"
 #include <string>
 
-enum PLAYERMSG { NONE, SHOOT };
+enum PLAYERMSG { NONE, SHOOT, WPNSWITCH };
 
 class Player : public GameObject
 {
@@ -18,7 +19,11 @@ private:
 	bool lockControls = false;
 
 
-	Weapon mainWeapon;
+	Weapon weapons[2];
+	int currentWpn = 0;
+
+	Weapon pickup;
+	Weapon super;
 
 	std::string name;
 	glm::vec3 pos;
@@ -52,6 +57,7 @@ public:
 	bool isLocal() { return isLocalPlayer; };
 
 	void getWeaponData(WEAPON_TYPE &wpntype);
+	void switchWpn(WEAPON_TYPE ws);
 
 	void setTeam(int teamid) { currentTeam = teamid; };
 	int getTeam() { return currentTeam; };

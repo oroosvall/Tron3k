@@ -37,7 +37,8 @@ void CameraInput::update(float dt, bool freeCam)
 	if(freeCam)
 		keypan(dt);
 	
-	*viewMat = lookAt(pos, pos + dir, vec3(0, 1, 0));
+	if(freeCam)
+		*viewMat = lookAt(pos, pos + dir, vec3(0, 1, 0));
 	
 	x_last = x_new;
 	y_last = y_new;
@@ -105,6 +106,7 @@ void CameraInput::mousepan(float x, float y)
 	view = rotH * view;
 	dir = normalize(view);
 
+
 }
 
 void CameraInput::setCam(vec3 _pos, vec3 _dir)
@@ -125,6 +127,8 @@ void CameraInput::setCam(vec3 _pos, vec3 _dir)
 
 	pos = _pos;
 	dir = _dir;
+
+	*viewMat = lookAt(pos, pos + dir, vec3(0, 1, 0));
 }
 
 CameraInput* CameraInput::getCam()

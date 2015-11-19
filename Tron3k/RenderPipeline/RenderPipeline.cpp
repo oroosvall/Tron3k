@@ -96,13 +96,13 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	//CreateProgram(testShader, shaderNames, shaderTypes, 2);
 
 
-	std::string shaderNamesDeffered[] = { "GameFiles/Shaders/Deffered_vs.glsl", "GameFiles/Shaders/Deffered_fs.glsl" };
+	std::string shaderNamesDeffered[] = { "GameFiles/Shaders/BlitShader_vs.glsl", "GameFiles/Shaders/BlitShader_fs.glsl" };
 	GLenum shaderTypesDeffered[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
 	
 	CreateProgram(*gBuffer->shaderPtr, shaderNamesDeffered, shaderTypesDeffered, 2);
 
-	std::string shaderNamesPreDe[] = { "GameFiles/Shaders/PreDeffered_vs.glsl", "GameFiles/Shaders/PreDeffered_gs.glsl", "GameFiles/Shaders/PreDeffered_fs.glsl" };
-	GLenum shaderTypesPreDe[] = { GL_VERTEX_SHADER, GL_GEOMETRY_SHADER, GL_FRAGMENT_SHADER };
+	std::string shaderNamesRegular[] = { "GameFiles/Shaders/RegularShader_vs.glsl", "GameFiles/Shaders/RegularShader_gs.glsl", "GameFiles/Shaders/RegularShader_fs.glsl" };
+	GLenum shaderTypesRegular[] = { GL_VERTEX_SHADER, GL_GEOMETRY_SHADER, GL_FRAGMENT_SHADER };
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
@@ -110,17 +110,24 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 	//CreateProgram(testShader, shaderNames, shaderTypes, 2);
 
-	CreateProgram(preDefferedShader, shaderNamesPreDe, shaderTypesPreDe, 3);
+	CreateProgram(regularShader, shaderNamesRegular, shaderTypesRegular, 3);
 
-	worldMat = glGetUniformLocation(preDefferedShader, "WorldMatrix"); //worldMat
-	viewMat = glGetUniformLocation(preDefferedShader, "ViewMatrix"); //view
-	viewProjMat = glGetUniformLocation(preDefferedShader, "ViewProjMatrix"); //view
+	worldMat = glGetUniformLocation(regularShader, "WorldMatrix"); //worldMat
+	viewMat = glGetUniformLocation(regularShader, "ViewMatrix"); //view
+	viewProjMat = glGetUniformLocation(regularShader, "ViewProjMatrix"); //view
 
-	uniformTextureLocation = glGetUniformLocation(preDefferedShader, "textureSample"); //view
-	uniformnNormalLocation = glGetUniformLocation(preDefferedShader, "normalSample"); //view
+	uniformTextureLocation = glGetUniformLocation(regularShader, "textureSample"); //view
+	uniformnNormalLocation = glGetUniformLocation(regularShader, "normalSample"); //view
 
 	//cam.setProjMat(preDefferedShader, projMat);
-	cam.setViewMat(preDefferedShader, viewMat);
+	cam.setViewMat(regularShader, viewMat);
+	worldMat = glGetUniformLocation(regularShader, "WorldMatrix"); //worldMat
+	viewMat = glGetUniformLocation(regularShader, "ViewProjMatrix"); //view
+
+	uniformTextureLocation = glGetUniformLocation(regularShader, "textureSample"); //view
+
+	cam.setViewProjMat(regularShader, viewProjMat);
+	cam.setViewMat(regularShader, viewMat);
 	
 	gBuffer->init(WindowWidth, WindowHeight, 5, true);
 
@@ -137,7 +144,7 @@ void RenderPipeline::release()
 {
 	// place delete code here
 
-	glDeleteShader(preDefferedShader);
+	glDeleteShader(regularShader);
 	
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -157,20 +164,20 @@ void RenderPipeline::update()
 
 void RenderPipeline::renderIni()
 {
-	glUseProgram(preDefferedShader);
+	glUseProgram(regularShader);
 	gBuffer->bind(GL_FRAMEBUFFER);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void RenderPipeline::render()
 {
-	glUseProgram(preDefferedShader);
+	glUseProgram(regularShader);
 
 	//set camera matrixes
-	cam.setViewMat(preDefferedShader, viewMat);
-	cam.setViewProjMat(preDefferedShader, viewProjMat);
+	cam.setViewMat(regularShader, viewMat);
+	cam.setViewProjMat(regularShader, viewProjMat);
 
-	contMan.renderChunks(preDefferedShader, worldMat, uniformTextureLocation, uniformnNormalLocation);
+	contMan.renderChunks(regularShader, worldMat, uniformTextureLocation, uniformnNormalLocation);
 	
 	//GBuffer Render
 	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
@@ -192,7 +199,7 @@ void RenderPipeline::renderPlayer(int playerID, void* world)
 {
 
 	//set temp objects worldmat
-	glProgramUniformMatrix4fv(preDefferedShader, worldMat, 1, GL_FALSE, (GLfloat*)world);
+	glProgramUniformMatrix4fv(regularShader, worldMat, 1, GL_FALSE, (GLfloat*)world);
 
 	contMan.renderPlayer(0, *(glm::mat4*)world);
 

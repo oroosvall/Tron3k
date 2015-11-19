@@ -2,7 +2,7 @@
 
 int SoundPlayer::nrOfSoundsPlaying = 0;
 float SoundPlayer::soundVolume = 100.0f;
-float SoundPlayer::musicVolume = 100.0f;
+float SoundPlayer::musicVolume = 50.0f;
 bool SoundPlayer::soundEnabler = false;
 
 
@@ -29,12 +29,10 @@ void SoundPlayer::init()
 {
 	if (singleton)
 	{
-		singleton->soundList[SOUNDS::gunshot].loadFromFile("/GameFiles/Sound/soundEffectGunshots.ogg");
-		singleton->soundList[SOUNDS::firstBlood].loadFromFile("/GameFiles/Sound/voiceFirstBlood.ogg");
-		singleton->musicList[MUSIC::mainMenu] = "/GameFiles/Sound/musicMainMenu.ogg";
+		singleton->soundList[SOUNDS::gunshot].loadFromFile("GameFiles//Sound/soundEffectGunshots.ogg");
+		singleton->soundList[SOUNDS::firstBlood].loadFromFile("GameFiles/Sound/voiceFirstBlood.ogg");
+		singleton->musicList[MUSIC::mainMenu] = "GameFiles/Sound/musicMainMenu.ogg";
 	}
-	
-
 	
 }
 
@@ -156,11 +154,5 @@ void SoundPlayer::update()
 			sounds[nrOfSoundsPlaying] = sounds[i];
 			nrOfSoundsPlaying--;
 		}
-	}
-
-	Input* i = Input::getInput();
-	if (i->justPressed(GLFW_KEY_M))
-	{
-		enableSounds();
 	}
 }

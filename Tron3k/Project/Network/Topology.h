@@ -75,6 +75,15 @@ public:
 	virtual void in_event(Packet* rec, Uint8 conID) = 0;
 	virtual void in_frame(Packet* rec, Uint8 conID) = 0;
 	virtual void in_message(Packet* rec, Uint8 conID) = 0;
+	virtual void in_command(Packet* rec, Uint8 conID)
+	{
+		Uint8 command_type;
+		*rec >> command_type;
+		switch (command_type)
+		{
+		case NET_COMMAND::TEAM_CHANGE: in_command_team_change(rec, conID); break;
+		}
+	}
 
 	void IN(Connection* connection, Uint8 conID)
 	{
@@ -101,6 +110,7 @@ public:
 			case NEW_CONNECTION:	in_new_connection(rec, conID); break;
 			case EVENT:				in_event(rec, conID); break;
 			case FRAME:				in_frame(rec, conID); break;
+			case COMMAND:			in_command(rec, conID); break;
 			case MESSAGE:			in_message(rec, conID); break;
 			default:
 				//package error?
@@ -142,7 +152,6 @@ public:
 			consolePtr->printMsg("ERROR in_event_player_left" , "System", 'S');
 	}
 
-
 	//Frame package FROM CLIENT
 	virtual void frame_fire(WEAPON_TYPE wt, int teamId, glm::vec3 pos, glm::vec3 dir) 
 	{ 
@@ -150,6 +159,11 @@ public:
 			pos.x << pos.y << pos.z <<
 			dir.x << dir.y << dir.z;
 	};
+
+	virtual void frame_weapon_switch(int conID, WEAPON_TYPE ws)
+	{
+		*package << Uint8(NET_FRAME::WPN_SWITCH) << Uint8(conID) << Uint8(ws);
+	}
 
 	virtual void frame_name_change(Uint8 conid, string name)
 	{
@@ -159,11 +173,6 @@ public:
 	virtual void frame_pos(Uint8 conid, glm::vec3 cPos, glm::vec3 cDir)
 	{
 		*package << Uint8(NET_FRAME::POS) << conid << cPos.x << cPos.y << cPos.z << cDir.x << cDir.y << cDir.z;
-	}
-
-	virtual void frame_team_change(Uint8 conid, Uint8 team)
-	{
-		*package << Uint8(NET_FRAME::TEAM_CHANGE) << conid << team;
 	}
 
 	virtual void in_frame_fire(Packet* rec)
@@ -176,6 +185,20 @@ public:
 		*rec >> pos.x >> pos.y >> pos.z;
 		*rec >> dir.x >> dir.y >> dir.z;
 		gamePtr->handleWeaponFire(team, WEAPON_TYPE(weapontype), pos, dir);
+	}
+
+	virtual void in_frame_weapon_switch(Packet* rec)
+	{
+		Uint8 p_conID;
+		Uint8 weapontype;
+		*rec >> p_conID >> weapontype;
+
+		gamePtr->handleWeaponSwitch(p_conID, WEAPON_TYPE(weapontype));
+
+		if (weapontype == WEAPON_TYPE::PULSE_RIFLE)
+			consolePtr->printMsg(gamePtr->getPlayer(p_conID)->getName() + " switched weapon to Pulse Rifle!", "System", 'S');
+		if (weapontype == WEAPON_TYPE::POOP_GUN)
+			consolePtr->printMsg(gamePtr->getPlayer(p_conID)->getName() + " switched weapon to Poop Gun!", "System", 'S');
 	}
 
 	virtual void in_frame_name_change(Packet* rec)
@@ -213,24 +236,60 @@ public:
 			consolePtr->printMsg("ERROR in_frame_current_pos", "System", 'S');
 	}
 
-	virtual void in_frame_team_change(Packet* rec)
+	//COMMANDS  From Client  --->  Server  - if ok -> Clients
+	virtual void command_team_change(Uint8 conid, Uint8 team)
+	{
+		Packet* out = new Packet();
+		*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::TEAM_CHANGE) << conid << team;
+		con->send(out);
+		delete out;
+	}
+
+	virtual void in_command_team_change(Packet* rec, Uint8 conID)
 	{
 		Uint8 p_conID;
 		Uint8 team;
 		*rec >> p_conID >> team;
 
 		Player* p = gamePtr->getPlayer(p_conID);
-		
-		if (gamePtr->getPlayersOnTeam(team) + 1 < gamePtr->getMaxTeamSize())
+		if (p == nullptr)
 		{
-			gamePtr->addPlayerToTeam(p_conID, team);
-			if (team == 0)
-				consolePtr->printMsg("Player (" + p->getName() + ") joined team Spectators", "System", 'S');
-			if (team == 1)
-				consolePtr->printMsg("Player (" + p->getName() + ") joined team One", "System", 'S');
-			if (team == 2)
-				consolePtr->printMsg("Player (" + p->getName() + ") joined team Two", "System", 'S');
+			consolePtr->printMsg("ERROR in_command_team_change", "System", 'S');
+			return;
 		}
+
+		if (isClient == false) //Decide if the command is OK
+		{
+			if (gamePtr->getPlayersOnTeam(team) + 1 < gamePtr->getMaxTeamSize())
+			{
+				Packet* out; out = new Packet();
+				string reply = "Teamchange Accepted";
+				*out << Uint8(NET_INDEX::MESSAGE) << Uint8(getConId()) << Uint8('S') << reply;
+				con[p_conID].send(out);
+				delete out;
+			}
+			else
+			{
+				Packet* out; out = new Packet();
+				string reply = "Teamchange denied";
+				*out << Uint8(NET_INDEX::MESSAGE) << Uint8(getConId()) << Uint8('S') << reply;
+				con[p_conID].send(out);
+				delete out;
+				return;
+			}
+		}
+
+		gamePtr->addPlayerToTeam(p_conID, team);
+		if (team == 0)
+			consolePtr->printMsg("Player (" + p->getName() + ") joined team Spectators", "System", 'S');
+		if (team == 1)
+			consolePtr->printMsg("Player (" + p->getName() + ") joined team One", "System", 'S');
+		if (team == 2)
+			consolePtr->printMsg("Player (" + p->getName() + ") joined team Two", "System", 'S');
+		
+
+		if (isClient == false)
+			branch(rec, -1);
 	}
 };
 

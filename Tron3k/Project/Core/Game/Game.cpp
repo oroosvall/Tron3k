@@ -77,7 +77,19 @@ void Game::update(float dt)
 			PLAYERMSG msg = playerList[c]->update(dt);
 			if (msg == PLAYERMSG::SHOOT)
 			{
-				registerWeapon(playerList[c]);
+				if (gameState != Gamestate::ROAM)
+					registerWeapon(playerList[c]);
+				else
+				{
+					WEAPON_TYPE wt;
+					playerList[c]->getWeaponData(wt);
+					handleWeaponFire(playerList[c]->getTeam(), wt, playerList[c]->getPos(), playerList[c]->getDir());
+				}
+					
+			}
+			if (msg == PLAYERMSG::WPNSWITCH)
+			{
+				registerSwitch(playerList[c]);
 			}
 		}
 	}
@@ -98,7 +110,7 @@ void Game::update(float dt)
 		checkPvPCollision();
 
 	if (gameState == Gamestate::SERVER)
-		checkBulletCollision();
+		checkPlayerVBulletCollision();
 }
 
 Player* Game::getPlayer(int conID)
@@ -154,7 +166,7 @@ void Game::checkPvPCollision()
 			{
 				localPPos = playerList[i]->getPos();
 				localP = i;
-				//localPTeam = playerList[i]->getTeam();
+				localPTeam = playerList[i]->getTeam();
 			}
 		}
 		else
@@ -174,10 +186,11 @@ void Game::checkPvPCollision()
 
 		if (collides)
 		{
+			
 			//here we can do things when two objects, collide, cause now we know i and j collided.
 			//int x = 0;
 			//TODO: Add separated collision places for friendly vs hostile
-			if (/*playerList[i]->getTeamID() == localPTeam*/true)
+			if (playerList[i]->getTeam() == localPTeam)
 			{
 				//Friendly
 
@@ -196,7 +209,7 @@ void Game::checkPvPCollision()
 
 }
 
-void Game::checkBulletCollision()
+void Game::checkPlayerVBulletCollision()
 {
 	bool collides = false;
 	for (int b = 0; b < BULLET_TYPE::NROFBULLETS; b++)
@@ -206,10 +219,15 @@ void Game::checkBulletCollision()
 			for (int j = 0; j < bullets[b].size(); j++)
 			{
 				collides = false;
-				if (playerList[i] != nullptr)
+				if (playerList[i] != nullptr && bullets[b][j] != nullptr)
 				{
-					//if (bullets[j]->teamId != playerList[i]->getTeamID())
+					if (bullets[b][j]->teamId != playerList[i]->getTeam())
 					collides = physics->checkPlayerVBulletCollision(playerList[i]->getPos(), bullets[b][j]->pos);
+					if (collides)
+					{
+						//Code for player on bullet collision goes here
+					}
+						
 				}
 			}
 		}
@@ -220,6 +238,17 @@ void Game::registerWeapon(Player* p)
 {
 	p->getWeaponData(weaponShotWith);
 	shotsFired = true;
+}
+
+void Game::registerSwitch(Player* p)
+{
+	p->getWeaponData(weaponSwitchedTo);
+	wpnSwitched = true;
+}
+
+void Game::handleWeaponSwitch(int conID, WEAPON_TYPE ws)
+{
+	playerList[conID]->switchWpn(ws);
 }
 
 int Game::getPlayersOnTeam(int team)
@@ -312,6 +341,9 @@ void Game::addBulletToList(int team, BULLET_TYPE bt, glm::vec3 pos, glm::vec3 di
 	case BULLET_TYPE::PULSE_SHOT:
 		b = new PulseShot(pos, dir, team);
 		break;
+	case BULLET_TYPE::POOP:
+		b = new Poop(pos, dir, team);
+		break;
 	}
 	
 	bullets[bt].push_back(b);
@@ -325,6 +357,9 @@ void Game::handleWeaponFire(int team, WEAPON_TYPE weapontype, glm::vec3 pos, glm
 	case WEAPON_TYPE::PULSE_RIFLE:
 		//To do: Automate generation of bullets
 		addBulletToList(team, BULLET_TYPE::PULSE_SHOT, pos, dir);
+		break;
+	case WEAPON_TYPE::POOP_GUN:
+		addBulletToList(team, BULLET_TYPE::POOP, pos, dir);
 		break;
 	}
 }

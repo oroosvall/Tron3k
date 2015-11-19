@@ -30,6 +30,7 @@
     <ClCompile Include="Core\Game\PlayerEffects\Effect.cpp" />
     <ClCompile Include="Core\Game\PlayerEffects\Modifier.cpp" />
     <ClCompile Include="Core\Game\Weapon\Bullet.cpp" />
+    <ClCompile Include="Core\Game\Weapon\BulletTypes\BulletPoop.cpp" />
     <ClCompile Include="Core\Game\Weapon\BulletTypes\BulletPulseShot.cpp" />
     <ClCompile Include="Core\Game\Weapon\Weapon.cpp" />
     <ClCompile Include="Core\Input.cpp" />
@@ -55,6 +56,7 @@
     <ClInclude Include="Core\Game\PlayerEffects\Modifier.h" />
     <ClInclude Include="Core\Game\Weapon\Bullet.h" />
     <ClInclude Include="Core\Game\Weapon\BulletTypes\AllBullets.h" />
+    <ClInclude Include="Core\Game\Weapon\BulletTypes\BulletPoop.h" />
     <ClInclude Include="Core\Game\Weapon\BulletTypes\BulletPulseShot.h" />
     <ClInclude Include="Core\Game\Weapon\Weapon.h" />
     <ClInclude Include="Core\Input.h" />
