@@ -45,7 +45,7 @@ bool Physics::checkCollision(CollideMesh* obj1, CollideMesh* obj2)
 	return false;
 }
 
-bool Physics::checkPlayerCollision(glm::vec3 playerPos1, glm::vec3 playerPos2)
+bool Physics::checkPlayerVPlayerCollision(glm::vec3 playerPos1, glm::vec3 playerPos2)
 {
 
 	Geometry obj1 = Geometry(playerPos1, this->size);
@@ -53,6 +53,11 @@ bool Physics::checkPlayerCollision(glm::vec3 playerPos1, glm::vec3 playerPos2)
 	bool collide = checkCollision(&obj1, &obj2);
 
 	return collide;
+}
+
+bool Physics::checkPlayerVBulletCollision(glm::vec3 playerPos, glm::vec3 bulletPos)
+{
+	return true;
 }
 
 //TEMPORARY

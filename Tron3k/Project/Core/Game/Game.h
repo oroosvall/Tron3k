@@ -5,6 +5,16 @@
 #include "../../../Physics/Physics.h"
 #include <vector>
 
+
+enum Gamestate
+{
+	START,
+	MENU,
+	ROAM,
+	CLIENT,
+	SERVER
+};
+
 class Game
 {
 private:
@@ -18,6 +28,8 @@ private:
 	int maxTeamSize = 5;
 	int maxSpec = 5;
 	void removeConIDfromTeams(int conID);
+
+	int gameState;
 
 	int max_con;
 	Player** playerList;
@@ -33,7 +45,7 @@ public:
 
 	Game();
 	void release();
-	void init(int max_connections);
+	void init(int max_connections, int state);
 
 	Player* getPlayer(int conID);
 	std::vector<Bullet*> getBullets();
@@ -46,7 +58,9 @@ public:
 	void getBoatCoordsFromCore(glm::vec3 minVals, glm::vec3 maxVals);
 	//TEMPORARY
 	void sendBoatCoordsToPhysics(glm::vec3 minVals, glm::vec3 maxVals);
-	void checkCollision();
+	void checkPvPCollision();
+
+	void checkBulletCollision();
 
 	void addPlayerToTeam(int p_conID, int team);
 	int getPlayersOnTeam(int team);

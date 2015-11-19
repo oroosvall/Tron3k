@@ -29,11 +29,13 @@ Game::Game()
 }
 
 
-void Game::init(int max_connections)
+void Game::init(int max_connections, int state)
 {
 	max_con = max_connections;
 
 	initPhysics();
+
+	gameState = state;
 
 	playerList = new Player*[max_con];
 	for (int c = 0; c < max_con; c++)
@@ -86,7 +88,11 @@ void Game::update(float dt)
 		}
 	}
 
-	checkCollision();
+	if (gameState == Gamestate::CLIENT)
+		checkPvPCollision();
+
+	if (gameState == Gamestate::SERVER)
+		checkBulletCollision();
 }
 
 Player* Game::getPlayer(int conID)
@@ -125,7 +131,7 @@ void Game::sendBoatCoordsToPhysics(glm::vec3 minVals, glm::vec3 maxVals)
 	physics->getBoatExtremes(minVals, maxVals);
 }
 
-void Game::checkCollision()
+void Game::checkPvPCollision()
 {
 	//TEMPORARY
 	vec3 pPos[20];
@@ -158,28 +164,23 @@ void Game::checkCollision()
 	{
 		collides = false;
 		if (playerList[i] != nullptr)
-			//collides = physics->checkPlayerCollision(localPPos, pPos[i]);
+			collides = physics->checkPlayerVPlayerCollision(localPPos, pPos[i]);
 
 		if (collides)
 		{
 			//here we can do things when two objects, collide, cause now we know i and j collided.
 			//int x = 0;
 			//TODO: Add separated collision places for friendly vs hostile
-			vec3 inBetween = localPPos - pPos[i];
-			if (localPPos.x < pPos[i].x)
+			if (/*playerList[i]->getTeamID() == localPTeam*/true)
 			{
-				inBetween.x = abs(inBetween.x);
+				//Friendly
+
 			}
-			if (localPPos.y < pPos[i].y)
+			else
 			{
-				inBetween.y = abs(inBetween.y);
+				//Enemy
+
 			}
-			if (localPPos.z < pPos[i].z)
-			{
-				inBetween.z = abs(inBetween.z);
-			}
-			playerList[localP]->setGoalPos(pPos[localP] - inBetween);
-			playerList[i]->setGoalPos(pPos[i] + inBetween);
 
 		}
 
@@ -187,6 +188,23 @@ void Game::checkCollision()
 
 	}
 
+}
+
+void Game::checkBulletCollision()
+{
+	bool collides = false;
+	for (int i = 0; i < max_con; i++)
+	{
+		for (int j = 0; j < bullets.size(); j++)
+		{
+			collides = false;
+			if (playerList[i] != nullptr)
+			{
+				//if (bullets[j]->teamId != playerList[i]->getTeamID())
+					collides = physics->checkPlayerVBulletCollision(playerList[i]->getPos(), bullets[j]->pos);
+			}
+		}
+	}
 }
 
 void Game::createBullet(Player* p)
@@ -285,8 +303,8 @@ Bullet* Game::addBulletToList(Bullet* temp)
 	TO DO: Add logic to find appropriate Bullet vector in the future
 	*/
 	Bullet* b = new Bullet(temp->pos, temp->direction, temp->velocity, temp->teamId);
-	
+
 	bullets.push_back(b);
-	
+
 	return b;
 }

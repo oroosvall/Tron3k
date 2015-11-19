@@ -28,7 +28,8 @@ public:
 	virtual bool release();
 
 	bool checkCollision(Geometry* obj1, Geometry* obj2);
-	virtual bool checkPlayerCollision(glm::vec3 playerPos1, glm::vec3 playerPos2);
+	virtual bool checkPlayerVPlayerCollision(glm::vec3 playerPos1, glm::vec3 playerPos2);
+	virtual bool checkPlayerVBulletCollision(glm::vec3 playerPos, glm::vec3 bulletPos);
 
 	//TEMPORARY
 	virtual void getBoatExtremes(glm::vec3 minVals, glm::vec3 maxVals);

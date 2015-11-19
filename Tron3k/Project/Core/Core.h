@@ -23,14 +23,7 @@
 #include <fstream> //load settings
 #include <sstream>
 
-enum Gamestate
-{
-	START,
-	MENU,
-	ROAM,
-	CLIENT,
-	SERVER
-};
+
 
 
 class Core

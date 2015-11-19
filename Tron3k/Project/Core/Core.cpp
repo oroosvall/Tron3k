@@ -247,7 +247,7 @@ void Core::upClient(float dt)
 				if (game != nullptr)
 					delete game;
 				game = new Game();
-				game->init(MAX_CONNECT);
+				game->init(MAX_CONNECT, current);
 				top->setGamePtr(game);
 				subState++;
 				return;
@@ -389,7 +389,7 @@ void Core::startHandleCmds(float dt)
 			initPipeline();
 
 			game = new Game();
-			game->init(MAX_CONNECT);
+			game->init(MAX_CONNECT, current);
 
 			Player* p = new Player();
 			
@@ -482,7 +482,7 @@ void Core::upServer(float dt)
 		if (game != nullptr)
 			delete game;
 		game = new Game();
-		game->init(MAX_CONNECT);
+		game->init(MAX_CONNECT, current);
 
 		top->setGamePtr(game);
 
@@ -496,6 +496,7 @@ void Core::upServer(float dt)
 		top->network_IN(dt);
 
 		//update game
+
 
 		if (console.messageReady())
 		{
