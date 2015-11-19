@@ -310,7 +310,7 @@ void Game::addBulletToList(int team, BULLET_TYPE bt, glm::vec3 pos, glm::vec3 di
 	switch (bt)
 	{
 	case BULLET_TYPE::PULSE_SHOT:
-		b = new Bullet(pos, dir, 5.0f, team);
+		b = new PulseShot(pos, dir, team);
 		break;
 	}
 	

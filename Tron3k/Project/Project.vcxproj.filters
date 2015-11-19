@@ -37,6 +37,9 @@
     <Filter Include="Source Files\Core\Game\Weapon">
       <UniqueIdentifier>{eac0f42a-03d4-467e-bfa9-9dd048e2e29f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Core\Game\Weapon\BulletTypes">
+      <UniqueIdentifier>{fcc1a40f-32dc-4d5c-834c-db87e4914472}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -92,6 +95,9 @@
     </ClCompile>
     <ClCompile Include="Core\Game\ActiveEffects\Ability.cpp">
       <Filter>Source Files\Core\Game\ActiveEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Game\Weapon\BulletTypes\BulletPulseShot.cpp">
+      <Filter>Source Files\Core\Game\Weapon\BulletTypes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -166,6 +172,12 @@
     </ClInclude>
     <ClInclude Include="Core\Game\GameDataIndex.h">
       <Filter>Source Files\Core\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Weapon\BulletTypes\BulletPulseShot.h">
+      <Filter>Source Files\Core\Game\Weapon\BulletTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Weapon\BulletTypes\AllBullets.h">
+      <Filter>Source Files\Core\Game\Weapon\BulletTypes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -8,17 +8,16 @@
 
 class Bullet : public GameObject
 {
-	public:
-		glm::vec3 pos;
-		glm::vec3 direction;
-		float velocity;
-		int teamId;
+protected:
+	void updateWorldMat();
+public:
+	glm::vec3 pos;
+	glm::vec3 dir;
+	int teamId;
 
-		Bullet();
-		Bullet(glm::vec3 pos, glm::vec3 direction, float velocity, int teamID);
-		~Bullet();
+	virtual ~Bullet();
 
-		int update(float dt);
+	virtual int update(float dt) = 0;
 
 };
 #endif

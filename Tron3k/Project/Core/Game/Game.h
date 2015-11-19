@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include "GameDataIndex.h"
+#include "Weapon/BulletTypes/AllBullets.h"
 #include "Player.h"
 #include "../../../Physics/Physics.h"
 #include <vector>
