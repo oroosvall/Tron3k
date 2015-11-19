@@ -117,7 +117,7 @@ void Gbuffer::render()
 	glUseProgram(*shaderPtr);
 
 	// bind textures
-	for (int i = 1; i < 4; i++)
+	for (int i = 0; i < nrTextures; i++)
 	{
 		glActiveTexture(GL_TEXTURE0 + i);
 		glBindTexture(GL_TEXTURE_2D, rTexture[i].getTargetId());
@@ -128,23 +128,23 @@ void Gbuffer::render()
 	glBindBuffer(GL_ARRAY_BUFFER, renderQuad);
 	glBindVertexArray(renderVao);
 
-	//glProgramUniform1i(*shaderPtr, pos[0], 0);
+	glProgramUniform1i(*shaderPtr, pos[0], 0);
 	glProgramUniform1i(*shaderPtr, pos[1], 1);
 	glProgramUniform1i(*shaderPtr, pos[2], 2);
 	glProgramUniform1i(*shaderPtr, pos[3], 3);
-	//glProgramUniform1i(*shaderPtr, pos[4], 4);
+	glProgramUniform1i(*shaderPtr, pos[4], 4);
 
 	blitQuads[5].BindVertData();
 	glProgramUniform1i(*shaderPtr, pos[5], 5);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
 	//each blit
-	//for (int n = 0; n < 5; n++)
-	//{
-	//	blitQuads[n].BindVertData();
-	//	glProgramUniform1i(*shaderPtr, pos[5], n);
-	//	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-	//}
+	for (int n = 0; n < 5; n++)
+	{
+		blitQuads[n].BindVertData();
+		glProgramUniform1i(*shaderPtr, pos[5], n);
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	}
 }
 
 
