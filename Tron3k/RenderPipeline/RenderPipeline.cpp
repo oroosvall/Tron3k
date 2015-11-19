@@ -95,6 +95,7 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	//
 	//CreateProgram(testShader, shaderNames, shaderTypes, 2);
 
+
 	std::string shaderNamesDeffered[] = { "GameFiles/Shaders/Deffered_vs.glsl", "GameFiles/Shaders/Deffered_fs.glsl" };
 	GLenum shaderTypesDeffered[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
 	
@@ -131,6 +132,8 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 void RenderPipeline::release()
 {
 	// place delete code here
+
+	glDeleteShader(preDefferedShader);
 	
 	delete test;
 
@@ -164,6 +167,7 @@ void RenderPipeline::render()
 	//GBuffer Render
 	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	gBuffer->render();
 	//glUseProgram(testShader);
 

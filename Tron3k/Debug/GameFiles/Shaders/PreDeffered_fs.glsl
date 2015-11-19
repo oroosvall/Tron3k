@@ -10,8 +10,9 @@ layout (location = 1) out vec3 DiffuseOut;
 layout (location = 2) out vec3 NormalOut;     
 layout (location = 3) out vec3 TexCoordOut;
 
+
 void main()									
-{											
+{			
 	WorldPosOut	= Position;					
 	DiffuseOut	= vec3( UV.x, UV.y, 1);//texture(textureSample, UV).xyz;	
 	NormalOut = Normal;					
