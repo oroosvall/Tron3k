@@ -517,12 +517,11 @@ void Core::clientHandleCmds(float dt)
 		else if (token == "/team")
 		{
 			ss >> token;
-			int team = atoi(token.c_str());
-			if (team == 0 || team == 1 || team == 2)
+			if(token != "/team" || token == "0" || token == "1" || token == "2")
 			{
-				top->frame_team_change(top->getConId(), team);
-				game->addPlayerToTeam(top->getConId(), team);
-				console.printMsg("You changed team to (" + token + ")", "System", 'S');
+				int team = stoi(token);
+				top->command_team_change(top->getConId(), team);
+				console.printMsg("Change team request sent to server", "System", 'S');
 			}
 			else
 				console.printMsg("Invalid team. Use /team <1/2/3>", "System", 'S');
