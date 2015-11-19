@@ -37,6 +37,7 @@ void Game::init(int max_connections, int state)
 	max_con = max_connections;
 
 	initPhysics();
+	InitSound(CreateSound());
 
 	gameState = state;
 

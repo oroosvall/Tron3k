@@ -18,82 +18,34 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Core\CameraInput.cpp" />
-    <ClCompile Include="Core\Console.cpp" />
-    <ClCompile Include="Core\Core.cpp" />
-    <ClCompile Include="Core\Game\ActiveEffects\Ability.cpp" />
-    <ClCompile Include="Core\Game\ActiveEffects\Consumable.cpp" />
-    <ClCompile Include="Core\Game\ActiveEffects\Special.cpp" />
-    <ClCompile Include="Core\Game\Game.cpp" />
-    <ClCompile Include="Core\Game\Player.cpp" />
-    <ClCompile Include="Core\Game\PlayerEffects\Effect.cpp" />
-    <ClCompile Include="Core\Game\PlayerEffects\Modifier.cpp" />
-    <ClCompile Include="Core\Game\Weapon\Bullet.cpp" />
-    <ClCompile Include="Core\Game\Weapon\BulletTypes\BulletPoop.cpp" />
-    <ClCompile Include="Core\Game\Weapon\BulletTypes\BulletPulseShot.cpp" />
-    <ClCompile Include="Core\Game\Weapon\Weapon.cpp" />
-    <ClCompile Include="Core\Input.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Network\Client.cpp" />
-    <ClCompile Include="Network\Connection.cpp" />
-    <ClCompile Include="Network\Server.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Core\CameraInput.h" />
-    <ClInclude Include="Core\Console.h" />
-    <ClInclude Include="Core\Core.h" />
-    <ClInclude Include="Core\Game\ActiveEffects\Ability.h" />
-    <ClInclude Include="Core\Game\ActiveEffects\Consumable.h" />
-    <ClInclude Include="Core\Game\ActiveEffects\Special.h" />
-    <ClInclude Include="Core\Game\Animation.h" />
-    <ClInclude Include="Core\Game\Game.h" />
-    <ClInclude Include="Core\Game\GameDataIndex.h" />
-    <ClInclude Include="Core\Game\GameObject.h" />
-    <ClInclude Include="Core\Game\Player.h" />
-    <ClInclude Include="Core\Game\PlayerEffects\Effect.h" />
-    <ClInclude Include="Core\Game\PlayerEffects\Modifier.h" />
-    <ClInclude Include="Core\Game\Weapon\Bullet.h" />
-    <ClInclude Include="Core\Game\Weapon\BulletTypes\AllBullets.h" />
-    <ClInclude Include="Core\Game\Weapon\BulletTypes\BulletPoop.h" />
-    <ClInclude Include="Core\Game\Weapon\BulletTypes\BulletPulseShot.h" />
-    <ClInclude Include="Core\Game\Weapon\Weapon.h" />
-    <ClInclude Include="Core\Input.h" />
-    <ClInclude Include="Core\ui\Ui.h" />
-    <ClInclude Include="Network\Client.h" />
-    <ClInclude Include="Network\Connection.h" />
-    <ClInclude Include="Network\NetIndex.h" />
-    <ClInclude Include="Network\Server.h" />
-    <ClInclude Include="Network\Topology.h" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{93453B35-651C-43D5-958F-5A97A3830548}</ProjectGuid>
+    <ProjectGuid>{21FA0CEC-902C-4202-BB0D-4CEA46E39F1D}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Project</RootNamespace>
+    <RootNamespace>SoundPlayer</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -119,13 +71,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)\Dependencies\SFML;$(SolutionDir)\Dependencies\GLFW\include;$(SolutionDir)\Dependencies\glm;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\Dependencies\SFML\lib;$(SolutionDir)\Debug;$(SolutionDir)\Dependencies\GLFW\lib-vc2015;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\Dependencies\SFML;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\Dependencies\SFML\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)\Dependencies\GLFW\include;$(SolutionDir)\Dependencies\SFML;$(SolutionDir)\Dependencies\glm;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\Dependencies\GLFW\lib-vc2015;$(SolutionDir)\Dependencies\SFML\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -139,14 +89,12 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SOUNDPLAYER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SoundPlayer.lib;RenderPipeline.lib;Physics.lib;sfml-system-d.lib;sfml-network-d.lib;glfw3.lib;sfml-audio-d.lib;ogg.lib;openal32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <IgnoreSpecificDefaultLibraries>MSVCRT</IgnoreSpecificDefaultLibraries>
+      <AdditionalDependencies>sfml-system-d.lib;sfml-audio-d.lib;ogg.lib;openal32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -155,13 +103,11 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;SOUNDPLAYER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;sfml-network-d.lib;sfml-system-d.lib;sfml-audio-d.lib;ogg.lib;openal32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -172,11 +118,10 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;SOUNDPLAYER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
@@ -190,16 +135,22 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;SOUNDPLAYER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="sound\SoundPlayer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="sound\SoundList.h" />
+    <ClInclude Include="sound\SoundPlayer.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

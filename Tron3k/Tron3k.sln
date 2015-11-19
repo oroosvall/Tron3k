@@ -7,11 +7,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Project", "Project\Project.
 	ProjectSection(ProjectDependencies) = postProject
 		{AD290168-EA43-4596-9A73-2BB300D44BAA} = {AD290168-EA43-4596-9A73-2BB300D44BAA}
 		{B9FC44C5-C0D4-4397-B623-9F723A15F729} = {B9FC44C5-C0D4-4397-B623-9F723A15F729}
+		{21FA0CEC-902C-4202-BB0D-4CEA46E39F1D} = {21FA0CEC-902C-4202-BB0D-4CEA46E39F1D}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RenderPipeline", "RenderPipeline\RenderPipeline.vcxproj", "{B9FC44C5-C0D4-4397-B623-9F723A15F729}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Physics", "Physics\Physics.vcxproj", "{AD290168-EA43-4596-9A73-2BB300D44BAA}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SoundPlayer", "SoundPlayer\SoundPlayer.vcxproj", "{21FA0CEC-902C-4202-BB0D-4CEA46E39F1D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +48,14 @@ Global
 		{AD290168-EA43-4596-9A73-2BB300D44BAA}.Release|x64.Build.0 = Release|x64
 		{AD290168-EA43-4596-9A73-2BB300D44BAA}.Release|x86.ActiveCfg = Release|Win32
 		{AD290168-EA43-4596-9A73-2BB300D44BAA}.Release|x86.Build.0 = Release|Win32
+		{21FA0CEC-902C-4202-BB0D-4CEA46E39F1D}.Debug|x64.ActiveCfg = Debug|x64
+		{21FA0CEC-902C-4202-BB0D-4CEA46E39F1D}.Debug|x64.Build.0 = Debug|x64
+		{21FA0CEC-902C-4202-BB0D-4CEA46E39F1D}.Debug|x86.ActiveCfg = Debug|Win32
+		{21FA0CEC-902C-4202-BB0D-4CEA46E39F1D}.Debug|x86.Build.0 = Debug|Win32
+		{21FA0CEC-902C-4202-BB0D-4CEA46E39F1D}.Release|x64.ActiveCfg = Release|x64
+		{21FA0CEC-902C-4202-BB0D-4CEA46E39F1D}.Release|x64.Build.0 = Release|x64
+		{21FA0CEC-902C-4202-BB0D-4CEA46E39F1D}.Release|x86.ActiveCfg = Release|Win32
+		{21FA0CEC-902C-4202-BB0D-4CEA46E39F1D}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

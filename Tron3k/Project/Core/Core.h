@@ -2,7 +2,7 @@
 #define CORE_H
 
 #include "Input.h"
-#include "sound\SoundPlayer.h"
+#include "../../SoundPlayer/sound/SoundPlayer.h"
 #include "ui\Ui.h"
 
 #undef APIENTRY
@@ -30,7 +30,6 @@ class Core
 {
 private:
 	float timepass;	//temp
-	SoundPlayer* theSound = nullptr;
 	Topology* top;
 	Game* game;
 	IRenderPipeline* renderPipe;

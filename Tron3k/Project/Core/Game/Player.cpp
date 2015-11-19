@@ -107,8 +107,7 @@ PLAYERMSG Player::update(float dt)
 
 			if (i->justPressed(GLFW_KEY_M))					//Temp?
 			{
-				SoundPlayer* theSound = SoundPlayer::getSound();
-				theSound->enableSounds();
+				GetSound()->enableSounds();
 			}
 
 			cam->setCam(pos, dir);

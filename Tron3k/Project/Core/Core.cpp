@@ -23,10 +23,8 @@ void Core::init()
 	createWindow(winX, winY, fullscreen);
 
 	//******************* TEMP *************************
-	theSound = SoundPlayer::getSound();
-	theSound->init();
-	theSound->playMusic(MUSIC::mainMenu);
-	theSound->enableSounds();
+	GetSound()->playMusic(MUSIC::mainMenu);
+	GetSound()->enableSounds();
 	timepass = 0.0f;
 	//**************************************************
 	current = Gamestate::START;
@@ -47,8 +45,7 @@ Core::~Core()
 	if (renderPipe != nullptr)
 		renderPipe->release();
 	
-	SoundPlayer* theSound = SoundPlayer::getSound();
-	theSound->release();
+	ReleaseSound();
 
 	Input* i = Input::getInput();
 	i->release();
@@ -148,7 +145,7 @@ void Core::update(float dt)
 	}
 
 	//*******TEMP**********
-	theSound->update();
+	GetSound()->update();
 	//*********************
 
 	//shouldnt get the ref every frame

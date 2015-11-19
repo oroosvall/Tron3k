@@ -22,9 +22,6 @@
     <Filter Include="Source Files\Core\Game">
       <UniqueIdentifier>{017d875f-ed63-4a08-b5fc-1565028b3503}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Core\Sound">
-      <UniqueIdentifier>{cf395fb5-d0d5-4dad-b772-e62a1bcbfd02}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Core\Ui">
       <UniqueIdentifier>{cfd55ae1-25ab-4d06-a9ad-6147e281e652}</UniqueIdentifier>
     </Filter>
@@ -65,9 +62,6 @@
     </ClCompile>
     <ClCompile Include="Core\Console.cpp">
       <Filter>Source Files\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\sound\SoundPlayer.cpp">
-      <Filter>Source Files\Core\Sound</Filter>
     </ClCompile>
     <ClCompile Include="Core\Game\Player.cpp">
       <Filter>Source Files\Core\Game</Filter>
@@ -142,12 +136,6 @@
     </ClInclude>
     <ClInclude Include="Core\Console.h">
       <Filter>Source Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\sound\SoundPlayer.h">
-      <Filter>Source Files\Core\Sound</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\sound\SoundList.h">
-      <Filter>Source Files\Core\Sound</Filter>
     </ClInclude>
     <ClInclude Include="Core\CameraInput.h">
       <Filter>Source Files\Core</Filter>

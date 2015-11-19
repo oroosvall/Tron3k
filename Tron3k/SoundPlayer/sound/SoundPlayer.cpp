@@ -8,15 +8,6 @@ bool SoundPlayer::soundEnabler = false;
 
 SoundPlayer* SoundPlayer::singleton = nullptr;
 
-SoundPlayer* SoundPlayer::getSound()
-{
-	if (singleton == nullptr)
-	{
-		singleton = new SoundPlayer();
-	}
-	return singleton;
-}
-
 void SoundPlayer::release()
 {
 	if (singleton)
@@ -25,15 +16,22 @@ void SoundPlayer::release()
 	}
 }
 
-void SoundPlayer::init()
+void SoundPlayer::init(SoundPlayer* sound)
 {
-	if (singleton)
+	singleton = sound;
+
+	singleton->soundList[SOUNDS::gunshot].loadFromFile("GameFiles/Sound/soundEffectGunshots.ogg");
+	singleton->soundList[SOUNDS::firstBlood].loadFromFile("GameFiles/Sound/voiceFirstBlood.ogg");
+	singleton->musicList[MUSIC::mainMenu] = "GameFiles/Sound/musicMainMenu.ogg";
+}
+
+SoundPlayer* SoundPlayer::getSound()
+{
+	if (singleton == nullptr)
 	{
-		singleton->soundList[SOUNDS::gunshot].loadFromFile("GameFiles//Sound/soundEffectGunshots.ogg");
-		singleton->soundList[SOUNDS::firstBlood].loadFromFile("GameFiles/Sound/voiceFirstBlood.ogg");
-		singleton->musicList[MUSIC::mainMenu] = "GameFiles/Sound/musicMainMenu.ogg";
+		singleton = new SoundPlayer();
 	}
-	
+	return singleton;
 }
 
 SoundPlayer::SoundPlayer()
@@ -155,4 +153,24 @@ void SoundPlayer::update()
 			nrOfSoundsPlaying--;
 		}
 	}
+}
+
+SoundPlayer* CreateSound()
+{
+	return new SoundPlayer();
+}
+
+SoundPlayer* GetSound()
+{
+	return SoundPlayer::getSound();
+}
+
+void InitSound(SoundPlayer* sound)
+{
+	SoundPlayer::init(sound);
+}
+
+void ReleaseSound()
+{
+	SoundPlayer::release();
 }
