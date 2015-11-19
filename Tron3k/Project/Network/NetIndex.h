@@ -27,12 +27,11 @@ enum NET_FRAME
 	FIRE = int('F'),
 	WPN_SWITCH = int('W'),
 	NAME_CHANGE = int('N'),
-	TEAM_CHANGE = int('T')
 };
 
-enum NET_COMMAND //not implemented yet.
+enum NET_COMMAND 
 {
-	//TEAM_CHANGE = int('T'),
+	TEAM_CHANGE = int('T') //request teamchange
 };
 
 enum NET_MESSAGE

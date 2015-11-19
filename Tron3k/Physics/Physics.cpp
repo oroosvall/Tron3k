@@ -57,7 +57,11 @@ bool Physics::checkPlayerVPlayerCollision(glm::vec3 playerPos1, glm::vec3 player
 
 bool Physics::checkPlayerVBulletCollision(glm::vec3 playerPos, glm::vec3 bulletPos)
 {
-	return true;
+	Geometry player = Geometry(playerPos, this->size);
+	Geometry bullet = Geometry(playerPos, this->size);
+	bool collide = checkCollision(&player, &bullet);
+
+	return collide;
 }
 
 //TEMPORARY

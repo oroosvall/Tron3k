@@ -105,6 +105,12 @@ PLAYERMSG Player::update(float dt)
 					msg = SHOOT;
 			}
 
+			if (i->justPressed(GLFW_KEY_M))					//Temp?
+			{
+				SoundPlayer* theSound = SoundPlayer::getSound();
+				theSound->enableSounds();
+			}
+
 			cam->setCam(pos, dir);
 			if (olddir != dir)
 				rotatePlayer(olddir, dir);

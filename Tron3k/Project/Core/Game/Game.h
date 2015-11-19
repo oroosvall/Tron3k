@@ -69,7 +69,7 @@ public:
 	void sendBoatCoordsToPhysics(glm::vec3 minVals, glm::vec3 maxVals);
 	void checkPvPCollision();
 
-	void checkBulletCollision();
+	void checkPlayerVBulletCollision();
 
 	void addPlayerToTeam(int p_conID, int team);
 	int getPlayersOnTeam(int team);

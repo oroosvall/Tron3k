@@ -22,13 +22,11 @@ void Core::init()
 	
 	createWindow(winX, winY, fullscreen);
 
-	SoundPlayer* theSound = SoundPlayer::getSound();
-	//theSound->init();
-	//theSound->playExternalSound(SOUNDS::gunshot, sf::Vector3f(10.0f, 0.0f, 0.0f));
-	//theSound->playUserGeneratedSound(SOUNDS::firstBlood);
-	//theSound->playMusic(MUSIC::mainMenu);
 	//******************* TEMP *************************
-	
+	theSound = SoundPlayer::getSound();
+	theSound->init();
+	theSound->playMusic(MUSIC::mainMenu);
+	theSound->enableSounds();
 	timepass = 0.0f;
 	//**************************************************
 	current = Gamestate::START;
@@ -150,9 +148,7 @@ void Core::update(float dt)
 	}
 
 	//*******TEMP**********
-	timepass += dt;
-	//musicPlayer.rotate(timepass);
-	//musicPlayer.update();
+	theSound->update();
 	//*********************
 
 	//shouldnt get the ref every frame
@@ -389,7 +385,7 @@ void Core::upServer(float dt)
 		top->network_IN(dt);
 
 		//update game
-
+		game->update(dt);
 
 		if (console.messageReady())
 		{
@@ -530,12 +526,11 @@ void Core::clientHandleCmds(float dt)
 		else if (token == "/team")
 		{
 			ss >> token;
-			int team = atoi(token.c_str());
-			if (team == 0 || team == 1 || team == 2)
+			if(token != "/team" || token == "0" || token == "1" || token == "2")
 			{
-				top->frame_team_change(top->getConId(), team);
-				game->addPlayerToTeam(top->getConId(), team);
-				console.printMsg("You changed team to (" + token + ")", "System", 'S');
+				int team = stoi(token);
+				top->command_team_change(top->getConId(), team);
+				console.printMsg("Change team request sent to server", "System", 'S');
 			}
 			else
 				console.printMsg("Invalid team. Use /team <1/2/3>", "System", 'S');
@@ -625,6 +620,9 @@ void Core::createWindow(int x, int y, bool fullscreen)
 			x, y, "ASUM PROJECT", glfwGetPrimaryMonitor(), NULL);
 	}
 
+	//set vsync off
+	glfwSwapInterval(0);
+
 	Input* i = Input::getInput();
 	i->setupCallbacks(win);
 
@@ -694,7 +692,7 @@ void Core::givePlayerBoatExtremes()
 		game->getBoatCoordsFromCore(minEx, maxEx);
 	}
 	else
-	game->getBoatCoordsFromCore(vec3(0,0,0), vec3(0,0,0));
+	game->getBoatCoordsFromCore(vec3(-1,-1,-1), vec3(1,1,1));
 }
 
 bool Core::windowVisible() const
