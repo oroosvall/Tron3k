@@ -45,4 +45,4 @@
 *.log
 *.lastbuildstate
 *.idb
-Tron3k/Debug/settings.txt
+Tron3k/Debug/GameFiles/Config/player.ini

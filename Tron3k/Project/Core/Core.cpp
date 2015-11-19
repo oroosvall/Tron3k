@@ -422,7 +422,7 @@ void Core::startHandleCmds(float dt)
 		ss >> token;
 		if (token == "/help")
 		{
-			console.printMsg("Console comands", "", ' ');
+			console.printMsg("Console commands", "", ' ');
 			console.printMsg("/name " + _name, "", ' ');
 			console.printMsg("/ip " + _addrs.toString(), "", ' ');
 			console.printMsg("/port " + to_string(_port), "", ' ');
@@ -500,7 +500,7 @@ void Core::clientHandleCmds(float dt)
 		ss >> token;
 		if (token == "/help")
 		{
-			console.printMsg("Console comands", "", ' ');
+			console.printMsg("Console commands", "", ' ');
 			console.printMsg("/name " + _name, "", ' ');
 			console.printMsg("/team " + to_string(game->getPlayer(top->getConId())->getTeam()), "", ' ');
 			console.printMsg("/players", "", ' ');
@@ -562,7 +562,7 @@ void Core::serverHandleCmds(float dt)
 		ss >> token;
 		if (token == "/help")
 		{
-			console.printMsg("Console comands", "", ' ');
+			console.printMsg("Console commands", "", ' ');
 			console.printMsg("/players", "", ' ');
 			console.printMsg("/disconnect", "", ' ');
 		}
@@ -587,7 +587,7 @@ void Core::serverHandleCmds(float dt)
 void Core::saveSettings()
 {
 	fstream file;
-	file.open("settings.txt", fstream::trunc | fstream::out);
+	file.open("GameFiles/Config/player.ini", fstream::trunc | fstream::out);
 
 	if (file.is_open())
 	{
@@ -599,7 +599,7 @@ void Core::saveSettings()
 
 void Core::loadSettings()
 {
-	fstream file("settings.txt");
+	fstream file("GameFiles/Config/player.ini");
 
 	//default values
 	_name = "ClientName";
