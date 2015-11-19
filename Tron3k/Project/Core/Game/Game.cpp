@@ -199,15 +199,18 @@ void Game::checkPvPCollision()
 void Game::checkBulletCollision()
 {
 	bool collides = false;
-	for (int i = 0; i < max_con; i++)
+	for (int b = 0; b < BULLET_TYPE::NROFBULLETS; b++)
 	{
-		for (int j = 0; j < bullets.size(); j++)
+		for (int i = 0; i < max_con; i++)
 		{
-			collides = false;
-			if (playerList[i] != nullptr)
+			for (int j = 0; j < bullets[b].size(); j++)
 			{
-				//if (bullets[j]->teamId != playerList[i]->getTeamID())
-					collides = physics->checkPlayerVBulletCollision(playerList[i]->getPos(), bullets[j]->pos);
+				collides = false;
+				if (playerList[i] != nullptr)
+				{
+					//if (bullets[j]->teamId != playerList[i]->getTeamID())
+					collides = physics->checkPlayerVBulletCollision(playerList[i]->getPos(), bullets[b][j]->pos);
+				}
 			}
 		}
 	}
