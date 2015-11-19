@@ -105,10 +105,6 @@ PLAYERMSG Player::update(float dt)
 
 void Player::rotatePlayer(vec3 olddir, vec3 newdir)
 {
-	//vec3 oldIgnoreY = vec3(olddir.x, 0, olddir.z);
-	//vec3 newIgnoreY = vec3(newdir.x, 0, newdir.z);
-
-	//float angle = (dot(oldIgnoreY, newIgnoreY)) / (oldIgnoreY.length() * newIgnoreY.length());
 	float angle = atan2(newdir.x, newdir.z) - atan2(olddir.x, olddir.z);
 	rotate(0, -angle, 0);
 }
