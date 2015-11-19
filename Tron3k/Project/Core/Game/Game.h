@@ -27,7 +27,7 @@ private:
 	void initPhysics();
 
 	void registerWeapon(Player* p);
-	void addBulletToList(Bullet* temp);
+	void addBulletToList(int team, BULLET_TYPE bt, glm::vec3 pos, glm::vec3 dir);
 
 	WEAPON_TYPE weaponShotWith;
 	bool shotsFired = false;

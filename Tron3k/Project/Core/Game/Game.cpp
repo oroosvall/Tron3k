@@ -282,14 +282,19 @@ WEAPON_TYPE Game::getLatestWeaponFired(int localPlayer)
 	return weaponShotWith;
 }
 
-void Game::addBulletToList(Bullet* temp)
+void Game::addBulletToList(int team, BULLET_TYPE bt, glm::vec3 pos, glm::vec3 dir)
 {
-	/*
-	TO DO: Add logic to find appropriate Bullet vector in the future
-	*/
-	Bullet* b = new Bullet(temp->pos, temp->direction, temp->velocity, temp->teamId);
+	Bullet* b = nullptr;
+
+	switch (bt)
+	{
+	case BULLET_TYPE::PULSE_SHOT:
+		b = new Bullet(pos, dir, 5.0f, team);
+		break;
+	}
 	
-	bullets[BULLET_TYPE::PULSE_SHOT].push_back(b);
+	bullets[bt].push_back(b);
+	
 }
 
 void Game::handleWeaponFire(int team, WEAPON_TYPE weapontype, glm::vec3 pos, glm::vec3 dir)
@@ -298,9 +303,7 @@ void Game::handleWeaponFire(int team, WEAPON_TYPE weapontype, glm::vec3 pos, glm
 	{
 	case WEAPON_TYPE::PULSE_RIFLE:
 		//To do: Automate generation of bullets
-		Bullet* b = new Bullet(pos, dir, 5.0f, team);
-		addBulletToList(b);
-		delete b;
+		addBulletToList(team, BULLET_TYPE::PULSE_SHOT, pos, dir);
 		break;
 	}
 }
