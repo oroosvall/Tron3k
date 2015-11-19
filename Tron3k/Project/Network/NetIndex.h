@@ -7,6 +7,7 @@ enum NET_INDEX
 	NEW_CONNECTION = int('N'),
 	EVENT = int('E'),
 	FRAME = int('F'),
+	COMMAND = int('C'),
 	MESSAGE = int('M')
 };
 
@@ -26,6 +27,11 @@ enum NET_FRAME
 	FIRE = int('F'),
 	NAME_CHANGE = int('N'),
 	TEAM_CHANGE = int('T')
+};
+
+enum NET_COMMAND //not implemented yet.
+{
+	//TEAM_CHANGE = int('T'),
 };
 
 enum NET_MESSAGE

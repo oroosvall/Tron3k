@@ -284,6 +284,8 @@ void Core::upClient(float dt)
 		game->update(dt);
 		Player* local = game->getPlayer(top->getConId());
 
+	
+
 		//fetch new network data
 		if (top->network_IN(dt) == false)
 		{
@@ -298,6 +300,8 @@ void Core::upClient(float dt)
 		}
 
 		clientHandleCmds(dt);
+		if (top == nullptr)//check for disconnected command
+			return;
 
 		tick_timer += dt;
 		if (tick_timer > tick)
@@ -415,6 +419,9 @@ void Core::clientHandleCmds(float dt)
 		{
 			console.printMsg("Console comands", "", ' ');
 			console.printMsg("/name " + _name, "", ' ');
+			//console.printMsg("/team" + game->
+			console.printMsg("/disconnect", "", ' ');
+			
 		}
 		else if (token == "/name")
 		{
@@ -427,12 +434,13 @@ void Core::clientHandleCmds(float dt)
 				Player* me = game->getPlayer(top->getConId());
 				
 				me->setName(token);
+				_name = token;
 				console.printMsg("You changed name to (" + token + ")", "System", 'S');
 				//send new name
 				top->frame_name_change(top->getConId(), token);
 			}
 		}
-		if (token == "/team")
+		else if (token == "/team")
 		{
 			ss >> token;
 			int team = atoi(token.c_str());
@@ -445,6 +453,11 @@ void Core::clientHandleCmds(float dt)
 			else
 				console.printMsg("Invalid team. Use /team <1/2/3>", "System", 'S');
 		}
+		else if (token == "/disconnect")
+		{
+			clientDisconnect();
+		}
+
 	}
 }
 
