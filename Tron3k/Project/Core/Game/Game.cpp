@@ -12,11 +12,14 @@ void Game::release()
 	}
 	delete[]playerList;
 
-	for (int i = 0; i < bullets.size(); i++)
+	for (int c = 0; c < BULLET_TYPE::NROFBULLETS; c++)
 	{
-		if (bullets[i] != nullptr)
+		for (int i = 0; i < bullets[c].size(); i++)
 		{
-			delete bullets[i];
+			if (bullets[c][i] != nullptr)
+			{
+				delete bullets[c][i];
+			}
 		}
 	}
 
@@ -77,12 +80,15 @@ void Game::update(float dt)
 		}
 	}
 
-	for (int c = 0; c < bullets.size(); c++)
+	for (int i = 0; i < BULLET_TYPE::NROFBULLETS; i++)
 	{
-		int msg = bullets[c]->update(dt);
-		if (msg == 1)
+		for (int c = 0; c < bullets[i].size(); c++)
 		{
-			delete bullets[c];
+			int msg = bullets[i][c]->update(dt);
+			if (msg == 1)
+			{
+				delete bullets[i][c];
+			}
 		}
 	}
 
@@ -96,9 +102,9 @@ Player* Game::getPlayer(int conID)
 	return nullptr;
 }
 
-std::vector<Bullet*> Game::getBullets()
+std::vector<Bullet*> Game::getBullets(BULLET_TYPE type)
 {
-	return bullets;
+	return bullets[type];
 }
 
 void Game::createPlayer(Player* p, int conID, bool isLocal)
@@ -283,7 +289,7 @@ void Game::addBulletToList(Bullet* temp)
 	*/
 	Bullet* b = new Bullet(temp->pos, temp->direction, temp->velocity, temp->teamId);
 	
-	bullets.push_back(b);
+	bullets[BULLET_TYPE::PULSE_SHOT].push_back(b);
 }
 
 void Game::handleWeaponFire(int team, WEAPON_TYPE weapontype, glm::vec3 pos, glm::vec3 dir)

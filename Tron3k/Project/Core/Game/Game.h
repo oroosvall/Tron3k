@@ -9,8 +9,8 @@
 class Game
 {
 private:
-	
-	std::vector<Bullet*> bullets;
+
+	std::vector<Bullet*> bullets[BULLET_TYPE::NROFBULLETS];
 
 	std::vector<int> teamSpectators; //Team vectors hold connection IDs
 	std::vector<int> teamOne;
@@ -39,7 +39,7 @@ public:
 	void init(int max_connections);
 
 	Player* getPlayer(int conID);
-	std::vector<Bullet*> getBullets();
+	std::vector<Bullet*> getBullets(BULLET_TYPE type);
 	void createPlayer(Player* p, int conID, bool isLocal = false);
 	void removePlayer(int conID);
 

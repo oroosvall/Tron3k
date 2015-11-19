@@ -130,7 +130,7 @@ void Core::update(float dt)
 						renderPipe->renderPlayer(0, p->getWorldMat());
 					}
 				}
-				std::vector<Bullet*> bullets = game->getBullets();
+				std::vector<Bullet*> bullets = game->getBullets(BULLET_TYPE::PULSE_SHOT);
 				for (int i = 0; i < bullets.size(); i++)
 				{
 					renderPipe->renderPlayer(0, bullets[i]->getWorldMat());
