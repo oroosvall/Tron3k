@@ -98,7 +98,7 @@ void Game::update(float dt)
 		checkPvPCollision();
 
 	if (gameState == Gamestate::SERVER)
-		checkBulletCollision();
+		checkPlayerVBulletCollision();
 }
 
 Player* Game::getPlayer(int conID)
@@ -174,6 +174,7 @@ void Game::checkPvPCollision()
 
 		if (collides)
 		{
+			
 			//here we can do things when two objects, collide, cause now we know i and j collided.
 			//int x = 0;
 			//TODO: Add separated collision places for friendly vs hostile
@@ -196,7 +197,7 @@ void Game::checkPvPCollision()
 
 }
 
-void Game::checkBulletCollision()
+void Game::checkPlayerVBulletCollision()
 {
 	bool collides = false;
 	for (int b = 0; b < BULLET_TYPE::NROFBULLETS; b++)
@@ -206,10 +207,12 @@ void Game::checkBulletCollision()
 			for (int j = 0; j < bullets[b].size(); j++)
 			{
 				collides = false;
-				if (playerList[i] != nullptr)
+				if (playerList[i] != nullptr && bullets[b][j] != nullptr)
 				{
 					//if (bullets[j]->teamId != playerList[i]->getTeamID())
 					collides = physics->checkPlayerVBulletCollision(playerList[i]->getPos(), bullets[b][j]->pos);
+					//if (collides)
+						
 				}
 			}
 		}

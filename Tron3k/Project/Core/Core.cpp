@@ -380,7 +380,7 @@ void Core::upServer(float dt)
 		top->network_IN(dt);
 
 		//update game
-
+		game->update(dt);
 
 		if (console.messageReady())
 		{
@@ -688,7 +688,7 @@ void Core::givePlayerBoatExtremes()
 		game->getBoatCoordsFromCore(minEx, maxEx);
 	}
 	else
-	game->getBoatCoordsFromCore(vec3(0,0,0), vec3(0,0,0));
+	game->getBoatCoordsFromCore(vec3(-1,-1,-1), vec3(1,1,1));
 }
 
 bool Core::windowVisible() const
