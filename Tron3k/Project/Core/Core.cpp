@@ -616,6 +616,9 @@ void Core::createWindow(int x, int y, bool fullscreen)
 			x, y, "ASUM PROJECT", glfwGetPrimaryMonitor(), NULL);
 	}
 
+	//set vsync off
+	glfwSwapInterval(0);
+
 	Input* i = Input::getInput();
 	i->setupCallbacks(win);
 
