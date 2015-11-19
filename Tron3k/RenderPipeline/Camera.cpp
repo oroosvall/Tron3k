@@ -5,7 +5,7 @@
 void Camera::init()
 {
 	viewMat = glm::lookAt(glm::vec3(0, 0, 25), glm::vec3(0, 0, 24), glm::vec3(0, 1, 0));
-	projMat = glm::perspective(3.14f*0.45f, 640.f / 480.0f, 0.01f, 1000.0f);
+	projMat = glm::perspective(3.14f*0.45f, 640.f / 480.0f, 0.1f, 1000.0f);
 
 }
 
