@@ -1,12 +1,14 @@
 #include "BulletPoop.h"
 
 
-Poop::Poop(glm::vec3 position, glm::vec3 direction, int tID)
+Poop::Poop(glm::vec3 position, glm::vec3 direction, int pID, int bID, int tID)
 {
 
 	pos = position;
 	dir = direction;
 	teamId = tID;
+	playerId = pID;
+	bulletId = bID;
 
 	vel = 5.0f;
 

@@ -56,7 +56,7 @@ public:
 
 	bool isLocal() { return isLocalPlayer; };
 
-	void getWeaponData(WEAPON_TYPE &wpntype);
+	Weapon* getPlayerCurrentWeapon();
 	void switchWpn(WEAPON_TYPE ws);
 
 	void setTeam(int teamid) { currentTeam = teamid; };

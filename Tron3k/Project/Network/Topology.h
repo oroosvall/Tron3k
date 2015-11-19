@@ -153,9 +153,9 @@ public:
 	}
 
 	//Frame package FROM CLIENT
-	virtual void frame_fire(WEAPON_TYPE wt, int teamId, glm::vec3 pos, glm::vec3 dir) 
+	virtual void frame_fire(WEAPON_TYPE wt, int conID, int bulletId, glm::vec3 pos, glm::vec3 dir) 
 	{ 
-		*package << Uint8(NET_FRAME::FIRE) << Uint8(teamId) << Uint8(wt) << 
+		*package << Uint8(NET_FRAME::FIRE) << Uint8(conID) << Uint8(bulletId) << Uint8(wt) <<
 			pos.x << pos.y << pos.z <<
 			dir.x << dir.y << dir.z;
 	};
@@ -177,14 +177,15 @@ public:
 
 	virtual void in_frame_fire(Packet* rec)
 	{
-		Uint8 team;
+		Uint8 conID;
+		Uint8 bulletId;
 		Uint8 weapontype;
 		glm::vec3 pos;
 		glm::vec3 dir;
-		*rec >> team >> weapontype;
+		*rec >> conID >> bulletId >> weapontype;
 		*rec >> pos.x >> pos.y >> pos.z;
 		*rec >> dir.x >> dir.y >> dir.z;
-		gamePtr->handleWeaponFire(team, WEAPON_TYPE(weapontype), pos, dir);
+		gamePtr->handleWeaponFire(conID, bulletId, WEAPON_TYPE(weapontype), pos, dir);
 	}
 
 	virtual void in_frame_weapon_switch(Packet* rec)

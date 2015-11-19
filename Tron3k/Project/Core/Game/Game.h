@@ -42,9 +42,10 @@ private:
 	void registerWeapon(Player* p);
 	void registerSwitch(Player* p);
 
-	void addBulletToList(int team, BULLET_TYPE bt, glm::vec3 pos, glm::vec3 dir);
+	void addBulletToList(int conID, int bulletId, BULLET_TYPE bt, glm::vec3 pos, glm::vec3 dir);
 
 	WEAPON_TYPE weaponShotWith;
+	int bulletShot = -1;
 	bool shotsFired = false;
 
 	WEAPON_TYPE weaponSwitchedTo;
@@ -78,8 +79,8 @@ public:
 	bool weaponSwitchReady() { return wpnSwitched; };
 
 	bool fireEventReady() { return shotsFired; };
-	WEAPON_TYPE getLatestWeaponFired(int localPlayer);
-	void handleWeaponFire(int team, WEAPON_TYPE weapontype, glm::vec3 pos, glm::vec3 dir);
+	void getLatestWeaponFired(int localPlayer, WEAPON_TYPE &wt, int &bulletId);
+	void handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm::vec3 pos, glm::vec3 dir);
 
 	WEAPON_TYPE getWpnSwitch() { wpnSwitched = false; return weaponSwitchedTo; };
 	void handleWeaponSwitch(int conID, WEAPON_TYPE ws);

@@ -129,9 +129,9 @@ void Player::rotatePlayer(vec3 olddir, vec3 newdir)
 	rotate(0, -angle, 0);
 }
 
-void Player::getWeaponData(WEAPON_TYPE &wpntype)
+Weapon* Player::getPlayerCurrentWeapon()
 {
-	wpntype = weapons[currentWpn].getType();
+	return &weapons[currentWpn];
 }
 
 void Player::switchWpn(WEAPON_TYPE ws)

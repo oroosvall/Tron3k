@@ -82,9 +82,8 @@ void Game::update(float dt)
 					registerWeapon(playerList[c]);
 				else
 				{
-					WEAPON_TYPE wt;
-					playerList[c]->getWeaponData(wt);
-					handleWeaponFire(playerList[c]->getTeam(), wt, playerList[c]->getPos(), playerList[c]->getDir());
+					Weapon* wpn = playerList[c]->getPlayerCurrentWeapon();
+					handleWeaponFire(c, wpn->getBulletId(), wpn->getType(), playerList[c]->getPos(), playerList[c]->getDir());
 				}
 					
 			}
@@ -222,13 +221,12 @@ void Game::checkPlayerVBulletCollision()
 				collides = false;
 				if (playerList[i] != nullptr && bullets[b][j] != nullptr)
 				{
-					if (bullets[b][j]->teamId != playerList[i]->getTeam())
-					collides = physics->checkPlayerVBulletCollision(playerList[i]->getPos(), bullets[b][j]->pos);
+					if (bullets[b][j]->getTeamId() != playerList[i]->getTeam())
+					collides = physics->checkPlayerVBulletCollision(playerList[i]->getPos(), bullets[b][j]->getPos());
 					if (collides)
 					{
 						//Code for player on bullet collision goes here
 					}
-						
 				}
 			}
 		}
@@ -237,13 +235,15 @@ void Game::checkPlayerVBulletCollision()
 
 void Game::registerWeapon(Player* p)
 {
-	p->getWeaponData(weaponShotWith);
+	Weapon* wpn = p->getPlayerCurrentWeapon();
+	weaponSwitchedTo = wpn->getType();
+	bulletShot = wpn->getBulletId();
 	shotsFired = true;
 }
 
 void Game::registerSwitch(Player* p)
 {
-	p->getWeaponData(weaponSwitchedTo);
+	weaponSwitchedTo = p->getPlayerCurrentWeapon()->getType();
 	wpnSwitched = true;
 }
 
@@ -325,25 +325,28 @@ void Game::addPlayerToTeam(int p_conID, int team)
 	}
 }
 
-WEAPON_TYPE Game::getLatestWeaponFired(int localPlayer)
+void Game::getLatestWeaponFired(int localPlayer, WEAPON_TYPE &wt, int &bulletId)
 {
 	shotsFired = false;
 	Player* p = playerList[localPlayer];
-	handleWeaponFire(p->getTeam(), weaponShotWith, p->getPos(), p->getDir());
-	return weaponShotWith;
+	handleWeaponFire(localPlayer, bulletShot, weaponShotWith, p->getPos(), p->getDir());
+	wt = weaponShotWith;
+	bulletId = bulletShot;
+	bulletShot = -1;
 }
 
-void Game::addBulletToList(int team, BULLET_TYPE bt, glm::vec3 pos, glm::vec3 dir)
+void Game::addBulletToList(int conID, int bulletId, BULLET_TYPE bt, glm::vec3 pos, glm::vec3 dir)
 {
 	Bullet* b = nullptr;
+	Player* p = playerList[conID];
 
 	switch (bt)
 	{
 	case BULLET_TYPE::PULSE_SHOT:
-		b = new PulseShot(pos, dir, team);
+		b = new PulseShot(pos, dir, conID, bulletId, p->getTeam());
 		break;
 	case BULLET_TYPE::POOP:
-		b = new Poop(pos, dir, team);
+		b = new Poop(pos, dir, conID, bulletId, p->getTeam());
 		break;
 	}
 	
@@ -351,16 +354,16 @@ void Game::addBulletToList(int team, BULLET_TYPE bt, glm::vec3 pos, glm::vec3 di
 	
 }
 
-void Game::handleWeaponFire(int team, WEAPON_TYPE weapontype, glm::vec3 pos, glm::vec3 dir)
+void Game::handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm::vec3 pos, glm::vec3 dir)
 {
 	switch (weapontype)
 	{
 	case WEAPON_TYPE::PULSE_RIFLE:
 		//To do: Automate generation of bullets
-		addBulletToList(team, BULLET_TYPE::PULSE_SHOT, pos, dir);
+		addBulletToList(conID, bulletId, BULLET_TYPE::PULSE_SHOT, pos, dir);
 		break;
 	case WEAPON_TYPE::POOP_GUN:
-		addBulletToList(team, BULLET_TYPE::POOP, pos, dir);
+		addBulletToList(conID, bulletId, BULLET_TYPE::POOP, pos, dir);
 		break;
 	}
 }

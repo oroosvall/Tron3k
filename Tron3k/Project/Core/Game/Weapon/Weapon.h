@@ -10,6 +10,8 @@ class Weapon
 		int maxClipSize;
 		int currentClipAmmo;
 		
+		int currentBulletId = 0;
+		
 		float firingSpeed;
 		float currentDelay;
 
@@ -25,5 +27,7 @@ class Weapon
 		void update(float deltaTime);
 
 		WEAPON_TYPE getType() { return weaponType; };
+
+		int getBulletId();
 };
 #endif

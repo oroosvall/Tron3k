@@ -17,6 +17,8 @@ void Weapon::init(int maxClipSize, WEAPON_TYPE weaponType, float firingSpeed)
 	this->weaponType = weaponType;
 	this->firingSpeed = firingSpeed;
 	currentDelay = firingSpeed;
+
+	currentBulletId;
 }
 
 bool Weapon::shoot()
@@ -46,4 +48,11 @@ void Weapon::update(float deltaTime)
 	{
 		currentDelay -= deltaTime;
 	}
+}
+
+int Weapon::getBulletId()
+{
+	int bid = currentBulletId;
+	currentBulletId++ % 255;
+	return bid;
 }
