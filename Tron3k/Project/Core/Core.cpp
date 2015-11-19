@@ -22,13 +22,11 @@ void Core::init()
 	
 	createWindow(winX, winY, fullscreen);
 
-	SoundPlayer* theSound = SoundPlayer::getSound();
-	//theSound->init();
-	//theSound->playExternalSound(SOUNDS::gunshot, sf::Vector3f(10.0f, 0.0f, 0.0f));
-	//theSound->playUserGeneratedSound(SOUNDS::firstBlood);
-	//theSound->playMusic(MUSIC::mainMenu);
 	//******************* TEMP *************************
-	
+	theSound = SoundPlayer::getSound();
+	theSound->init();
+	theSound->playMusic(MUSIC::mainMenu);
+	theSound->enableSounds();
 	timepass = 0.0f;
 	//**************************************************
 	current = Gamestate::START;
@@ -147,9 +145,7 @@ void Core::update(float dt)
 	}
 
 	//*******TEMP**********
-	timepass += dt;
-	//musicPlayer.rotate(timepass);
-	//musicPlayer.update();
+	theSound->update();
 	//*********************
 
 	//shouldnt get the ref every frame

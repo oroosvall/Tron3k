@@ -2,6 +2,7 @@
 #define PLAYER_H
 
 #include "GameObject.h"
+#include "../sound/SoundPlayer.h"	//??
 #include "Animation.h"
 #include "../Input.h"
 #include "../CameraInput.h"

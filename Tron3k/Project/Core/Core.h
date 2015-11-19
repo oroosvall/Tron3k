@@ -30,7 +30,7 @@ class Core
 {
 private:
 	float timepass;	//temp
-
+	SoundPlayer* theSound = nullptr;
 	Topology* top;
 	Game* game;
 	IRenderPipeline* renderPipe;
