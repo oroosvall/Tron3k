@@ -59,13 +59,14 @@ private:
 
 	void startHandleCmds(float dt);
 	void clientHandleCmds(float dt); //Handles clientside /-commands
+	void serverHandleCmds(float dt);
 
 	void createWindow(int x, int y, bool fullscreen);
 	void removeWindow();
 
 	void initPipeline();
 
-	void clientDisconnect();
+	void disconnect();
 
 	//load from file
 	IpAddress _addrs;

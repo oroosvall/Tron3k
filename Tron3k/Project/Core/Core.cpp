@@ -289,7 +289,7 @@ void Core::upClient(float dt)
 		//fetch new network data
 		if (top->network_IN(dt) == false)
 		{
-			clientDisconnect();
+			disconnect();
 			return;
 		}
 
@@ -326,6 +326,85 @@ void Core::upClient(float dt)
 
 			tick_timer = 0;
 		}
+		break;
+	}
+}
+
+void Core::upServer(float dt)
+{
+	switch (subState)
+	{
+	case 0:  //create server object
+
+		if (top)
+			delete top;
+		top = new Server();
+		top->init(&console, _port, _addrs);
+
+		subState = 1;
+		break;
+	case 1: //configure port & select map
+
+			//TODO
+
+		subState = 2;
+		break;
+	case 2: //atempting mapload & bind
+
+			//bind port
+		if (top->bind())
+		{
+			console.printMsg("Port bound", "System", 'S');
+		}
+		else
+		{
+			console.printMsg("Port bind failed", "System", 'S');
+			subState = 1;
+			return;
+		}
+
+		if (game != nullptr)
+			delete game;
+		game = new Game();
+		game->init(MAX_CONNECT, current);
+
+		top->setGamePtr(game);
+
+		//load map
+
+		subState = 3;
+		break;
+	case 3: //main server loop
+
+			//get data
+		top->network_IN(dt);
+
+		//update game
+
+
+		if (console.messageReady())
+		{
+			top->msg_out = console.getMessage();
+			top->scope_out = Uint8(ALL);
+		}
+
+		serverHandleCmds(dt);
+		if (top == nullptr)
+			return;
+
+		tick_timer += dt;
+		if (tick_timer > tick)
+		{
+			//look for clients
+			top->new_connection();
+
+			//network out
+			top->network_OUT(dt);
+			tick_timer = 0;
+		}
+
+		break;
+	default:
 		break;
 	}
 }
@@ -419,9 +498,8 @@ void Core::clientHandleCmds(float dt)
 		{
 			console.printMsg("Console comands", "", ' ');
 			console.printMsg("/name " + _name, "", ' ');
-			//console.printMsg("/team" + game->
+			console.printMsg("/team " + to_string(game->getPlayer(top->getConId())->getTeam()), "", ' ');
 			console.printMsg("/disconnect", "", ' ');
-			
 		}
 		else if (token == "/name")
 		{
@@ -444,7 +522,7 @@ void Core::clientHandleCmds(float dt)
 		{
 			ss >> token;
 			int team = atoi(token.c_str());
-			if (team == 0  || team == 1 || team == 2)
+			if (team == 0 || team == 1 || team == 2)
 			{
 				top->frame_team_change(top->getConId(), team);
 				game->addPlayerToTeam(top->getConId(), team);
@@ -454,85 +532,24 @@ void Core::clientHandleCmds(float dt)
 				console.printMsg("Invalid team. Use /team <1/2/3>", "System", 'S');
 		}
 		else if (token == "/disconnect")
-		{
-			clientDisconnect();
-		}
-
+			disconnect();
 	}
 }
 
-void Core::upServer(float dt)
+void Core::serverHandleCmds(float dt)
 {
-	switch (subState)
+	if (console.commandReady())
 	{
-	case 0:  //create server object
-
-		if (top)
-			delete top;
-		top = new Server();
-		top->init(&console, _port, _addrs);
-		
-		subState = 1;
-		break;
-	case 1: //configure port & select map
-		
-		//TODO
-
-		subState = 2;  
-		break;
-	case 2: //atempting mapload & bind
-
-		//bind port
-		if (top->bind())
+		string token;
+		istringstream ss = istringstream(console.getCommand());
+		ss >> token;
+		if (token == "/help")
 		{
-			console.printMsg("Port bound", "System", 'S');
+			console.printMsg("Console comands", "", ' ');
+			console.printMsg("/disconnect", "", ' ');
 		}
-		else
-		{
-			console.printMsg("Port bind failed", "System", 'S');
-			subState = 1;
-			return;
-		}
-		
-		if (game != nullptr)
-			delete game;
-		game = new Game();
-		game->init(MAX_CONNECT, current);
-
-		top->setGamePtr(game);
-
-		//load map
-
-		subState = 3;
-		break;
-	case 3: //main server loop
-
-		//get data
-		top->network_IN(dt);
-
-		//update game
-
-
-		if (console.messageReady())
-		{
-			top->msg_out = console.getMessage();
-			top->scope_out = Uint8(ALL);
-		}
-
-		tick_timer += dt;
-		if (tick_timer > tick)
-		{
-			//look for clients
-			top->new_connection();
-
-			//network out
-			top->network_OUT(dt);
-			tick_timer = 0;
-		}
-		
-		break;
-	default:
-		break;
+		else if (token == "/disconnect")
+			disconnect();
 	}
 }
 
@@ -676,15 +693,18 @@ bool Core::windowVisible() const
 	return !glfwWindowShouldClose(win);
 }
 
-void Core::clientDisconnect()
+void Core::disconnect()
 {
 	saveSettings();
 	delete top;
 	top = nullptr;
 	game->release();
 	game = nullptr;
-	renderPipe->release();
-	renderPipe = nullptr;
+	if (renderPipe != nullptr) //server might not have a renderpipe
+	{
+		renderPipe->release();
+		renderPipe = nullptr;
+	}
 	current = Gamestate::START;
 	subState = 0;
 }
