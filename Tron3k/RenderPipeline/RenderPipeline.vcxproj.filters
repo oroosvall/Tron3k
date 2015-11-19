@@ -25,6 +25,9 @@
     <Filter Include="Source Files\Manager">
       <UniqueIdentifier>{e74ac6cc-17b3-4c4d-8775-04ffe1c8c6fb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Texture">
+      <UniqueIdentifier>{0fc689ae-3d1e-4356-acb8-1df47c8c27ee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RenderPipeline.cpp">
@@ -52,6 +55,9 @@
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
       <Filter>Source Files\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Source Files\Texture</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -86,6 +92,9 @@
     </ClInclude>
     <ClInclude Include="Mesh.h">
       <Filter>Source Files\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Source Files\Texture</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

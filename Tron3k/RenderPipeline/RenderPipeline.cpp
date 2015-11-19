@@ -115,6 +115,8 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	worldMat = glGetUniformLocation(preDefferedShader, "WorldMatrix"); //worldMat
 	viewMat = glGetUniformLocation(preDefferedShader, "ViewProjMatrix"); //view
 
+	uniformTextureLocation = glGetUniformLocation(preDefferedShader, "textureSample"); //view
+
 	cam.setProjMat(preDefferedShader, projMat);
 	cam.setViewMat(preDefferedShader, viewMat);
 	
@@ -135,6 +137,9 @@ void RenderPipeline::release()
 
 	glDeleteShader(preDefferedShader);
 	
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	delete test;
 
 	delete gBuffer;
@@ -162,7 +167,7 @@ void RenderPipeline::render()
 	//set camera matrixes
 	cam.setViewProjMat(preDefferedShader, viewMat);
 
-	contMan.renderChunks(preDefferedShader, worldMat);
+	contMan.renderChunks(preDefferedShader, worldMat, uniformTextureLocation);
 	
 	//GBuffer Render
 	glBindFramebuffer(GL_FRAMEBUFFER, NULL);

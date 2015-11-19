@@ -157,6 +157,7 @@
     <ClCompile Include="RenderPipeline.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="ShimpleShit.cpp" />
+    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Text\TextObject.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -170,6 +171,7 @@
     <ClInclude Include="RenderTarget.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SimpleShit.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="Text\TextObject.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

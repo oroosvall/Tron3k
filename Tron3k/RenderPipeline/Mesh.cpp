@@ -167,6 +167,11 @@ void Mesh::load(std::string path)
 
 }
 
+void Mesh::setTexture(GLuint texID)
+{
+	textureID = texID;
+}
+
 float* Mesh::getWorld()
 {
 	return &world[0][0];

@@ -9,6 +9,8 @@
 
 #include "ContentManager.h"
 
+//#include <vld.h>
+
 enum SETTING_INPUT
 {
 	CLEAR_COLOR_IN = PipelineValues::FLOAT3,
@@ -46,6 +48,8 @@ private:
 	GLuint worldMat;
 	GLuint projMat;
 	GLuint viewMat;
+
+	GLuint uniformTextureLocation;
 
 	float rotation;
 

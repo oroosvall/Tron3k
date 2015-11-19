@@ -16,19 +16,28 @@ struct PlayerObject
 	GLuint textureID;
 };
 
+struct TextureLookup
+{
+	std::string textureName;
+	GLuint textureID;
+	GLuint fileTexID;
+	bool loaded;
+};
+
 class ContentManager
 {
 
 private:
 
 	std::vector<Mesh> meshes;
+	std::vector<TextureLookup> textures;
 	PlayerObject* playerModels;
 
 public:
-
+	~ContentManager();
 	void init();
 
-	void renderChunks(GLuint shader, GLuint shaderLocation);
+	void renderChunks(GLuint shader, GLuint shaderLocation, GLuint textureLocation);
 
 	void renderPlayer(int playerID, glm::mat4 world);
 

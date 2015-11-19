@@ -41,10 +41,12 @@ public:
 	GLuint vao;
 	GLuint ibo;
 
+	GLuint textureID;
+
 	int faceCount;
 
 	void init(float x, float y, float z);
-
+	void setTexture(GLuint textureID);
 	void load(std::string file);
 
 	float* getWorld();
