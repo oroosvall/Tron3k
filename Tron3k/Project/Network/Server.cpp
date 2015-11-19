@@ -66,7 +66,7 @@ void Server::branch(Packet* rec, Uint8 conID)
 	}
 }
 
-void Server::network_IN(float dt)
+bool Server::network_IN(float dt)
 {
 	//fetch packages from all clients and check for disconnected clients
 	for (int n = 0; n < MAX_CONNECT; n++)
@@ -74,6 +74,8 @@ void Server::network_IN(float dt)
 		if (con[n].isConnected())
 			IN(&con[n], n);
 	}
+
+	return true;
 }
 
 void Server::network_OUT(float dt)

@@ -16,7 +16,7 @@ public:
 	~Server();
 
 	//Core->Topology com
-	void network_IN(float dt);
+	bool network_IN(float dt);
 	void network_OUT(float dt);
 	bool new_connection();
 	Uint8 getConId() { return 'S'; };

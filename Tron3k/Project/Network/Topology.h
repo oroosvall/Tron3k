@@ -51,7 +51,7 @@ public:
 	}
 
 	//Core->Topology com
-	virtual void network_IN(float dt) = 0;
+	virtual bool network_IN(float dt) = 0;
 	virtual void network_OUT(float dt) = 0;
 	virtual bool new_connection() = 0;
 	virtual Uint8 getConId() = 0;
@@ -63,7 +63,7 @@ public:
 	//client only
 	virtual void setIP(IpAddress addr) { };
 	virtual bool firstPackageRecieved() { return false; };
-	virtual void new_connection_packet() {};
+	virtual void new_connection_packet(string name) {};
 
 	//server only
 	virtual bool bind() { return false; };
