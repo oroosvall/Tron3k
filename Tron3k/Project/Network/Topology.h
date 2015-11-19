@@ -51,7 +51,7 @@ public:
 	}
 
 	//Core->Topology com
-	virtual void network_IN(float dt) = 0;
+	virtual bool network_IN(float dt) = 0;
 	virtual void network_OUT(float dt) = 0;
 	virtual bool new_connection() = 0;
 	virtual Uint8 getConId() = 0;
@@ -63,7 +63,7 @@ public:
 	//client only
 	virtual void setIP(IpAddress addr) { };
 	virtual bool firstPackageRecieved() { return false; };
-	virtual void new_connection_packet() {};
+	virtual void new_connection_packet(string name) {};
 
 	//server only
 	virtual bool bind() { return false; };
@@ -144,9 +144,11 @@ public:
 
 
 	//Frame package FROM CLIENT
-	virtual void frame_fire(Bullet* b) 
+	virtual void frame_fire(WEAPON_TYPE wt, int teamId, glm::vec3 pos, glm::vec3 dir) 
 	{ 
-		*package << Uint8(NET_FRAME::FIRE) << Uint8(b->teamId) << b->pos.x << b->pos.y << b->pos.z << b->direction.x << b->direction.y << b->direction.z << b->velocity;
+		*package << Uint8(NET_FRAME::FIRE) << Uint8(teamId) << Uint8(wt) << 
+			pos.x << pos.y << pos.z <<
+			dir.x << dir.y << dir.z;
 	};
 
 	virtual void frame_name_change(Uint8 conid, string name)
@@ -166,15 +168,14 @@ public:
 
 	virtual void in_frame_fire(Packet* rec)
 	{
-		Bullet* newB = new Bullet();
 		Uint8 team;
-		*rec >> team;
-		newB->teamId = team;
-		*rec >> newB->pos.x >> newB->pos.y >> newB->pos.z;
-		*rec >> newB->direction.x >> newB->direction.y >> newB->direction.z;
-		*rec >> newB->velocity;
-		gamePtr->addBulletToList(newB);
-		delete newB;
+		Uint8 weapontype;
+		glm::vec3 pos;
+		glm::vec3 dir;
+		*rec >> team >> weapontype;
+		*rec >> pos.x >> pos.y >> pos.z;
+		*rec >> dir.x >> dir.y >> dir.z;
+		gamePtr->handleWeaponFire(team, WEAPON_TYPE(weapontype), pos, dir);
 	}
 
 	virtual void in_frame_name_change(Packet* rec)

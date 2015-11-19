@@ -4,6 +4,8 @@
 #include <glm/glm.hpp>
 #include "../GameObject.h"
 
+#include "../GameDataIndex.h"
+
 class Bullet : public GameObject
 {
 	public:

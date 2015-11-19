@@ -130,7 +130,7 @@ void Core::update(float dt)
 						renderPipe->renderPlayer(0, p->getWorldMat());
 					}
 				}
-				std::vector<Bullet*> bullets = game->getBullets();
+				std::vector<Bullet*> bullets = game->getBullets(BULLET_TYPE::PULSE_SHOT);
 				for (int i = 0; i < bullets.size(); i++)
 				{
 					renderPipe->renderPlayer(0, bullets[i]->getWorldMat());
@@ -242,7 +242,7 @@ void Core::upClient(float dt)
 			{
 				console.printMsg("Connecting Successful", "System", 'S');
 				//send "new connection" event to server
-				top->new_connection_packet();
+				top->new_connection_packet(_name);
 				
 				if (game != nullptr)
 					delete game;
@@ -271,7 +271,7 @@ void Core::upClient(float dt)
 			//can i load?
 
 			// if not  -> menu
-			top->frame_name_change(top->getConId(), _name);
+			//top->frame_name_change(top->getConId(), _name);
 			Player* me = game->getPlayer(top->getConId());
 			me->setName(_name);
 			subState++;
@@ -285,7 +285,11 @@ void Core::upClient(float dt)
 		Player* local = game->getPlayer(top->getConId());
 
 		//fetch new network data
-		top->network_IN(dt);
+		if (top->network_IN(dt) == false)
+		{
+			clientDisconnect();
+			return;
+		}
 
 		if (console.messageReady())
 		{
@@ -307,13 +311,11 @@ void Core::upClient(float dt)
 
 			top->frame_pos(top->getConId(), lPos, lDir);
 
-			if (game->isBulletReady())
+			if (game->fireEventReady())
 			{
-				Bullet* b = game->getNewBullet();
-				if (b != nullptr)
-				{
-					top->frame_fire(b);
-				}
+				WEAPON_TYPE wt = game->getLatestWeaponFired(top->getConId());
+				int team = local->getTeam();
+				top->frame_fire(wt, team, lPos, lDir);
 			}
 
 			top->network_OUT(dt);
@@ -659,4 +661,17 @@ void Core::givePlayerBoatExtremes()
 bool Core::windowVisible() const
 {
 	return !glfwWindowShouldClose(win);
+}
+
+void Core::clientDisconnect()
+{
+	saveSettings();
+	delete top;
+	top = nullptr;
+	game->release();
+	game = nullptr;
+	renderPipe->release();
+	renderPipe = nullptr;
+	current = Gamestate::START;
+	subState = 0;
 }

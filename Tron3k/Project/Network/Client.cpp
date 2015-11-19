@@ -36,10 +36,12 @@ void Client::init(Console* console, int port, IpAddress addrs)
 	con->init();
 }
 
-void Client::network_IN(float dt)
+bool Client::network_IN(float dt)
 {
-	if(con->isConnected())
-		IN(con, conID);
+	IN(con, conID);
+	if (con->isConnected())
+		return true;
+	return false;
 }
 
 void Client::network_OUT(float dt)
@@ -74,12 +76,12 @@ bool Client::new_connection()
 	return true; //??? already connected
 }
 
-void Client::new_connection_packet()
+void Client::new_connection_packet(string _name)
 {
 	Packet* out;
 	out = new Packet();
 	*out << Uint8(NET_INDEX::NEW_CONNECTION);
-	*out << "ClientName";
+	*out << _name;
 	con->send(out);
 	delete out;
 }

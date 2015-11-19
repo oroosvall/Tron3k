@@ -65,6 +65,8 @@ private:
 
 	void initPipeline();
 
+	void clientDisconnect();
+
 	//load from file
 	IpAddress _addrs;
 	int _port;

@@ -19,7 +19,7 @@ public:
 	~Client();
 	
 	//Core->Topology com
-	void network_IN(float dt);
+	bool network_IN(float dt);
 	void network_OUT(float dt);
 	bool new_connection();
 	Uint8 getConId() { return conID; };
@@ -27,7 +27,7 @@ public:
 	//client only
 	virtual void setIP(IpAddress addr) { address = addr; };
 	virtual bool firstPackageRecieved() { return packageRecieved; };
-	virtual void new_connection_packet();
+	virtual void new_connection_packet(string name);
 
 	//package
 	void package_clear();

@@ -2,6 +2,7 @@
 #define WEAPON_H
 
 #include "Bullet.h"
+#include "../GameDataIndex.h"
 
 class Weapon
 {
@@ -12,17 +13,17 @@ class Weapon
 		float firingSpeed;
 		float currentDelay;
 
-		int weaponType;
+		WEAPON_TYPE weaponType;
 	public:
 		Weapon();
 		~Weapon();
 
-		void init(int maxClipSize, int weaponType, float firingSpeed);
+		void init(int maxClipSize, WEAPON_TYPE weaponType, float firingSpeed);
 		bool shoot();
 		bool reload();
 
 		void update(float deltaTime);
 
-		int getType() { return weaponType; };
+		WEAPON_TYPE getType() { return weaponType; };
 };
 #endif
