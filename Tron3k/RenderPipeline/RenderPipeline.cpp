@@ -188,7 +188,8 @@ void RenderPipeline::renderPlayer(int playerID, void* world)
 	//set temp objects worldmat
 	glProgramUniformMatrix4fv(regularShader, worldMat, 1, GL_FALSE, (GLfloat*)world);
 
-	contMan.renderPlayer(0, *(glm::mat4*)world);
+	contMan.renderPlayer(playerID, *(glm::mat4*)world);
+
 
 }
 

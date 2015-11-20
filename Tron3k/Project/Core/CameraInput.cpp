@@ -138,6 +138,17 @@ CameraInput* CameraInput::getCam()
 	return singleton;
 }
 
+glm::mat4 CameraInput::getSkyboxMat()
+{
+	glm::mat4 ret;
+	//pos
+	ret[0].w = pos.x;
+	ret[1].w = pos.y;
+	ret[2].w = pos.z;
+
+	return ret;
+}
+
 void CameraInput::release()
 {
 	if (singleton != nullptr)
