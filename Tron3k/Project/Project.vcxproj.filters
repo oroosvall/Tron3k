@@ -25,16 +25,19 @@
     <Filter Include="Source Files\Core\Ui">
       <UniqueIdentifier>{cfd55ae1-25ab-4d06-a9ad-6147e281e652}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Core\Game\ActiveEffects">
+    <Filter Include="Source Files\Core\Game\Role">
+      <UniqueIdentifier>{f9189c9f-cdf4-4d69-bfe4-b6f249a1332c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\Game\Role\ActiveEffects">
       <UniqueIdentifier>{27d0cd6e-d8d0-4b62-8fc0-ef2e5cf39da5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Core\Game\PlayerEffects">
+    <Filter Include="Source Files\Core\Game\Role\PlayerEffects">
       <UniqueIdentifier>{faaa083c-3833-4b81-ba9c-63093dfc3878}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Core\Game\Weapon">
+    <Filter Include="Source Files\Core\Game\Role\Weapon">
       <UniqueIdentifier>{eac0f42a-03d4-467e-bfa9-9dd048e2e29f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Core\Game\Weapon\BulletTypes">
+    <Filter Include="Source Files\Core\Game\Role\Weapon\BulletTypes">
       <UniqueIdentifier>{fcc1a40f-32dc-4d5c-834c-db87e4914472}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -69,32 +72,35 @@
     <ClCompile Include="Core\CameraInput.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Game\Weapon\Weapon.cpp">
-      <Filter>Source Files\Core\Game\Weapon</Filter>
+    <ClCompile Include="Core\Game\Role\Role.cpp">
+      <Filter>Source Files\Core\Game\Role</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Game\Weapon\Bullet.cpp">
-      <Filter>Source Files\Core\Game\Weapon</Filter>
+    <ClCompile Include="Core\Game\Role\ActiveEffects\Ability.cpp">
+      <Filter>Source Files\Core\Game\Role\ActiveEffects</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Game\PlayerEffects\Modifier.cpp">
-      <Filter>Source Files\Core\Game\PlayerEffects</Filter>
+    <ClCompile Include="Core\Game\Role\ActiveEffects\Consumable.cpp">
+      <Filter>Source Files\Core\Game\Role\ActiveEffects</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Game\PlayerEffects\Effect.cpp">
-      <Filter>Source Files\Core\Game\PlayerEffects</Filter>
+    <ClCompile Include="Core\Game\Role\ActiveEffects\Special.cpp">
+      <Filter>Source Files\Core\Game\Role\ActiveEffects</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Game\ActiveEffects\Consumable.cpp">
-      <Filter>Source Files\Core\Game\ActiveEffects</Filter>
+    <ClCompile Include="Core\Game\Role\PlayerEffects\Effect.cpp">
+      <Filter>Source Files\Core\Game\Role\PlayerEffects</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Game\ActiveEffects\Special.cpp">
-      <Filter>Source Files\Core\Game\ActiveEffects</Filter>
+    <ClCompile Include="Core\Game\Role\PlayerEffects\Modifier.cpp">
+      <Filter>Source Files\Core\Game\Role\PlayerEffects</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Game\ActiveEffects\Ability.cpp">
-      <Filter>Source Files\Core\Game\ActiveEffects</Filter>
+    <ClCompile Include="Core\Game\Role\Weapon\Bullet.cpp">
+      <Filter>Source Files\Core\Game\Role\Weapon</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Game\Weapon\BulletTypes\BulletPulseShot.cpp">
-      <Filter>Source Files\Core\Game\Weapon\BulletTypes</Filter>
+    <ClCompile Include="Core\Game\Role\Weapon\Weapon.cpp">
+      <Filter>Source Files\Core\Game\Role\Weapon</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Game\Weapon\BulletTypes\BulletPoop.cpp">
-      <Filter>Source Files\Core\Game\Weapon\BulletTypes</Filter>
+    <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\BulletPoop.cpp">
+      <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\BulletPulseShot.cpp">
+      <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -140,38 +146,41 @@
     <ClInclude Include="Core\CameraInput.h">
       <Filter>Source Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Game\Weapon\Bullet.h">
-      <Filter>Source Files\Core\Game\Weapon</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Game\Weapon\Weapon.h">
-      <Filter>Source Files\Core\Game\Weapon</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Game\PlayerEffects\Modifier.h">
-      <Filter>Source Files\Core\Game\PlayerEffects</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Game\PlayerEffects\Effect.h">
-      <Filter>Source Files\Core\Game\PlayerEffects</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Game\ActiveEffects\Consumable.h">
-      <Filter>Source Files\Core\Game\ActiveEffects</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Game\ActiveEffects\Special.h">
-      <Filter>Source Files\Core\Game\ActiveEffects</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Game\ActiveEffects\Ability.h">
-      <Filter>Source Files\Core\Game\ActiveEffects</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Game\GameDataIndex.h">
       <Filter>Source Files\Core\Game</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Game\Weapon\BulletTypes\BulletPulseShot.h">
-      <Filter>Source Files\Core\Game\Weapon\BulletTypes</Filter>
+    <ClInclude Include="Core\Game\Role\Role.h">
+      <Filter>Source Files\Core\Game\Role</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Game\Weapon\BulletTypes\AllBullets.h">
-      <Filter>Source Files\Core\Game\Weapon\BulletTypes</Filter>
+    <ClInclude Include="Core\Game\Role\ActiveEffects\Ability.h">
+      <Filter>Source Files\Core\Game\Role\ActiveEffects</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Game\Weapon\BulletTypes\BulletPoop.h">
-      <Filter>Source Files\Core\Game\Weapon\BulletTypes</Filter>
+    <ClInclude Include="Core\Game\Role\ActiveEffects\Consumable.h">
+      <Filter>Source Files\Core\Game\Role\ActiveEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\ActiveEffects\Special.h">
+      <Filter>Source Files\Core\Game\Role\ActiveEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\PlayerEffects\Effect.h">
+      <Filter>Source Files\Core\Game\Role\PlayerEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\PlayerEffects\Modifier.h">
+      <Filter>Source Files\Core\Game\Role\PlayerEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Weapon\bullet.h">
+      <Filter>Source Files\Core\Game\Role\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Weapon\weapon.h">
+      <Filter>Source Files\Core\Game\Role\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\AllBullets.h">
+      <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\bulletpoop.h">
+      <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\bulletpulseshot.h">
+      <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
