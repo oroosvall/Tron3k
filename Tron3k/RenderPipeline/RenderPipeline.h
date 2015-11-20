@@ -36,14 +36,12 @@ private:
 
 	TextObject* test;
 
-	TestMesh testMesh;
-
 	Camera cam;
 
 	Gbuffer* gBuffer;
 
 	GLuint regularShader;
-	//GLuint testShader;
+
 	GLuint worldMat;
 	GLuint viewProjMat;
 	GLuint viewMat;
@@ -51,7 +49,9 @@ private:
 	GLuint uniformTextureLocation;
 	GLuint uniformnNormalLocation;
 
-	float rotation;
+	//temp
+	TestMesh testMesh;
+
 
 public:
 
