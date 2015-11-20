@@ -20,6 +20,15 @@ void Server::disconnected(Uint8 _conID)
 		consolePtr->printMsg("ERROR Disconnect", "System", 'S');
 }
 
+void Server::event_bullet_hit(BulletHitInfo hi)
+{
+	Packet* out = new Packet();
+	*out << Uint8(NET_INDEX::EVENT) << Uint8(NET_EVENT::HIT);
+	*out << Uint8(hi.playerHit) << Uint8(hi.bulletPID) << Uint8(hi.bulletBID) << Uint8(hi.bt);
+	branch(out, -1);
+	delete out;
+}
+
 Server::~Server()
 {
 	if (con)

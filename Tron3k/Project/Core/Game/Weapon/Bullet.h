@@ -20,7 +20,7 @@ public:
 	virtual ~Bullet();
 
 	int getTeamId() { return teamId; };
-	int getId(int &player, int &bullet) { player = playerId; bullet = bulletId; };
+	void getId(int &player, int &bullet) { player = playerId; bullet = bulletId; };
 
 	glm::vec3 getPos() { return pos; };
 	glm::vec3 getDir() { return dir; };

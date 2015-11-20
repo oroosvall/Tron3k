@@ -211,24 +211,51 @@ void Game::checkPvPCollision()
 void Game::checkPlayerVBulletCollision()
 {
 	bool collides = false;
-	for (int b = 0; b < BULLET_TYPE::NROFBULLETS; b++)
+
+	for (int i = 0; i < max_con; i++)
 	{
-		for (int i = 0; i < max_con; i++)
+		Player* p = playerList[i];
+		if (p != nullptr)
 		{
-			for (int j = 0; j < bullets[b].size(); j++)
+			for (int b = 0; b < BULLET_TYPE::NROFBULLETS; b++)
 			{
-				collides = false;
-				if (playerList[i] != nullptr && bullets[b][j] != nullptr)
+				for (int j = 0; j < bullets[b].size(); j++)
 				{
-					if (bullets[b][j]->getTeamId() != playerList[i]->getTeam())
-					collides = physics->checkPlayerVBulletCollision(playerList[i]->getPos(), bullets[b][j]->getPos());
-					if (collides)
+					collides = false;
+					if (bullets[b][j] != nullptr)
 					{
-						//Code for player on bullet collision goes here
+						int pid = -1, bid = -1;
+						bullets[b][j]->getId(pid, bid);
+						if (bullets[b][j]->getTeamId() != playerList[i]->getTeam() && pid != i)
+							collides = physics->checkPlayerVBulletCollision(playerList[i]->getPos(), bullets[b][j]->getPos());
+						if (collides)
+						{
+							//Code for player on bullet collision goes here
+							/*
+
+							Spara undan player som blev träffad (dvs i), bulletId (pID och bID) och BULLET_TYPE. Även dir.
+							Lägg förslagsvis i en vector<struct> som kan skickas till Core. Core matar in alla träffade spelare i ett NET_EVENT (conID, bID, pID, bt).
+							NET_EVENT eftersom allt detta sker endast på servern
+							Tas emot av klienterna, Core->Game. Game hanterar sina bullethits när paketet tas emot.
+
+							Servern gör givetvis samma beräkning för bullethits (speed/position-data pga knockbacks antingen görs inte eller görs och sedan discardas pga client->server update)
+							direkt när kollisionen sker, dvs.
+
+							*/
+
+							hit.bt = BULLET_TYPE(b);
+							hit.playerHit = i;
+							bullets[b][j]->getId(hit.bulletPID, hit.bulletBID);
+
+							playerHit = true;
+
+							handleBulletHitEvent(hit);
+						}
 					}
 				}
 			}
 		}
+		
 	}
 }
 
@@ -365,4 +392,29 @@ void Game::handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm
 		addBulletToList(conID, bulletId, BULLET_TYPE::POOP, pos, dir);
 		break;
 	}
+}
+
+glm::vec3 Game::removeBullet(int PID, int BID, BULLET_TYPE bt)
+{
+	for (int c = 0; c < bullets[bt].size(); c++)
+	{
+		int p = -1;
+		int b = -1;
+		bullets[bt][c]->getId(p, b);
+		if (p == PID && b == BID);
+		{
+			glm::vec3 ret = bullets[bt][c]->getDir();
+			delete bullets[bt][c];
+			bullets[bt][c] = bullets[bt][bullets[bt].size() - 1];
+			bullets[bt].pop_back();
+			return ret;
+		}
+	}
+}
+
+void Game::handleBulletHitEvent(BulletHitInfo hi)
+{
+	Player* p = playerList[hi.playerHit];
+	glm::vec3 dir = removeBullet(hi.bulletPID, hi.bulletBID, hi.bt);
+	p->hitByBullet(hi, dir);
 }

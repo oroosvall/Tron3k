@@ -34,6 +34,7 @@ public:
 	void in_frame(Packet* rec, Uint8 conID);
 	void in_message(Packet* rec, Uint8 conID);
 
+	void event_bullet_hit(BulletHitInfo hi);
 };
 
 #endif
