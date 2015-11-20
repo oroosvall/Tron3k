@@ -153,6 +153,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ContentManager.cpp" />
     <ClCompile Include="GBuffer.cpp" />
+    <ClCompile Include="Map\Map.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="RenderPipeline.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
