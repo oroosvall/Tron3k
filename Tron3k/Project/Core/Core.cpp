@@ -23,6 +23,7 @@ void Core::init()
 	createWindow(winX, winY, fullscreen);
 
 	//******************* TEMP *************************
+	InitSound(CreateSound());
 	GetSound()->playMusic(MUSIC::mainMenu);
 	GetSound()->enableSounds();
 	timepass = 0.0f;

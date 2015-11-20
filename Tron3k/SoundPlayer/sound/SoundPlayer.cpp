@@ -1,5 +1,4 @@
 #include "SoundPlayer.h"
-
 int SoundPlayer::nrOfSoundsPlaying = 0;
 float SoundPlayer::soundVolume = 100.0f;
 float SoundPlayer::musicVolume = 50.0f;
