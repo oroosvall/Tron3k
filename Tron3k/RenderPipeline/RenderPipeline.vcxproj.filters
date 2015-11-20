@@ -96,7 +96,7 @@
     <ClInclude Include="Texture.h">
       <Filter>Source Files\Texture</Filter>
     </ClInclude>
-    <ClInclude Include="Light.h">
+    <ClInclude Include="Lights.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

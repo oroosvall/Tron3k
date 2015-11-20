@@ -166,7 +166,7 @@
     <ClInclude Include="ContentManager.h" />
     <ClInclude Include="GBuffer.h" />
     <ClInclude Include="IRenderPipeline.h" />
-    <ClInclude Include="Light.h" />
+    <ClInclude Include="Lights.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="RenderPipeline.h" />
     <ClInclude Include="RenderTarget.h" />
