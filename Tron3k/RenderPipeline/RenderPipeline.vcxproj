@@ -167,6 +167,8 @@
     <ClInclude Include="GBuffer.h" />
     <ClInclude Include="IRenderPipeline.h" />
     <ClInclude Include="Lights.h" />
+    <ClInclude Include="Map\Map.h" />
+    <ClInclude Include="Map\MapHeaders.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="RenderPipeline.h" />
     <ClInclude Include="RenderTarget.h" />

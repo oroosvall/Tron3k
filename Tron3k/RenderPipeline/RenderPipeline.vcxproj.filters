@@ -28,6 +28,9 @@
     <Filter Include="Source Files\Texture">
       <UniqueIdentifier>{0fc689ae-3d1e-4356-acb8-1df47c8c27ee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Map">
+      <UniqueIdentifier>{63b8f0b6-9087-4066-9efb-6776334c3031}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RenderPipeline.cpp">
@@ -58,6 +61,9 @@
     </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Map\Map.cpp">
+      <Filter>Source Files\Map</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -98,6 +104,12 @@
     </ClInclude>
     <ClInclude Include="Lights.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Map\Map.h">
+      <Filter>Source Files\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="Map\MapHeaders.h">
+      <Filter>Source Files\Map</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

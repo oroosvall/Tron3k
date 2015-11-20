@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 #include "../Bullet.h"
 
-#include "../../GameDataIndex.h"
+#include "../../../GameDataIndex.h"
 
 class Poop : public Bullet
 {

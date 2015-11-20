@@ -2,7 +2,7 @@
 #define WEAPON_H
 
 #include "Bullet.h"
-#include "../GameDataIndex.h"
+#include "../../GameDataIndex.h"
 
 class Weapon
 {

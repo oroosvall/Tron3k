@@ -23,6 +23,7 @@ void Core::init()
 	createWindow(winX, winY, fullscreen);
 
 	//******************* TEMP *************************
+	InitSound(CreateSound());
 	GetSound()->playMusic(MUSIC::mainMenu);
 	GetSound()->enableSounds();
 	timepass = 0.0f;
@@ -114,8 +115,11 @@ void Core::update(float dt)
 			if (renderPipe)
 			{
 				renderPipe->update();
-				renderPipe->renderIni(); 
-				
+				renderPipe->renderIni();
+
+				//render skybox
+				renderPipe->renderPlayer(1, (void*)&(CameraInput::getCam()->getSkyboxMat()));
+
 				//render players
 				for (size_t i = 0; i < MAX_CONNECT; i++)
 				{

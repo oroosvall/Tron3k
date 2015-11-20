@@ -90,12 +90,6 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 		printf("glDebugMessageCallback not available\n");
 #endif
 
-	//std::string shaderNames[] = { "GameFiles/Shaders/simple_vs.glsl", "GameFiles/Shaders/simple_fs.glsl" };
-	//GLenum shaderTypes[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
-	//
-	//CreateProgram(testShader, shaderNames, shaderTypes, 2);
-
-
 	std::string shaderNamesDeffered[] = { "GameFiles/Shaders/BlitShader_vs.glsl", "GameFiles/Shaders/BlitShader_fs.glsl" };
 	GLenum shaderTypesDeffered[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
 	
@@ -108,8 +102,6 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	glDepthFunc(GL_LEQUAL);
 	glDepthMask(GL_TRUE);
 
-	//CreateProgram(testShader, shaderNames, shaderTypes, 2);
-
 	CreateProgram(regularShader, shaderNamesRegular, shaderTypesRegular, 3);
 
 	worldMat = glGetUniformLocation(regularShader, "WorldMatrix"); //worldMat
@@ -119,7 +111,6 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	uniformTextureLocation = glGetUniformLocation(regularShader, "textureSample"); //view
 	uniformnNormalLocation = glGetUniformLocation(regularShader, "normalSample"); //view
 
-	//cam.setProjMat(preDefferedShader, projMat);
 	cam.setViewMat(regularShader, viewMat);
 	worldMat = glGetUniformLocation(regularShader, "WorldMatrix"); //worldMat
 	viewMat = glGetUniformLocation(regularShader, "ViewProjMatrix"); //view
@@ -184,10 +175,6 @@ void RenderPipeline::render()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	gBuffer->render();
-	//glUseProgram(testShader);
-
-	//set camera matrixes
-	//cam.setViewProjMat(testShader, viewMat);
 }
 
 void* RenderPipeline::getView()
@@ -201,7 +188,8 @@ void RenderPipeline::renderPlayer(int playerID, void* world)
 	//set temp objects worldmat
 	glProgramUniformMatrix4fv(regularShader, worldMat, 1, GL_FALSE, (GLfloat*)world);
 
-	contMan.renderPlayer(0, *(glm::mat4*)world);
+	contMan.renderPlayer(playerID, *(glm::mat4*)world);
+
 
 }
 
