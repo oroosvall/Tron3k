@@ -57,6 +57,7 @@ private:
 	void upServer(float dt);
 
 	void startHandleCmds(float dt);
+	void roamHandleCmds(float dt);
 	void clientHandleCmds(float dt); //Handles clientside /-commands
 	void serverHandleCmds(float dt);
 

@@ -207,6 +207,7 @@ void Core::upRoam(float dt)
 	//ROAM
 	//load
 	//run
+	roamHandleCmds(dt);
 
 	game->update(dt);
 
@@ -280,11 +281,8 @@ void Core::upClient(float dt)
 		break;
 	case 4: //main client loop
 
-
 		game->update(dt);
 		Player* local = game->getPlayer(top->getConId());
-
-	
 
 		//fetch new network data
 		if (top->network_IN(dt) == false)
@@ -495,6 +493,93 @@ void Core::startHandleCmds(float dt)
 	}
 }
 
+void Core::roamHandleCmds(float dt)
+{
+	if (console.commandReady())
+	{
+		string token;
+		istringstream ss = istringstream(console.getCommand());
+		ss >> token;
+		if (token == "/help")
+		{
+			console.printMsg("Console commands", "", ' ');
+			console.printMsg("/name " + _name, "", ' ');
+			console.printMsg("/players", "", ' ');
+			console.printMsg("/free (turns freecam on/off)", "", ' ');
+			console.printMsg("/spec <Number> (spectate player id)", "", ' ');
+		}
+		else if (token == "/name")
+		{
+			ss >> token;
+			if (token == "/name")
+				console.printMsg("No name found. Use /name <new Name>", "System", 'S');
+			else
+			{
+				/* Todo: Check for illegal names */
+				Player* me = game->getPlayer(0);
+
+				me->setName(token);
+				_name = token;
+				console.printMsg("You changed name to (" + token + ")", "System", 'S');
+			}
+		}
+		else if (token == "/players")
+		{
+			for (int n = 0; n < MAX_CONNECT; n++)
+			{
+				Player* p = game->getPlayer(n);
+				if (p != nullptr)
+				{
+					string print;
+					print += "ConID: " + to_string(n) + " Team: " + to_string(p->getTeam()) + " Name: " + p->getName();
+					console.printMsg(print, "", ' ');
+				}
+			}
+		}
+		else if (token == "/free")
+		{
+			if (game->freecam)
+			{
+				//set view dir pos back to the player's view REMEMBER Roam conID 0
+				CameraInput::getCam()->setCam(game->getPlayer(0)->getPos(), game->getPlayer(0)->getDir());
+				game->freecam = false;
+			}
+			else
+				game->freecam = true;
+
+			game->spectateID = -1;
+		}
+		else if (token == "/spec")
+		{
+			ss >> token;
+			if (token == "/spec")
+				console.printMsg("Invalid Number", "System", 'S');
+			else
+			{
+				int id = stoi(token); // yes this is dangerous, dont write anything but numbers
+				if (id > -1 && id < MAX_CONNECT)
+				{
+					//set view dir pos back to the player's view
+					Player* p = game->getPlayer(id);
+					if (p != nullptr)
+					{
+						CameraInput::getCam()->setCam(p->getPos(), p->getDir());
+						game->spectateID = id;
+						game->freecam = true;
+					}
+					else
+						console.printMsg("That Player Doesn't exist", "System", 'S');
+				}
+				else
+				{
+					game->spectateID = -1;
+					game->freecam = true;
+				}
+			}
+		}
+	}
+}
+
 void Core::clientHandleCmds(float dt)
 {
 	if (console.commandReady())
@@ -509,6 +594,8 @@ void Core::clientHandleCmds(float dt)
 			console.printMsg("/team " + to_string(game->getPlayer(top->getConId())->getTeam()), "", ' ');
 			console.printMsg("/players", "", ' ');
 			console.printMsg("/disconnect", "", ' ');
+			console.printMsg("/free (turns freecam on/off)", "", ' ');
+			console.printMsg("/spec # (spectate player id)", "", ' ');
 		}
 		else if (token == "/name")
 		{
@@ -554,6 +641,44 @@ void Core::clientHandleCmds(float dt)
 		}
 		else if (token == "/disconnect")
 			disconnect();
+		else if (token == "/free")
+		{
+			if (game->freecam)
+			{
+				//set view dir pos back to the player's view REMEMBER Roam conID 0
+				CameraInput::getCam()->setCam(game->getPlayer(top->getConId())->getPos(), game->getPlayer(top->getConId())->getDir());
+				game->freecam = false;
+			}
+			else
+				game->freecam = true;
+
+			game->spectateID = -1;
+		}
+		else if (token == "/spec")
+		{
+			ss >> token;
+			if (token == "/spec")
+				console.printMsg("Invalid Number", "System", 'S');
+			else
+			{
+				int id = stoi(token); // yes this is dangerous, dont write anything but numbers
+				if (id > -1 && id < MAX_CONNECT)
+				{
+					//set view dir pos back to the player's view
+					Player* p = game->getPlayer(id);
+					if (p != nullptr)
+					{
+						CameraInput::getCam()->setCam(p->getPos(), p->getDir());
+						game->spectateID = id;
+						game->freecam = true;
+					}
+					else
+						console.printMsg("That Player Doesn't exist", "System", 'S');
+				}
+				else
+					game->spectateID = -1;
+			}
+		}
 	}
 }
 

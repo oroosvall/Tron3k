@@ -50,7 +50,6 @@ private:
 
 	WEAPON_TYPE weaponSwitchedTo;
 	bool wpnSwitched = false;
-
 public:
 
 	Game();
@@ -84,6 +83,9 @@ public:
 
 	WEAPON_TYPE getWpnSwitch() { wpnSwitched = false; return weaponSwitchedTo; };
 	void handleWeaponSwitch(int conID, WEAPON_TYPE ws);
+
+	bool freecam; // freecam is active also when in spectate but specctate overides
+	int spectateID; // -1 = none, else use conID
 };
 
 #endif

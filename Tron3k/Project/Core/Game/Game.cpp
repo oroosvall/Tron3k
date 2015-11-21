@@ -22,7 +22,6 @@ void Game::release()
 			}
 		}
 	}
-
 	delete this; // yes this is safe
 }
 
@@ -43,6 +42,9 @@ void Game::init(int max_connections, int state)
 	playerList = new Player*[max_con];
 	for (int c = 0; c < max_con; c++)
 		playerList[c] = nullptr;
+
+	freecam = false;
+	spectateID = -1;
 }
 
 void Game::initPhysics()
@@ -74,7 +76,10 @@ void Game::update(float dt)
 	{
 		if (playerList[c] != nullptr)
 		{
-			PLAYERMSG msg = playerList[c]->update(dt);
+			bool spectating = false;
+			if (c == spectateID)
+				spectating = true;
+			PLAYERMSG msg = playerList[c]->update(dt, freecam, spectating);
 			if (msg == PLAYERMSG::SHOOT)
 			{
 				if (gameState != Gamestate::ROAM)
@@ -84,7 +89,6 @@ void Game::update(float dt)
 					Weapon* wpn = playerList[c]->getPlayerCurrentWeapon();
 					handleWeaponFire(c, wpn->getBulletId(), wpn->getType(), playerList[c]->getPos(), playerList[c]->getDir());
 				}
-					
 			}
 			if (msg == PLAYERMSG::WPNSWITCH)
 			{

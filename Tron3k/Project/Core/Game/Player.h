@@ -44,7 +44,7 @@ public:
 	Player();
 	void init(std::string name, glm::vec3 pos, bool isLocal = false);
 
-	PLAYERMSG update(float dt);
+	PLAYERMSG update(float dt, bool freecam, bool spectatingThisPlayer);
 
 	void setName(std::string newName);
 	void setGoalPos(glm::vec3 newPos);

@@ -40,12 +40,12 @@ void Player::setGoalDir(glm::vec3 newDir)
 	dir = newDir; //Temporary 
 }
 
-PLAYERMSG Player::update(float dt)
+PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer)
 {
 	PLAYERMSG msg = NONE;
 	bool ableToShoot = false;
 
-	if (isLocalPlayer)
+	if (isLocalPlayer) // even if we are the local player we can be dead and spectating some one
 	{
 		if (i->justPressed(GLFW_KEY_ENTER))
 		{
@@ -56,66 +56,78 @@ PLAYERMSG Player::update(float dt)
 		}
 		if (!lockControls)
 		{
+			//move camera to where we are looking.
+			//if freecam is true the cam can move on its own
 			vec3 olddir = cam->getDir();
-			cam->update(dt, false);
+			cam->update(dt, freecam);
 
-			dir = cam->getDir();
-
-			if (i->getKeyInfo(GLFW_KEY_W))
-				pos += dir * dt;
-
-			if (i->getKeyInfo(GLFW_KEY_S))
-				pos -= dir * dt;
-
-			if (i->getKeyInfo(GLFW_KEY_A))
+			//If freecam or spectating dont take player move input
+			if (freecam == false)
 			{
-				vec3 left = cross(vec3(0, 1, 0), dir);
-				left = normalize(left);
-				pos += left * dt;
-			}
-			if (i->getKeyInfo(GLFW_KEY_D))
-			{
-				vec3 left = cross(dir, vec3(0, 1, 0));
-				left = normalize(left);
-				pos += left * dt;
-			}
+				dir = cam->getDir();
 
-			weapons[currentWpn].update(dt);		//Temp;
-			if (i->justPressed(GLFW_KEY_R))
-			{
-				weapons[currentWpn].reload();
-			}
+				if (i->getKeyInfo(GLFW_KEY_W))
+					pos += dir * dt;
 
-			if (i->justPressed(GLFW_KEY_1))
-			{
-				currentWpn = 0;
-				msg = WPNSWITCH;
-			}
-				
-			if (i->justPressed(GLFW_KEY_2))
-			{
-				currentWpn = 1;
-				msg = WPNSWITCH;
-			}
+				if (i->getKeyInfo(GLFW_KEY_S))
+					pos -= dir * dt;
 
-			if (i->getKeyInfo(GLFW_MOUSE_BUTTON_LEFT))		//Temp
-			{
-				ableToShoot = weapons[currentWpn].shoot();
-				if(ableToShoot)
-					msg = SHOOT;
-			}
+				if (i->getKeyInfo(GLFW_KEY_A))
+				{
+					vec3 left = cross(vec3(0, 1, 0), dir);
+					left = normalize(left);
+					pos += left * dt;
+				}
+				if (i->getKeyInfo(GLFW_KEY_D))
+				{
+					vec3 left = cross(dir, vec3(0, 1, 0));
+					left = normalize(left);
+					pos += left * dt;
+				}
 
-			if (i->justPressed(GLFW_KEY_M))					//Temp?
-			{
-				GetSound()->enableSounds();
-			}
+				weapons[currentWpn].update(dt);		//Temp;
+				if (i->justPressed(GLFW_KEY_R))
+				{
+					weapons[currentWpn].reload();
+				}
 
-			cam->setCam(pos, dir);
-			if (olddir != dir)
+				if (i->justPressed(GLFW_KEY_1))
+				{
+					currentWpn = 0;
+					msg = WPNSWITCH;
+				}
+
+				if (i->justPressed(GLFW_KEY_2))
+				{
+					currentWpn = 1;
+					msg = WPNSWITCH;
+				}
+
+				if (i->getKeyInfo(GLFW_MOUSE_BUTTON_LEFT))		//Temp
+				{
+					ableToShoot = weapons[currentWpn].shoot();
+					if (ableToShoot)
+						msg = SHOOT;
+				}
+
+				if (i->justPressed(GLFW_KEY_M))					//Temp?
+				{
+					GetSound()->enableSounds();
+				}	
+			} // end of player input
+
+			if (freecam == false || spectatingThisPlayer == true)
+			{
+				cam->setCam(pos, dir);
+				//if (olddir != dir)
 				rotatePlayer(olddir, dir);
-		}
+			}
+		} // end of lock control check
+	} // end of local player check
+	else if (spectatingThisPlayer == true)
+	{
+		cam->setCam(pos, dir);
 	}
-	
 	worldMat[0].w = pos.x;
 	worldMat[1].w = pos.y-0.6f;
 	worldMat[2].w = pos.z;
