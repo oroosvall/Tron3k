@@ -40,7 +40,7 @@ void Player::setGoalDir(glm::vec3 newDir)
 	dir = newDir; //Temporary 
 }
 
-PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer)
+PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool spectating)
 {
 	PLAYERMSG msg = NONE;
 	bool ableToShoot = false;
@@ -59,7 +59,8 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer)
 			//move camera to where we are looking.
 			//if freecam is true the cam can move on its own
 			vec3 olddir = cam->getDir();
-			cam->update(dt, freecam);
+			if(spectating == false)
+				cam->update(dt, freecam);
 
 			//If freecam or spectating dont take player move input
 			if (freecam == false)
@@ -118,8 +119,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer)
 
 			if (freecam == false || spectatingThisPlayer == true)
 			{
-				cam->setCam(pos, dir);
-				//if (olddir != dir)
+				cam->setCam(pos);
 				rotatePlayer(olddir, dir);
 			}
 		} // end of lock control check

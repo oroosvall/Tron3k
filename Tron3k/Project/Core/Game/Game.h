@@ -86,6 +86,8 @@ public:
 
 	bool freecam; // freecam is active also when in spectate but specctate overides
 	int spectateID; // -1 = none, else use conID
+
+	float lastDT = 0;
 };
 
 #endif

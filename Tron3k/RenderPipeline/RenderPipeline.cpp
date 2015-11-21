@@ -149,7 +149,9 @@ void RenderPipeline::release()
 
 void RenderPipeline::update()
 {
-	
+	//set camera matrixes
+	cam.setViewMat(regularShader, viewMat);
+	cam.setViewProjMat(regularShader, viewProjMat);
 }
 
 
@@ -163,10 +165,6 @@ void RenderPipeline::renderIni()
 void RenderPipeline::render()
 {
 	glUseProgram(regularShader);
-
-	//set camera matrixes
-	cam.setViewMat(regularShader, viewMat);
-	cam.setViewProjMat(regularShader, viewProjMat);
 
 	contMan.renderChunks(regularShader, worldMat, uniformTextureLocation, uniformnNormalLocation);
 	

@@ -76,10 +76,16 @@ void Game::update(float dt)
 	{
 		if (playerList[c] != nullptr)
 		{
+			bool spectatingThis = false;
 			bool spectating = false;
-			if (c == spectateID)
+			if (spectateID > -1)
+			{
 				spectating = true;
-			PLAYERMSG msg = playerList[c]->update(dt, freecam, spectating);
+				if (c == spectateID)
+					spectatingThis = true;
+			}
+
+			PLAYERMSG msg = playerList[c]->update(dt, freecam, spectatingThis, spectating);
 			if (msg == PLAYERMSG::SHOOT)
 			{
 				if (gameState != Gamestate::ROAM)

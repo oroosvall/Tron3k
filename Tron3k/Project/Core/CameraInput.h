@@ -50,6 +50,7 @@ public:
 
 	glm::vec3 getDir() { return dir; };
 	void setCam(vec3 _pos, vec3 _dir);
+	void setCam(vec3 _pos);
 
 	glm::mat4 getSkyboxMat();
 

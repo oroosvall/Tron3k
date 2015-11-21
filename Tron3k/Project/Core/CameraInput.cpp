@@ -131,6 +131,12 @@ void CameraInput::setCam(vec3 _pos, vec3 _dir)
 	*viewMat = lookAt(pos, pos + dir, vec3(0, 1, 0));
 }
 
+void CameraInput::setCam(vec3 _pos)
+{
+	pos = _pos;
+	*viewMat = lookAt(pos, pos + dir, vec3(0, 1, 0));
+}
+
 CameraInput* CameraInput::getCam()
 {
 	if (singleton == nullptr)

@@ -114,9 +114,11 @@ void Core::update(float dt)
 		{
 			if (renderPipe)
 			{
-				renderPipe->update();
+				renderPipe->update(); // sets the view/proj matrix
 				renderPipe->renderIni();
 
+				
+				
 				//render skybox
 				renderPipe->renderPlayer(1, (void*)&(CameraInput::getCam()->getSkyboxMat()));
 
@@ -137,7 +139,6 @@ void Core::update(float dt)
 						renderPipe->renderPlayer(0, bullets[i]->getWorldMat());
 					}
 				}
-
 				renderPipe->render();
 			}
 
