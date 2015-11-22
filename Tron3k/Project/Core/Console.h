@@ -51,6 +51,8 @@ public:
 	string getCommand();
 
 	void discardCommandAndLastMsg();
+
+	bool getInChatMode() { return inChatMode; };
 };
 
 #endif

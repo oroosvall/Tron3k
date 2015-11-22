@@ -33,13 +33,16 @@ private:
 	Topology* top;
 	Game* game;
 	IRenderPipeline* renderPipe;
-
+	Input* i;
 	Console console;
+
+	CameraInput* serverCam;
 
 	// window
 	GLFWwindow* win;
 	bool recreate;
 	bool fullscreen;
+	bool serverRender;
 	int winX, winY;
 
 	//gamestates
@@ -56,11 +59,12 @@ private:
 	void upClient(float dt);
 	void upServer(float dt);
 
-	void startHandleCmds(float dt);
-	void roamHandleCmds(float dt);
-	void clientHandleCmds(float dt); //Handles clientside /-commands
-	void serverHandleCmds(float dt);
+	void startHandleCmds();
+	void roamHandleCmds();
+	void clientHandleCmds(); //Handles clientside /-commands
+	void serverHandleCmds();
 
+	void renderWorld(float dt);
 	void createWindow(int x, int y, bool fullscreen);
 	void removeWindow();
 

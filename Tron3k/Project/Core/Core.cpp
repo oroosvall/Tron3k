@@ -19,8 +19,11 @@ void Core::init()
 	recreate = false;
 	fullscreen = false;
 	winX = winY = 800;
-	
 	createWindow(winX, winY, fullscreen);
+
+	serverRender = false;
+
+	i = Input::getInput();
 
 	//******************* TEMP *************************
 	InitSound(CreateSound());
@@ -59,44 +62,11 @@ Core::~Core()
 
 void Core::update(float dt)
 {
-	//update I/O
 	if (recreate)
-	{
 		createWindow(winX, winY, fullscreen);
 
-		if (renderPipe)
-		{
-			PipelineValues pv;
-			pv.type = pv.INT2;
-			pv.xy[0] = winX;
-			pv.xy[1] = winY;
-			renderPipe->setSetting(PIPELINE_SETTINGS::VIEWPORT, pv);
-			if (!renderPipe->setSetting(PIPELINE_SETTINGS::VIEWPORT, pv))
-			{
-				console.printMsg("Error: failed to set pipeline setting: VIEWPORT", "System", 'S');
-			}
-
-		}
-	}
-
 	glfwPollEvents();
-	string name = "Temp";
-	if (top != nullptr)
-	{
-		if (game != nullptr)
-		{
-			if (top->is_client())
-			{
-				Player* p = game->getPlayer(top->getConId());
-				if (p != nullptr)
-					name = p->getName();
-			}
-			else
-				name = "Server";
-		}
-	}
-	console.update(name, 'A'); //Updates to check for new messages and commands
-
+	console.update(_name, 'A'); //Updates to check for new messages and commands
 
 	switch (current)
 	{
@@ -108,53 +78,10 @@ void Core::update(float dt)
 	default:						break;
 	}
 
-	if (current != START && current != SERVER)
-	{
-		if (game)
-		{
-			if (renderPipe)
-			{
-				renderPipe->update(); // sets the view/proj matrix
-				renderPipe->renderIni();
-
-				
-				
-				//render skybox
-				renderPipe->renderPlayer(1, (void*)&(CameraInput::getCam()->getSkyboxMat()));
-
-				//render players
-				for (size_t i = 0; i < MAX_CONNECT; i++)
-				{
-					Player* p = game->getPlayer(i);
-					if (p)
-					{
-						renderPipe->renderPlayer(0, p->getWorldMat());
-					}
-				}
-				for (int c = 0; c < BULLET_TYPE::NROFBULLETS; c++)
-				{
-					std::vector<Bullet*> bullets = game->getBullets(BULLET_TYPE(c));
-					for (int i = 0; i < bullets.size(); i++)
-					{
-						renderPipe->renderPlayer(0, bullets[i]->getWorldMat());
-					}
-				}
-				renderPipe->render();
-			}
-
-		}
-
-		
-		//update ui & sound
-		//update renderPipeline
-	}
-
 	//*******TEMP**********
 	GetSound()->update();
 	//*********************
 
-	//shouldnt get the ref every frame
-	Input* i = Input::getInput();
 	i->clearOnPress();
 	console.discardCommandAndLastMsg();
 
@@ -184,7 +111,7 @@ void Core::upStart(float dt)
 
 	case 1:
 		//start console commands
-		startHandleCmds(dt);
+		startHandleCmds();
 		break;
 	}
 }
@@ -205,38 +132,43 @@ void Core::upMenu(float dt)
 
 void Core::upRoam(float dt)
 {
-	//ROAM
-	//load
-	//run
-	roamHandleCmds(dt);
+	switch (subState)
+	{
+	case 0: //init
+	{
+		initPipeline();
 
-	game->update(dt);
+		game = new Game();
+		game->init(MAX_CONNECT, current);
 
-	//return MENU
+		Player* p = new Player();
+		p->init("Roam", glm::vec3(0, 0, 0));
+		game->createPlayer(p, 0, true);
+		delete p;
+		subState++;
+		break;
+	}
+	case 1: //main loop
+
+		roamHandleCmds();
+		game->update(dt);
+		renderWorld(dt);
+		break;
+	}
 }
 
 void Core::upClient(float dt)
 {
 	switch (subState)
 	{
-	case 0: //setup client object
-
+	case 0: //init
+		initPipeline();
 		if (top)
 			delete top;
 		top = new Client();
 		top->init(&console, _port, _addrs);
-
-		subState++;
-		break;
-	case 1: //fill the server address and port to use
-
-		//todo
-
-		subState++;
-		break;
-		
-	case 2: //attempt to connect
-
+		 
+		//attempt to connect
 		for (int n = 0; n < 3; n++)
 		{
 			console.printMsg("Connecting...", "System", 'S');
@@ -252,10 +184,10 @@ void Core::upClient(float dt)
 				game->init(MAX_CONNECT, current);
 				top->setGamePtr(game);
 				subState++;
-				return;
+				return; //On sucsess
 			}
 		}
-
+		//On Fail
 		console.printMsg("Connection Failed", "System", 'S');
 		current = START;
 		subState = 0;
@@ -264,26 +196,19 @@ void Core::upClient(float dt)
 		return;
 
 		break;
-	case 3: //get full server info & map check
-
+	case 1: //get full server info & map check
 		top->network_IN(dt);
-
 		if (top->firstPackageRecieved()) 
 		{
 			//can i load?
-
 			// if not  -> menu
 			//top->frame_name_change(top->getConId(), _name);
 			Player* me = game->getPlayer(top->getConId());
 			me->setName(_name);
 			subState++;
 		}
-		
 		break;
-	case 4: //main client loop
-
-		game->update(dt);
-		Player* local = game->getPlayer(top->getConId());
+	case 2: //main client loop
 
 		//fetch new network data
 		if (top->network_IN(dt) == false)
@@ -292,27 +217,28 @@ void Core::upClient(float dt)
 			return;
 		}
 
+		//update game
+		game->update(dt);
+		
+		//Command and message handle
 		if (console.messageReady())
 		{
 			top->msg_out = console.getMessage();
 			top->scope_out = Uint8(ALL);
 		}
 
-		clientHandleCmds(dt);
+		clientHandleCmds();
 		if (top == nullptr)//check for disconnected command
 			return;
 
+		//Frame tick timer. Network out
 		tick_timer += dt;
 		if (tick_timer > tick)
 		{
-			/*
-			Fetch current player position
-			Add to topology packet
-			*/
-			glm::vec3 lPos = local->getPos();
-			glm::vec3 lDir = local->getDir();
-
-			top->frame_pos(top->getConId(), lPos, lDir);
+			//Fetch current player position
+			//Add to topology packet
+			Player* local = game->getPlayer(top->getConId());
+			top->frame_pos(top->getConId(), local->getPos(), local->getDir());
 
 			if (game->weaponSwitchReady())
 			{
@@ -328,11 +254,12 @@ void Core::upClient(float dt)
 				int team = local->getTeam();
 				top->frame_fire(wt, top->getConId(), bID, local->getPos(), local->getDir());
 			}
-
+			//send the package
 			top->network_OUT(dt);
-
-			tick_timer = 0;
+			tick_timer = 0;	
 		}
+
+		renderWorld(dt);
 		break;
 	}
 }
@@ -341,64 +268,59 @@ void Core::upServer(float dt)
 {
 	switch (subState)
 	{
-	case 0:  //create server object
-
+	case 0:  //init server
+	{
+		initPipeline();
+		//createWindow(200, 200, false);
+		serverCam = CameraInput::getCam();
 		if (top)
 			delete top;
 		top = new Server();
 		top->init(&console, _port, _addrs);
+		_name = "Server";
 
-		subState = 1;
-		break;
-	case 1: //configure port & select map
-
-			//TODO
-
-		subState = 2;
-		break;
-	case 2: //atempting mapload & bind
-
-			//bind port
+		//bind port
 		if (top->bind())
-		{
 			console.printMsg("Port bound", "System", 'S');
-		}
 		else
 		{
 			console.printMsg("Port bind failed", "System", 'S');
-			subState = 1;
+			current = Gamestate::START;
+			subState = 0;
 			return;
 		}
 
+		//atempting mapload
 		if (game != nullptr)
 			delete game;
 		game = new Game();
 		game->init(MAX_CONNECT, current);
+		game->freecam = true;
+		//load map
 
 		top->setGamePtr(game);
 
-		//load map
-
-		subState = 3;
+		subState++;
 		break;
-	case 3: //main server loop
-
-			//get data
+	}
+	case 1: //main server loop
+		//get data
 		top->network_IN(dt);
 
 		//update game
 		game->update(dt);
 
+		//handle commands and messages
 		if (console.messageReady())
 		{
 			top->msg_out = console.getMessage();
 			top->scope_out = Uint8(ALL);
 		}
-
-		serverHandleCmds(dt);
+		serverHandleCmds();
 		if (top == nullptr)
 			return;
 
+		//event packages out
 		tick_timer += dt;
 		if (tick_timer > tick)
 		{
@@ -410,13 +332,17 @@ void Core::upServer(float dt)
 			tick_timer = 0;
 		}
 
-		break;
-	default:
+		if (serverRender)
+		{
+			if (console.getInChatMode() == false)
+				serverCam->update(dt, game->freecam);
+			renderWorld(dt);
+		}
 		break;
 	}
 }
 
-void Core::startHandleCmds(float dt)
+void Core::startHandleCmds()
 {
 	if (console.commandReady())
 	{
@@ -465,7 +391,6 @@ void Core::startHandleCmds(float dt)
 		{
 			current = Gamestate::CLIENT;
 			subState = 0;
-			initPipeline();
 		}
 
 		else if (token == "/2")
@@ -478,23 +403,11 @@ void Core::startHandleCmds(float dt)
 		{
 			current = Gamestate::ROAM;
 			subState = 0;
-			initPipeline();
-
-			game = new Game();
-			game->init(MAX_CONNECT, current);
-
-			Player* p = new Player();
-			
-			p->init("Roam", glm::vec3(0, 0, 0));
-			
-			game->createPlayer(p, 0, true);
-			
-			delete p;
 		}
 	}
 }
 
-void Core::roamHandleCmds(float dt)
+void Core::roamHandleCmds()
 {
 	if (console.commandReady())
 	{
@@ -581,7 +494,7 @@ void Core::roamHandleCmds(float dt)
 	}
 }
 
-void Core::clientHandleCmds(float dt)
+void Core::clientHandleCmds()
 {
 	if (console.commandReady())
 	{
@@ -683,7 +596,7 @@ void Core::clientHandleCmds(float dt)
 	}
 }
 
-void Core::serverHandleCmds(float dt)
+void Core::serverHandleCmds()
 {
 	if (console.commandReady())
 	{
@@ -695,6 +608,8 @@ void Core::serverHandleCmds(float dt)
 			console.printMsg("Console commands", "", ' ');
 			console.printMsg("/players", "", ' ');
 			console.printMsg("/disconnect", "", ' ');
+			console.printMsg("/render", "", ' ');
+			console.printMsg("/spec #", "", ' ');
 		}
 		else if (token == "/players")
 		{
@@ -711,6 +626,38 @@ void Core::serverHandleCmds(float dt)
 		}
 		else if (token == "/disconnect")
 			disconnect();
+		else if (token == "/render")
+		{
+			if (serverRender)
+				serverRender = false; //createWindow(200, 200, false);
+			else
+				serverRender = true; //createWindow(winX, winY, fullscreen);
+		}
+		else if (token == "/spec")
+		{
+			ss >> token;
+			if (token == "/spec")
+				console.printMsg("Invalid Number", "System", 'S');
+			else
+			{
+				int id = stoi(token); // yes this is dangerous, dont write anything but numbers
+				if (id > -1 && id < MAX_CONNECT)
+				{
+					//set view dir pos back to the player's view
+					Player* p = game->getPlayer(id);
+					if (p != nullptr)
+					{
+						CameraInput::getCam()->setCam(p->getPos(), p->getDir());
+						game->spectateID = id;
+						game->freecam = true;
+					}
+					else
+						console.printMsg("That Player Doesn't exist", "System", 'S');
+				}
+				else
+					game->spectateID = -1;
+			}
+		}
 	}
 }
 
@@ -721,7 +668,10 @@ void Core::saveSettings()
 
 	if (file.is_open())
 	{
-		file << "Name: " << _name << endl;
+		if (_name == "Server")
+			file << "Name: ClientName" << endl;
+		else
+			file << "Name: " << _name << endl;
 		file << "IP: " << _addrs.toString() << endl;
 		file << "Port: " << _port;
 	}
@@ -760,33 +710,67 @@ void Core::loadSettings()
 
 }
 
+void Core::renderWorld(float dt)
+{
+	if (renderPipe && game)
+	{
+		renderPipe->update(); // sets the view/proj matrix
+		renderPipe->renderIni();
+
+		//render skybox
+		renderPipe->renderPlayer(1, (void*)&(CameraInput::getCam()->getSkyboxMat()));
+
+		//render players
+		for (size_t i = 0; i < MAX_CONNECT; i++)
+		{
+			Player* p = game->getPlayer(i);
+			if (p)
+			{
+				renderPipe->renderPlayer(0, p->getWorldMat());
+			}
+		}
+		for (int c = 0; c < BULLET_TYPE::NROFBULLETS; c++)
+		{
+			std::vector<Bullet*> bullets = game->getBullets(BULLET_TYPE(c));
+			for (int i = 0; i < bullets.size(); i++)
+			{
+				renderPipe->renderPlayer(0, bullets[i]->getWorldMat());
+			}
+		}
+		renderPipe->render();
+	}
+}
+
 void Core::createWindow(int x, int y, bool fullscreen)
 {
 	if (win != 0)
-	{
 		removeWindow();
-	}
 	if (!fullscreen)
-	{
 		win = glfwCreateWindow(
 			x, y, "ASUM PROJECT", NULL, NULL);
-	}
 	else
-	{
 		win = glfwCreateWindow(
 			x, y, "ASUM PROJECT", glfwGetPrimaryMonitor(), NULL);
-	}
 
 	//set vsync off
 	glfwSwapInterval(0);
 
-	Input* i = Input::getInput();
 	i->setupCallbacks(win);
 
 	glfwShowWindow(win);
 
 	glfwMakeContextCurrent(win);
 
+	if (renderPipe)
+	{
+		PipelineValues pv;
+		pv.type = pv.INT2;
+		pv.xy[0] = winX;
+		pv.xy[1] = winY;
+		renderPipe->setSetting(PIPELINE_SETTINGS::VIEWPORT, pv);
+		if (!renderPipe->setSetting(PIPELINE_SETTINGS::VIEWPORT, pv))
+			console.printMsg("Error: failed to set pipeline setting: VIEWPORT", "System", 'S');
+	}
 	recreate = false;
 }
 
