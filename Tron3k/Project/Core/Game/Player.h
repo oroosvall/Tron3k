@@ -2,13 +2,13 @@
 #define PLAYER_H
 
 #include "GameObject.h"
-#include "../../SoundPlayer/sound/SoundPlayer.h" //??
+#include "../../SoundPlayer/sound/SoundPlayer.h"
 #include "Animation.h"
 #include "../Input.h"
 #include "../CameraInput.h"
 
 #include <glm/glm.hpp>
-#include "Weapon/Weapon.h"
+#include "Role/Weapon/Weapon.h"
 #include <string>
 
 enum PLAYERMSG { NONE, SHOOT, WPNSWITCH };

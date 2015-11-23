@@ -33,6 +33,9 @@ private:
 	std::vector<TextureLookup> textures;
 	PlayerObject* playerModels;
 
+	//skybox
+	Mesh skybox;
+
 public:
 	~ContentManager();
 	void init();

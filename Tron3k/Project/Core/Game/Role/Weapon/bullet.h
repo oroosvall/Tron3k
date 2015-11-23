@@ -2,9 +2,9 @@
 #define BULLET_H
 
 #include <glm/glm.hpp>
-#include "../GameObject.h"
+#include "../../GameObject.h"
 
-#include "../GameDataIndex.h"
+#include "../../GameDataIndex.h"
 
 class Bullet : public GameObject
 {
