@@ -157,7 +157,12 @@ public:
 	virtual void in_event_bullet_hit(Packet* rec)
 	{
 		BulletHitInfo hi = BulletHitInfo();
-		*rec << hi.playerHit << hi.bulletPID << hi.bulletBID << hi.bt;
+		Uint8 playerHit, PID, BID, bt;
+		*rec >> playerHit >> PID >> BID >> bt;
+		hi.playerHit = playerHit;
+		hi.bt = BULLET_TYPE(bt);
+		hi.bulletBID = BID;
+		hi.bulletPID = PID;
 		gamePtr->handleBulletHitEvent(hi);
 	}
 

@@ -15,7 +15,7 @@ protected:
 	int teamId;
 
 	int playerId;
-	int bulletId = -1;
+	int bulletId = 0;
 public:
 	virtual ~Bullet();
 
