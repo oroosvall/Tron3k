@@ -83,7 +83,6 @@ void Game::update(float dt)
 				{
 					Weapon* wpn = playerList[c]->getPlayerCurrentWeapon();
 					weaponShotWith = wpn->getType();
-					handleWeaponFire(c, wpn->getBulletId(), wpn->getType(), playerList[c]->getPos(), playerList[c]->getDir());
 					shotsFired = true;
 				}
 					
