@@ -316,6 +316,13 @@ void Core::upServer(float dt)
 			top->msg_out = console.getMessage();
 			top->scope_out = Uint8(ALL);
 		}
+
+		if (game->hitEventReady())
+		{
+			BulletHitInfo hi = game->getHitInfo();
+			top->event_bullet_hit(hi);
+		}
+
 		serverHandleCmds();
 		if (top == nullptr)
 			return;

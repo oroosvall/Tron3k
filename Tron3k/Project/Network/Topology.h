@@ -152,6 +152,21 @@ public:
 			consolePtr->printMsg("ERROR in_event_player_left" , "System", 'S');
 	}
 
+	virtual void event_bullet_hit(BulletHitInfo hi) {};
+
+	virtual void in_event_bullet_hit(Packet* rec)
+	{
+		BulletHitInfo hi = BulletHitInfo();
+		Uint8 playerHit, PID, BID, bt;
+		*rec >> playerHit >> PID >> BID >> bt;
+		hi.playerHit = playerHit;
+		hi.bt = BULLET_TYPE(bt);
+		hi.bulletBID = BID;
+		hi.bulletPID = PID;
+		gamePtr->handleBulletHitEvent(hi);
+	}
+
+
 	//Frame package FROM CLIENT
 	virtual void frame_fire(WEAPON_TYPE wt, int conID, int bulletId, glm::vec3 pos, glm::vec3 dir) 
 	{ 

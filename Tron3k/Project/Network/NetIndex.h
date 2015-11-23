@@ -17,7 +17,7 @@ enum NET_EVENT
 	SERVER_STATUS = int('S'),
 	PLAYER_JOINED = int('J'),
 	PLAYER_LEFT = int('L'),
-	DAMAGE = int('D')
+	HIT = int('H')
 };
 
 enum NET_FRAME

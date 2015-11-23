@@ -163,3 +163,23 @@ void Player::switchWpn(WEAPON_TYPE ws)
 		break;
 	}
 }
+
+void Player::hitByBullet(BulletHitInfo hi, glm::vec3 dir)
+{
+	/*
+	
+	THIS CODE IS TEMPORARY
+	This needs to instead draw information from the templated bullets that are supposed to exist globally
+	Right now, we hardcode boys
+
+	*/
+	switch (hi.bt)
+	{
+	case BULLET_TYPE::PULSE_SHOT:
+		pos += dir;
+		break;
+	case BULLET_TYPE::POOP:
+		pos += dir*0.1f;
+		break;
+	}
+}

@@ -13,6 +13,14 @@
 
 enum PLAYERMSG { NONE, SHOOT, WPNSWITCH };
 
+struct BulletHitInfo
+{
+	int playerHit;
+	int bulletPID;
+	int bulletBID;
+	BULLET_TYPE bt;
+};
+
 class Player : public GameObject
 {
 private:
@@ -61,6 +69,8 @@ public:
 
 	void setTeam(int teamid) { currentTeam = teamid; };
 	int getTeam() { return currentTeam; };
+
+	void hitByBullet(BulletHitInfo hi, glm::vec3 dir);
 };
 
 #endif

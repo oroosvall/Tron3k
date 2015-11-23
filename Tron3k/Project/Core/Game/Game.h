@@ -7,7 +7,6 @@
 #include "../../../Physics/Physics.h"
 #include <vector>
 
-
 enum Gamestate
 {
 	START,
@@ -43,6 +42,7 @@ private:
 	void registerSwitch(Player* p);
 
 	void addBulletToList(int conID, int bulletId, BULLET_TYPE bt, glm::vec3 pos, glm::vec3 dir);
+	glm::vec3 removeBullet(int PID, int BID, BULLET_TYPE bt);
 
 	WEAPON_TYPE weaponShotWith;
 	int bulletShot = -1;
@@ -50,6 +50,9 @@ private:
 
 	WEAPON_TYPE weaponSwitchedTo;
 	bool wpnSwitched = false;
+
+	BulletHitInfo hit;
+	bool playerHit = false;
 public:
 
 	Game();
@@ -75,14 +78,18 @@ public:
 	int getPlayersOnTeam(int team);
 	int getMaxTeamSize(bool spec = false) { if (spec) return maxSpec; return maxTeamSize; };
 
-	bool weaponSwitchReady() { return wpnSwitched; };
-
 	bool fireEventReady() { return shotsFired; };
 	void getLatestWeaponFired(int localPlayer, WEAPON_TYPE &wt, int &bulletId);
 	void handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm::vec3 pos, glm::vec3 dir);
 
+	bool weaponSwitchReady() { return wpnSwitched; };
 	WEAPON_TYPE getWpnSwitch() { wpnSwitched = false; return weaponSwitchedTo; };
 	void handleWeaponSwitch(int conID, WEAPON_TYPE ws);
+
+	bool hitEventReady() { return playerHit; };
+	BulletHitInfo getHitInfo() { playerHit = false; return hit; };
+	void handleBulletHitEvent(BulletHitInfo hi);
+
 
 	bool freecam; // freecam is active also when in spectate but specctate overides
 	int spectateID; // -1 = none, else use conID
