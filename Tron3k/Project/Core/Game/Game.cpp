@@ -77,12 +77,14 @@ void Game::update(float dt)
 			PLAYERMSG msg = playerList[c]->update(dt);
 			if (msg == PLAYERMSG::SHOOT)
 			{
-				if (gameState != Gamestate::ROAM)
+				if (gameState == Gamestate::ROAM)
 					registerWeapon(playerList[c]);
 				else
 				{
 					Weapon* wpn = playerList[c]->getPlayerCurrentWeapon();
+					weaponShotWith = wpn->getType();
 					handleWeaponFire(c, wpn->getBulletId(), wpn->getType(), playerList[c]->getPos(), playerList[c]->getDir());
+					shotsFired = true;
 				}
 					
 			}
