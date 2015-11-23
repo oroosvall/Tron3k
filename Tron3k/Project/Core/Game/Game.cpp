@@ -94,6 +94,7 @@ void Game::update(float dt)
 				{
 					Weapon* wpn = playerList[c]->getPlayerCurrentWeapon();
 					weaponShotWith = wpn->getType();
+					bulletShot = wpn->getBulletId();
 					shotsFired = true;
 				}
 			}
@@ -261,6 +262,7 @@ void Game::checkPlayerVBulletCollision()
 							playerHit = true;
 
 							handleBulletHitEvent(hit);
+							return;
 						}
 					}
 				}
