@@ -319,8 +319,7 @@ void Core::upServer(float dt)
 
 		if (game->hitEventReady())
 		{
-			BulletHitInfo hi = game->getHitInfo();
-			top->event_bullet_hit(hi);
+			top->event_bullet_hit(game->getHitInfo());
 		}
 
 		serverHandleCmds();
