@@ -49,6 +49,7 @@ public:
 	void update(float dt, bool freeCam);
 
 	glm::vec3 getDir() { return dir; };
+	glm::vec3 getPos() { return pos; };
 	void setCam(vec3 _pos, vec3 _dir);
 	void setCam(vec3 _pos);
 

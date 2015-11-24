@@ -38,6 +38,12 @@ void ContentManager::init()
 	tex.textureName = "GameFiles/TestFiles/skybox.jpg";
 	textures.push_back(tex);
 
+	tex.loaded = false;
+	tex.textureID = 0;
+	tex.fileTexID = 1;
+	tex.textureName = "GameFiles/TestFiles/Blank_normal.png";
+	textures.push_back(tex);
+
 	
 
 	Mesh m;
@@ -101,8 +107,6 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 	{
 		glProgramUniformMatrix4fv(shader, shaderLocation, 1, GL_FALSE, (GLfloat*)meshes[i].getWorld());
 
-		glProgramUniform1i(shader, textureLocation, 0);
-		glProgramUniform1i(shader, normalLocation, 1);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, meshes[i].textureID);
 
@@ -125,6 +129,10 @@ void ContentManager::renderPlayer(int playerID, glm::mat4 world)
 	{
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, playerModels[playerID].textureID);
+
+		glActiveTexture(GL_TEXTURE0 + 1);
+		glBindTexture(GL_TEXTURE_2D, textures[4].textureID);
+
 		glBindVertexArray(playerModels[playerID].vao);
 		glBindBuffer(GL_ARRAY_BUFFER, playerModels[playerID].meshID);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, playerModels[playerID].index);
@@ -134,8 +142,13 @@ void ContentManager::renderPlayer(int playerID, glm::mat4 world)
 	else if (playerID == 1)
 	{
 		glDisable(GL_DEPTH_TEST);
+
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, skybox.textureID);
+		glBindTexture(GL_TEXTURE_2D, textures[3].textureID);
+
+		glActiveTexture(GL_TEXTURE0 + 1);
+		glBindTexture(GL_TEXTURE_2D, textures[4].textureID);
+
 		glBindVertexArray(skybox.vao);
 		glBindBuffer(GL_ARRAY_BUFFER, skybox.vbo);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, skybox.ibo);

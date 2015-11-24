@@ -720,7 +720,8 @@ void Core::renderWorld(float dt)
 {
 	if (renderPipe && game)
 	{
-		renderPipe->update(); // sets the view/proj matrix
+		glm::vec3 tmpEyePos = CameraInput::getCam()->getPos();
+		renderPipe->update(tmpEyePos.x, tmpEyePos.y, tmpEyePos.z, dt); // sets the view/proj matrix
 		renderPipe->renderIni();
 
 		//render skybox
