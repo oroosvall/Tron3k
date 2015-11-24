@@ -44,7 +44,7 @@ void Player::setGoalDir(glm::vec3 newDir)
 
 void Player::movePlayer(float dt)
 {
-	glm::vec3 playerVel = vel*speed;
+	glm::vec3 playerVel = vel*1.0f;//vel*role.getMovementSpeed();
 	pos += playerVel * dt; //Here we will also include external forces
 }
 
@@ -104,9 +104,13 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					left = normalize(left);
 					if (grounded)
 					{	
-						vel.x = left.x;
-						vel.z = left.z;
+						vel.x += left.x;
+						vel.z += left.z;
 						stop = false;
+						glm::vec2 tempvec = vec2(vel.x, vel.z);
+						tempvec = normalize(tempvec);
+						vel.x = tempvec.x;
+						vel.z = tempvec.y;
 					}
 				}
 				if (i->getKeyInfo(GLFW_KEY_D))
@@ -115,9 +119,13 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					right = normalize(right);
 					if (grounded)
 					{
-						vel.x = right.x;
-						vel.z = right.z;
+						vel.x += right.x;
+						vel.z += right.z;
 						stop = false;
+						glm::vec2 tempvec = vec2(vel.x, vel.z);
+						tempvec = normalize(tempvec);
+						vel.x = tempvec.x;
+						vel.z = tempvec.y;
 					}
 				}
 

@@ -38,8 +38,6 @@ private:
 	glm::vec3 vel; //Our velocity i.e. in which direction we're moving
 	void movePlayer(float dt);
 	bool grounded = false;
-	float speed = 1.0f;
-	float airControlCoefficient = 0.1f;
 
 
 	glm::vec3 oldPos;
