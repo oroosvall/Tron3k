@@ -258,10 +258,10 @@ void Player::hitByBullet(BulletHitInfo hi, glm::vec3 dir)
 void Player::applyGravity(Physics* p, float dt)
 {
 	p->addGravity(vel, dt);
-	if (pos.y <= -2.0f) // Temp code for floor lol
+	/*if (pos.y <= -2.0f) // Temp code for floor lol
 	{
 		vel.y = 0.0f;
 		pos.y = -2.0f;
 		grounded = true;
-	}
+	}*/
 }

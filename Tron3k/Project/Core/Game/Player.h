@@ -78,6 +78,12 @@ public:
 	void setTeam(int teamid) { currentTeam = teamid; };
 	int getTeam() { return currentTeam; };
 
+	void setGrounded(bool grounded) { this->grounded = grounded; };
+	bool getGrounded() { return grounded; };
+
+	void setVelocity(glm::vec3 velocity) { vel = velocity; };
+	glm::vec3 getVelocity() { return vel; };
+
 	void hitByBullet(BulletHitInfo hi, glm::vec3 dir);
 };
 

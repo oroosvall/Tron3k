@@ -86,8 +86,10 @@ void Game::update(float dt)
 			}
 
 			if (playerList[c]->isLocal())
+			{
+				if(!playerList[c]->getGrounded())
 				playerList[c]->applyGravity(physics, dt);
-				
+			}
 
 			PLAYERMSG msg = playerList[c]->update(dt, freecam, spectatingThis, spectating);
 			if (msg == PLAYERMSG::SHOOT)
@@ -292,7 +294,13 @@ void Game::checkPlayerVWorldCollision()
 			{
 				bool collides = physics->checkPlayerVWorldCollision(playerList[i]->getPos());
 				if (collides)
-					int x = 0;
+				{
+					//collision with world here, no gravity etc
+					playerList[i]->setGrounded(true);
+					glm::vec3 vel = playerList[i]->getVelocity();
+					vel.y = 0.0f;
+					playerList[i]->setVelocity(vel);
+				}
 			}
 		}
 	}
