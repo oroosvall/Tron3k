@@ -32,7 +32,7 @@ struct PointLight
 	float ax, ay, az;
 };
 
-struct SpotLight
+struct SpotLightH
 {
 	float x, y, z;
 	float dx, dy, dz;

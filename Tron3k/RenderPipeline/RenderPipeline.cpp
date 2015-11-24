@@ -157,6 +157,9 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	gBuffer->eyePos.x = x;
 	gBuffer->eyePos.y = y;
 	gBuffer->eyePos.z = z;
+
+	glProgramUniform1i(regularShader, uniformTextureLocation, 0);
+	glProgramUniform1i(regularShader, uniformnNormalLocation, 1);
 }
 
 
