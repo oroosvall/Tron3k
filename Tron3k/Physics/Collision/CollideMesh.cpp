@@ -20,3 +20,8 @@ void CollideMesh::addAABB(float xPos, float yPos, float zPos, float xSize, float
 	boundingBox.sizeY = ySize;
 	boundingBox.sizeZ = zSize;
 }
+
+AABB CollideMesh::getAABB()
+{
+	return boundingBox;
+}

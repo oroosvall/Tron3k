@@ -119,7 +119,10 @@ void Game::update(float dt)
 	}
 
 	if (gameState == Gamestate::CLIENT)
+	{
 		checkPvPCollision();
+		checkPlayerVWorldCollision();
+	}
 
 	if (gameState == Gamestate::SERVER)
 		checkPlayerVBulletCollision();
@@ -275,6 +278,22 @@ void Game::checkPlayerVBulletCollision()
 			}
 		}
 		
+	}
+}
+
+void Game::checkPlayerVWorldCollision()
+{
+	for (int i = 0; i < max_con; i++)
+	{
+		if (playerList[i] != nullptr)
+		{
+			if (playerList[i]->isLocal())
+			{
+				bool collides = physics->checkPlayerVWorldCollision(playerList[i]->getPos());
+				if (collides)
+					int x = 0;
+			}
+		}
 	}
 }
 

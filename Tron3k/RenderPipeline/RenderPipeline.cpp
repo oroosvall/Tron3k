@@ -251,10 +251,20 @@ void* RenderPipeline::getMaxExtremes()
 	return (void*)ret;
 }
 
-void* RenderPipeline::getWorldBoxes()
+void RenderPipeline::getWorldBoxes(int &current, float &xMax, float &xMin, float &yMax, float &yMin, float &zMax, float &zMin)
 {
-	std::vector<std::vector<float>>* wBoxes = new std::vector<std::vector<float>>(contMan.getMeshBoxes());
-	return (void*)wBoxes;
+	std::vector<std::vector<float>> wBoxes = contMan.getMeshBoxes();
+	xMax = wBoxes[current][0];
+	xMin = wBoxes[current][1];
+	yMax = wBoxes[current][2];
+	yMin = wBoxes[current][3];
+	zMax = wBoxes[current][4];
+	zMin = wBoxes[current][5];
+}
+
+int RenderPipeline::getNrOfWorldBoxes()
+{
+	return contMan.getMeshBoxes().size();
 }
 
 IRenderPipeline* CreatePipeline()

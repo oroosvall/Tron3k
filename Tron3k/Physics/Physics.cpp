@@ -40,9 +40,23 @@ bool Physics::checkCollision(Geometry* obj1, Geometry* obj2)
 	return 0;
 }
 
-bool Physics::checkCollision(CollideMesh* obj1, CollideMesh* obj2)
+bool Physics::checkCollision(glm::vec3 pos, CollideMesh mesh)
 {
-	return false;
+	if (pos.x + size.x > mesh.getAABB().posX - mesh.getAABB().sizeX &&
+		pos.x - size.x < mesh.getAABB().posX + mesh.getAABB().sizeX)//x
+	{
+		if (pos.y + size.y > mesh.getAABB().posY - mesh.getAABB().sizeY &&
+			pos.y - size.y < mesh.getAABB().posY + mesh.getAABB().sizeY)//y
+		{
+			if (pos.z + size.z > mesh.getAABB().posZ - mesh.getAABB().sizeZ &&
+				pos.z - size.z < mesh.getAABB().posZ + mesh.getAABB().sizeZ)//z
+			{
+				return 1;
+			}
+		}
+	}
+
+	return 0;
 }
 
 bool Physics::checkPlayerVPlayerCollision(glm::vec3 playerPos1, glm::vec3 playerPos2)
@@ -62,6 +76,17 @@ bool Physics::checkPlayerVBulletCollision(glm::vec3 playerPos, glm::vec3 bulletP
 	bool collide = checkCollision(&player, &bullet);
 
 	return collide;
+}
+
+bool Physics::checkPlayerVWorldCollision(glm::vec3 playerPos)
+{
+	bool collides = false;
+	for (int i = 0; i < worldBoxes.size(); i++)
+	{
+		if (checkCollision(playerPos, worldBoxes[i]))
+			collides = true;
+	}
+	return collides;
 }
 
 void Physics::addGravity(glm::vec3 &pos, float dt)

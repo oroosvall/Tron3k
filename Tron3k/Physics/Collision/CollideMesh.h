@@ -20,5 +20,6 @@ public:
 	~CollideMesh();
 
 	void addAABB(float xPos, float yPos, float zPos, float xSize, float ySize, float zSize);
+	AABB getAABB();
 };
 #endif

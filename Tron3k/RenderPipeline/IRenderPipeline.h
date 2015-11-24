@@ -69,7 +69,8 @@ public:
 
 	virtual void* getMinExtremes() = 0;
 	virtual void* getMaxExtremes() = 0;
-	virtual void* getWorldBoxes() = 0;
+	virtual void getWorldBoxes(int &current, float &xMax, float &xMin, float &yMax, float &yMin, float &zMax, float &zMin) = 0;
+	virtual int getNrOfWorldBoxes() = 0;
 
 };
 

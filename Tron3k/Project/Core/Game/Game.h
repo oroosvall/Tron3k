@@ -74,6 +74,7 @@ public:
 
 	void checkPvPCollision();
 	void checkPlayerVBulletCollision();
+	void checkPlayerVWorldCollision();
 
 	void addPlayerToTeam(int p_conID, int team);
 	int getPlayersOnTeam(int team);
