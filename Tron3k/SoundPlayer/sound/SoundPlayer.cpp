@@ -18,8 +18,8 @@ void SoundPlayer::release()
 void SoundPlayer::init(SoundPlayer* sound)
 {
 	singleton = sound;
-
-	singleton->soundList[SOUNDS::gunshot].loadFromFile("GameFiles/Sound/soundEffectGunshots.ogg");
+	singleton->soundList[SOUNDS::soundEffectPusleRifleShot].loadFromFile("GameFiles/Sound/soundEffectBulletPlayerHit.ogg");
+	singleton->soundList[SOUNDS::soundEffectPusleRifleShot].loadFromFile("GameFiles/Sound/soundEffectPusleRifleShot.ogg");
 	singleton->soundList[SOUNDS::firstBlood].loadFromFile("GameFiles/Sound/voiceFirstBlood.ogg");
 	singleton->musicList[MUSIC::mainMenu] = "GameFiles/Sound/musicMainMenu.ogg";
 }
@@ -94,7 +94,7 @@ int SoundPlayer::playUserGeneratedSound(int sound)
 	return 0;
 }
 
-int SoundPlayer::playExternalSound(int sound, sf::Vector3f soundOrigin)
+int SoundPlayer::playExternalSound(int sound, float x, float y, float z)
 {
 	//sf::Listener::setPosition(playerPosX, playerPosY, playerPosZ);			//Set the position of the player
 	sf::Listener::setDirection(0.0f, 0.0f, -10.0f);			//Set the direction of the player
@@ -102,7 +102,7 @@ int SoundPlayer::playExternalSound(int sound, sf::Vector3f soundOrigin)
 	if (nrOfSoundsPlaying < 29)
 	{
 		sounds[nrOfSoundsPlaying].setMinDistance(10.0f);		//Set the sound's distance it travels before it starts to attenuate. Could be passed in through a parameter.
-		sounds[nrOfSoundsPlaying].setPosition(soundOrigin);			//Set the sound's position in the world. Could be passed in through a parameter.
+		sounds[nrOfSoundsPlaying].setPosition(x, y, z);			//Set the sound's position in the world. Could be passed in through a parameter.
 		sounds[nrOfSoundsPlaying].setBuffer(soundList[sound]);
 		sounds[nrOfSoundsPlaying].play();
 		nrOfSoundsPlaying++;
@@ -110,7 +110,7 @@ int SoundPlayer::playExternalSound(int sound, sf::Vector3f soundOrigin)
 	else if (nrOfSoundsPlaying >= 30)
 	{
 		sounds[0].setMinDistance(10.0f);		
-		sounds[0].setPosition(soundOrigin);			
+		sounds[0].setPosition(x, y, z);			
 		sounds[0].setBuffer(soundList[sound]);
 		sounds[0].play();
 	}

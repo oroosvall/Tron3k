@@ -46,7 +46,7 @@ public:
 
 	virtual int playMusic(int music);
 
-	virtual int playExternalSound(int sound, sf::Vector3f soundOrigin);
+	virtual int playExternalSound(int sound, float, float, float);
 	virtual int playUserGeneratedSound(int sound);
 
 	virtual void rotate(float deltaTime);
