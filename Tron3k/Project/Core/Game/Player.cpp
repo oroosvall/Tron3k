@@ -7,8 +7,6 @@ Player::Player()
 
 void Player::init(std::string pName, glm::vec3 initPos, bool isLocal)
 {
-	role.chooseRole(TRAPPER);
-
 	name = pName;
 	pos = initPos;
 	vel = glm::vec3(0, 0, 0);
@@ -272,4 +270,9 @@ void Player::applyGravity(Physics* p, float dt)
 		pos.y = -10.0f;
 		grounded = true;
 	}
+}
+
+void Player::setRole(Role role)
+{
+	this->role = role;
 }

@@ -35,6 +35,7 @@ void Game::init(int max_connections, int state)
 {
 	max_con = max_connections;
 
+	loadRoles();
 	initPhysics();
 
 	gameState = state;
@@ -45,6 +46,33 @@ void Game::init(int max_connections, int state)
 
 	freecam = false;
 	spectateID = -1;
+}
+
+void Game::loadRoles()
+{
+	string roles[NROFROLES];
+	roles[TRAPPER] = "GameFiles/Roles/trapper.txt";
+	roles[DESTROYER] = "GameFiles/Roles/destroyer.txt";
+	roles[MOBILITY] = "GameFiles/Roles/mobility.txt";
+	roles[BRUTE] = "GameFiles/Roles/brute.txt";
+	roles[MANIPULATOR] = "GameFiles/Roles/manipulator.txt";
+
+	ifstream roleFile;
+	for (int i = 0; i < NROFROLES; i++)
+	{
+		for (int y = 0; y < NROFREAD; y += 5)
+		{
+			roleFile.open(roles[i]);
+
+			getline(roleFile, loadedRoles[i][y]);
+			getline(roleFile, loadedRoles[i][y + 1]);
+			getline(roleFile, loadedRoles[i][y + 2]);
+			getline(roleFile, loadedRoles[i][y + 3]);
+			getline(roleFile, loadedRoles[i][y + 4]);
+			roleFile.close();
+		}
+	}
+	templateRole = new Role(loadedRoles);
 }
 
 void Game::initPhysics()
@@ -147,6 +175,7 @@ void Game::createPlayer(Player* p, int conID, bool isLocal)
 {
 	playerList[conID] = new Player();
 	playerList[conID]->init(p->getName(), p->getPos(), isLocal);
+	playerList[conID]->setRole(*templateRole);
 }
 
 void Game::removePlayer(int conID)

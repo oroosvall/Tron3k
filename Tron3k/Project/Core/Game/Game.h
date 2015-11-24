@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "../../../Physics/Physics.h"
 #include <vector>
+#include <fstream>
 
 enum Gamestate
 {
@@ -30,12 +31,16 @@ private:
 	int maxSpec = 5;
 	void removeConIDfromTeams(int conID);
 
+	Role* templateRole;
+	string loadedRoles[NROFROLES][NROFREAD];
+
 	int gameState;
 
 	int max_con;
 	Player** playerList;
 	Physics* physics;
 
+	void loadRoles();
 	void initPhysics();
 
 	void registerWeapon(Player* p);
