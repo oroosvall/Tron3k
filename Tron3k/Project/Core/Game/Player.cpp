@@ -7,6 +7,7 @@ Player::Player()
 
 void Player::init(std::string pName, glm::vec3 initPos, bool isLocal)
 {
+	role.chooseRole(TRAPPER);
 	weapons[0].init(36, WEAPON_TYPE::PULSE_RIFLE, 0.5);
 	weapons[1].init(80, WEAPON_TYPE::POOP_GUN, 0.1);
 
@@ -170,25 +171,12 @@ void Player::rotatePlayer(vec3 olddir, vec3 newdir)
 
 Weapon* Player::getPlayerCurrentWeapon()
 {
-	return &weapons[currentWpn];
+	return role.getCurrentWeapon();
 }
 
 void Player::switchWpn(WEAPON_TYPE ws)
 {
-	/*
-	THIS CODE IS TEMPORARY
-	This logic needs to be moved to the class, where we can easily compare to the class' weapons. If the class does not hold any of these weapons, we can conclude that the weapon switch
-	is due to a tech pickup or super weapon. Then, we check which type of weapon ws is and figure out in which slot to put it.
-	*/
-	switch (ws)
-	{
-	case WEAPON_TYPE::PULSE_RIFLE:
-		currentWpn = 0;
-		break;
-	case WEAPON_TYPE::POOP_GUN:
-		currentWpn = 1;
-		break;
-	}
+	role.swapWeapon(ws);
 }
 
 void Player::hitByBullet(BulletHitInfo hi, glm::vec3 dir)
