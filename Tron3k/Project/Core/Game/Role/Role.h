@@ -5,8 +5,6 @@
 #include "../GameDataIndex.h"
 #include "ActiveEffects/consumable.h"
 #include<string>
-#include <fstream>
-#include <sstream>
 
 using namespace std;
 
@@ -31,6 +29,7 @@ class Role
 
 	public:
 		Role();
+		Role(string inLoadedRoles[NROFROLES][NROFREAD]);
 		~Role();
 
 		float getMovementSpeed();

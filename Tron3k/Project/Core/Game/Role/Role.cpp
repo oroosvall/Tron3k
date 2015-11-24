@@ -4,29 +4,21 @@ Role::Role()
 {
 	currentWpn = 0;
 	health = 1;
-
-	roles[TRAPPER] = "GameFiles/Roles/trapper.txt";
-	roles[DESTROYER] = "GameFiles/Roles/destroyer.txt";
-	roles[MOBILITY] = "GameFiles/Roles/mobility.txt";
-	roles[BRUTE] = "GameFiles/Roles/brute.txt";
-	roles[MANIPULATOR] = "GameFiles/Roles/manipulator.txt";
-
-	ifstream roleFile;
+	movementSpeed = 0;
+	weapons[0].init(36, WEAPON_TYPE::PULSE_RIFLE, 0.5);
+}
+Role::Role(string inLoadedRoles[NROFROLES][NROFREAD])
+{
 	for (int i = 0; i < NROFROLES; i++)
 	{
-		for (int y = 0; y < NROFREAD; y += 5)
+		for (int y = 0; y < NROFREAD; y++)
 		{
-			roleFile.open(roles[i]);
-
-			getline(roleFile, loadedRoles[i][y]);
-			getline(roleFile, loadedRoles[i][y + 1]);
-			getline(roleFile, loadedRoles[i][y + 2]);
-			getline(roleFile, loadedRoles[i][y + 3]);
-			getline(roleFile, loadedRoles[i][y + 4]);
-			roleFile.close();
+			loadedRoles[i][y] = inLoadedRoles[i][y];
 		}
 	}
-
+	currentWpn = 0;
+	health = 1;
+	chooseRole(TRAPPER);
 }
 
 Role::~Role()
@@ -41,7 +33,6 @@ float Role::getMovementSpeed()
 
 void Role::chooseRole(int role)
 {
-	stringstream temp;
 	if (role < NROFROLES)
 	{
 		health = atoi(loadedRoles[role][HEALTH].c_str());

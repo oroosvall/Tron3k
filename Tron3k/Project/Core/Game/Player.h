@@ -85,6 +85,8 @@ public:
 	glm::vec3 getVelocity() { return vel; };
 
 	void hitByBullet(BulletHitInfo hi, glm::vec3 dir);
+
+	void setRole(Role role);
 };
 
 #endif
