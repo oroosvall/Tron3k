@@ -64,7 +64,8 @@ void Gbuffer::init(int x, int y, int nrTex, bool depth)
 	uniformBitsList = new GLuint[nrTextures];
 
 	uniformEyePos = glGetUniformLocation(*shaderPtr, "eyepos");
-	//uniformNrOfLight = glGetUniformLocation(*shaderPtr, "NumSpotLights");
+	uniformNrOfLight = glGetUniformLocation(*shaderPtr, "NumSpotLights");
+	uniformBufferLightPos = glGetUniformBlockIndex(*shaderPtr, "Light");
 
 	if (depth)
 	{
@@ -86,12 +87,23 @@ void Gbuffer::init(int x, int y, int nrTex, bool depth)
 	blitQuads[5].Init(shaderPtr, vec2(-1, -1), vec2(1, 1));
 
 	initialized = true;
+
+	initLight();
 }
 
-//void Gbuffer::initLight()
-//{
-//
-//}
+void Gbuffer::initLight()
+{
+	if (targetId == 0)
+		throw;
+	glGenBuffers(1, &lightBuffer);
+
+	maxLights = 500;
+
+	glBindBuffer(GL_UNIFORM_BUFFER, lightBuffer);
+	glBufferData(GL_UNIFORM_BUFFER, maxLights * sizeof(maxLights), NULL, GL_DYNAMIC_DRAW);
+
+	lightInitialized = true;
+}
 
 Gbuffer::~Gbuffer()
 {
@@ -116,12 +128,27 @@ void Gbuffer::resize(int x, int y)
 	}
 }
 
+void Gbuffer::pushLights(SpotLight* light, int nrLight)
+{
+	glBindBuffer(GL_UNIFORM_BUFFER, lightBuffer);
+
+	for (int i = 0; i < nrLight; i++)
+	{
+		if (nrOfLights < maxLights)
+		{
+			glBindBuffer(GL_UNIFORM_BUFFER, lightBuffer);
+			glBufferSubData(GL_UNIFORM_BUFFER, nrOfLights * sizeof(SpotLight), 1 * sizeof(SpotLight), &light[i]);
+			nrOfLights++;
+		}
+	}
+}
+
 void Gbuffer::bind(GLuint target)
 {
 	glBindFramebuffer(target, targetId);
 }
 
-void Gbuffer::render()
+void Gbuffer::render(/*glm::vec3 playerPos, glm::vec3 playerDir*/)
 {
 	// bind shader
 	glUseProgram(*shaderPtr);
@@ -135,11 +162,14 @@ void Gbuffer::render()
 	}
 
 	glProgramUniform3fv(*shaderPtr, uniformEyePos, 1, &eyePos[0]);
-	//glProgramUniform1i(*shaderPtr, nrLightLoc, nrOfLights);
+	glProgramUniform1i(*shaderPtr, uniformNrOfLight, nrOfLights);
 
 	// bind buffer
 	glBindBuffer(GL_ARRAY_BUFFER, renderQuad);
 	glBindVertexArray(renderVao);
+
+	glBindBuffer(GL_UNIFORM_BUFFER, lightBuffer);
+	glBindBufferBase(GL_UNIFORM_BUFFER, uniformBufferLightPos, lightBuffer);
 
 	blitQuads[5].BindVertData();
 	glProgramUniform1i(*shaderPtr, uniformUse, 5);

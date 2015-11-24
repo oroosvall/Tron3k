@@ -15,16 +15,16 @@ public:
 	~Gbuffer();
 
 	void init(int x, int y, int nrTex, bool depth);
-	//void initLight();
+	void initLight();
 
 	void resize(int x, int y);
 
 	void bind(GLuint index);
 
-	void render();
+	void render(/*glm::vec3 playerPos, glm::vec3 playerDir*/);
 
 	void clearLights();
-	//void pushLights(SpotLight* light, int nrLight);
+	void pushLights(SpotLight* light, int nrLight);
 
 	GLuint* shaderPtr;
 
@@ -44,16 +44,16 @@ private:
 	GLuint* uniformBitsList;
 	GLuint uniformUse;
 	GLuint uniformEyePos;
-	//GLuint uniformNrOfLight;
+	GLuint uniformNrOfLight;
 
 	//Light Buffers
 	GLuint lightBuffer;
-	GLuint lightBufferGlow;
-
-	GLuint LightVao;
+	GLuint uniformBufferLightPos;
 
 	//Bits
 	BlitQuad* blitQuads;
+
+	int maxLights;
 };
 
 #endif

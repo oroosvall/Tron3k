@@ -24,21 +24,20 @@ struct SpotLight
 	float Cutoff;
 };
 
-//layout (std140) uniform Light
-//{ 
-//	SpotLight lights[30];
-//};
+layout (std140) uniform Light
+{ 
+	SpotLight lights[500];
+};
 
-//uniform int NumSpotLights;
+uniform int NumSpotLights;
 uniform vec3 eyepos;
 
 float gSpecularPower = 20;
 float gMatSpecularIntensity = 0.4;
 
 //TEST LIGHT
-int NumSpotLights = 1;
-
-SpotLight tmpLight;
+//int NumSpotLights = 1;
+//SpotLight tmpLight;
 
 
 
@@ -46,7 +45,7 @@ out vec4 fragment_color;
 					
 vec4 CalcLightInternal(SpotLight l, vec3 LightDirection, vec3 Normal)                   
 {                                                                                           
-	vec4 AmbientColor = vec4(l.Color, 1.0f) * l.AmbientIntensity;                   
+	              
 	float DiffuseFactor = dot(Normal, -LightDirection);                                     
                                                                                            
 	vec4 DiffuseColor  = vec4(0, 0, 0, 0);                                            
@@ -64,7 +63,7 @@ vec4 CalcLightInternal(SpotLight l, vec3 LightDirection, vec3 Normal)
 			SpecularColor = vec4(l.Color, 1.0f) * gMatSpecularIntensity * SpecularFactor;                                                                                                          
 	}                                                                                       
                                                                                    
-	return (AmbientColor + DiffuseColor + SpecularColor);                                   
+	return (DiffuseColor + SpecularColor);                                   
 }               
 
 vec4 CalcPointLight(SpotLight l, vec3 Normal)
@@ -73,14 +72,17 @@ vec4 CalcPointLight(SpotLight l, vec3 Normal)
 	float Distance = length(LightDirection);
 	LightDirection = normalize(LightDirection);    
 
-	return (CalcLightInternal(l, LightDirection, Normal));                          
+	vec4 Color = vec4(CalcLightInternal(l, LightDirection, Normal)); 
+	float Attenuation =  0.5 * Distance;
+	return Color / Attenuation;                           
+	//return (CalcLightInternal(l, LightDirection, Normal));                          
 }                                                                                           
                                                                                            
 vec4 CalcSpotLight(SpotLight l, vec3 Normal)                                                
 {                                                                                           
 	vec3 LightToPixel = normalize(Position0.xyz - l.Position);                             
 	float SpotFactor = dot(LightToPixel, l.Direction);                                      
-                                                                                           
+    	
 	if (SpotFactor > l.Cutoff) 
 	{                                                            
 		vec4 Color = CalcPointLight(l, Normal);                             
@@ -88,16 +90,17 @@ vec4 CalcSpotLight(SpotLight l, vec3 Normal)
 	}                                                                                       
 	else                                                                                
 		return vec4(0,0,0,0);                                                                   
+	
 }  		
 
 void main()
 {
-	tmpLight.Color = vec3(1.0, 1.0, 1.0);
-	tmpLight.DiffuseIntensity = 0.7;
-	tmpLight.AmbientIntensity = 0.5;
-	tmpLight.Position = vec3(1.891, 7.186, 2.467);
-	tmpLight.Direction = vec3(-0.361, -0.817, -0.449);
-	tmpLight.Cutoff = 0.0;
+	//tmpLight.Color = vec3(1.0, 1.0, 1.0);
+	//tmpLight.DiffuseIntensity = 0.7;
+	//tmpLight.AmbientIntensity = 0.5;
+	//tmpLight.Position = vec3(1.891, 7.186, 2.467);
+	//tmpLight.Direction = vec3(-0.361, -0.817, -0.449);
+	//tmpLight.Cutoff = -3.14;
 
 	if(Use == 0)
 	{
@@ -120,9 +123,12 @@ void main()
 		Normal0 = texture(Normal, vec2(UV.x, UV.y));
 		Depth0 = texture(Depth, vec2(UV.x, UV.y));
 
-		//for(int n = 0; n < NumSpotLights; n++)
-		fragment_color += CalcSpotLight(tmpLight, Normal0.xyz);
-
+		for(int n = 0; n < NumSpotLights; n++)
+		{
+			fragment_color += CalcSpotLight(lights[n], Normal0.xyz);
+			fragment_color += Diffuse0 * lights[n].Color * lights[n].AmbientIntensity;
+		}
+		
 		fragment_color = fragment_color * Diffuse0;
 	}	
 }

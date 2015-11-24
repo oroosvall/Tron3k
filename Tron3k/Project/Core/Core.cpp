@@ -728,6 +728,25 @@ void Core::renderWorld(float dt)
 		//render skybox
 		renderPipe->renderPlayer(1, (void*)&(CameraInput::getCam()->getSkyboxMat()));
 
+		//send all lights
+		bool firstLight = true;
+		for (size_t i = 0; i < MAX_CONNECT; i++)
+		{
+			Player* p = game->getPlayer(i);
+			if (p)
+			{
+				SpotLight light;
+				light.Position = p->getPos();
+				light.Direction = p->getDir();
+				if (firstLight)
+				{
+					light.AmbientIntensity = 0.3;
+					firstLight = false;
+				}
+				renderPipe->addLight(&light);
+			}
+		}
+
 		//render players
 		for (size_t i = 0; i < MAX_CONNECT; i++)
 		{

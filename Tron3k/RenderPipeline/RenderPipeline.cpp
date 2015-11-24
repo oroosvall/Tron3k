@@ -160,6 +160,18 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 
 	glProgramUniform1i(regularShader, uniformTextureLocation, 0);
 	glProgramUniform1i(regularShader, uniformnNormalLocation, 1);
+
+	SpotLight playerLight[2];
+	playerLight[0].Position = vec3(x,y,z);
+	playerLight[0].Direction = vec3();
+
+
+	gBuffer->clearLights();
+}
+
+void RenderPipeline::addLight(SpotLight* newLight)
+{
+	gBuffer->pushLights(newLight, 1);
 }
 
 

@@ -1,8 +1,6 @@
 #ifndef LIGHTS_H
 #define LIGHTS_H
 
-#include <gl/glew.h>
-#include <gl/GL.h>
 #include <glm\glm.hpp>
 #include <glm\gtc\matrix_transform.hpp>
 
@@ -17,7 +15,7 @@ struct SpotLight
 
 	SpotLight()
 	{
-		Color = glm::vec3(0.0f, 0.0f, 0.0f); // 0 1 2
+		Color = glm::vec3(1.0f, 1.0f, 1.0f); // 0 1 2
 		Position = glm::vec3(0.0f, 0.0f, 0.0f); // 3 4 5
 		Direction = glm::vec3(0.0f, -1.0f, 0.0f); // 6 7 8
 

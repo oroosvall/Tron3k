@@ -63,6 +63,8 @@ public:
 	virtual void renderIni();
 	virtual void render();
 
+	virtual void addLight(SpotLight* newLight);
+
 	virtual void* getView();
 
 	virtual void renderPlayer(int playerID, void* world);
