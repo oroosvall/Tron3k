@@ -158,6 +158,11 @@ void Game::sendBoatCoordsToPhysics(glm::vec3 minVals, glm::vec3 maxVals)
 	physics->getBoatExtremes(minVals, maxVals);
 }
 
+void Game::sendWorldBoxes(std::vector<std::vector<float>> wBoxes)
+{
+	physics->receiveWorldBoxes(wBoxes);
+}
+
 void Game::checkPvPCollision()
 {
 	//TEMPORARY

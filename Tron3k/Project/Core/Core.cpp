@@ -92,6 +92,7 @@ void Core::update(float dt)
 	if (game != nullptr && !given)
 	{
 		givePlayerBoatExtremes();
+		sendWorldBoxes();
 		given = true;
 	}
 }
@@ -840,6 +841,26 @@ void Core::givePlayerBoatExtremes()
 	}
 	else
 	game->getBoatCoordsFromCore(vec3(-1,-1,-1), vec3(1,1,1));
+}
+
+void Core::sendWorldBoxes()
+{
+	if (renderPipe != nullptr)
+	{
+		//Jag hatar .dll-er
+		std::vector<std::vector<float>>* wBoxes = (std::vector<std::vector<float>>*)renderPipe->getWorldBoxes();
+		std::vector<std::vector<float>> worldBoxes;
+		std::vector<float> temp;
+		for (int i = 0; i < wBoxes->size(); i++)
+		{
+			temp.clear();
+			
+			temp = (wBoxes[i][i]);
+				//temp.push_back(wBoxes[i][j]);
+			worldBoxes.push_back(temp);
+		}
+		game->sendWorldBoxes(worldBoxes);
+	}
 }
 
 bool Core::windowVisible() const

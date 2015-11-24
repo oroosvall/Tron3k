@@ -87,6 +87,7 @@ public:
 	virtual void setGBufferWin(unsigned int WindowWidth, unsigned int WindowHeight);
 	virtual void* getMinExtremes();
 	virtual void* getMaxExtremes();
+	virtual void* getWorldBoxes();
 
 };
 

@@ -11,12 +11,14 @@
 
 #include "Collision\Geometry.h"
 #include "Collision\CollideMesh.h"
+#include<vector>
 
 
 class Physics
 {
 private:
 	//General physics components will go here, and things will be added as we go
+	std::vector<CollideMesh> worldBoxes;
 
 	bool checkCollision(CollideMesh* obj1, CollideMesh* obj2);//Iterative function for each layer of CollideMesh
 
@@ -38,6 +40,7 @@ public:
 
 	//TEMPORARY
 	virtual void getBoatExtremes(glm::vec3 minVals, glm::vec3 maxVals);
+	virtual void receiveWorldBoxes(std::vector<std::vector<float>> wBoxes);
 };
 
 extern "C" PHYSICS_API Physics* CreatePhysics();

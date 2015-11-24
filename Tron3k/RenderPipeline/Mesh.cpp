@@ -181,3 +181,31 @@ float* Mesh::getWorld()
 {
 	return &world[0][0];
 }
+
+std::vector<float> Mesh::getBoundaries()
+{
+	std::vector<float> boundaries;
+
+	float maxX, maxY, maxZ;
+	float minX, minY, minZ;
+
+	minX = minY = minZ = FLT_MAX;
+	maxX = maxY = maxZ = -FLT_MAX;
+
+	//Currently hardcoded around the testCube (I moved it down one unit in Y, shh)
+	minX = -1.0f;
+	maxX = 1.0f;
+	minY = -2.0f;
+	maxY = 0.0f;
+	minZ = -1.0f;
+	maxZ = 1.0f;
+
+	boundaries.push_back(maxX);
+	boundaries.push_back(minX);
+	boundaries.push_back(maxY);
+	boundaries.push_back(minY);
+	boundaries.push_back(maxZ);
+	boundaries.push_back(minZ);
+
+	return boundaries;
+}

@@ -69,6 +69,7 @@ public:
 
 	virtual void* getMinExtremes() = 0;
 	virtual void* getMaxExtremes() = 0;
+	virtual void* getWorldBoxes() = 0;
 
 };
 

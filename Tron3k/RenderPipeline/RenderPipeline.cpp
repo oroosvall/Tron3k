@@ -245,6 +245,12 @@ void* RenderPipeline::getMaxExtremes()
 	return (void*)ret;
 }
 
+void* RenderPipeline::getWorldBoxes()
+{
+	std::vector<std::vector<float>>* wBoxes = new std::vector<std::vector<float>>(contMan.getMeshBoxes());
+	return (void*)wBoxes;
+}
+
 IRenderPipeline* CreatePipeline()
 {
 	return new RenderPipeline();
