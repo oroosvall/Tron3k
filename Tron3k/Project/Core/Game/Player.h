@@ -38,8 +38,13 @@ private:
 	Weapon super;
 
 	std::string name;
-	glm::vec3 pos;
+	glm::vec3 pos; //Current actual position
 	glm::vec3 dir; //Current viewing direction
+	glm::vec3 vel; //Our velocity i.e. in which direction we're moving
+	void movePlayer(float dt);
+	bool grounded = false;
+	float speed = 1.0f;
+	float airControlCoefficient = 0.1f;
 
 
 	glm::vec3 oldPos;
