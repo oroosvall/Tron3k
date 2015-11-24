@@ -62,12 +62,12 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			else
 				lockControls = true;
 		}
-		
+
+		vec3 olddir = cam->getDir();
 		if (!lockControls)
 		{
 			//move camera to where we are looking.
 			//if freecam is true the cam can move on its own
-			vec3 olddir = cam->getDir();
 			if(spectating == false)
 				cam->update(dt, freecam);
 
@@ -102,11 +102,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 				if (i->getKeyInfo(GLFW_KEY_A) || i->getKeyInfo(GLFW_KEY_D))
 				{
-					if (i->getKeyInfo(GLFW_KEY_A) && i->getKeyInfo(GLFW_KEY_D))
-					{
-						//Stop fucking crashing you piece of shit fuck tits
-					}
-					else
+					if (!(i->getKeyInfo(GLFW_KEY_A) && i->getKeyInfo(GLFW_KEY_D)))
 					{
 						if (i->getKeyInfo(GLFW_KEY_A))
 						{
@@ -161,8 +157,6 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					}
 				}
 
-				movePlayer(dt);
-
 				role.getCurrentWeapon()->update(dt);		//Temp;
 
 				if (i->justPressed(GLFW_KEY_R))
@@ -194,13 +188,13 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					GetSound()->enableSounds();
 				}	
 			} // end of player input
-
-			if (freecam == false || spectatingThisPlayer == true)
-			{
-				cam->setCam(pos);
-				rotatePlayer(olddir, dir);
-			}
 		} // end of lock control check
+		if (freecam == false || spectatingThisPlayer == true)
+		{
+			cam->setCam(pos);
+			rotatePlayer(olddir, dir);
+		}
+		movePlayer(dt); //Move the player regardless of control lock
 	} // end of local player check
 	else
 	{
