@@ -293,11 +293,14 @@ void Game::checkPlayerVWorldCollision()
 			if (playerList[i]->isLocal())
 			{
 				bool collides = physics->checkPlayerVWorldCollision(playerList[i]->getPos());
+				playerList[i]->setGrounded(collides);
 				if (collides)
 				{
 					//collision with world here, no gravity etc
-					playerList[i]->setGrounded(true);
 					glm::vec3 vel = playerList[i]->getVelocity();
+					glm::vec3 pos = playerList[i]->getPos();
+					pos.y += vel.y;
+					playerList[i]->setGoalPos(pos);
 					vel.y = 0.0f;
 					playerList[i]->setVelocity(vel);
 				}
