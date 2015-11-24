@@ -90,7 +90,7 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 		printf("glDebugMessageCallback not available\n");
 #endif
 
-	std::string shaderNamesDeffered[] = { "GameFiles/Shaders/BlitShader_vs.glsl", "GameFiles/Shaders/BlitShader_fs.glsl" };
+	std::string shaderNamesDeffered[] = { "GameFiles/Shaders/BlitLightShader_vs.glsl", "GameFiles/Shaders/BlitLightShader_fs.glsl" };
 	GLenum shaderTypesDeffered[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
 	
 	CreateProgram(*gBuffer->shaderPtr, shaderNamesDeffered, shaderTypesDeffered, 2);
@@ -149,11 +149,14 @@ void RenderPipeline::release()
 	delete this; // yes this is safe
 }
 
-void RenderPipeline::update()
+void RenderPipeline::update(float x, float y, float z, float dt)
 {
 	//set camera matrixes
 	cam.setViewMat(regularShader, viewMat);
 	cam.setViewProjMat(regularShader, viewProjMat);
+	gBuffer->eyePos.x = x;
+	gBuffer->eyePos.y = y;
+	gBuffer->eyePos.z = z;
 }
 
 
