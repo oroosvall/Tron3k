@@ -18,7 +18,7 @@ vec4 CalcBumpedNormal()
   tan = normalize(tan - dot(tan, Normal) * Normal);
   vec3 bitangent = cross(tan, Normal);
   vec4 normalMap = texture(normalSample, vec2(UV.s, 1-UV.t));
-  vec4 newnormal = (2.0 * normalMap) - vec3(1.0, 1.0, 1.0);
+  vec4 newnormal = (2.0 * normalMap) - vec4(1.0, 1.0, 1.0, 0.0);
   mat3 TBN = mat3(tan, bitangent, Normal);
   newnormal.xyz = TBN * newnormal.xyz;
   newnormal.xyz = normalize(newnormal.xyz);
