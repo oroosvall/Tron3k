@@ -210,3 +210,8 @@ void Player::hitByBullet(BulletHitInfo hi, glm::vec3 dir)
 		break;
 	}
 }
+
+void Player::applyGravity(Physics* p, float dt)
+{
+	p->addGravity(pos, dt);
+}

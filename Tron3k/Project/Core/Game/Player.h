@@ -7,7 +7,7 @@
 #include "../Input.h"
 #include "../CameraInput.h"
 
-//#include "../../../Physics/Physics.h"
+#include "../../../Physics/Physics.h"
 
 #include <glm/glm.hpp>
 #include "Role/Weapon/Weapon.h"
@@ -65,6 +65,8 @@ public:
 	void setName(std::string newName);
 	void setGoalPos(glm::vec3 newPos);
 	void setGoalDir(glm::vec3 newDir);
+
+	void applyGravity(Physics* p, float dt);
 
 	std::string getName() { return name; };
 	glm::vec3 getPos() { return pos; };
