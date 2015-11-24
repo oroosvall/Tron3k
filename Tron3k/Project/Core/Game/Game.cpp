@@ -85,6 +85,9 @@ void Game::update(float dt)
 					spectatingThis = true;
 			}
 
+			if (playerList[c]->isLocal())
+				playerList[c]->applyGravity(physics, dt);
+
 			PLAYERMSG msg = playerList[c]->update(dt, freecam, spectatingThis, spectating);
 			if (msg == PLAYERMSG::SHOOT)
 			{
@@ -402,9 +405,13 @@ void Game::handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm
 	{
 	case WEAPON_TYPE::PULSE_RIFLE:
 		//To do: Automate generation of bullets
+		if (gameState != Gamestate::SERVER)
+			GetSound()->playExternalSound(SOUNDS::soundEffectPusleRifleShot, pos.x, pos.y, pos.z);
 		addBulletToList(conID, bulletId, BULLET_TYPE::PULSE_SHOT, pos, dir);
 		break;
 	case WEAPON_TYPE::POOP_GUN:
+		if (gameState != Gamestate::SERVER)
+			GetSound()->playExternalSound(SOUNDS::soundEffectPoopRifleShot, pos.x, pos.y, pos.z);
 		addBulletToList(conID, bulletId, BULLET_TYPE::POOP, pos, dir);
 		break;
 	}
@@ -430,6 +437,9 @@ glm::vec3 Game::removeBullet(int PID, int BID, BULLET_TYPE bt)
 
 void Game::handleBulletHitEvent(BulletHitInfo hi)
 {
+	glm::vec3 pos = playerList[hi.playerHit]->getPos();
+	if (gameState != Gamestate::SERVER)
+		GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHit, pos.x, pos.y, pos.z);
 	Player* p = playerList[hi.playerHit];
 	glm::vec3 dir = removeBullet(hi.bulletPID, hi.bulletBID, hi.bt);
 	p->hitByBullet(hi, dir);

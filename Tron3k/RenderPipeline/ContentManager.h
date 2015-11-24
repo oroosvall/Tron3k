@@ -4,7 +4,7 @@
 #include <glm\glm.hpp>
 #include "Mesh.h"
 #include <GL\glew.h>
-
+#include "Map\Map.h"
 #include <vector>
 
 struct PlayerObject
@@ -35,6 +35,8 @@ private:
 
 	//skybox
 	Mesh skybox;
+
+	Map testMap;
 
 public:
 	~ContentManager();

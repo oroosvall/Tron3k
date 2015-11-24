@@ -59,7 +59,7 @@ public:
 
 	virtual bool init(unsigned int WindowWidth, unsigned int WindowHeight);
 	virtual void release();
-	virtual void update();
+	virtual void update(float x, float y, float z, float dt);
 	virtual void renderIni();
 	virtual void render();
 

@@ -7,9 +7,10 @@
 #include "../Input.h"
 #include "../CameraInput.h"
 
-//#include "../../../Physics/Physics.h"
+#include "../../../Physics/Physics.h"
 
 #include <glm/glm.hpp>
+#include "Role/role.h"
 #include "Role/Weapon/Weapon.h"
 #include <string>
 
@@ -28,14 +29,8 @@ struct BulletHitInfo
 class Player : public GameObject
 {
 private:
+	Role role;
 	bool lockControls = false;
-
-
-	Weapon weapons[2];
-	int currentWpn = 0;
-
-	Weapon pickup;
-	Weapon super;
 
 	std::string name;
 	glm::vec3 pos;
@@ -65,6 +60,8 @@ public:
 	void setName(std::string newName);
 	void setGoalPos(glm::vec3 newPos);
 	void setGoalDir(glm::vec3 newDir);
+
+	void applyGravity(Physics* p, float dt);
 
 	std::string getName() { return name; };
 	glm::vec3 getPos() { return pos; };

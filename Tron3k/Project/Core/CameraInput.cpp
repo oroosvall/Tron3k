@@ -152,6 +152,10 @@ glm::mat4 CameraInput::getSkyboxMat()
 	ret[1].w = pos.y;
 	ret[2].w = pos.z;
 
+	//scale of skybox
+	ret[0].x = 200;
+	ret[1].y = 200;
+	ret[2].z = 200;
 	return ret;
 }
 

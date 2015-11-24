@@ -5,7 +5,8 @@ Gbuffer::Gbuffer()
 	targetId = 0;
 	initialized = false;
 	blitQuads = nullptr;
-	pos = nullptr;
+	uniformBitsList = nullptr;
+	nrOfLights = 0;
 }
 
 void Gbuffer::init(int x, int y, int nrTex, bool depth)
@@ -60,17 +61,21 @@ void Gbuffer::init(int x, int y, int nrTex, bool depth)
 		throw;
 	}
 
-	pos = new GLuint[nrTextures];
+	uniformBitsList = new GLuint[nrTextures];
+
+	uniformEyePos = glGetUniformLocation(*shaderPtr, "eyepos");
+	//uniformNrOfLight = glGetUniformLocation(*shaderPtr, "NumSpotLights");
 
 	if (depth)
 	{
-		pos[0] = glGetUniformLocation(*shaderPtr, "Depth");;
+		uniformBitsList[0] = glGetUniformLocation(*shaderPtr, "Depth");;
 	}
-	pos[1] = glGetUniformLocation(*shaderPtr, "Position");
-	pos[2] = glGetUniformLocation(*shaderPtr, "Diffuse");
-	pos[3] = glGetUniformLocation(*shaderPtr, "Normal");
-	pos[4] = glGetUniformLocation(*shaderPtr, "UVcord");;
-	useLoc = glGetUniformLocation(*shaderPtr, "Use");
+	uniformBitsList[1] = glGetUniformLocation(*shaderPtr, "Position");
+	uniformBitsList[2] = glGetUniformLocation(*shaderPtr, "Diffuse");
+	uniformBitsList[3] = glGetUniformLocation(*shaderPtr, "Normal");
+	uniformBitsList[4] = glGetUniformLocation(*shaderPtr, "UVcord");;
+	uniformUse = glGetUniformLocation(*shaderPtr, "Use");
+
 
 	blitQuads = new BlitQuad[6];
 	blitQuads[0].Init(shaderPtr, vec2(-1, -1), vec2(-0.6, -0.6));
@@ -83,10 +88,15 @@ void Gbuffer::init(int x, int y, int nrTex, bool depth)
 	initialized = true;
 }
 
+//void Gbuffer::initLight()
+//{
+//
+//}
+
 Gbuffer::~Gbuffer()
 {
 	delete[] rTexture;
-	delete[] pos;
+	delete[] uniformBitsList;
 	delete[] blitQuads;
 	if (initialized)
 	{
@@ -121,24 +131,32 @@ void Gbuffer::render()
 	{
 		glActiveTexture(GL_TEXTURE0 + i);
 		glBindTexture(GL_TEXTURE_2D, rTexture[i].getTargetId());
-		glProgramUniform1i(*shaderPtr, pos[i], i);
+		glProgramUniform1i(*shaderPtr, uniformBitsList[i], i);
 	}
+
+	glProgramUniform3fv(*shaderPtr, uniformEyePos, 1, &eyePos[0]);
+	//glProgramUniform1i(*shaderPtr, nrLightLoc, nrOfLights);
 
 	// bind buffer
 	glBindBuffer(GL_ARRAY_BUFFER, renderQuad);
 	glBindVertexArray(renderVao);
 
 	blitQuads[5].BindVertData();
-	glProgramUniform1i(*shaderPtr, useLoc, 5);
+	glProgramUniform1i(*shaderPtr, uniformUse, 5);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
 	//each blit
 	for (int n = 0; n < 5; n++)
 	{
 		blitQuads[n].BindVertData();
-		glProgramUniform1i(*shaderPtr, useLoc, n);
+		glProgramUniform1i(*shaderPtr, uniformUse, n);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	}
+}
+
+void Gbuffer::clearLights()
+{
+	nrOfLights = 0;
 }
 
 

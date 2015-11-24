@@ -39,7 +39,7 @@ class IRenderPipeline
 public:
 	virtual bool init(unsigned int WindowWidth, unsigned int WindowHeight) = 0;
 	virtual void release() = 0;
-	virtual void update() = 0;
+	virtual void update(float x, float y, float z, float dt) = 0;
 	virtual void renderIni() = 0;
 	virtual void render() = 0;
 
