@@ -33,6 +33,11 @@ Role::~Role()
 
 }
 
+float Role::getMovementSpeed()
+{
+	return movementSpeed;
+}
+
 void Role::chooseRole(int role)
 {
 	stringstream temp;
@@ -44,6 +49,7 @@ void Role::chooseRole(int role)
 		weapons[1].init(80, (WEAPON_TYPE)atoi(loadedRoles[TRAPPER][SECWEP].c_str()), 0.1);
 
 		consumable.setConsumable(atoi(loadedRoles[TRAPPER][CONSUMABLE].c_str()));
+		movementSpeed = atof(loadedRoles[TRAPPER][MOVEMENTSPEED].c_str());
 	}
 	else if (role == DESTROYER)
 	{
@@ -53,6 +59,7 @@ void Role::chooseRole(int role)
 		weapons[1].init(80, (WEAPON_TYPE)atoi(loadedRoles[DESTROYER][SECWEP].c_str()), 0.1);
 
 		consumable.setConsumable(atoi(loadedRoles[DESTROYER][CONSUMABLE].c_str()));
+		movementSpeed = atof(loadedRoles[DESTROYER][MOVEMENTSPEED].c_str());
 	}
 	else if (role == MOBILITY)
 	{
@@ -62,6 +69,7 @@ void Role::chooseRole(int role)
 		weapons[1].init(80, (WEAPON_TYPE)atoi(loadedRoles[MOBILITY][SECWEP].c_str()), 0.1);
 
 		consumable.setConsumable(atoi(loadedRoles[MOBILITY][CONSUMABLE].c_str()));
+		movementSpeed = atof(loadedRoles[MOBILITY][MOVEMENTSPEED].c_str());
 	}
 	else if (role == BRUTE)
 	{
@@ -71,6 +79,7 @@ void Role::chooseRole(int role)
 		weapons[1].init(80, (WEAPON_TYPE)atoi(loadedRoles[BRUTE][SECWEP].c_str()), 0.1);
 		
 		consumable.setConsumable(atoi(loadedRoles[BRUTE][CONSUMABLE].c_str()));
+		movementSpeed = atof(loadedRoles[BRUTE][MOVEMENTSPEED].c_str());
 
 	}
 	else if (role == MANIPULATOR)
@@ -81,6 +90,7 @@ void Role::chooseRole(int role)
 		weapons[1].init(80, (WEAPON_TYPE)atoi(loadedRoles[MANIPULATOR][SECWEP].c_str()), 0.1);
 
 		consumable.setConsumable(atoi(loadedRoles[MANIPULATOR][CONSUMABLE].c_str()));
+		movementSpeed = atof(loadedRoles[MANIPULATOR][MOVEMENTSPEED].c_str());
 	}
 }
 

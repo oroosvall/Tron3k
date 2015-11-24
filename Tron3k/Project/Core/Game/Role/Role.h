@@ -11,13 +11,14 @@
 using namespace std;
 
 enum ROLES { TRAPPER, DESTROYER, MOBILITY, BRUTE, MANIPULATOR, NROFROLES };
-enum PROPERTIES{HEALTH, MAINWEP, SECWEP, CONSUMABLE, NROFREAD};
+enum PROPERTIES{HEALTH, MAINWEP, SECWEP, CONSUMABLE, MOVEMENTSPEED, NROFREAD};
 
 class Role
 {
 	private:
 		int currentWpn;
 		int health;
+		float movementSpeed;
 		string roles[NROFROLES];
 		
 		string loadedRoles[NROFROLES][NROFREAD];
@@ -31,6 +32,8 @@ class Role
 	public:
 		Role();
 		~Role();
+
+		float getMovementSpeed();
 
 		void chooseRole(int role);
 		void swapWeapon(int swapTo);
