@@ -32,13 +32,6 @@ private:
 	Role role;
 	bool lockControls = false;
 
-
-	Weapon weapons[2];
-	int currentWpn = 0;
-
-	Weapon pickup;
-	Weapon super;
-
 	std::string name;
 	glm::vec3 pos;
 	glm::vec3 dir; //Current viewing direction

@@ -8,8 +8,6 @@ Player::Player()
 void Player::init(std::string pName, glm::vec3 initPos, bool isLocal)
 {
 	role.chooseRole(TRAPPER);
-	weapons[0].init(36, WEAPON_TYPE::PULSE_RIFLE, 0.5);
-	weapons[1].init(80, WEAPON_TYPE::POOP_GUN, 0.1);
 
 	name = pName;
 	pos = initPos;
@@ -94,27 +92,27 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					pos += left * dt;
 				}
 
-				weapons[currentWpn].update(dt);		//Temp;
+				role.getCurrentWeapon()->update(dt);		//Temp;
 				if (i->justPressed(GLFW_KEY_R))
 				{
-					weapons[currentWpn].reload();
+					role.getCurrentWeapon()->reload();
 				}
 
 				if (i->justPressed(GLFW_KEY_1))
 				{
-					currentWpn = 0;
+					role.swapWeapon(0);
 					msg = WPNSWITCH;
 				}
 
 				if (i->justPressed(GLFW_KEY_2))
 				{
-					currentWpn = 1;
+					role.swapWeapon(1);
 					msg = WPNSWITCH;
 				}
 
 				if (i->getKeyInfo(GLFW_MOUSE_BUTTON_LEFT))		//Temp
 				{
-					ableToShoot = weapons[currentWpn].shoot();
+					ableToShoot = role.getCurrentWeapon()->shoot();
 					if (ableToShoot)
 						msg = SHOOT;
 				}
