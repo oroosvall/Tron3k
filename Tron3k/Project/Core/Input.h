@@ -40,6 +40,8 @@ private:
 	static double scrollVal; //Scroll up = Positive, scroll down = Negative. Value = Speed of scrolling (useless?)
 	static void callbackScroll(GLFWwindow* wnd, double xOffset, double yOffset);
 
+	GLFWwindow* window;
+
 public:
 	static Input* getInput();
 	void setupCallbacks(GLFWwindow* wnd); //Must call this when window is created to make GLFW callback functions work!
@@ -48,6 +50,7 @@ public:
 	bool justPressed(int key); //Used for both keyboard and mouse, returns whether a key was pressed this frame
 
 	void getCursor(double &x, double &y);
+	void centerCursor();
 
 	double getScrollValue();
 

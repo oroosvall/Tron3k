@@ -26,13 +26,10 @@ void CameraInput::init(glm::mat4* view)
 void CameraInput::update(float dt, bool freeCam)
 {
 	i->getCursor(x_new, y_new);
-	
-	if (i->getKeyInfo(GLFW_KEY_LEFT_SHIFT))
-	{
-		int x = x_new - x_last;
-		int y = y_new - y_last;
-		mousepan(x, y);
-	}
+
+	int x = x_new - 400.0;
+	int y = y_new - 400.0;
+	mousepan(x, y);
 	
 	if(freeCam)
 		keypan(dt);
@@ -40,8 +37,7 @@ void CameraInput::update(float dt, bool freeCam)
 	if(freeCam)
 		*viewMat = lookAt(pos, pos + dir, vec3(0, 1, 0));
 	
-	x_last = x_new;
-	y_last = y_new;
+	i->centerCursor();
 }
 
 void CameraInput::keypan(float dt)
@@ -80,8 +76,8 @@ void CameraInput::keypan(float dt)
 
 void CameraInput::mousepan(float x, float y)
 {
-	angleH += x / mouseSpeed;
-	angleV += y / mouseSpeed;
+	angleH -= x / mouseSpeed;
+	angleV -= y / mouseSpeed;
 	if (angleV > 89)
 		angleV = 89;
 	if (angleV < -89)

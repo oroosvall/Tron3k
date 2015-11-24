@@ -132,10 +132,11 @@ Input::Input()
 
 void Input::setupCallbacks(GLFWwindow* wnd)
 {
-	glfwSetKeyCallback(wnd, callbackKeyboard);
-	glfwSetMouseButtonCallback(wnd, callbackMouseButton);
-	glfwSetCursorPosCallback(wnd, callbackCursorPos);
-	glfwSetScrollCallback(wnd, callbackScroll);
+	window = wnd;
+	glfwSetKeyCallback(window, callbackKeyboard);
+	glfwSetMouseButtonCallback(window, callbackMouseButton);
+	glfwSetCursorPosCallback(window, callbackCursorPos);
+	glfwSetScrollCallback(window, callbackScroll);
 }
 /*
 
@@ -990,4 +991,9 @@ char Input::keyToChar(int key)
 	default:
 		return '\0'; //Not sure how safe this is
 	}
+}
+
+void Input::centerCursor()
+{
+	glfwSetCursorPos(window, 400, 400);
 }

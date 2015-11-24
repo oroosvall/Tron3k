@@ -3,6 +3,7 @@
 void Core::init()
 {
 	glfwInit();
+	i = Input::getInput();
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
@@ -22,8 +23,6 @@ void Core::init()
 	createWindow(winX, winY, fullscreen);
 
 	serverRender = false;
-
-	i = Input::getInput();
 
 	//******************* TEMP *************************
 	InitSound(CreateSound());
