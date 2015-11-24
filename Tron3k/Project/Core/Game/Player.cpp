@@ -187,12 +187,12 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				}	
 			} // end of player input
 		} // end of lock control check
+		movePlayer(dt); //Move the player regardless of control lock
 		if (freecam == false || spectatingThisPlayer == true)
 		{
 			cam->setCam(pos);
 			rotatePlayer(olddir, dir);
 		}
-		movePlayer(dt); //Move the player regardless of control lock
 	} // end of local player check
 	else
 	{
