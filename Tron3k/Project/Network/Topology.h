@@ -13,7 +13,7 @@ using namespace std;
 
 #define MAX_CONNECT 20
 #define PORT_DEFAULT 18180
-#define tick 0.050f
+#define tick 0.050f //Also change in Player.h
 
 class Topology
 {

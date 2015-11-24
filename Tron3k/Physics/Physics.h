@@ -7,7 +7,7 @@
 #define PHYSICS_API __declspec( dllimport  )
 #endif
 
-#define GRAVITY 9.82f
+#define GRAVITY 0.1f
 
 #include "Collision\Geometry.h"
 #include "Collision\CollideMesh.h"
@@ -34,7 +34,7 @@ public:
 	virtual bool checkPlayerVPlayerCollision(glm::vec3 playerPos1, glm::vec3 playerPos2);
 	virtual bool checkPlayerVBulletCollision(glm::vec3 playerPos, glm::vec3 bulletPos);
 
-	virtual glm::vec3 addGravity(glm::vec3 pos, float dt);
+	virtual void addGravity(glm::vec3 &pos, float dt);
 
 	//TEMPORARY
 	virtual void getBoatExtremes(glm::vec3 minVals, glm::vec3 maxVals);

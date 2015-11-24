@@ -85,16 +85,18 @@ void Game::update(float dt)
 					spectatingThis = true;
 			}
 
+			if (playerList[c]->isLocal())
+				playerList[c]->applyGravity(physics, dt);
+
 			PLAYERMSG msg = playerList[c]->update(dt, freecam, spectatingThis, spectating);
 			if (msg == PLAYERMSG::SHOOT)
 			{
-				if (gameState == Gamestate::ROAM)
+				if (gameState != Gamestate::ROAM)
 					registerWeapon(playerList[c]);
 				else
 				{
-					Weapon* wpn = playerList[c]->getPlayerCurrentWeapon();
-					weaponShotWith = wpn->getType();
-					shotsFired = true;
+					registerWeapon(playerList[c]);
+					handleWeaponFire(c, bulletShot, weaponShotWith, playerList[c]->getPos(), playerList[c]->getDir());
 				}
 			}
 			if (msg == PLAYERMSG::WPNSWITCH)
@@ -261,6 +263,7 @@ void Game::checkPlayerVBulletCollision()
 							playerHit = true;
 
 							handleBulletHitEvent(hit);
+							return;
 						}
 					}
 				}
@@ -273,7 +276,7 @@ void Game::checkPlayerVBulletCollision()
 void Game::registerWeapon(Player* p)
 {
 	Weapon* wpn = p->getPlayerCurrentWeapon();
-	weaponSwitchedTo = wpn->getType();
+	weaponShotWith = wpn->getType();
 	bulletShot = wpn->getBulletId();
 	shotsFired = true;
 }

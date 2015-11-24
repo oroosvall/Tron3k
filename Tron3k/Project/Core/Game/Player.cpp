@@ -30,14 +30,16 @@ void Player::setName(std::string newName)
 void Player::setGoalPos(glm::vec3 newPos)
 {
 	goalpos = newPos;
-	pos = newPos; //Temporary
+	oldPos = pos;
+	goalTimer = 0.0f;
+	//pos = newPos; //Temporary
 }
 
 void Player::setGoalDir(glm::vec3 newDir)
 {
 	goaldir = newDir;
-	rotatePlayer(dir, goaldir);
-	dir = newDir; //Temporary 
+	oldDir = dir;
+	//dir = newDir; //Temporary 
 }
 
 PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool spectating)
@@ -54,6 +56,11 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			else
 				lockControls = true;
 		}
+		
+		/*
+		GRAVITY????
+		*/
+
 		if (!lockControls)
 		{
 			//move camera to where we are looking.
@@ -124,10 +131,30 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			}
 		} // end of lock control check
 	} // end of local player check
-	else if (spectatingThisPlayer == true)
+	else
+	{
+		/*
+		THIS IS NOT THE LOCAL PLAYER
+		*/
+		goalTimer += dt;
+		float t = goalTimer / interpolationTick;
+
+		if (t > 1.0f)
+			t = 1.0f;
+
+		pos = (oldPos * (1.0f - t)) + (goalpos * t);
+		glm::vec3 prev = dir;
+		dir = (oldDir * (1.0f - t)) + (goaldir * t);
+
+		rotatePlayer(prev, dir);
+	}
+	
+
+	if (spectatingThisPlayer == true)
 	{
 		cam->setCam(pos, dir);
 	}
+	
 	worldMat[0].w = pos.x;
 	worldMat[1].w = pos.y-0.6f;
 	worldMat[2].w = pos.z;
@@ -182,4 +209,9 @@ void Player::hitByBullet(BulletHitInfo hi, glm::vec3 dir)
 		pos += dir*0.1f;
 		break;
 	}
+}
+
+void Player::applyGravity(Physics* p, float dt)
+{
+	p->addGravity(pos, dt);
 }

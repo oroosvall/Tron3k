@@ -7,9 +7,13 @@
 #include "../Input.h"
 #include "../CameraInput.h"
 
+#include "../../../Physics/Physics.h"
+
 #include <glm/glm.hpp>
 #include "Role/Weapon/Weapon.h"
 #include <string>
+
+#define interpolationTick 0.050f
 
 enum PLAYERMSG { NONE, SHOOT, WPNSWITCH };
 
@@ -37,8 +41,12 @@ private:
 	glm::vec3 pos;
 	glm::vec3 dir; //Current viewing direction
 
+
+	glm::vec3 oldPos;
+	glm::vec3 oldDir;
 	glm::vec3 goalpos; //Used by non-local players to move smoothly
 	glm::vec3 goaldir; //Used by non-locals to turn smoothly
+	float goalTimer;
 
 	bool isLocalPlayer;
 
@@ -57,6 +65,8 @@ public:
 	void setName(std::string newName);
 	void setGoalPos(glm::vec3 newPos);
 	void setGoalDir(glm::vec3 newDir);
+
+	void applyGravity(Physics* p, float dt);
 
 	std::string getName() { return name; };
 	glm::vec3 getPos() { return pos; };
