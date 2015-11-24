@@ -78,6 +78,7 @@ bool Physics::checkPlayerVBulletCollision(glm::vec3 playerPos, glm::vec3 bulletP
 	return collide;
 }
 
+
 bool Physics::checkPlayerVWorldCollision(glm::vec3 playerPos)
 {
 	bool collides = false;
@@ -89,9 +90,10 @@ bool Physics::checkPlayerVWorldCollision(glm::vec3 playerPos)
 	return collides;
 }
 
-void Physics::addGravity(glm::vec3 &pos, float dt)
+
+void Physics::addGravity(glm::vec3 &vel, float dt)
 {
-	pos.y -= GRAVITY * dt;
+	vel.y -= GRAVITY * dt;
 }
 
 

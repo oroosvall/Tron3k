@@ -87,6 +87,7 @@ void Game::update(float dt)
 
 			if (playerList[c]->isLocal())
 				playerList[c]->applyGravity(physics, dt);
+				
 
 			PLAYERMSG msg = playerList[c]->update(dt, freecam, spectatingThis, spectating);
 			if (msg == PLAYERMSG::SHOOT)

@@ -11,6 +11,7 @@ void Player::init(std::string pName, glm::vec3 initPos, bool isLocal)
 
 	name = pName;
 	pos = initPos;
+	vel = glm::vec3(0, 0, 0);
 
 	isLocalPlayer = isLocal;
 
@@ -41,6 +42,12 @@ void Player::setGoalDir(glm::vec3 newDir)
 	//dir = newDir; //Temporary 
 }
 
+void Player::movePlayer(float dt)
+{
+	glm::vec3 playerVel = vel*role.getMovementSpeed();
+	pos += playerVel * dt; //Here we will also include external forces
+}
+
 PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool spectating)
 {
 	PLAYERMSG msg = NONE;
@@ -56,10 +63,6 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				lockControls = true;
 		}
 		
-		/*
-		GRAVITY????
-		*/
-
 		if (!lockControls)
 		{
 			//move camera to where we are looking.
@@ -72,27 +75,82 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			if (freecam == false)
 			{
 				dir = cam->getDir();
-
+				bool stop = true;
 				if (i->getKeyInfo(GLFW_KEY_W))
-					pos += dir * dt;
+				{
+					vec3 forward = normalize(vec3(dir.x, 0, dir.z));
+					if (grounded)
+					{
+						vel.x = forward.x;
+						vel.z = forward.z;
+						stop = false;
+					}
+				}
 
 				if (i->getKeyInfo(GLFW_KEY_S))
-					pos -= dir * dt;
+				{
+					vec3 back = -normalize(vec3(dir.x, 0, dir.z));
+					if (grounded)
+					{
+						vel.x = back.x;
+						vel.z = back.z;
+						stop = false;
+					}
+				}
 
 				if (i->getKeyInfo(GLFW_KEY_A))
 				{
 					vec3 left = cross(vec3(0, 1, 0), dir);
 					left = normalize(left);
-					pos += left * dt;
+					if (grounded)
+					{	
+						vel.x += left.x;
+						vel.z += left.z;
+						stop = false;
+						glm::vec2 tempvec = vec2(vel.x, vel.z);
+						tempvec = normalize(tempvec);
+						vel.x = tempvec.x;
+						vel.z = tempvec.y;
+					}
 				}
 				if (i->getKeyInfo(GLFW_KEY_D))
 				{
-					vec3 left = cross(dir, vec3(0, 1, 0));
-					left = normalize(left);
-					pos += left * dt;
+					vec3 right = cross(dir, vec3(0, 1, 0));
+					right = normalize(right);
+					if (grounded)
+					{
+						vel.x += right.x;
+						vel.z += right.z;
+						stop = false;
+						glm::vec2 tempvec = vec2(vel.x, vel.z);
+						tempvec = normalize(tempvec);
+						vel.x = tempvec.x;
+						vel.z = tempvec.y;
+					}
 				}
 
+				if (stop)
+				{
+					if (grounded)
+					{
+						vel.x = 0;
+						vel.z = 0;
+					}
+				}
+
+				if (i->justPressed(GLFW_KEY_SPACE))
+				{
+					if (grounded)
+					{
+						vel.y = 4.0f;
+						grounded = false;
+					}
+				}
+
+				movePlayer(dt);
+
 				role.getCurrentWeapon()->update(dt);		//Temp;
+
 				if (i->justPressed(GLFW_KEY_R))
 				{
 					role.getCurrentWeapon()->reload();
@@ -199,5 +257,11 @@ void Player::hitByBullet(BulletHitInfo hi, glm::vec3 dir)
 
 void Player::applyGravity(Physics* p, float dt)
 {
-	p->addGravity(pos, dt);
+	p->addGravity(vel, dt);
+	if (pos.y <= -2.0f) // Temp code for floor lol
+	{
+		vel.y = 0.0f;
+		pos.y = -2.0f;
+		grounded = true;
+	}
 }

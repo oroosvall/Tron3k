@@ -33,8 +33,11 @@ private:
 	bool lockControls = false;
 
 	std::string name;
-	glm::vec3 pos;
+	glm::vec3 pos; //Current actual position
 	glm::vec3 dir; //Current viewing direction
+	glm::vec3 vel; //Our velocity i.e. in which direction we're moving
+	void movePlayer(float dt);
+	bool grounded = false;
 
 
 	glm::vec3 oldPos;

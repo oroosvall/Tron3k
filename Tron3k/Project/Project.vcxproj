@@ -55,11 +55,11 @@
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effect.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Modifier.h" />
     <ClInclude Include="Core\Game\Role\Role.h" />
-    <ClInclude Include="Core\Game\Role\Weapon\bullet.h" />
+    <ClInclude Include="Core\Game\Role\Weapon\Bullet.h" />
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\AllBullets.h" />
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\bulletpoop.h" />
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\bulletpulseshot.h" />
-    <ClInclude Include="Core\Game\Role\Weapon\weapon.h" />
+    <ClInclude Include="Core\Game\Role\Weapon\Weapon.h" />
     <ClInclude Include="Core\Input.h" />
     <ClInclude Include="Core\ui\Ui.h" />
     <ClInclude Include="Network\Client.h" />

@@ -167,12 +167,6 @@
     <ClInclude Include="Core\Game\Role\PlayerEffects\Modifier.h">
       <Filter>Source Files\Core\Game\Role\PlayerEffects</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Game\Role\Weapon\bullet.h">
-      <Filter>Source Files\Core\Game\Role\Weapon</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Game\Role\Weapon\weapon.h">
-      <Filter>Source Files\Core\Game\Role\Weapon</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\AllBullets.h">
       <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes</Filter>
     </ClInclude>
@@ -181,6 +175,12 @@
     </ClInclude>
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\bulletpulseshot.h">
       <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Weapon\Bullet.h">
+      <Filter>Source Files\Core\Game\Role\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Weapon\Weapon.h">
+      <Filter>Source Files\Core\Game\Role\Weapon</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
