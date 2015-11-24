@@ -158,6 +158,7 @@
     <ClCompile Include="RenderPipeline.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="ShimpleShit.cpp" />
+    <ClCompile Include="StaticMesh.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Text\TextObject.cpp" />
   </ItemGroup>
@@ -165,6 +166,7 @@
     <ClInclude Include="BlitQuad.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ContentManager.h" />
+    <ClInclude Include="defines.h" />
     <ClInclude Include="GBuffer.h" />
     <ClInclude Include="IRenderPipeline.h" />
     <ClInclude Include="Lights.h" />
@@ -175,6 +177,7 @@
     <ClInclude Include="RenderTarget.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SimpleShit.h" />
+    <ClInclude Include="StaticMesh.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Text\TextObject.h" />
   </ItemGroup>
