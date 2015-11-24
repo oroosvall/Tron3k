@@ -101,8 +101,6 @@ void CameraInput::mousepan(float x, float y)
 		sin(rotateRad), 0.0f, cos(rotateRad));
 	view = rotH * view;
 	dir = normalize(view);
-
-
 }
 
 void CameraInput::setCam(vec3 _pos, vec3 _dir)

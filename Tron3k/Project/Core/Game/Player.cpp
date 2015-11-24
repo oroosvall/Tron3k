@@ -76,56 +76,70 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			{
 				dir = cam->getDir();
 				bool stop = true;
+				vec2 tempvec = vec2(0, 0);
+
 				if (i->getKeyInfo(GLFW_KEY_W))
 				{
-					vec3 forward = normalize(dir);
+					tempvec = normalize(vec2(dir.x, dir.z));
 					if (grounded)
 					{
-						vel.x = forward.x;
-						vel.z = forward.z;
+						vel.x = tempvec.x;
+						vel.z = tempvec.y;
 						stop = false;
 					}
 				}
 
 				if (i->getKeyInfo(GLFW_KEY_S))
 				{
-					vec3 back = -normalize(dir);
+					tempvec = -normalize(vec2(dir.x, dir.z));
 					if (grounded)
 					{
-						vel.x = back.x;
-						vel.z = back.z;
+						vel.x = tempvec.x;
+						vel.z = tempvec.y;
 						stop = false;
 					}
 				}
 
-				if (i->getKeyInfo(GLFW_KEY_A))
+				if (i->getKeyInfo(GLFW_KEY_A) || i->getKeyInfo(GLFW_KEY_D))
 				{
-					vec3 left = cross(vec3(0, 1, 0), dir);
-					left = normalize(left);
-					if (grounded)
-					{	
-						vel.x += left.x;
-						vel.z += left.z;
-						stop = false;
-						glm::vec2 tempvec = vec2(vel.x, vel.z);
-						tempvec = normalize(tempvec);
-						vel.x = tempvec.x;
-						vel.z = tempvec.y;
-					}
-				}
-				if (i->getKeyInfo(GLFW_KEY_D))
-				{
-					vec3 right = cross(dir, vec3(0, 1, 0));
-					right = normalize(right);
-					if (grounded)
+					if (i->getKeyInfo(GLFW_KEY_A) && i->getKeyInfo(GLFW_KEY_D))
 					{
-						vel.x += right.x;
-						vel.z += right.z;
-						stop = false;
-						glm::vec2 tempvec = vec2(vel.x, vel.z);
-						tempvec = normalize(tempvec);
-						vel.x = tempvec.x;
-						vel.z = tempvec.y;
+						//Stop fucking crashing you piece of shit fuck tits
+					}
+					else
+					{
+						if (i->getKeyInfo(GLFW_KEY_A))
+						{
+							vec3 left = cross(vec3(0, 1, 0), dir);
+							tempvec = normalize(vec2(left.x, left.z));
+							if (grounded)
+							{
+								vel.x += tempvec.x;
+								vel.z += tempvec.y;
+								stop = false;
+								tempvec = vec2(vel.x, vel.z);
+								tempvec = normalize(tempvec);
+								vel.x = tempvec.x;
+								vel.z = tempvec.y;
+							}
+						}
+
+						if (i->getKeyInfo(GLFW_KEY_D))
+						{
+							vec3 right = cross(dir, vec3(0, 1, 0));
+							tempvec = normalize(vec2(right.x, right.z));
+							right = normalize(right);
+							if (grounded)
+							{
+								vel.x += tempvec.x;
+								vel.z += tempvec.y;
+								stop = false;
+								tempvec = vec2(vel.x, vel.z);
+								tempvec = normalize(tempvec);
+								vel.x = tempvec.x;
+								vel.z = tempvec.y;
+							}
+						}
 					}
 				}
 
