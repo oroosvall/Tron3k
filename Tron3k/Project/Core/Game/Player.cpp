@@ -44,7 +44,7 @@ void Player::setGoalDir(glm::vec3 newDir)
 
 void Player::movePlayer(float dt)
 {
-	glm::vec3 playerVel = vel*1.0f;//vel*role.getMovementSpeed();
+	glm::vec3 playerVel = vel*role.getMovementSpeed();
 	pos += playerVel * dt; //Here we will also include external forces
 }
 
