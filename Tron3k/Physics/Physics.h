@@ -7,7 +7,7 @@
 #define PHYSICS_API __declspec( dllimport  )
 #endif
 
-#define GRAVITY 0.8f
+#define GRAVITY 4.0f
 
 #include "Collision\Geometry.h"
 #include "Collision\CollideMesh.h"

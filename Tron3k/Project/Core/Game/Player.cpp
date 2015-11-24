@@ -150,7 +150,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				{
 					if (grounded)
 					{
-						vel.y = 4.0f;
+						vel.y = 3.0f;
 						grounded = false;
 					}
 				}
