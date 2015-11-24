@@ -120,7 +120,10 @@ void Game::update(float dt)
 	}
 
 	if (gameState == Gamestate::CLIENT)
+	{
 		checkPvPCollision();
+		checkPlayerVWorldCollision();
+	}
 
 	if (gameState == Gamestate::SERVER)
 		checkPlayerVBulletCollision();
@@ -160,6 +163,11 @@ void Game::getBoatCoordsFromCore(glm::vec3 minVals, glm::vec3 maxVals)
 void Game::sendBoatCoordsToPhysics(glm::vec3 minVals, glm::vec3 maxVals)
 {
 	physics->getBoatExtremes(minVals, maxVals);
+}
+
+void Game::sendWorldBoxes(std::vector<std::vector<float>> wBoxes)
+{
+	physics->receiveWorldBoxes(wBoxes);
 }
 
 void Game::checkPvPCollision()
@@ -271,6 +279,22 @@ void Game::checkPlayerVBulletCollision()
 			}
 		}
 		
+	}
+}
+
+void Game::checkPlayerVWorldCollision()
+{
+	for (int i = 0; i < max_con; i++)
+	{
+		if (playerList[i] != nullptr)
+		{
+			if (playerList[i]->isLocal())
+			{
+				bool collides = physics->checkPlayerVWorldCollision(playerList[i]->getPos());
+				if (collides)
+					int x = 0;
+			}
+		}
 	}
 }
 

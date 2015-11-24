@@ -81,6 +81,7 @@ private:
 
 	//TEMPORARY
 	void givePlayerBoatExtremes();
+	void sendWorldBoxes();
 
 public:
 	void init();

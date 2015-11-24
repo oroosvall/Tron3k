@@ -49,7 +49,7 @@ public:
 	void loadChunk();
 	void releaseChunk();
 
-
+	std::vector<std::vector<float>> getMeshBoxes(); //Will send out all meshboxes, for now it'll just send a static one
 };
 
 #endif

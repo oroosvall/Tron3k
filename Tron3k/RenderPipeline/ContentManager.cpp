@@ -158,3 +158,16 @@ void ContentManager::renderPlayer(int playerID, glm::mat4 world)
 		glEnable(GL_DEPTH_TEST);
 	}
 }
+
+std::vector<std::vector<float>> ContentManager::getMeshBoxes()
+{
+	std::vector<std::vector<float>> size;
+
+	for (int i = 0; i < meshes.size(); i++)
+	{
+		size.push_back(meshes[i].getBoundaries());
+	}
+
+	//Size is currently a vector containing the extremes for all of our world objects
+	return size;
+}

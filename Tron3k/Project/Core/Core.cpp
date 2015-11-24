@@ -92,6 +92,7 @@ void Core::update(float dt)
 	if (game != nullptr && !given)
 	{
 		givePlayerBoatExtremes();
+		sendWorldBoxes();
 		given = true;
 	}
 }
@@ -841,6 +842,36 @@ void Core::givePlayerBoatExtremes()
 	}
 	else
 	game->getBoatCoordsFromCore(vec3(-1,-1,-1), vec3(1,1,1));
+}
+
+void Core::sendWorldBoxes()
+{
+	if (renderPipe != nullptr)
+	{
+		int size = renderPipe->getNrOfWorldBoxes();
+
+		float xMax, yMax, zMax;
+		float xMin, yMin, zMin;
+		xMax = yMax = zMax = xMin = yMin = zMin = 0;
+		std::vector<std::vector<float>> worldBoxes;
+		std::vector<float> temp;
+		for (int i = 0; i < size; i++)
+		{
+			//temp.clear();
+			renderPipe->getWorldBoxes(i, xMax, xMin, yMax, yMin, zMax, zMin);
+			temp.push_back(xMax);
+			temp.push_back(xMin);
+			temp.push_back(yMax);
+			temp.push_back(yMin);
+			temp.push_back(zMax);
+			temp.push_back(zMin);
+
+			worldBoxes.push_back(temp);
+			temp.clear();
+		}
+		//Jag hatar .dll-er
+		game->sendWorldBoxes(worldBoxes);
+	}
 }
 
 bool Core::windowVisible() const

@@ -70,9 +70,11 @@ public:
 	void getBoatCoordsFromCore(glm::vec3 minVals, glm::vec3 maxVals);
 	//TEMPORARY
 	void sendBoatCoordsToPhysics(glm::vec3 minVals, glm::vec3 maxVals);
-	void checkPvPCollision();
+	void sendWorldBoxes(std::vector<std::vector<float>>);
 
+	void checkPvPCollision();
 	void checkPlayerVBulletCollision();
+	void checkPlayerVWorldCollision();
 
 	void addPlayerToTeam(int p_conID, int team);
 	int getPlayersOnTeam(int team);

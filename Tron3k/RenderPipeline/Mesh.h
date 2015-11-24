@@ -42,6 +42,8 @@ public:
 
 	float* getWorld();
 
+	std::vector<float> getBoundaries();
+
 };
 
 #endif
