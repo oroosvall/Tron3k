@@ -1,25 +1,27 @@
 #ifndef MAPHEADERS_H
 #define MAPHEADERS_H
 
-struct MharedFileHDR
+#include <cstdlib>
+
+struct SharedFileHDR
 {
-	int meshCount;
-	int pointLightCount;
-	int spotLightCount;
-	int dirLightCount;
-	int materialCount;
-	int textureCount;
-	int portalCount;
+	int64_t meshCount;
+	int64_t pointLightCount;
+	int64_t spotLightCount;
+	int64_t dirLightCount;
+	int64_t materialCount;
+	int64_t textureCount;
+	int64_t portalCount;
 };
 
 struct MeshDataHDR
 {
-	int objectType;
-	int instanceCount;
-	int materialCount;
-	int indicesCount;
-	int vertexCount;
-	int bbCount;
+	int32_t objectType;
+	int32_t instanceCount;
+	int32_t materialCount;
+	int32_t indicesCount;
+	int32_t vertexCount;
+	int32_t bbCount;
 };
 
 struct PointLight
@@ -47,25 +49,25 @@ struct DirectionalLight
 
 struct MaterialHDR
 {
-	int textureMapIndex;
-	int normalMapIndex;
-	int specularMapIndex;
+	int64_t textureMapIndex;
+	int64_t normalMapIndex;
+	int64_t specularMapIndex;
 };
 
 struct TextureHDR
 {
-	int* textureSize;
+	int64_t* textureSize;
 };
 
 struct TextureData
 {
-	int** texturePath;
+	int64_t** texturePath;
 };
 
 struct PortalData
 {
-	int portalID;
-	int bridgedRooms[2];
+	int64_t portalID;
+	int64_t bridgedRooms[2];
 	float* positions[4];
 };
 

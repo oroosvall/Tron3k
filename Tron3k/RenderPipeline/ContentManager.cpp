@@ -65,6 +65,9 @@ void ContentManager::init()
 	meshes[1].setTexture(textures[1].textureID);
 
 	skybox.setTexture(textures[3].textureID);
+
+	testMap.init();
+
 }
 
 ContentManager::~ContentManager()
