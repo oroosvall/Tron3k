@@ -78,7 +78,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				bool stop = true;
 				if (i->getKeyInfo(GLFW_KEY_W))
 				{
-					vec3 forward = normalize(vec3(dir.x, 0, dir.z));
+					vec3 forward = normalize(dir);
 					if (grounded)
 					{
 						vel.x = forward.x;
@@ -89,7 +89,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 				if (i->getKeyInfo(GLFW_KEY_S))
 				{
-					vec3 back = -normalize(vec3(dir.x, 0, dir.z));
+					vec3 back = -normalize(dir);
 					if (grounded)
 					{
 						vel.x = back.x;
