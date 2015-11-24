@@ -13,6 +13,7 @@ vec4 Position0;
 vec4 Diffuse0;
 vec4 Normal0;
 vec4 Depth0;
+float glowValue;
 
 struct SpotLight
 {
@@ -34,12 +35,6 @@ uniform vec3 eyepos;
 
 float gSpecularPower = 20;
 float gMatSpecularIntensity = 0.4;
-
-//TEST LIGHT
-//int NumSpotLights = 1;
-//SpotLight tmpLight;
-
-
 
 out vec4 fragment_color;
 					
@@ -95,13 +90,6 @@ vec4 CalcSpotLight(SpotLight l, vec3 Normal)
 
 void main()
 {
-	//tmpLight.Color = vec3(1.0, 1.0, 1.0);
-	//tmpLight.DiffuseIntensity = 0.7;
-	//tmpLight.AmbientIntensity = 0.5;
-	//tmpLight.Position = vec3(1.891, 7.186, 2.467);
-	//tmpLight.Direction = vec3(-0.361, -0.817, -0.449);
-	//tmpLight.Cutoff = -3.14;
-
 	if(Use == 0)
 	{
 		float Depth = texture(Depth, vec2(UV.x, UV.y)).x;
@@ -122,13 +110,15 @@ void main()
 		Position0 = texture(Position, vec2(UV.x, UV.y));
 		Normal0 = texture(Normal, vec2(UV.x, UV.y));
 		Depth0 = texture(Depth, vec2(UV.x, UV.y));
-
+		glowValue = texture(Normal, vec2(UV.x, UV.y)).w;
+			
 		for(int n = 0; n < NumSpotLights; n++)
 		{
 			fragment_color += CalcSpotLight(lights[n], Normal0.xyz);
 			fragment_color += Diffuse0 * vec4(lights[n].Color, 1) * lights[n].AmbientIntensity;
 		}
 		
-		fragment_color = fragment_color * Diffuse0;
+		//fragment_color = vec4(glowValue);
+		fragment_color = fragment_color * Diffuse0 + (1.0 - glowValue) * Diffuse0;
 	}	
 }

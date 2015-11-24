@@ -111,7 +111,7 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 		glBindTexture(GL_TEXTURE_2D, meshes[i].textureID);
 
 		glActiveTexture(GL_TEXTURE0+1);
-		glBindTexture(GL_TEXTURE_2D, textures[2].textureID);
+		glBindTexture(GL_TEXTURE_2D, textures[0].textureID);
 
 		glBindVertexArray(meshes[i].vao);
 		glBindBuffer(GL_ARRAY_BUFFER, meshes[i].vbo);
