@@ -3,6 +3,13 @@
 
 class Consumable
 {
+	private:
+		int effect;
 
+	public:
+		Consumable();
+		~Consumable();
+		
+		void setConsumable(int consumable);
 };
 #endif

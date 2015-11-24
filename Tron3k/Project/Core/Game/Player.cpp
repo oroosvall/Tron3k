@@ -7,8 +7,7 @@ Player::Player()
 
 void Player::init(std::string pName, glm::vec3 initPos, bool isLocal)
 {
-	weapons[0].init(36, WEAPON_TYPE::PULSE_RIFLE, 0.5);
-	weapons[1].init(80, WEAPON_TYPE::POOP_GUN, 0.1);
+	role.chooseRole(TRAPPER);
 
 	name = pName;
 	pos = initPos;
@@ -142,27 +141,28 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 				movePlayer(dt);
 
-				weapons[currentWpn].update(dt);		//Temp;
+				role.getCurrentWeapon()->update(dt);		//Temp;
+
 				if (i->justPressed(GLFW_KEY_R))
 				{
-					weapons[currentWpn].reload();
+					role.getCurrentWeapon()->reload();
 				}
 
 				if (i->justPressed(GLFW_KEY_1))
 				{
-					currentWpn = 0;
+					role.swapWeapon(0);
 					msg = WPNSWITCH;
 				}
 
 				if (i->justPressed(GLFW_KEY_2))
 				{
-					currentWpn = 1;
+					role.swapWeapon(1);
 					msg = WPNSWITCH;
 				}
 
 				if (i->getKeyInfo(GLFW_MOUSE_BUTTON_LEFT))		//Temp
 				{
-					ableToShoot = weapons[currentWpn].shoot();
+					ableToShoot = role.getCurrentWeapon()->shoot();
 					if (ableToShoot)
 						msg = SHOOT;
 				}
@@ -219,25 +219,12 @@ void Player::rotatePlayer(vec3 olddir, vec3 newdir)
 
 Weapon* Player::getPlayerCurrentWeapon()
 {
-	return &weapons[currentWpn];
+	return role.getCurrentWeapon();
 }
 
 void Player::switchWpn(WEAPON_TYPE ws)
 {
-	/*
-	THIS CODE IS TEMPORARY
-	This logic needs to be moved to the class, where we can easily compare to the class' weapons. If the class does not hold any of these weapons, we can conclude that the weapon switch
-	is due to a tech pickup or super weapon. Then, we check which type of weapon ws is and figure out in which slot to put it.
-	*/
-	switch (ws)
-	{
-	case WEAPON_TYPE::PULSE_RIFLE:
-		currentWpn = 0;
-		break;
-	case WEAPON_TYPE::POOP_GUN:
-		currentWpn = 1;
-		break;
-	}
+	role.swapWeapon(ws);
 }
 
 void Player::hitByBullet(BulletHitInfo hi, glm::vec3 dir)

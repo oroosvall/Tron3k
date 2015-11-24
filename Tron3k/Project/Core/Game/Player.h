@@ -10,6 +10,7 @@
 #include "../../../Physics/Physics.h"
 
 #include <glm/glm.hpp>
+#include "Role/role.h"
 #include "Role/Weapon/Weapon.h"
 #include <string>
 
@@ -28,14 +29,8 @@ struct BulletHitInfo
 class Player : public GameObject
 {
 private:
+	Role role;
 	bool lockControls = false;
-
-
-	Weapon weapons[2];
-	int currentWpn = 0;
-
-	Weapon pickup;
-	Weapon super;
 
 	std::string name;
 	glm::vec3 pos; //Current actual position
