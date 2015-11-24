@@ -57,6 +57,9 @@ Core::~Core()
 	cam->release();
 
 	saveSettings();
+
+	glfwTerminate();
+
 }
 
 void Core::update(float dt)
