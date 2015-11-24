@@ -92,7 +92,7 @@ vec4 CalcSpotLight(SpotLight l, vec3 Normal)
 
 void main()
 {
-	tmpLight.Color = vec3(1.0, 0.0, 0.0);
+	tmpLight.Color = vec3(1.0, 1.0, 1.0);
 	tmpLight.DiffuseIntensity = 0.7;
 	tmpLight.AmbientIntensity = 0.0;
 	tmpLight.Position = vec3(1.891, 7.186, 2.467);
