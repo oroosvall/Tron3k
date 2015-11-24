@@ -42,56 +42,15 @@ float Role::getMovementSpeed()
 void Role::chooseRole(int role)
 {
 	stringstream temp;
-	if (role == TRAPPER)
+	if (role < NROFROLES)
 	{
-		health = atoi(loadedRoles[TRAPPER][HEALTH].c_str());
-		
-		weapons[0].init(36, (WEAPON_TYPE)atoi(loadedRoles[TRAPPER][MAINWEP].c_str()), 0.5);
-		weapons[1].init(80, (WEAPON_TYPE)atoi(loadedRoles[TRAPPER][SECWEP].c_str()), 0.1);
+		health = atoi(loadedRoles[role][HEALTH].c_str());
 
-		consumable.setConsumable(atoi(loadedRoles[TRAPPER][CONSUMABLE].c_str()));
-		movementSpeed = atof(loadedRoles[TRAPPER][MOVEMENTSPEED].c_str());
-	}
-	else if (role == DESTROYER)
-	{
-		health = atoi(loadedRoles[DESTROYER][HEALTH].c_str());
+		weapons[0].init(36, (WEAPON_TYPE)atoi(loadedRoles[role][MAINWEP].c_str()), 0.5);
+		weapons[1].init(80, (WEAPON_TYPE)atoi(loadedRoles[role][SECWEP].c_str()), 0.1);
 
-		weapons[0].init(36, (WEAPON_TYPE)atoi(loadedRoles[DESTROYER][MAINWEP].c_str()), 0.5);
-		weapons[1].init(80, (WEAPON_TYPE)atoi(loadedRoles[DESTROYER][SECWEP].c_str()), 0.1);
-
-		consumable.setConsumable(atoi(loadedRoles[DESTROYER][CONSUMABLE].c_str()));
-		movementSpeed = atof(loadedRoles[DESTROYER][MOVEMENTSPEED].c_str());
-	}
-	else if (role == MOBILITY)
-	{
-		health = atoi(loadedRoles[MOBILITY][HEALTH].c_str());
-
-		weapons[0].init(36, (WEAPON_TYPE)atoi(loadedRoles[MOBILITY][MAINWEP].c_str()), 0.5);
-		weapons[1].init(80, (WEAPON_TYPE)atoi(loadedRoles[MOBILITY][SECWEP].c_str()), 0.1);
-
-		consumable.setConsumable(atoi(loadedRoles[MOBILITY][CONSUMABLE].c_str()));
-		movementSpeed = atof(loadedRoles[MOBILITY][MOVEMENTSPEED].c_str());
-	}
-	else if (role == BRUTE)
-	{
-		health = atoi(loadedRoles[BRUTE][HEALTH].c_str());
-
-		weapons[0].init(36, (WEAPON_TYPE)atoi(loadedRoles[BRUTE][MAINWEP].c_str()), 0.5);
-		weapons[1].init(80, (WEAPON_TYPE)atoi(loadedRoles[BRUTE][SECWEP].c_str()), 0.1);
-		
-		consumable.setConsumable(atoi(loadedRoles[BRUTE][CONSUMABLE].c_str()));
-		movementSpeed = atof(loadedRoles[BRUTE][MOVEMENTSPEED].c_str());
-
-	}
-	else if (role == MANIPULATOR)
-	{
-		health = atoi(loadedRoles[MANIPULATOR][HEALTH].c_str());
-
-		weapons[0].init(36, (WEAPON_TYPE)atoi(loadedRoles[MANIPULATOR][MAINWEP].c_str()), 0.5);
-		weapons[1].init(80, (WEAPON_TYPE)atoi(loadedRoles[MANIPULATOR][SECWEP].c_str()), 0.1);
-
-		consumable.setConsumable(atoi(loadedRoles[MANIPULATOR][CONSUMABLE].c_str()));
-		movementSpeed = atof(loadedRoles[MANIPULATOR][MOVEMENTSPEED].c_str());
+		consumable.setConsumable(atoi(loadedRoles[role][CONSUMABLE].c_str()));
+		movementSpeed = atof(loadedRoles[role][MOVEMENTSPEED].c_str());
 	}
 }
 
