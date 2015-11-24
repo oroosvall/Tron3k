@@ -6,6 +6,11 @@ struct Vertex3
 	float x, y, z;
 };
 
+struct Vertex4
+{
+	float x, y, z, w;
+};
+
 struct Vertex
 {
 	float x, y, z;

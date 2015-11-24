@@ -98,27 +98,34 @@ ContentManager::~ContentManager()
 	glDeleteVertexArrays(1, &playerModels[0].vao);
 	
 	delete playerModels;
+	testMap.release();
 
 }
 
 void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint textureLocation, GLuint normalLocation)
 {
-	for (size_t i = 0; i < meshes.size(); i++)
-	{
-		glProgramUniformMatrix4fv(shader, shaderLocation, 1, GL_FALSE, (GLfloat*)meshes[i].getWorld());
 
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, meshes[i].textureID);
-
-		glActiveTexture(GL_TEXTURE0+1);
-		glBindTexture(GL_TEXTURE_2D, textures[0].textureID);
-
-		glBindVertexArray(meshes[i].vao);
-		glBindBuffer(GL_ARRAY_BUFFER, meshes[i].vbo);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshes[i].ibo);
-
-		glDrawElements(GL_TRIANGLES, meshes[i].faceCount * 3, GL_UNSIGNED_SHORT, 0);
-	}
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, textures[1].textureID);
+	testMap.render(shader, shaderLocation);
+	//for (size_t i = 0; i < meshes.size(); i++)
+	//{
+	//	glProgramUniformMatrix4fv(shader, shaderLocation, 1, GL_FALSE, (GLfloat*)meshes[i].getWorld());
+	//
+	//	glProgramUniform1i(shader, textureLocation, 0);
+	//	glProgramUniform1i(shader, normalLocation, 1);
+	//	glActiveTexture(GL_TEXTURE0);
+	//	glBindTexture(GL_TEXTURE_2D, meshes[i].textureID);
+	//
+	//	glActiveTexture(GL_TEXTURE0+1);
+	//	glBindTexture(GL_TEXTURE_2D, textures[2].textureID);
+	//
+	//	glBindVertexArray(meshes[i].vao);
+	//	glBindBuffer(GL_ARRAY_BUFFER, meshes[i].vbo);
+	//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshes[i].ibo);
+	//
+	//	glDrawElements(GL_TRIANGLES, meshes[i].faceCount * 3, GL_UNSIGNED_SHORT, 0);
+	//}
 	
 
 }

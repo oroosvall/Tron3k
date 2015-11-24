@@ -5,23 +5,23 @@
 
 struct SharedFileHDR
 {
-	int64_t meshCount;
-	int64_t pointLightCount;
-	int64_t spotLightCount;
-	int64_t dirLightCount;
-	int64_t materialCount;
-	int64_t textureCount;
-	int64_t portalCount;
+	uint32_t meshCount;
+	uint32_t pointLightCount;
+	uint32_t spotLightCount;
+	uint32_t dirLightCount;
+	uint32_t materialCount;
+	uint32_t textureCount;
+	uint32_t portalCount;
 };
 
 struct MeshDataHDR
 {
-	int32_t objectType;
-	int32_t instanceCount;
-	int32_t materialCount;
-	int32_t indicesCount;
-	int32_t vertexCount;
-	int32_t bbCount;
+	uint32_t objectType;
+	uint32_t instanceCount;
+	uint32_t materialCount;
+	uint32_t indicesCount;
+	uint32_t vertexCount;
+	uint32_t bbCount;
 };
 
 struct PointLight
@@ -47,28 +47,28 @@ struct DirectionalLight
 	float intensity;
 };
 
-struct MaterialHDR
+struct Material
 {
-	int64_t textureMapIndex;
-	int64_t normalMapIndex;
-	int64_t specularMapIndex;
+	uint32_t textureMapIndex;
+	uint32_t normalMapIndex;
+	uint32_t specularMapIndex;
 };
 
 struct TextureHDR
 {
-	int64_t* textureSize;
+	uint32_t* textureSize;
 };
 
 struct TextureData
 {
-	int64_t** texturePath;
+	char* texturePath;
 };
 
 struct PortalData
 {
-	int64_t portalID;
-	int64_t bridgedRooms[2];
-	float* positions[4];
+	uint32_t portalID;
+	uint32_t bridgedRooms[2];
+	Vertex3 positions[4];
 };
 
 #endif

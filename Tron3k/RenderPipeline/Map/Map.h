@@ -13,10 +13,14 @@ private:
 
 	StaticMesh* meshes;
 
+	int meshCount;
+
 public:
 	
 	void init();
 	void release();
+
+	void render(GLuint shader, GLuint shaderLocation);
 
 	void loadMap(std::string mapName);
 

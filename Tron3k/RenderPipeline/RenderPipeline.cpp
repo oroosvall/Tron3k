@@ -4,6 +4,8 @@
 
 #include "Shader.h"
 
+//#include <vld.h>
+
 #ifdef _DEBUG
 extern "C"
 {
@@ -65,6 +67,7 @@ extern "C"
 
 bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 {
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	GLenum result = glewInit();
 	if (result != GLEW_OK)
 	{
@@ -129,6 +132,8 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	contMan.init();
 	
 	glEnable(GL_CULL_FACE); //TEMPORARY PLZ MOVE THIS SOMEWHERE APPROPRIATE OR DELETE THIS
+
+	new char[2001];
 
 	return true;
 }

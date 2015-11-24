@@ -22,7 +22,7 @@ int main()
 
 	Core core;
 	core.init();
-
+	
 	while (core.windowVisible())
 	{
 		core.update(dt);
