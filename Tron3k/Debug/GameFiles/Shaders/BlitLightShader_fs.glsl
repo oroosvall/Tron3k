@@ -126,7 +126,7 @@ void main()
 		for(int n = 0; n < NumSpotLights; n++)
 		{
 			fragment_color += CalcSpotLight(lights[n], Normal0.xyz);
-			fragment_color += Diffuse0 * lights[n].Color * lights[n].AmbientIntensity;
+			fragment_color += Diffuse0 * vec4(lights[n].Color, 1) * lights[n].AmbientIntensity;
 		}
 		
 		fragment_color = fragment_color * Diffuse0;
