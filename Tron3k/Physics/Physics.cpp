@@ -129,6 +129,7 @@ void Physics::receiveWorldBoxes(std::vector<std::vector<float>> wBoxes)
 	float xPos, yPos, zPos;
 	float xSize, ySize, zSize;
 	CollideMesh temp;
+	temp.init();
 	for (int i = 0; i < wBoxes.size(); i++)
 	{
 		xSize = abs(wBoxes[i][0] - wBoxes[i][1]) / 2;
@@ -138,7 +139,7 @@ void Physics::receiveWorldBoxes(std::vector<std::vector<float>> wBoxes)
 		xPos = (wBoxes[i][0] + wBoxes[i][1]) / 2;
 		yPos = (wBoxes[i][2] + wBoxes[i][3]) / 2;
 		zPos = (wBoxes[i][4] + wBoxes[i][5]) / 2;
-
+		
 		temp.setAABB(xPos, yPos, zPos, xSize, ySize, zSize);
 
 		worldBoxes.push_back(temp);

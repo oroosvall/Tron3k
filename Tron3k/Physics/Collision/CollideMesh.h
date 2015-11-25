@@ -32,7 +32,7 @@ class CollideMesh
 {
 private:
 	AABB boundingBox;
-	OBB CollisionBox;
+	OBB collisionBox;
 public:
 	CollideMesh();
 	~CollideMesh();
