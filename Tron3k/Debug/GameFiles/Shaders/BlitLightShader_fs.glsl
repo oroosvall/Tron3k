@@ -6,14 +6,16 @@ uniform int Use;
 uniform sampler2D Position;
 uniform sampler2D Diffuse;
 uniform sampler2D Normal;
-uniform sampler2D UVcord;	
+uniform sampler2D GlowSpec;
+uniform sampler2D GlowMap;	
 uniform sampler2D Depth;
+
 
 vec4 Position0;
 vec4 Diffuse0;
 vec4 Normal0;
 vec4 Depth0;
-float glowValue;
+vec4 glowValue;
 
 struct SpotLight
 {
@@ -102,7 +104,7 @@ void main()
 	else if(Use == 3)	 
 		fragment_color = texture(Normal, vec2(UV.x, UV.y));
 	else if(Use == 4)	 
-		fragment_color = texture(UVcord, vec2(UV.x, UV.y));
+		fragment_color = texture(GlowMap, vec2(UV.x, UV.y));
 	else if(Use == 5)
 	{
 		fragment_color = vec4(0,0,0,0);
@@ -110,7 +112,7 @@ void main()
 		Position0 = texture(Position, vec2(UV.x, UV.y));
 		Normal0 = texture(Normal, vec2(UV.x, UV.y));
 		Depth0 = texture(Depth, vec2(UV.x, UV.y));
-		glowValue = texture(Normal, vec2(UV.x, UV.y)).w;
+		glowValue = texture(GlowMap, vec2(UV.x, UV.y));
 			
 		for(int n = 0; n < NumSpotLights; n++)
 		{
@@ -118,7 +120,6 @@ void main()
 			fragment_color += Diffuse0 * vec4(lights[n].Color, 1) * lights[n].AmbientIntensity;
 		}
 		
-		//fragment_color = vec4(glowValue);
-		fragment_color = fragment_color * Diffuse0 + (1.0 - glowValue) * Diffuse0;
+		fragment_color = fragment_color * Diffuse0 + glowValue;
 	}	
 }

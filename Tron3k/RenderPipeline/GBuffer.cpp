@@ -74,7 +74,7 @@ void Gbuffer::init(int x, int y, int nrTex, bool depth)
 	uniformBitsList[1] = glGetUniformLocation(*shaderPtr, "Position");
 	uniformBitsList[2] = glGetUniformLocation(*shaderPtr, "Diffuse");
 	uniformBitsList[3] = glGetUniformLocation(*shaderPtr, "Normal");
-	uniformBitsList[4] = glGetUniformLocation(*shaderPtr, "UVcord");;
+	uniformBitsList[4] = glGetUniformLocation(*shaderPtr, "GlowMap");;
 	uniformUse = glGetUniformLocation(*shaderPtr, "Use");
 
 
@@ -160,7 +160,7 @@ void Gbuffer::render(/*glm::vec3 playerPos, glm::vec3 playerDir*/)
 		glBindTexture(GL_TEXTURE_2D, rTexture[i].getTargetId());
 		glProgramUniform1i(*shaderPtr, uniformBitsList[i], i);
 	}
-
+	
 	glProgramUniform3fv(*shaderPtr, uniformEyePos, 1, &eyePos[0]);
 	glProgramUniform1i(*shaderPtr, uniformNrOfLight, nrOfLights);
 
