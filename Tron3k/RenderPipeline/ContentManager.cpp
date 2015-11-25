@@ -107,6 +107,8 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, textures[1].textureID);
+	glActiveTexture(GL_TEXTURE0 +1 );
+	glBindTexture(GL_TEXTURE_2D, textures[0].textureID);
 	testMap.render(shader, shaderLocation);
 	//for (size_t i = 0; i < meshes.size(); i++)
 	//{
