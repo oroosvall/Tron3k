@@ -71,4 +71,10 @@ struct PortalData
 	Vertex3 positions[4];
 };
 
+struct BBPoint
+{
+	Vertex4 BBPos[8];
+};
+
+
 #endif

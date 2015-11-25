@@ -25,6 +25,13 @@ void Map::release()
 		delete[] meshes;
 		meshes = nullptr;
 	}
+
+	if (bbPoints)
+	{
+		delete[] bbPoints;
+		bbPoints = nullptr;
+	}
+
 }
 
 void Map::render(GLuint shader, GLuint shaderLocation)
@@ -115,15 +122,8 @@ void Map::loadMap(std::string mapName)
 		inFile.read((char*)verts, sizeof(Vertex11)*vertexCount);
 		meshes[i].setVertices((float*)verts, vertexCount);
 
-		struct BBPoint
-		{
-			Vertex4 BBPos[8];
-		};
-
-		BBPoint* bbPoints = new BBPoint[bbCount];
+		bbPoints = new BBPoint[bbCount];
 		inFile.read((char*)bbPoints, sizeof(BBPoint)*bbCount);
-		std::cout << std::endl;
-		delete[] bbPoints;
 
 		for (int i = 0; i < instanceCount; i++)
 		{

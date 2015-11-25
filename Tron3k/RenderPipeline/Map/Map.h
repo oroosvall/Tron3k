@@ -11,6 +11,7 @@ class Map
 
 private:
 
+	BBPoint* bbPoints;
 	StaticMesh* meshes;
 
 	int meshCount;
