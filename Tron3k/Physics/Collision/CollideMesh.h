@@ -4,6 +4,17 @@
 #include <vector>
 #include"../../Dependencies/glm/glm/glm.hpp"
 //Not sure if this should be a class, but it is temporarily
+
+//corner defines
+#define DLF 0
+#define DRF 1
+#define ULF 2
+#define URF 3
+#define DLB 4
+#define DRB 5
+#define ULB 6
+#define URB 7
+
 struct AABB
 {
 	float posX, posY, posZ;
@@ -12,7 +23,7 @@ struct AABB
 
 struct OBB
 {
-	glm::vec3 corners[4];
+	glm::vec3 corners[8];
 
 };
 
@@ -25,6 +36,8 @@ private:
 public:
 	CollideMesh();
 	~CollideMesh();
+
+	void init();
 
 	void setAABB(float xPos, float yPos, float zPos, float xSize, float ySize, float zSize);
 	AABB getAABB();

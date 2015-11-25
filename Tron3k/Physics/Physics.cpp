@@ -61,12 +61,12 @@ bool Physics::checkAABBCollision(glm::vec3 pos, CollideMesh mesh)
 
 bool Physics::checkOBBCollision(Geometry* obj1, Geometry* obj2)
 {
-	return 0;
+	return 1;
 }
 
 bool Physics::checkOBBCollision(glm::vec3 pos, CollideMesh mesh)
 {
-	return 0;
+	return 1;
 }
 
 bool Physics::checkPlayerVPlayerCollision(glm::vec3 playerPos1, glm::vec3 playerPos2)
@@ -76,6 +76,8 @@ bool Physics::checkPlayerVPlayerCollision(glm::vec3 playerPos1, glm::vec3 player
 	Geometry obj2 = Geometry(playerPos2, this->size);
 	bool collide = checkAABBCollision(&obj1, &obj2);
 
+	if (collide)
+		collide = checkOBBCollision(&obj1, &obj2);
 	return collide;
 }
 
@@ -85,6 +87,8 @@ bool Physics::checkPlayerVBulletCollision(glm::vec3 playerPos, glm::vec3 bulletP
 	Geometry bullet = Geometry(bulletPos, this->size);
 	bool collide = checkAABBCollision(&player, &bullet);
 
+	if (collide)
+		collide = checkOBBCollision(&player, &bullet);
 	return collide;
 }
 
@@ -95,7 +99,8 @@ bool Physics::checkPlayerVWorldCollision(glm::vec3 playerPos)
 	for (int i = 0; i < worldBoxes.size(); i++)
 	{
 		if (checkAABBCollision(playerPos, worldBoxes[i]))
-			collides = true;
+			if (checkOBBCollision(playerPos, worldBoxes[i]))
+				collides = true;
 	}
 	return collides;
 }
@@ -126,17 +131,17 @@ void Physics::receiveWorldBoxes(std::vector<std::vector<float>> wBoxes)
 	CollideMesh temp;
 	for (int i = 0; i < wBoxes.size(); i++)
 	{
-		 xSize = abs(wBoxes[i][0] - wBoxes[i][1]);
-		 ySize = abs(wBoxes[i][2] - wBoxes[i][3]);
-		 zSize = abs(wBoxes[i][4] - wBoxes[i][5]);
+		xSize = abs(wBoxes[i][0] - wBoxes[i][1]) / 2;
+		ySize = abs(wBoxes[i][2] - wBoxes[i][3]) / 2;
+		zSize = abs(wBoxes[i][4] - wBoxes[i][5]) / 2;
 
-		 xPos = (wBoxes[i][0] + wBoxes[i][1]) / 2;
-		 yPos = (wBoxes[i][2] + wBoxes[i][3]) / 2;
-		 zPos = (wBoxes[i][4] + wBoxes[i][5]) / 2;
-		 
-		 temp.setAABB(xPos, yPos, zPos, xSize, ySize, zSize);
+		xPos = (wBoxes[i][0] + wBoxes[i][1]) / 2;
+		yPos = (wBoxes[i][2] + wBoxes[i][3]) / 2;
+		zPos = (wBoxes[i][4] + wBoxes[i][5]) / 2;
 
-		 worldBoxes.push_back(temp);
+		temp.setAABB(xPos, yPos, zPos, xSize, ySize, zSize);
+
+		worldBoxes.push_back(temp);
 	}
 }
 
