@@ -80,10 +80,6 @@ void Core::update(float dt)
 	default:						break;
 	}
 
-	//*******TEMP**********
-	GetSound()->update();
-	//*********************
-
 	i->clearOnPress();
 	console.discardCommandAndLastMsg();
 

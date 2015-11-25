@@ -1,6 +1,6 @@
 #include "SoundPlayer.h"
 int SoundPlayer::nrOfSoundsPlaying = 0;
-float SoundPlayer::soundVolume = 100.0f;
+float SoundPlayer::soundVolume = 50.0f;
 float SoundPlayer::musicVolume = 50.0f;
 bool SoundPlayer::soundEnabler = false;
 
@@ -78,19 +78,11 @@ void SoundPlayer::setVolumeSound(float volume)
 
 int SoundPlayer::playUserGeneratedSound(int sound)
 {
-	if (nrOfSoundsPlaying < 29)
-	{
-		sounds[nrOfSoundsPlaying].setBuffer(soundList[sound]);
-		sounds[nrOfSoundsPlaying].play();
-		nrOfSoundsPlaying++;
-	}
-	else if (nrOfSoundsPlaying >= 30)
-	{
-		sounds[0].setMinDistance(10.0f);
-		sounds[0].setPosition(0.0f, 0.0f, 0.0f);
-		sounds[0].setBuffer(soundList[sound]);
-		sounds[0].play();
-	}
+
+	sounds[nrOfSoundsPlaying].setBuffer(soundList[sound]);
+	sounds[nrOfSoundsPlaying].play();
+	nrOfSoundsPlaying++;
+	nrOfSoundsPlaying %= MAXSOUNDS;
 
 	return 0;
 }
@@ -100,21 +92,12 @@ int SoundPlayer::playExternalSound(int sound, float x, float y, float z)
 	//sf::Listener::setPosition(playerPosX, playerPosY, playerPosZ);			//Set the position of the player
 	sf::Listener::setDirection(0.0f, 0.0f, -10.0f);			//Set the direction of the player
 
-	if (nrOfSoundsPlaying < 29)
-	{
-		sounds[nrOfSoundsPlaying].setMinDistance(10.0f);		//Set the sound's distance it travels before it starts to attenuate. Could be passed in through a parameter.
-		sounds[nrOfSoundsPlaying].setPosition(x, y, z);			//Set the sound's position in the world. Could be passed in through a parameter.
-		sounds[nrOfSoundsPlaying].setBuffer(soundList[sound]);
-		sounds[nrOfSoundsPlaying].play();
-		nrOfSoundsPlaying++;
-	}
-	else if (nrOfSoundsPlaying >= 30)
-	{
-		sounds[0].setMinDistance(10.0f);		
-		sounds[0].setPosition(x, y, z);			
-		sounds[0].setBuffer(soundList[sound]);
-		sounds[0].play();
-	}
+	sounds[nrOfSoundsPlaying].setMinDistance(10.0f);		//Set the sound's distance it travels before it starts to attenuate. Could be passed in through a parameter.
+	sounds[nrOfSoundsPlaying].setPosition(x, y, z);			//Set the sound's position in the world. Could be passed in through a parameter.
+	sounds[nrOfSoundsPlaying].setBuffer(soundList[sound]);
+	sounds[nrOfSoundsPlaying].play();
+	nrOfSoundsPlaying++;
+	nrOfSoundsPlaying %= MAXSOUNDS;
 
 	return 0;
 }
@@ -141,18 +124,6 @@ int SoundPlayer::playMusic(int music)
 void SoundPlayer::rotate(float deltaTime)
 {
 	sf::Listener::setDirection(cos(deltaTime), 0.0f, sin(deltaTime));
-}
-
-void SoundPlayer::update()
-{
-	for (int i = 0; i < nrOfSoundsPlaying; i++)
-	{
-		if(sounds[i].getStatus() == sf::Sound::Stopped)
-		{
-			sounds[nrOfSoundsPlaying] = sounds[i];
-			nrOfSoundsPlaying--;
-		}
-	}
 }
 
 SoundPlayer* CreateSound()

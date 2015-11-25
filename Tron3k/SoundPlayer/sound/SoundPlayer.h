@@ -11,6 +11,8 @@
 #include<vector>
 #include"SoundList.h"
 
+int const MAXSOUNDS = 50;
+
 using namespace std;
 
 class SoundPlayer
@@ -24,7 +26,7 @@ private:
 	~SoundPlayer();
 
 
-	sf::Sound sounds[30];
+	sf::Sound sounds[MAXSOUNDS];
 	sf::SoundBuffer soundList[SOUNDS::nrOfSounds];
 	string musicList[MUSIC::nrOfMusic];
 
@@ -51,7 +53,6 @@ public:
 
 	virtual void rotate(float deltaTime);
 
-	virtual void update();
 };
 
 extern "C" SOUNDPLAYER_API SoundPlayer* CreateSound();
