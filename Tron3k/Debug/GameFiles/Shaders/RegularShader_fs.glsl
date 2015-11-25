@@ -39,5 +39,5 @@ void main()
 	DiffuseOut	= texture(textureSample, vec2(UV.x, 1-UV.y));	
 	NormalOut = CalcBumpedNormal();
 	GlowMap = texture(glowSpecSample, vec2(UV.x, UV.y)) * staticGlowIntensity;
-	GlowMap +=  (1.0 - normalMap.w) * dynamicGlowColor;
+	GlowMap +=  vec4((1.0 - normalMap.w) * dynamicGlowColor, 0);
 }
