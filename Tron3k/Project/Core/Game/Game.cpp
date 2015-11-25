@@ -100,6 +100,8 @@ void Game::initPhysics()
 
 void Game::update(float dt)
 {
+	//if (dt > 1.0f)
+		//dt = 0.2f;
 	for (int c = 0; c < max_con; c++)
 	{
 		if (playerList[c] != nullptr)
@@ -156,7 +158,14 @@ void Game::update(float dt)
 	}
 
 	if (gameState == Gamestate::SERVER)
+	{
 		checkPlayerVBulletCollision();
+	}
+
+	if (gameState == Gamestate::ROAM)
+	{
+		checkPlayerVWorldCollision();
+	}
 }
 
 Player* Game::getPlayer(int conID)

@@ -20,7 +20,11 @@ private:
 	//General physics components will go here, and things will be added as we go
 	std::vector<CollideMesh> worldBoxes;
 
-	bool checkCollision(glm::vec3 pos, CollideMesh mesh);//Iterative function for each layer of CollideMesh
+	bool checkAABBCollision(glm::vec3 pos, CollideMesh mesh);
+	bool checkAABBCollision(Geometry* obj1, Geometry* obj2);
+
+	bool checkOBBCollision(glm::vec3 pos, CollideMesh mesh);
+	bool checkOBBCollision(Geometry* obj1, Geometry* obj2);
 
 	glm::vec3 minExtremes = glm::vec3(0, 0, 0);
 	glm::vec3 maxExtremes = glm::vec3(0, 0, 0);
@@ -32,7 +36,7 @@ public:
 	virtual bool init();
 	virtual bool release();
 
-	bool checkCollision(Geometry* obj1, Geometry* obj2);
+	
 	virtual bool checkPlayerVPlayerCollision(glm::vec3 playerPos1, glm::vec3 playerPos2);
 	virtual bool checkPlayerVBulletCollision(glm::vec3 playerPos, glm::vec3 bulletPos);
 	virtual bool checkPlayerVWorldCollision(glm::vec3 playerPos);

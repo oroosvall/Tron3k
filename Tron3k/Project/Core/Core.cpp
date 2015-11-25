@@ -147,7 +147,10 @@ void Core::upRoam(float dt)
 		subState++;
 		break;
 	}
-	case 1: //main loop
+	case 1:
+		subState++;
+		break;
+	case 2: //main loop
 
 		roamHandleCmds();
 		game->update(dt);
