@@ -100,8 +100,6 @@ void Game::initPhysics()
 
 void Game::update(float dt)
 {
-	//if (dt > 1.0f)
-		//dt = 0.2f;
 	for (int c = 0; c < max_con; c++)
 	{
 		if (playerList[c] != nullptr)
@@ -151,6 +149,11 @@ void Game::update(float dt)
 		}
 	}
 
+	if (gameState == Gamestate::ROAM)
+	{
+		checkPlayerVWorldCollision();
+	}
+
 	if (gameState == Gamestate::CLIENT)
 	{
 		checkPvPCollision();
@@ -158,14 +161,7 @@ void Game::update(float dt)
 	}
 
 	if (gameState == Gamestate::SERVER)
-	{
 		checkPlayerVBulletCollision();
-	}
-
-	if (gameState == Gamestate::ROAM)
-	{
-		checkPlayerVWorldCollision();
-	}
 }
 
 Player* Game::getPlayer(int conID)
@@ -493,7 +489,7 @@ glm::vec3 Game::removeBullet(int PID, int BID, BULLET_TYPE bt)
 		int p = -1;
 		int b = -1;
 		bullets[bt][c]->getId(p, b);
-		if (p == PID && b == BID)
+		if (p == PID && b == BID);
 		{
 			glm::vec3 ret = bullets[bt][c]->getDir();
 			delete bullets[bt][c];
