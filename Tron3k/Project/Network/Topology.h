@@ -41,6 +41,8 @@ public:
 	virtual void init(Console* console, int port, IpAddress addrs) = 0;
 	~Topology()
 	{
+		if (package)
+			delete package;
 		if (con)
 		{
 			if (isClient)
