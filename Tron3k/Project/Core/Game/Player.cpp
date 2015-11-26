@@ -281,6 +281,12 @@ void Player::hitByBullet(Bullet* b, int newHPtotal)
 	{
 		role.setHealth(newHPtotal);
 	}
+
+	if (isLocalPlayer)
+	{
+		if (role.getHealth() == 0)
+		isDead = true;
+	}
 }
 
 void Player::applyGravity(Physics* p, float dt)

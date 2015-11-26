@@ -82,6 +82,7 @@ public:
 		switch (command_type)
 		{
 		case NET_COMMAND::TEAM_CHANGE: in_command_team_change(rec, conID); break;
+		case NET_COMMAND::RESPAWN: in_command_respawn(rec, conID); break;
 		}
 	}
 
