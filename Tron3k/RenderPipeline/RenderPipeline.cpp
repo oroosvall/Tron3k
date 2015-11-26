@@ -264,12 +264,13 @@ SETTING_INPUT RenderPipeline::getType(PIPELINE_SETTINGS type) const
 
 void RenderPipeline::getPlayerBox(float &xMax, float &xMin, float &yMax, float &yMin, float &zMax, float &zMin)
 {
+	//Will be changed later, this is number for now
 	xMax = 0.5f;
 	xMin = -0.5f;
 	yMax = 1.0f;
 	yMin = -1.0f;
-	zMax = 0.2f;
-	zMin = -0.2f;
+	zMax = 0.5f;
+	zMin = -0.5f;
 }
 
 void RenderPipeline::getWorldBoxes(int &current, float &xMax, float &xMin, float &yMax, float &yMin, float &zMax, float &zMin)
