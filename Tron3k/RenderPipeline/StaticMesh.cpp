@@ -49,11 +49,12 @@ void StaticMesh::stream()
 
 	glGenBuffers(1, &indexBuffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-	if (&indices[(indexCount - 1) / 3])
+#ifdef _DEBUG
+	if ((sizeof(unsigned int)*indexCount) == _msize(indices))
 	{
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indexCount, &indices[0], GL_STATIC_DRAW);
 	}
-
+#endif
 	//define vertex data layout
 	glGenVertexArrays(1, &vertexArray);
 	glBindVertexArray(vertexArray);
