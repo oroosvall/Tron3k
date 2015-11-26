@@ -357,13 +357,13 @@ public:
 		gamePtr->allowPlayerRespawn(p_conID, respawnPosition);
 		consolePtr->printMsg("Player (" + p->getName() + ") respawned!", "System", 'S');
 
-		Packet* out = new Packet;
-		*out << p_conID << respawnPosition.x << respawnPosition.y << respawnPosition.z;
-
 		if (isClient == false)
+		{
+			Packet* out = new Packet;
+			*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::RESPAWN) << p_conID << respawnPosition.x << respawnPosition.y << respawnPosition.z;
 			branch(out, -1);
-
-		delete out;
+			delete out;
+		}
 	}
 };
 
