@@ -71,11 +71,8 @@ public:
 
 	void update(float dt);
 
-	//TEMPORARY
-	void getBoatCoordsFromCore(glm::vec3 minVals, glm::vec3 maxVals);
-	//TEMPORARY
-	void sendBoatCoordsToPhysics(glm::vec3 minVals, glm::vec3 maxVals);
-	void sendWorldBoxes(std::vector<std::vector<float>>);
+	void sendWorldBoxes(std::vector<std::vector<float>> wBoxes);
+	void sendPlayerBox(std::vector<float> pBox);
 
 	void checkPvPCollision();
 	void checkPlayerVBulletCollision();

@@ -259,16 +259,15 @@ SETTING_INPUT RenderPipeline::getType(PIPELINE_SETTINGS type) const
 	return SETTING_INPUT::NONE_IN;
 }
 
-void* RenderPipeline::getMinExtremes()
+void RenderPipeline::getPlayerBox(float &xMax, float &xMin, float &yMax, float &yMin, float &zMax, float &zMin)
 {
-	vec3* ret = new vec3(0,0,0);
-	return (void*)ret;
-}
-
-void* RenderPipeline::getMaxExtremes()
-{
-	vec3* ret = new vec3(0,0,0);
-	return (void*)ret;
+	//Will be changed later, this is number for now
+	xMax = 0.5f;
+	xMin = -0.5f;
+	yMax = 1.0f;
+	yMin = -1.0f;
+	zMax = 0.5f;
+	zMin = -0.5f;
 }
 
 void RenderPipeline::getWorldBoxes(int &current, float &xMax, float &xMin, float &yMax, float &yMin, float &zMax, float &zMin)

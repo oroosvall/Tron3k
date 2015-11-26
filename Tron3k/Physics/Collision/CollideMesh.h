@@ -44,5 +44,10 @@ public:
 
 	void setOBB(glm::vec3* corners);
 	OBB getOBB();
+
+	void setPos(glm::vec3 pos);
+
+	void setSize(glm::vec3 size);
+	glm::vec3 getSize();
 };
 #endif

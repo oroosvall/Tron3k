@@ -12,7 +12,18 @@ Physics::~Physics()
 
 bool Physics::init()
 {
+	initBulletBox();
 	return 1;
+}
+
+void Physics::initBulletBox()
+{
+	bulletBox.init();
+
+	//TEMPORARY
+	glm::vec3 size = glm::vec3(0.2f, 0.2f, 0.2f);
+
+	bulletBox.setSize(size);
 }
 
 bool Physics::release()
@@ -40,16 +51,16 @@ bool Physics::checkAABBCollision(Geometry* obj1, Geometry* obj2)
 	return 0;
 }
 
-bool Physics::checkAABBCollision(glm::vec3 pos, CollideMesh mesh)
+bool Physics::checkAABBCollision(CollideMesh mesh1, CollideMesh mesh2)
 {
-	if (pos.x + size.x > mesh.getAABB().posX - mesh.getAABB().sizeX &&
-		pos.x - size.x < mesh.getAABB().posX + mesh.getAABB().sizeX)//x
+	if (mesh1.getAABB().posX + mesh1.getAABB().sizeX > mesh2.getAABB().posX - mesh2.getAABB().sizeX &&
+		mesh1.getAABB().posX - mesh1.getAABB().sizeX < mesh2.getAABB().posX + mesh2.getAABB().sizeX)//x
 	{
-		if (pos.y + size.y > mesh.getAABB().posY - mesh.getAABB().sizeY &&
-			pos.y - size.y < mesh.getAABB().posY + mesh.getAABB().sizeY)//y
+		if (mesh1.getAABB().posY + mesh1.getAABB().sizeY > mesh2.getAABB().posY - mesh2.getAABB().sizeY &&
+			mesh1.getAABB().posY - mesh1.getAABB().sizeY < mesh2.getAABB().posY + mesh2.getAABB().sizeY)//y
 		{
-			if (pos.z + size.z > mesh.getAABB().posZ - mesh.getAABB().sizeZ &&
-				pos.z - size.z < mesh.getAABB().posZ + mesh.getAABB().sizeZ)//z
+			if (mesh1.getAABB().posZ + mesh1.getAABB().sizeZ > mesh2.getAABB().posZ - mesh2.getAABB().sizeZ &&
+				mesh1.getAABB().posZ - mesh1.getAABB().sizeZ < mesh2.getAABB().posZ + mesh2.getAABB().sizeZ)//z
 			{
 				return 1;
 			}
@@ -64,31 +75,35 @@ bool Physics::checkOBBCollision(Geometry* obj1, Geometry* obj2)
 	return 1;
 }
 
-bool Physics::checkOBBCollision(glm::vec3 pos, CollideMesh mesh)
+bool Physics::checkOBBCollision(CollideMesh mesh1, CollideMesh mesh2)
 {
 	return 1;
 }
 
 bool Physics::checkPlayerVPlayerCollision(glm::vec3 playerPos1, glm::vec3 playerPos2)
 {
+	playerBox.setPos(playerPos1);
+	CollideMesh p2;
+	p2.init();
+	p2.setPos(playerPos2);
+	p2.setSize(playerBox.getSize());
 
-	Geometry obj1 = Geometry(playerPos1, this->size);
-	Geometry obj2 = Geometry(playerPos2, this->size);
-	bool collide = checkAABBCollision(&obj1, &obj2);
 
-	if (collide)
-		collide = checkOBBCollision(&obj1, &obj2);
+	bool collide = checkAABBCollision(playerBox, p2);
+
+	//if (collide)
+		//collide = checkOBBCollision(&obj1, &obj2);
 	return collide;
 }
 
 bool Physics::checkPlayerVBulletCollision(glm::vec3 playerPos, glm::vec3 bulletPos)
 {
-	Geometry player = Geometry(playerPos, this->size);
-	Geometry bullet = Geometry(bulletPos, this->size);
-	bool collide = checkAABBCollision(&player, &bullet);
+	playerBox.setPos(playerPos);
+	bulletBox.setPos(bulletPos);
+	bool collide = checkAABBCollision(playerBox, bulletBox);
 
-	if (collide)
-		collide = checkOBBCollision(&player, &bullet);
+	//if (collide)
+		//collide = checkOBBCollision(&player, &bullet);
 	return collide;
 }
 
@@ -96,10 +111,12 @@ bool Physics::checkPlayerVBulletCollision(glm::vec3 playerPos, glm::vec3 bulletP
 bool Physics::checkPlayerVWorldCollision(glm::vec3 playerPos)
 {
 	bool collides = false;
+	playerBox.setPos(playerPos);
+
 	for (int i = 0; i < worldBoxes.size(); i++)
 	{
-		if (checkAABBCollision(playerPos, worldBoxes[i]))
-			if (checkOBBCollision(playerPos, worldBoxes[i]))
+		if (checkAABBCollision(playerBox, worldBoxes[i]))
+			//if (checkOBBCollision(playerPos, worldBoxes[i]))
 				collides = true;
 	}
 	return collides;
@@ -111,17 +128,21 @@ void Physics::addGravity(glm::vec3 &vel, float dt)
 	vel.y -= GRAVITY * dt;
 }
 
-
-//TEMPORARY
-void Physics::getBoatExtremes(glm::vec3 minVals, glm::vec3 maxVals)
+void Physics::receivePlayerBox(std::vector<float> pBox)
 {
-	minExtremes = minVals;
-	maxExtremes = maxVals;
-	size = glm::vec3(abs(minExtremes.x) + abs(maxExtremes.x), abs(minExtremes.y) + abs(maxExtremes.y), abs(minExtremes.z) + abs(maxExtremes.z));
+	float xPos, yPos, zPos;
+	float xSize, ySize, zSize;
+	playerBox.init();
 
-	size.x = size.x / 2;
-	size.y = size.y / 2;
-	size.z = size.z / 2;
+	xSize = abs(pBox[0] - pBox[1]) / 2;
+	ySize = abs(pBox[2] - pBox[3]) / 2;
+	zSize = abs(pBox[4] - pBox[5]) / 2;
+
+	xPos = (pBox[0] + pBox[1]) / 2;
+	yPos = (pBox[2] + pBox[3]) / 2;
+	zPos = (pBox[4] + pBox[5]) / 2;
+
+	playerBox.setAABB(xPos, yPos, zPos, xSize, ySize, zSize);
 }
 
 void Physics::receiveWorldBoxes(std::vector<std::vector<float>> wBoxes)
@@ -139,7 +160,7 @@ void Physics::receiveWorldBoxes(std::vector<std::vector<float>> wBoxes)
 		xPos = (wBoxes[i][0] + wBoxes[i][1]) / 2;
 		yPos = (wBoxes[i][2] + wBoxes[i][3]) / 2;
 		zPos = (wBoxes[i][4] + wBoxes[i][5]) / 2;
-		
+
 		temp.setAABB(xPos, yPos, zPos, xSize, ySize, zSize);
 
 		worldBoxes.push_back(temp);

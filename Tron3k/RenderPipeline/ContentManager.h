@@ -38,6 +38,8 @@ private:
 
 	Map testMap;
 
+	Mesh bullet;
+
 public:
 	~ContentManager();
 	void init();

@@ -47,7 +47,7 @@ Core::~Core()
 	}
 	if (renderPipe != nullptr)
 		renderPipe->release();
-	
+
 	ReleaseSound();
 
 	Input* i = Input::getInput();
@@ -89,7 +89,7 @@ void Core::update(float dt)
 	static bool given = false;
 	if (game != nullptr && !given)
 	{
-		givePlayerBoatExtremes();
+		sendPlayerBox();
 		sendWorldBoxes();
 		given = true;
 	}
@@ -125,7 +125,7 @@ void Core::upMenu(float dt)
 	//multiplayer, enter server IP -> CLIENT
 	//settings
 	//exit
-	
+
 	//return exit
 }
 
@@ -169,7 +169,7 @@ void Core::upClient(float dt)
 			delete top;
 		top = new Client();
 		top->init(&console, _port, _addrs);
-		 
+
 		//attempt to connect
 		for (int n = 0; n < 3; n++)
 		{
@@ -179,7 +179,7 @@ void Core::upClient(float dt)
 				console.printMsg("Connecting Successful", "System", 'S');
 				//send "new connection" event to server
 				top->new_connection_packet(_name);
-				
+
 				if (game != nullptr)
 					delete game;
 				game = new Game();
@@ -200,7 +200,7 @@ void Core::upClient(float dt)
 		break;
 	case 1: //get full server info & map check
 		top->network_IN(dt);
-		if (top->firstPackageRecieved()) 
+		if (top->firstPackageRecieved())
 		{
 			//can i load?
 			// if not  -> menu
@@ -223,7 +223,7 @@ void Core::upClient(float dt)
 		game->update(dt);
 
 		GetSound()->setLocalPlayerDir(game->getPlayer(top->getConId())->getDir());
-		
+
 		//Command and message handle
 		if (console.messageReady())
 		{
@@ -260,7 +260,7 @@ void Core::upClient(float dt)
 			}
 			//send the package
 			top->network_OUT(dt);
-			tick_timer = 0;	
+			tick_timer = 0;
 		}
 
 		renderWorld(dt);
@@ -377,8 +377,8 @@ void Core::startHandleCmds()
 			else
 			{
 				/* Todo: Check for illegal names */
-					_name = token;
-					console.printMsg("You changed name to (" + token + ")", "System", 'S');
+				_name = token;
+				console.printMsg("You changed name to (" + token + ")", "System", 'S');
 			}
 		}
 		else if (token == "/ip")
@@ -391,7 +391,7 @@ void Core::startHandleCmds()
 		else if (token == "/port")
 		{
 			ss >> token;
-			if(token == "/port")
+			if (token == "/port")
 				console.printMsg("No port found. Use /port <new Port>", "System", 'S');
 			else
 			{
@@ -532,7 +532,7 @@ void Core::clientHandleCmds()
 			{
 				/* Todo: Check for illegal names */
 				Player* me = game->getPlayer(top->getConId());
-				
+
 				me->setName(token);
 				_name = token;
 				console.printMsg("You changed name to (" + token + ")", "System", 'S');
@@ -543,7 +543,7 @@ void Core::clientHandleCmds()
 		else if (token == "/team")
 		{
 			ss >> token;
-			if(token != "/team" || token == "0" || token == "1" || token == "2")
+			if (token != "/team" || token == "0" || token == "1" || token == "2")
 			{
 				int team = stoi(token);
 				top->command_team_change(top->getConId(), team);
@@ -858,29 +858,35 @@ void Core::initPipeline()
 
 void Core::setfps(int fps)
 {
-	if(win != nullptr)
+	if (win != nullptr)
 		glfwSetWindowTitle(win, to_string(fps).c_str());
 }
 
-//TEMPORARY
-void Core::givePlayerBoatExtremes()
+void Core::sendPlayerBox()
 {
+	std::vector<float> pBox;
+	float xMax, xMin, yMax, yMin, zMax, zMin;
+	xMax = 0.5f;
+	xMin = -0.5f;
+	yMax = 1.0f;
+	yMin = -1.0f;
+	zMax = 0.2f;
+	zMin = -0.2f;
+
 	if (renderPipe != nullptr)
 	{
-		//to avoid leaks
-		vec3* minExtremes = (vec3*)renderPipe->getMinExtremes();
-		vec3* maxExtremes = (vec3*)renderPipe->getMaxExtremes();
-
-		vec3 minEx = *minExtremes;
-		vec3 maxEx = *maxExtremes;
-
-		delete minExtremes;
-		delete maxExtremes;
-
-		game->getBoatCoordsFromCore(minEx, maxEx);
+		renderPipe->getPlayerBox(xMax, xMin, yMax, yMin, zMax, zMin);
+		
 	}
-	else
-	game->getBoatCoordsFromCore(vec3(-1,-1,-1), vec3(1,1,1));
+
+	pBox.push_back(xMax);
+	pBox.push_back(xMin);
+	pBox.push_back(yMax);
+	pBox.push_back(yMin);
+	pBox.push_back(zMax);
+	pBox.push_back(zMin);
+
+	game->sendPlayerBox(pBox);
 }
 
 void Core::sendWorldBoxes()

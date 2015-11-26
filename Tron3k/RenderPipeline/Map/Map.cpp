@@ -120,7 +120,7 @@ void Map::loadMap(std::string mapName)
 
 		Vertex11* verts = new Vertex11[vertexCount];
 		inFile.read((char*)verts, sizeof(Vertex11)*vertexCount);
-		meshes[i].setVertices((float*)verts, vertexCount);
+		meshes[i].setVertices((float*&)verts, vertexCount);
 
 		bbPoints = new BBPoint[bbCount];
 		inFile.read((char*)bbPoints, sizeof(BBPoint)*bbCount);
