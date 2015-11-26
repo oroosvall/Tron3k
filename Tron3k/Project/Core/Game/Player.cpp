@@ -206,6 +206,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			isDead = true;
 			msg = DEATH;
 			respawnTimer = respawnTime;
+			vel = glm::vec3(0, 0, 0);
 		}
 
 		if (isDead && respawnTimer != 0.0f)
@@ -286,6 +287,7 @@ void Player::hitByBullet(Bullet* b, int newHPtotal)
 	{
 		if (role.getHealth() == 0)
 		isDead = true;
+		vel = glm::vec3(0, 0, 0);
 	}
 }
 
