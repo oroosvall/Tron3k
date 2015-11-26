@@ -787,7 +787,7 @@ void Core::renderWorld(float dt)
 			std::vector<Bullet*> bullets = game->getBullets(BULLET_TYPE(c));
 			for (int i = 0; i < bullets.size(); i++)
 			{
-				renderPipe->renderPlayer(0, bullets[i]->getWorldMat(), dgColor, 1.0f);
+				renderPipe->renderPlayer(2, bullets[i]->getWorldMat(), dgColor, 1.0f);
 			}
 		}
 		renderPipe->render();
