@@ -55,7 +55,7 @@ void Map::render(GLuint shader, GLuint shaderLocation)
 			glBindBuffer(GL_ARRAY_BUFFER, meshes[i].vertexBuffer);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshes[i].indexBuffer);
 
-			glDrawElements(GL_TRIANGLES, meshes[i].indexCount * 3, GL_UNSIGNED_INT, 0);
+			glDrawElements(GL_TRIANGLES, meshes[i].indexCount, GL_UNSIGNED_INT, 0);
 		}
 		
 	}

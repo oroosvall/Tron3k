@@ -493,7 +493,7 @@ Bullet* Game::getBulletForRemoval(int PID, int BID, BULLET_TYPE bt, int &posInBu
 		int p = -1;
 		int b = -1;
 		bullets[bt][c]->getId(p, b);
-		if (p == PID && b == BID);
+		if (p == PID && b == BID)
 		{
 			posInBulletArray = c;
 			return bullets[bt][c];

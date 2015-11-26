@@ -31,6 +31,9 @@
     <Filter Include="Source Files\Map">
       <UniqueIdentifier>{63b8f0b6-9087-4066-9efb-6776334c3031}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Mesh">
+      <UniqueIdentifier>{f55c1ad0-a0c0-48c7-a50a-fb8a95167787}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RenderPipeline.cpp">
@@ -41,9 +44,6 @@
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="ShimpleShit.cpp">
-      <Filter>Source Files\Buffers</Filter>
     </ClCompile>
     <ClCompile Include="BlitQuad.cpp">
       <Filter>Source Files</Filter>
@@ -56,17 +56,17 @@
     <ClCompile Include="ContentManager.cpp">
       <Filter>Source Files\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>Source Files\Buffers</Filter>
-    </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>Source Files\Texture</Filter>
     </ClCompile>
     <ClCompile Include="Map\Map.cpp">
       <Filter>Source Files\Map</Filter>
     </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
     <ClCompile Include="StaticMesh.cpp">
-      <Filter>Source Files\Buffers</Filter>
+      <Filter>Source Files\Mesh</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -85,9 +85,6 @@
     <ClInclude Include="Shader.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="SimpleShit.h">
-      <Filter>Source Files\Buffers</Filter>
-    </ClInclude>
     <ClInclude Include="BlitQuad.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -98,9 +95,6 @@
       <Filter>Source Files\Buffers</Filter>
     </ClInclude>
     <ClInclude Include="RenderTarget.h">
-    </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>Source Files\Buffers</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
       <Filter>Source Files\Texture</Filter>
@@ -114,11 +108,14 @@
     <ClInclude Include="Map\MapHeaders.h">
       <Filter>Source Files\Map</Filter>
     </ClInclude>
-    <ClInclude Include="StaticMesh.h">
-      <Filter>Source Files\Buffers</Filter>
-    </ClInclude>
     <ClInclude Include="defines.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticMesh.h">
+      <Filter>Source Files\Mesh</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

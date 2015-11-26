@@ -1,15 +1,9 @@
 #include "ContentManager.h"
-#include "SimpleShit.h"
 #include "Texture.h"
 
 void ContentManager::init()
 {
 	playerModels = new PlayerObject[1];
-
-	TestMesh temp;
-
-	temp.make();
-	temp.take(playerModels[0].meshID, playerModels[0].vao, playerModels[0].index, playerModels[0].facecount);
 
 	TextureLookup tex;
 
@@ -84,6 +78,16 @@ void ContentManager::init()
 	skybox.setTexture(textures[3].textureID);
 
 	testMap.init();
+
+	Mesh player;
+	player.init(0, 0, 0);
+	player.load("GhostBoss1.v");
+
+	playerModels[0].meshID = player.vbo;
+	playerModels[0].vao = player.vao;
+	playerModels[0].index = player.ibo;
+	playerModels[0].facecount = player.faceCount;
+
 
 }
 

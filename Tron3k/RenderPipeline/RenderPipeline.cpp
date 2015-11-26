@@ -131,8 +131,6 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	
 	gBuffer->init(WindowWidth, WindowHeight, 5, true);
 
-	testMesh.make();
-
 	contMan.init();
 	
 	glEnable(GL_CULL_FACE); //TEMPORARY PLZ MOVE THIS SOMEWHERE APPROPRIATE OR DELETE THIS
@@ -266,13 +264,13 @@ SETTING_INPUT RenderPipeline::getType(PIPELINE_SETTINGS type) const
 
 void* RenderPipeline::getMinExtremes()
 {
-	vec3* ret = new vec3(testMesh.minX, testMesh.minY, testMesh.minZ);
+	vec3* ret = new vec3(0,0,0);
 	return (void*)ret;
 }
 
 void* RenderPipeline::getMaxExtremes()
 {
-	vec3* ret = new vec3(testMesh.maxX, testMesh.maxY, testMesh.maxZ);
+	vec3* ret = new vec3(0,0,0);
 	return (void*)ret;
 }
 

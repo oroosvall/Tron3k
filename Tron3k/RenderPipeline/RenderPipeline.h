@@ -4,7 +4,6 @@
 #include "IRenderPipeline.h"
 #include "Text\TextObject.h"
 #include "Camera.h"
-#include "SimpleShit.h"
 #include "GBuffer.h"
 
 #include "ContentManager.h"
@@ -49,9 +48,6 @@ private:
 	GLuint uniformGlowSpecLocation;
 	GLuint uniformDynamicGlowColorLocation;
 	GLuint uniformStaticGlowIntensityLocation;
-
-	//temp
-	TestMesh testMesh;
 
 	float timepass = 0;
 public:
