@@ -208,7 +208,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			respawnTimer = respawnTime;
 		}
 
-		if (isDead)
+		if (isDead && respawnTimer != 0.0f)
 		{
 			respawnTimer -= dt;
 			if (respawnTimer < FLT_EPSILON)

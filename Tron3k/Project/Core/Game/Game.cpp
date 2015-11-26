@@ -202,8 +202,6 @@ void Game::removePlayer(int conID)
 	removeConIDfromTeams(conID);
 }
 
-
-
 void Game::sendPlayerBox(std::vector<float> pBox)
 {
 	physics->receivePlayerBox(pBox);
