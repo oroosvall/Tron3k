@@ -35,9 +35,9 @@ public:
 
 	void init(int instanceCount);
 	void setRoomIDs(int* &room);
-	void setMatrices(glm::mat4* worldMatrices);
-	void setVertices(float* vertices, int vertexCount);
-	void setIndices(int* indices, int indicesCount);
+	void setMatrices(glm::mat4* &worldMatrices);
+	void setVertices(float* &vertices, int vertexCount);
+	void setIndices(int* &ndices, int indicesCount);
 
 	void stream();
 

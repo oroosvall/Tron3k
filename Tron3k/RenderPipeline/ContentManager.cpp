@@ -70,6 +70,18 @@ void ContentManager::init()
 	tex.fileTexID = 1;
 	tex.textureName = "GameFiles/TestFiles/playerglow.png";
 	textures.push_back(tex);
+	//10
+	tex.loaded = false;
+	tex.textureID = 0;
+	tex.fileTexID = 1;
+	tex.textureName = "GameFiles/TestFiles/bullet_texture.png";
+	textures.push_back(tex);
+	//11
+	tex.loaded = false;
+	tex.textureID = 0;
+	tex.fileTexID = 1;
+	tex.textureName = "GameFiles/TestFiles/bulletGlow.png";
+	textures.push_back(tex);
 
 
 	Mesh m;
@@ -109,6 +121,8 @@ void ContentManager::init()
 	playerModels[0].index = player.ibo;
 	playerModels[0].facecount = player.faceCount;
 
+	bullet.init(0, 0, 0);
+	bullet.load("GameFiles/TestFiles/bullet.v");
 
 }
 
@@ -219,6 +233,23 @@ void ContentManager::renderPlayer(int playerID, glm::mat4 world)
 		glDrawElements(GL_TRIANGLES, skybox.faceCount * 3, GL_UNSIGNED_SHORT, 0);
 
 		glEnable(GL_DEPTH_TEST);
+	}
+	else if (playerID == 2)
+	{
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, textures[10].textureID);
+
+		glActiveTexture(GL_TEXTURE0 + 1);
+		glBindTexture(GL_TEXTURE_2D, textures[4].textureID);
+
+		glActiveTexture(GL_TEXTURE0 + 2);
+		glBindTexture(GL_TEXTURE_2D, textures[11].textureID);
+
+		glBindVertexArray(bullet.vao);
+		glBindBuffer(GL_ARRAY_BUFFER, bullet.vbo);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bullet.ibo);
+
+		glDrawElements(GL_TRIANGLES, bullet.faceCount * 3, GL_UNSIGNED_SHORT, 0);
 	}
 }
 
