@@ -291,7 +291,10 @@ void Game::checkPlayerVBulletCollision()
 						int pid = -1, bid = -1;
 						bullets[b][j]->getId(pid, bid);
 						if (bullets[b][j]->getTeamId() != playerList[i]->getTeam() && pid != i)
-							collides = physics->checkPlayerVBulletCollision(playerList[i]->getPos(), bullets[b][j]->getPos());
+						{
+							if (playerList[i]->isAlive())
+								collides = physics->checkPlayerVBulletCollision(playerList[i]->getPos(), bullets[b][j]->getPos());
+						}
 						if (collides)
 						{
 							//Code for player on bullet collision goes here

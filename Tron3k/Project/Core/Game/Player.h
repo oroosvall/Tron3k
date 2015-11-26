@@ -74,6 +74,7 @@ public:
 	void setHP(int HPfromServer) { role.setHealth(HPfromServer); }; //Used by client
 
 	bool isLocal() { return isLocalPlayer; };
+	bool isAlive() { return !isDead; };
 
 	Weapon* getPlayerCurrentWeapon();
 	void switchWpn(WEAPON_TYPE ws);
