@@ -312,8 +312,6 @@ void Game::checkPlayerVBulletCollision()
 							bullets[b][j]->getId(hit.bulletPID, hit.bulletBID);
 
 							playerHit = true;
-
-							handleBulletHitEvent(hit);
 							return;
 						}
 					}
