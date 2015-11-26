@@ -91,8 +91,13 @@ public:
 		while (true)
 		{
 			Packet* rec = new Packet();
-			if(connection->receive(rec) == false && connection->isConnected())
-				disconnected(conID);
+			if (connection->receive(rec) == false && connection->isConnected())
+			{	
+				if(isClient)
+					disconnected(0);
+				else
+					disconnected(conID);
+			}
 
 			if (rec->getDataSize() == 0) // no more messages to handle
 			{
