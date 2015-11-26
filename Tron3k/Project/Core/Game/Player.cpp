@@ -201,7 +201,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			rotatePlayer(olddir, dir);
 		}
 
-		if (role.getHealth() == 0)
+		if (role.getHealth() == 0 && !isDead)
 		{
 			isDead = true;
 			msg = DEATH;
@@ -282,7 +282,7 @@ void Player::hitByBullet(Bullet* b, int newHPtotal)
 		role.setHealth(newHPtotal);
 	}
 
-	if (isLocalPlayer)
+	if (!isLocalPlayer)
 	{
 		if (role.getHealth() == 0)
 		isDead = true;
