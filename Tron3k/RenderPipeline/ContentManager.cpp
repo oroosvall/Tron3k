@@ -13,45 +13,56 @@ void ContentManager::init()
 
 	TextureLookup tex;
 
+	//0
 	tex.loaded = false;
 	tex.textureID = 0;
 	tex.fileTexID = 0;
 	tex.textureName = "GameFiles/TestFiles/Normal.png";
 	textures.push_back(tex);
-
+	//1
 	tex.loaded = false;
 	tex.textureID = 0;
 	tex.fileTexID = 1;
 	tex.textureName = "GameFiles/TestFiles/Diffuse.png";
 	textures.push_back(tex);
-
+	//2
 	tex.loaded = false;
 	tex.textureID = 0;
 	tex.fileTexID = 1;
 	tex.textureName = "GameFiles/TestFiles/sphere_n.png";
 	textures.push_back(tex);
-
+	//3
 	//skybox
 	tex.loaded = false;
 	tex.textureID = 0;
 	tex.fileTexID = 1;
 	tex.textureName = "GameFiles/TestFiles/skybox.jpg";
 	textures.push_back(tex);
-
+	//4
 	tex.loaded = false;
 	tex.textureID = 0;
 	tex.fileTexID = 1;
 	tex.textureName = "GameFiles/TestFiles/Blank_normal.png";
 	textures.push_back(tex);
-
-	
+	//5
+	tex.loaded = false;
+	tex.textureID = 0;
+	tex.fileTexID = 1;
+	tex.textureName = "GameFiles/TestFiles/GlowMap.png";
+	textures.push_back(tex);
+	//6
+	tex.loaded = false;
+	tex.textureID = 0;
+	tex.fileTexID = 1;
+	tex.textureName = "GameFiles/TestFiles/EmptyStaticGlowSpec.png";
+	textures.push_back(tex);
 
 	Mesh m;
-	m.init(0, 5, 0);
+	m.init(0, -3, 0);
 	m.load("GameFiles/TestFiles/cube.v");
 
 	Mesh m2;
-	m2.init(0, 0, 0);
+	m2.init(0, -8, 5);
 	m2.load("GameFiles/TestFiles/sphere.v");
 
 	//Skybox
@@ -102,26 +113,60 @@ ContentManager::~ContentManager()
 
 }
 
-void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint textureLocation, GLuint normalLocation)
+void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation)
 {
-
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, textures[1].textureID);
 	glActiveTexture(GL_TEXTURE0 +1 );
 	glBindTexture(GL_TEXTURE_2D, textures[0].textureID);
+	//static glow
+	glActiveTexture(GL_TEXTURE0 + 2);
+	glBindTexture(GL_TEXTURE_2D, textures[5].textureID);
 	testMap.render(shader, shaderLocation);
 
+	for (size_t i = 0; i < meshes.size(); i++)
+	{
+		glProgramUniformMatrix4fv(shader, shaderLocation, 1, GL_FALSE, (GLfloat*)meshes[i].getWorld());
+	
+		glProgramUniform1i(shader, textureLocation, 0);
+		glProgramUniform1i(shader, normalLocation, 1);
+		glProgramUniform1i(shader, glowSpecLocation, 2);
+		//diffuse
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, meshes[i].textureID);
+	
+		 //normal dynamic glow
+		glActiveTexture(GL_TEXTURE0+1);
+		glBindTexture(GL_TEXTURE_2D, textures[0].textureID);
+		
+		//static glow
+		glActiveTexture(GL_TEXTURE0 + 2);
+		glBindTexture(GL_TEXTURE_2D, textures[5].textureID);
+		
+
+		glBindVertexArray(meshes[i].vao);
+		glBindBuffer(GL_ARRAY_BUFFER, meshes[i].vbo);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshes[i].ibo);
+	
+		glDrawElements(GL_TRIANGLES, meshes[i].faceCount * 3, GL_UNSIGNED_SHORT, 0);
+	}
 }
 
 void ContentManager::renderPlayer(int playerID, glm::mat4 world)
 {
 	if (playerID == 0)
 	{
+		//diffuse
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, playerModels[playerID].textureID);
 
+		//normal dynamic glow
 		glActiveTexture(GL_TEXTURE0 + 1);
 		glBindTexture(GL_TEXTURE_2D, textures[4].textureID);
+
+		//static glow
+		glActiveTexture(GL_TEXTURE0 + 2);
+		glBindTexture(GL_TEXTURE_2D, textures[6].textureID);
 
 		glBindVertexArray(playerModels[playerID].vao);
 		glBindBuffer(GL_ARRAY_BUFFER, playerModels[playerID].meshID);
@@ -138,6 +183,9 @@ void ContentManager::renderPlayer(int playerID, glm::mat4 world)
 
 		glActiveTexture(GL_TEXTURE0 + 1);
 		glBindTexture(GL_TEXTURE_2D, textures[4].textureID);
+
+		glActiveTexture(GL_TEXTURE0 + 2);
+		glBindTexture(GL_TEXTURE_2D, textures[6].textureID);
 
 		glBindVertexArray(skybox.vao);
 		glBindBuffer(GL_ARRAY_BUFFER, skybox.vbo);

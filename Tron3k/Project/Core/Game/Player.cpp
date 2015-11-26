@@ -184,7 +184,12 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				if (i->justPressed(GLFW_KEY_M))					//Temp?
 				{
 					GetSound()->enableSounds();
-				}	
+				}
+
+				if (i->justPressed(GLFW_KEY_O))
+				{
+					msg = DEATH;
+				}
 			} // end of player input
 		} // end of lock control check
 		movePlayer(dt); //Move the player regardless of control lock

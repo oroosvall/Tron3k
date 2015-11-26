@@ -114,13 +114,17 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	viewProjMat = glGetUniformLocation(regularShader, "ViewProjMatrix"); //view
 
 	uniformTextureLocation = glGetUniformLocation(regularShader, "textureSample"); //view
-	uniformnNormalLocation = glGetUniformLocation(regularShader, "normalSample"); //view
+	uniformNormalLocation = glGetUniformLocation(regularShader, "normalSample"); //view
+	uniformGlowSpecLocation = glGetUniformLocation(regularShader, "glowSpecSample"); //view
 
 	cam.setViewMat(regularShader, viewMat);
 	worldMat = glGetUniformLocation(regularShader, "WorldMatrix"); //worldMat
 	viewMat = glGetUniformLocation(regularShader, "ViewProjMatrix"); //view
 
 	uniformTextureLocation = glGetUniformLocation(regularShader, "textureSample"); //view
+
+	uniformDynamicGlowColorLocation = glGetUniformLocation(regularShader, "dynamicGlowColor");
+	uniformStaticGlowIntensityLocation = glGetUniformLocation(regularShader, "staticGlowIntensity");
 
 	cam.setViewProjMat(regularShader, viewProjMat);
 	cam.setViewMat(regularShader, viewMat);
@@ -154,6 +158,7 @@ void RenderPipeline::release()
 
 void RenderPipeline::update(float x, float y, float z, float dt)
 {
+	timepass += dt;
 	//set camera matrixes
 	cam.setViewMat(regularShader, viewMat);
 	cam.setViewProjMat(regularShader, viewProjMat);
@@ -162,7 +167,12 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	gBuffer->eyePos.z = z;
 
 	glProgramUniform1i(regularShader, uniformTextureLocation, 0);
-	glProgramUniform1i(regularShader, uniformnNormalLocation, 1);
+	glProgramUniform1i(regularShader, uniformNormalLocation, 1);
+	glProgramUniform1i(regularShader, uniformGlowSpecLocation, 2);
+
+	glProgramUniform1f(regularShader, uniformStaticGlowIntensityLocation, mod((timepass/5.0f), 1.0f));
+	glm::vec3 glowColor(mod((timepass / 1.0f), 1.0f), mod((timepass / 2.0f), 1.0f), mod((timepass / 3.0f), 1.0f));
+	glProgramUniform3fv(regularShader, uniformDynamicGlowColorLocation, 1, (GLfloat*)&glowColor[0]);
 
 	SpotLight playerLight[2];
 	playerLight[0].Position = vec3(x,y,z);
@@ -189,7 +199,7 @@ void RenderPipeline::render()
 {
 	glUseProgram(regularShader);
 
-	contMan.renderChunks(regularShader, worldMat, uniformTextureLocation, uniformnNormalLocation);
+	contMan.renderChunks(regularShader, worldMat, uniformTextureLocation, uniformNormalLocation, uniformGlowSpecLocation);
 	
 	//GBuffer Render
 	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
