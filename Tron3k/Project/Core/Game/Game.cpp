@@ -22,6 +22,7 @@ void Game::release()
 			}
 		}
 	}
+	delete templateRole;
 	delete this; // yes this is safe
 }
 

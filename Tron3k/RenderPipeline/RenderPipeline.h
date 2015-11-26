@@ -45,12 +45,15 @@ private:
 	GLuint viewMat;
 
 	GLuint uniformTextureLocation;
-	GLuint uniformnNormalLocation;
+	GLuint uniformNormalLocation;
+	GLuint uniformGlowSpecLocation;
+	GLuint uniformDynamicGlowColorLocation;
+	GLuint uniformStaticGlowIntensityLocation;
 
 	//temp
 	TestMesh testMesh;
 
-
+	float timepass = 0;
 public:
 
 	RenderPipeline() {};

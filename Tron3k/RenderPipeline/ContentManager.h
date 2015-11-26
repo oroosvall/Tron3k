@@ -42,7 +42,7 @@ public:
 	~ContentManager();
 	void init();
 
-	void renderChunks(GLuint shader, GLuint shaderLocation, GLuint textureLocation, GLuint normalLocation);
+	void renderChunks(GLuint shader, GLuint shaderLocation, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation);
 
 	void renderPlayer(int playerID, glm::mat4 world);
 
