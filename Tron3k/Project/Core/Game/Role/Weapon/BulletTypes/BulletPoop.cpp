@@ -10,7 +10,7 @@ Poop::Poop(glm::vec3 position, glm::vec3 direction, int pID, int bID, int tID)
 	playerId = pID;
 	bulletId = bID;
 
-	vel = 5.0f;
+	vel = 25.0f;
 	damage = 4;
 
 	//sets pos
