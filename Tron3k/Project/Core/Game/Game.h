@@ -58,6 +58,9 @@ private:
 
 	BulletHitInfo hit;
 	bool playerHit = false;
+
+	bool localPlayerWantsRespawn = false;
+	bool localPlayerRespawnWaiting = false;
 public:
 
 	Game();
@@ -77,6 +80,10 @@ public:
 	void checkPvPCollision();
 	void checkPlayerVBulletCollision();
 	void checkPlayerVWorldCollision();
+
+	bool playerWantsToRespawn();
+	void allowPlayerRespawn(int p_conID, glm::vec3 respawnPosition);
+	void denyPlayerRespawn(char tryAgain);
 
 	void addPlayerToTeam(int p_conID, int team);
 	int getPlayersOnTeam(int team);

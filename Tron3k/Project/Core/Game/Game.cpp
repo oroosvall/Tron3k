@@ -140,6 +140,11 @@ void Game::update(float dt)
 			{
 				freecam = true;
 			}
+			if (msg == PLAYERMSG::PLAYERRESPAWN)
+			{
+				if (playerList[c]->isLocal())
+					localPlayerWantsRespawn = true;
+			}
 		}
 	}
 
@@ -516,4 +521,28 @@ int Game::handleBulletHitEvent(BulletHitInfo hi, int newHPtotal)
 
 	int newHP = p->getHP();
 	return newHP;
+}
+
+bool Game::playerWantsToRespawn()
+{
+	if (localPlayerRespawnWaiting)
+		return false;
+	else if (localPlayerWantsRespawn)
+		localPlayerRespawnWaiting = true;
+	return localPlayerWantsRespawn;
+}
+
+void Game::allowPlayerRespawn(int p_conID, glm::vec3 respawnPosition)
+{
+	playerList[p_conID]->respawn(respawnPosition);
+	localPlayerWantsRespawn = false;
+	localPlayerRespawnWaiting = false;
+}
+
+void Game::denyPlayerRespawn(char tryAgain)
+{
+	if (tryAgain == 'Y')
+	{
+		localPlayerRespawnWaiting = false;
+	}
 }

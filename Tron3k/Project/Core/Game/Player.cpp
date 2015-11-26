@@ -190,6 +190,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				{
 					msg = DEATH;
 					isDead = true;
+					respawnTimer = respawnTime;
 				}
 			} // end of player input
 		} // end of lock control check
@@ -204,6 +205,18 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		{
 			isDead = true;
 			msg = DEATH;
+			respawnTimer = respawnTime;
+		}
+
+		if (isDead)
+		{
+			respawnTimer -= dt;
+			if (respawnTimer < FLT_EPSILON)
+			{
+				respawnTimer = 0.0f;
+				msg = PLAYERRESPAWN;
+				//role.returnToLife();
+			}
 		}
 
 	} // end of local player check
@@ -284,4 +297,14 @@ void Player::applyGravity(Physics* p, float dt)
 void Player::setRole(Role role)
 {
 	this->role = role;
+}
+
+void Player::respawn(glm::vec3 respawnPos)
+{
+	pos = respawnPos;
+	worldMat[0].w = pos.x;
+	worldMat[1].w = pos.y - 0.6f;
+	worldMat[2].w = pos.z;
+
+	role.returnToLife();
 }

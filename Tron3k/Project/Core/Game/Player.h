@@ -15,8 +15,9 @@
 #include <string>
 
 #define interpolationTick 0.050f
+#define respawnTime 5.0f;
 
-enum PLAYERMSG { NONE, SHOOT, WPNSWITCH, DEATH };
+enum PLAYERMSG { NONE, SHOOT, WPNSWITCH, DEATH, PLAYERRESPAWN};
 
 struct BulletHitInfo
 {
@@ -40,6 +41,7 @@ private:
 	bool grounded = false;
 
 	bool isDead = false;
+	float respawnTimer = 0.0f;
 
 	glm::vec3 oldPos;
 	glm::vec3 oldDir;
@@ -91,6 +93,8 @@ public:
 	void hitByBullet(Bullet* b, int newHPtotal = -1);
 
 	void setRole(Role role);
+
+	void respawn(glm::vec3 respawnPos);
 };
 
 #endif

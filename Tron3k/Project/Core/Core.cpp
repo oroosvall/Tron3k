@@ -235,6 +235,11 @@ void Core::upClient(float dt)
 		if (top == nullptr)//check for disconnected command
 			return;
 
+		if (game->playerWantsToRespawn())
+		{
+			top->command_respawn(top->getConId());
+		}
+
 		//Frame tick timer. Network out
 		tick_timer += dt;
 		if (tick_timer > tick)

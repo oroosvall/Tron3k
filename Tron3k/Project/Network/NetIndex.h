@@ -17,7 +17,8 @@ enum NET_EVENT
 	SERVER_STATUS = int('S'),
 	PLAYER_JOINED = int('J'),
 	PLAYER_LEFT = int('L'),
-	HIT = int('H')
+	HIT = int('H'),
+	RESPAWN_DENIED = int('R') //Used by command_respawn to deny respawn auth to client
 };
 
 enum NET_FRAME
@@ -29,9 +30,10 @@ enum NET_FRAME
 	NAME_CHANGE = int('N'),
 };
 
-enum NET_COMMAND 
+enum NET_COMMAND
 {
-	TEAM_CHANGE = int('T') //request teamchange
+	TEAM_CHANGE = int('T'), //request teamchange
+	RESPAWN = int('R') //Request respawn
 };
 
 enum NET_MESSAGE

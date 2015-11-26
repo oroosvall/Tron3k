@@ -154,6 +154,13 @@ public:
 
 	virtual void event_bullet_hit(BulletHitInfo hi, int newHPtotal) {};
 
+	virtual void in_event_respawn_denied(Packet* rec)
+	{
+		Uint8 tryAgain;
+		*rec >> tryAgain;
+		gamePtr->denyPlayerRespawn(tryAgain);
+	}
+
 	virtual void in_event_bullet_hit(Packet* rec)
 	{
 		BulletHitInfo hi = BulletHitInfo();
@@ -261,6 +268,14 @@ public:
 		delete out;
 	}
 
+	virtual void command_respawn(Uint8 conid)
+	{
+		Packet* out = new Packet();
+		*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::RESPAWN) << conid << 0.0f << 0.0f << 0.0f;
+		con->send(out);
+		delete out;
+	}
+
 	virtual void in_command_team_change(Packet* rec, Uint8 conID)
 	{
 		Uint8 p_conID;
@@ -306,6 +321,48 @@ public:
 
 		if (isClient == false)
 			branch(rec, -1);
+	}
+
+	virtual void in_command_respawn(Packet* rec, Uint8 conid)
+	{
+		Uint8 p_conID;
+		glm::vec3 respawnPosition; //if sent from client, this will be 0,0,0
+		*rec >> p_conID >> respawnPosition.x >> respawnPosition.y >> respawnPosition.z;
+
+		Player* p = gamePtr->getPlayer(p_conID);
+		if (p == nullptr)
+		{
+			consolePtr->printMsg("ERROR in_command_respawn", "System", 'S');
+			return;
+		}
+
+		if (isClient == false) //Decide if the command is OK
+		{
+			respawnPosition = glm::vec3(0, 0, 0); //Add logic to ask serverside game for respawn position for a given p_conID
+			/*
+			Authentication to make sure we actually can respawn - for now always Yes
+			*/
+			if (false)
+			{
+				Packet* out = new Packet();
+				char tryAgain = 'Y'; //Y/N
+				*out << Uint8(NET_INDEX::EVENT) << Uint8(NET_EVENT::RESPAWN_DENIED) << Uint8(tryAgain);
+				con[p_conID].send(out);
+				delete out;
+				return;
+			}
+		}
+		
+		gamePtr->allowPlayerRespawn(p_conID, respawnPosition);
+		consolePtr->printMsg("Player (" + p->getName() + ") respawned!", "System", 'S');
+
+		Packet* out = new Packet;
+		*out << p_conID << respawnPosition.x << respawnPosition.y << respawnPosition.z;
+
+		if (isClient == false)
+			branch(out, -1);
+
+		delete out;
 	}
 };
 
