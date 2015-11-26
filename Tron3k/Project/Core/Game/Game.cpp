@@ -191,6 +191,7 @@ void Game::createPlayer(Player* p, int conID, bool isLocal)
 {
 	playerList[conID] = new Player();
 	playerList[conID]->init(p->getName(), p->getPos(), isLocal);
+	playerList[conID]->setTeam(p->getTeam());
 	playerList[conID]->setRole(*templateRole);
 }
 

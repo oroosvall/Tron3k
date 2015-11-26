@@ -104,6 +104,7 @@ void Client::in_new_connection(Packet* rec, Uint8 _conID)
 
 	Uint8 pExists;
 	string pName;
+	Uint8 team;
 	Player* temp;
 	for (int c = 0; c < MAX_CONNECT; c++)
 	{
@@ -113,6 +114,8 @@ void Client::in_new_connection(Packet* rec, Uint8 _conID)
 			temp = new Player();
 			*rec >> pName;
 			temp->init(pName, glm::vec3(0, 0, 0));
+			*rec >> team;
+			temp->setTeam(team);
 			gamePtr->createPlayer(temp, c);
 			delete temp;
 		}
