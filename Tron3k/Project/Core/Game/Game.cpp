@@ -196,15 +196,11 @@ void Game::removePlayer(int conID)
 	removeConIDfromTeams(conID);
 }
 
-//TEMPORARY
-void Game::getBoatCoordsFromCore(glm::vec3 minVals, glm::vec3 maxVals)
-{
-	sendBoatCoordsToPhysics(minVals, maxVals);
-}
 
-void Game::sendBoatCoordsToPhysics(glm::vec3 minVals, glm::vec3 maxVals)
+
+void Game::sendPlayerBox(std::vector<float> pBox)
 {
-	physics->getBoatExtremes(minVals, maxVals);
+	physics->receivePlayerBox(pBox);
 }
 
 void Game::sendWorldBoxes(std::vector<std::vector<float>> wBoxes)

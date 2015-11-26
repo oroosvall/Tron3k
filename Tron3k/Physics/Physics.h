@@ -20,16 +20,20 @@ class Physics
 private:
 	//General physics components will go here, and things will be added as we go
 	std::vector<CollideMesh> worldBoxes;
+	CollideMesh playerBox;
+	CollideMesh bulletBox;
 
-	bool checkAABBCollision(glm::vec3 pos, CollideMesh mesh);
+	bool checkAABBCollision(CollideMesh mesh1, CollideMesh mesh2);
 	bool checkAABBCollision(Geometry* obj1, Geometry* obj2);
 
-	bool checkOBBCollision(glm::vec3 pos, CollideMesh mesh);
+	bool checkOBBCollision(CollideMesh mesh1, CollideMesh mesh2);
 	bool checkOBBCollision(Geometry* obj1, Geometry* obj2);
 
 	glm::vec3 minExtremes = glm::vec3(0, 0, 0);
 	glm::vec3 maxExtremes = glm::vec3(0, 0, 0);
 	glm::vec3 size = glm::vec3(0, 0, 0);
+
+	void initBulletBox();
 public:
 	Physics();
 	~Physics();
@@ -44,9 +48,8 @@ public:
 
 	virtual void addGravity(glm::vec3 &velocity, float dt);
 
-	//TEMPORARY
-	virtual void getBoatExtremes(glm::vec3 minVals, glm::vec3 maxVals);
 	virtual void receiveWorldBoxes(std::vector<std::vector<float>> wBoxes);
+	virtual void receivePlayerBox(std::vector<float> pBox);
 };
 
 extern "C" PHYSICS_API Physics* CreatePhysics();

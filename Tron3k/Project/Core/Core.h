@@ -79,8 +79,8 @@ private:
 	void loadSettings();
 	void saveSettings();
 
-	//TEMPORARY
-	void givePlayerBoatExtremes();
+	//Relays BoundingBoxes to Physics
+	void sendPlayerBox();
 	void sendWorldBoxes();
 
 public:

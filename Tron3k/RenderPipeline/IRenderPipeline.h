@@ -70,8 +70,7 @@ public:
 
 	virtual void setGBufferWin(unsigned int WindowWidth, unsigned int WindowHeight) = 0;
 
-	virtual void* getMinExtremes() = 0;
-	virtual void* getMaxExtremes() = 0;
+	virtual void getPlayerBox(float &xMax, float &xMin, float &yMax, float &yMin, float &zMax, float &zMin) = 0;
 	virtual void getWorldBoxes(int &current, float &xMax, float &xMin, float &yMax, float &yMin, float &zMax, float &zMin) = 0;
 	virtual int getNrOfWorldBoxes() = 0;
 

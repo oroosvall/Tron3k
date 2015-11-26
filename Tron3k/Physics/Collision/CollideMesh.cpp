@@ -50,3 +50,28 @@ OBB CollideMesh::getOBB()
 {
 	return collisionBox;
 }
+
+void CollideMesh::setPos(glm::vec3 pos)
+{
+	boundingBox.posX = pos.x;
+	boundingBox.posY = pos.y;
+	boundingBox.posZ = pos.z;
+}
+
+void CollideMesh::setSize(glm::vec3 size)
+{
+	boundingBox.sizeX = size.x;
+	boundingBox.sizeY = size.y;
+	boundingBox.sizeZ = size.z;
+}
+
+glm::vec3 CollideMesh::getSize()
+{
+	glm::vec3 size;
+
+	size.x = boundingBox.sizeX;
+	size.y = boundingBox.sizeY;
+	size.z = boundingBox.sizeZ;
+
+	return size;
+}
