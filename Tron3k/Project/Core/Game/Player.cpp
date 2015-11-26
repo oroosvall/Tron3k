@@ -189,6 +189,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				if (i->justPressed(GLFW_KEY_O))
 				{
 					msg = DEATH;
+					isDead = true;
 				}
 			} // end of player input
 		} // end of lock control check
