@@ -537,6 +537,7 @@ void Game::allowPlayerRespawn(int p_conID, glm::vec3 respawnPosition)
 	playerList[p_conID]->respawn(respawnPosition);
 	localPlayerWantsRespawn = false;
 	localPlayerRespawnWaiting = false;
+	freecam = false;
 }
 
 void Game::denyPlayerRespawn(char tryAgain)
