@@ -308,6 +308,8 @@ void Player::setRole(Role role)
 void Player::respawn(glm::vec3 respawnPos)
 {
 	pos = respawnPos;
+	if (isLocalPlayer)
+		cam->setCam(pos, dir);
 	worldMat[0].w = pos.x;
 	worldMat[1].w = pos.y - 0.6f;
 	worldMat[2].w = pos.z;
