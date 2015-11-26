@@ -57,9 +57,8 @@ vec4 CalcLightInternal(SpotLight l, vec3 LightDirection, vec3 Normal)
 		float SpecularFactor = dot(VertexToEye, LightReflect);                              
 		SpecularFactor = pow(SpecularFactor, gSpecularPower);                               
 		if (SpecularFactor > 0)                                                           
-			SpecularColor = vec4(l.Color, 1.0f) * gMatSpecularIntensity * SpecularFactor;                                                                                                          
-	}                                                                                       
-                                                                                   
+			SpecularColor = vec4(l.Color, 1.0f) * gMatSpecularIntensity * SpecularFactor; 				
+	}                                                                                                                                                                         
 	return (DiffuseColor + SpecularColor);                                   
 }               
 
@@ -71,8 +70,8 @@ vec4 CalcPointLight(SpotLight l, vec3 Normal)
 
 	vec4 Color = vec4(CalcLightInternal(l, LightDirection, Normal)); 
 	float Attenuation =  0.5 * Distance;
-	return Color / Attenuation;                           
-	//return (CalcLightInternal(l, LightDirection, Normal));                          
+	return Color / Attenuation;     
+	//float att = pointlightArray[i].attenuation.x + (pointlightArray[i].attenuation.y * dist) + (pointlightArray[i].attenuation.z * dist * dist);			
 }                                                                                           
                                                                                            
 vec4 CalcSpotLight(SpotLight l, vec3 Normal)                                                
