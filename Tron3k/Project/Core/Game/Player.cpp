@@ -184,7 +184,13 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				if (i->justPressed(GLFW_KEY_M))					//Temp?
 				{
 					GetSound()->enableSounds();
-				}	
+				}
+
+				if (i->justPressed(GLFW_KEY_O))
+				{
+
+					msg = DEATH;
+				}
 			} // end of player input
 		} // end of lock control check
 		movePlayer(dt); //Move the player regardless of control lock
@@ -259,6 +265,11 @@ void Player::hitByBullet(BulletHitInfo hi, glm::vec3 dir)
 		pos += dir*0.1f;
 		break;
 	}
+}
+
+void Player::onDeath()
+{
+	
 }
 
 void Player::applyGravity(Physics* p, float dt)

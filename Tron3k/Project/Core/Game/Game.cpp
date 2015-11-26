@@ -135,6 +135,11 @@ void Game::update(float dt)
 			{
 				registerSwitch(playerList[c]);
 			}
+
+			if (msg == PLAYERMSG::DEATH)
+			{
+				freecam = true;
+			}
 		}
 	}
 

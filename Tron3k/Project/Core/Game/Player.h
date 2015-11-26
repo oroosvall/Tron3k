@@ -16,7 +16,7 @@
 
 #define interpolationTick 0.050f
 
-enum PLAYERMSG { NONE, SHOOT, WPNSWITCH };
+enum PLAYERMSG { NONE, SHOOT, WPNSWITCH, DEATH };
 
 struct BulletHitInfo
 {
@@ -85,6 +85,7 @@ public:
 	glm::vec3 getVelocity() { return vel; };
 
 	void hitByBullet(BulletHitInfo hi, glm::vec3 dir);
+	void onDeath();
 
 	void setRole(Role role);
 };
