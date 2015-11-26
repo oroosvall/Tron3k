@@ -51,6 +51,27 @@ void ContentManager::init()
 	tex.textureName = "GameFiles/TestFiles/EmptyStaticGlowSpec.png";
 	textures.push_back(tex);
 
+	//7
+	tex.loaded = false;
+	tex.textureID = 0;
+	tex.fileTexID = 1;
+	tex.textureName = "GameFiles/TestFiles/player.png";
+	textures.push_back(tex);
+
+	//8
+	tex.loaded = false;
+	tex.textureID = 0;
+	tex.fileTexID = 1;
+	tex.textureName = "GameFiles/TestFiles/Blank_normal_50glow.png";
+	textures.push_back(tex);
+	//9
+	tex.loaded = false;
+	tex.textureID = 0;
+	tex.fileTexID = 1;
+	tex.textureName = "GameFiles/TestFiles/playerglow.png";
+	textures.push_back(tex);
+
+
 	Mesh m;
 	m.init(0, -3, 0);
 	m.load("GameFiles/TestFiles/cube.v");
@@ -162,15 +183,15 @@ void ContentManager::renderPlayer(int playerID, glm::mat4 world)
 	{
 		//diffuse
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, playerModels[playerID].textureID);
+		glBindTexture(GL_TEXTURE_2D, textures[7].textureID);
 
 		//normal dynamic glow
 		glActiveTexture(GL_TEXTURE0 + 1);
-		glBindTexture(GL_TEXTURE_2D, textures[4].textureID);
+		glBindTexture(GL_TEXTURE_2D, textures[8].textureID);
 
 		//static glow
 		glActiveTexture(GL_TEXTURE0 + 2);
-		glBindTexture(GL_TEXTURE_2D, textures[6].textureID);
+		glBindTexture(GL_TEXTURE_2D, textures[9].textureID);
 
 		glBindVertexArray(playerModels[playerID].vao);
 		glBindBuffer(GL_ARRAY_BUFFER, playerModels[playerID].meshID);
