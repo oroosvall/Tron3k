@@ -311,6 +311,6 @@ void Player::respawn(glm::vec3 respawnPos)
 	worldMat[0].w = pos.x;
 	worldMat[1].w = pos.y - 0.6f;
 	worldMat[2].w = pos.z;
-
+	isDead = false;
 	role.returnToLife();
 }
