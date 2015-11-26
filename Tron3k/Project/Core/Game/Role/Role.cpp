@@ -38,7 +38,7 @@ void Role::chooseRole(int role)
 		health = atoi(loadedRoles[role][HEALTH].c_str());
 
 		weapons[0].init(36, (WEAPON_TYPE)atoi(loadedRoles[role][MAINWEP].c_str()), 0.5);
-		weapons[1].init(80, (WEAPON_TYPE)atoi(loadedRoles[role][SECWEP].c_str()), 0.1);
+		weapons[1].init(80, (WEAPON_TYPE)atoi(loadedRoles[role][SECWEP].c_str()), 0.2);
 
 		consumable.setConsumable(atoi(loadedRoles[role][CONSUMABLE].c_str()));
 		movementSpeed = atof(loadedRoles[role][MOVEMENTSPEED].c_str());

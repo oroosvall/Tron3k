@@ -115,7 +115,6 @@ ContentManager::~ContentManager()
 
 void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation)
 {
-
 	//glActiveTexture(GL_TEXTURE0);
 	//glBindTexture(GL_TEXTURE_2D, textures[1].textureID);
 	//glActiveTexture(GL_TEXTURE0 +1 );
@@ -147,8 +146,6 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 	
 		glDrawElements(GL_TRIANGLES, meshes[i].faceCount * 3, GL_UNSIGNED_SHORT, 0);
 	}
-	
-
 }
 
 void ContentManager::renderPlayer(int playerID, glm::mat4 world)
@@ -200,7 +197,7 @@ std::vector<std::vector<float>> ContentManager::getMeshBoxes()
 {
 	std::vector<std::vector<float>> size;
 
-	for (int i = 0; i < meshes.size(); i++)
+	for (size_t i = 0; i < meshes.size(); i++)
 	{
 		size.push_back(meshes[i].getBoundaries());
 	}

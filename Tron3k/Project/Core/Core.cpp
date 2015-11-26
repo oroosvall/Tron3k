@@ -80,10 +80,6 @@ void Core::update(float dt)
 	default:						break;
 	}
 
-	//*******TEMP**********
-	GetSound()->update();
-	//*********************
-
 	i->clearOnPress();
 	console.discardCommandAndLastMsg();
 
@@ -151,7 +147,10 @@ void Core::upRoam(float dt)
 		subState++;
 		break;
 	}
-	case 1: //main loop
+	case 1:
+		subState++;
+		break;
+	case 2: //main loop
 
 		roamHandleCmds();
 		game->update(dt);
@@ -222,6 +221,8 @@ void Core::upClient(float dt)
 
 		//update game
 		game->update(dt);
+
+		GetSound()->setLocalPlayerDir(game->getPlayer(top->getConId())->getDir());
 		
 		//Command and message handle
 		if (console.messageReady())

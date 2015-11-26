@@ -193,12 +193,12 @@ std::vector<float> Mesh::getBoundaries()
 	maxX = maxY = maxZ = -FLT_MAX;
 
 	//Currently hardcoded around the testCube, I think, it didn't work to just give it the testcube's actual coords
-	minX = -1.0f;
-	maxX = 1.0f;
-	minY = -6.0f;
-	maxY = -4.0f;
-	minZ = -1.0f;
-	maxZ = 1.0f;
+	minX = -100.0f;
+	maxX = 100.0f;
+	minY = -1500.0f;
+	maxY = -13.0f;
+	minZ = -100.0f;
+	maxZ = 100.0f;
 
 	boundaries.push_back(maxX);
 	boundaries.push_back(minX);

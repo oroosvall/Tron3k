@@ -22,6 +22,7 @@ void Game::release()
 			}
 		}
 	}
+	delete templateRole;
 	delete this; // yes this is safe
 }
 
@@ -147,6 +148,11 @@ void Game::update(float dt)
 				delete bullets[i][c];
 			}
 		}
+	}
+
+	if (gameState == Gamestate::ROAM)
+	{
+		checkPlayerVWorldCollision();
 	}
 
 	if (gameState == Gamestate::CLIENT)

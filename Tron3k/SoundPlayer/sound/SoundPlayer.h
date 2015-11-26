@@ -8,8 +8,11 @@
 #endif
 
 #include<sfml/Audio.hpp>
+#include <../glm/glm/glm.hpp>
 #include<vector>
 #include"SoundList.h"
+
+int const MAXSOUNDS = 50;
 
 using namespace std;
 
@@ -21,10 +24,12 @@ private:
 	static int nrOfSoundsPlaying;
 	static float soundVolume;
 	static float musicVolume;
+	glm::vec3 playerDir;
+
 	~SoundPlayer();
 
 
-	sf::Sound sounds[30];
+	sf::Sound sounds[MAXSOUNDS];
 	sf::SoundBuffer soundList[SOUNDS::nrOfSounds];
 	string musicList[MUSIC::nrOfMusic];
 
@@ -43,15 +48,14 @@ public:
 
 	virtual void setVolumeMusic(float volume);
 	virtual void setVolumeSound(float volume);
-
+	virtual void setLocalPlayerDir(glm::vec3 playerDir);
 	virtual int playMusic(int music);
 
-	virtual int playExternalSound(int sound, float, float, float);
+	virtual int playExternalSound(int sound, float posX, float posY, float posZ);
 	virtual int playUserGeneratedSound(int sound);
 
 	virtual void rotate(float deltaTime);
 
-	virtual void update();
 };
 
 extern "C" SOUNDPLAYER_API SoundPlayer* CreateSound();
