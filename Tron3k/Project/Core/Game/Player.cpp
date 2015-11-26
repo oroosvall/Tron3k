@@ -254,14 +254,20 @@ void Player::switchWpn(WEAPON_TYPE ws)
 	role.swapWeapon(ws);
 }
 
-void Player::hitByBullet(Bullet* b)
+void Player::hitByBullet(Bullet* b, int newHPtotal)
 {
 	/*
 	This is where we will extract additional modifiers from the Bullet, when applicable.
 	*/
-
-	int dmg = b->getDamage();
-	role.takeDamage(dmg);
+	if (newHPtotal == -1) //We are actually taking damage on the server now
+	{
+		int dmg = b->getDamage();
+		role.takeDamage(dmg);
+	}
+	else //We are on a client, and thus are only interested on our HP on the server
+	{
+		role.setHealth(newHPtotal);
+	}
 }
 
 void Player::applyGravity(Physics* p, float dt)

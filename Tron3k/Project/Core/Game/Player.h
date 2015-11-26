@@ -70,6 +70,8 @@ public:
 	std::string getName() { return name; };
 	glm::vec3 getPos() { return pos; };
 	glm::vec3 getDir() { return dir; };
+	int getHP() { return role.getHealth(); };
+	void setHP(int HPfromServer) { role.setHealth(HPfromServer); }; //Used by client
 
 	bool isLocal() { return isLocalPlayer; };
 
@@ -85,7 +87,7 @@ public:
 	void setVelocity(glm::vec3 velocity) { vel = velocity; };
 	glm::vec3 getVelocity() { return vel; };
 
-	void hitByBullet(Bullet* b);
+	void hitByBullet(Bullet* b, int newHPtotal = -1);
 
 	void setRole(Role role);
 };

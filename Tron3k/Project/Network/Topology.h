@@ -152,18 +152,18 @@ public:
 			consolePtr->printMsg("ERROR in_event_player_left" , "System", 'S');
 	}
 
-	virtual void event_bullet_hit(BulletHitInfo hi) {};
+	virtual void event_bullet_hit(BulletHitInfo hi, int newHPtotal) {};
 
 	virtual void in_event_bullet_hit(Packet* rec)
 	{
 		BulletHitInfo hi = BulletHitInfo();
-		Uint8 playerHit, PID, BID, bt;
-		*rec >> playerHit >> PID >> BID >> bt;
+		Uint8 playerHit, PID, BID, bt, hpTotal;
+		*rec >> playerHit >> PID >> BID >> bt >> hpTotal;
 		hi.playerHit = playerHit;
 		hi.bt = BULLET_TYPE(bt);
 		hi.bulletBID = BID;
 		hi.bulletPID = PID;
-		gamePtr->handleBulletHitEvent(hi);
+		gamePtr->handleBulletHitEvent(hi, hpTotal);
 	}
 
 

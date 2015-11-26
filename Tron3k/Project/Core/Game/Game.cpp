@@ -503,7 +503,7 @@ Bullet* Game::getBulletForRemoval(int PID, int BID, BULLET_TYPE bt, int &posInBu
 	}
 }
 
-void Game::handleBulletHitEvent(BulletHitInfo hi)
+int Game::handleBulletHitEvent(BulletHitInfo hi, int newHPtotal)
 {
 	glm::vec3 pos = playerList[hi.playerHit]->getPos();
 	if (gameState != Gamestate::SERVER)
@@ -511,9 +511,12 @@ void Game::handleBulletHitEvent(BulletHitInfo hi)
 	Player* p = playerList[hi.playerHit];
 	int bulletPosInArray;
 	Bullet* theBullet = getBulletForRemoval(hi.bulletPID, hi.bulletBID, hi.bt, bulletPosInArray);
-	p->hitByBullet(theBullet);
+	p->hitByBullet(theBullet, newHPtotal);
 
 	delete bullets[hi.bt][bulletPosInArray];
 	bullets[hi.bt][bulletPosInArray] = bullets[hi.bt][bullets[hi.bt].size() - 1];
 	bullets[hi.bt].pop_back();
+
+	int newHP = p->getHP();
+	return newHP;
 }

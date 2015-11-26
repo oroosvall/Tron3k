@@ -39,8 +39,9 @@ class Role
 		void swapWeapon(int swapTo);
 		Weapon* getCurrentWeapon();
 
-		void takeDamage(int dmg);
-		void heal(int h);
+		void setHealth(int newHealth) { health = newHealth; }; //Used by clients
+		void takeDamage(int dmg); //Used by server
+		void heal(int h); //Used by server
 
 		int getHealth() { return health; };
 		void returnToLife() { health = maxHealth; };

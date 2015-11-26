@@ -95,7 +95,7 @@ public:
 
 	bool hitEventReady() { return playerHit; };
 	BulletHitInfo getHitInfo() { playerHit = false; return hit; };
-	void handleBulletHitEvent(BulletHitInfo hi);
+	int handleBulletHitEvent(BulletHitInfo hi, int newHPtotal = -1); //Returns the new HP total of the player, takes the new HP total instead if info is coming from server
 
 
 	bool freecam; // freecam is active also when in spectate but specctate overides
