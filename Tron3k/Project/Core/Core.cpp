@@ -730,8 +730,11 @@ void Core::renderWorld(float dt)
 		renderPipe->update(tmpEyePos.x, tmpEyePos.y, tmpEyePos.z, dt); // sets the view/proj matrix
 		renderPipe->renderIni();
 
+
+		float dgColor[3];
 		//render skybox
-		renderPipe->renderPlayer(1, (void*)&(CameraInput::getCam()->getSkyboxMat()));
+		dgColor[0] = 0; dgColor[1] = 0; dgColor[2] = 0;
+		renderPipe->renderPlayer(1, (void*)&(CameraInput::getCam()->getSkyboxMat()), dgColor, 0.0f);
 
 		//send all lights
 		bool firstLight = true;
@@ -758,15 +761,27 @@ void Core::renderWorld(float dt)
 			Player* p = game->getPlayer(i);
 			if (p)
 			{
-				renderPipe->renderPlayer(0, p->getWorldMat());
+				if (p->getHP() <= 0){ // set red
+					dgColor[0] = 1; dgColor[1] = 0; dgColor[2] = 0;	}
+				else if (p->getTeam() == 1){ //team 1 color
+					dgColor[0] = 0; dgColor[1] = 1; dgColor[2] = 0; }
+				else if (p->getTeam() == 2){ // team 2 color
+					dgColor[0] = 0.2f; dgColor[1] = 0.2f; dgColor[2] = 1; }
+
+				//static intense based on health
+				float hpval = float(p->getHP()) / 130.0f;
+
+				renderPipe->renderPlayer(0, p->getWorldMat(), dgColor, hpval);
 			}
 		}
 		for (int c = 0; c < BULLET_TYPE::NROFBULLETS; c++)
 		{
+			dgColor[0] = 0; dgColor[1] = 0; dgColor[2] = 0;
+
 			std::vector<Bullet*> bullets = game->getBullets(BULLET_TYPE(c));
 			for (int i = 0; i < bullets.size(); i++)
 			{
-				renderPipe->renderPlayer(0, bullets[i]->getWorldMat());
+				renderPipe->renderPlayer(0, bullets[i]->getWorldMat(), dgColor, 1.0f);
 			}
 		}
 		renderPipe->render();

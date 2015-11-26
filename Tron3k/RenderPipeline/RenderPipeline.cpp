@@ -168,15 +168,6 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	glProgramUniform1i(regularShader, uniformNormalLocation, 1);
 	glProgramUniform1i(regularShader, uniformGlowSpecLocation, 2);
 
-	glProgramUniform1f(regularShader, uniformStaticGlowIntensityLocation, mod((timepass/5.0f), 1.0f));
-	glm::vec3 glowColor(mod((timepass / 1.0f), 1.0f), mod((timepass / 2.0f), 1.0f), mod((timepass / 3.0f), 1.0f));
-	glProgramUniform3fv(regularShader, uniformDynamicGlowColorLocation, 1, (GLfloat*)&glowColor[0]);
-
-	SpotLight playerLight[2];
-	playerLight[0].Position = vec3(x,y,z);
-	playerLight[0].Direction = vec3();
-
-
 	gBuffer->clearLights();
 }
 
@@ -197,6 +188,11 @@ void RenderPipeline::render()
 {
 	glUseProgram(regularShader);
 
+	//Glow values for world
+	glProgramUniform1f(regularShader, uniformStaticGlowIntensityLocation, mod((timepass / 5.0f), 1.0f));
+	glm::vec3 glowColor(mod((timepass / 1.0f), 1.0f), mod((timepass / 2.0f), 1.0f), mod((timepass / 3.0f), 1.0f));
+	glProgramUniform3fv(regularShader, uniformDynamicGlowColorLocation, 1, (GLfloat*)&glowColor[0]);
+
 	contMan.renderChunks(regularShader, worldMat, uniformTextureLocation, uniformNormalLocation, uniformGlowSpecLocation);
 	
 	//GBuffer Render
@@ -211,15 +207,16 @@ void* RenderPipeline::getView()
 	return (void*)cam.getViewMat();
 }
 
-void RenderPipeline::renderPlayer(int playerID, void* world)
+void RenderPipeline::renderPlayer(int playerID, void* world, float* dgColor, float sgInten)
 {
+	//Glow values for player
+	glProgramUniform1f(regularShader, uniformStaticGlowIntensityLocation, sgInten);
+	glProgramUniform3fv(regularShader, uniformDynamicGlowColorLocation, 1, (GLfloat*)&dgColor[0]);
 
 	//set temp objects worldmat
 	glProgramUniformMatrix4fv(regularShader, worldMat, 1, GL_FALSE, (GLfloat*)world);
 
 	contMan.renderPlayer(playerID, *(glm::mat4*)world);
-
-
 }
 
 bool RenderPipeline::setSetting(PIPELINE_SETTINGS type, PipelineValues value)

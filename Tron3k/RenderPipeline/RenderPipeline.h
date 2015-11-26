@@ -64,7 +64,7 @@ public:
 
 	virtual void* getView();
 
-	virtual void renderPlayer(int playerID, void* world);
+	virtual void renderPlayer(int playerID, void* world, float* dgColor, float sgInten);
 
 	virtual std::string getStatus() { return ""; };
 

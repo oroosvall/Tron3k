@@ -47,8 +47,7 @@ public:
 	virtual void addLight(SpotLight* newLight) = 0;
 
 	virtual void* getView() = 0;
-
-	virtual void renderPlayer(int playerID, void* world) = 0;
+	virtual void renderPlayer(int playerID, void* world, float* dgColor, float sgInten) = 0;
 
 	virtual std::string getStatus() = 0;
 
