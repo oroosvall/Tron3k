@@ -12,10 +12,14 @@ protected:
 	void updateWorldMat();
 	glm::vec3 pos;
 	glm::vec3 dir;
-	int teamId;
+	float vel;
+	int damage;
 
+	int teamId;
 	int playerId;
 	int bulletId = 0;
+
+
 public:
 	virtual ~Bullet();
 
@@ -24,6 +28,7 @@ public:
 
 	glm::vec3 getPos() { return pos; };
 	glm::vec3 getDir() { return dir; };
+	float getDamage() { return damage; };
 
 	virtual int update(float dt) = 0;
 

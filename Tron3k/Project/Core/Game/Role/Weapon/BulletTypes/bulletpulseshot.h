@@ -9,7 +9,6 @@
 class PulseShot : public Bullet
 {
 private:
-	float vel;
 public:
 	PulseShot(glm::vec3 pos, glm::vec3 dir, int pID, int bID, int tID);
 	~PulseShot();

@@ -11,6 +11,7 @@ PulseShot::PulseShot(glm::vec3 position, glm::vec3 direction, int pID, int bID, 
 	bulletId = bID;
 
 	vel = 20.0f;
+	damage = 10;
 
 	//sets pos
 	updateWorldMat();

@@ -16,6 +16,7 @@ class Role
 	private:
 		int currentWpn;
 		int health;
+		int maxHealth;
 		float movementSpeed;
 		string roles[NROFROLES];
 		
@@ -37,5 +38,11 @@ class Role
 		void chooseRole(int role);
 		void swapWeapon(int swapTo);
 		Weapon* getCurrentWeapon();
+
+		void takeDamage(int dmg);
+		void heal(int h);
+
+		int getHealth() { return health; };
+		void returnToLife() { health = maxHealth; };
 };
 #endif

@@ -16,7 +16,7 @@
 
 #define interpolationTick 0.050f
 
-enum PLAYERMSG { NONE, SHOOT, WPNSWITCH };
+enum PLAYERMSG { NONE, SHOOT, WPNSWITCH, DEATH };
 
 struct BulletHitInfo
 {
@@ -39,6 +39,7 @@ private:
 	void movePlayer(float dt);
 	bool grounded = false;
 
+	bool isDead = false;
 
 	glm::vec3 oldPos;
 	glm::vec3 oldDir;
@@ -84,7 +85,7 @@ public:
 	void setVelocity(glm::vec3 velocity) { vel = velocity; };
 	glm::vec3 getVelocity() { return vel; };
 
-	void hitByBullet(BulletHitInfo hi, glm::vec3 dir);
+	void hitByBullet(Bullet* b);
 
 	void setRole(Role role);
 };

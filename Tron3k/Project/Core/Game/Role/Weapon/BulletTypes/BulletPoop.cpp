@@ -11,6 +11,7 @@ Poop::Poop(glm::vec3 position, glm::vec3 direction, int pID, int bID, int tID)
 	bulletId = bID;
 
 	vel = 5.0f;
+	damage = 1;
 
 	//sets pos
 	updateWorldMat();

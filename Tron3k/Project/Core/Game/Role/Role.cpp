@@ -36,6 +36,7 @@ void Role::chooseRole(int role)
 	if (role < NROFROLES)
 	{
 		health = atoi(loadedRoles[role][HEALTH].c_str());
+		maxHealth = health;
 
 		weapons[0].init(36, (WEAPON_TYPE)atoi(loadedRoles[role][MAINWEP].c_str()), 0.5);
 		weapons[1].init(80, (WEAPON_TYPE)atoi(loadedRoles[role][SECWEP].c_str()), 0.2);
@@ -64,4 +65,18 @@ void Role::swapWeapon(int swapTo)
 Weapon* Role::getCurrentWeapon()
 {
 	return &weapons[currentWpn];
+}
+
+void Role::takeDamage(int dmg)
+{
+	health -= dmg;
+	if (health <= 0)
+		health = 0;
+}
+
+void Role::heal(int h)
+{
+	health += h;
+	if (h > maxHealth)
+		h = maxHealth;
 }

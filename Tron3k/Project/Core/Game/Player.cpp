@@ -193,6 +193,13 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			cam->setCam(pos);
 			rotatePlayer(olddir, dir);
 		}
+
+		if (role.getHealth() == 0)
+		{
+			isDead = true;
+			msg = DEATH;
+		}
+
 	} // end of local player check
 	else
 	{
@@ -241,24 +248,14 @@ void Player::switchWpn(WEAPON_TYPE ws)
 	role.swapWeapon(ws);
 }
 
-void Player::hitByBullet(BulletHitInfo hi, glm::vec3 dir)
+void Player::hitByBullet(Bullet* b)
 {
 	/*
-	
-	THIS CODE IS TEMPORARY
-	This needs to instead draw information from the templated bullets that are supposed to exist globally
-	Right now, we hardcode boys
-
+	This is where we will extract additional modifiers from the Bullet, when applicable.
 	*/
-	switch (hi.bt)
-	{
-	case BULLET_TYPE::PULSE_SHOT:
-		pos += dir;
-		break;
-	case BULLET_TYPE::POOP:
-		pos += dir*0.1f;
-		break;
-	}
+
+	int dmg = b->getDamage();
+	role.takeDamage(dmg);
 }
 
 void Player::applyGravity(Physics* p, float dt)

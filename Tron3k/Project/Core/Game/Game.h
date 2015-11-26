@@ -47,7 +47,7 @@ private:
 	void registerSwitch(Player* p);
 
 	void addBulletToList(int conID, int bulletId, BULLET_TYPE bt, glm::vec3 pos, glm::vec3 dir);
-	glm::vec3 removeBullet(int PID, int BID, BULLET_TYPE bt);
+	Bullet* getBulletForRemoval(int PID, int BID, BULLET_TYPE bt, int &posInBulletArray);
 
 	WEAPON_TYPE weaponShotWith;
 	int bulletShot = -1;

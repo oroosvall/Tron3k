@@ -483,7 +483,7 @@ void Game::handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm
 	}
 }
 
-glm::vec3 Game::removeBullet(int PID, int BID, BULLET_TYPE bt)
+Bullet* Game::getBulletForRemoval(int PID, int BID, BULLET_TYPE bt, int &posInBulletArray)
 {
 	for (int c = 0; c < bullets[bt].size(); c++)
 	{
@@ -492,11 +492,8 @@ glm::vec3 Game::removeBullet(int PID, int BID, BULLET_TYPE bt)
 		bullets[bt][c]->getId(p, b);
 		if (p == PID && b == BID);
 		{
-			glm::vec3 ret = bullets[bt][c]->getDir();
-			delete bullets[bt][c];
-			bullets[bt][c] = bullets[bt][bullets[bt].size() - 1];
-			bullets[bt].pop_back();
-			return ret;
+			posInBulletArray = c;
+			return bullets[bt][c];
 		}
 	}
 }
@@ -507,6 +504,11 @@ void Game::handleBulletHitEvent(BulletHitInfo hi)
 	if (gameState != Gamestate::SERVER)
 		GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHit, pos.x, pos.y, pos.z);
 	Player* p = playerList[hi.playerHit];
-	glm::vec3 dir = removeBullet(hi.bulletPID, hi.bulletBID, hi.bt);
-	p->hitByBullet(hi, dir);
+	int bulletPosInArray;
+	Bullet* theBullet = getBulletForRemoval(hi.bulletPID, hi.bulletBID, hi.bt, bulletPosInArray);
+	p->hitByBullet(theBullet);
+
+	delete bullets[hi.bt][bulletPosInArray];
+	bullets[hi.bt][bulletPosInArray] = bullets[hi.bt][bullets[hi.bt].size() - 1];
+	bullets[hi.bt].pop_back();
 }
