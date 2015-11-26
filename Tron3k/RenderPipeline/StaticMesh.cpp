@@ -6,6 +6,12 @@ void StaticMesh::release()
 	delete[] indices;
 	delete[] roomIDs;
 	delete[] worldMatrices;
+
+	glDeleteBuffers(1, &vertexBuffer);
+	glDeleteBuffers(1, &indexBuffer);
+
+	glDeleteVertexArrays(1, &vertexArray);
+
 }
 
 void StaticMesh::init(int iCount)
@@ -43,17 +49,10 @@ void StaticMesh::stream()
 
 	glGenBuffers(1, &indexBuffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices[0]) * indexCount, indices, GL_STATIC_DRAW);
-
-	/*
-	struct Vertex11
+	if (&indices[(indexCount - 1) / 3])
 	{
-		float x, y, z;
-		float u, v;
-		float nx, ny, nz;
-		float tx, ty, tz;
-	};
-	*/
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indexCount, &indices[0], GL_STATIC_DRAW);
+	}
 
 	//define vertex data layout
 	glGenVertexArrays(1, &vertexArray);
@@ -61,7 +60,7 @@ void StaticMesh::stream()
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
-	//glEnableVertexAttribArray(3);
+	glEnableVertexAttribArray(3);
 
 #define BUFFER_OFFSET(i) ((char *)nullptr + (i))
 
@@ -72,5 +71,5 @@ void StaticMesh::stream()
 	// normal
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex11), BUFFER_OFFSET(sizeof(float) * 5));
 	// tangent
-	//glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), BUFFER_OFFSET(sizeof(float) * 8));
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), BUFFER_OFFSET(sizeof(float) * 8));
 }
