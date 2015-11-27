@@ -125,6 +125,19 @@ bool Physics::checkPlayerVWorldCollision(glm::vec3 playerPos)
 	return collides;
 }
 
+bool Physics::checkBulletVWorldCollision(glm::vec3 bulletPos)
+{
+	bool collides = false;
+	bulletBox.setPos(bulletPos);
+
+	for (int i = 0; i < worldBoxes.size(); i++)
+	{
+		if (checkAABBCollision(bulletBox, worldBoxes[i]))
+			collides = true;
+	}
+	return collides;
+}
+
 
 void Physics::addGravity(glm::vec3 &vel, float dt)
 {
