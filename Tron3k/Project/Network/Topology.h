@@ -326,7 +326,7 @@ public:
 		if (team == 2)
 			consolePtr->printMsg("Player (" + p->getName() + ") joined team Two", "System", 'S');
 
-		if (p_conID == conID)
+		if (p_conID == getConId())
 		{
 			if (team != 0)
 				gamePtr->freecam = false;
