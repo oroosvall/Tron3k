@@ -196,6 +196,8 @@ void Game::createPlayer(Player* p, int conID, bool isLocal)
 	playerList[conID]->init(p->getName(), p->getPos(), isLocal);
 	playerList[conID]->setTeam(p->getTeam());
 	playerList[conID]->setRole(*templateRole);
+	if (isLocal)
+		freecam = true;
 }
 
 void Game::removePlayer(int conID)
@@ -293,9 +295,9 @@ void Game::checkPlayerVBulletCollision()
 					{
 						int pid = -1, bid = -1;
 						bullets[b][j]->getId(pid, bid);
-						if (bullets[b][j]->getTeamId() != playerList[i]->getTeam() && pid != i)
+						if (bullets[b][j]->getTeamId() != playerList[i]->getTeam() && playerList[i]->getTeam() != 0) //Don't shoot same team, don't shoot spectators
 						{
-							if (playerList[i]->isAlive())
+							if (playerList[i]->isAlive()) //Don't shoot dead people
 								collides = physics->checkPlayerVBulletCollision(playerList[i]->getPos(), bullets[b][j]->getPos());
 						}
 						if (collides)

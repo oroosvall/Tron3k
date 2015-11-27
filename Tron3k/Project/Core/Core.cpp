@@ -576,9 +576,12 @@ void Core::clientHandleCmds()
 		{
 			if (game->freecam)
 			{
-				//set view dir pos back to the player's view REMEMBER Roam conID 0
-				CameraInput::getCam()->setCam(game->getPlayer(top->getConId())->getPos(), game->getPlayer(top->getConId())->getDir());
-				game->freecam = false;
+				if (game->getPlayer(top->getConId())->getTeam() != 0)
+				{
+					//set view dir pos back to the player's view REMEMBER Roam conID 0
+					CameraInput::getCam()->setCam(game->getPlayer(top->getConId())->getPos(), game->getPlayer(top->getConId())->getDir());
+					game->freecam = false;
+				}
 			}
 			else
 				game->freecam = true;
@@ -766,18 +769,25 @@ void Core::renderWorld(float dt)
 			Player* p = game->getPlayer(i);
 			if (p)
 			{
-				if (p->getHP() <= 0){ // set red
-					dgColor[0] = 1; dgColor[1] = 0; dgColor[2] = 0;	}
-				else if (p->getTeam() == 1){ //team 1 color
-					dgColor[0] = 0; dgColor[1] = 1; dgColor[2] = 0; }
-				else if (p->getTeam() == 2){ // team 2 color
-					dgColor[0] = 0.2f; dgColor[1] = 0.2f; dgColor[2] = 1; }
-				else if (p->getTeam() == 0) { // spectate color
-					dgColor[0] = 0; dgColor[1] = 0; dgColor[2] = 0;}
-				//static intense based on health
-				float hpval = float(p->getHP()) / 130.0f;
+				if (p->getTeam() != 0) //Don't render spectators!
+				{
+					if (p->getHP() <= 0) { // set red
+						dgColor[0] = 1; dgColor[1] = 0; dgColor[2] = 0;
+					}
+					else if (p->getTeam() == 1) { //team 1 color
+						dgColor[0] = 0; dgColor[1] = 1; dgColor[2] = 0;
+					}
+					else if (p->getTeam() == 2) { // team 2 color
+						dgColor[0] = 0.2f; dgColor[1] = 0.2f; dgColor[2] = 1;
+					}
+					else if (p->getTeam() == 0) { // spectate color
+						dgColor[0] = 0; dgColor[1] = 0; dgColor[2] = 0;
+					}
+					//static intense based on health
+					float hpval = float(p->getHP()) / 130.0f;
 
-				renderPipe->renderPlayer(0, p->getWorldMat(), dgColor, hpval);
+					renderPipe->renderPlayer(0, p->getWorldMat(), dgColor, hpval);
+				}
 			}
 		}
 		for (int c = 0; c < BULLET_TYPE::NROFBULLETS; c++)
