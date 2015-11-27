@@ -49,6 +49,7 @@ struct DirectionalLight
 
 struct Material
 {
+	uint32_t materialID;
 	uint32_t textureMapIndex;
 	uint32_t normalMapIndex;
 	uint32_t specularMapIndex;
@@ -56,7 +57,7 @@ struct Material
 
 struct TextureHDR
 {
-	uint32_t* textureSize;
+	uint32_t textureSize;
 };
 
 struct TextureData

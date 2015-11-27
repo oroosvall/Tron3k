@@ -77,9 +77,11 @@ public:
 	void sendWorldBoxes(std::vector<std::vector<float>> wBoxes);
 	void sendPlayerBox(std::vector<float> pBox);
 
+	//Collision checks
 	void checkPvPCollision();
 	void checkPlayerVBulletCollision();
 	void checkPlayerVWorldCollision();
+	void checkBulletVWorldCollision();
 
 	bool playerWantsToRespawn();
 	void allowPlayerRespawn(int p_conID, glm::vec3 respawnPosition);

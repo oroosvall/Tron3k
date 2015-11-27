@@ -45,6 +45,7 @@ public:
 	virtual bool checkPlayerVPlayerCollision(glm::vec3 playerPos1, glm::vec3 playerPos2);
 	virtual bool checkPlayerVBulletCollision(glm::vec3 playerPos, glm::vec3 bulletPos);
 	virtual bool checkPlayerVWorldCollision(glm::vec3 playerPos);
+	virtual bool checkBulletVWorldCollision(glm::vec3 bulletPos);
 
 	virtual void addGravity(glm::vec3 &velocity, float dt);
 

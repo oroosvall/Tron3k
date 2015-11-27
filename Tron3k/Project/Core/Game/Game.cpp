@@ -332,13 +332,14 @@ void Game::checkPlayerVBulletCollision()
 
 void Game::checkPlayerVWorldCollision()
 {
+	bool collides = false;
 	for (int i = 0; i < max_con; i++)
 	{
 		if (playerList[i] != nullptr)
 		{
 			if (playerList[i]->isLocal())
 			{
-				bool collides = physics->checkPlayerVWorldCollision(playerList[i]->getPos());
+				collides = physics->checkPlayerVWorldCollision(playerList[i]->getPos());
 				playerList[i]->setGrounded(collides);
 				if (collides)
 				{
@@ -349,6 +350,30 @@ void Game::checkPlayerVWorldCollision()
 					playerList[i]->setGoalPos(pos);
 					vel.y = 0.0f;
 					playerList[i]->setVelocity(vel);
+				}
+			}
+		}
+	}
+}
+
+void Game::checkBulletVWorldCollision()
+{
+	bool collides = false;
+
+	for (int b = 0; b < BULLET_TYPE::NROFBULLETS; b++)
+	{
+		for (int j = 0; j < bullets[b].size(); j++)
+		{
+			collides = false;
+			if (bullets[b][j] != nullptr)
+			{
+				int pid = -1, bid = -1;
+				bullets[b][j]->getId(pid, bid);
+				collides = physics->checkBulletVWorldCollision(bullets[b][j]->getPos());
+				if (collides)
+				{
+					//TODO: remove bullet, add network thing for deleting the bullet
+					//handleBulletHitEvent()
 				}
 			}
 		}

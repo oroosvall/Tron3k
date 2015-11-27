@@ -22,6 +22,8 @@ private:
 
 public:
 
+	int material;
+
 	int instanceCount;
 	glm::mat4* worldMatrices;
 

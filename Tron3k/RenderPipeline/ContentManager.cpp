@@ -161,7 +161,7 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 	//static glow
 	glActiveTexture(GL_TEXTURE0 + 2);
 	glBindTexture(GL_TEXTURE_2D, textures[5].textureID);
-	testMap.render(shader, shaderLocation);
+	testMap.render(shader, shaderLocation, textureLocation, normalLocation, glowSpecLocation);
 
 	for (size_t i = 0; i < meshes.size(); i++)
 	{
