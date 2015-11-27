@@ -10,7 +10,10 @@ void Map::init()
 	{
 		meshes[i].stream();
 	}
-
+	for (int i = 0; i < textureCount; i++)
+	{
+		tex[i].textureID = loadTexture("GameFiles/testfiles/" + std::string(tex[i].textureName));
+	}
 }
 
 void Map::release()
@@ -26,6 +29,18 @@ void Map::release()
 		meshes = nullptr;
 	}
 
+	if (materials)
+	{
+		delete[] materials;
+		materials = nullptr;
+	}
+
+	if (tex)
+	{
+		delete[] tex;
+		tex = nullptr;
+	}
+
 	//if (bbPoints)
 	//{
 	//	delete[] bbPoints;
@@ -34,7 +49,7 @@ void Map::release()
 
 }
 
-void Map::render(GLuint shader, GLuint shaderLocation)
+void Map::render(GLuint shader, GLuint shaderLocation, GLuint texture, GLuint normal, GLuint spec)
 {
 	for (int i = 0; i < meshCount; i++)
 	{
@@ -43,13 +58,15 @@ void Map::render(GLuint shader, GLuint shaderLocation)
 
 			glProgramUniformMatrix4fv(shader, shaderLocation, 1, GL_TRUE, (GLfloat*)&meshes[i].worldMatrices[ins][0][0]);
 
-			//glProgramUniform1i(shader, textureLocation, 0);
-			//glProgramUniform1i(shader, normalLocation, 1);
-			//glActiveTexture(GL_TEXTURE0);
-			//glBindTexture(GL_TEXTURE_2D, meshes[i].textureID);
-			//
-			//glActiveTexture(GL_TEXTURE0 + 1);
-			//glBindTexture(GL_TEXTURE_2D, textures[2].textureID);
+			glProgramUniform1i(shader, texture, 0);
+			glProgramUniform1i(shader, normal, 1);
+			glProgramUniform1i(shader, spec, 2);
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[i].material].textureMapIndex].textureID);
+			glActiveTexture(GL_TEXTURE0 + 1);
+			glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[i].material].normalMapIndex].textureID);
+			glActiveTexture(GL_TEXTURE0 + 2);
+			glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[i].material].specularMapIndex].textureID);
 
 			glBindVertexArray(meshes[i].vertexArray);
 			glBindBuffer(GL_ARRAY_BUFFER, meshes[i].vertexBuffer);
@@ -79,7 +96,7 @@ void Map::loadMap(std::string mapName)
 	int spotLightCount = (int)fileHeader.spotLightCount;
 	int dirLightCount = (int)fileHeader.dirLightCount;
 	int materialCount = (int)fileHeader.materialCount;
-	int textureCount = (int)fileHeader.textureCount;
+	textureCount = (int)fileHeader.textureCount;
 	int portalCount = (int)fileHeader.portalCount;
 	
 	meshes = new StaticMesh[meshCount];
@@ -108,6 +125,7 @@ void Map::loadMap(std::string mapName)
 	
 		int* materialIndices = new int[materialCount];
 		inFile.read((char*)materialIndices, sizeof(int)*materialCount);
+		meshes[i].material = materialIndices[0];
 		delete[]materialIndices;
 	
 		int* materialOffsets = new int[materialCount];
@@ -153,21 +171,20 @@ void Map::loadMap(std::string mapName)
 	inFile.read((char*)dl, sizeof(DirectionalLight) * dirLightCount);
 	delete[] dl;
 	
-	Material* mats = new Material[materialCount];
-	inFile.read((char*)mats, sizeof(Material) * materialCount);
-	delete[]mats;
+	materials= new Material[materialCount];
+	inFile.read((char*)materials, sizeof(Material) * materialCount);
 	
+	tex = new TextureStruct[textureCount];
 	TextureHDR* textHeader = new TextureHDR[textureCount];
-	TextureData* texData = new TextureData[textureCount];
 	inFile.read((char*)textHeader, sizeof(TextureHDR) * textureCount);
 	
 	for (int i = 0; i < textureCount; i++)
 	{
-		texData[i].texturePath = new char[(unsigned int)textHeader[i].textureSize];
-		inFile.read((char*)texData[i].texturePath, sizeof(char) * (unsigned int)textHeader[i].textureSize);
-		delete[] texData[i].texturePath;
+		char* texName = new char[(unsigned int)textHeader[i].textureSize];
+		inFile.read(texName, sizeof(char) * (unsigned int)textHeader[i].textureSize);
+		tex[i].textureName = std::string(texName, textHeader[i].textureSize);
+		delete[] texName;
 	}
-	delete[] texData;
 	delete[] textHeader;
 	
 	PortalData* portalData = new PortalData[portalCount];
