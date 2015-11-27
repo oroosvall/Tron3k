@@ -318,6 +318,7 @@ public:
 		}
 
 		gamePtr->addPlayerToTeam(p_conID, team);
+		gamePtr->allowPlayerRespawn(p_conID, spawnPosition);
 		if (team == 0)
 			consolePtr->printMsg("Player (" + p->getName() + ") joined team Spectators", "System", 'S');
 		if (team == 1)
@@ -335,8 +336,8 @@ public:
 
 		if (isClient == false)
 		{
-			Packet* out = new Packet;
-			*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::TEAM_CHANGE) << p_conID << spawnPosition.x << spawnPosition.y << spawnPosition.z;
+			Packet* out = new Packet();
+			*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::TEAM_CHANGE) << p_conID << team << 0.0f << 0.0f << 0.0f;
 			branch(out, -1);
 			delete out;
 		}
