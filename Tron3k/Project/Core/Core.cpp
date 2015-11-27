@@ -152,8 +152,40 @@ void Core::upRoam(float dt)
 		break;
 	case 2: //main loop
 
-		roamHandleCmds();
+		/*roamHandleCmds();
 		game->update(dt);
+		renderWorld(dt);
+		break;*/
+
+		//Command and message handle
+		roamHandleCmds();
+
+		//update game
+		game->update(dt);
+
+		GetSound()->setLocalPlayerDir(game->getPlayer(0)->getDir());
+
+		if (game->playerWantsToRespawn())
+		{
+			game->allowPlayerRespawn(0, glm::vec3(0, 0, 0));
+		}
+
+		if (game->weaponSwitchReady())
+		{
+			WEAPON_TYPE wt = game->getWpnSwitch();
+			game->handleWeaponSwitch(0, wt);
+		}
+
+		if (game->fireEventReady())
+		{
+			Player* p = game->getPlayer(0);
+			WEAPON_TYPE wt;
+			int bID;
+			game->getLatestWeaponFired(0, wt, bID);
+			int team = 0;
+			game->handleWeaponFire(0, bID, wt, p->getPos(), p->getDir());
+		}
+
 		renderWorld(dt);
 		break;
 	}
@@ -454,22 +486,25 @@ void Core::roamHandleCmds()
 				console.printMsg("You changed name to (" + token + ")", "System", 'S');
 			}
 		}
-		else if (token == "/players")
+		else if (token == "/team")
 		{
-			for (int n = 0; n < MAX_CONNECT; n++)
+			ss >> token;
+			if (token != "/team" || token == "0" || token == "1" || token == "2")
 			{
-				Player* p = game->getPlayer(n);
-				if (p != nullptr)
-				{
-					string print;
-					print += "ConID: " + to_string(n) + " Team: " + to_string(p->getTeam()) + " Name: " + p->getName();
-					console.printMsg(print, "", ' ');
-				}
+				int team = stoi(token);
+				game->addPlayerToTeam(0, team);
+				game->allowPlayerRespawn(0, vec3(0,0,0)); //Add new spawn point probably
+				if (team != 0)
+					game->freecam = false;
+				else
+					game->freecam = true;
 			}
+			else
+				console.printMsg("Invalid team. Use /team <1/2/3>", "System", 'S');
 		}
 		else if (token == "/free")
 		{
-			if (game->freecam)
+			if (game->freecam && game->getPlayer(0)->getTeam() != 0)
 			{
 				//set view dir pos back to the player's view REMEMBER Roam conID 0
 				CameraInput::getCam()->setCam(game->getPlayer(0)->getPos(), game->getPlayer(0)->getDir());
@@ -479,34 +514,6 @@ void Core::roamHandleCmds()
 				game->freecam = true;
 
 			game->spectateID = -1;
-		}
-		else if (token == "/spec")
-		{
-			ss >> token;
-			if (token == "/spec")
-				console.printMsg("Invalid Number", "System", 'S');
-			else
-			{
-				int id = stoi(token); // yes this is dangerous, dont write anything but numbers
-				if (id > -1 && id < MAX_CONNECT)
-				{
-					//set view dir pos back to the player's view
-					Player* p = game->getPlayer(id);
-					if (p != nullptr)
-					{
-						CameraInput::getCam()->setCam(p->getPos(), p->getDir());
-						game->spectateID = id;
-						game->freecam = true;
-					}
-					else
-						console.printMsg("That Player Doesn't exist", "System", 'S');
-				}
-				else
-				{
-					game->spectateID = -1;
-					game->freecam = true;
-				}
-			}
 		}
 	}
 }

@@ -126,13 +126,13 @@ void Game::update(float dt)
 			PLAYERMSG msg = playerList[c]->update(dt, freecam, spectatingThis, spectating);
 			if (msg == PLAYERMSG::SHOOT)
 			{
-				if (gameState != Gamestate::ROAM)
+				//if (gameState != Gamestate::ROAM)
 					registerWeapon(playerList[c]);
-				else
+				/*else
 				{
 					registerWeapon(playerList[c]);
 					handleWeaponFire(c, bulletShot, weaponShotWith, playerList[c]->getPos(), playerList[c]->getDir());
-				}
+				}*/
 			}
 			if (msg == PLAYERMSG::WPNSWITCH)
 			{
