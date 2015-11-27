@@ -4,6 +4,8 @@
 
 void Map::init()
 {
+	currentChunk = -1;
+
 	loadMap("GameFiles/TestFiles/Tron3k_map_1_textures.bin");
 	
 	for (int i = 0; i < meshCount; i++)
@@ -193,4 +195,82 @@ void Map::loadMap(std::string mapName)
 	
 	inFile.close();
 
+}
+
+int Map::getChunkID(glm::vec3 oldPos, glm::vec3 newPos)
+{
+	//intersection test vs all portals in this room
+
+	PortalData p;				//     1 --------- 2
+	p.portalID = 0;				//	   |           |
+	p.bridgedRooms[0] = 1;		//	   |           |
+	p.bridgedRooms[1] = 2;		//     4 --------- 3
+
+	//define corners
+	//1
+	p.positions[0].x = 5;
+	p.positions[0].y = 10;
+	p.positions[0].z = 10;
+
+	// 2
+	p.positions[1].x = 10;
+	p.positions[1].y = 10;
+	p.positions[1].z = 10;
+
+	// 3
+	p.positions[2].x = 10;
+	p.positions[2].y = -10;
+	p.positions[2].z = 10;
+
+	// 4
+	p.positions[3].x = 5;
+	p.positions[3].y = -10;
+	p.positions[3].z = 10;
+
+	//Extract Plane formula http://answers.google.com/answers/threadview?id=18979
+	float A, B, C, D;
+
+#define pp p.positions
+
+	A = pp[0].y * (pp[1].z - pp[2].z) + pp[1].y * (pp[2].z - pp[0].z) + pp[2].y * (pp[0].z - pp[1].z);
+	B = pp[0].z * (pp[1].x - pp[2].x) + pp[1].z * (pp[2].x - pp[0].x) + pp[2].z * (pp[0].x - pp[1].x);
+	C = pp[0].x * (pp[1].y - pp[2].y) + pp[1].x * (pp[2].y - pp[0].y) + pp[2].x * (pp[0].y - pp[1].y);
+
+	D =  -pp[0].x * (pp[1].y * pp[2].z - pp[2].y * pp[1].z)
+		- pp[1].x * (pp[2].y * pp[0].z - pp[0].y * pp[2].z)
+		- pp[2].x * (pp[0].y * pp[1].z - pp[1].y * pp[0].z);
+
+
+
+	//Ray origin = oldPos
+	//Ray direction = Rd
+	glm::vec3 rd = newPos - oldPos;
+	float len = rd.length();
+	//if len = 0 we didnt move
+	rd = glm::normalize(rd);
+
+	//Solve intersection distance  t = -(A*x0 + B*y0 + C*z0 + D) / (A*xd + B*yd + C*zd)
+	float t = -(A * oldPos.x + B * oldPos.y + C * oldPos.z + D) / (A * rd.x + B * rd.y + C * rd.z);
+
+	//if t negative no intersection?
+
+	//intersection point  R(t) = (x0 + xd*t, y0 + yd*t, z0 + zd*t).
+	glm::vec3 interPos = glm::vec3(oldPos.x * rd.x * t, oldPos.y * rd.y * t, oldPos.z * rd.z * t);
+
+	glm::vec3 V1 = pp[1] - pp[0]; 
+	glm::vec3 V3 = pp[3] - pp[2]; 
+
+	glm::vec3 V4 = interPos - pp[0]; // 1st corenr to interpoint
+	glm::vec3 V5 = interPos - pp[2]; // 3rd corner to interpoint
+
+	glm::normalize(V1);
+	glm::normalize(V3);
+	glm::normalize(V4);
+	glm::normalize(V5);
+
+#undef pp
+
+
+
+	return 0;
 }

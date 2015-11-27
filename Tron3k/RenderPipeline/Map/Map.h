@@ -4,6 +4,7 @@
 #include "../StaticMesh.h"
 #include "MapHeaders.h"
 #include "../Texture.h"
+#include <glm\glm.hpp>
 #include <string>
 
 struct TextureStruct
@@ -28,6 +29,8 @@ private:
 	int meshCount;
 	int textureCount;
 
+	int currentChunk;
+
 public:
 	
 	void init();
@@ -36,6 +39,8 @@ public:
 	void render(GLuint shader, GLuint shaderLocation, GLuint texture, GLuint normal, GLuint spec);
 
 	void loadMap(std::string mapName);
+
+	int getChunkID(glm::vec3 oldPos, glm::vec3 newPos);
 
 };
 
