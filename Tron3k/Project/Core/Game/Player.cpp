@@ -7,14 +7,15 @@ Player::Player()
 
 void Player::init(std::string pName, glm::vec3 initPos, bool isLocal)
 {
+	cam = CameraInput::getCam();
+	i = Input::getInput();
+
 	name = pName;
 	pos = initPos;
 	vel = glm::vec3(0, 0, 0);
+	dir = cam->getDir();
 
 	isLocalPlayer = isLocal;
-
-	i = Input::getInput();
-	cam = CameraInput::getCam();
 
 	if (isLocal)
 		rotate(0, -3.141592654f, 0);
