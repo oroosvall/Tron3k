@@ -6,10 +6,10 @@ void Map::init()
 {
 	loadMap("GameFiles/TestFiles/Tron3k_map_1_textures.bin");
 	
-	//for (int i = 0; i < meshCount; i++)
-	//{
-	//	meshes[i].stream();
-	//}
+	for (int i = 0; i < meshCount; i++)
+	{
+		meshes[i].stream();
+	}
 
 }
 
