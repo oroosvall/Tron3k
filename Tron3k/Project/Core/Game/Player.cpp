@@ -17,8 +17,7 @@ void Player::init(std::string pName, glm::vec3 initPos, bool isLocal)
 
 	isLocalPlayer = isLocal;
 
-	if (isLocal)
-		rotate(0, -3.141592654f, 0);
+	rotate(0, -3.141592654f, 0);
 }
 
 void Player::setName(std::string newName)
