@@ -271,7 +271,7 @@ public:
 	virtual void command_team_change(Uint8 conid, Uint8 team)
 	{
 		Packet* out = new Packet();
-		*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::TEAM_CHANGE) << conid << team;
+		*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::TEAM_CHANGE) << conid << team << 0.0f << 0.0f << 0.0f;
 		con->send(out);
 		delete out;
 	}
@@ -288,7 +288,8 @@ public:
 	{
 		Uint8 p_conID;
 		Uint8 team;
-		*rec >> p_conID >> team;
+		glm::vec3 spawnPosition;
+		*rec >> p_conID >> team >> spawnPosition.x >> spawnPosition.y >> spawnPosition.z;
 
 		Player* p = gamePtr->getPlayer(p_conID);
 		if (p == nullptr)
@@ -301,20 +302,18 @@ public:
 		{
 			if (gamePtr->getPlayersOnTeam(team) + 1 < gamePtr->getMaxTeamSize())
 			{
-				Packet* out; out = new Packet();
-				string reply = "Teamchange Accepted";
-				*out << Uint8(NET_INDEX::MESSAGE) << Uint8(getConId()) << Uint8('S') << reply;
-				con[p_conID].send(out);
-				delete out;
+				/*
+				TO DO
+				Add logic to give player a new place to spawn after team change
+				*/
+
+				spawnPosition = glm::vec3(0, 0, 0);
 			}
 			else
 			{
-				Packet* out; out = new Packet();
-				string reply = "Teamchange denied";
-				*out << Uint8(NET_INDEX::MESSAGE) << Uint8(getConId()) << Uint8('S') << reply;
-				con[p_conID].send(out);
-				delete out;
-				return;
+				/*
+				CAN'T CHANGE TEAM
+				*/
 			}
 		}
 
@@ -325,19 +324,22 @@ public:
 			consolePtr->printMsg("Player (" + p->getName() + ") joined team One", "System", 'S');
 		if (team == 2)
 			consolePtr->printMsg("Player (" + p->getName() + ") joined team Two", "System", 'S');
-		
+
 		if (p_conID == conID)
 		{
 			if (team != 0)
-			{
 				gamePtr->freecam = false;
-			}
 			else
 				gamePtr->freecam = true;
 		}
 
 		if (isClient == false)
-			branch(rec, -1);
+		{
+			Packet* out = new Packet;
+			*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::TEAM_CHANGE) << p_conID << spawnPosition.x << spawnPosition.y << spawnPosition.z;
+			branch(out, -1);
+			delete out;
+		}
 	}
 
 	virtual void in_command_respawn(Packet* rec, Uint8 conid)

@@ -417,10 +417,6 @@ void Game::removeConIDfromTeams(int conID)
 
 void Game::addPlayerToTeam(int p_conID, int team)
 {
-	/*
-	TO DO
-	Create new Player when a user switches team, or simply remove the Player when joining spectators
-	*/
 	switch (team)
 	{
 	case 0:
@@ -436,6 +432,11 @@ void Game::addPlayerToTeam(int p_conID, int team)
 		//	delete playerList[p_conID];
 		teamOne.push_back(p_conID);
 		playerList[p_conID]->setTeam(1);
+
+		//if (playerList[p_conID]->isLocal())
+		//{
+
+		//}
 		break;
 	case 2:
 		removeConIDfromTeams(p_conID);
