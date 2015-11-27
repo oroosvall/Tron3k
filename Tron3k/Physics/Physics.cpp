@@ -1,5 +1,7 @@
 #include "Physics.h"
 
+//#include "vld.h"
+
 Physics::Physics()
 {
 
@@ -28,6 +30,7 @@ void Physics::initBulletBox()
 
 bool Physics::release()
 {
+	delete this;
 	return 1;
 }
 

@@ -5,11 +5,11 @@
 void Map::init()
 {
 	loadMap("GameFiles/TestFiles/Tron3k_map_1_textures.bin");
-
-	for (int i = 0; i < meshCount; i++)
-	{
-		meshes[i].stream();
-	}
+	
+	//for (int i = 0; i < meshCount; i++)
+	//{
+	//	meshes[i].stream();
+	//}
 
 }
 
@@ -26,11 +26,11 @@ void Map::release()
 		meshes = nullptr;
 	}
 
-	if (bbPoints)
-	{
-		delete[] bbPoints;
-		bbPoints = nullptr;
-	}
+	//if (bbPoints)
+	//{
+	//	delete[] bbPoints;
+	//	bbPoints = nullptr;
+	//}
 
 }
 
@@ -67,13 +67,13 @@ void Map::loadMap(std::string mapName)
 
 	ifstream inFile;
 	inFile.open(mapName, ios::in | ios::binary);
-
+	
 	SharedFileHDR fileHeader;
-
+	
 	inFile.read((char*)&fileHeader, sizeof(fileHeader));
-
+	
 	cout << sizeof(fileHeader) << endl;
-
+	
 	meshCount = (int)fileHeader.meshCount;
 	int pointLightCount = (int)fileHeader.pointLightCount;
 	int spotLightCount = (int)fileHeader.spotLightCount;
@@ -81,53 +81,56 @@ void Map::loadMap(std::string mapName)
 	int materialCount = (int)fileHeader.materialCount;
 	int textureCount = (int)fileHeader.textureCount;
 	int portalCount = (int)fileHeader.portalCount;
-
+	
 	meshes = new StaticMesh[meshCount];
-
+	
 	for (int i = 0; i < meshCount; i++)
 	{
 		MeshDataHDR meshHeader;
 		inFile.read((char*)&meshHeader, sizeof(meshHeader));
-
+	
 		int objType = meshHeader.objectType;
 		int instanceCount = meshHeader.instanceCount;
 		int materialCount = meshHeader.materialCount;
 		int indicesCount = meshHeader.indicesCount;
 		int vertexCount = meshHeader.vertexCount;
 		int bbCount = meshHeader.bbCount;
-
+	
 		int* roomIDs = new int[instanceCount];
 		meshes[i].init(instanceCount);
 		inFile.read((char*)roomIDs, sizeof(int)*instanceCount);
 		meshes[i].setRoomIDs(roomIDs);
-
+	
 		glm::mat4* matrices = new glm::mat4[instanceCount];
-
+	
 		inFile.read((char*)matrices, sizeof(glm::mat4)*instanceCount);
 		meshes[i].setMatrices(matrices);
-
+	
 		int* materialIndices = new int[materialCount];
 		inFile.read((char*)materialIndices, sizeof(int)*materialCount);
 		delete[]materialIndices;
-
+	
 		int* materialOffsets = new int[materialCount];
 		inFile.read((char*)materialOffsets, sizeof(int)*materialCount);
 		delete[]materialOffsets;
-
+	
 		int* indices = new int[indicesCount];
 		inFile.read((char*)indices, sizeof(int)*indicesCount);
 		meshes[i].setIndices(indices, indicesCount);
-
+	
 		Vertex11* verts = new Vertex11[vertexCount];
 		inFile.read((char*)verts, sizeof(Vertex11)*vertexCount);
 		meshes[i].setVertices((float*&)verts, vertexCount);
-
+	
 		AAB* bounds = new AAB[instanceCount];
 		inFile.read((char*)bounds, sizeof(AAB)*instanceCount);
 		delete [] bounds;
-
+	
 		bbPoints = new BBPoint[bbCount];
 		inFile.read((char*)bbPoints, sizeof(BBPoint)*bbCount);
+	
+		// temp fix for leaks
+		delete[] bbPoints;
 
 		for (int i = 0; i < instanceCount; i++)
 		{
@@ -137,23 +140,23 @@ void Map::loadMap(std::string mapName)
 			delete[] bbMats;
 		}
 	}
-
+	
 	PointLight* pl = new PointLight[pointLightCount];
 	inFile.read((char*)pl, sizeof(PointLight) * pointLightCount);
 	delete[] pl;
-
+	
 	SpotLightH* sl = new SpotLightH[spotLightCount];
 	inFile.read((char*)sl, sizeof(SpotLightH) * spotLightCount);
 	delete[] sl;
-
+	
 	DirectionalLight* dl = new DirectionalLight[dirLightCount];
 	inFile.read((char*)dl, sizeof(DirectionalLight) * dirLightCount);
 	delete[] dl;
-
+	
 	Material* mats = new Material[materialCount];
 	inFile.read((char*)mats, sizeof(Material) * materialCount);
 	delete[]mats;
-
+	
 	TextureHDR* textHeader = new TextureHDR[textureCount];
 	TextureData* texData = new TextureData[textureCount];
 	inFile.read((char*)textHeader, sizeof(TextureHDR) * textureCount);
@@ -166,11 +169,11 @@ void Map::loadMap(std::string mapName)
 	}
 	delete[] texData;
 	delete[] textHeader;
-
+	
 	PortalData* portalData = new PortalData[portalCount];
 	inFile.read((char*)portalData, sizeof(PortalData) * portalCount);
 	delete[] portalData;
-
+	
 	inFile.close();
 
 }

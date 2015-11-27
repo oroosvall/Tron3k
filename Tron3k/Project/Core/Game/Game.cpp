@@ -22,6 +22,9 @@ void Game::release()
 			}
 		}
 	}
+
+	physics->release();
+
 	delete templateRole;
 	delete this; // yes this is safe
 }

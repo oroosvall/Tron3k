@@ -837,7 +837,10 @@ void Core::removeWindow()
 
 void Core::initPipeline()
 {
-	renderPipe = CreatePipeline();
+	if (!renderPipe)
+	{
+		renderPipe = CreatePipeline();
+	}
 	if (!renderPipe->init(winX, winY))
 	{
 		console.printMsg("Error: Pipeline could not be created!", "System", 'S');
