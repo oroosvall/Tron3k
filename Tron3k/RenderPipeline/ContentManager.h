@@ -48,7 +48,10 @@ public:
 
 	void renderPlayer(int playerID, glm::mat4 world);
 
+	int getPortalID(glm::vec3 oldpos, glm::vec3 newpos) { return testMap.getChunkID(oldpos, newpos); }
+
 	void renderPortals(GLuint shader, GLuint world);
+
 
 	void loadChunk();
 	void releaseChunk();

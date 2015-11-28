@@ -169,9 +169,13 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	cam.setViewMat(regularShader, viewMat);
 	cam.setViewProjMat(regularShader, viewProjMat);
 
+	gBuffer->eyePosLast = gBuffer->eyePos;
 	gBuffer->eyePos.x = x;
 	gBuffer->eyePos.y = y;
 	gBuffer->eyePos.z = z;
+
+	//returns room id, new value if we went though a portal
+	contMan.getPortalID(gBuffer->eyePosLast, gBuffer->eyePos);
 
 	glProgramUniform1i(regularShader, uniformTextureLocation, 0);
 	glProgramUniform1i(regularShader, uniformNormalLocation, 1);

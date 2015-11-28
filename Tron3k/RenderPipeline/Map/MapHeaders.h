@@ -70,6 +70,8 @@ struct PortalData
 	uint32_t portalID;
 	uint32_t bridgedRooms[2];
 	glm::vec3 positions[4];
+	glm::vec3 normal;
+	float A, B, C, D;
 };
 
 struct AAB

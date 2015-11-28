@@ -34,6 +34,7 @@ public:
 	glm::vec3 eyePos;
 
 	//Portal shader uniforms
+	glm::vec3 eyePosLast;
 	GLuint portal_vp;
 	GLuint portal_model;
 private:
