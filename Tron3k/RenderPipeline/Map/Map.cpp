@@ -16,6 +16,31 @@ void Map::init()
 	{
 		tex[i].textureID = loadTexture("GameFiles/testfiles/" + std::string(tex[i].textureName));
 	}
+
+	//init test portal
+								//     1 --------- 2
+	p.portalID = 0;				//	   |           |
+	p.bridgedRooms[0] = 1;		//	   |           |
+	p.bridgedRooms[1] = 2;		//     4 --------- 3
+	//1
+	p.positions[0].x = 5;
+	p.positions[0].y = -10;
+	p.positions[0].z = 10;
+	// 2
+	p.positions[1].x = 10;
+	p.positions[1].y = -10;
+	p.positions[1].z = 10;
+	// 3
+	p.positions[2].x = 10;
+	p.positions[2].y = -15;
+	p.positions[2].z = 10;
+	// 4
+	p.positions[3].x = 5;
+	p.positions[3].y = -15;
+	p.positions[3].z = 10;
+
+	//to draw, setup the drawing object
+	portal.Init(p.positions[3], p.positions[1]);
 }
 
 void Map::release()
@@ -76,7 +101,6 @@ void Map::render(GLuint shader, GLuint shaderLocation, GLuint texture, GLuint no
 
 			glDrawElements(GL_TRIANGLES, meshes[i].indexCount, GL_UNSIGNED_INT, 0);
 		}
-		
 	}
 }
 
@@ -201,32 +225,6 @@ int Map::getChunkID(glm::vec3 oldPos, glm::vec3 newPos)
 {
 	//intersection test vs all portals in this room
 
-	PortalData p;				//     1 --------- 2
-	p.portalID = 0;				//	   |           |
-	p.bridgedRooms[0] = 1;		//	   |           |
-	p.bridgedRooms[1] = 2;		//     4 --------- 3
-
-	//define corners
-	//1
-	p.positions[0].x = 5;
-	p.positions[0].y = 10;
-	p.positions[0].z = 10;
-
-	// 2
-	p.positions[1].x = 10;
-	p.positions[1].y = 10;
-	p.positions[1].z = 10;
-
-	// 3
-	p.positions[2].x = 10;
-	p.positions[2].y = -10;
-	p.positions[2].z = 10;
-
-	// 4
-	p.positions[3].x = 5;
-	p.positions[3].y = -10;
-	p.positions[3].z = 10;
-
 	//Extract Plane formula http://answers.google.com/answers/threadview?id=18979
 	float A, B, C, D;
 
@@ -273,4 +271,10 @@ int Map::getChunkID(glm::vec3 oldPos, glm::vec3 newPos)
 
 
 	return 0;
+}
+
+void Map::renderPortals()
+{
+	portal.BindVertData();
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }

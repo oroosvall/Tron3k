@@ -19,9 +19,6 @@
     <Filter Include="Source Files\Buffers">
       <UniqueIdentifier>{be95b5bd-7528-41db-8131-c148de519c11}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Camera">
-      <UniqueIdentifier>{d672e48f-2d88-4d01-af47-f86ce387fd15}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Manager">
       <UniqueIdentifier>{e74ac6cc-17b3-4c4d-8775-04ffe1c8c6fb}</UniqueIdentifier>
     </Filter>
@@ -34,6 +31,9 @@
     <Filter Include="Source Files\Mesh">
       <UniqueIdentifier>{f55c1ad0-a0c0-48c7-a50a-fb8a95167787}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Buffers\Camera">
+      <UniqueIdentifier>{d672e48f-2d88-4d01-af47-f86ce387fd15}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RenderPipeline.cpp">
@@ -43,7 +43,7 @@
       <Filter>Source Files\Text</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
-      <Filter>Source Files\Camera</Filter>
+      <Filter>Source Files\Buffers\Camera</Filter>
     </ClCompile>
     <ClCompile Include="BlitQuad.cpp">
       <Filter>Source Files</Filter>
@@ -80,7 +80,7 @@
       <Filter>Source Files\Text</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>Source Files\Camera</Filter>
+      <Filter>Source Files\Buffers\Camera</Filter>
     </ClInclude>
     <ClInclude Include="Shader.h">
       <Filter>Source Files</Filter>

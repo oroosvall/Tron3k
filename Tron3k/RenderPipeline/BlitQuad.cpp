@@ -5,15 +5,14 @@ BlitQuad::BlitQuad()
 
 }
 
-void BlitQuad::Init(GLuint* shaderProgram, vec2 bl, vec2 tr)
+void BlitQuad::Init(vec3 bl, vec3 tr)
 {
-	gShaderProgram = shaderProgram;
 
 	TriangleVertex* vex = new TriangleVertex[6];
-	vex[0] = { vec3(bl.x, tr.y, 0), vec2(0, 1) };
-	vex[1] = { vec3(bl.x, bl.y, 0), vec2(0, 0) };
-	vex[2] = { vec3(tr.x, tr.y, 0), vec2(1, 1) };
-	vex[3] = { vec3(tr.x, bl.y, 0), vec2(1, 0) };
+	vex[0] = { vec3(bl.x, tr.y, bl.z), vec2(0, 1) };
+	vex[1] = { vec3(bl.x, bl.y, bl.z), vec2(0, 0) };
+	vex[2] = { vec3(tr.x, tr.y, tr.z), vec2(1, 1) };
+	vex[3] = { vec3(tr.x, bl.y, tr.z), vec2(1, 0) };
 
 	glGenBuffers(1, &vertexDataId);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexDataId);

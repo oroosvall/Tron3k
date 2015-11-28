@@ -76,16 +76,26 @@ void Gbuffer::init(int x, int y, int nrTex, bool depth)
 	uniformBitsList[3] = glGetUniformLocation(*shaderPtr, "Normal");
 	uniformBitsList[4] = glGetUniformLocation(*shaderPtr, "GlowMap");;
 	uniformUse = glGetUniformLocation(*shaderPtr, "Use");
+	
+
+	if (!portal_shaderPtr)
+	{
+		throw;
+	}
+
+	//portal shader init
+	portal_vp = glGetUniformLocation(*portal_shaderPtr, "VP");
+	portal_model = glGetUniformLocation(*portal_shaderPtr, "world");
 
 
 	blitQuads = new BlitQuad[6];
-	blitQuads[0].Init(shaderPtr, vec2(-1, -1), vec2(-0.6, -0.6));
-	blitQuads[1].Init(shaderPtr, vec2(-0.6, -1), vec2(-0.2, -0.6));
-	blitQuads[2].Init(shaderPtr, vec2(-0.2, -1), vec2(0.2, -0.6));
-	blitQuads[3].Init(shaderPtr, vec2(0.2, -1), vec2(0.6, -0.6));
-	blitQuads[4].Init(shaderPtr, vec2(0.6, -1), vec2(1, -0.6));
-	blitQuads[5].Init(shaderPtr, vec2(-1, -1), vec2(1, 1));
-
+	blitQuads[0].Init(vec3(-1, -1, 0), vec3(-0.6, -0.6, 0 ));
+	blitQuads[1].Init(vec3(-0.6, -1, 0), vec3(-0.2, -0.6, 0));
+	blitQuads[2].Init(vec3(-0.2, -1, 0), vec3(0.2, -0.6, 0));
+	blitQuads[3].Init(vec3(0.2, -1, 0), vec3(0.6, -0.6, 0));
+	blitQuads[4].Init(vec3(0.6, -1, 0), vec3(1, -0.6, 0));
+	blitQuads[5].Init(vec3(-1, -1, 0), vec3(1, 1, 0));
+	
 	initialized = true;
 
 	initLight();
@@ -118,6 +128,8 @@ Gbuffer::~Gbuffer()
 
 	glDeleteShader(*shaderPtr);
 	delete shaderPtr;
+	glDeleteShader(*portal_shaderPtr);
+	delete portal_shaderPtr;
 }
 
 void Gbuffer::resize(int x, int y)
@@ -182,13 +194,13 @@ void Gbuffer::render(/*glm::vec3 playerPos, glm::vec3 playerDir*/)
 		glProgramUniform1i(*shaderPtr, uniformUse, n);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	}
+
 }
 
 void Gbuffer::clearLights()
 {
 	nrOfLights = 0;
 }
-
 
 void Gbuffer::generate(int x, int y)
 {

@@ -78,7 +78,7 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	cam.init();
 
 	gBuffer = new Gbuffer();
-	gBuffer->shaderPtr = new GLuint();
+	
 
 	//test = new TextObject("Swag", 11, glm::vec2(10, 10));
 
@@ -94,20 +94,29 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 		printf("glDebugMessageCallback not available\n");
 #endif
 
-	std::string shaderNamesDeffered[] = { "GameFiles/Shaders/BlitLightShader_vs.glsl", "GameFiles/Shaders/BlitLightShader_fs.glsl" };
-	GLenum shaderTypesDeffered[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
-	
-	CreateProgram(*gBuffer->shaderPtr, shaderNamesDeffered, shaderTypesDeffered, 2);
-
-	std::string shaderNamesRegular[] = { "GameFiles/Shaders/RegularShader_vs.glsl", "GameFiles/Shaders/RegularShader_gs.glsl", "GameFiles/Shaders/RegularShader_fs.glsl" };
-	GLenum shaderTypesRegular[] = { GL_VERTEX_SHADER, GL_GEOMETRY_SHADER, GL_FRAGMENT_SHADER };
-
 	glClearColor(0.4f, 0.4f, 0.4f, 1);
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
 	glDepthMask(GL_TRUE);
 
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_CULL_FACE); 
+
+	gBuffer->shaderPtr = new GLuint();
+	std::string shaderNamesDeffered[] = { "GameFiles/Shaders/BlitLightShader_vs.glsl", "GameFiles/Shaders/BlitLightShader_fs.glsl" };
+	GLenum shaderTypesDeffered[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
+	CreateProgram(*gBuffer->shaderPtr, shaderNamesDeffered, shaderTypesDeffered, 2);
+
+	//portal shader
+	gBuffer->portal_shaderPtr = new GLuint();
+	std::string shaderPortalRender[] = { "GameFiles/Shaders/portal_vs.glsl", "GameFiles/Shaders/portal_fs.glsl" };
+	GLenum shaderTypesPortal[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
+	CreateProgram(*gBuffer->portal_shaderPtr, shaderPortalRender, shaderTypesPortal, 2);
+
+
+	std::string shaderNamesRegular[] = { "GameFiles/Shaders/RegularShader_vs.glsl", "GameFiles/Shaders/RegularShader_gs.glsl", "GameFiles/Shaders/RegularShader_fs.glsl" };
+	GLenum shaderTypesRegular[] = { GL_VERTEX_SHADER, GL_GEOMETRY_SHADER, GL_FRAGMENT_SHADER };
 	CreateProgram(regularShader, shaderNamesRegular, shaderTypesRegular, 3);
 
 	worldMat = glGetUniformLocation(regularShader, "WorldMatrix"); //worldMat
@@ -134,8 +143,6 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 	contMan.init();
 	
-	glEnable(GL_CULL_FACE); //TEMPORARY PLZ MOVE THIS SOMEWHERE APPROPRIATE OR DELETE THIS
-	
 	return true;
 }
 
@@ -161,6 +168,7 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	//set camera matrixes
 	cam.setViewMat(regularShader, viewMat);
 	cam.setViewProjMat(regularShader, viewProjMat);
+
 	gBuffer->eyePos.x = x;
 	gBuffer->eyePos.y = y;
 	gBuffer->eyePos.z = z;
@@ -201,6 +209,17 @@ void RenderPipeline::render()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	gBuffer->render();
+
+	//if rendering portals
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_CULL_FACE);
+	glEnable(GL_BLEND);
+	cam.setViewProjMat(*gBuffer->portal_shaderPtr, gBuffer->portal_vp);
+	contMan.renderPortals(*gBuffer->portal_shaderPtr, gBuffer->portal_model);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	glDisable(GL_BLEND);
+
 }
 
 void* RenderPipeline::getView()

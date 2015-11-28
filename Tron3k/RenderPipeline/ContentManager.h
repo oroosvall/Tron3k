@@ -48,6 +48,8 @@ public:
 
 	void renderPlayer(int playerID, glm::mat4 world);
 
+	void renderPortals(GLuint shader, GLuint world);
+
 	void loadChunk();
 	void releaseChunk();
 

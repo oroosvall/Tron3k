@@ -253,6 +253,14 @@ void ContentManager::renderPlayer(int playerID, glm::mat4 world)
 	}
 }
 
+void ContentManager::renderPortals(GLuint shader, GLuint world)
+{
+	glUseProgram(shader);
+	glm::mat4 alreadyinworldpace;
+	glProgramUniformMatrix4fv(shader, world, 1, GL_FALSE, &alreadyinworldpace[0][0]);
+	testMap.renderPortals();
+}
+
 std::vector<std::vector<float>> ContentManager::getMeshBoxes()
 {
 	std::vector<std::vector<float>> size;

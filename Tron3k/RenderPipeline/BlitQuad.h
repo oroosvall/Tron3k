@@ -13,7 +13,6 @@ class BlitQuad
 private:
 	GLuint vertexDataId;
 	GLuint gVertexAttribute;
-	GLuint* gShaderProgram;
 
 	struct TriangleVertex
 	{
@@ -23,7 +22,7 @@ private:
 public:
 	BlitQuad();
 	void BindVertData();
-	void Init(GLuint* shaderProgram, vec2 botLeft, vec2 topRight);
+	void Init(vec3 botLeft, vec3 topRight);
 };
 
 #endif

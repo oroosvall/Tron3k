@@ -6,6 +6,7 @@
 #include "../Texture.h"
 #include <glm\glm.hpp>
 #include <string>
+#include "../BlitQuad.h" //used for rendering portals
 
 struct TextureStruct
 {
@@ -31,6 +32,8 @@ private:
 
 	int currentChunk;
 
+	PortalData p;
+	BlitQuad portal;
 public:
 	
 	void init();
@@ -41,6 +44,8 @@ public:
 	void loadMap(std::string mapName);
 
 	int getChunkID(glm::vec3 oldPos, glm::vec3 newPos);
+
+	void renderPortals();
 
 };
 

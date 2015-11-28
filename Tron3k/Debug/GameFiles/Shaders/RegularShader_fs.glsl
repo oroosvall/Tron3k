@@ -29,15 +29,14 @@ vec4 CalcBumpedNormal()
   mat3 TBN = mat3(tan, bitangent, Normal);
   newnormal.xyz = TBN * newnormal.xyz;
   newnormal.xyz = normalize(newnormal.xyz);
-  
+  newnormal.w = 1;
   return newnormal;
  }
 
 void main()									
 {			
-	WorldPosOut	= vec4(Position, 0.0);					
+	WorldPosOut	= vec4(Position, 1.0);					
 	DiffuseOut	= texture(textureSample, vec2(UV.x, 1-UV.y));	
 	NormalOut = CalcBumpedNormal();
-	GlowMap = texture(glowSpecSample, vec2(UV.x, 1-UV.y)) * staticGlowIntensity;
-	GlowMap +=  vec4((1.0 - normalMap.w) * dynamicGlowColor, 0);
+	GlowMap = (texture(glowSpecSample, vec2(UV.x, 1-UV.y)) * staticGlowIntensity) + vec4((1.0 - normalMap.w) * dynamicGlowColor, 0);
 }

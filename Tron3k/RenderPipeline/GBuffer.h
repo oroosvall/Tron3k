@@ -27,10 +27,15 @@ public:
 	void pushLights(SpotLight* light, int nrLight);
 
 	GLuint* shaderPtr;
+	GLuint* portal_shaderPtr;
 
 	//Light variables
 	int nrOfLights;
 	glm::vec3 eyePos;
+
+	//Portal shader uniforms
+	GLuint portal_vp;
+	GLuint portal_model;
 private:
 
 	bool initialized;
@@ -54,6 +59,7 @@ private:
 	BlitQuad* blitQuads;
 
 	int maxLights;
+
 };
 
 #endif
