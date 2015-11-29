@@ -7,6 +7,9 @@
 #include <glm\glm.hpp>
 #include <string>
 #include "../BlitQuad.h" //used for rendering portals
+#include <vector>
+
+using std::vector;
 
 struct TextureStruct
 {
@@ -32,8 +35,7 @@ private:
 
 	int currentChunk;
 
-	PortalData p;
-	BlitQuad portal;
+	vector<PortalData> portals;
 public:
 	
 	void init();

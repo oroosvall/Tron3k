@@ -19,10 +19,12 @@ private:
 		vec3 pos; 
 		vec2 uv;
 	};
+	void createData(TriangleVertex* vex);
 public:
 	BlitQuad();
 	void BindVertData();
 	void Init(vec3 botLeft, vec3 topRight);
+	void Init(vec3 topLeft, vec3 topRight, vec3 botRight, vec3 botLeft);
 };
 
 #endif

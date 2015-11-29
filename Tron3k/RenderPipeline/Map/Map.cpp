@@ -17,50 +17,11 @@ void Map::init()
 		tex[i].textureID = loadTexture("GameFiles/testfiles/" + std::string(tex[i].textureName));
 	}
 
+	portals.push_back(PortalData());
+	portals[0].init(0, 0, 1, vec3(5, -10, 10), vec3(10, -10, 10), vec3(10, -15, 10), vec3(5, -15, 10));
 
-	//init test portal
-								//     1 --------- 2
-	p.portalID = 0;				//	   |           |
-	p.bridgedRooms[0] = 1;		//	   |           |
-	p.bridgedRooms[1] = 2;		//     4 --------- 3
-
-#define pp p.positions
-
-	//1
-	pp[0].x = 5;
-	pp[0].y = -10;
-	pp[0].z = 10;
-	//2
-	pp[1].x = 10;
-	pp[1].y = -10;
-	pp[1].z = 10;
-	//3
-	pp[2].x = 10;
-	pp[2].y = -15;
-	pp[2].z = 10;
-	//4
-	pp[3].x = 5;
-	pp[3].y = -15;
-	pp[3].z = 10;
-
-	//get two vectors
-	vec3 _vec1 = pp[1] - pp[0];
-	vec3 _vec2 = pp[3] - pp[0];
-	p.normal = cross(_vec1, _vec2);
-
-	p.A = p.normal.x;
-	p.B = p.normal.y;
-	p.C = p.normal.z;
-
-	p.normal = normalize(p.normal);
-
-	p.D = p.A * pp[0].x + p.B * pp[0].y + p.C * pp[0].z;
-
-	//to draw, setup the drawing object
-	portal.Init(p.positions[3], p.positions[1]);
-
-#undef pp
-
+	portals.push_back(PortalData());
+	portals[1].init(0, 0, 1, vec3(5, 15.1, 15), vec3(10, 15.1, 15), vec3(10, 15.2, 10), vec3(5, 15.2, 10));
 }
 
 void Map::release()
@@ -243,86 +204,28 @@ void Map::loadMap(std::string mapName)
 
 int Map::getChunkID(glm::vec3 oldPos, glm::vec3 newPos)
 {
-	//intersection test vs all portals in this room
+	vec3 dir = newPos - oldPos;
+	float len = length(dir);
+	dir = normalize(dir);
 
-	//Extract Plane formula http://answers.google.com/answers/threadview?id=18979
-
-#define pp p.positions
-
-	//Ray origin = oldPos
-	//Ray direction = Rd
-	glm::vec3 rd = newPos - oldPos;
-	float len = length(rd);
-	if (len == 0) // we didnt move
-		return currentChunk;
-	rd = glm::normalize(rd); // not sure if i should notmalize or not
-
-
-	float denom = dot(p.normal, rd);
-
-	if (length(denom) > 0.0001f) 
-	{
-		float t = dot((p.positions[0] - oldPos), p.normal) / denom;
-		if (t >= 0) 
+	for (int n = 0; n < portals.size(); n++)
+		if (portals[n].intersects(oldPos, dir, len))
 		{
-			if (length(newPos - oldPos) > t) //went though plane
-			{
-				//check if the value is within the portal
-				vec3 inter = oldPos + t * rd;
+			if (portals[n].bridgedRooms[0] == currentChunk)
+				currentChunk = portals[n].bridgedRooms[1];
+			else
+				currentChunk = portals[n].bridgedRooms[0];
 
-				if (inter.y < p.positions[0].y && inter.y > p.positions[3].y)
-				{
-					vec3 _v1 = p.positions[1] - p.positions[0]; //static data 
-					vec3 _v3 = p.positions[3] - p.positions[2]; //static data
-					vec3 _v4 = inter - p.positions[0];
-					vec3 _v5 = inter - p.positions[2];
+			printf("Now in room %d \n", currentChunk);
 
-					_v1 = normalize(_v1); //static data 
-					_v3 = normalize(_v3); //static data 
-					_v4 = normalize(_v4);
-					_v5 = normalize(_v5);
-
-					float test1 = dot(_v1, _v4);
-					float test2 = dot(_v3, _v5);
-
-					if(test1 > 0.0001 && test2 > 0.0001)
-						printf("went though portal \n");
-				}
-			}
+			return currentChunk;
 		}
-	}
-
-#undef pp
 
 	return currentChunk;
-
-
-
-
-
-
-	//intersection point  R(t) = (x0 + xd*t, y0 + yd*t, z0 + zd*t).
-	//glm::vec3 interPos = glm::vec3(oldPos.x * rd.x * t, oldPos.y * rd.y * t, oldPos.z * rd.z * t);
-	//glm::vec3 V1 = pp[1] - pp[0]; 
-	//glm::vec3 V3 = pp[3] - pp[2]; 
-	//glm::vec3 V4 = interPos - pp[0]; // 1st corenr to interpoint
-	//glm::vec3 V5 = interPos - pp[2]; // 3rd corner to interpoint
-	//glm::normalize(V1);
-	//glm::normalize(V3);
-	//glm::normalize(V4);
-	//glm::normalize(V5);
-	////V1 dot V4 and V3 dot V5. If both are non - negative, then the point is in the rectangle.
-	//float test1 = dot(V1, V4);
-	//float test2 = dot(V3, V5);
-	//
-	//if (test1 > 0 && test2 > 0)
-	//	int k = 222;
-
-
 }
 
 void Map::renderPortals()
 {
-	portal.BindVertData();
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	for (int n = 0; n < portals.size(); n++)
+		portals[n].render();
 }
