@@ -18,10 +18,10 @@ void Map::init()
 	}
 
 	portals.push_back(PortalData());
-	portals[0].init(0, 0, 1, vec3(5, -10, 10), vec3(10, -10, 10), vec3(10, -15, 10), vec3(5, -15, 10));
+	portals[0].init(0, 0, 1, vec3(5, -10, 10), vec3(10, -15, 10), vec3(5, -20, 10), vec3(0, -15, 10));
 
 	portals.push_back(PortalData());
-	portals[1].init(0, 0, 1, vec3(5, 15.1, 15), vec3(10, 15.1, 15), vec3(10, 15.2, 10), vec3(5, 15.2, 10));
+	portals[1].init(0, 0, 1, vec3(5, 15., 15), vec3(10, 15., 15), vec3(10, 15, 10), vec3(5, 15, 10));
 }
 
 void Map::release()
