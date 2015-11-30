@@ -98,7 +98,7 @@ int SoundPlayer::playExternalSound(int sound, float x, float y, float z)
 	sf::Listener::setDirection(playerDir.x, playerDir.y, playerDir.z);			//Set the direction of the player
 
 	sounds[nrOfSoundsPlaying].setMinDistance(10.0f);		//Set the sound's distance it travels before it starts to attenuate. Could be passed in through a parameter.
-	sounds[nrOfSoundsPlaying].setPosition(0, 0, 0);			//Set the sound's position in the world. Could be passed in through a parameter.
+	sounds[nrOfSoundsPlaying].setPosition(x, y, z);			//Set the sound's position in the world. Could be passed in through a parameter.
 	sounds[nrOfSoundsPlaying].setBuffer(soundList[sound]);
 	sounds[nrOfSoundsPlaying].setVolume(soundVolume);
 	sounds[nrOfSoundsPlaying].play();
