@@ -2,7 +2,10 @@
 
 layout(location = 0) in float dist;
 
-out vec4 fragment_color;
+layout (location = 1) out vec4 WorldPosOut;   
+layout (location = 2) out vec4 DiffuseOut;     
+layout (location = 3) out vec4 NormalOut;     
+layout (location = 4) out vec4 GlowMap;
 
 void main () 
 {
@@ -13,6 +16,9 @@ void main ()
 		transp = 0.1;
 	else
 		transp =  1 - (transp / maxlen);
-
-    fragment_color = vec4((1 - transp) / 1.5 , 0 , transp / 2, 0.25 + transp / 4);
+  
+	WorldPosOut	= vec4(0);
+	DiffuseOut = vec4((1 - transp) / 1.5 , 0 , transp / 2, 0.25 + transp / 4);	
+	NormalOut = vec4(0);
+	GlowMap = vec4(0);
 }

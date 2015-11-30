@@ -168,6 +168,7 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	//set camera matrixes
 	cam.setViewMat(regularShader, viewMat);
 	cam.setViewProjMat(regularShader, viewProjMat);
+	cam.setViewProjMat(*gBuffer->portal_shaderPtr, gBuffer->portal_vp);
 
 	gBuffer->eyePosLast = gBuffer->eyePos;
 	gBuffer->eyePos.x = x;
