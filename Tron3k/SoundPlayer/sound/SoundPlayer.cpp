@@ -94,7 +94,6 @@ int SoundPlayer::playUserGeneratedSound(int sound)
 
 int SoundPlayer::playExternalSound(int sound, float x, float y, float z)
 {
-	//sf::Listener::setPosition(playerPosX, playerPosY, playerPosZ);			//Set the position of the player
 	sf::Listener::setDirection(playerDir.x, playerDir.y, -playerDir.z);			//Set the direction of the player
 
 	sounds[nrOfSoundsPlaying].setMinDistance(10.0f);		//Set the sound's distance it travels before it starts to attenuate. Could be passed in through a parameter.

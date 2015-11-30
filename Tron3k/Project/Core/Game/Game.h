@@ -32,7 +32,7 @@ private:
 	void removeConIDfromTeams(int conID);
 
 	Role* templateRole;
-	string loadedRoles[NROFROLES][NROFREAD];
+	string loadedRoles[NROFROLES][NROFREADPROPERTIES];
 
 	int gameState;
 

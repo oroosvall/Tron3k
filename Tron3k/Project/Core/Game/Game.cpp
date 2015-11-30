@@ -34,7 +34,6 @@ Game::Game()
 
 }
 
-
 void Game::init(int max_connections, int state)
 {
 	max_con = max_connections;
@@ -64,7 +63,7 @@ void Game::loadRoles()
 	ifstream roleFile;
 	for (int i = 0; i < NROFROLES; i++)
 	{
-		for (int y = 0; y < NROFREAD; y += 5)
+		for (int y = 0; y < NROFREADPROPERTIES; y += 5)
 		{
 			roleFile.open(roles[i]);
 
@@ -156,7 +155,7 @@ void Game::update(float dt)
 		for (int c = 0; c < bullets[i].size(); c++)
 		{
 			int msg = bullets[i][c]->update(dt);
-			if (msg == 1)
+			if (msg == 1)		//Bullet is dead
 			{
 				//support for removing bullets
 				//delete bullets[i][c];
