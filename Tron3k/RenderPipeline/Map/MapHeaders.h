@@ -92,8 +92,6 @@ struct PortalData
 	vec3 v3;
 	vec3 v4;
 
-	bool upsideDown;
-
 	//init with bottom left and top right corners
 	void init(uint32_t _portalID, uint32_t room1, uint32_t room2, vec3 topleft, vec3 topright, vec3 botright, vec3 botleft)
 	{
@@ -105,10 +103,6 @@ struct PortalData
 		positions[1] = topright;
 		positions[2] = botright;
 		positions[3] = botleft;
-
-		upsideDown = false;
-		if (topleft.y < botleft.y)
-			upsideDown = true;
 
 		v1 = normalize(positions[1] - positions[0]);
 		v2 = normalize(positions[2] - positions[1]);
@@ -135,28 +129,27 @@ struct PortalData
 					//check if the intersection is within the portal
 					vec3 inter = origin + t * dir;
 
-					bool validy = false;
+					// XZ CHECK
+		
+					vec3 v5 = normalize(inter - positions[0]);
+					vec3 v6 = normalize(inter - positions[2]);
 
-					if (upsideDown == false)
+					float test1 = dot(v1, v5);
+					float test2 = dot(v3, v6);
+
+					if (test1 > 0.0001 && test2 > 0.0001)
 					{
-						if (inter.y < positions[0].y && inter.y > positions[3].y)
-							validy = true;
-					}
-					else
-						if (inter.y > positions[0].y && inter.y < positions[3].y)
-							validy = true;
+						// Z check
 
-
-					if(validy)
-					{
-						vec3 v5 = normalize(inter - positions[0]);
-						vec3 v6 = normalize(inter - positions[2]);
-
-						float test1 = dot(v1, v5);
-						float test2 = dot(v3, v6);
+						v5 = normalize(inter - positions[1]);
+						v6 = normalize(inter - positions[3]);
+						test1 = dot(v2, v5);
+						test2 = dot(v4, v6);
 
 						if (test1 > 0.0001 && test2 > 0.0001)
+						{
 							return true;
+						}
 					}
 				}
 			}
