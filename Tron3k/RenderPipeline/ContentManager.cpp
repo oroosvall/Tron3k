@@ -152,8 +152,10 @@ ContentManager::~ContentManager()
 
 }
 
-void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation)
+void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation, GLuint portal_shader, GLuint portal_world)
 {
+	glUseProgram(shader);
+
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, textures[1].textureID);
 	glActiveTexture(GL_TEXTURE0 +1 );
@@ -189,6 +191,33 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 	
 		glDrawElements(GL_TRIANGLES, meshes[i].faceCount * 3, GL_UNSIGNED_SHORT, 0);
 	}
+
+	glUseProgram(portal_shader);
+	glm::mat4 alreadyinworldpace;
+	glProgramUniformMatrix4fv(portal_shader, portal_world, 1, GL_FALSE, &alreadyinworldpace[0][0]);
+
+	glDepthMask(GL_FALSE);
+	glDisable(GL_CULL_FACE);
+	glEnable(GL_BLEND);
+	GLuint test;
+	glGenQueries(1, &test);
+	glBeginQuery(GL_SAMPLES_PASSED, test);
+
+	testMap.portals[0].render();
+	testMap.portals[1].render();
+
+	GLint passed = 2222;
+	glEndQuery(GL_SAMPLES_PASSED);
+	glGetQueryObjectiv(test, GL_QUERY_RESULT, &passed);
+
+	if (passed == GL_FALSE)
+		int k = 33;
+	else if (passed > 0)
+		int k = 33;
+
+	glDepthMask(GL_TRUE);
+	glEnable(GL_CULL_FACE);
+	glDisable(GL_BLEND);
 }
 
 void ContentManager::renderPlayer(int playerID, glm::mat4 world)
@@ -251,14 +280,6 @@ void ContentManager::renderPlayer(int playerID, glm::mat4 world)
 
 		glDrawElements(GL_TRIANGLES, bullet.faceCount * 3, GL_UNSIGNED_SHORT, 0);
 	}
-}
-
-void ContentManager::renderPortals(GLuint shader, GLuint world)
-{
-	glUseProgram(shader);
-	glm::mat4 alreadyinworldpace;
-	glProgramUniformMatrix4fv(shader, world, 1, GL_FALSE, &alreadyinworldpace[0][0]);
-	testMap.renderPortals();
 }
 
 std::vector<std::vector<float>> ContentManager::getMeshBoxes()
