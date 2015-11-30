@@ -35,8 +35,9 @@ private:
 
 	int currentChunk;
 
-	vector<PortalData> portals;
+	
 public:
+	vector<PortalData> portals;
 	
 	void init();
 	void release();

@@ -44,7 +44,7 @@ public:
 	~ContentManager();
 	void init();
 
-	void renderChunks(GLuint shader, GLuint shaderLocation, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation);
+	void renderChunks(GLuint shader, GLuint shaderLocation, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation, GLuint portal_shader, GLuint portal_world);
 
 	void renderPlayer(int playerID, glm::mat4 world);
 

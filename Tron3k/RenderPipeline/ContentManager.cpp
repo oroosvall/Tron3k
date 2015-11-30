@@ -152,8 +152,27 @@ ContentManager::~ContentManager()
 
 }
 
-void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation)
+void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation, GLuint portal_shader, GLuint portal_world)
 {
+	//portal depth write test
+	testMap.portals[0].render();
+
+	glUseProgram(portal_shader);
+	glm::mat4 alreadyinworldpace;
+	glProgramUniformMatrix4fv(portal_shader, portal_world, 1, GL_FALSE, &alreadyinworldpace[0][0]);
+
+	GLuint test;
+	glGenQueries(1, &test);
+	glBeginQuery(GL_SAMPLES_PASSED, test);
+	
+	testMap.portals[0].render();
+
+
+
+
+
+	glUseProgram(shader);
+
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, textures[1].textureID);
 	glActiveTexture(GL_TEXTURE0 +1 );
@@ -189,6 +208,16 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 	
 		glDrawElements(GL_TRIANGLES, meshes[i].faceCount * 3, GL_UNSIGNED_SHORT, 0);
 	}
+
+	GLint passed = 2222;
+	glEndQuery(GL_SAMPLES_PASSED);
+	glGetQueryObjectiv(test, GL_QUERY_RESULT, &passed);
+
+	if (passed == GL_FALSE)
+		int k = 33;
+	else if (passed > 0)
+		int k = 33;
+	
 }
 
 void ContentManager::renderPlayer(int playerID, glm::mat4 world)

@@ -129,7 +129,7 @@ struct PortalData
 
 					if (test1 > 0.0001 && test2 > 0.0001)
 					{
-						// Z check
+						// Y check
 
 						v5 = normalize(inter - positions[1]);
 						v6 = normalize(inter - positions[3]);

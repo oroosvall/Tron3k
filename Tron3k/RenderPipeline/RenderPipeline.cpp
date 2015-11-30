@@ -199,14 +199,12 @@ void RenderPipeline::renderIni()
 
 void RenderPipeline::render()
 {
-	glUseProgram(regularShader);
-
 	//Glow values for world
 	glProgramUniform1f(regularShader, uniformStaticGlowIntensityLocation, mod((timepass / 5.0f), 1.0f));
 	glm::vec3 glowColor(mod((timepass / 1.0f), 1.0f), mod((timepass / 2.0f), 1.0f), mod((timepass / 3.0f), 1.0f));
 	glProgramUniform3fv(regularShader, uniformDynamicGlowColorLocation, 1, (GLfloat*)&glowColor[0]);
 
-	contMan.renderChunks(regularShader, worldMat, uniformTextureLocation, uniformNormalLocation, uniformGlowSpecLocation);
+	contMan.renderChunks(regularShader, worldMat, uniformTextureLocation, uniformNormalLocation, uniformGlowSpecLocation, *gBuffer->portal_shaderPtr, gBuffer->portal_model);
 	
 	//GBuffer Render
 	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
@@ -215,14 +213,14 @@ void RenderPipeline::render()
 	gBuffer->render();
 
 	//if rendering portals
-	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_CULL_FACE);
-	glEnable(GL_BLEND);
-	cam.setViewProjMat(*gBuffer->portal_shaderPtr, gBuffer->portal_vp);
-	contMan.renderPortals(*gBuffer->portal_shaderPtr, gBuffer->portal_model);
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
-	glDisable(GL_BLEND);
+	//glDisable(GL_DEPTH_TEST);
+	//glDisable(GL_CULL_FACE);
+	//glEnable(GL_BLEND);
+	//cam.setViewProjMat(*gBuffer->portal_shaderPtr, gBuffer->portal_vp);
+	//contMan.renderPortals(*gBuffer->portal_shaderPtr, gBuffer->portal_model);
+	//glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_CULL_FACE);
+	//glDisable(GL_BLEND);
 
 }
 
