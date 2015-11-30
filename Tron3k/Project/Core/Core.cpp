@@ -163,6 +163,7 @@ void Core::upRoam(float dt)
 		game->update(dt);
 
 		GetSound()->setLocalPlayerDir(game->getPlayer(0)->getDir());
+		GetSound()->setLocalPlayerPos(game->getPlayer(0)->getPos());
 
 		if (game->playerWantsToRespawn())
 		{
