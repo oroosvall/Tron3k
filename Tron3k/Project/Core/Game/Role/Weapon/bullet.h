@@ -6,6 +6,7 @@
 
 #include "../../GameDataIndex.h"
 
+
 class Bullet : public GameObject
 {
 protected:
@@ -14,6 +15,7 @@ protected:
 	glm::vec3 dir;
 	float vel;
 	int damage;
+	float ttl = 8;
 
 	int teamId;
 	int playerId;

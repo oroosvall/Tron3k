@@ -7,11 +7,11 @@ Role::Role()
 	movementSpeed = 0;
 	weapons[0].init(36, WEAPON_TYPE::PULSE_RIFLE, 0.5);
 }
-Role::Role(string inLoadedRoles[NROFROLES][NROFREAD])
+Role::Role(string inLoadedRoles[NROFROLES][NROFREADPROPERTIES])
 {
 	for (int i = 0; i < NROFROLES; i++)
 	{
-		for (int y = 0; y < NROFREAD; y++)
+		for (int y = 0; y < NROFREADPROPERTIES; y++)
 		{
 			loadedRoles[i][y] = inLoadedRoles[i][y];
 		}

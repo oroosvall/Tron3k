@@ -49,6 +49,7 @@ public:
 	virtual void setVolumeMusic(float volume);
 	virtual void setVolumeSound(float volume);
 	virtual void setLocalPlayerDir(glm::vec3 playerDir);
+	virtual void setLocalPlayerPos(glm::vec3 playerPos);
 	virtual int playMusic(int music);
 
 	virtual int playExternalSound(int sound, float posX, float posY, float posZ);

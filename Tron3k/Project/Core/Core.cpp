@@ -24,12 +24,11 @@ void Core::init()
 
 	serverRender = false;
 
-	//******************* TEMP *************************
 	InitSound(CreateSound());
 	GetSound()->playMusic(MUSIC::mainMenu);
 	GetSound()->enableSounds();
 	timepass = 0.0f;
-	//**************************************************
+	
 	current = Gamestate::START;
 	tick_timer = 0;
 }
@@ -164,6 +163,7 @@ void Core::upRoam(float dt)
 		game->update(dt);
 
 		GetSound()->setLocalPlayerDir(game->getPlayer(0)->getDir());
+		GetSound()->setLocalPlayerPos(game->getPlayer(0)->getPos());
 
 		if (game->playerWantsToRespawn())
 		{

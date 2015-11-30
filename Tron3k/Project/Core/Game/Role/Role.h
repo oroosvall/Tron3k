@@ -9,7 +9,7 @@
 using namespace std;
 
 enum ROLES { TRAPPER, DESTROYER, MOBILITY, BRUTE, MANIPULATOR, NROFROLES };
-enum PROPERTIES{HEALTH, MAINWEP, SECWEP, CONSUMABLE, MOVEMENTSPEED, NROFREAD};
+enum PROPERTIES{HEALTH, MAINWEP, SECWEP, CONSUMABLE, MOVEMENTSPEED, NROFREADPROPERTIES};
 
 class Role
 {
@@ -20,7 +20,7 @@ class Role
 		float movementSpeed;
 		string roles[NROFROLES];
 		
-		string loadedRoles[NROFROLES][NROFREAD];
+		string loadedRoles[NROFROLES][NROFREADPROPERTIES];
 
 		Weapon weapons[2];
 		Weapon pickup;
@@ -30,7 +30,7 @@ class Role
 
 	public:
 		Role();
-		Role(string inLoadedRoles[NROFROLES][NROFREAD]);
+		Role(string inLoadedRoles[NROFROLES][NROFREADPROPERTIES]);
 		~Role();
 
 		float getMovementSpeed();
