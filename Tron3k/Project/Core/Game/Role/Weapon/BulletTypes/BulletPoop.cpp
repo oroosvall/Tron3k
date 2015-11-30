@@ -35,8 +35,8 @@ int Poop::update(float dt)
 
 	updateWorldMat();
 	
-	ttl--;
-	if (ttl == 0)	//Bullet is no longer alive and should be removed
+	ttl -= dt;
+	if (ttl <= 0)	//Bullet is no longer alive and should be removed
 		return 1;
 
 	return 0;

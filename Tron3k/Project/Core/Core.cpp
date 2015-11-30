@@ -24,12 +24,11 @@ void Core::init()
 
 	serverRender = false;
 
-	//******************* TEMP *************************
 	InitSound(CreateSound());
 	GetSound()->playMusic(MUSIC::mainMenu);
 	GetSound()->enableSounds();
 	timepass = 0.0f;
-	//**************************************************
+	
 	current = Gamestate::START;
 	tick_timer = 0;
 }
