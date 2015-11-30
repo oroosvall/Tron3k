@@ -14,6 +14,7 @@ protected:
 	glm::vec3 dir;
 	float vel;
 	int damage;
+	int ttl = 5;
 
 	int teamId;
 	int playerId;

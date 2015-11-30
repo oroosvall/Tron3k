@@ -158,7 +158,8 @@ void Game::update(float dt)
 			int msg = bullets[i][c]->update(dt);
 			if (msg == 1)
 			{
-				delete bullets[i][c];
+				//support for removing bullets
+				//delete bullets[i][c];
 			}
 		}
 	}
