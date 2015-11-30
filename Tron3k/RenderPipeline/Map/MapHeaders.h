@@ -9,10 +9,13 @@ struct SharedFileHDR
 	uint32_t meshCount;
 	uint32_t pointLightCount;
 	uint32_t spotLightCount;
-	uint32_t dirLightCount;
 	uint32_t materialCount;
 	uint32_t textureCount;
 	uint32_t portalCount;
+	uint32_t capturePointCount;
+	uint32_t SPCountTeamA;
+	uint32_t SPCountTeamB;
+	uint32_t SPCountTeamFFA;
 };
 
 struct MeshDataHDR
@@ -27,25 +30,24 @@ struct MeshDataHDR
 
 struct PointLight
 {
-	float x, y, z;
 	float r, g, b;
 	float intensity;
-	float ax, ay, az;
+	float x, y, z;
+	float ambientIntensity;
+	float dx, dy, dz;
+	float coneAngle;
+	float ax, ay, az, aw;
 };
 
 struct SpotLightH
 {
+	float r, g, b;
+	float intensity;
 	float x, y, z;
+	float ambientIntensity;
 	float dx, dy, dz;
-	float r, g, b;
-	float intensity;
-};
-
-struct DirectionalLight
-{
-	float dx, dy, dz;
-	float r, g, b;
-	float intensity;
+	float coneAngle;
+	float ax, ay, az, aw;
 };
 
 struct Material
@@ -64,6 +66,14 @@ struct TextureHDR
 struct TextureData
 {
 	char* texturePath;
+};
+
+struct PortalDataRead
+{
+	uint32_t portalID;
+	uint32_t bridgedRooms[2];
+	glm::vec4 positions[4];
+	//glm::mat4 transform;
 };
 
 struct PortalData
@@ -171,5 +181,16 @@ struct BBPoint
 	Vertex4 BBPos[8];
 };
 
+struct CapturePoints
+{
+	uint32_t capturePoints;
+};
+
+struct SpawnPoint
+{
+	uint32_t roomID;
+	glm::mat4 transform;
+	float dx, dy, dz;
+};
 
 #endif

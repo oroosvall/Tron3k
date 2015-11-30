@@ -6,7 +6,7 @@ void Map::init()
 {
 	currentChunk = -1;
 
-	loadMap("GameFiles/TestFiles/Tron3k_map_1_textures.bin");
+	loadMap("GameFiles/TestFiles/Tron3k_map_3_allStatics.bin");
 
 	for (int i = 0; i < meshCount; i++)
 	{
@@ -101,10 +101,13 @@ void Map::loadMap(std::string mapName)
 	meshCount = (int)fileHeader.meshCount;
 	int pointLightCount = (int)fileHeader.pointLightCount;
 	int spotLightCount = (int)fileHeader.spotLightCount;
-	int dirLightCount = (int)fileHeader.dirLightCount;
 	int materialCount = (int)fileHeader.materialCount;
 	textureCount = (int)fileHeader.textureCount;
 	int portalCount = (int)fileHeader.portalCount;
+	int capCount = (int)fileHeader.capturePointCount;
+	int spTACount = (int)fileHeader.SPCountTeamA;
+	int spTBCount = (int)fileHeader.SPCountTeamB;
+	int spFFACount = (int)fileHeader.SPCountTeamFFA;
 	
 	meshes = new StaticMesh[meshCount];
 	
@@ -166,18 +169,6 @@ void Map::loadMap(std::string mapName)
 		}
 	}
 	
-	PointLight* pl = new PointLight[pointLightCount];
-	inFile.read((char*)pl, sizeof(PointLight) * pointLightCount);
-	delete[] pl;
-	
-	SpotLightH* sl = new SpotLightH[spotLightCount];
-	inFile.read((char*)sl, sizeof(SpotLightH) * spotLightCount);
-	delete[] sl;
-	
-	DirectionalLight* dl = new DirectionalLight[dirLightCount];
-	inFile.read((char*)dl, sizeof(DirectionalLight) * dirLightCount);
-	delete[] dl;
-	
 	materials= new Material[materialCount];
 	inFile.read((char*)materials, sizeof(Material) * materialCount);
 	
@@ -194,8 +185,16 @@ void Map::loadMap(std::string mapName)
 	}
 	delete[] textHeader;
 	
-	PortalData* portalData = new PortalData[portalCount];
-	inFile.read((char*)portalData, sizeof(PortalData) * portalCount);
+	PointLight* pl = new PointLight[pointLightCount];
+	inFile.read((char*)pl, sizeof(PointLight) * pointLightCount);
+	delete[] pl;
+
+	SpotLightH* sl = new SpotLightH[spotLightCount];
+	inFile.read((char*)sl, sizeof(SpotLightH) * spotLightCount);
+	delete[] sl;
+
+	PortalDataRead* portalData = new PortalDataRead[portalCount];
+	inFile.read((char*)portalData, sizeof(PortalDataRead) * portalCount);
 	delete[] portalData;
 	
 	inFile.close();
