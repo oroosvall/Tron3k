@@ -57,37 +57,19 @@ void Map::release()
 
 }
 
-void Map::render(GLuint shader, GLuint shaderLocation, GLuint texture, GLuint normal, GLuint spec)
+void Map::renderChunk(GLuint shader, GLuint shaderLocation, int chunkID)
 {
-	/*for (int i = 0; i < meshCount; i++)
-	{
-		for (int ins = 0; ins < meshes[i].instanceCount; ins++)
-		{
-
-			glProgramUniformMatrix4fv(shader, shaderLocation, 1, GL_TRUE, (GLfloat*)&meshes[i].worldMatrices[ins][0][0]);
-
-			glProgramUniform1i(shader, texture, 0);
-			glProgramUniform1i(shader, normal, 1);
-			glProgramUniform1i(shader, spec, 2);
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[i].material].textureMapIndex].textureID);
-			glActiveTexture(GL_TEXTURE0 + 1);
-			glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[i].material].normalMapIndex].textureID);
-			glActiveTexture(GL_TEXTURE0 + 2);
-			glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[i].material].specularMapIndex].textureID);
-
-			glBindVertexArray(meshes[i].vertexArray);
-			glBindBuffer(GL_ARRAY_BUFFER, meshes[i].vertexBuffer);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshes[i].indexBuffer);
-
-			glDrawElements(GL_TRIANGLES, meshes[i].indexCount, GL_UNSIGNED_INT, 0);
-		}
-	}*/
-	int chunkID = 1;
 	for (size_t i = 0; i < chunks[chunkID].props.size(); i++)
 	{
 		int meshID = chunks[chunkID].props[i].id;
 
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].textureMapIndex].textureID);
+		glActiveTexture(GL_TEXTURE0 + 1);
+		glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].normalMapIndex].textureID);
+		glActiveTexture(GL_TEXTURE0 + 2);
+		glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].specularMapIndex].textureID);
+		
 		glBindVertexArray(meshes[meshID].vertexArray);
 		glBindBuffer(GL_ARRAY_BUFFER, meshes[meshID].vertexBuffer);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshes[meshID].indexBuffer);
@@ -218,6 +200,11 @@ void Map::loadMap(std::string mapName)
 	
 	PointLight* pl = new PointLight[pointLightCount];
 	inFile.read((char*)pl, sizeof(PointLight) * pointLightCount);
+
+	for (int i = 0; i < pointLightCount; i++)
+	{
+		chunks[pl[i].roomID].addLight(*(SpotLightH*)&pl[i]);
+	}
 	delete[] pl;
 
 	SpotLightH* sl = new SpotLightH[spotLightCount];
@@ -226,6 +213,20 @@ void Map::loadMap(std::string mapName)
 
 	PortalDataRead* portalData = new PortalDataRead[portalCount];
 	inFile.read((char*)portalData, sizeof(PortalDataRead) * portalCount);
+
+	for (int p = 0; p < portalCount; p++)
+	{
+		if (portalData[p].bridgedRooms[0] == portalData[p].bridgedRooms[1])
+		{
+			std::cout << "Portal only in one room!\n";
+		}
+		else
+		{
+			chunks[portalData[p].bridgedRooms[0]].addPortal(portalData[p]);
+			chunks[portalData[p].bridgedRooms[1]].addPortal(portalData[p]);
+		}
+	}
+
 	delete[] portalData;
 	
 	inFile.close();

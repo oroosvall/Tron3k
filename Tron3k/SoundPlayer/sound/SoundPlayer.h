@@ -45,6 +45,7 @@ public:
 	static SoundPlayer* getSound();
 
 	virtual void enableSounds();
+	static bool getSoundEnabler();
 
 	virtual void setVolumeMusic(float volume);
 	virtual void setVolumeSound(float volume);
@@ -62,6 +63,8 @@ public:
 extern "C" SOUNDPLAYER_API SoundPlayer* CreateSound();
 
 extern "C" SOUNDPLAYER_API SoundPlayer* GetSound();
+
+extern "C" SOUNDPLAYER_API bool GetSoundActivated();
 
 extern "C" SOUNDPLAYER_API void InitSound(SoundPlayer* sound);
 

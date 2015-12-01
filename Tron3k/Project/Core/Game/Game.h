@@ -20,7 +20,6 @@ enum Gamestate
 class Game
 {
 private:
-
 	std::vector<Bullet*> bullets[BULLET_TYPE::NROFBULLETS];
 
 	std::vector<int> teamSpectators; //Team vectors hold connection IDs

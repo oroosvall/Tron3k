@@ -18,8 +18,10 @@ void CollideMesh::init()
 	{
 		corners[i] = glm::vec3(0, 0, 0);
 	}
-	setOBB(corners);
+	setOBB(glm::vec3(0, 0, 0), corners);
 	delete corners;
+
+	setCylinder(glm::vec3(0, 0, 0), 0.5f, 1.0f);
 }
 
 void CollideMesh::setAABB(float xPos, float yPos, float zPos, float xSize, float ySize, float zSize)
@@ -38,8 +40,10 @@ AABB CollideMesh::getAABB()
 	return boundingBox;
 }
 
-void CollideMesh::setOBB(glm::vec3* corners)
+void CollideMesh::setOBB(glm::vec3 pos, glm::vec3* corners)
 {
+	collisionBox.pos = pos;
+
 	for (int i = 0; i < 8; i++)
 	{
 		collisionBox.corners[i] = corners[i];
@@ -51,11 +55,27 @@ OBB CollideMesh::getOBB()
 	return collisionBox;
 }
 
+void CollideMesh::setCylinder(glm::vec3 pos, float radius, float height)
+{
+	cylinder.pos = pos;
+	cylinder.radius = radius;
+	cylinder.height = height;
+}
+
+Cylinder CollideMesh::getCylinder()
+{
+	return cylinder;
+}
+
 void CollideMesh::setPos(glm::vec3 pos)
 {
 	boundingBox.posX = pos.x;
 	boundingBox.posY = pos.y;
 	boundingBox.posZ = pos.z;
+
+	collisionBox.pos = pos;
+
+	cylinder.pos = pos;
 }
 
 void CollideMesh::setSize(glm::vec3 size)

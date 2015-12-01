@@ -5,7 +5,6 @@
 #include "Shader.h"
 
 //#include <vld.h>
-//#include "vld.h"
 
 #ifdef _DEBUG
 extern "C"

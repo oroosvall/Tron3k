@@ -35,6 +35,7 @@ struct MeshDataHDR
 
 struct PointLight
 {
+	int roomID;
 	float r, g, b;
 	float intensity;
 	float x, y, z;
@@ -46,6 +47,7 @@ struct PointLight
 
 struct SpotLightH
 {
+	int roomID;
 	float r, g, b;
 	float intensity;
 	float x, y, z;
@@ -201,8 +203,8 @@ struct Chunk
 	Chunk()
 	{
 		roomID = -1;
-		nrPortals = 0;
-		nrLights = 0;
+		color = { 1, 1, 1 };
+		staticIntes = 1;
 	}
 
 	void addProp(int id, glm::mat4 matrix)
@@ -220,15 +222,35 @@ struct Chunk
 		props[props.size() - 1].mats.push_back(matrix);
 	}
 
+	void addPortal(PortalDataRead port)
+	{
+		PortalData pd;
+
+		pd.positions[0] = glm::vec3(port.positions[0]);
+		pd.positions[1] = glm::vec3(port.positions[1]);
+		pd.positions[2] = glm::vec3(port.positions[2]);
+		pd.positions[3] = glm::vec3(port.positions[3]);
+
+		pd.init(port.portalID, port.bridgedRooms[0], port.bridgedRooms[1], glm::vec3(port.positions[0]), glm::vec3(port.positions[2]), glm::vec3(port.positions[3]), glm::vec3(port.positions[1]));
+
+		portals.push_back(pd);
+	}
+
+	void addLight(SpotLightH light)
+	{
+		lights.push_back(light);
+	}
+
+	glm::vec3 color;
+	float staticIntes;
+
 	uint32_t roomID;
 
 	vector<Prop> props;
 
-	int nrPortals;
-	PortalData* portals;
+	vector<PortalData> portals;
 
-	int nrLights;
-	SpotLightH* lights;
+	vector<SpotLightH> lights;
 
 };
 #endif

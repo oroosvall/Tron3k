@@ -12,6 +12,7 @@
 #include <glm/glm.hpp>
 #include "Role/role.h"
 #include "Role/Weapon/Weapon.h"
+#include "Role/Weapon/bullet.h"
 #include <string>
 
 #define interpolationTick 0.050f
@@ -95,6 +96,8 @@ public:
 	void setRole(Role role);
 
 	void respawn(glm::vec3 respawnPos);
+
+	void healing(int amount);
 };
 
 #endif

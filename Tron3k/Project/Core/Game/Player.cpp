@@ -49,7 +49,6 @@ void Player::movePlayer(float dt)
 PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool spectating)
 {
 	PLAYERMSG msg = NONE;
-	bool ableToShoot = false;
 
 	if (isLocalPlayer) // even if we are the local player we can be dead and spectating some one
 	{
@@ -180,14 +179,14 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 				if (i->getKeyInfo(GLFW_MOUSE_BUTTON_LEFT))		//Temp
 				{
-					ableToShoot = role.getCurrentWeapon()->shoot();
-					if (ableToShoot)
+					if (role.getCurrentWeapon()->shoot())
 						msg = SHOOT;
 				}
 
 				if (i->justPressed(GLFW_KEY_M))					//Temp?
 				{
-					GetSound()->enableSounds();
+					if (GetSoundActivated)
+						GetSound()->enableSounds();
 				}
 
 				if (i->justPressed(GLFW_KEY_O))
@@ -309,6 +308,7 @@ void Player::applyGravity(Physics* p, float dt)
 void Player::setRole(Role role)
 {
 	this->role = role;
+	this->role.chooseRole(TRAPPER);
 }
 
 void Player::respawn(glm::vec3 respawnPos)
@@ -321,4 +321,9 @@ void Player::respawn(glm::vec3 respawnPos)
 	worldMat[2].w = pos.z;
 	isDead = false;
 	role.returnToLife();
+}
+
+void Player::healing(int amount)
+{
+	role.setHealth(role.getHealth()+amount);
 }

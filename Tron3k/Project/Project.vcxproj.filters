@@ -40,6 +40,18 @@
     <Filter Include="Source Files\Core\Game\Role\Weapon\BulletTypes">
       <UniqueIdentifier>{fcc1a40f-32dc-4d5c-834c-db87e4914472}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Core\Game\Role\Weapon\WeaponTypes">
+      <UniqueIdentifier>{0b4350f4-ed14-4605-9291-fcba15835a0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\Game\Role\Special">
+      <UniqueIdentifier>{e1cf1983-6c09-4268-a97e-dd6598c8f6ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\Game\Role\Special\SpecialTypes">
+      <UniqueIdentifier>{8e14757e-60e0-41c7-b789-13601d10b09f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\Game\Role\PlayerEffects\Modifiers">
+      <UniqueIdentifier>{5a5a72f5-6f4f-40ec-91e7-571485bdc219}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -81,9 +93,6 @@
     <ClCompile Include="Core\Game\Role\ActiveEffects\Consumable.cpp">
       <Filter>Source Files\Core\Game\Role\ActiveEffects</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Game\Role\ActiveEffects\Special.cpp">
-      <Filter>Source Files\Core\Game\Role\ActiveEffects</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effect.cpp">
       <Filter>Source Files\Core\Game\Role\PlayerEffects</Filter>
     </ClCompile>
@@ -101,6 +110,21 @@
     </ClCompile>
     <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\BulletPulseShot.cpp">
       <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\PulseRifle.cpp">
+      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\EnergyBoost.cpp">
+      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Game\Role\Special\Special.cpp">
+      <Filter>Source Files\Core\Game\Role\Special</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Game\Role\Special\SpecialTypes\Lightwall.cpp">
+      <Filter>Source Files\Core\Game\Role\Special\SpecialTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Game\Role\PlayerEffects\Modifiers\LightwallLockedControls.cpp">
+      <Filter>Source Files\Core\Game\Role\PlayerEffects\Modifiers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -158,9 +182,6 @@
     <ClInclude Include="Core\Game\Role\ActiveEffects\Consumable.h">
       <Filter>Source Files\Core\Game\Role\ActiveEffects</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Game\Role\ActiveEffects\Special.h">
-      <Filter>Source Files\Core\Game\Role\ActiveEffects</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effect.h">
       <Filter>Source Files\Core\Game\Role\PlayerEffects</Filter>
     </ClInclude>
@@ -181,6 +202,30 @@
     </ClInclude>
     <ClInclude Include="Core\Game\Role\Weapon\Weapon.h">
       <Filter>Source Files\Core\Game\Role\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\AllWeapons.h">
+      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\PulseRifle.h">
+      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\EnergyBoost.h">
+      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Special\Special.h">
+      <Filter>Source Files\Core\Game\Role\Special</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Special\SpecialTypes\AllSpecials.h">
+      <Filter>Source Files\Core\Game\Role\Special\SpecialTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Special\SpecialTypes\Lightwall.h">
+      <Filter>Source Files\Core\Game\Role\Special\SpecialTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\PlayerEffects\Modifiers\LightwallLockedControls.h">
+      <Filter>Source Files\Core\Game\Role\PlayerEffects\Modifiers</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\PlayerEffects\Modifiers\AllModifiers.h">
+      <Filter>Source Files\Core\Game\Role\PlayerEffects\Modifiers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
