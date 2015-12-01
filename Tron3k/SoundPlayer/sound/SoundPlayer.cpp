@@ -5,6 +5,8 @@ float SoundPlayer::musicVolume = 50.0f;
 bool SoundPlayer::soundEnabler = false;
 #include <iostream>
 
+//#include <vld.h>
+
 SoundPlayer* SoundPlayer::singleton = nullptr;
 
 void SoundPlayer::release()
