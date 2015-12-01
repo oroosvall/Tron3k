@@ -307,6 +307,7 @@ void Player::applyGravity(Physics* p, float dt)
 void Player::setRole(Role role)
 {
 	this->role = role;
+	this->role.chooseRole(TRAPPER);
 }
 
 void Player::respawn(glm::vec3 respawnPos)

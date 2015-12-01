@@ -12,6 +12,8 @@ EnergyBoost::~EnergyBoost()
 
 void EnergyBoost::init()
 {
+	weaponType = WEAPON_TYPE::ENERGY_BOOST;
+
 	maxClipSize = 12;
 	currentClipAmmo = 12;
 

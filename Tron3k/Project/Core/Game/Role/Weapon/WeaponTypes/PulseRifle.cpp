@@ -12,6 +12,8 @@ PulseRifle::~PulseRifle()
 
 void PulseRifle::init()
 {
+	weaponType = WEAPON_TYPE::PULSE_RIFLE;
+
 	maxClipSize = 12;
 	currentClipAmmo = 12;
 

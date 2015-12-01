@@ -19,7 +19,6 @@ Role::Role(string inLoadedRoles[NROFROLES][NROFREADPROPERTIES])
 	}
 	currentWpn = 0;
 	health = 1;
-	chooseRole(TRAPPER);
 }
 
 Role::~Role()
