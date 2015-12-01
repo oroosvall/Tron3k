@@ -28,7 +28,6 @@ class ContentManager
 {
 
 private:
-
 	std::vector<Mesh> meshes;
 	std::vector<TextureLookup> textures;
 	PlayerObject* playerModels;
@@ -40,6 +39,10 @@ private:
 
 	Mesh bullet;
 
+	int nrChunks;
+	int* renderedChunks;
+	int* renderNextChunks;
+	GLuint portalQuery;
 public:
 	~ContentManager();
 	void init();
