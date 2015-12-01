@@ -4,9 +4,13 @@
 #include <cstdlib>
 #include "../BlitQuad.h"
 #include "../StaticMesh.h"
+#include <vector>
+
+using std::vector;
 
 struct SharedFileHDR
 {
+	uint32_t roomCount;
 	uint32_t meshCount;
 	uint32_t pointLightCount;
 	uint32_t spotLightCount;
@@ -186,12 +190,19 @@ struct SpawnPoint
 	float dx, dy, dz;
 };
 
+struct Prop
+{
+	uint32_t id;
+	int count;
+	vector<glm::mat4> mats;
+};
+
 struct Chunk
 {
 	uint32_t roomID;
 
-	int meshCount;
-	StaticMesh* meshes;
+	int propCount;
+	vector<Prop> props;
 
 	int nrPortals;
 	PortalData* portals;
