@@ -228,8 +228,8 @@ public:
 
 		if (weapontype == WEAPON_TYPE::PULSE_RIFLE)
 			consolePtr->printMsg(gamePtr->getPlayer(p_conID)->getName() + " switched weapon to Pulse Rifle!", "System", 'S');
-		if (weapontype == WEAPON_TYPE::POOP_GUN)
-			consolePtr->printMsg(gamePtr->getPlayer(p_conID)->getName() + " switched weapon to Poop Gun!", "System", 'S');
+		if (weapontype == WEAPON_TYPE::ENERGY_BOOST)
+			consolePtr->printMsg(gamePtr->getPlayer(p_conID)->getName() + " switched weapon to Energy Boost!", "System", 'S');
 	}
 
 	virtual void in_frame_name_change(Packet* rec)
