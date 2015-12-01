@@ -185,7 +185,8 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 				if (i->justPressed(GLFW_KEY_M))					//Temp?
 				{
-					GetSound()->enableSounds();
+					if (GetSoundActivated)
+						GetSound()->enableSounds();
 				}
 
 				if (i->justPressed(GLFW_KEY_O))

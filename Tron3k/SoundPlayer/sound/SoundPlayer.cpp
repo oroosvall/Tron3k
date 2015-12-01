@@ -23,7 +23,7 @@ void SoundPlayer::init(SoundPlayer* sound)
 	
 	if (singleton->soundList[SOUNDS::soundEffectPoopRifleShot].loadFromFile("GameFiles/Sound/soundEffectPoopRifleShot.ogg"))
 	{
-		// someone to fix the rest of the spammming atleast no more stack overflow
+		// if file not read dont play sound
 		soundEnabler = false;
 	}
 	singleton->soundList[SOUNDS::soundEffectBulletPlayerHit].loadFromFile("GameFiles/Sound/soundEffectBulletPlayerHit.ogg");
@@ -66,12 +66,17 @@ void SoundPlayer::enableSounds()
 	{
 		for (int i = 0; i < nrOfSoundsPlaying; i++)
 		{
-			sounds[i].setVolume(soundVolume);
+			sounds[i].stop();
 		}
-		musicPlayer.setVolume(musicVolume);
+		musicPlayer.stop();
 		soundEnabler = false;
 	}
 }
+bool SoundPlayer::getSoundEnabler()
+{
+	return soundEnabler;
+}
+
 
 void SoundPlayer::setVolumeMusic(float volume)
 {
@@ -85,45 +90,50 @@ void SoundPlayer::setVolumeSound(float volume)
 
 int SoundPlayer::playUserGeneratedSound(int sound)
 {
-	sounds[nrOfSoundsPlaying].setBuffer(soundList[sound]);
-	sounds[nrOfSoundsPlaying].play();
-	nrOfSoundsPlaying++;
-	nrOfSoundsPlaying %= MAXSOUNDS;
+	if (soundEnabler)
+	{
+		sounds[nrOfSoundsPlaying].setBuffer(soundList[sound]);
+		sounds[nrOfSoundsPlaying].play();
+		nrOfSoundsPlaying++;
+		nrOfSoundsPlaying %= MAXSOUNDS;
+	}
 
 	return 0;
 }
 
 int SoundPlayer::playExternalSound(int sound, float x, float y, float z)
 {
-	
+	if (soundEnabler)
+	{
 
-	sf::Listener::setDirection(playerDir.x, playerDir.y, playerDir.z);			//Set the direction of the player
-	if (sf::Listener::getPosition().x > x - 0.1 && sf::Listener::getPosition().x < x + 0.1)
-	{
-		if (sf::Listener::getPosition().z > z - 0.1 && sf::Listener::getPosition().z < z + 0.1)
+		sf::Listener::setDirection(playerDir.x, playerDir.y, playerDir.z);			//Set the direction of the player
+		if (sf::Listener::getPosition().x > x - 0.1 && sf::Listener::getPosition().x < x + 0.1)
 		{
-			sounds[nrOfSoundsPlaying].setRelativeToListener(true);
-			sounds[nrOfSoundsPlaying].setPosition(0, 0, 0);
-			
+			if (sf::Listener::getPosition().z > z - 0.1 && sf::Listener::getPosition().z < z + 0.1)
+			{
+				sounds[nrOfSoundsPlaying].setRelativeToListener(true);
+				sounds[nrOfSoundsPlaying].setPosition(0, 0, 0);
+
+			}
 		}
-	}
-		
-	else
-	{
+
+		else
+		{
 			sounds[nrOfSoundsPlaying].setRelativeToListener(false);
 			sounds[nrOfSoundsPlaying].setPosition(x, y, z);			//Set the sound's position in the world. Could be passed in through a parameter.
-	}
+		}
 
-	//std::cout << "x: " << sf::Listener::getPosition().x << " y: " << sf::Listener::getPosition().y << " z: " << sf::Listener::getPosition().z << endl;
-	//std::cout << "x: " << x << " y: " << y << " z: " << z << endl;
-	//sounds[nrOfSoundsPlaying].isRelativeToListener();
-	sounds[nrOfSoundsPlaying].setMinDistance(10.0f);		//Set the sound's distance it travels before it starts to attenuate. Could be passed in through a parameter.
-				
-	sounds[nrOfSoundsPlaying].setBuffer(soundList[sound]);
-	sounds[nrOfSoundsPlaying].setVolume(soundVolume);
-	sounds[nrOfSoundsPlaying].play();
-	nrOfSoundsPlaying++;
-	nrOfSoundsPlaying %= MAXSOUNDS;
+		//std::cout << "x: " << sf::Listener::getPosition().x << " y: " << sf::Listener::getPosition().y << " z: " << sf::Listener::getPosition().z << endl;
+		//std::cout << "x: " << x << " y: " << y << " z: " << z << endl;
+		//sounds[nrOfSoundsPlaying].isRelativeToListener();
+		sounds[nrOfSoundsPlaying].setMinDistance(10.0f);		//Set the sound's distance it travels before it starts to attenuate. Could be passed in through a parameter.
+
+		sounds[nrOfSoundsPlaying].setBuffer(soundList[sound]);
+		sounds[nrOfSoundsPlaying].setVolume(soundVolume);
+		sounds[nrOfSoundsPlaying].play();
+		nrOfSoundsPlaying++;
+		nrOfSoundsPlaying %= MAXSOUNDS;
+	}
 
 	return 0;
 }
@@ -141,19 +151,22 @@ void SoundPlayer::setLocalPlayerPos(glm::vec3 playerPos)
 
 int SoundPlayer::playMusic(int music)
 {
-
-	if (musicPlayer.getStatus() == sf::Sound::Playing)
+	if (soundEnabler)
 	{
-		musicPlayer.stop();
-	}
 
-	if (!musicPlayer.openFromFile(musicList[music]))
-	{
-		return -1;
-	}
+		if (musicPlayer.getStatus() == sf::Sound::Playing)
+		{
+			musicPlayer.stop();
+		}
 
-	musicPlayer.play();
-	musicPlayer.setLoop(true);
+		if (!musicPlayer.openFromFile(musicList[music]))
+		{
+			return -1;
+		}
+
+		musicPlayer.play();
+		musicPlayer.setLoop(true);
+	}
 
 	return 0;
 }
@@ -173,6 +186,10 @@ SoundPlayer* GetSound()
 	return SoundPlayer::getSound();
 }
 
+bool GetSoundActivated()
+{
+	return SoundPlayer::getSoundEnabler();
+}
 void InitSound(SoundPlayer* sound)
 {
 	SoundPlayer::init(sound);

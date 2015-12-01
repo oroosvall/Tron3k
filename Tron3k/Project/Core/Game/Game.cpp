@@ -103,6 +103,14 @@ void Game::initPhysics()
 
 void Game::update(float dt)
 {
+	if (Input::getInput()->justPressed(GLFW_KEY_Z) && !GetSoundActivated())
+	{
+		InitSound(CreateSound());
+		GetSound()->playMusic(MUSIC::mainMenu);
+		GetSound()->enableSounds();
+	}
+	
+
 	for (int c = 0; c < max_con; c++)
 	{
 		if (playerList[c] != nullptr)
@@ -537,7 +545,8 @@ int Game::handleBulletHitEvent(BulletHitInfo hi, int newHPtotal)
 {
 	glm::vec3 pos = playerList[hi.playerHit]->getPos();
 	if (gameState != Gamestate::SERVER)
-		GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHit, pos.x, pos.y, pos.z);
+		if (GetSoundActivated)
+			GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHit, pos.x, pos.y, pos.z);
 	Player* p = playerList[hi.playerHit];
 	int bulletPosInArray;
 	Bullet* theBullet = getBulletForRemoval(hi.bulletPID, hi.bulletBID, hi.bt, bulletPosInArray);
