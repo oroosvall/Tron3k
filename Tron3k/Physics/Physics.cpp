@@ -79,6 +79,8 @@ bool Physics::checkCylindervAABBCollision(CollideMesh mesh1, CollideMesh mesh2)
 		mesh1.getCylinder().pos.y - mesh1.getCylinder().height < mesh2.getAABB().posY + mesh2.getAABB().sizeY)
 	{
 		//Collides in Y
+
+		//http://stackoverflow.com/questions/401847/circle-rectangle-collision-detection-intersection
 		glm::vec2 dist = glm::vec2(abs(mesh1.getCylinder().pos.x - mesh2.getAABB().posX), abs(mesh1.getCylinder().pos.z - mesh2.getAABB().posZ));
 
 		if (dist.x > mesh2.getAABB().sizeX + mesh1.getCylinder().radius)
