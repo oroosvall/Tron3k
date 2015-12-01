@@ -3,6 +3,7 @@
 
 #include <cstdlib>
 #include "../BlitQuad.h"
+#include "../StaticMesh.h"
 
 struct SharedFileHDR
 {
@@ -193,4 +194,18 @@ struct SpawnPoint
 	float dx, dy, dz;
 };
 
+struct Chunk
+{
+	uint32_t roomID;
+
+	int meshCount;
+	StaticMesh* meshes;
+
+	int nrPortals;
+	PortalData* portals;
+
+	int nrLights;
+	SpotLightH* lights;
+
+};
 #endif

@@ -35,6 +35,8 @@ private:
 
 	int currentChunk;
 
+	vector<Chunk> chunks;
+
 	vector<PortalData> portals;
 public:
 	
