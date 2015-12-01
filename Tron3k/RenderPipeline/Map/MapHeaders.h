@@ -35,6 +35,7 @@ struct MeshDataHDR
 
 struct PointLight
 {
+	int roomID;
 	float r, g, b;
 	float intensity;
 	float x, y, z;
@@ -46,6 +47,7 @@ struct PointLight
 
 struct SpotLightH
 {
+	int roomID;
 	float r, g, b;
 	float intensity;
 	float x, y, z;

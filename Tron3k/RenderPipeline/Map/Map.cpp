@@ -201,11 +201,10 @@ void Map::loadMap(std::string mapName)
 	PointLight* pl = new PointLight[pointLightCount];
 	inFile.read((char*)pl, sizeof(PointLight) * pointLightCount);
 
-	//for (int i = 0; i < pointLightCount; i++)
-	//{
-	//	chunk[]
-	//}
-	int k = 0;
+	for (int i = 0; i < pointLightCount; i++)
+	{
+		chunks[pl[i].roomID].addLight(*(SpotLightH*)&pl[i]);
+	}
 	delete[] pl;
 
 	SpotLightH* sl = new SpotLightH[spotLightCount];
@@ -217,7 +216,15 @@ void Map::loadMap(std::string mapName)
 
 	for (int p = 0; p < portalCount; p++)
 	{
-		//chunks[portalData[p].bridgedRooms[0]].addPortal(portalData[p]);
+		if (portalData[p].bridgedRooms[0] == portalData[p].bridgedRooms[1])
+		{
+			std::cout << "Portal only in one room!\n";
+		}
+		else
+		{
+			chunks[portalData[p].bridgedRooms[0]].addPortal(portalData[p]);
+			chunks[portalData[p].bridgedRooms[1]].addPortal(portalData[p]);
+		}
 	}
 
 	delete[] portalData;

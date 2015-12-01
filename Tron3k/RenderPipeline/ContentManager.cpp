@@ -215,9 +215,9 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 	//testMap.portals[0].render();
 	//testMap.portals[1].render();
 
-	for (size_t i = 0; i < 	testMap.chunks[1].portals.size(); i++)
+	for (size_t i = 0; i < 	testMap.chunks[2].portals.size(); i++)
 	{
-		testMap.chunks[1].portals[i].render();
+		testMap.chunks[2].portals[i].render();
 	}
 
 	GLint passed = 2222;
