@@ -218,6 +218,7 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 	glDepthMask(GL_TRUE);
 	glEnable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
+	glDeleteQueries(1, &test);
 }
 
 void ContentManager::renderPlayer(int playerID, glm::mat4 world)
