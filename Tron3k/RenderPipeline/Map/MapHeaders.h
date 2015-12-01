@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include "../BlitQuad.h"
 #include "../StaticMesh.h"
+#include "../Lights.h"
 #include <vector>
 
 using std::vector;
@@ -238,7 +239,18 @@ struct Chunk
 
 	void addLight(SpotLightH light)
 	{
-		lights.push_back(light);
+		SpotLight l;
+		l.Color = vec3(light.r, light.g, light.b);
+		l.DiffuseIntensity = light.intensity;
+		l.Position = vec3(light.x, light.y, light.z);
+		l.AmbientIntensity = light.ambientIntensity;
+		l.Direction = vec3(light.dx, light.dy, light.dz);
+		if (length(l.Direction) <= 0.001f)
+			l.Direction.y = -1;
+		l.Cutoff = light.coneAngle;
+		l.Cutoff = 0.7f;
+
+		lights.push_back(l);
 	}
 
 	glm::vec3 color;
@@ -250,7 +262,7 @@ struct Chunk
 
 	vector<PortalData> portals;
 
-	vector<SpotLightH> lights;
+	vector<SpotLight> lights;
 
 };
 #endif

@@ -761,7 +761,7 @@ void Core::renderWorld(float dt)
 				light.Direction = p->getDir();
 				if (firstLight)
 				{
-					light.AmbientIntensity = 0.3;
+					light.AmbientIntensity = 0.0;
 					firstLight = false;
 				}
 				renderPipe->addLight(&light);

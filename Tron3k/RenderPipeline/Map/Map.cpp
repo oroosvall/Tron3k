@@ -60,9 +60,9 @@ void Map::renderChunk(GLuint shader, GLuint shaderLocation, int chunkID)
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].textureMapIndex].textureID);
 		glActiveTexture(GL_TEXTURE0 + 1);
-		glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].normalMapIndex].textureID);
-		glActiveTexture(GL_TEXTURE0 + 2);
-		glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].specularMapIndex].textureID);
+		glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].textureMapIndex].textureID);
+		//glActiveTexture(GL_TEXTURE0 + 2);
+		//glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].textureMapIndex].textureID);
 		
 		glBindVertexArray(meshes[meshID].vertexArray);
 		glBindBuffer(GL_ARRAY_BUFFER, meshes[meshID].vertexBuffer);

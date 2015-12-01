@@ -35,15 +35,16 @@ private:
 	//skybox
 	Mesh skybox;
 
-	Map testMap;
-
 	Mesh bullet;
+
+	GLuint portalQuery;
+public:
+	Map testMap;
 
 	int nrChunks;
 	int* renderedChunks;
 	int* renderNextChunks;
-	GLuint portalQuery;
-public:
+
 	~ContentManager();
 	void init();
 
@@ -54,7 +55,6 @@ public:
 	int getPortalID(glm::vec3 oldpos, glm::vec3 newpos) { return testMap.getChunkID(oldpos, newpos); }
 
 	void renderPortals(GLuint shader, GLuint world);
-
 
 	void loadChunk();
 	void releaseChunk();
