@@ -1,8 +1,9 @@
 #ifndef WEAPON_H
 #define WEAPON_H
 
-#include "Bullet.h"
 #include "../../GameDataIndex.h"
+
+#include <glm/glm.hpp>
 
 class Weapon
 {

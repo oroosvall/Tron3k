@@ -1,5 +1,5 @@
-#ifndef POOPGUN_H
-#define POOPGUN_H
+#ifndef ENERGYBOOST_H
+#define ENERGYBOOST_H
 
 #include <glm/glm.hpp>
 #include "../Weapon.h"

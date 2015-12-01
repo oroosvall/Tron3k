@@ -1,5 +1,5 @@
-#ifndef ALLBULLETS_H
-#define ALLBULLETS_H
+#ifndef ALLWEAPONS_H
+#define ALLWEAPONS_H
 
 #include "PulseRifle.h"
 #include "EnergyBoost.h"

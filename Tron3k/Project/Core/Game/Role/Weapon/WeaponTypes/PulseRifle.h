@@ -1,5 +1,5 @@
-#ifndef PULSE_SHOT_H
-#define PULSE_SHOT_H
+#ifndef PULSERIFLE_H
+#define PULSERIFLE_H
 
 #include <glm/glm.hpp>
 #include "../Weapon.h"
