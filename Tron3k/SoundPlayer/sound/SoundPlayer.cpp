@@ -107,8 +107,8 @@ int SoundPlayer::playExternalSound(int sound, float x, float y, float z)
 			sounds[nrOfSoundsPlaying].setPosition(x, y, z);			//Set the sound's position in the world. Could be passed in through a parameter.
 	}
 
-	std::cout << "x: " << sf::Listener::getPosition().x << " y: " << sf::Listener::getPosition().y << " z: " << sf::Listener::getPosition().z << endl;
-	std::cout << "x: " << x << " y: " << y << " z: " << z << endl;
+	//std::cout << "x: " << sf::Listener::getPosition().x << " y: " << sf::Listener::getPosition().y << " z: " << sf::Listener::getPosition().z << endl;
+	//std::cout << "x: " << x << " y: " << y << " z: " << z << endl;
 	//sounds[nrOfSoundsPlaying].isRelativeToListener();
 	sounds[nrOfSoundsPlaying].setMinDistance(10.0f);		//Set the sound's distance it travels before it starts to attenuate. Could be passed in through a parameter.
 				
