@@ -37,8 +37,8 @@ private:
 
 	vector<Chunk> chunks;
 
-	vector<PortalData> portals;
 public:
+	vector<PortalData> portals;
 	
 	void init();
 	void release();

@@ -77,14 +77,8 @@ void SoundPlayer::setVolumeSound(float volume)
 	musicPlayer.setVolume(volume);
 }
 
-void SoundPlayer::setLocalPlayerDir(glm::vec3 playerDir)
-{
-	this->playerDir = playerDir;
-}
-
 int SoundPlayer::playUserGeneratedSound(int sound)
 {
-
 	sounds[nrOfSoundsPlaying].setBuffer(soundList[sound]);
 	sounds[nrOfSoundsPlaying].play();
 	nrOfSoundsPlaying++;
@@ -97,6 +91,7 @@ int SoundPlayer::playExternalSound(int sound, float x, float y, float z)
 {
 	sf::Listener::setDirection(playerDir.x, playerDir.y, playerDir.z);			//Set the direction of the player
 
+	sounds[nrOfSoundsPlaying].isRelativeToListener();
 	sounds[nrOfSoundsPlaying].setMinDistance(10.0f);		//Set the sound's distance it travels before it starts to attenuate. Could be passed in through a parameter.
 	sounds[nrOfSoundsPlaying].setPosition(x, y, z);			//Set the sound's position in the world. Could be passed in through a parameter.
 	sounds[nrOfSoundsPlaying].setBuffer(soundList[sound]);
@@ -106,6 +101,16 @@ int SoundPlayer::playExternalSound(int sound, float x, float y, float z)
 	nrOfSoundsPlaying %= MAXSOUNDS;
 
 	return 0;
+}
+
+void SoundPlayer::setLocalPlayerDir(glm::vec3 playerDir)
+{
+	this->playerDir = playerDir;
+}
+
+void SoundPlayer::setLocalPlayerPos(glm::vec3 playerPos)
+{
+	sf::Listener::setPosition(playerPos.x, playerPos.y, playerPos.z);
 }
 
 int SoundPlayer::playMusic(int music)
