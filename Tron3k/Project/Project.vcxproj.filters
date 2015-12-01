@@ -40,6 +40,9 @@
     <Filter Include="Source Files\Core\Game\Role\Weapon\BulletTypes">
       <UniqueIdentifier>{fcc1a40f-32dc-4d5c-834c-db87e4914472}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Core\Game\Role\Weapon\WeaponTypes">
+      <UniqueIdentifier>{0b4350f4-ed14-4605-9291-fcba15835a0a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -101,6 +104,12 @@
     </ClCompile>
     <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\BulletPulseShot.cpp">
       <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\PulseRifle.cpp">
+      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\EnergyBoost.cpp">
+      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -181,6 +190,15 @@
     </ClInclude>
     <ClInclude Include="Core\Game\Role\Weapon\Weapon.h">
       <Filter>Source Files\Core\Game\Role\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\AllWeapons.h">
+      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\PulseRifle.h">
+      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\EnergyBoost.h">
+      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

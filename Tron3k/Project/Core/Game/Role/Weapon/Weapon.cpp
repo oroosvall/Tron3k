@@ -1,58 +1,49 @@
 #include "Weapon.h"
 
-Weapon::Weapon()
-{
-	maxClipSize = 0;
-	currentClipAmmo = maxClipSize;
-	weaponType = WEAPON_TYPE::PULSE_RIFLE;
-}
-
-Weapon::~Weapon()
-{}
-
-void Weapon::init(int maxClipSize, WEAPON_TYPE weaponType, float firingSpeed)
-{
-	this->maxClipSize = maxClipSize;
-	currentClipAmmo = maxClipSize;
-	this->weaponType = weaponType;
-	this->firingSpeed = firingSpeed;
-	currentDelay = firingSpeed;
-
-	currentBulletId;
-}
-
 bool Weapon::shoot()
 {
 	bool ableToShoot = false;
 
-	if (currentDelay <= 0 && currentClipAmmo > 0)
+	if (rldTimer < FLT_EPSILON)
 	{
-		currentClipAmmo--;
-		currentDelay = firingSpeed;
-		ableToShoot = true;
+		if (firingSpeedCurrentDelay <= 0 && currentClipAmmo > 0)
+		{
+			currentClipAmmo--;
+			firingSpeedCurrentDelay = firingSpeed;
+			ableToShoot = true;
+		}
 	}
-
+	
 	return ableToShoot;
 }
 
 bool Weapon::reload()
 {
-	currentClipAmmo = maxClipSize;
-	
+	rldTimer = reloadTime;
 	return true;
-}
-
-void Weapon::update(float deltaTime)
-{
-	if (currentDelay > 0)
-	{
-		currentDelay -= deltaTime;
-	}
 }
 
 int Weapon::getBulletId()
 {
 	int bid = currentBulletId;
-	currentBulletId++ % 255;
+	if (currentBulletId == -1)
+		currentBulletId++ % 255;
 	return bid;
+}
+
+void Weapon::countDownFiringSpeed(float dt)
+{
+	if (firingSpeedCurrentDelay > FLT_EPSILON)
+	{
+		firingSpeedCurrentDelay -= dt;
+	}
+}
+void Weapon::countDownReloadTimer(float dt)
+{
+	if (rldTimer > FLT_EPSILON) //Tick dat reloadtimer down boi
+	{
+		rldTimer -= dt;
+		if (rldTimer < FLT_EPSILON)
+			currentClipAmmo = maxClipSize; //Reload complete
+	}
 }

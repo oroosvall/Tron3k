@@ -1,7 +1,8 @@
 #ifndef ROLE_H
 #define ROLE_H
 
-#include "Weapon/weapon.h"
+#include "Weapon/WeaponTypes/AllWeapons.h"
+#include "Weapon/Weapon.h"
 #include "../GameDataIndex.h"
 #include "ActiveEffects/consumable.h"
 #include<string>
@@ -22,11 +23,13 @@ class Role
 		
 		string loadedRoles[NROFROLES][NROFREADPROPERTIES];
 
-		Weapon weapons[2];
-		Weapon pickup;
-		Weapon super;
+		void loadWeapons(int role, int wpn); //wpn = main or sec
 
-		Consumable consumable;
+		Weapon* weapons[2];
+		Weapon* storageMain;
+		Weapon* storageSec;
+
+		//Consumable* consumable;
 
 	public:
 		Role();

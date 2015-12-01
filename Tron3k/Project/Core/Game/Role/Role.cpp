@@ -5,7 +5,8 @@ Role::Role()
 	currentWpn = 0;
 	health = 1;
 	movementSpeed = 0;
-	weapons[0].init(36, WEAPON_TYPE::PULSE_RIFLE, 0.5);
+	weapons[0] = nullptr;
+	weapons[1] = nullptr;
 }
 Role::Role(string inLoadedRoles[NROFROLES][NROFREADPROPERTIES])
 {
@@ -23,7 +24,32 @@ Role::Role(string inLoadedRoles[NROFROLES][NROFREADPROPERTIES])
 
 Role::~Role()
 {
+	delete weapons[0];
+	delete weapons[1];
+	if (storageMain != nullptr)
+		delete storageMain;
+	if (storageSec != nullptr)
+		delete storageSec;
+}
 
+void Role::loadWeapons(int role, int wpn)
+{
+	PROPERTIES w;
+	if (wpn == 0)
+		w = MAINWEP;
+	if (wpn == 1)
+		w = SECWEP;
+	switch ((WEAPON_TYPE)atoi(loadedRoles[role][w].c_str()))
+	{
+	case PULSE_RIFLE:
+		weapons[wpn] = new PulseRifle();
+		break;
+	case ENERGY_BOOST:
+		weapons[wpn] = new EnergyBoost();
+		break;
+	}
+
+	weapons[wpn]->init();
 }
 
 float Role::getMovementSpeed()
@@ -38,10 +64,10 @@ void Role::chooseRole(int role)
 		health = atoi(loadedRoles[role][HEALTH].c_str());
 		maxHealth = health;
 
-		weapons[0].init(36, (WEAPON_TYPE)atoi(loadedRoles[role][MAINWEP].c_str()), 0.5);
-		weapons[1].init(80, (WEAPON_TYPE)atoi(loadedRoles[role][SECWEP].c_str()), 0.2);
+		loadWeapons(role, 0);
+		loadWeapons(role, 1);
 
-		consumable.setConsumable(atoi(loadedRoles[role][CONSUMABLE].c_str()));
+		//consumable.setConsumable(atoi(loadedRoles[role][CONSUMABLE].c_str()));
 		movementSpeed = atof(loadedRoles[role][MOVEMENTSPEED].c_str());
 	}
 }
@@ -49,22 +75,12 @@ void Role::chooseRole(int role)
 void Role::swapWeapon(int swapTo)
 {
 	if (currentWpn != swapTo)
-	{
-		switch (swapTo)
-		{
-		case WEAPON_TYPE::PULSE_RIFLE:
-			currentWpn = 0;
-			break;
-		case WEAPON_TYPE::POOP_GUN:
-			currentWpn = 1;
-			break;
-		}
-	}
+		currentWpn = swapTo;
 }
 
 Weapon* Role::getCurrentWeapon()
 {
-	return &weapons[currentWpn];
+	return weapons[currentWpn];
 }
 
 void Role::takeDamage(int dmg)

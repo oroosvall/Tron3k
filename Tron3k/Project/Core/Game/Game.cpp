@@ -493,9 +493,6 @@ void Game::addBulletToList(int conID, int bulletId, BULLET_TYPE bt, glm::vec3 po
 	case BULLET_TYPE::PULSE_SHOT:
 		b = new PulseShot(pos, dir, conID, bulletId, p->getTeam());
 		break;
-	case BULLET_TYPE::POOP:
-		b = new Poop(pos, dir, conID, bulletId, p->getTeam());
-		break;
 	}
 	
 	bullets[bt].push_back(b);
@@ -512,10 +509,10 @@ void Game::handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm
 			GetSound()->playExternalSound(SOUNDS::soundEffectPusleRifleShot, pos.x, pos.y, pos.z);
 		addBulletToList(conID, bulletId, BULLET_TYPE::PULSE_SHOT, pos, dir);
 		break;
-	case WEAPON_TYPE::POOP_GUN:
+	case WEAPON_TYPE::ENERGY_BOOST:
 		if (gameState != Gamestate::SERVER)
 			GetSound()->playExternalSound(SOUNDS::soundEffectPoopRifleShot, pos.x, pos.y, pos.z);
-		addBulletToList(conID, bulletId, BULLET_TYPE::POOP, pos, dir);
+		playerList[conID]->healing(10);
 		break;
 	}
 }

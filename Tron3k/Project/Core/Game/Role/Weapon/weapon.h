@@ -6,25 +6,28 @@
 
 class Weapon
 {
-	private:
+	protected:
 		int maxClipSize;
 		int currentClipAmmo;
 		
-		int currentBulletId = 0;
+		int currentBulletId = -1;
 		
 		float firingSpeed;
-		float currentDelay;
+		float firingSpeedCurrentDelay;
+
+		float reloadTime;
+		float rldTimer;
 
 		WEAPON_TYPE weaponType;
+
+		void countDownFiringSpeed(float deltaTime);
+		void countDownReloadTimer(float deltaTime);
 	public:
-		Weapon();
-		~Weapon();
+		virtual void init() = 0;
+		virtual bool shoot();
+		virtual bool reload();
 
-		void init(int maxClipSize, WEAPON_TYPE weaponType, float firingSpeed);
-		bool shoot();
-		bool reload();
-
-		void update(float deltaTime);
+		virtual int update(float deltaTime) = 0;
 
 		WEAPON_TYPE getType() { return weaponType; };
 
