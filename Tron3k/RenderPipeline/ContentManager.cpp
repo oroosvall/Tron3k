@@ -175,11 +175,15 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 	glBindTexture(GL_TEXTURE_2D, textures[0].textureID);
 	//static glow & spec
 	glActiveTexture(GL_TEXTURE0 + 2);
-	glBindTexture(GL_TEXTURE_2D, textures[5].textureID);
+	glBindTexture(GL_TEXTURE_2D, textures[6].textureID);
 
 	glProgramUniform1i(shader, textureLocation, 0);
 	glProgramUniform1i(shader, normalLocation, 1);
 	glProgramUniform1i(shader, glowSpecLocation, 2);
+
+	//reset rendered chunks from last frame
+	for (int n = 0; n < nrChunks; n++)
+		renderedChunks[n] = false;
 
 	//render chunks logged from last frame
 	for (int n = 0; n < nrChunks; n++)
@@ -213,9 +217,7 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 
 	//reset the renderrednextlist
 	for (int n = 0; n < nrChunks; n++)
-	{
 		renderNextChunks[n] = false;
-	}
 
 	glUseProgram(portal_shader);
 	glm::mat4 alreadyinworldpace;

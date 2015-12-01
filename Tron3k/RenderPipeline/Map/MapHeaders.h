@@ -248,7 +248,7 @@ struct Chunk
 		if (length(l.Direction) <= 0.001f)
 			l.Direction.y = -1;
 		l.Cutoff = light.coneAngle;
-		l.Cutoff = 0.7f;
+		l.Cutoff = -1.0f;
 
 		lights.push_back(l);
 	}

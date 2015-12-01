@@ -195,7 +195,7 @@ std::vector<float> Mesh::getBoundaries()
 	minX = -100.0f;
 	maxX = 100.0f;
 	minY = -15.0f;
-	maxY = 0.0f;
+	maxY = 1.0f;
 	minZ = -100.0f;
 	maxZ = 100.0f;
 
