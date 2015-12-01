@@ -348,7 +348,7 @@ void Game::checkPlayerVWorldCollision()
 					glm::vec3 vel = playerList[i]->getVelocity();
 					glm::vec3 pos = playerList[i]->getPos();
 					pos.y += vel.y;
-					playerList[i]->setGoalPos(pos);
+					
 					vel.y = 0.0f;
 					playerList[i]->setVelocity(vel);
 				}

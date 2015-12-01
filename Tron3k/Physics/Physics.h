@@ -26,6 +26,8 @@ private:
 	bool checkAABBCollision(CollideMesh mesh1, CollideMesh mesh2);
 	bool checkAABBCollision(Geometry* obj1, Geometry* obj2);
 
+	bool checkCylindervAABBCollision(CollideMesh mesh1, CollideMesh mesh2);
+
 	bool checkOBBCollision(CollideMesh mesh1, CollideMesh mesh2);
 	bool checkOBBCollision(Geometry* obj1, Geometry* obj2);
 

@@ -23,8 +23,17 @@ struct AABB
 
 struct OBB
 {
+	glm::vec3 pos;
 	glm::vec3 corners[8];
 
+};
+
+struct Cylinder
+{
+	glm::vec3 pos;
+	
+	float radius;
+	float height;
 };
 
 //contains several levels of meshes, one that is just a cube, and then one or several below that is a simple mesh, not sure how to solve yet, might work.
@@ -33,6 +42,7 @@ class CollideMesh
 private:
 	AABB boundingBox;
 	OBB collisionBox;
+	Cylinder cylinder;
 public:
 	CollideMesh();
 	~CollideMesh();
@@ -42,8 +52,11 @@ public:
 	void setAABB(float xPos, float yPos, float zPos, float xSize, float ySize, float zSize);
 	AABB getAABB();
 
-	void setOBB(glm::vec3* corners);
+	void setOBB(glm::vec3 pos, glm::vec3* corners);
 	OBB getOBB();
+	
+	void setCylinder(glm::vec3 pos, float radius, float height);
+	Cylinder getCylinder();
 
 	void setPos(glm::vec3 pos);
 

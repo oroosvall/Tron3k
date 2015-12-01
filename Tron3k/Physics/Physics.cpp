@@ -73,6 +73,50 @@ bool Physics::checkAABBCollision(CollideMesh mesh1, CollideMesh mesh2)
 	return 0;
 }
 
+bool Physics::checkCylindervAABBCollision(CollideMesh mesh1, CollideMesh mesh2)
+{
+	if (mesh1.getCylinder().pos.y + mesh1.getCylinder().height > mesh2.getAABB().posY - mesh2.getAABB().sizeY &&
+		mesh1.getCylinder().pos.y - mesh1.getCylinder().height < mesh2.getAABB().posY + mesh2.getAABB().sizeY)
+	{
+		//Collides in Y
+		glm::vec2 dist = glm::vec2(abs(mesh1.getCylinder().pos.x - mesh2.getAABB().posX), abs(mesh1.getCylinder().pos.z - mesh2.getAABB().posZ));
+
+		if (dist.x > mesh2.getAABB().sizeX + mesh1.getCylinder().radius)
+			return 0;
+		if (dist.y > mesh2.getAABB().sizeZ + mesh1.getCylinder().radius)
+			return 0;
+
+		if (dist.x <= mesh2.getAABB().sizeX)
+			return 1;
+		if (dist.y <= mesh2.getAABB().sizeZ)
+			return 1;
+
+		float cDist = ((dist.x - mesh2.getAABB().sizeX) * (dist.x - mesh2.getAABB().sizeX)) + ((dist.y - mesh2.getAABB().sizeZ) * (dist.y - mesh2.getAABB().sizeZ));
+		
+		if (cDist <= mesh1.getCylinder().radius * mesh1.getCylinder().radius)
+			return 1;
+		return 0;
+
+	}
+
+	return 0;
+	/*if (mesh1.getAABB().posX + mesh1.getAABB().sizeX > mesh2.getAABB().posX - mesh2.getAABB().sizeX &&
+		mesh1.getAABB().posX - mesh1.getAABB().sizeX < mesh2.getAABB().posX + mesh2.getAABB().sizeX)//x
+	{
+		if (mesh1.getAABB().posY + mesh1.getAABB().sizeY > mesh2.getAABB().posY - mesh2.getAABB().sizeY &&
+			mesh1.getAABB().posY - mesh1.getAABB().sizeY < mesh2.getAABB().posY + mesh2.getAABB().sizeY)//y
+		{
+			if (mesh1.getAABB().posZ + mesh1.getAABB().sizeZ > mesh2.getAABB().posZ - mesh2.getAABB().sizeZ &&
+				mesh1.getAABB().posZ - mesh1.getAABB().sizeZ < mesh2.getAABB().posZ + mesh2.getAABB().sizeZ)//z
+			{
+				return 1;
+			}
+		}
+	}
+
+	return 0;*/
+}
+
 bool Physics::checkOBBCollision(Geometry* obj1, Geometry* obj2)
 {
 	return 1;
@@ -118,7 +162,7 @@ bool Physics::checkPlayerVWorldCollision(glm::vec3 playerPos)
 
 	for (int i = 0; i < worldBoxes.size(); i++)
 	{
-		if (checkAABBCollision(playerBox, worldBoxes[i]))
+		if (checkCylindervAABBCollision(playerBox, worldBoxes[i]))
 			//if (checkOBBCollision(playerPos, worldBoxes[i]))
 				collides = true;
 	}
