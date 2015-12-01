@@ -38,16 +38,21 @@ private:
 	Gbuffer* gBuffer;
 
 	GLuint regularShader;
+	GLuint skeletonAShader;
+	GLuint computeShader;
 
-	GLuint worldMat;
-	GLuint viewProjMat;
+	GLuint worldMat[2];
+	GLuint viewProjMat[2];
 	GLuint viewMat;
 
-	GLuint uniformTextureLocation;
-	GLuint uniformNormalLocation;
-	GLuint uniformGlowSpecLocation;
-	GLuint uniformDynamicGlowColorLocation;
-	GLuint uniformStaticGlowIntensityLocation;
+	GLuint uniformTextureLocation[2];
+	GLuint uniformNormalLocation[2];
+	GLuint uniformGlowSpecLocation[2];
+	GLuint uniformDynamicGlowColorLocation[2];
+	GLuint uniformStaticGlowIntensityLocation[2];
+
+	GLuint uniformSkeletonMatrix[2];
+
 
 	float timepass = 0;
 public:
@@ -59,6 +64,7 @@ public:
 	virtual void update(float x, float y, float z, float dt);
 	virtual void renderIni();
 	virtual void render();
+	virtual void skeletonARender();
 
 	virtual void addLight(SpotLight* newLight);
 

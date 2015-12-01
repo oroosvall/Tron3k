@@ -119,30 +119,54 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	GLenum shaderTypesRegular[] = { GL_VERTEX_SHADER, GL_GEOMETRY_SHADER, GL_FRAGMENT_SHADER };
 	CreateProgram(regularShader, shaderNamesRegular, shaderTypesRegular, 3);
 
-	worldMat = glGetUniformLocation(regularShader, "WorldMatrix"); //worldMat
-	viewMat = glGetUniformLocation(regularShader, "ViewMatrix"); //view
-	viewProjMat = glGetUniformLocation(regularShader, "ViewProjMatrix"); //view
+	//Skeleton Animation Shader
+	std::string shaderNamesSkeletonA[] = { "GameFiles/Shaders/SkeletonAnimation_fs.glsl", "SkeletonAnimation_vs.glsl" };
+	GLenum shaderTypesSkeletonA[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
+	CreateProgram(skeletonAShader, shaderNamesSkeletonA, shaderTypesSkeletonA, 2);
 
-	uniformTextureLocation = glGetUniformLocation(regularShader, "textureSample"); //view
-	uniformNormalLocation = glGetUniformLocation(regularShader, "normalSample"); //view
-	uniformGlowSpecLocation = glGetUniformLocation(regularShader, "glowSpecSample"); //view
+	//Compute Shader
+	std::string shaderNamesCompute[] = { "GameFiles/Shaders/ComputeShader.glsl" };
+	GLenum shaderTypesCompute[] = { GL_COMPUTE_SHADER };
+	CreateProgram(computeShader, shaderNamesCompute, shaderTypesCompute, 1);
+	
+
+	worldMat[0] = glGetUniformLocation(regularShader, "WorldMatrix"); //worldMat regular shader
+	worldMat[1] = glGetUniformLocation(skeletonAShader, "WorldMatrix"); //worldMat skeleton shader
+	viewMat = glGetUniformLocation(regularShader, "ViewMatrix"); //view
+	viewProjMat[0] = glGetUniformLocation(regularShader, "ViewProjMatrix"); //view regular shader
+	viewProjMat[1] = glGetUniformLocation(skeletonAShader, "ViewProjMatrix"); //view skeleton shader
+
+	uniformTextureLocation[0] = glGetUniformLocation(regularShader, "textureSample"); //view regular shader
+	uniformTextureLocation[1] = glGetUniformLocation(skeletonAShader, "textureSample"); //view skeleton shader
+	uniformNormalLocation[0] = glGetUniformLocation(regularShader, "normalSample"); //view regular shader
+	uniformNormalLocation[1] = glGetUniformLocation(skeletonAShader, "normalSample"); //view skeleton shader
+	uniformGlowSpecLocation[0] = glGetUniformLocation(regularShader, "glowSpecSample"); //view regular shader
+	uniformGlowSpecLocation[1] = glGetUniformLocation(skeletonAShader, "glowSpecSample"); //view skeleton shader
 
 	cam.setViewMat(regularShader, viewMat);
-	worldMat = glGetUniformLocation(regularShader, "WorldMatrix"); //worldMat
+	worldMat[0] = glGetUniformLocation(regularShader, "WorldMatrix"); //worldMat regular shader
+	worldMat[1] = glGetUniformLocation(skeletonAShader, "WorldMatrix"); //worldMat skeleton shader
 	viewMat = glGetUniformLocation(regularShader, "ViewProjMatrix"); //view
 
-	uniformTextureLocation = glGetUniformLocation(regularShader, "textureSample"); //view
+	uniformTextureLocation[0] = glGetUniformLocation(regularShader, "textureSample"); //view regular shader
+	uniformTextureLocation[1] = glGetUniformLocation(skeletonAShader, "textureSample"); //view skeleton shader
 
-	uniformDynamicGlowColorLocation = glGetUniformLocation(regularShader, "dynamicGlowColor");
-	uniformStaticGlowIntensityLocation = glGetUniformLocation(regularShader, "staticGlowIntensity");
+	uniformDynamicGlowColorLocation[0] = glGetUniformLocation(regularShader, "dynamicGlowColor"); //regular shader
+	uniformDynamicGlowColorLocation[1] = glGetUniformLocation(skeletonAShader, "dynamicGlowColor"); //skeleton shader
+	uniformStaticGlowIntensityLocation[0] = glGetUniformLocation(regularShader, "staticGlowIntensity"); //regular shader
+	uniformStaticGlowIntensityLocation[1] = glGetUniformLocation(skeletonAShader, "staticGlowIntensity"); //skeleton shader
 
-	cam.setViewProjMat(regularShader, viewProjMat);
+	uniformSkeletonMatrix[0] = glGetUniformLocation(computeShader, "inverseBindpose");
+	uniformSkeletonMatrix[1] = glGetUniformLocation(skeletonAShader, "inverseBindpose");
+
+	cam.setViewProjMat(regularShader, viewProjMat[0]);
+	cam.setViewProjMat(skeletonAShader, viewProjMat[0]);
 	cam.setViewMat(regularShader, viewMat);
-	
+
 	gBuffer->init(WindowWidth, WindowHeight, 5, true);
 
 	contMan.init();
-	
+
 	return true;
 }
 
@@ -151,7 +175,9 @@ void RenderPipeline::release()
 	// place delete code here
 
 	glDeleteShader(regularShader);
-	
+	glDeleteShader(skeletonAShader);
+	glDeleteShader(computeShader);
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -167,8 +193,8 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	timepass += dt;
 	//set camera matrixes
 	cam.setViewMat(regularShader, viewMat);
-	cam.setViewProjMat(regularShader, viewProjMat);
-	cam.setViewProjMat(*gBuffer->portal_shaderPtr, gBuffer->portal_vp);
+	cam.setViewProjMat(regularShader, viewProjMat[0]);
+	cam.setViewProjMat(skeletonAShader, viewProjMat[0]);
 
 	gBuffer->eyePosLast = gBuffer->eyePos;
 	gBuffer->eyePos.x = x;
@@ -178,13 +204,16 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	//returns room id, new value if we went though a portal
 	contMan.getPortalID(gBuffer->eyePosLast, gBuffer->eyePos);
 
-	glProgramUniform1i(regularShader, uniformTextureLocation, 0);
-	glProgramUniform1i(regularShader, uniformNormalLocation, 1);
-	glProgramUniform1i(regularShader, uniformGlowSpecLocation, 2);
+	glProgramUniform1i(regularShader, uniformTextureLocation[0], 0); //regular shader
+	glProgramUniform1i(regularShader, uniformNormalLocation[0], 1); //regular shader
+	glProgramUniform1i(regularShader, uniformGlowSpecLocation[0], 2); //regular shader
+
+	glProgramUniform1i(skeletonAShader, uniformTextureLocation[1], 0); //skeleton shader
+	glProgramUniform1i(skeletonAShader, uniformNormalLocation[1], 1); //skeleton shader
+	glProgramUniform1i(skeletonAShader, uniformGlowSpecLocation[1], 2); //skeleton shader
 
 	gBuffer->clearLights();
 }
-
 void RenderPipeline::addLight(SpotLight* newLight)
 {
 	gBuffer->pushLights(newLight, 1);
@@ -201,12 +230,15 @@ void RenderPipeline::renderIni()
 void RenderPipeline::render()
 {
 	//Glow values for world
-	glProgramUniform1f(regularShader, uniformStaticGlowIntensityLocation, mod((timepass / 5.0f), 1.0f));
+	glProgramUniform1f(regularShader, uniformStaticGlowIntensityLocation[0], mod((timepass / 5.0f), 1.0f));
 	glm::vec3 glowColor(mod((timepass / 1.0f), 1.0f), mod((timepass / 2.0f), 1.0f), mod((timepass / 3.0f), 1.0f));
-	glProgramUniform3fv(regularShader, uniformDynamicGlowColorLocation, 1, (GLfloat*)&glowColor[0]);
+	glProgramUniform3fv(regularShader, uniformDynamicGlowColorLocation[0], 1, (GLfloat*)&glowColor[0]);
 
-	contMan.renderChunks(regularShader, worldMat, uniformTextureLocation, uniformNormalLocation, uniformGlowSpecLocation, *gBuffer->portal_shaderPtr, gBuffer->portal_model);
+	contMan.renderChunks(regularShader, worldMat[0], uniformTextureLocation[0], uniformNormalLocation[0], uniformGlowSpecLocation[0], *gBuffer->portal_shaderPtr, gBuffer->portal_model);
 	
+	//Skeleton render here
+	skeletonARender();
+
 	//GBuffer Render
 	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -225,6 +257,30 @@ void RenderPipeline::render()
 
 }
 
+void RenderPipeline::skeletonARender()
+{
+	//Compute shader for Skeleton shadern
+	glUseProgram(computeShader);
+
+	glProgramUniformMatrix4fv(computeShader, uniformSkeletonMatrix[0], /*nrOfMatrices*/, FALSE, /*&skeletonA->MatrixArray[0]*/);
+
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, /*SkeletionA buffer here*/);
+	glDispatchCompute(10, 1, 1);
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+
+	//Skeleton
+	glUseProgram(skeletonAShader);
+
+	glProgramUniformMatrix4fv(skeletonAShader, uniformSkeletonMatrix[1], /*nrOfMatrices*/, FALSE, /*&skeletonA->MatrixArray[0]*/);
+	glProgramUniform1f(skeletonAShader, uniformStaticGlowIntensityLocation[1], mod((timepass / 5.0f), 1.0f));
+	glm::vec3 glowColor(mod((timepass / 1.0f), 1.0f), mod((timepass / 2.0f), 1.0f), mod((timepass / 3.0f), 1.0f));
+	glProgramUniform3fv(skeletonAShader, uniformDynamicGlowColorLocation[1], 1, (GLfloat*)&glowColor[0]);
+
+	//glBindBuffer(GL_SHADER_STORAGE_BUFFER, particles->paticleVBO);
+	contMan.renderChunks(skeletonAShader, worldMat[1], uniformTextureLocation[1], uniformNormalLocation[1], uniformGlowSpecLocation[1], *gBuffer->portal_shaderPtr, gBuffer->portal_model);
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+}
+
 void* RenderPipeline::getView()
 {
 	return (void*)cam.getViewMat();
@@ -233,11 +289,11 @@ void* RenderPipeline::getView()
 void RenderPipeline::renderPlayer(int playerID, void* world, float* dgColor, float sgInten)
 {
 	//Glow values for player
-	glProgramUniform1f(regularShader, uniformStaticGlowIntensityLocation, sgInten);
-	glProgramUniform3fv(regularShader, uniformDynamicGlowColorLocation, 1, (GLfloat*)&dgColor[0]);
+	glProgramUniform1f(regularShader, uniformStaticGlowIntensityLocation[0], sgInten);
+	glProgramUniform3fv(regularShader, uniformDynamicGlowColorLocation[0], 1, (GLfloat*)&dgColor[0]);
 
 	//set temp objects worldmat
-	glProgramUniformMatrix4fv(regularShader, worldMat, 1, GL_FALSE, (GLfloat*)world);
+	glProgramUniformMatrix4fv(regularShader, worldMat[0], 1, GL_FALSE, (GLfloat*)world);
 
 	contMan.renderPlayer(playerID, *(glm::mat4*)world);
 }
