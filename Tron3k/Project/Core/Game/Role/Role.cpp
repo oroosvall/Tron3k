@@ -23,8 +23,10 @@ Role::Role(string inLoadedRoles[NROFROLES][NROFREADPROPERTIES])
 
 Role::~Role()
 {
-	delete weapons[0];
-	delete weapons[1];
+	if (weapons[0] != nullptr)
+		delete weapons[0];
+	if (weapons[0] != nullptr)
+		delete weapons[1];
 	if (storageMain != nullptr)
 		delete storageMain;
 	if (storageSec != nullptr)

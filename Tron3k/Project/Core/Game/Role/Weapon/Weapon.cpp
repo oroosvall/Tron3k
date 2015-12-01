@@ -6,7 +6,7 @@ bool Weapon::shoot()
 
 	if (rldTimer < FLT_EPSILON)
 	{
-		if (firingSpeedCurrentDelay <= 0 && currentClipAmmo > 0)
+		if (firingSpeedCurrentDelay < FLT_EPSILON && currentClipAmmo > 0)
 		{
 			currentClipAmmo--;
 			firingSpeedCurrentDelay = firingSpeed;
@@ -20,6 +20,7 @@ bool Weapon::shoot()
 bool Weapon::reload()
 {
 	rldTimer = reloadTime;
+
 	return true;
 }
 
@@ -43,7 +44,10 @@ void Weapon::countDownReloadTimer(float dt)
 	if (rldTimer > FLT_EPSILON) //Tick dat reloadtimer down boi
 	{
 		rldTimer -= dt;
-		if (rldTimer < FLT_EPSILON)
-			currentClipAmmo = maxClipSize; //Reload complete
+		if (rldTimer < FLT_EPSILON) //Reload complete
+		{
+			currentClipAmmo = maxClipSize;
+			firingSpeedCurrentDelay = 0.0f;
+		}
 	}
 }
