@@ -209,6 +209,11 @@ void Map::loadMap(std::string mapName)
 
 	SpotLightH* sl = new SpotLightH[spotLightCount];
 	inFile.read((char*)sl, sizeof(SpotLightH) * spotLightCount);
+	
+	for (int i = 0; i < spotLightCount; i++)
+	{
+		chunks[sl[i].roomID].addLight(sl[i]);
+	}
 	delete[] sl;
 
 	PortalDataRead* portalData = new PortalDataRead[portalCount];
