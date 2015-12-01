@@ -59,7 +59,7 @@ void Map::release()
 
 void Map::render(GLuint shader, GLuint shaderLocation, GLuint texture, GLuint normal, GLuint spec)
 {
-	for (int i = 0; i < meshCount; i++)
+	/*for (int i = 0; i < meshCount; i++)
 	{
 		for (int ins = 0; ins < meshes[i].instanceCount; ins++)
 		{
@@ -82,7 +82,25 @@ void Map::render(GLuint shader, GLuint shaderLocation, GLuint texture, GLuint no
 
 			glDrawElements(GL_TRIANGLES, meshes[i].indexCount, GL_UNSIGNED_INT, 0);
 		}
+	}*/
+	int chunkID = 1;
+	for (size_t i = 0; i < chunks[chunkID].props.size(); i++)
+	{
+		int meshID = chunks[chunkID].props[i].id;
+
+		glBindVertexArray(meshes[meshID].vertexArray);
+		glBindBuffer(GL_ARRAY_BUFFER, meshes[meshID].vertexBuffer);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshes[meshID].indexBuffer);
+
+		for (int ins = 0; ins < chunks[chunkID].props[i].mats.size(); ins++)
+		{
+			glProgramUniformMatrix4fv(shader, shaderLocation, 1, GL_TRUE, (GLfloat*)&chunks[chunkID].props[i].mats[ins][0][0]);
+
+			glDrawElements(GL_TRIANGLES, meshes[meshID].indexCount, GL_UNSIGNED_INT, 0);
+		}
+
 	}
+
 }
 
 void Map::loadMap(std::string mapName)
@@ -109,6 +127,12 @@ void Map::loadMap(std::string mapName)
 	int spTBCount = (int)fileHeader.SPCountTeamB;
 	int spFFACount = (int)fileHeader.SPCountTeamFFA;
 	
+	for (size_t i = 0; i < fileHeader.roomCount; i++)
+	{
+		chunks.push_back(Chunk());
+		chunks[i].roomID = i;
+	}
+
 	meshes = new StaticMesh[meshCount];
 	
 	for (int i = 0; i < meshCount; i++)
@@ -126,13 +150,20 @@ void Map::loadMap(std::string mapName)
 		int* roomIDs = new int[instanceCount];
 		meshes[i].init(instanceCount);
 		inFile.read((char*)roomIDs, sizeof(int)*instanceCount);
-		meshes[i].setRoomIDs(roomIDs);
 	
 		glm::mat4* matrices = new glm::mat4[instanceCount];
 	
 		inFile.read((char*)matrices, sizeof(glm::mat4)*instanceCount);
-		meshes[i].setMatrices(matrices);
-	
+		//meshes[i].setMatrices(matrices);
+
+		for (int j = 0; j < instanceCount; j++)
+		{
+			chunks[roomIDs[j]].addProp(i, matrices[j]);
+		}
+
+		delete[] roomIDs;
+		delete[] matrices;
+
 		int* materialIndices = new int[materialCount];
 		inFile.read((char*)materialIndices, sizeof(int)*materialCount);
 		meshes[i].material = materialIndices[0];
@@ -160,7 +191,7 @@ void Map::loadMap(std::string mapName)
 		// temp fix for leaks
 		delete[] bbPoints;
 
-		for (int i = 0; i < instanceCount; i++)
+		for (int j = 0; j < instanceCount; j++)
 		{
 			glm::mat4* bbMats = new glm::mat4[bbCount];
 			inFile.read((char*)bbMats, sizeof(glm::mat4)*bbCount);

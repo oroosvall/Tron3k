@@ -4,8 +4,6 @@ void StaticMesh::release()
 {
 	delete[] verts;
 	delete[] indices;
-	delete[] roomIDs;
-	delete[] worldMatrices;
 
 	glDeleteBuffers(1, &vertexBuffer);
 	glDeleteBuffers(1, &indexBuffer);
@@ -17,16 +15,6 @@ void StaticMesh::release()
 void StaticMesh::init(int iCount)
 {
 	instanceCount = iCount;
-}
-
-void StaticMesh::setRoomIDs(int* &room)
-{
-	roomIDs = room;
-}
-
-void StaticMesh::setMatrices(glm::mat4* &worldMats)
-{
-	worldMatrices = worldMats;
 }
 
 void StaticMesh::setVertices(float* &vertices, int vertCount)

@@ -11,9 +11,6 @@ class StaticMesh
 private:
 
 	int materialCount;
-
-	int* roomIDs;
-
 	
 	int vertexCount;
 	Vertex11* verts;
@@ -25,7 +22,6 @@ public:
 	int material;
 
 	int instanceCount;
-	glm::mat4* worldMatrices;
 
 	GLuint vertexBuffer;
 	GLuint indexBuffer;
@@ -36,8 +32,6 @@ public:
 	void release();
 
 	void init(int instanceCount);
-	void setRoomIDs(int* &room);
-	void setMatrices(glm::mat4* &worldMatrices);
 	void setVertices(float* &vertices, int vertexCount);
 	void setIndices(int* &ndices, int indicesCount);
 

@@ -33,9 +33,12 @@ private:
 	int meshCount;
 	int textureCount;
 
+	int bbCount;
+
 	int currentChunk;
 
-	
+	vector<Chunk> chunks;
+
 public:
 	vector<PortalData> portals;
 	

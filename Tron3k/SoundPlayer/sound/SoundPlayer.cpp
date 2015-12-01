@@ -3,7 +3,7 @@ int SoundPlayer::nrOfSoundsPlaying = 0;
 float SoundPlayer::soundVolume = 50.0f;
 float SoundPlayer::musicVolume = 50.0f;
 bool SoundPlayer::soundEnabler = false;
-
+#include <iostream>
 
 SoundPlayer* SoundPlayer::singleton = nullptr;
 
@@ -89,11 +89,30 @@ int SoundPlayer::playUserGeneratedSound(int sound)
 
 int SoundPlayer::playExternalSound(int sound, float x, float y, float z)
 {
-	sf::Listener::setDirection(playerDir.x, playerDir.y, playerDir.z);			//Set the direction of the player
+	
 
-	sounds[nrOfSoundsPlaying].isRelativeToListener();
+	sf::Listener::setDirection(playerDir.x, playerDir.y, playerDir.z);			//Set the direction of the player
+	if (sf::Listener::getPosition().x > x - 0.1 && sf::Listener::getPosition().x < x + 0.1)
+	{
+		if (sf::Listener::getPosition().z > z - 0.1 && sf::Listener::getPosition().z < z + 0.1)
+		{
+			sounds[nrOfSoundsPlaying].setRelativeToListener(true);
+			sounds[nrOfSoundsPlaying].setPosition(0, 0, 0);
+			
+		}
+	}
+		
+	else
+	{
+			sounds[nrOfSoundsPlaying].setRelativeToListener(false);
+			sounds[nrOfSoundsPlaying].setPosition(x, y, z);			//Set the sound's position in the world. Could be passed in through a parameter.
+	}
+
+	//std::cout << "x: " << sf::Listener::getPosition().x << " y: " << sf::Listener::getPosition().y << " z: " << sf::Listener::getPosition().z << endl;
+	//std::cout << "x: " << x << " y: " << y << " z: " << z << endl;
+	//sounds[nrOfSoundsPlaying].isRelativeToListener();
 	sounds[nrOfSoundsPlaying].setMinDistance(10.0f);		//Set the sound's distance it travels before it starts to attenuate. Could be passed in through a parameter.
-	sounds[nrOfSoundsPlaying].setPosition(x, y, z);			//Set the sound's position in the world. Could be passed in through a parameter.
+				
 	sounds[nrOfSoundsPlaying].setBuffer(soundList[sound]);
 	sounds[nrOfSoundsPlaying].setVolume(soundVolume);
 	sounds[nrOfSoundsPlaying].play();
@@ -110,6 +129,7 @@ void SoundPlayer::setLocalPlayerDir(glm::vec3 playerDir)
 
 void SoundPlayer::setLocalPlayerPos(glm::vec3 playerPos)
 {
+	//cout << playerPos.x << "    " << playerPos.z << endl;
 	sf::Listener::setPosition(playerPos.x, playerPos.y, playerPos.z);
 }
 

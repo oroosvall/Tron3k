@@ -3,9 +3,14 @@
 
 #include <cstdlib>
 #include "../BlitQuad.h"
+#include "../StaticMesh.h"
+#include <vector>
+
+using std::vector;
 
 struct SharedFileHDR
 {
+	uint32_t roomCount;
 	uint32_t meshCount;
 	uint32_t pointLightCount;
 	uint32_t spotLightCount;
@@ -185,4 +190,45 @@ struct SpawnPoint
 	float dx, dy, dz;
 };
 
+struct Prop
+{
+	uint32_t id;
+	vector<glm::mat4> mats;
+};
+
+struct Chunk
+{
+	Chunk()
+	{
+		roomID = -1;
+		nrPortals = 0;
+		nrLights = 0;
+	}
+
+	void addProp(int id, glm::mat4 matrix)
+	{
+		for (size_t i = 0; i < props.size(); i++)
+		{
+			if (props[i].id == id)
+			{
+				props[i].mats.push_back(matrix);
+				return;
+			}
+		}
+		props.push_back(Prop());
+		props[props.size() - 1].id = id;
+		props[props.size() - 1].mats.push_back(matrix);
+	}
+
+	uint32_t roomID;
+
+	vector<Prop> props;
+
+	int nrPortals;
+	PortalData* portals;
+
+	int nrLights;
+	SpotLightH* lights;
+
+};
 #endif
