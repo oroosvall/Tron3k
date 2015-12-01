@@ -163,15 +163,22 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 	//static glow
 	glActiveTexture(GL_TEXTURE0 + 2);
 	glBindTexture(GL_TEXTURE_2D, textures[5].textureID);
-	testMap.render(shader, shaderLocation, textureLocation, normalLocation, glowSpecLocation);
+
+	glProgramUniform1i(shader, textureLocation, 0);
+	glProgramUniform1i(shader, normalLocation, 1);
+	glProgramUniform1i(shader, glowSpecLocation, 2);
+
+	testMap.renderChunk(shader, shaderLocation, 1);
+	
+	/* TEMP STUFF*/
 
 	for (size_t i = 0; i < meshes.size(); i++)
 	{
 		glProgramUniformMatrix4fv(shader, shaderLocation, 1, GL_FALSE, (GLfloat*)meshes[i].getWorld());
 	
-		glProgramUniform1i(shader, textureLocation, 0);
-		glProgramUniform1i(shader, normalLocation, 1);
-		glProgramUniform1i(shader, glowSpecLocation, 2);
+		//glProgramUniform1i(shader, textureLocation, 0);
+		//glProgramUniform1i(shader, normalLocation, 1);
+		//glProgramUniform1i(shader, glowSpecLocation, 2);
 		//diffuse
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, meshes[i].textureID);
@@ -192,6 +199,8 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 		glDrawElements(GL_TRIANGLES, meshes[i].faceCount * 3, GL_UNSIGNED_SHORT, 0);
 	}
 
+	/* NO MORE STUFF*/
+
 	glUseProgram(portal_shader);
 	glm::mat4 alreadyinworldpace;
 	glProgramUniformMatrix4fv(portal_shader, portal_world, 1, GL_FALSE, &alreadyinworldpace[0][0]);
@@ -203,8 +212,13 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 	glGenQueries(1, &test);
 	glBeginQuery(GL_SAMPLES_PASSED, test);
 
-	testMap.portals[0].render();
-	testMap.portals[1].render();
+	//testMap.portals[0].render();
+	//testMap.portals[1].render();
+
+	for (size_t i = 0; i < 	testMap.chunks[1].portals.size(); i++)
+	{
+		testMap.chunks[1].portals[i].render();
+	}
 
 	GLint passed = 2222;
 	glEndQuery(GL_SAMPLES_PASSED);

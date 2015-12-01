@@ -37,15 +37,14 @@ private:
 
 	int currentChunk;
 
-	vector<Chunk> chunks;
-
 public:
+	vector<Chunk> chunks;
 	vector<PortalData> portals;
 	
 	void init();
 	void release();
 
-	void render(GLuint shader, GLuint shaderLocation, GLuint texture, GLuint normal, GLuint spec);
+	void renderChunk(GLuint shader, GLuint shaderLocation, int chunkID);
 
 	void loadMap(std::string mapName);
 
