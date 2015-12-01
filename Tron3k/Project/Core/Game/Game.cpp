@@ -157,6 +157,7 @@ void Game::update(float dt)
 			int msg = bullets[i][c]->update(dt);
 			if (msg == 1)		//Bullet is dead
 			{
+				delete bullets[i][c];
 				bullets[i][c] = bullets[i][bullets[i].size() - 1];
 				bullets[i].pop_back();
 			}

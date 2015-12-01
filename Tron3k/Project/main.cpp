@@ -8,13 +8,13 @@
 #include <crtdbg.h>
 #include "Core\Core.h"
 
-//#include <vld.h>
+#include <vld.h>
 
 using namespace std;
 
 int main()
 {
-	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	double dt = 0.0f;
 	float timePass = 0.0f;
 	int fps = 0;
