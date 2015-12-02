@@ -21,6 +21,7 @@ class SoundPlayer
 private:
 	static SoundPlayer* singleton;
 	static bool soundEnabler;
+	static bool initialized;
 	static int nrOfSoundsPlaying;
 	static float soundVolume;
 	static float musicVolume;
@@ -41,11 +42,12 @@ public:
 	SoundPlayer();
 
 	static void release();
-	static void init(SoundPlayer* sound);
+	static void init(SoundPlayer* sound, int activateSound);
 	static SoundPlayer* getSound();
 
 	virtual void enableSounds();
 	static bool getSoundEnabler();
+	static bool getInitialized();
 
 	virtual void setVolumeMusic(float volume);
 	virtual void setVolumeSound(float volume);
@@ -66,7 +68,9 @@ extern "C" SOUNDPLAYER_API SoundPlayer* GetSound();
 
 extern "C" SOUNDPLAYER_API bool GetSoundActivated();
 
-extern "C" SOUNDPLAYER_API void InitSound(SoundPlayer* sound);
+extern "C" SOUNDPLAYER_API bool GetInitialized();
+
+extern "C" SOUNDPLAYER_API void InitSound(SoundPlayer* sound, int activateSound);
 
 extern "C" SOUNDPLAYER_API void ReleaseSound();
 

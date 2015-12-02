@@ -103,11 +103,16 @@ void Game::initPhysics()
 
 void Game::update(float dt)
 {
-	if (Input::getInput()->justPressed(GLFW_KEY_Z) && !GetSoundActivated())
+	if (Input::getInput()->justPressed(GLFW_KEY_Z))
 	{
-		InitSound(CreateSound());
-		GetSound()->playMusic(MUSIC::mainMenu);
-		GetSound()->enableSounds();
+		if (GetSoundActivated() == 0 && GetInitialized() == 0)
+		{
+			InitSound(CreateSound(), 1);
+		}
+		else if (GetInitialized())
+		{
+			GetSound()->enableSounds();
+		}
 	}
 	
 
@@ -515,12 +520,14 @@ void Game::handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm
 	case WEAPON_TYPE::PULSE_RIFLE:
 		//To do: Automate generation of bullets
 		if (gameState != Gamestate::SERVER)
-			GetSound()->playExternalSound(SOUNDS::soundEffectPusleRifleShot, pos.x, pos.y, pos.z);
+			if (GetSound())
+				GetSound()->playExternalSound(SOUNDS::soundEffectPusleRifleShot, pos.x, pos.y, pos.z);	
 		addBulletToList(conID, bulletId, BULLET_TYPE::PULSE_SHOT, pos, dir);
 		break;
 	case WEAPON_TYPE::ENERGY_BOOST:
 		if (gameState != Gamestate::SERVER)
-			GetSound()->playExternalSound(SOUNDS::soundEffectPoopRifleShot, pos.x, pos.y, pos.z);
+			if(GetSound())
+				GetSound()->playExternalSound(SOUNDS::soundEffectPoopRifleShot, pos.x, pos.y, pos.z);
 		playerList[conID]->healing(10);
 		break;
 	}

@@ -3,6 +3,7 @@ int SoundPlayer::nrOfSoundsPlaying = 0;
 float SoundPlayer::soundVolume = 50.0f;
 float SoundPlayer::musicVolume = 50.0f;
 bool SoundPlayer::soundEnabler = false;
+bool SoundPlayer::initialized = false;
 #include <iostream>
 
 //#include <vld.h>
@@ -17,27 +18,25 @@ void SoundPlayer::release()
 	}
 }
 
-void SoundPlayer::init(SoundPlayer* sound)
+void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 {
 	singleton = sound;
-	
-	if (singleton->soundList[SOUNDS::soundEffectPoopRifleShot].loadFromFile("GameFiles/Sound/soundEffectPoopRifleShot.ogg"))
+	soundEnabler = activateSound;
+
+	if (soundEnabler)
 	{
-		// if file not read dont play sound
-		soundEnabler = false;
+		singleton->soundList[SOUNDS::soundEffectPoopRifleShot].loadFromFile("GameFiles/Sound/soundEffectPoopRifleShot.ogg");
+		singleton->soundList[SOUNDS::soundEffectBulletPlayerHit].loadFromFile("GameFiles/Sound/soundEffectBulletPlayerHit.ogg");
+		singleton->soundList[SOUNDS::soundEffectPusleRifleShot].loadFromFile("GameFiles/Sound/soundEffectPusleRifleShot.ogg");
+		singleton->soundList[SOUNDS::firstBlood].loadFromFile("GameFiles/Sound/voiceFirstBlood.ogg");
+		singleton->musicList[MUSIC::mainMenu] = "GameFiles/Sound/musicMainMenu.ogg";
+
+		initialized = true;
 	}
-	singleton->soundList[SOUNDS::soundEffectBulletPlayerHit].loadFromFile("GameFiles/Sound/soundEffectBulletPlayerHit.ogg");
-	singleton->soundList[SOUNDS::soundEffectPusleRifleShot].loadFromFile("GameFiles/Sound/soundEffectPusleRifleShot.ogg");
-	singleton->soundList[SOUNDS::firstBlood].loadFromFile("GameFiles/Sound/voiceFirstBlood.ogg");
-	singleton->musicList[MUSIC::mainMenu] = "GameFiles/Sound/musicMainMenu.ogg";
 }
 
 SoundPlayer* SoundPlayer::getSound()
 {
-	if (singleton == nullptr)
-	{
-		singleton = new SoundPlayer();
-	}
 	return singleton;
 }
 
@@ -57,9 +56,10 @@ void SoundPlayer::enableSounds()
 	{
 		for (int i = 0; i < nrOfSoundsPlaying; i++)
 		{
-			sounds[i].setVolume(0.0);
+			sounds[i].setVolume(soundVolume);
 		}
-		musicPlayer.setVolume(0.0);
+		musicPlayer.play();
+		musicPlayer.setVolume(musicVolume);
 		soundEnabler = true;
 	}
 	else
@@ -77,6 +77,10 @@ bool SoundPlayer::getSoundEnabler()
 	return soundEnabler;
 }
 
+bool SoundPlayer::getInitialized()
+{
+	return initialized;
+}
 
 void SoundPlayer::setVolumeMusic(float volume)
 {
@@ -90,7 +94,7 @@ void SoundPlayer::setVolumeSound(float volume)
 
 int SoundPlayer::playUserGeneratedSound(int sound)
 {
-	if (soundEnabler)
+	if (soundEnabler && initialized == 1)
 	{
 		sounds[nrOfSoundsPlaying].setBuffer(soundList[sound]);
 		sounds[nrOfSoundsPlaying].play();
@@ -103,7 +107,7 @@ int SoundPlayer::playUserGeneratedSound(int sound)
 
 int SoundPlayer::playExternalSound(int sound, float x, float y, float z)
 {
-	if (soundEnabler)
+	if (soundEnabler && initialized == 1)
 	{
 
 		sf::Listener::setDirection(playerDir.x, playerDir.y, playerDir.z);			//Set the direction of the player
@@ -151,7 +155,7 @@ void SoundPlayer::setLocalPlayerPos(glm::vec3 playerPos)
 
 int SoundPlayer::playMusic(int music)
 {
-	if (soundEnabler)
+	if (soundEnabler && initialized == 1)
 	{
 
 		if (musicPlayer.getStatus() == sf::Sound::Playing)
@@ -190,9 +194,15 @@ bool GetSoundActivated()
 {
 	return SoundPlayer::getSoundEnabler();
 }
-void InitSound(SoundPlayer* sound)
+
+bool GetInitialized()
 {
-	SoundPlayer::init(sound);
+	return SoundPlayer::getInitialized();
+}
+
+void InitSound(SoundPlayer* sound, int activateSound)
+{
+	SoundPlayer::init(sound, activateSound);
 }
 
 void ReleaseSound()
