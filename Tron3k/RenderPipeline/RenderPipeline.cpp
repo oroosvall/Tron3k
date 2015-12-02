@@ -206,22 +206,19 @@ void RenderPipeline::render()
 
 	contMan.renderChunks(regularShader, worldMat, uniformTextureLocation, uniformNormalLocation, uniformGlowSpecLocation, *gBuffer->portal_shaderPtr, gBuffer->portal_model);
 	
+	//push the lights of the rendered chunks
+	for (int n = 0; n < contMan.nrChunks; n++)
+		if (contMan.renderedChunks[n] == true)
+			for (int k = 0; k < contMan.testMap.chunks[n].lights.size(); k++)
+			{
+				gBuffer->pushLights(&contMan.testMap.chunks[n].lights[k], 1);
+			}
+
 	//GBuffer Render
 	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	gBuffer->render();
-
-	//if rendering portals
-	//glDisable(GL_DEPTH_TEST);
-	//glDisable(GL_CULL_FACE);
-	//glEnable(GL_BLEND);
-	//cam.setViewProjMat(*gBuffer->portal_shaderPtr, gBuffer->portal_vp);
-	//contMan.renderPortals(*gBuffer->portal_shaderPtr, gBuffer->portal_model);
-	//glEnable(GL_DEPTH_TEST);
-	//glEnable(GL_CULL_FACE);
-	//glDisable(GL_BLEND);
-
 }
 
 void* RenderPipeline::getView()

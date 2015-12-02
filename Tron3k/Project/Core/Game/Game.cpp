@@ -103,6 +103,19 @@ void Game::initPhysics()
 
 void Game::update(float dt)
 {
+	if (Input::getInput()->justPressed(GLFW_KEY_Z))
+	{
+		if (GetSoundActivated() == 0 && GetInitialized() == 0)
+		{
+			InitSound(CreateSound(), 1);
+		}
+		else if (GetInitialized())
+		{
+			GetSound()->enableSounds();
+		}
+	}
+	
+
 	for (int c = 0; c < max_con; c++)
 	{
 		if (playerList[c] != nullptr)
@@ -353,7 +366,7 @@ void Game::checkPlayerVWorldCollision()
 					glm::vec3 vel = playerList[i]->getVelocity();
 					glm::vec3 pos = playerList[i]->getPos();
 					pos.y += vel.y;
-					playerList[i]->setGoalPos(pos);
+					
 					vel.y = 0.0f;
 					playerList[i]->setVelocity(vel);
 				}
@@ -512,12 +525,14 @@ void Game::handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm
 	case WEAPON_TYPE::PULSE_RIFLE:
 		//To do: Automate generation of bullets
 		if (gameState != Gamestate::SERVER)
-			GetSound()->playExternalSound(SOUNDS::soundEffectPusleRifleShot, pos.x, pos.y, pos.z);
+			if (GetSound())
+				GetSound()->playExternalSound(SOUNDS::soundEffectPusleRifleShot, pos.x, pos.y, pos.z);	
 		addBulletToList(conID, bulletId, BULLET_TYPE::PULSE_SHOT, pos, dir);
 		break;
 	case WEAPON_TYPE::ENERGY_BOOST:
 		if (gameState != Gamestate::SERVER)
-			GetSound()->playExternalSound(SOUNDS::soundEffectPoopRifleShot, pos.x, pos.y, pos.z);
+			if(GetSound())
+				GetSound()->playExternalSound(SOUNDS::soundEffectPoopRifleShot, pos.x, pos.y, pos.z);
 		playerList[conID]->healing(10);
 		break;
 	}
@@ -542,7 +557,8 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi, int newHPtotal)
 {
 	glm::vec3 pos = playerList[hi.playerHit]->getPos();
 	if (gameState != Gamestate::SERVER)
-		GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHit, pos.x, pos.y, pos.z);
+		if (GetSoundActivated)
+			GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHit, pos.x, pos.y, pos.z);
 	Player* p = playerList[hi.playerHit];
 	int bulletPosInArray;
 	Bullet* theBullet = getBulletForRemoval(hi.bulletPID, hi.bulletBID, hi.bt, bulletPosInArray);

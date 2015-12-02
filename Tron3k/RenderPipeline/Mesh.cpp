@@ -192,12 +192,12 @@ std::vector<float> Mesh::getBoundaries()
 	minX = minY = minZ = FLT_MAX;
 	maxX = maxY = maxZ = -FLT_MAX;
 
-	minX = -10000.0f;
-	maxX = 10000.0f;
+	minX = -100.0f;
+	maxX = 100.0f;
 	minY = -15.0f;
-	maxY = 0.0f;
-	minZ = -10000.0f;
-	maxZ = 10000.0f;
+	maxY = 1.0f;
+	minZ = -100.0f;
+	maxZ = 100.0f;
 
 	boundaries.push_back(maxX);
 	boundaries.push_back(minX);

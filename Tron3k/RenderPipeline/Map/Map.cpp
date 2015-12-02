@@ -4,7 +4,7 @@
 
 void Map::init()
 {
-	currentChunk = -1;
+	currentChunk = 1;
 
 	loadMap("GameFiles/TestFiles/Tron3k_map_3_allStatics.bin");
 
@@ -16,12 +16,6 @@ void Map::init()
 	{
 		tex[i].textureID = loadTexture("GameFiles/testfiles/" + std::string(tex[i].textureName));
 	}
-
-	portals.push_back(PortalData());
-	portals[0].init(0, 0, 1, vec3(5, -10, 10), vec3(10, -15, 10), vec3(5, -20, 10), vec3(0, -15, 10));
-
-	portals.push_back(PortalData());
-	portals[1].init(0, 0, 1, vec3(5, 15., 15), vec3(10, 15., 15), vec3(10, 15, 10), vec3(5, 15, 10));
 }
 
 void Map::release()
@@ -66,9 +60,9 @@ void Map::renderChunk(GLuint shader, GLuint shaderLocation, int chunkID)
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].textureMapIndex].textureID);
 		glActiveTexture(GL_TEXTURE0 + 1);
-		glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].normalMapIndex].textureID);
-		glActiveTexture(GL_TEXTURE0 + 2);
-		glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].specularMapIndex].textureID);
+		glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].textureMapIndex].textureID);
+		//glActiveTexture(GL_TEXTURE0 + 2);
+		//glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].textureMapIndex].textureID);
 		
 		glBindVertexArray(meshes[meshID].vertexArray);
 		glBindBuffer(GL_ARRAY_BUFFER, meshes[meshID].vertexBuffer);
@@ -80,9 +74,7 @@ void Map::renderChunk(GLuint shader, GLuint shaderLocation, int chunkID)
 
 			glDrawElements(GL_TRIANGLES, meshes[meshID].indexCount, GL_UNSIGNED_INT, 0);
 		}
-
 	}
-
 }
 
 void Map::loadMap(std::string mapName)
@@ -209,6 +201,11 @@ void Map::loadMap(std::string mapName)
 
 	SpotLightH* sl = new SpotLightH[spotLightCount];
 	inFile.read((char*)sl, sizeof(SpotLightH) * spotLightCount);
+	
+	for (int i = 0; i < spotLightCount; i++)
+	{
+		chunks[sl[i].roomID].addLight(sl[i]);
+	}
 	delete[] sl;
 
 	PortalDataRead* portalData = new PortalDataRead[portalCount];
@@ -239,13 +236,13 @@ int Map::getChunkID(glm::vec3 oldPos, glm::vec3 newPos)
 	float len = length(dir);
 	dir = normalize(dir);
 
-	for (int n = 0; n < portals.size(); n++)
-		if (portals[n].intersects(oldPos, dir, len))
+	for (int n = 0; n < chunks[currentChunk].portals.size(); n++)
+		if (chunks[currentChunk].portals[n].intersects(oldPos, dir, len))
 		{
-			if (portals[n].bridgedRooms[0] == currentChunk)
-				currentChunk = portals[n].bridgedRooms[1];
+			if (chunks[currentChunk].portals[n].bridgedRooms[0] == currentChunk)
+				currentChunk = chunks[currentChunk].portals[n].bridgedRooms[1];
 			else
-				currentChunk = portals[n].bridgedRooms[0];
+				currentChunk = chunks[currentChunk].portals[n].bridgedRooms[0];
 
 			printf("Now in room %d \n", currentChunk);
 
@@ -253,10 +250,4 @@ int Map::getChunkID(glm::vec3 oldPos, glm::vec3 newPos)
 		}
 
 	return currentChunk;
-}
-
-void Map::renderPortals()
-{
-	for (int n = 0; n < portals.size(); n++)
-		portals[n].render();
 }
