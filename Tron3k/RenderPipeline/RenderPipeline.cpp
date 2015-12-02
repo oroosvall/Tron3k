@@ -275,8 +275,8 @@ void RenderPipeline::skeletonARender()
 	glm::vec3 glowColor(mod((timepass / 1.0f), 1.0f), mod((timepass / 2.0f), 1.0f), mod((timepass / 3.0f), 1.0f));
 	glProgramUniform3fv(skeletonAShader, uniformDynamicGlowColorLocation[1], 1, (GLfloat*)&glowColor[0]);
 
-	//glBindBuffer(GL_SHADER_STORAGE_BUFFER, particles->paticleVBO);
-	contMan.renderChunks(skeletonAShader, worldMat[1], uniformTextureLocation[1], uniformNormalLocation[1], uniformGlowSpecLocation[1], *gBuffer->portal_shaderPtr, gBuffer->portal_model);
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER,  /*SkeletionA buffer here*/);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, /*nrOfVertices*/);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 }
 
