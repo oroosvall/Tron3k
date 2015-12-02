@@ -1,7 +1,7 @@
 #include "SoundPlayer.h"
 int SoundPlayer::nrOfSoundsPlaying = 0;
 float SoundPlayer::soundVolume = 50.0f;
-float SoundPlayer::musicVolume = 50.0f;
+float SoundPlayer::musicVolume = 100.0f;
 bool SoundPlayer::soundEnabler = false;
 bool SoundPlayer::initialized = false;
 #include <iostream>
