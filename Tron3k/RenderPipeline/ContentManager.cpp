@@ -164,7 +164,7 @@ ContentManager::~ContentManager()
 	delete [] renderNextChunks;
 }
 
-void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation, GLuint portal_shader, GLuint portal_world)
+void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation, GLuint DglowColor, GLuint SglowColor, GLuint portal_shader, GLuint portal_world)
 {
 	glUseProgram(shader);
 	//diffuse
@@ -172,7 +172,7 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 	glBindTexture(GL_TEXTURE_2D, textures[1].textureID);
 	//normal & dynamic glow
 	glActiveTexture(GL_TEXTURE0 +1 );
-	glBindTexture(GL_TEXTURE_2D, textures[0].textureID);
+	glBindTexture(GL_TEXTURE_2D, textures[8].textureID);
 	//static glow & spec
 	glActiveTexture(GL_TEXTURE0 + 2);
 	glBindTexture(GL_TEXTURE_2D, textures[6].textureID);
@@ -190,6 +190,10 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 	{
 		if (renderNextChunks[n] == true)
 		{
+			//Glow values for world
+			glProgramUniform3fv(shader, DglowColor, 1, (GLfloat*)&testMap.chunks[n].color[0]);
+			glProgramUniform1f(shader, SglowColor, testMap.chunks[n].staticIntes);
+
 			testMap.renderChunk(shader, shaderLocation, n);
 			renderedChunks[n] = true;
 		}
