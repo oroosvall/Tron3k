@@ -1,7 +1,7 @@
 #include "SoundPlayer.h"
 int SoundPlayer::nrOfSoundsPlaying = 0;
 float SoundPlayer::soundVolume = 50.0f;
-float SoundPlayer::musicVolume = 100.0f;
+float SoundPlayer::musicVolume = 50.0f;
 bool SoundPlayer::soundEnabler = false;
 bool SoundPlayer::initialized = false;
 #include <iostream>
@@ -58,9 +58,9 @@ void SoundPlayer::enableSounds()
 		{
 			sounds[i].setVolume(soundVolume);
 		}
-		musicPlayer.play();
-		musicPlayer.setVolume(musicVolume);
 		soundEnabler = true;
+		playMusic(mainMenu);
+		musicPlayer.setVolume(musicVolume);
 	}
 	else
 	{
@@ -155,7 +155,7 @@ void SoundPlayer::setLocalPlayerPos(glm::vec3 playerPos)
 
 int SoundPlayer::playMusic(int music)
 {
-	if (soundEnabler && initialized == 1)
+	if (soundEnabler == 1 && initialized == 1)
 	{
 
 		if (musicPlayer.getStatus() == sf::Sound::Playing)

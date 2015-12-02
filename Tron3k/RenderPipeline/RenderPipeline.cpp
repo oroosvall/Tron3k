@@ -206,12 +206,7 @@ void RenderPipeline::renderIni()
 
 void RenderPipeline::render()
 {
-	//Glow values for world
-	glProgramUniform1f(regularShader, uniformStaticGlowIntensityLocation, mod((timepass / 5.0f), 1.0f));
-	glm::vec3 glowColor(mod((timepass / 1.0f), 1.0f), mod((timepass / 2.0f), 1.0f), mod((timepass / 3.0f), 1.0f));
-	glProgramUniform3fv(regularShader, uniformDynamicGlowColorLocation, 1, (GLfloat*)&glowColor[0]);
-
-	contMan.renderChunks(regularShader, worldMat, uniformTextureLocation, uniformNormalLocation, uniformGlowSpecLocation, *gBuffer->portal_shaderPtr, gBuffer->portal_model);
+	contMan.renderChunks(regularShader, worldMat, uniformTextureLocation, uniformNormalLocation, uniformGlowSpecLocation, uniformDynamicGlowColorLocation, uniformStaticGlowIntensityLocation,  *gBuffer->portal_shaderPtr, gBuffer->portal_model);
 	
 	//push the lights of the rendered chunks
 	for (int n = 0; n < contMan.nrChunks; n++)
@@ -231,6 +226,12 @@ void RenderPipeline::render()
 void* RenderPipeline::getView()
 {
 	return (void*)cam.getViewMat();
+}
+
+void RenderPipeline::setChunkColorAndInten(int ID, float* color, float inten)
+{
+	contMan.testMap.chunks[ID].color = { color[0], color[1], color[2] };
+	contMan.testMap.chunks[ID].staticIntes = inten;
 }
 
 void RenderPipeline::renderPlayer(int playerID, void* world, float* dgColor, float sgInten)
