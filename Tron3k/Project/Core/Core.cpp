@@ -736,7 +736,10 @@ void Core::loadSettings()
 			{
 				int activateSound = atoi(in2.c_str());
 				if (activateSound)
+				{
 					InitSound(CreateSound(), activateSound);
+					GetSound()->playMusic(mainMenu);
+				}
 			}
 		}
 	}

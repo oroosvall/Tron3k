@@ -102,20 +102,7 @@ void Game::initPhysics()
 }
 
 void Game::update(float dt)
-{
-	if (Input::getInput()->justPressed(GLFW_KEY_Z))
-	{
-		if (GetSoundActivated() == 0 && GetInitialized() == 0)
-		{
-			InitSound(CreateSound(), 1);
-		}
-		else if (GetInitialized())
-		{
-			GetSound()->enableSounds();
-		}
-	}
-	
-
+{	
 	for (int c = 0; c < max_con; c++)
 	{
 		if (playerList[c] != nullptr)
