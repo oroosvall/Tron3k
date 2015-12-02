@@ -104,7 +104,7 @@ void ContentManager::init()
 		textures[i].textureID = loadTexture(textures[i].textureName);
 		textures[i].loaded = true;
 	}
-	
+
 	meshes[0].setTexture(textures[1].textureID);
 	meshes[1].setTexture(textures[1].textureID);
 
@@ -140,7 +140,7 @@ ContentManager::~ContentManager()
 	{
 		glDeleteBuffers(1, &meshes[i].ibo);
 		glDeleteBuffers(1, &meshes[i].vbo);
-		glDeleteVertexArrays(1,&meshes[i].vao);
+		glDeleteVertexArrays(1, &meshes[i].vao);
 	}
 
 	for (size_t i = 0; i < textures.size(); i++)
@@ -154,14 +154,14 @@ ContentManager::~ContentManager()
 	glDeleteBuffers(1, &playerModels[0].meshID);
 	glDeleteBuffers(1, &playerModels[0].index);
 	glDeleteVertexArrays(1, &playerModels[0].vao);
-	
+
 	delete playerModels;
 	testMap.release();
 
 	glDeleteQueries(1, &portalQuery);
 
-	delete [] renderedChunks;
-	delete [] renderNextChunks;
+	delete[] renderedChunks;
+	delete[] renderNextChunks;
 }
 
 void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation, GLuint portal_shader, GLuint portal_world)
@@ -171,7 +171,7 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, textures[1].textureID);
 	//normal & dynamic glow
-	glActiveTexture(GL_TEXTURE0 +1 );
+	glActiveTexture(GL_TEXTURE0 + 1);
 	glBindTexture(GL_TEXTURE_2D, textures[0].textureID);
 	//static glow & spec
 	glActiveTexture(GL_TEXTURE0 + 2);
@@ -194,7 +194,7 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 			renderedChunks[n] = true;
 		}
 	}
-	
+
 	/* TEMP STUFF*/
 	for (size_t i = 0; i < meshes.size(); i++)
 	{
@@ -202,8 +202,8 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 		//diffuse
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, meshes[i].textureID);
-		 //normal dynamic glow
-		glActiveTexture(GL_TEXTURE0+1);
+		//normal dynamic glow
+		glActiveTexture(GL_TEXTURE0 + 1);
 		glBindTexture(GL_TEXTURE_2D, textures[0].textureID);
 		//static glow
 		glActiveTexture(GL_TEXTURE0 + 2);
@@ -326,7 +326,9 @@ void ContentManager::renderPlayer(int playerID, glm::mat4 world)
 
 void* ContentManager::getChunkCollisionVectorAsPointer(int chunkID)
 {
-	return (void*)testMap.getChunkCollision(chunkID);
+	if (chunkID < nrChunks)
+		return (void*)testMap.getChunkCollision(chunkID);
+	return nullptr;
 }
 
 std::vector<std::vector<float>> ContentManager::getMeshBoxes()

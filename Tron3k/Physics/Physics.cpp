@@ -25,7 +25,7 @@ void Physics::initBulletBox()
 	//TEMPORARY
 	glm::vec3 size = glm::vec3(0.2f, 0.2f, 0.2f);
 
-	bulletBox.setSize(size);
+	//bulletBox.setSize(size);
 }
 
 bool Physics::release()
@@ -56,14 +56,14 @@ bool Physics::checkAABBCollision(Geometry* obj1, Geometry* obj2)
 
 bool Physics::checkAABBCollision(CollideMesh mesh1, CollideMesh mesh2)
 {
-	if (mesh1.getAABB().posX + mesh1.getAABB().sizeX > mesh2.getAABB().posX - mesh2.getAABB().sizeX &&
-		mesh1.getAABB().posX - mesh1.getAABB().sizeX < mesh2.getAABB().posX + mesh2.getAABB().sizeX)//x
+	if (mesh1.getAABB().pos.x + mesh1.getAABB().max.x > mesh2.getAABB().pos.x - mesh2.getAABB().min.x &&
+		mesh1.getAABB().pos.x - mesh1.getAABB().min.x < mesh2.getAABB().pos.x + mesh2.getAABB().max.x)//x
 	{
-		if (mesh1.getAABB().posY + mesh1.getAABB().sizeY > mesh2.getAABB().posY - mesh2.getAABB().sizeY &&
-			mesh1.getAABB().posY - mesh1.getAABB().sizeY < mesh2.getAABB().posY + mesh2.getAABB().sizeY)//y
+		if (mesh1.getAABB().pos.y + mesh1.getAABB().max.y > mesh2.getAABB().pos.y - mesh2.getAABB().min.y &&
+			mesh1.getAABB().pos.y - mesh1.getAABB().min.y < mesh2.getAABB().pos.y + mesh2.getAABB().max.y)//y
 		{
-			if (mesh1.getAABB().posZ + mesh1.getAABB().sizeZ > mesh2.getAABB().posZ - mesh2.getAABB().sizeZ &&
-				mesh1.getAABB().posZ - mesh1.getAABB().sizeZ < mesh2.getAABB().posZ + mesh2.getAABB().sizeZ)//z
+			if (mesh1.getAABB().pos.z + mesh1.getAABB().max.z > mesh2.getAABB().pos.z - mesh2.getAABB().min.z &&
+				mesh1.getAABB().pos.z - mesh1.getAABB().min.z < mesh2.getAABB().pos.z + mesh2.getAABB().max.z)//z
 			{
 				return 1;
 			}
@@ -75,25 +75,25 @@ bool Physics::checkAABBCollision(CollideMesh mesh1, CollideMesh mesh2)
 
 bool Physics::checkCylindervAABBCollision(CollideMesh mesh1, CollideMesh mesh2)
 {
-	if (mesh1.getCylinder().pos.y + mesh1.getCylinder().height > mesh2.getAABB().posY - mesh2.getAABB().sizeY &&
-		mesh1.getCylinder().pos.y - mesh1.getCylinder().height < mesh2.getAABB().posY + mesh2.getAABB().sizeY)
+	if (mesh1.getCylinder().pos.y + mesh1.getCylinder().height > mesh2.getAABB().pos.y - mesh2.getAABB().min.y &&
+		mesh1.getCylinder().pos.y - mesh1.getCylinder().height < mesh2.getAABB().pos.y + mesh2.getAABB().max.y)
 	{
 		//Collides in Y
 
 		//http://stackoverflow.com/questions/401847/circle-rectangle-collision-detection-intersection
-		glm::vec2 dist = glm::vec2(abs(mesh1.getCylinder().pos.x - mesh2.getAABB().posX), abs(mesh1.getCylinder().pos.z - mesh2.getAABB().posZ));
+		glm::vec2 dist = glm::vec2(abs(mesh1.getCylinder().pos.x - mesh2.getAABB().pos.x), abs(mesh1.getCylinder().pos.z - mesh2.getAABB().pos.z));
 
-		if (dist.x > mesh2.getAABB().sizeX + mesh1.getCylinder().radius)
+		if (dist.x > mesh2.getAABB().max.x + mesh1.getCylinder().radius)
 			return 0;
-		if (dist.y > mesh2.getAABB().sizeZ + mesh1.getCylinder().radius)
+		if (dist.y > mesh2.getAABB().max.z + mesh1.getCylinder().radius)
 			return 0;
 
-		if (dist.x <= mesh2.getAABB().sizeX)
+		if (dist.x <= mesh2.getAABB().max.x)
 			return 1;
-		if (dist.y <= mesh2.getAABB().sizeZ)
+		if (dist.y <= mesh2.getAABB().max.z)
 			return 1;
 
-		float cDist = ((dist.x - mesh2.getAABB().sizeX) * (dist.x - mesh2.getAABB().sizeX)) + ((dist.y - mesh2.getAABB().sizeZ) * (dist.y - mesh2.getAABB().sizeZ));
+		float cDist = ((dist.x - mesh2.getAABB().min.x) * (dist.x - mesh2.getAABB().min.x)) + ((dist.y - mesh2.getAABB().min.z) * (dist.y - mesh2.getAABB().min.z));
 		
 		if (cDist <= mesh1.getCylinder().radius * mesh1.getCylinder().radius)
 			return 1;
@@ -135,7 +135,7 @@ bool Physics::checkPlayerVPlayerCollision(glm::vec3 playerPos1, glm::vec3 player
 	CollideMesh p2;
 	p2.init();
 	p2.setPos(playerPos2);
-	p2.setSize(playerBox.getSize());
+	//p2.setSize(playerBox.getSize());
 
 
 	bool collide = checkAABBCollision(playerBox, p2);
@@ -190,6 +190,11 @@ void Physics::addGravity(glm::vec3 &vel, float dt)
 	vel.y -= GRAVITY * dt;
 }
 
+void Physics::receiveChunkBoxes(int chunkID, void* cBoxes)
+{
+
+}
+
 void Physics::receivePlayerBox(std::vector<float> pBox)
 {
 	float xPos, yPos, zPos;
@@ -204,7 +209,7 @@ void Physics::receivePlayerBox(std::vector<float> pBox)
 	yPos = (pBox[2] + pBox[3]) / 2;
 	zPos = (pBox[4] + pBox[5]) / 2;
 
-	playerBox.setAABB(xPos, yPos, zPos, xSize, ySize, zSize);
+	playerBox.setAABB(glm::vec3(xPos, yPos, zPos), glm::vec3(xSize, ySize, zSize), glm::vec3(-xSize, -ySize, -zSize));
 }
 
 void Physics::receiveWorldBoxes(std::vector<std::vector<float>> wBoxes)
@@ -223,7 +228,7 @@ void Physics::receiveWorldBoxes(std::vector<std::vector<float>> wBoxes)
 		yPos = (wBoxes[i][2] + wBoxes[i][3]) / 2;
 		zPos = (wBoxes[i][4] + wBoxes[i][5]) / 2;
 
-		temp.setAABB(xPos, yPos, zPos, xSize, ySize, zSize);
+		temp.setAABB(glm::vec3(xPos, yPos, zPos), glm::vec3(xSize, ySize, zSize), glm::vec3(-xSize, -ySize, -zSize));
 
 		worldBoxes.push_back(temp);
 	}

@@ -221,6 +221,11 @@ void Game::removePlayer(int conID)
 	removeConIDfromTeams(conID);
 }
 
+void Game::sendChunkBoxes(int chunkID, void* cBoxes)
+{
+	physics->receiveChunkBoxes(chunkID, cBoxes);
+}
+
 void Game::sendPlayerBox(std::vector<float> pBox)
 {
 	physics->receivePlayerBox(pBox);

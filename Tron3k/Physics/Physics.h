@@ -51,6 +51,7 @@ public:
 
 	virtual void addGravity(glm::vec3 &velocity, float dt);
 
+	virtual void receiveChunkBoxes(int chunkID, void* cBoxes);
 	virtual void receiveWorldBoxes(std::vector<std::vector<float>> wBoxes);
 	virtual void receivePlayerBox(std::vector<float> pBox);
 };

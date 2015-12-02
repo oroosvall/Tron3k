@@ -85,6 +85,11 @@ void Core::update(float dt)
 	static bool given = false;
 	if (game != nullptr && !given)
 	{
+		bool allchunksSent = false;
+		for (int i = 0; allchunksSent = false; i++)
+		{
+			allchunksSent = sendChunkBoxes(i);
+		}
 		sendPlayerBox();
 		sendWorldBoxes();
 		given = true;
@@ -896,6 +901,24 @@ void Core::setfps(int fps)
 {
 	if (win != nullptr)
 		glfwSetWindowTitle(win, to_string(fps).c_str());
+}
+
+bool Core::sendChunkBoxes(int chunkID)
+{
+	if (renderPipe != nullptr)
+	{
+		void* cBoxes = renderPipe->getChunkCollisionVectorAsPoint(chunkID);
+
+		if (cBoxes != nullptr)
+		{
+			game->sendChunkBoxes(chunkID, cBoxes);
+			return 0;
+		}
+
+		
+	}
+	//when we're done with all chunks, we'll get here cause cBoxes will be nullptr, so we'll end the for-loop
+	return 1;
 }
 
 void Core::sendPlayerBox()
