@@ -160,7 +160,7 @@ public:
 			consolePtr->printMsg("ERROR in_event_player_left" , "System", 'S');
 	}
 
-	virtual void event_bullet_hit(BulletHitInfo hi, int newHPtotal) {};
+	virtual void event_bullet_hit_player(BulletHitPlayerInfo hi, int newHPtotal) {};
 
 	virtual void in_event_respawn_denied(Packet* rec)
 	{
@@ -169,16 +169,16 @@ public:
 		gamePtr->denyPlayerRespawn(tryAgain);
 	}
 
-	virtual void in_event_bullet_hit(Packet* rec)
+	virtual void in_event_bullet_hit_player(Packet* rec)
 	{
-		BulletHitInfo hi = BulletHitInfo();
+		BulletHitPlayerInfo hi = BulletHitPlayerInfo();
 		Uint8 playerHit, PID, BID, bt, hpTotal;
 		*rec >> playerHit >> PID >> BID >> bt >> hpTotal;
 		hi.playerHit = playerHit;
 		hi.bt = BULLET_TYPE(bt);
 		hi.bulletBID = BID;
 		hi.bulletPID = PID;
-		gamePtr->handleBulletHitEvent(hi, hpTotal);
+		gamePtr->handleBulletHitPlayerEvent(hi, hpTotal);
 	}
 
 

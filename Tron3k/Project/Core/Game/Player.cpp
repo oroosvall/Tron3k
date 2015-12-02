@@ -183,6 +183,14 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 						msg = SHOOT;
 				}
 
+				if (i->justPressed(GLFW_KEY_E))
+				{
+					/*
+					Add logic (in role) that checks against the applicable special and fixes Special meter accordingly
+					*/
+					msg = SPECIAL;
+				}
+
 				if (i->justPressed(GLFW_KEY_M))					//Temp?
 				{
 					GetSound()->enableSounds();

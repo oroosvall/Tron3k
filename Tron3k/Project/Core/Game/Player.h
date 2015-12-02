@@ -13,14 +13,16 @@
 #include "Role/role.h"
 #include "Role/Weapon/Weapon.h"
 #include "Role/Weapon/bullet.h"
+#include "Role/PlayerEffects/Modifier.h"
+
 #include <string>
 
 #define interpolationTick 0.050f
 #define respawnTime 5.0f;
 
-enum PLAYERMSG { NONE, SHOOT, WPNSWITCH, DEATH, PLAYERRESPAWN};
+enum PLAYERMSG { NONE, SHOOT, SPECIAL, WPNSWITCH, DEATH, PLAYERRESPAWN};
 
-struct BulletHitInfo
+struct BulletHitPlayerInfo
 {
 	int playerHit;
 	int bulletPID;
@@ -56,6 +58,8 @@ private:
 
 	Input* i;
 	CameraInput* cam;
+
+	vector<Modifier*> myModifiers;
 
 	void rotatePlayer(vec3 olddir, vec3 newdir);
 public:
@@ -98,6 +102,8 @@ public:
 	void respawn(glm::vec3 respawnPos);
 
 	void healing(int amount);
+
+	Role* getRole() { return &role; };
 };
 
 #endif

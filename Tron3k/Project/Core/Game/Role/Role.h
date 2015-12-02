@@ -15,6 +15,8 @@ enum PROPERTIES{HEALTH, MAINWEP, SECWEP, CONSUMABLE, MOVEMENTSPEED, NROFREADPROP
 class Role
 {
 	private:
+		float specialMeter;
+
 		int currentWpn;
 		int health;
 		int maxHealth;
@@ -48,5 +50,7 @@ class Role
 
 		int getHealth() { return health; };
 		void returnToLife() { health = maxHealth; };
+
+		float getSpecialMeter() { return specialMeter; };
 };
 #endif

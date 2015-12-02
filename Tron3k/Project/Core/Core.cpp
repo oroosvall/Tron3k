@@ -359,11 +359,11 @@ void Core::upServer(float dt)
 			top->scope_out = Uint8(ALL);
 		}
 
-		if (game->hitEventReady())
+		if (game->hitPlayerEventReady())
 		{
-			BulletHitInfo hi = game->getHitInfo();
-			int newHPtotal = game->handleBulletHitEvent(hi);
-			top->event_bullet_hit(hi, newHPtotal);
+			BulletHitPlayerInfo hi = game->getHitPlayerInfo();
+			int newHPtotal = game->handleBulletHitPlayerEvent(hi);
+			top->event_bullet_hit_player(hi, newHPtotal);
 		}
 
 		serverHandleCmds();

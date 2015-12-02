@@ -123,7 +123,7 @@
     <ClCompile Include="Core\Game\Role\Special\SpecialTypes\Lightwall.cpp">
       <Filter>Source Files\Core\Game\Role\Special\SpecialTypes</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Game\Role\PlayerEffects\Modifiers\LightwallLockedControls.cpp">
+    <ClCompile Include="Core\Game\Role\PlayerEffects\Modifiers\LightWallLockedControls.cpp">
       <Filter>Source Files\Core\Game\Role\PlayerEffects\Modifiers</Filter>
     </ClCompile>
   </ItemGroup>
@@ -221,10 +221,10 @@
     <ClInclude Include="Core\Game\Role\Special\SpecialTypes\Lightwall.h">
       <Filter>Source Files\Core\Game\Role\Special\SpecialTypes</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Game\Role\PlayerEffects\Modifiers\LightwallLockedControls.h">
+    <ClInclude Include="Core\Game\Role\PlayerEffects\Modifiers\AllModifiers.h">
       <Filter>Source Files\Core\Game\Role\PlayerEffects\Modifiers</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Game\Role\PlayerEffects\Modifiers\AllModifiers.h">
+    <ClInclude Include="Core\Game\Role\PlayerEffects\Modifiers\LightWallLockedControls.h">
       <Filter>Source Files\Core\Game\Role\PlayerEffects\Modifiers</Filter>
     </ClInclude>
   </ItemGroup>

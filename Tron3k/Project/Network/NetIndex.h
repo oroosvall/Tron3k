@@ -17,7 +17,7 @@ enum NET_EVENT
 	SERVER_STATUS = int('S'),
 	PLAYER_JOINED = int('J'),
 	PLAYER_LEFT = int('L'),
-	HIT = int('H'),
+	PLAYER_HIT = int('H'),
 	RESPAWN_DENIED = int('R') //Used by command_respawn to deny respawn auth to client
 };
 

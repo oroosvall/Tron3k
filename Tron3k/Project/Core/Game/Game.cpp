@@ -107,46 +107,7 @@ void Game::update(float dt)
 	{
 		if (playerList[c] != nullptr)
 		{
-			bool spectatingThis = false;
-			bool spectating = false;
-			if (spectateID > -1)
-			{
-				spectating = true;
-				if (c == spectateID)
-					spectatingThis = true;
-			}
-
-			if (playerList[c]->isLocal())
-			{
-				if(!playerList[c]->getGrounded())
-				playerList[c]->applyGravity(physics, dt);
-			}
-
-			PLAYERMSG msg = playerList[c]->update(dt, freecam, spectatingThis, spectating);
-			if (msg == PLAYERMSG::SHOOT)
-			{
-				//if (gameState != Gamestate::ROAM)
-					registerWeapon(playerList[c]);
-				/*else
-				{
-					registerWeapon(playerList[c]);
-					handleWeaponFire(c, bulletShot, weaponShotWith, playerList[c]->getPos(), playerList[c]->getDir());
-				}*/
-			}
-			if (msg == PLAYERMSG::WPNSWITCH)
-			{
-				registerSwitch(playerList[c]);
-			}
-
-			if (msg == PLAYERMSG::DEATH)
-			{
-				freecam = true;
-			}
-			if (msg == PLAYERMSG::PLAYERRESPAWN)
-			{
-				if (playerList[c]->isLocal())
-					localPlayerWantsRespawn = true;
-			}
+			playerUpdate(c, dt);
 		}
 	}
 
@@ -177,6 +138,50 @@ void Game::update(float dt)
 
 	if (gameState == Gamestate::SERVER)
 		checkPlayerVBulletCollision();
+}
+
+void Game::playerUpdate(int conid, float dt)
+{
+	bool spectatingThis = false;
+	bool spectating = false;
+	if (spectateID > -1)
+	{
+		spectating = true;
+		if (conid == spectateID)
+			spectatingThis = true;
+	}
+
+	if (playerList[conid]->isLocal())
+	{
+		if (!playerList[conid]->getGrounded())
+			playerList[conid]->applyGravity(physics, dt);
+	}
+
+	PLAYERMSG msg = playerList[conid]->update(dt, freecam, spectatingThis, spectating);
+	if (msg == PLAYERMSG::SHOOT)
+	{
+		//if (gameState != Gamestate::ROAM)
+		registerWeapon(playerList[conid]);
+		/*else
+		{
+		registerWeapon(playerList[c]);
+		handleWeaponFire(c, bulletShot, weaponShotWith, playerList[c]->getPos(), playerList[c]->getDir());
+		}*/
+	}
+	if (msg == PLAYERMSG::WPNSWITCH)
+	{
+		registerSwitch(playerList[conid]);
+	}
+
+	if (msg == PLAYERMSG::DEATH)
+	{
+		freecam = true;
+	}
+	if (msg == PLAYERMSG::PLAYERRESPAWN)
+	{
+		if (playerList[conid]->isLocal())
+			localPlayerWantsRespawn = true;
+	}
 }
 
 Player* Game::getPlayer(int conID)
@@ -533,7 +538,7 @@ Bullet* Game::getBulletForRemoval(int PID, int BID, BULLET_TYPE bt, int &posInBu
 	}
 }
 
-int Game::handleBulletHitEvent(BulletHitInfo hi, int newHPtotal)
+int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi, int newHPtotal)
 {
 	glm::vec3 pos = playerList[hi.playerHit]->getPos();
 	if (gameState != Gamestate::SERVER)
