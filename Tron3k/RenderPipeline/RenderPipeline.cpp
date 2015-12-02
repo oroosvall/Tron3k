@@ -4,6 +4,8 @@
 
 #include "Shader.h"
 
+//#include "Map\MapHeaders.h"
+
 //#include <vld.h>
 
 #ifdef _DEBUG
@@ -142,6 +144,11 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 	contMan.init();
 	
+
+	//void* test = contMan.getChunkCollisionVectorAsPointer(1);
+
+	//vector<ChunkCollision>* test2 = (vector<ChunkCollision>*)test;
+
 	return true;
 }
 

@@ -324,6 +324,11 @@ void ContentManager::renderPlayer(int playerID, glm::mat4 world)
 	}
 }
 
+void* ContentManager::getChunkCollisionVectorAsPointer(int chunkID)
+{
+	return (void*)testMap.getChunkCollision(chunkID);
+}
+
 std::vector<std::vector<float>> ContentManager::getMeshBoxes()
 {
 	std::vector<std::vector<float>> size;
