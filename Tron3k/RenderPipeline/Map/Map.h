@@ -35,12 +35,12 @@ private:
 
 	int bbCount;
 
-	int currentChunk;
+	
 
 public:
 	vector<Chunk> chunks;
-	vector<PortalData> portals;
-	
+	int currentChunk;
+
 	void init();
 	void release();
 
@@ -49,9 +49,6 @@ public:
 	void loadMap(std::string mapName);
 
 	int getChunkID(glm::vec3 oldPos, glm::vec3 newPos);
-
-	void renderPortals();
-
 };
 
 #endif

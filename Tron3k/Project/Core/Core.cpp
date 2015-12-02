@@ -158,9 +158,11 @@ void Core::upRoam(float dt)
 
 		//update game
 		game->update(dt);
-
-		GetSound()->setLocalPlayerDir(game->getPlayer(0)->getDir());
-		GetSound()->setLocalPlayerPos(game->getPlayer(0)->getPos());
+		if (GetSoundActivated())
+		{
+			GetSound()->setLocalPlayerDir(game->getPlayer(0)->getDir());
+			GetSound()->setLocalPlayerPos(game->getPlayer(0)->getPos());
+		}
 
 		if (game->playerWantsToRespawn())
 		{
@@ -698,7 +700,11 @@ void Core::saveSettings()
 		else
 			file << "Name: " << _name << endl;
 		file << "IP: " << _addrs.toString() << endl;
-		file << "Port: " << _port;
+		file << "Port: " << _port << endl;
+		if(GetSoundActivated() == 1)
+			file << "Sound: " << "1";
+		else
+			file << "Sound: " << "0";
 	}
 }
 
@@ -726,6 +732,12 @@ void Core::loadSettings()
 				_addrs = IpAddress(in2);
 			else if (in == "Port:")
 				_port = atoi(in2.c_str());
+			else if (in == "Sound:")
+			{
+				int activateSound = atoi(in2.c_str());
+				if (activateSound)
+					InitSound(CreateSound(), activateSound);
+			}
 		}
 	}
 	else

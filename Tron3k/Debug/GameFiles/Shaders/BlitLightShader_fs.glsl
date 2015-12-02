@@ -69,7 +69,7 @@ vec4 CalcPointLight(SpotLight l, vec3 Normal)
 	LightDirection = normalize(LightDirection);    
 
 	vec4 Color = vec4(CalcLightInternal(l, LightDirection, Normal)); 
-	float Attenuation =  0.5 * Distance;
+	float Attenuation =  0.1 * Distance;
 	return Color / Attenuation;     
 	//float att = pointlightArray[i].attenuation.x + (pointlightArray[i].attenuation.y * dist) + (pointlightArray[i].attenuation.z * dist * dist);			
 }                                                                                           

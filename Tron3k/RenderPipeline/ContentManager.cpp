@@ -111,6 +111,15 @@ void ContentManager::init()
 	skybox.setTexture(textures[3].textureID);
 
 	testMap.init();
+	nrChunks = testMap.chunks.size();
+	renderedChunks = new int[nrChunks];
+	renderNextChunks = new int[nrChunks];
+	for (int n = 0; n < nrChunks; n++)
+	{
+		renderedChunks[n] = false;
+		renderNextChunks[n] = false;
+	}
+	glGenQueries(1, &portalQuery);
 
 	Mesh player;
 	player.init(0, 0, 0);
@@ -123,7 +132,6 @@ void ContentManager::init()
 
 	bullet.init(0, 0, 0);
 	bullet.load("GameFiles/TestFiles/bullet.v");
-
 }
 
 ContentManager::~ContentManager()
@@ -150,89 +158,108 @@ ContentManager::~ContentManager()
 	delete playerModels;
 	testMap.release();
 
+	glDeleteQueries(1, &portalQuery);
+
+	delete [] renderedChunks;
+	delete [] renderNextChunks;
 }
 
 void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation, GLuint portal_shader, GLuint portal_world)
 {
 	glUseProgram(shader);
-
+	//diffuse
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, textures[1].textureID);
+	//normal & dynamic glow
 	glActiveTexture(GL_TEXTURE0 +1 );
 	glBindTexture(GL_TEXTURE_2D, textures[0].textureID);
-	//static glow
+	//static glow & spec
 	glActiveTexture(GL_TEXTURE0 + 2);
-	glBindTexture(GL_TEXTURE_2D, textures[5].textureID);
+	glBindTexture(GL_TEXTURE_2D, textures[6].textureID);
 
 	glProgramUniform1i(shader, textureLocation, 0);
 	glProgramUniform1i(shader, normalLocation, 1);
 	glProgramUniform1i(shader, glowSpecLocation, 2);
 
-	testMap.renderChunk(shader, shaderLocation, 1);
+	//reset rendered chunks from last frame
+	for (int n = 0; n < nrChunks; n++)
+		renderedChunks[n] = false;
+
+	//render chunks logged from last frame
+	for (int n = 0; n < nrChunks; n++)
+	{
+		if (renderNextChunks[n] == true)
+		{
+			testMap.renderChunk(shader, shaderLocation, n);
+			renderedChunks[n] = true;
+		}
+	}
 	
 	/* TEMP STUFF*/
-
 	for (size_t i = 0; i < meshes.size(); i++)
 	{
 		glProgramUniformMatrix4fv(shader, shaderLocation, 1, GL_FALSE, (GLfloat*)meshes[i].getWorld());
-	
-		//glProgramUniform1i(shader, textureLocation, 0);
-		//glProgramUniform1i(shader, normalLocation, 1);
-		//glProgramUniform1i(shader, glowSpecLocation, 2);
 		//diffuse
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, meshes[i].textureID);
-	
 		 //normal dynamic glow
 		glActiveTexture(GL_TEXTURE0+1);
 		glBindTexture(GL_TEXTURE_2D, textures[0].textureID);
-		
 		//static glow
 		glActiveTexture(GL_TEXTURE0 + 2);
-		glBindTexture(GL_TEXTURE_2D, textures[5].textureID);
-		
-
+		glBindTexture(GL_TEXTURE_2D, textures[6].textureID);
 		glBindVertexArray(meshes[i].vao);
 		glBindBuffer(GL_ARRAY_BUFFER, meshes[i].vbo);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshes[i].ibo);
-	
 		glDrawElements(GL_TRIANGLES, meshes[i].faceCount * 3, GL_UNSIGNED_SHORT, 0);
 	}
-
 	/* NO MORE STUFF*/
+
+	//reset the renderrednextlist
+	for (int n = 0; n < nrChunks; n++)
+		renderNextChunks[n] = false;
 
 	glUseProgram(portal_shader);
 	glm::mat4 alreadyinworldpace;
 	glProgramUniformMatrix4fv(portal_shader, portal_world, 1, GL_FALSE, &alreadyinworldpace[0][0]);
-
 	glDepthMask(GL_FALSE);
 	glDisable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
-	GLuint test;
-	glGenQueries(1, &test);
-	glBeginQuery(GL_SAMPLES_PASSED, test);
 
-	//testMap.portals[0].render();
-	//testMap.portals[1].render();
-
-	for (size_t i = 0; i < 	testMap.chunks[2].portals.size(); i++)
+	//render portals from the rendered chunks
+	for (int n = 0; n < nrChunks; n++)
 	{
-		testMap.chunks[2].portals[i].render();
+		if (renderedChunks[n] == true)
+		{
+			int size = testMap.chunks[n].portals.size();
+			for (int p = 0; p < size; p++) // render the portals
+			{
+				// dont render if it bridges between chunks that are already in the rendernextqueue
+				if (renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[0]] == false ||
+					renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[1]] == false)
+				{
+					glBeginQuery(GL_SAMPLES_PASSED, portalQuery);
+					testMap.chunks[n].portals[p].render();
+					GLint passed = 2222;
+					glEndQuery(GL_SAMPLES_PASSED);
+					glGetQueryObjectiv(portalQuery, GL_QUERY_RESULT, &passed);
+
+					if (passed > 0)
+					{
+						renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[0]] = true;
+						renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[1]] = true;
+					}
+				}
+			}
+		}
 	}
 
-	GLint passed = 2222;
-	glEndQuery(GL_SAMPLES_PASSED);
-	glGetQueryObjectiv(test, GL_QUERY_RESULT, &passed);
-
-	if (passed == GL_FALSE)
-		int k = 33;
-	else if (passed > 0)
-		int k = 33;
+	renderNextChunks[0] = true;
+	renderNextChunks[testMap.currentChunk] = true;
 
 	glDepthMask(GL_TRUE);
 	glEnable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
-	glDeleteQueries(1, &test);
 }
 
 void ContentManager::renderPlayer(int playerID, glm::mat4 world)

@@ -25,7 +25,19 @@ struct SpotLight
 	}
 };
 
-
+/*
+struct SpotLightH
+{
+int roomID;
+float r, g, b;
+float intensity;
+float x, y, z;
+float ambientIntensity;
+float dx, dy, dz;
+float coneAngle;
+float ax, ay, az, aw;
+};
+*/
 
 
 #endif
