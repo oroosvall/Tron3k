@@ -1,4 +1,4 @@
-#version 410
+#version 430
 
 uniform mat4 WorldMatrix;
 uniform mat4 ViewProjMatrix;
@@ -14,7 +14,7 @@ struct bones
 	vec4 skinWeights;
 };
 
-layout (std410, binding = 2) buffer boneArray
+layout (std430, binding = 2) buffer boneArray
 {
 	particles data[];
 };

@@ -258,7 +258,7 @@ void RenderPipeline::skeletonARender()
 	//Compute shader for Skeleton shadern
 	glUseProgram(computeShader);
 
-	glProgramUniformMatrix4fv(computeShader, uniformSkeletonMatrix[0], /*nrOfMatrices*/, FALSE, /*&skeletonA->MatrixArray[0]*/);
+	glProgramUniformMatrix4fv(computeShader, uniformSkeletonMatrix[0], /*nrOfMatrices*/, GL_FALSE, /*&skeletonA->MatrixArray[0]*/);
 
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, /*SkeletionA buffer here*/);
 	glDispatchCompute(10, 1, 1);
@@ -267,13 +267,20 @@ void RenderPipeline::skeletonARender()
 	//Skeleton
 	glUseProgram(skeletonAShader);
 
-	glProgramUniformMatrix4fv(skeletonAShader, uniformSkeletonMatrix[1], /*nrOfMatrices*/, FALSE, /*&skeletonA->MatrixArray[0]*/);
+	glProgramUniformMatrix4fv(skeletonAShader, uniformSkeletonMatrix[1], /*nrOfMatrices*/, GL_FALSE, /*&skeletonA->MatrixArray[0]*/);
+	glProgramUniformMatrix4fv(skeletonAShader, worldMat[1], 1, GL_FALSE, /*&WorldMatrix[0]*/);
+	
+	glProgramUniform1i(skeletonAShader, uniformTextureLocation[1], 0);
+	glProgramUniform1i(skeletonAShader, uniformNormalLocation[1], 1);
+	glProgramUniform1i(skeletonAShader, uniformGlowSpecLocation[1], 2);
+
 	glProgramUniform1f(skeletonAShader, uniformStaticGlowIntensityLocation[1], mod((timepass / 5.0f), 1.0f));
 	glm::vec3 glowColor(mod((timepass / 1.0f), 1.0f), mod((timepass / 2.0f), 1.0f), mod((timepass / 3.0f), 1.0f));
 	glProgramUniform3fv(skeletonAShader, uniformDynamicGlowColorLocation[1], 1, (GLfloat*)&glowColor[0]);
 
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER,  /*SkeletionA buffer here*/);
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, /*nrOfVertices*/);
+	glDrawElements(GL_TRIANGLES, /*skeletonA.faceCount*3*/, GL_UNSIGNED_SHORT, 0);
+	//glDrawArrays(GL_TRIANGLE_STRIP, 0, /*nrOfVertices*/);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 }
 
