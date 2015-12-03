@@ -2,9 +2,9 @@
 #define ENERGYBOOST_H
 
 #include <glm/glm.hpp>
-#include "../Weapon.h"
+#include "../../Weapon.h"
 
-#include "../../../GameDataIndex.h"
+#include "../../../../GameDataIndex.h"
 
 class EnergyBoost : public Weapon
 {

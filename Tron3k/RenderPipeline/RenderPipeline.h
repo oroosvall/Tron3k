@@ -67,6 +67,7 @@ public:
 	virtual void skeletonARender();
 
 	virtual void addLight(SpotLight* newLight);
+	virtual void setChunkColorAndInten(int ID, float* color, float inten);
 
 	virtual void* getView();
 

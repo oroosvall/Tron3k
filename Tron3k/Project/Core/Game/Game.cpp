@@ -102,20 +102,7 @@ void Game::initPhysics()
 }
 
 void Game::update(float dt)
-{
-	if (Input::getInput()->justPressed(GLFW_KEY_Z))
-	{
-		if (GetSoundActivated() == 0 && GetInitialized() == 0)
-		{
-			InitSound(CreateSound(), 1);
-		}
-		else if (GetInitialized())
-		{
-			GetSound()->enableSounds();
-		}
-	}
-	
-
+{	
 	for (int c = 0; c < max_con; c++)
 	{
 		if (playerList[c] != nullptr)
@@ -527,7 +514,7 @@ void Game::handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm
 	case WEAPON_TYPE::ENERGY_BOOST:
 		if (gameState != Gamestate::SERVER)
 			if(GetSound())
-				GetSound()->playExternalSound(SOUNDS::soundEffectPoopRifleShot, pos.x, pos.y, pos.z);
+				GetSound()->playExternalSound(SOUNDS::soundEffectEnergyBoost, pos.x, pos.y, pos.z);
 		playerList[conID]->healing(10);
 		break;
 	}

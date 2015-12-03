@@ -183,10 +183,17 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 						msg = SHOOT;
 				}
 
-				if (i->justPressed(GLFW_KEY_M))					//Temp?
+				if (i->justPressed(GLFW_KEY_Z))					//Temp?
 				{
-					if (GetSoundActivated)
+					if (GetSoundActivated() == 0 && GetInitialized() == 0)
+					{
+						InitSound(CreateSound(), 1);
+						GetSound()->playMusic(mainMenu);
+					}
+					else if (GetInitialized())
+					{
 						GetSound()->enableSounds();
+					}
 				}
 
 				if (i->justPressed(GLFW_KEY_O))

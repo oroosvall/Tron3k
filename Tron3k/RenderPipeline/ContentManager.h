@@ -42,13 +42,13 @@ public:
 	Map testMap;
 
 	int nrChunks;
-	int* renderedChunks;
-	int* renderNextChunks;
+	bool* renderedChunks;
+	bool* renderNextChunks;
 
 	~ContentManager();
 	void init();
 
-	void renderChunks(GLuint shader, GLuint shaderLocation, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation, GLuint portal_shader, GLuint portal_world);
+	void renderChunks(GLuint shader, GLuint shaderLocation, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation, GLuint DglowColor, GLuint SglowColor, GLuint portal_shader, GLuint portal_world);
 
 	void renderPlayer(int playerID, glm::mat4 world);
 
@@ -58,6 +58,8 @@ public:
 
 	void loadChunk();
 	void releaseChunk();
+
+	void* getChunkCollisionVectorAsPointer(int chunkID);
 
 	std::vector<std::vector<float>> getMeshBoxes(); //Will send out all meshboxes, for now it'll just send a static one
 };

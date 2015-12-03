@@ -25,7 +25,7 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 
 	if (soundEnabler)
 	{
-		singleton->soundList[SOUNDS::soundEffectPoopRifleShot].loadFromFile("GameFiles/Sound/soundEffectPoopRifleShot.ogg");
+		singleton->soundList[SOUNDS::soundEffectEnergyBoost].loadFromFile("GameFiles/Sound/soundEffectEnergyBoost.ogg");
 		singleton->soundList[SOUNDS::soundEffectBulletPlayerHit].loadFromFile("GameFiles/Sound/soundEffectBulletPlayerHit.ogg");
 		singleton->soundList[SOUNDS::soundEffectPusleRifleShot].loadFromFile("GameFiles/Sound/soundEffectPusleRifleShot.ogg");
 		singleton->soundList[SOUNDS::firstBlood].loadFromFile("GameFiles/Sound/voiceFirstBlood.ogg");
@@ -58,9 +58,9 @@ void SoundPlayer::enableSounds()
 		{
 			sounds[i].setVolume(soundVolume);
 		}
-		musicPlayer.play();
-		musicPlayer.setVolume(musicVolume);
 		soundEnabler = true;
+		playMusic(mainMenu);
+		musicPlayer.setVolume(musicVolume);
 	}
 	else
 	{
@@ -155,7 +155,7 @@ void SoundPlayer::setLocalPlayerPos(glm::vec3 playerPos)
 
 int SoundPlayer::playMusic(int music)
 {
-	if (soundEnabler && initialized == 1)
+	if (soundEnabler == 1 && initialized == 1)
 	{
 
 		if (musicPlayer.getStatus() == sf::Sound::Playing)

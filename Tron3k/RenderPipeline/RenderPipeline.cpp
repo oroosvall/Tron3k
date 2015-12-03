@@ -4,6 +4,8 @@
 
 #include "Shader.h"
 
+//#include "Map\MapHeaders.h"
+
 //#include <vld.h>
 
 #ifdef _DEBUG
@@ -160,6 +162,10 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 	contMan.init();
 
+	//void* test = contMan.getChunkCollisionVectorAsPointer(1);
+
+	//vector<ChunkCollision>* test2 = (vector<ChunkCollision>*)test;
+
 	return true;
 }
 
@@ -227,7 +233,9 @@ void RenderPipeline::render()
 	glm::vec3 glowColor(mod((timepass / 1.0f), 1.0f), mod((timepass / 2.0f), 1.0f), mod((timepass / 3.0f), 1.0f));
 	glProgramUniform3fv(regularShader, uniformDynamicGlowColorLocation[0], 1, (GLfloat*)&glowColor[0]);
 
-	contMan.renderChunks(regularShader, worldMat[0], uniformTextureLocation[0], uniformNormalLocation[0], uniformGlowSpecLocation[0], *gBuffer->portal_shaderPtr, gBuffer->portal_model);
+	//contMan.renderChunks(regularShader, worldMat[0], uniformTextureLocation[0], uniformNormalLocation[0], uniformGlowSpecLocation[0], *gBuffer->portal_shaderPtr, gBuffer->portal_model);
+
+	contMan.renderChunks(regularShader, worldMat, uniformTextureLocation, uniformNormalLocation, uniformGlowSpecLocation, uniformDynamicGlowColorLocation, uniformStaticGlowIntensityLocation,  *gBuffer->portal_shaderPtr, gBuffer->portal_model);
 	
 	//Skeleton render here
 	skeletonARender();
@@ -235,7 +243,7 @@ void RenderPipeline::render()
 	//push the lights of the rendered chunks
 	for (int n = 0; n < contMan.nrChunks; n++)
 		if (contMan.renderedChunks[n] == true)
-			for (int k = 0; k < contMan.testMap.chunks[n].lights.size(); k++)
+			for (size_t k = 0; k < contMan.testMap.chunks[n].lights.size(); k++)
 			{
 				gBuffer->pushLights(&contMan.testMap.chunks[n].lights[k], 1);
 			}
@@ -270,6 +278,12 @@ void RenderPipeline::skeletonARender()
 void* RenderPipeline::getView()
 {
 	return (void*)cam.getViewMat();
+}
+
+void RenderPipeline::setChunkColorAndInten(int ID, float* color, float inten)
+{
+	contMan.testMap.chunks[ID].color = { color[0], color[1], color[2] };
+	contMan.testMap.chunks[ID].staticIntes = inten;
 }
 
 void RenderPipeline::renderPlayer(int playerID, void* world, float* dgColor, float sgInten)

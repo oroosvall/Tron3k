@@ -59,8 +59,8 @@ void Map::renderChunk(GLuint shader, GLuint shaderLocation, int chunkID)
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].textureMapIndex].textureID);
-		glActiveTexture(GL_TEXTURE0 + 1);
-		glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].textureMapIndex].textureID);
+		//glActiveTexture(GL_TEXTURE0 + 1);
+		//glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].textureMapIndex].textureID);
 		//glActiveTexture(GL_TEXTURE0 + 2);
 		//glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].textureMapIndex].textureID);
 		
@@ -68,7 +68,7 @@ void Map::renderChunk(GLuint shader, GLuint shaderLocation, int chunkID)
 		glBindBuffer(GL_ARRAY_BUFFER, meshes[meshID].vertexBuffer);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshes[meshID].indexBuffer);
 
-		for (int ins = 0; ins < chunks[chunkID].props[i].mats.size(); ins++)
+		for (size_t ins = 0; ins < chunks[chunkID].props[i].mats.size(); ins++)
 		{
 			glProgramUniformMatrix4fv(shader, shaderLocation, 1, GL_TRUE, (GLfloat*)&chunks[chunkID].props[i].mats[ins][0][0]);
 
@@ -124,7 +124,7 @@ void Map::loadMap(std::string mapName)
 		int* roomIDs = new int[instanceCount];
 		meshes[i].init(instanceCount);
 		inFile.read((char*)roomIDs, sizeof(int)*instanceCount);
-	
+
 		glm::mat4* matrices = new glm::mat4[instanceCount];
 	
 		inFile.read((char*)matrices, sizeof(glm::mat4)*instanceCount);
@@ -135,7 +135,6 @@ void Map::loadMap(std::string mapName)
 			chunks[roomIDs[j]].addProp(i, matrices[j]);
 		}
 
-		delete[] roomIDs;
 		delete[] matrices;
 
 		int* materialIndices = new int[materialCount];
@@ -155,23 +154,42 @@ void Map::loadMap(std::string mapName)
 		inFile.read((char*)verts, sizeof(Vertex11)*vertexCount);
 		meshes[i].setVertices((float*&)verts, vertexCount);
 	
-		AAB* bounds = new AAB[instanceCount];
-		inFile.read((char*)bounds, sizeof(AAB)*instanceCount);
-		delete [] bounds;
+		ABB* bounds = new ABB[instanceCount];
+		inFile.read((char*)bounds, sizeof(ABB)*instanceCount);
+		
 	
 		bbPoints = new BBPoint[bbCount];
 		inFile.read((char*)bbPoints, sizeof(BBPoint)*bbCount);
-	
-		// temp fix for leaks
-		delete[] bbPoints;
 
+		// temp fix for leaks
+		
 		for (int j = 0; j < instanceCount; j++)
 		{
 			glm::mat4* bbMats = new glm::mat4[bbCount];
 			inFile.read((char*)bbMats, sizeof(glm::mat4)*bbCount);
-			std::cout << std::endl;
+
+			ChunkCollision col;
+			ABBFinishedCollision abbBox;
+			abbBox.abbBox = bounds[j];
+
+			for (int b = 0; b < bbCount; b++)
+			{
+				OBB obbBox;
+				obbBox.point = bbPoints[b];
+				obbBox.transform = bbMats[b];
+				abbBox.obbBoxes.push_back(obbBox);
+			}
+
+			col.abbStuff.push_back(abbBox);
+
+			chunks[roomIDs[j]].addCollisionMesh(col);
+
 			delete[] bbMats;
 		}
+
+		delete[] bounds;
+		delete[] bbPoints;
+		delete[] roomIDs;
 	}
 	
 	materials= new Material[materialCount];
@@ -236,7 +254,7 @@ int Map::getChunkID(glm::vec3 oldPos, glm::vec3 newPos)
 	float len = length(dir);
 	dir = normalize(dir);
 
-	for (int n = 0; n < chunks[currentChunk].portals.size(); n++)
+	for (size_t n = 0; n < chunks[currentChunk].portals.size(); n++)
 		if (chunks[currentChunk].portals[n].intersects(oldPos, dir, len))
 		{
 			if (chunks[currentChunk].portals[n].bridgedRooms[0] == currentChunk)
@@ -250,4 +268,9 @@ int Map::getChunkID(glm::vec3 oldPos, glm::vec3 newPos)
 		}
 
 	return currentChunk;
+}
+
+vector<ChunkCollision>* Map::getChunkCollision(int chunkID)
+{
+	return chunks[chunkID].getChunkCollision();
 }
