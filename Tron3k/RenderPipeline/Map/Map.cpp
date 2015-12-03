@@ -68,7 +68,7 @@ void Map::renderChunk(GLuint shader, GLuint shaderLocation, int chunkID)
 		glBindBuffer(GL_ARRAY_BUFFER, meshes[meshID].vertexBuffer);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshes[meshID].indexBuffer);
 
-		for (int ins = 0; ins < chunks[chunkID].props[i].mats.size(); ins++)
+		for (size_t ins = 0; ins < chunks[chunkID].props[i].mats.size(); ins++)
 		{
 			glProgramUniformMatrix4fv(shader, shaderLocation, 1, GL_TRUE, (GLfloat*)&chunks[chunkID].props[i].mats[ins][0][0]);
 
@@ -172,7 +172,7 @@ void Map::loadMap(std::string mapName)
 			ABBFinishedCollision abbBox;
 			abbBox.abbBox = bounds[j];
 
-			for (size_t b = 0; b < bbCount; b++)
+			for (int b = 0; b < bbCount; b++)
 			{
 				OBB obbBox;
 				obbBox.point = bbPoints[b];
@@ -254,7 +254,7 @@ int Map::getChunkID(glm::vec3 oldPos, glm::vec3 newPos)
 	float len = length(dir);
 	dir = normalize(dir);
 
-	for (int n = 0; n < chunks[currentChunk].portals.size(); n++)
+	for (size_t n = 0; n < chunks[currentChunk].portals.size(); n++)
 		if (chunks[currentChunk].portals[n].intersects(oldPos, dir, len))
 		{
 			if (chunks[currentChunk].portals[n].bridgedRooms[0] == currentChunk)

@@ -112,8 +112,8 @@ void ContentManager::init()
 
 	testMap.init();
 	nrChunks = testMap.chunks.size();
-	renderedChunks = new int[nrChunks];
-	renderNextChunks = new int[nrChunks];
+	renderedChunks = new bool[nrChunks];
+	renderNextChunks = new bool[nrChunks];
 	for (int n = 0; n < nrChunks; n++)
 	{
 		renderedChunks[n] = false;
