@@ -129,9 +129,6 @@
     <ClCompile Include="Core\Game\Role\PlayerEffects\Modifier.cpp">
       <Filter>Source Files\Core\Game\Role\PlayerEffects</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Game\Role\Weapon\Bullet.cpp">
-      <Filter>Source Files\Core\Game\Role\Weapon</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Game\Role\Weapon\Weapon.cpp">
       <Filter>Source Files\Core\Game\Role\Weapon</Filter>
     </ClCompile>
@@ -216,6 +213,9 @@
     <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\TrapperBullets\Clutsterling.cpp">
       <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\TrapperBullets</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Game\Role\Weapon\Bullet.cpp">
+      <Filter>Source Files\Core\Game\Role\Weapon</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Input.h">
@@ -280,9 +280,6 @@
     </ClInclude>
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\AllBullets.h">
       <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Game\Role\Weapon\Bullet.h">
-      <Filter>Source Files\Core\Game\Role\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="Core\Game\Role\Weapon\Weapon.h">
       <Filter>Source Files\Core\Game\Role\Weapon</Filter>
@@ -376,6 +373,9 @@
     </ClInclude>
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\TrapperBullets\Clusterling.h">
       <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\TrapperBullets</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Weapon\Bullet.h">
+      <Filter>Source Files\Core\Game\Role\Weapon</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
