@@ -137,7 +137,7 @@ void Core::upRoam(float dt)
 		game->init(MAX_CONNECT, current);
 
 		Player* p = new Player();
-		p->init("Roam", glm::vec3(0, 0, 0));
+		p->init("Roam", glm::vec3(0, 0, -500));
 		game->createPlayer(p, 0, true);
 		delete p;
 		subState++;
@@ -493,7 +493,7 @@ void Core::roamHandleCmds()
 			{
 				int team = stoi(token);
 				game->addPlayerToTeam(0, team);
-				game->allowPlayerRespawn(0, vec3(0,0,0)); //Add new spawn point probably
+				game->allowPlayerRespawn(0, vec3(0,0,-500)); //Add new spawn point probably
 				if (team != 0)
 					game->freecam = false;
 				else

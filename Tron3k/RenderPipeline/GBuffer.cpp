@@ -66,6 +66,14 @@ void Gbuffer::init(int x, int y, int nrTex, bool depth)
 	uniformEyePos = glGetUniformLocation(*shaderPtr, "eyepos");
 	uniformNrOfLight = glGetUniformLocation(*shaderPtr, "NumSpotLights");
 	uniformBufferLightPos = glGetUniformBlockIndex(*shaderPtr, "Light");
+	uBlitLightPixelX  = glGetUniformLocation(*shaderPtr, "pixeluvX");
+	uBlitLightPixelY = glGetUniformLocation(*shaderPtr, "pixeluvY");
+
+	float uvPixelX = 2.0f / float(x);
+	float uvPixelY = 2.0f / float(y);
+
+	glProgramUniform1f(*shaderPtr, uBlitLightPixelX, uvPixelX);
+	glProgramUniform1f(*shaderPtr, uBlitLightPixelY, uvPixelY);
 
 	if (depth)
 	{
