@@ -232,6 +232,7 @@ void Physics::storeChunkBox(int chunkID, std::vector<AABB> cBoxes)
 
 	for (int i = 0; i < cBoxes.size(); i++)
 	{
+		temp = CollideMesh();
 		//stores all the info in a tempmesh
 		temp.init();
 		temp.setAABB(cBoxes[i]);
