@@ -181,8 +181,11 @@ void Core::upRoam(float dt)
 			WEAPON_TYPE wt;
 			int bID;
 			game->getLatestWeaponFired(0, wt, bID);
-			int team = 0;
-			game->handleWeaponFire(0, bID, wt, p->getPos(), p->getDir());
+		}
+
+		if (game->specialActivationReady())
+		{
+			game->getSpecialAbilityUsed(0);
 		}
 
 		renderWorld(dt);
@@ -252,9 +255,11 @@ void Core::upClient(float dt)
 
 		//update game
 		game->update(dt);
-
-		GetSound()->setLocalPlayerDir(game->getPlayer(top->getConId())->getDir());
-		GetSound()->setLocalPlayerPos(game->getPlayer(0)->getPos());
+		if (GetSoundActivated())
+		{
+			GetSound()->setLocalPlayerDir(game->getPlayer(top->getConId())->getDir());
+			GetSound()->setLocalPlayerPos(game->getPlayer(0)->getPos());
+		}
 
 		//Command and message handle
 		if (console.messageReady())
@@ -292,9 +297,15 @@ void Core::upClient(float dt)
 				WEAPON_TYPE wt;
 				int bID;
 				game->getLatestWeaponFired(top->getConId(), wt, bID);
-				int team = local->getTeam();
 				top->frame_fire(wt, top->getConId(), bID, local->getPos(), local->getDir());
 			}
+
+			if (game->specialActivationReady())
+			{
+				SPECIAL_TYPE st = game->getSpecialAbilityUsed(top->getConId());
+				top->frame_special_use(st, top->getConId(), local->getPos(), local->getDir());
+			}
+
 			//send the package
 			top->network_OUT(dt);
 			tick_timer = 0;
@@ -358,11 +369,11 @@ void Core::upServer(float dt)
 			top->scope_out = Uint8(ALL);
 		}
 
-		if (game->hitEventReady())
+		if (game->hitPlayerEventReady())
 		{
-			BulletHitInfo hi = game->getHitInfo();
-			int newHPtotal = game->handleBulletHitEvent(hi);
-			top->event_bullet_hit(hi, newHPtotal);
+			BulletHitPlayerInfo hi = game->getHitPlayerInfo();
+			int newHPtotal = game->handleBulletHitPlayerEvent(hi);
+			top->event_bullet_hit_player(hi, newHPtotal);
 		}
 
 		serverHandleCmds();

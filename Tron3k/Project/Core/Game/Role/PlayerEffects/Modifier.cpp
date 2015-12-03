@@ -1,4 +1,5 @@
 #include "Modifier.h"
+#include "../../Player.h"
 
 bool Modifier::updateLifeTime(float dt)
 {

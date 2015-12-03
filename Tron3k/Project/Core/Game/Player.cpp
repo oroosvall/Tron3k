@@ -5,6 +5,12 @@ Player::Player()
 	
 }
 
+Player::~Player()
+{
+	for (int c = 0; c < myModifiers.size(); c++)
+		delete myModifiers[c];
+}
+
 void Player::init(std::string pName, glm::vec3 initPos, bool isLocal)
 {
 	cam = CameraInput::getCam();
@@ -30,26 +36,62 @@ void Player::setGoalPos(glm::vec3 newPos)
 	goalpos = newPos;
 	oldPos = pos;
 	goalTimer = 0.0f;
-	//pos = newPos; //Temporary
 }
 
 void Player::setGoalDir(glm::vec3 newDir)
 {
 	goaldir = newDir;
 	oldDir = dir;
-	//dir = newDir; //Temporary 
 }
 
-void Player::movePlayer(float dt)
+void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingThis)
 {
 	glm::vec3 playerVel = vel*role.getMovementSpeed();
 	pos += playerVel * dt; //Here we will also include external forces
+	if (freecam == false || specingThis == true)
+	{
+		cam->setCam(pos);
+		rotatePlayer(oldDir, dir);
+	}
+}
+
+void Player::modifiersGetData(float dt)
+{
+	for (int c = 0; c < myModifiers.size(); c++)
+	{
+		int msg = myModifiers[c]->getData(dt);
+		if (msg == 1)
+		{
+			delete myModifiers[c];
+			myModifiers[c] = myModifiers[myModifiers.size() - 1];
+			myModifiers.pop_back();
+			c--;
+		}
+	}
+}
+
+void Player::modifiersSetData(float dt)
+{
+	for (int c = 0; c < myModifiers.size(); c++)
+	{
+		int msg = myModifiers[c]->setData(dt);
+		if (msg == 1)
+		{
+			delete myModifiers[c];
+			myModifiers[c] = myModifiers[myModifiers.size() - 1];
+			myModifiers.pop_back();
+			c--;
+		}
+	}
 }
 
 PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool spectating)
 {
 	PLAYERMSG msg = NONE;
 
+	modifiersGetData(dt);
+
+	vec3 olddir = cam->getDir();
 	if (isLocalPlayer) // even if we are the local player we can be dead and spectating some one
 	{
 		if (i->justPressed(GLFW_KEY_ENTER))
@@ -60,7 +102,6 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				lockControls = true;
 		}
 
-		vec3 olddir = cam->getDir();
 		if (!lockControls)
 		{
 			//move camera to where we are looking.
@@ -158,7 +199,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					}
 				}
 
-				role.getCurrentWeapon()->update(dt);		//Temp;
+				role.update(dt);		//Temp;
 
 				if (i->justPressed(GLFW_KEY_R))
 				{
@@ -183,6 +224,18 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 						msg = SHOOT;
 				}
 
+				if (i->justPressed(GLFW_KEY_E))
+				{
+					/*
+					Add logic (in role) that checks against the applicable special and other conditions
+					*/
+					if (role.getSpecialMeter() - 100.0f < FLT_EPSILON && role.getSpecialMeter() - 100.0f > -FLT_EPSILON)
+					{
+						if (role.getSpecialAbility()->allowedToActivate(this))
+							msg = SPECIALUSE;
+					}
+				}
+
 				if (i->justPressed(GLFW_KEY_Z))					//Temp?
 				{
 					if (GetSoundActivated() == 0 && GetInitialized() == 0)
@@ -204,12 +257,6 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				}
 			} // end of player input
 		} // end of lock control check
-		movePlayer(dt); //Move the player regardless of control lock
-		if (freecam == false || spectatingThisPlayer == true)
-		{
-			cam->setCam(pos);
-			rotatePlayer(olddir, dir);
-		}
 
 		if (role.getHealth() == 0 && !isDead)
 		{
@@ -248,7 +295,14 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 		rotatePlayer(prev, dir);
 	}
-	
+
+	modifiersSetData(dt);
+
+	/*
+	Kind of ugly, but I put it here so it interacts properly with movement-changing modifiers
+	*/
+	if (isLocalPlayer)
+		movePlayer(dt, olddir, freecam, spectatingThisPlayer); //Move the player regardless of control lock
 
 	if (spectatingThisPlayer == true)
 	{
@@ -310,6 +364,19 @@ void Player::applyGravity(Physics* p, float dt)
 		pos.y = -10.0f;
 		grounded = true;
 	}*/
+}
+
+void Player::addModifier(MODIFIER_TYPE mt)
+{
+	Modifier* m = nullptr;
+	switch (mt)
+	{
+	case LIGHTWALLCONTROLLOCK:
+		m = new LightWallLockedControls();
+		myModifiers.push_back(m);
+		break;
+	}
+	myModifiers[myModifiers.size() - 1]->init(this);
 }
 
 void Player::setRole(Role role)
