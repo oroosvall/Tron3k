@@ -90,7 +90,7 @@
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\BruteBullets\ShotgunPellet.h" />
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\DestroyerBullets\CleanseBomb.h" />
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\DestroyerBullets\PlasmaShot.h" />
-    <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\BatterSlowShot.h" />
+    <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\BatterySlowShot.h" />
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\BatterySpeedShot.h" />
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\LinkShot.h" />
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\VacuumGrenade.h" />
