@@ -77,6 +77,16 @@
     <ClInclude Include="Core\Game\Role\Special\SpecialTypes\Lightwall.h" />
     <ClInclude Include="Core\Game\Role\Weapon\Bullet.h" />
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\AllBullets.h" />
+    <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\BruteBullets\GrenadeShot.h" />
+    <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\BruteBullets\ShotgunPellet.h" />
+    <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\DestroyerBullets\CleanseBomb.h" />
+    <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\DestroyerBullets\PlasmaShot.h" />
+    <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\BatterySlowShot.h" />
+    <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\BatterySpeedShot.h" />
+    <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\LinkShot.h" />
+    <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\VacuumGrenade.h" />
+    <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\MobilityBullets\DiscShot.h" />
+    <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\MobilityBullets\HackingDart.h" />
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\TrapperBullets\bulletpulseshot.h" />
     <ClInclude Include="Core\Game\Role\Weapon\Weapon.h" />
     <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\AllWeapons.h" />
