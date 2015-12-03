@@ -3,28 +3,11 @@ layout(location = 0) in vec3 VertexPos;
 layout(location = 1) in vec2 VertexUV;
 
 layout (location = 0) out vec2 UVOut;  
-layout (location = 1) out vec2 blur[25];
-
-uniform float pixeluvX;
-uniform float pixeluvY;
 
 void main()
 {
 	gl_Position = vec4(VertexPos ,1.0);
 	UVOut = VertexUV;
-	
-	int count = 0;
-
-	for(int x = 0; x < 12; x++)
-	{
-		blur[count] = VertexUV + vec2( (6 - x) * pixeluvX,  0);
-		count++;
-	}	
-	for(int y = 0; y < 12; y++)
-	{
-		blur[count] = VertexUV + vec2( 0, (6 - y) * pixeluvY);
-		count++;
-	}
 }
 
 //blur[1 + n] = VertexUV + vec2(0.0, -pixeluvY * 6);
