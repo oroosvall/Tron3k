@@ -134,13 +134,13 @@ void ContentManager::init()
 	bullet.load("GameFiles/TestFiles/bullet.v");
 }
 
-ContentManager::~ContentManager()
+void ContentManager::release()
 {
 	for (size_t i = 0; i < meshes.size(); i++)
 	{
 		glDeleteBuffers(1, &meshes[i].ibo);
 		glDeleteBuffers(1, &meshes[i].vbo);
-		glDeleteVertexArrays(1,&meshes[i].vao);
+		glDeleteVertexArrays(1, &meshes[i].vao);
 	}
 
 	for (size_t i = 0; i < textures.size(); i++)
@@ -154,14 +154,19 @@ ContentManager::~ContentManager()
 	glDeleteBuffers(1, &playerModels[0].meshID);
 	glDeleteBuffers(1, &playerModels[0].index);
 	glDeleteVertexArrays(1, &playerModels[0].vao);
-	
+
 	delete playerModels;
 	testMap.release();
 
 	glDeleteQueries(1, &portalQuery);
 
-	delete [] renderedChunks;
-	delete [] renderNextChunks;
+	delete[] renderedChunks;
+	delete[] renderNextChunks;
+}
+
+ContentManager::~ContentManager()
+{
+	
 }
 
 void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation, GLuint DglowColor, GLuint SglowColor, GLuint portal_shader, GLuint portal_world)

@@ -1,7 +1,7 @@
 #ifndef BLIT_QUAD_H
 #define BLIT_QUAD_H
 
-#include <gl/glew.h>
+#include "Utils\GPUMemoryLeakChecker.h"
 #include <gl/GL.h>
 #include <glm\glm.hpp>
 #define BUFFER_OFFSET(i) ((char *)nullptr + (i))

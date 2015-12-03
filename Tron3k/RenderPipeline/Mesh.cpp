@@ -9,6 +9,11 @@ void Mesh::init(float x, float y, float z)
 	world[2].w = z;
 }
 
+Mesh::~Mesh()
+{
+	glDeleteBuffers(1, &vbo);
+}
+
 void Mesh::load(std::string path)
 {
 

@@ -1,7 +1,7 @@
 #ifndef MESH_H
 #define MESH_H
 
-#include <GL\glew.h>
+#include "Utils\GPUMemoryLeakChecker.h"
 #include <glm\glm.hpp>
 
 #include "defines.h"
@@ -27,6 +27,8 @@ private:
 	glm::mat4 world;
 
 public:
+
+	~Mesh();
 
 	GLuint vbo;
 	GLuint vao;
