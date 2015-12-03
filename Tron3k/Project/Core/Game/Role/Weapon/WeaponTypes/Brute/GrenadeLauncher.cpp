@@ -17,5 +17,5 @@ void GrenadeLauncher::init()
 
 int GrenadeLauncher::update(float deltaTime)
 {
-
+	return 0;
 }

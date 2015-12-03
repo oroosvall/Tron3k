@@ -17,5 +17,5 @@ void LinkGun::init()
 
 int LinkGun::update(float deltaTime)
 {
-
+	return 0;
 }
