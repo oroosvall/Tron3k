@@ -313,6 +313,11 @@ SETTING_INPUT RenderPipeline::getType(PIPELINE_SETTINGS type) const
 	return SETTING_INPUT::NONE_IN;
 }
 
+void* RenderPipeline::getChunkCollisionVectorAsPoint(int chunkID)
+{
+	return contMan.getChunkCollisionVectorAsPointer(chunkID);
+}
+
 void RenderPipeline::getPlayerBox(float &xMax, float &xMin, float &yMax, float &yMin, float &zMax, float &zMin)
 {
 	//Will be changed later, this is number for now

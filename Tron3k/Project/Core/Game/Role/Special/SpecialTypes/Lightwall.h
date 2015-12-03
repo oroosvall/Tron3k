@@ -16,5 +16,7 @@ public:
 
 	void init();
 	int update(float deltaTime);
+
+	bool allowedToActivate(Player* p);
 };
 #endif

@@ -2,9 +2,9 @@
 #define PULSE_SHOT_H
 
 #include <glm/glm.hpp>
-#include "../Bullet.h"
+#include "../../Bullet.h"
 
-#include "../../../GameDataIndex.h"
+#include "../../../../GameDataIndex.h"
 
 class PulseShot : public Bullet
 {

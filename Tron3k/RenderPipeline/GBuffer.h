@@ -52,6 +52,9 @@ private:
 	GLuint uniformEyePos;
 	GLuint uniformNrOfLight;
 
+	GLuint uBlitLightPixelX;
+	GLuint uBlitLightPixelY;
+
 	//Light Buffers
 	GLuint lightBuffer;
 	GLuint uniformBufferLightPos;

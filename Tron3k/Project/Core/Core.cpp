@@ -85,8 +85,13 @@ void Core::update(float dt)
 	static bool given = false;
 	if (game != nullptr && !given)
 	{
+		bool allchunksSent = false;
+		for (int i = 0; !allchunksSent; i++)
+		{
+			allchunksSent = sendChunkBoxes(i);
+		}
 		sendPlayerBox();
-		sendWorldBoxes();
+		//sendWorldBoxes();
 		given = true;
 	}
 }
@@ -358,11 +363,11 @@ void Core::upServer(float dt)
 			top->scope_out = Uint8(ALL);
 		}
 
-		if (game->hitEventReady())
+		if (game->hitPlayerEventReady())
 		{
-			BulletHitInfo hi = game->getHitInfo();
-			int newHPtotal = game->handleBulletHitEvent(hi);
-			top->event_bullet_hit(hi, newHPtotal);
+			BulletHitPlayerInfo hi = game->getHitPlayerInfo();
+			int newHPtotal = game->handleBulletHitPlayerEvent(hi);
+			top->event_bullet_hit_player(hi, newHPtotal);
 		}
 
 		serverHandleCmds();
@@ -493,7 +498,7 @@ void Core::roamHandleCmds()
 			{
 				int team = stoi(token);
 				game->addPlayerToTeam(0, team);
-				game->allowPlayerRespawn(0, vec3(0,0,0)); //Add new spawn point probably
+				game->allowPlayerRespawn(0, vec3(0,5,0)); //Add new spawn point probably
 				if (team != 0)
 					game->freecam = false;
 				else
@@ -937,6 +942,24 @@ void Core::sendPlayerBox()
 	pBox.push_back(zMin);
 
 	game->sendPlayerBox(pBox);
+}
+
+bool Core::sendChunkBoxes(int chunkID)
+{
+	if (renderPipe != nullptr)
+	{
+		void* cBoxes = renderPipe->getChunkCollisionVectorAsPoint(chunkID);
+
+		if (cBoxes != nullptr)
+		{
+			game->sendChunkBoxes(chunkID, cBoxes);
+			return 0;
+		}
+
+
+	}
+	//when we're done with all chunks, we'll get here cause cBoxes will be nullptr, so we'll end the for-loop
+	return 1;
 }
 
 void Core::sendWorldBoxes()

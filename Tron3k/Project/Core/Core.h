@@ -80,6 +80,7 @@ private:
 	void saveSettings();
 
 	//Relays BoundingBoxes to Physics
+	bool sendChunkBoxes(int chunkID);
 	void sendPlayerBox();
 	void sendWorldBoxes();
 

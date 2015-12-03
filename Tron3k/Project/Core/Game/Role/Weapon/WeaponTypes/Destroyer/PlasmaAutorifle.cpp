@@ -17,5 +17,5 @@ void PlasmaAutorifle::init()
 
 int PlasmaAutorifle::update(float deltaTime)
 {
-
+	return 0;
 }

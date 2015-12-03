@@ -6,6 +6,10 @@ enum SOUNDS
 	soundEffectPusleRifleShot,
 	soundEffectEnergyBoost,
 	soundEffectBulletPlayerHit,
+	soundEffectGrenadeLauncher,
+	soundEffectShotGun,
+	soundEffectDiscGun,
+	soundEffectLinkGun,
 	firstBlood,
 
 

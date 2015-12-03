@@ -160,7 +160,7 @@ public:
 			consolePtr->printMsg("ERROR in_event_player_left" , "System", 'S');
 	}
 
-	virtual void event_bullet_hit(BulletHitInfo hi, int newHPtotal) {};
+	virtual void event_bullet_hit_player(BulletHitPlayerInfo hi, int newHPtotal) {};
 
 	virtual void in_event_respawn_denied(Packet* rec)
 	{
@@ -169,16 +169,16 @@ public:
 		gamePtr->denyPlayerRespawn(tryAgain);
 	}
 
-	virtual void in_event_bullet_hit(Packet* rec)
+	virtual void in_event_bullet_hit_player(Packet* rec)
 	{
-		BulletHitInfo hi = BulletHitInfo();
+		BulletHitPlayerInfo hi = BulletHitPlayerInfo();
 		Uint8 playerHit, PID, BID, bt, hpTotal;
 		*rec >> playerHit >> PID >> BID >> bt >> hpTotal;
 		hi.playerHit = playerHit;
 		hi.bt = BULLET_TYPE(bt);
 		hi.bulletBID = BID;
 		hi.bulletPID = PID;
-		gamePtr->handleBulletHitEvent(hi, hpTotal);
+		gamePtr->handleBulletHitPlayerEvent(hi, hpTotal);
 	}
 
 
@@ -189,6 +189,13 @@ public:
 			pos.x << pos.y << pos.z <<
 			dir.x << dir.y << dir.z;
 	};
+
+	virtual void frame_special_use(SPECIAL_TYPE st, int conID, glm::vec3 pos, glm::vec3 dir)
+	{
+		*package << Uint8(NET_FRAME::SPECIAL) << Uint8(conID) << Uint8(st) <<
+			pos.x << pos.y << pos.z <<
+			dir.x << dir.y << dir.z;
+	}
 
 	virtual void frame_weapon_switch(int conID, WEAPON_TYPE ws)
 	{
@@ -216,6 +223,18 @@ public:
 		*rec >> pos.x >> pos.y >> pos.z;
 		*rec >> dir.x >> dir.y >> dir.z;
 		gamePtr->handleWeaponFire(conID, bulletId, WEAPON_TYPE(weapontype), pos, dir);
+	}
+
+	virtual void in_frame_special_use(Packet* rec)
+	{
+		Uint8 conID;
+		Uint8 specialtype;
+		glm::vec3 pos;
+		glm::vec3 dir;
+		*rec >> conID >> specialtype;
+		*rec >> pos.x >> pos.y >> pos.z;
+		*rec >> dir.x >> dir.y >> dir.z;
+		gamePtr->handleSpecialAbilityUse(conID, SPECIAL_TYPE(specialtype), pos, dir);
 	}
 
 	virtual void in_frame_weapon_switch(Packet* rec)

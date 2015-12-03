@@ -13,14 +13,17 @@
 #include "Role/role.h"
 #include "Role/Weapon/Weapon.h"
 #include "Role/Weapon/bullet.h"
+#include "Role/PlayerEffects/Modifier.h"
+#include "Role/Special/Special.h"
+
 #include <string>
 
 #define interpolationTick 0.050f
 #define respawnTime 5.0f;
 
-enum PLAYERMSG { NONE, SHOOT, WPNSWITCH, DEATH, PLAYERRESPAWN};
+enum PLAYERMSG { NONE, SHOOT, SPECIALUSE, WPNSWITCH, DEATH, PLAYERRESPAWN};
 
-struct BulletHitInfo
+struct BulletHitPlayerInfo
 {
 	int playerHit;
 	int bulletPID;
@@ -38,7 +41,7 @@ private:
 	glm::vec3 pos; //Current actual position
 	glm::vec3 dir; //Current viewing direction
 	glm::vec3 vel; //Our velocity i.e. in which direction we're moving
-	void movePlayer(float dt);
+	void movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingThis);
 	bool grounded = false;
 
 	bool isDead = false;
@@ -57,9 +60,14 @@ private:
 	Input* i;
 	CameraInput* cam;
 
+	vector<Modifier*> myModifiers;
+	void modifiersGetData(float dt); //Gets relevant data (if any) from the player before update occurs
+	void modifiersSetData(float dt); //Sets player's data as necessary after player's update occurs
+
 	void rotatePlayer(vec3 olddir, vec3 newdir);
 public:
 	Player();
+	~Player();
 	void init(std::string name, glm::vec3 pos, bool isLocal = false);
 
 	PLAYERMSG update(float dt, bool freecam, bool spectatingThisPlayer, bool spectating);
@@ -82,6 +90,8 @@ public:
 	Weapon* getPlayerCurrentWeapon();
 	void switchWpn(WEAPON_TYPE ws);
 
+	Special* getPlayerSpecialAbility() { return role.getSpecialAbility(); };
+
 	void setTeam(int teamid) { currentTeam = teamid; };
 	int getTeam() { return currentTeam; };
 
@@ -93,11 +103,15 @@ public:
 
 	void hitByBullet(Bullet* b, int newHPtotal = -1);
 
+	void addModifier(MODIFIER_TYPE mt);
+
 	void setRole(Role role);
 
 	void respawn(glm::vec3 respawnPos);
 
 	void healing(int amount);
+
+	Role* getRole() { return &role; };
 };
 
 #endif
