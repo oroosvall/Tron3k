@@ -25,16 +25,21 @@ Role::~Role()
 {
 	if (weapons[0] != nullptr)
 		delete weapons[0];
-	if (weapons[0] != nullptr)
+	if (weapons[1] != nullptr)
 		delete weapons[1];
 	if (storageMain != nullptr)
 		delete storageMain;
 	if (storageSec != nullptr)
 		delete storageSec;
+	if (specialAbility != nullptr)
+		delete specialAbility;
 }
 
 void Role::loadWeapons(int role, int wpn)
 {
+	if (weapons[wpn] != nullptr)
+		delete weapons[wpn];
+
 	PROPERTIES w;
 	if (wpn == 0)
 		w = MAINWEP;
@@ -53,6 +58,15 @@ void Role::loadWeapons(int role, int wpn)
 	weapons[wpn]->init();
 }
 
+void Role::loadSpecialAbility(int role)
+{
+	if (specialAbility != nullptr)
+		delete specialAbility;
+
+	specialAbility = new Lightwall();
+	specialAbility->init();
+}
+
 float Role::getMovementSpeed()
 {
 	return movementSpeed;
@@ -67,6 +81,8 @@ void Role::chooseRole(int role)
 
 		loadWeapons(role, 0);
 		loadWeapons(role, 1);
+
+		loadSpecialAbility(role);
 
 		//consumable.setConsumable(atoi(loadedRoles[role][CONSUMABLE].c_str()));
 		movementSpeed = atof(loadedRoles[role][MOVEMENTSPEED].c_str());

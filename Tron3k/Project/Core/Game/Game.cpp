@@ -114,7 +114,7 @@ void Game::update(float dt)
 			GetSound()->enableSounds();
 		}
 	}
-	
+
 
 	for (int c = 0; c < max_con; c++)
 	{
@@ -164,26 +164,18 @@ void Game::playerUpdate(int conid, float dt)
 			spectatingThis = true;
 	}
 
-	if (playerList[conid]->isLocal())
-	{
-		if (!playerList[conid]->getGrounded())
-			playerList[conid]->applyGravity(physics, dt);
-	}
-
 	PLAYERMSG msg = playerList[conid]->update(dt, freecam, spectatingThis, spectating);
 	if (msg == PLAYERMSG::SHOOT)
 	{
-		//if (gameState != Gamestate::ROAM)
 		registerWeapon(playerList[conid]);
-		/*else
-		{
-		registerWeapon(playerList[c]);
-		handleWeaponFire(c, bulletShot, weaponShotWith, playerList[c]->getPos(), playerList[c]->getDir());
-		}*/
 	}
 	if (msg == PLAYERMSG::WPNSWITCH)
 	{
 		registerSwitch(playerList[conid]);
+	}
+	if (msg == PLAYERMSG::SPECIAL)
+	{
+		registerSpecial(playerList[conid]);
 	}
 
 	if (msg == PLAYERMSG::DEATH)
@@ -195,6 +187,18 @@ void Game::playerUpdate(int conid, float dt)
 		if (playerList[conid]->isLocal())
 			localPlayerWantsRespawn = true;
 	}
+
+	/*
+	
+	THIS IS WHERE WE APPLY ALL EXTERNAL FORCES TO THE PLAYER?
+
+	*/
+	if (playerList[conid]->isLocal())
+	{
+		if (!playerList[conid]->getGrounded())
+			playerList[conid]->applyGravity(physics, dt);
+	}
+
 }
 
 Player* Game::getPlayer(int conID)
@@ -413,6 +417,13 @@ void Game::registerSwitch(Player* p)
 	wpnSwitched = true;
 }
 
+void Game::registerSpecial(Player* p)
+{
+	Special* s = p->getPlayerSpecialAbility();
+	specialUsed = s->getType();
+	specialActivated = true;
+}
+
 void Game::handleWeaponSwitch(int conID, WEAPON_TYPE ws)
 {
 	playerList[conID]->switchWpn(ws);
@@ -523,7 +534,6 @@ void Game::handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm
 	switch (weapontype)
 	{
 	case WEAPON_TYPE::PULSE_RIFLE:
-		//To do: Automate generation of bullets
 		if (gameState != Gamestate::SERVER)
 			if (GetSound())
 				GetSound()->playExternalSound(SOUNDS::soundEffectPusleRifleShot, pos.x, pos.y, pos.z);	
@@ -534,6 +544,24 @@ void Game::handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm
 			if(GetSound())
 				GetSound()->playExternalSound(SOUNDS::soundEffectPoopRifleShot, pos.x, pos.y, pos.z);
 		playerList[conID]->healing(10);
+		break;
+	}
+}
+
+SPECIAL_TYPE Game::getSpecialAbilityUsed(int localPlayer)
+{
+	specialActivated = false;
+	Player* p = playerList[localPlayer];
+	handleSpecialAbilityUse(localPlayer, specialUsed, p->getPos(), p->getDir());
+	return specialUsed;
+}
+
+void Game::handleSpecialAbilityUse(int conID, SPECIAL_TYPE st, glm::vec3 pos, glm::vec3 dir)
+{
+	switch (st)
+	{
+	case SPECIAL_TYPE::LIGHTWALL:
+		playerList[conID]->addModifier(MODIFIER_TYPE::LIGHTWALLCONTROLLOCK);
 		break;
 	}
 }

@@ -6,6 +6,7 @@
 class LightWallLockedControls : public Modifier
 {
 private:
+	float lightWallSpeed;
 	glm::vec3 vel;
 public:
 	void init(Player* myTarget);

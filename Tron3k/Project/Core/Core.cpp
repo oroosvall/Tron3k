@@ -181,8 +181,11 @@ void Core::upRoam(float dt)
 			WEAPON_TYPE wt;
 			int bID;
 			game->getLatestWeaponFired(0, wt, bID);
-			int team = 0;
-			game->handleWeaponFire(0, bID, wt, p->getPos(), p->getDir());
+		}
+
+		if (game->specialActivationReady())
+		{
+			game->getSpecialAbilityUsed(0);
 		}
 
 		renderWorld(dt);

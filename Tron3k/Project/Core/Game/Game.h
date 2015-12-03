@@ -49,6 +49,7 @@ private:
 
 	void registerWeapon(Player* p);
 	void registerSwitch(Player* p);
+	void registerSpecial(Player* p);
 
 	WEAPON_TYPE weaponShotWith;
 	int bulletShot = -1;
@@ -56,6 +57,9 @@ private:
 
 	WEAPON_TYPE weaponSwitchedTo;
 	bool wpnSwitched = false;
+
+	SPECIAL_TYPE specialUsed;
+	bool specialActivated = false;
 
 	BulletHitPlayerInfo hit;
 	bool playerHit = false;
@@ -99,6 +103,10 @@ public:
 	bool weaponSwitchReady() { return wpnSwitched; };
 	WEAPON_TYPE getWpnSwitch() { wpnSwitched = false; return weaponSwitchedTo; };
 	void handleWeaponSwitch(int conID, WEAPON_TYPE ws);
+
+	bool specialActivationReady() { return specialActivated; };
+	SPECIAL_TYPE getSpecialAbilityUsed(int localPlayer);
+	void handleSpecialAbilityUse(int conID, SPECIAL_TYPE st, glm::vec3 pos, glm::vec3 dir);
 
 	bool hitPlayerEventReady() { return playerHit; };
 	BulletHitPlayerInfo getHitPlayerInfo() { playerHit = false; return hit; };
