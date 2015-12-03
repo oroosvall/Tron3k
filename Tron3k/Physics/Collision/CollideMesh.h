@@ -55,6 +55,7 @@ public:
 	void init();
 
 	void setAABB(glm::vec3 pos, glm::vec3 max, glm::vec3 min);
+	void setAABB(AABB aabb);
 	AABB getAABB();
 
 

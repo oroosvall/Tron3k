@@ -270,12 +270,12 @@ struct Chunk
 		lights.push_back(l);
 	}
 
-	void addCollisionMesh(ChunkCollision collision)
+	void addCollisionMesh(ABBFinishedCollision collision)
 	{
-		collisionMesh.push_back(collision);
+		collisionMesh.abbStuff.push_back(collision);
 	}
 
-	vector<ChunkCollision>* getChunkCollision()
+	ChunkCollision* getChunkCollision()
 	{
 		return &collisionMesh;
 	}
@@ -291,7 +291,7 @@ struct Chunk
 
 	vector<SpotLight> lights;
 
-	vector<ChunkCollision> collisionMesh;
+	ChunkCollision collisionMesh;
 
 };
 #endif

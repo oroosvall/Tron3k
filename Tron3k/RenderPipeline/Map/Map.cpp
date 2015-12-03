@@ -168,7 +168,6 @@ void Map::loadMap(std::string mapName)
 			glm::mat4* bbMats = new glm::mat4[bbCount];
 			inFile.read((char*)bbMats, sizeof(glm::mat4)*bbCount);
 
-			ChunkCollision col;
 			ABBFinishedCollision abbBox;
 			abbBox.abbBox = bounds[j];
 
@@ -180,9 +179,7 @@ void Map::loadMap(std::string mapName)
 				abbBox.obbBoxes.push_back(obbBox);
 			}
 
-			col.abbStuff.push_back(abbBox);
-
-			chunks[roomIDs[j]].addCollisionMesh(col);
+			chunks[roomIDs[j]].addCollisionMesh(abbBox);
 
 			delete[] bbMats;
 		}
@@ -270,7 +267,7 @@ int Map::getChunkID(glm::vec3 oldPos, glm::vec3 newPos)
 	return currentChunk;
 }
 
-vector<ChunkCollision>* Map::getChunkCollision(int chunkID)
+ChunkCollision* Map::getChunkCollision(int chunkID)
 {
 	return chunks[chunkID].getChunkCollision();
 }
