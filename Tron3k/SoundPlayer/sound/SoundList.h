@@ -9,6 +9,7 @@ enum SOUNDS
 	soundEffectGrenadeLauncher,
 	soundEffectShotGun,
 	soundEffectDiscGun,
+	soundEffectLinkGun,
 	firstBlood,
 
 
