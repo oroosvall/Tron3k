@@ -64,7 +64,6 @@ public:
 	virtual void update(float x, float y, float z, float dt);
 	virtual void renderIni();
 	virtual void render();
-	virtual void skeletonARender();
 
 	virtual void addLight(SpotLight* newLight);
 	virtual void setChunkColorAndInten(int ID, float* color, float inten);

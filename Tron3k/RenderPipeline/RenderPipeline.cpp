@@ -203,14 +203,6 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	//returns room id, new value if we went though a portal
 	contMan.getPortalID(gBuffer->eyePosLast, gBuffer->eyePos);
 
-	glProgramUniform1i(regularShader, uniformTextureLocation[0], 0); //regular shader
-	glProgramUniform1i(regularShader, uniformNormalLocation[0], 1); //regular shader
-	glProgramUniform1i(regularShader, uniformGlowSpecLocation[0], 2); //regular shader
-
-	glProgramUniform1i(skeletonAShader, uniformTextureLocation[1], 0); //skeleton shader
-	glProgramUniform1i(skeletonAShader, uniformNormalLocation[1], 1); //skeleton shader
-	glProgramUniform1i(skeletonAShader, uniformGlowSpecLocation[1], 2); //skeleton shader
-
 	gBuffer->clearLights();
 }
 void RenderPipeline::addLight(SpotLight* newLight)
@@ -228,14 +220,7 @@ void RenderPipeline::renderIni()
 
 void RenderPipeline::render()
 {
-	//Glow values for world
-	glProgramUniform1f(regularShader, uniformStaticGlowIntensityLocation[0], mod((timepass / 5.0f), 1.0f));
-	glm::vec3 glowColor(mod((timepass / 1.0f), 1.0f), mod((timepass / 2.0f), 1.0f), mod((timepass / 3.0f), 1.0f));
-	glProgramUniform3fv(regularShader, uniformDynamicGlowColorLocation[0], 1, (GLfloat*)&glowColor[0]);
-
-	//contMan.renderChunks(regularShader, worldMat[0], uniformTextureLocation[0], uniformNormalLocation[0], uniformGlowSpecLocation[0], *gBuffer->portal_shaderPtr, gBuffer->portal_model);
-
-	contMan.renderChunks(regularShader, worldMat, uniformTextureLocation, uniformNormalLocation, uniformGlowSpecLocation, uniformDynamicGlowColorLocation, uniformStaticGlowIntensityLocation,  *gBuffer->portal_shaderPtr, gBuffer->portal_model);
+	contMan.renderChunks(regularShader, worldMat[0], uniformTextureLocation[0], uniformNormalLocation[0], uniformGlowSpecLocation[0], uniformDynamicGlowColorLocation[0], uniformStaticGlowIntensityLocation[0],  *gBuffer->portal_shaderPtr, gBuffer->portal_model);
 	
 	//Skeleton render here
 	skeletonARender();
@@ -255,26 +240,6 @@ void RenderPipeline::render()
 	gBuffer->render();
 }
 
-void RenderPipeline::skeletonARender()
-{
-	glUseProgram(skeletonAShader);
-
-	glProgramUniformMatrix4fv(skeletonAShader, uniformSkeletonMatrix, /*nrOfMatrices*/, GL_FALSE, /*&skeletonA->MatrixArray[0]*/);
-	glProgramUniformMatrix4fv(skeletonAShader, worldMat[1], 1, GL_FALSE, /*&WorldMatrix[0]*/);
-	
-	glProgramUniform1i(skeletonAShader, uniformTextureLocation[1], 0);
-	glProgramUniform1i(skeletonAShader, uniformNormalLocation[1], 1);
-	glProgramUniform1i(skeletonAShader, uniformGlowSpecLocation[1], 2);
-
-	glProgramUniform1f(skeletonAShader, uniformStaticGlowIntensityLocation[1], mod((timepass / 5.0f), 1.0f));
-	glm::vec3 glowColor(mod((timepass / 1.0f), 1.0f), mod((timepass / 2.0f), 1.0f), mod((timepass / 3.0f), 1.0f));
-	glProgramUniform3fv(skeletonAShader, uniformDynamicGlowColorLocation[1], 1, (GLfloat*)&glowColor[0]);
-
-	glBindVertexArray();
-	glBindBuffer(GL_ARRAY_BUFFER,  /*SkeletionA buffer here*/);
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, /*nrOfVertices*/);
-}
-
 void* RenderPipeline::getView()
 {
 	return (void*)cam.getViewMat();
@@ -288,12 +253,22 @@ void RenderPipeline::setChunkColorAndInten(int ID, float* color, float inten)
 
 void RenderPipeline::renderPlayer(int playerID, void* world, float* dgColor, float sgInten)
 {
+	glUseProgram(skeletonAShader);
+
 	//Glow values for player
 	glProgramUniform1f(regularShader, uniformStaticGlowIntensityLocation[0], sgInten);
 	glProgramUniform3fv(regularShader, uniformDynamicGlowColorLocation[0], 1, (GLfloat*)&dgColor[0]);
 
 	//set temp objects worldmat
 	glProgramUniformMatrix4fv(regularShader, worldMat[0], 1, GL_FALSE, (GLfloat*)world);
+
+	//Set the skeleton animation matrices
+	//glProgramUniformMatrix4fv(skeletonAShader, uniformSkeletonMatrix, /*nrOfMatrices*/, GL_FALSE, /*&skeletonA->MatrixArray[0]*/);
+
+	//Set Texture, Normal and glow map
+	glProgramUniform1i(skeletonAShader, uniformTextureLocation[1], 0); //skeleton shader
+	glProgramUniform1i(skeletonAShader, uniformNormalLocation[1], 1); //skeleton shader
+	glProgramUniform1i(skeletonAShader, uniformGlowSpecLocation[1], 2); //skeleton shader
 
 	contMan.renderPlayer(playerID, *(glm::mat4*)world);
 }
