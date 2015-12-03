@@ -227,9 +227,9 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				if (i->justPressed(GLFW_KEY_E))
 				{
 					/*
-					Add logic (in role) that checks against the applicable special and fixes Special meter accordingly
+					Add logic (in role) that checks against the applicable special and other conditions
 					*/
-					msg = SPECIAL;
+					msg = SPECIALUSE;
 				}
 
 				if (i->justPressed(GLFW_KEY_Z))					//Temp?

@@ -230,6 +230,7 @@ void Server::in_frame(Packet* rec, Uint8 conID)
 		case NET_FRAME::POS: in_frame_pos(rec); break;
 		case NET_FRAME::FIRE: in_frame_fire(rec); break;
 		case NET_FRAME::WPN_SWITCH: in_frame_weapon_switch(rec); break;
+		case NET_FRAME::SPECIAL: in_frame_special_use(rec); break;
 		}
 	}
 

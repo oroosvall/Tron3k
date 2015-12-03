@@ -21,7 +21,7 @@
 #define interpolationTick 0.050f
 #define respawnTime 5.0f;
 
-enum PLAYERMSG { NONE, SHOOT, SPECIAL, WPNSWITCH, DEATH, PLAYERRESPAWN};
+enum PLAYERMSG { NONE, SHOOT, SPECIALUSE, WPNSWITCH, DEATH, PLAYERRESPAWN};
 
 struct BulletHitPlayerInfo
 {

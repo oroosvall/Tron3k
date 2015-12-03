@@ -295,9 +295,15 @@ void Core::upClient(float dt)
 				WEAPON_TYPE wt;
 				int bID;
 				game->getLatestWeaponFired(top->getConId(), wt, bID);
-				int team = local->getTeam();
 				top->frame_fire(wt, top->getConId(), bID, local->getPos(), local->getDir());
 			}
+
+			if (game->specialActivationReady())
+			{
+				SPECIAL_TYPE st = game->getSpecialAbilityUsed(top->getConId());
+				top->frame_special_use(st, top->getConId(), local->getPos(), local->getDir());
+			}
+
 			//send the package
 			top->network_OUT(dt);
 			tick_timer = 0;

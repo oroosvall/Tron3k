@@ -172,7 +172,7 @@ void Game::playerUpdate(int conid, float dt)
 	{
 		registerSwitch(playerList[conid]);
 	}
-	if (msg == PLAYERMSG::SPECIAL)
+	if (msg == PLAYERMSG::SPECIALUSE)
 	{
 		registerSpecial(playerList[conid]);
 	}
@@ -557,10 +557,11 @@ SPECIAL_TYPE Game::getSpecialAbilityUsed(int localPlayer)
 
 void Game::handleSpecialAbilityUse(int conID, SPECIAL_TYPE st, glm::vec3 pos, glm::vec3 dir)
 {
+	Player* p = playerList[conID];
 	switch (st)
 	{
 	case SPECIAL_TYPE::LIGHTWALL:
-		playerList[conID]->addModifier(MODIFIER_TYPE::LIGHTWALLCONTROLLOCK);
+		p->addModifier(MODIFIER_TYPE::LIGHTWALLCONTROLLOCK);
 		break;
 	}
 }
