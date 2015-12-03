@@ -4,7 +4,7 @@
 enum SOUNDS
 {
 	soundEffectPusleRifleShot,
-	soundEffectPoopRifleShot,
+	soundEffectEnergyBoost,
 	soundEffectBulletPlayerHit,
 	firstBlood,
 
