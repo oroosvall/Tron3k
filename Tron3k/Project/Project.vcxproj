@@ -23,6 +23,7 @@
     <ClCompile Include="Core\Console.cpp" />
     <ClCompile Include="Core\Core.cpp" />
     <ClCompile Include="Core\Game\Game.cpp" />
+    <ClCompile Include="Core\Game\GameMap.cpp" />
     <ClCompile Include="Core\Game\Player.cpp" />
     <ClCompile Include="Core\Game\Role\ActiveEffects\Ability.cpp" />
     <ClCompile Include="Core\Game\Role\ActiveEffects\Consumable.cpp" />
@@ -51,6 +52,7 @@
     <ClInclude Include="Core\Game\Animation.h" />
     <ClInclude Include="Core\Game\Game.h" />
     <ClInclude Include="Core\Game\GameDataIndex.h" />
+    <ClInclude Include="Core\Game\GameMap.h" />
     <ClInclude Include="Core\Game\GameObject.h" />
     <ClInclude Include="Core\Game\Player.h" />
     <ClInclude Include="Core\Game\Role\ActiveEffects\Ability.h" />

@@ -126,6 +126,9 @@
     <ClCompile Include="Core\Game\Role\PlayerEffects\Modifiers\LightWallLockedControls.cpp">
       <Filter>Source Files\Core\Game\Role\PlayerEffects\Modifiers</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Game\GameMap.cpp">
+      <Filter>Source Files\Core\Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Input.h">
@@ -226,6 +229,9 @@
     </ClInclude>
     <ClInclude Include="Core\Game\Role\PlayerEffects\Modifiers\LightWallLockedControls.h">
       <Filter>Source Files\Core\Game\Role\PlayerEffects\Modifiers</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\GameMap.h">
+      <Filter>Source Files\Core\Game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

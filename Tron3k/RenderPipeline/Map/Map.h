@@ -49,6 +49,8 @@ public:
 	void loadMap(std::string mapName);
 
 	int getChunkID(glm::vec3 oldPos, glm::vec3 newPos);
+
+	vector<ChunkCollision>* getChunkCollision(int chunkID);
 };
 
 #endif

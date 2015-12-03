@@ -58,9 +58,9 @@ void SoundPlayer::enableSounds()
 		{
 			sounds[i].setVolume(soundVolume);
 		}
-		musicPlayer.play();
-		musicPlayer.setVolume(musicVolume);
 		soundEnabler = true;
+		playMusic(mainMenu);
+		musicPlayer.setVolume(musicVolume);
 	}
 	else
 	{
@@ -155,7 +155,7 @@ void SoundPlayer::setLocalPlayerPos(glm::vec3 playerPos)
 
 int SoundPlayer::playMusic(int music)
 {
-	if (soundEnabler && initialized == 1)
+	if (soundEnabler == 1 && initialized == 1)
 	{
 
 		if (musicPlayer.getStatus() == sf::Sound::Playing)

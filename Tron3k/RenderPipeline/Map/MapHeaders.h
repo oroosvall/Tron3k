@@ -171,7 +171,7 @@ struct PortalData
 	}
 };
 
-struct AAB
+struct ABB
 {
 	float points[12];
 };
@@ -197,6 +197,23 @@ struct Prop
 {
 	uint32_t id;
 	vector<glm::mat4> mats;
+};
+
+struct OBB
+{
+	BBPoint point;
+	glm::mat4 transform;
+};
+
+struct ABBFinishedCollision
+{
+	ABB abbBox;
+	vector<OBB> obbBoxes;
+};
+
+struct ChunkCollision
+{
+	vector<ABBFinishedCollision> abbStuff;
 };
 
 struct Chunk
@@ -253,6 +270,16 @@ struct Chunk
 		lights.push_back(l);
 	}
 
+	void addCollisionMesh(ChunkCollision collision)
+	{
+		collisionMesh.push_back(collision);
+	}
+
+	vector<ChunkCollision>* getChunkCollision()
+	{
+		return &collisionMesh;
+	}
+
 	glm::vec3 color;
 	float staticIntes;
 
@@ -263,6 +290,8 @@ struct Chunk
 	vector<PortalData> portals;
 
 	vector<SpotLight> lights;
+
+	vector<ChunkCollision> collisionMesh;
 
 };
 #endif

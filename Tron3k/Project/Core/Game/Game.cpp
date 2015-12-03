@@ -114,8 +114,7 @@ void Game::update(float dt)
 			GetSound()->enableSounds();
 		}
 	}
-
-
+	
 	for (int c = 0; c < max_con; c++)
 	{
 		if (playerList[c] != nullptr)
