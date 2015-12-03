@@ -126,6 +126,8 @@ Gbuffer::~Gbuffer()
 		//Debug::DebugOutput("Deleting gbuffer target\n");
 	}
 
+	glDeleteBuffers(1, &lightBuffer);
+
 	glDeleteShader(*shaderPtr);
 	delete shaderPtr;
 	glDeleteShader(*portal_shaderPtr);

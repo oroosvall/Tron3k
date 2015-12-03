@@ -130,17 +130,17 @@ void reportGPULeaks()
 }
 
 #undef glGenBuffers
-#undef glGenVertexArray
-#undef glGenTexture
+#undef glGenVertexArrays
+#undef glGenTextures
 
 #undef glDeleteBuffers
-#undef glDeleteVertexArray
-#undef glDeleteTexture
+#undef glDeleteVertexArrays
+#undef glDeleteTextures
 
 #define glGenBuffers(n,i)			glGenBuffers_D(n,i, __FILE__, __LINE__)
-#define glGenVertexArray(n,i)		glGenVertexArray_D(n,i, __FILE__, __LINE__)
-#define glGenTexture(n,i)			glGenTexture_D(n,i, __FILE__, __LINE__)
+#define glGenVertexArrays(n,i)		glGenVertexArray_D(n,i, __FILE__, __LINE__)
+#define glGenTextures(n,i)			glGenTexture_D(n,i, __FILE__, __LINE__)
 
 #define glDeleteBuffers(n,i)		glDeleteBuffers_D(n,i)
-#define glDeleteVertexArray(n,i)	glDeleteVertexArray(n,i)
-#define glDeleteTexture(n,i)		glDeleteTexture_D(n,i)
+#define glDeleteVertexArrays(n,i)	glDeleteVertexArray_D(n,i)
+#define glDeleteTextures(n,i)		glDeleteTexture_D(n,i)
