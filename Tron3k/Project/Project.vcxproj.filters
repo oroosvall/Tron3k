@@ -52,6 +52,21 @@
     <Filter Include="Source Files\Core\Game\Role\PlayerEffects\Modifiers">
       <UniqueIdentifier>{5a5a72f5-6f4f-40ec-91e7-571485bdc219}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Core\Game\Role\Weapon\WeaponTypes\Trapper">
+      <UniqueIdentifier>{6f6f0f1b-b6b4-42d3-ac57-94d1b619a507}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\Game\Role\Weapon\WeaponTypes\Brute">
+      <UniqueIdentifier>{c2b23a94-5050-43b7-a0e8-44e773ee4b86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\Game\Role\Weapon\WeaponTypes\Manipulator">
+      <UniqueIdentifier>{f460529a-125b-4e66-9aaf-bfb1e2502bcb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\Game\Role\Weapon\WeaponTypes\Mobility">
+      <UniqueIdentifier>{65c96ee6-7540-42a5-b6cf-b9018fc41eb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\Game\Role\Weapon\WeaponTypes\Destroyer">
+      <UniqueIdentifier>{085e6c0f-442d-4884-a1cd-d2529cf146f7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -111,12 +126,6 @@
     <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\BulletPulseShot.cpp">
       <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\PulseRifle.cpp">
-      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\EnergyBoost.cpp">
-      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Game\Role\Special\Special.cpp">
       <Filter>Source Files\Core\Game\Role\Special</Filter>
     </ClCompile>
@@ -128,6 +137,36 @@
     </ClCompile>
     <ClCompile Include="Core\Game\GameMap.cpp">
       <Filter>Source Files\Core\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\Trapper\EnergyBoost.cpp">
+      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes\Trapper</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\Trapper\PulseRifle.cpp">
+      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes\Trapper</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\Destroyer\EnergyShield.cpp">
+      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes\Destroyer</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\Destroyer\PlasmaAutorifle.cpp">
+      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes\Destroyer</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\Mobility\DiscGun.cpp">
+      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes\Mobility</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\Mobility\Melee.cpp">
+      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes\Mobility</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\Manipulator\BatteryFields.cpp">
+      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes\Manipulator</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\Manipulator\LinkGun.cpp">
+      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes\Manipulator</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\Brute\GrenadeLauncher.cpp">
+      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes\Brute</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\Brute\Shotgun.cpp">
+      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes\Brute</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -206,15 +245,6 @@
     <ClInclude Include="Core\Game\Role\Weapon\Weapon.h">
       <Filter>Source Files\Core\Game\Role\Weapon</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\AllWeapons.h">
-      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\PulseRifle.h">
-      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\EnergyBoost.h">
-      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Game\Role\Special\Special.h">
       <Filter>Source Files\Core\Game\Role\Special</Filter>
     </ClInclude>
@@ -232,6 +262,39 @@
     </ClInclude>
     <ClInclude Include="Core\Game\GameMap.h">
       <Filter>Source Files\Core\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\AllWeapons.h">
+      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\Trapper\EnergyBoost.h">
+      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes\Trapper</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\Trapper\PulseRifle.h">
+      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes\Trapper</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\Destroyer\EnergyShield.h">
+      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes\Destroyer</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\Destroyer\PlasmaAutorifle.h">
+      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes\Destroyer</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\Mobility\DiscGun.h">
+      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes\Mobility</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\Mobility\Melee.h">
+      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes\Mobility</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\Manipulator\LinkGun.h">
+      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes\Manipulator</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\Brute\GrenadeLauncher.h">
+      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes\Brute</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\Brute\Shotgun.h">
+      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes\Brute</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\Manipulator\BatteryFields.h">
+      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes\Manipulator</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -4,8 +4,12 @@
 enum SOUNDS
 {
 	soundEffectPusleRifleShot,
-	soundEffectPoopRifleShot,
+	soundEffectEnergyBoost,
 	soundEffectBulletPlayerHit,
+	soundEffectGrenadeLauncher,
+	soundEffectShotGun,
+	soundEffectDiscGun,
+	soundEffectLinkGun,
 	firstBlood,
 
 
