@@ -73,6 +73,18 @@
     <Filter Include="Source Files\Core\Game\Role\PlayerEffects\Effects">
       <UniqueIdentifier>{46a1108f-eaf3-458f-9c36-5d121f3598fb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Core\Game\Role\Weapon\BulletTypes\DestroyerBullets">
+      <UniqueIdentifier>{9171fce7-7cd9-42b8-aa59-45eeee7de07a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\Game\Role\Weapon\BulletTypes\MobilityBullets">
+      <UniqueIdentifier>{22b77d5f-26d5-4a51-bf72-939a51148854}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\Game\Role\Weapon\BulletTypes\BruteBullets">
+      <UniqueIdentifier>{96d81911-9dea-40c0-b4b0-f4936639373a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\Game\Role\Weapon\BulletTypes\Manipulator">
+      <UniqueIdentifier>{a98a3185-d679-4bf1-8ba3-ba2350c050c4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -302,20 +314,8 @@
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\AllEffects.h">
       <Filter>Source Files\Core\Game\Role\PlayerEffects\Effects</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\BruteBullets\GrenadeShot.h">
-      <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\BruteBullets</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\BruteBullets\ShotgunPellet.h">
-      <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\BruteBullets</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\BatterySpeedShot.h">
-      <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\LinkShot.h">
-      <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\VacuumGrenade.h">
-      <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets</Filter>
+    <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\LightwallEffect.h">
+      <Filter>Source Files\Core\Game\Role\PlayerEffects\Effects</Filter>
     </ClInclude>
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\DestroyerBullets\CleanseBomb.h">
       <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\DestroyerBullets</Filter>
@@ -323,23 +323,29 @@
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\DestroyerBullets\PlasmaShot.h">
       <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\DestroyerBullets</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\MobilityBullets\DiscShot.h">
-      <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\MobilityBullets</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\MobilityBullets\HackingDart.h">
       <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\MobilityBullets</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\TrapperBullets\ClusterGrenade.h">
-      <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\TrapperBullets</Filter>
+    <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\MobilityBullets\DiscShot.h">
+      <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\MobilityBullets</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\TrapperBullets\Clusterling.h">
-      <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\TrapperBullets</Filter>
+    <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\BruteBullets\GrenadeShot.h">
+      <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\BruteBullets</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\LightwallEffect.h">
-      <Filter>Source Files\Core\Game\Role\PlayerEffects\Effects</Filter>
+    <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\BruteBullets\ShotgunPellet.h">
+      <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\BruteBullets</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\LinkShot.h">
+      <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\Manipulator</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\VacuumGrenade.h">
+      <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\Manipulator</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\BatterySpeedShot.h">
+      <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\Manipulator</Filter>
     </ClInclude>
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\BatterySlowShot.h">
-      <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets</Filter>
+      <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\Manipulator</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
