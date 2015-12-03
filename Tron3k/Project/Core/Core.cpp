@@ -255,9 +255,11 @@ void Core::upClient(float dt)
 
 		//update game
 		game->update(dt);
-
-		GetSound()->setLocalPlayerDir(game->getPlayer(top->getConId())->getDir());
-		GetSound()->setLocalPlayerPos(game->getPlayer(0)->getPos());
+		if (GetSoundActivated())
+		{
+			GetSound()->setLocalPlayerDir(game->getPlayer(top->getConId())->getDir());
+			GetSound()->setLocalPlayerPos(game->getPlayer(0)->getPos());
+		}
 
 		//Command and message handle
 		if (console.messageReady())
