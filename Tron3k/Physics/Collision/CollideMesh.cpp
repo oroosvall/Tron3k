@@ -18,9 +18,9 @@ void CollideMesh::init()
 
 void CollideMesh::setAABB(glm::vec3 pos, glm::vec3 max, glm::vec3 min)
 {
-	boundingBox.pos = pos;
-	boundingBox.max = max;
-	boundingBox.min = min;
+	//boundingBox.pos = pos;
+	//boundingBox.max = max;
+	//boundingBox.min = min;
 }
 
 AABB CollideMesh::getAABB()
@@ -42,7 +42,7 @@ Cylinder CollideMesh::getCylinder()
 
 void CollideMesh::setPos(glm::vec3 pos)
 {
-	boundingBox.pos = pos;
+	//boundingBox.pos = pos;
 
 	cylinder.pos = pos;
 }

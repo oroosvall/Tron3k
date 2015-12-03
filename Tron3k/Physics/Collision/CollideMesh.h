@@ -18,16 +18,16 @@
 
 struct OBB
 {
-	glm::vec3 corners[8];
+	glm::vec4 corners[8];
 
 	glm::mat4 transform;
 };
 
 struct AABB
 {
-	glm::vec3 pos;
-	glm::vec3 max;
-	glm::vec3 min;
+	glm::vec4 pos;
+	glm::vec4 max;
+	glm::vec4 min;
 
 	std::vector<OBB> ObbBoxes;
 };

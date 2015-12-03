@@ -86,7 +86,7 @@ void Core::update(float dt)
 	if (game != nullptr && !given)
 	{
 		bool allchunksSent = false;
-		for (int i = 0; allchunksSent = false; i++)
+		for (int i = 0; allchunksSent == false; i++)
 		{
 			allchunksSent = sendChunkBoxes(i);
 		}

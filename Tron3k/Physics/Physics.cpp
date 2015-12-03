@@ -192,7 +192,9 @@ void Physics::addGravity(glm::vec3 &vel, float dt)
 
 void Physics::receiveChunkBoxes(int chunkID, void* cBoxes)
 {
-
+	std::vector<std::vector<AABB>>* cBox = (std::vector<std::vector<AABB>>*)cBoxes;
+	std::vector<std::vector<AABB>> b = std::vector<std::vector<AABB>>(*cBox);
+	int x = 0;
 }
 
 void Physics::receivePlayerBox(std::vector<float> pBox)
