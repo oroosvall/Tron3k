@@ -51,7 +51,7 @@ private:
 	GLuint uniformDynamicGlowColorLocation[2];
 	GLuint uniformStaticGlowIntensityLocation[2];
 
-	GLuint uniformSkeletonMatrix[2];
+	GLuint uniformSkeletonMatrix;
 
 
 	float timepass = 0;

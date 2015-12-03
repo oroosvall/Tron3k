@@ -122,11 +122,6 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	std::string shaderNamesSkeletonA[] = { "GameFiles/Shaders/SkeletonAnimation_fs.glsl", "SkeletonAnimation_vs.glsl" };
 	GLenum shaderTypesSkeletonA[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
 	CreateProgram(skeletonAShader, shaderNamesSkeletonA, shaderTypesSkeletonA, 2);
-
-	//Compute Shader
-	std::string shaderNamesCompute[] = { "GameFiles/Shaders/ComputeShader.glsl" };
-	GLenum shaderTypesCompute[] = { GL_COMPUTE_SHADER };
-	CreateProgram(computeShader, shaderNamesCompute, shaderTypesCompute, 1);
 	
 
 	worldMat[0] = glGetUniformLocation(regularShader, "WorldMatrix"); //worldMat regular shader
@@ -155,8 +150,7 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	uniformStaticGlowIntensityLocation[0] = glGetUniformLocation(regularShader, "staticGlowIntensity"); //regular shader
 	uniformStaticGlowIntensityLocation[1] = glGetUniformLocation(skeletonAShader, "staticGlowIntensity"); //skeleton shader
 
-	uniformSkeletonMatrix[0] = glGetUniformLocation(computeShader, "inverseBindpose");
-	uniformSkeletonMatrix[1] = glGetUniformLocation(skeletonAShader, "inverseBindpose");
+	uniformSkeletonMatrix = glGetUniformLocation(skeletonAShader, "inverseBindpose");
 
 	cam.setViewProjMat(regularShader, viewProjMat[0]);
 	cam.setViewProjMat(skeletonAShader, viewProjMat[0]);
@@ -255,19 +249,9 @@ void RenderPipeline::render()
 
 void RenderPipeline::skeletonARender()
 {
-	//Compute shader for Skeleton shadern
-	glUseProgram(computeShader);
-
-	glProgramUniformMatrix4fv(computeShader, uniformSkeletonMatrix[0], /*nrOfMatrices*/, GL_FALSE, /*&skeletonA->MatrixArray[0]*/);
-
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, /*SkeletionA buffer here*/);
-	glDispatchCompute(10, 1, 1);
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-
-	//Skeleton
 	glUseProgram(skeletonAShader);
 
-	glProgramUniformMatrix4fv(skeletonAShader, uniformSkeletonMatrix[1], /*nrOfMatrices*/, GL_FALSE, /*&skeletonA->MatrixArray[0]*/);
+	glProgramUniformMatrix4fv(skeletonAShader, uniformSkeletonMatrix, /*nrOfMatrices*/, GL_FALSE, /*&skeletonA->MatrixArray[0]*/);
 	glProgramUniformMatrix4fv(skeletonAShader, worldMat[1], 1, GL_FALSE, /*&WorldMatrix[0]*/);
 	
 	glProgramUniform1i(skeletonAShader, uniformTextureLocation[1], 0);
@@ -278,10 +262,9 @@ void RenderPipeline::skeletonARender()
 	glm::vec3 glowColor(mod((timepass / 1.0f), 1.0f), mod((timepass / 2.0f), 1.0f), mod((timepass / 3.0f), 1.0f));
 	glProgramUniform3fv(skeletonAShader, uniformDynamicGlowColorLocation[1], 1, (GLfloat*)&glowColor[0]);
 
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER,  /*SkeletionA buffer here*/);
-	glDrawElements(GL_TRIANGLES, /*skeletonA.faceCount*3*/, GL_UNSIGNED_SHORT, 0);
-	//glDrawArrays(GL_TRIANGLE_STRIP, 0, /*nrOfVertices*/);
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+	glBindVertexArray();
+	glBindBuffer(GL_ARRAY_BUFFER,  /*SkeletionA buffer here*/);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, /*nrOfVertices*/);
 }
 
 void* RenderPipeline::getView()
