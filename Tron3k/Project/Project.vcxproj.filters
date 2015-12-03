@@ -52,6 +52,9 @@
     <Filter Include="Source Files\Core\Game\Role\PlayerEffects\Modifiers">
       <UniqueIdentifier>{5a5a72f5-6f4f-40ec-91e7-571485bdc219}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Core\Game\Role\Weapon\WeaponTypes\Trapper">
+      <UniqueIdentifier>{6f6f0f1b-b6b4-42d3-ac57-94d1b619a507}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -111,12 +114,6 @@
     <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\BulletPulseShot.cpp">
       <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\PulseRifle.cpp">
-      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\EnergyBoost.cpp">
-      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Game\Role\Special\Special.cpp">
       <Filter>Source Files\Core\Game\Role\Special</Filter>
     </ClCompile>
@@ -128,6 +125,12 @@
     </ClCompile>
     <ClCompile Include="Core\Game\GameMap.cpp">
       <Filter>Source Files\Core\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\Trapper\EnergyBoost.cpp">
+      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes\Trapper</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\Trapper\PulseRifle.cpp">
+      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes\Trapper</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -206,15 +209,6 @@
     <ClInclude Include="Core\Game\Role\Weapon\Weapon.h">
       <Filter>Source Files\Core\Game\Role\Weapon</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\AllWeapons.h">
-      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\PulseRifle.h">
-      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\EnergyBoost.h">
-      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Game\Role\Special\Special.h">
       <Filter>Source Files\Core\Game\Role\Special</Filter>
     </ClInclude>
@@ -232,6 +226,15 @@
     </ClInclude>
     <ClInclude Include="Core\Game\GameMap.h">
       <Filter>Source Files\Core\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\AllWeapons.h">
+      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\Trapper\EnergyBoost.h">
+      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes\Trapper</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\Trapper\PulseRifle.h">
+      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes\Trapper</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
