@@ -79,6 +79,7 @@ public:
 
 	void update(float dt);
 
+	void sendChunkBoxes(int chunkID, void* cBoxes);
 	void sendWorldBoxes(std::vector<std::vector<float>> wBoxes);
 	void sendPlayerBox(std::vector<float> pBox);
 
