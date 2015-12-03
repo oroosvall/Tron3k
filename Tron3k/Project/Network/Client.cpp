@@ -142,7 +142,7 @@ void Client::in_event(Packet* rec, Uint8 _conID)
 		{
 		case NET_EVENT::PLAYER_JOINED:	in_event_player_joined(rec);	break;
 		case NET_EVENT::PLAYER_LEFT: in_event_player_left(rec); break;
-		case NET_EVENT::HIT: in_event_bullet_hit(rec); break;
+		case NET_EVENT::PLAYER_HIT: in_event_bullet_hit_player(rec); break;
 		case NET_EVENT::RESPAWN_DENIED: in_event_respawn_denied(rec); break;
 		}
 	}
@@ -160,6 +160,7 @@ void Client::in_frame(Packet* rec, Uint8 conID)
 		case NET_FRAME::POS: in_frame_pos(rec); break;
 		case NET_FRAME::FIRE: in_frame_fire(rec); break;
 		case NET_FRAME::WPN_SWITCH: in_frame_weapon_switch(rec); break;
+		case NET_FRAME::SPECIAL: in_frame_special_use(rec); break;
 		}
 	}
 }

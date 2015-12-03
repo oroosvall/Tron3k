@@ -1,12 +1,17 @@
-#ifndef LIGHTWALLLOCKEDCONTROLS_H
-#define LIGHTWALLLOCKEDCONTROLS_H
+#ifndef LIGHTWALLCONTROLLOCK_H
+#define LIGHTWALLCONTROLLOCK_H
 
 #include "../Modifier.h"
 
-class LightwallLockedControls : public Modifier
+class LightWallLockedControls : public Modifier
 {
+private:
+	float lightWallSpeed;
+	float specialLower;
+	glm::vec3 vel;
 public:
-	void init();
-	//int update(Player* myTarget, float dt);
+	void init(Player* myTarget);
+	int getData(float dt);
+	int setData(float dt);
 };
 #endif

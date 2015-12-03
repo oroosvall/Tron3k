@@ -42,8 +42,8 @@ public:
 	Map testMap;
 
 	int nrChunks;
-	int* renderedChunks;
-	int* renderNextChunks;
+	bool* renderedChunks;
+	bool* renderNextChunks;
 
 	~ContentManager();
 	void init();

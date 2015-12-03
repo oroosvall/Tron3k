@@ -211,7 +211,7 @@ void RenderPipeline::render()
 	//push the lights of the rendered chunks
 	for (int n = 0; n < contMan.nrChunks; n++)
 		if (contMan.renderedChunks[n] == true)
-			for (int k = 0; k < contMan.testMap.chunks[n].lights.size(); k++)
+			for (size_t k = 0; k < contMan.testMap.chunks[n].lights.size(); k++)
 			{
 				gBuffer->pushLights(&contMan.testMap.chunks[n].lights[k], 1);
 			}
@@ -284,6 +284,11 @@ SETTING_INPUT RenderPipeline::getType(PIPELINE_SETTINGS type) const
 	}
 
 	return SETTING_INPUT::NONE_IN;
+}
+
+void* RenderPipeline::getChunkCollisionVectorAsPoint(int chunkID)
+{
+	return contMan.getChunkCollisionVectorAsPointer(chunkID);
 }
 
 void RenderPipeline::getPlayerBox(float &xMax, float &xMin, float &yMax, float &yMin, float &zMax, float &zMin)
