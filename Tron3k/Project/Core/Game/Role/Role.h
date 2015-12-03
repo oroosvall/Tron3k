@@ -18,8 +18,6 @@ enum PROPERTIES{HEALTH, MAINWEP, SECWEP, CONSUMABLE, MOVEMENTSPEED, NROFREADPROP
 class Role
 {
 	private:
-		float specialMeter;
-
 		int currentWpn;
 		int health;
 		int maxHealth;
@@ -36,6 +34,8 @@ class Role
 		Weapon* storageSec;
 
 		Special* specialAbility;
+		float specialMeter;
+		bool gainSpecial;
 
 		//Consumable* consumable;
 
@@ -50,6 +50,8 @@ class Role
 		void swapWeapon(int swapTo);
 		Weapon* getCurrentWeapon();
 
+		void update(float dt);
+
 		void setHealth(int newHealth) { health = newHealth; }; //Used by clients
 		void takeDamage(int dmg); //Used by server
 		void heal(int h); //Used by server
@@ -59,5 +61,9 @@ class Role
 
 		Special* getSpecialAbility() { return specialAbility; };
 		float getSpecialMeter() { return specialMeter; };
+		void setSpecialMeter(float s) { specialMeter = s; };
+
+		void shutOffMeterGain() { gainSpecial = false; };
+		void activateMeterGain() { gainSpecial = true; };
 };
 #endif

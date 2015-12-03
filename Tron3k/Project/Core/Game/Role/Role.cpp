@@ -72,6 +72,20 @@ float Role::getMovementSpeed()
 	return movementSpeed;
 }
 
+void Role::update(float dt)
+{
+	weapons[0]->update(dt);
+	weapons[1]->update(dt);
+	specialAbility->update(dt);
+
+	if (gainSpecial && specialMeter < 100.0f)
+	{
+		specialMeter += dt*10.0f;
+		if (specialMeter >= 100.0f)
+			specialMeter = 100.0f;
+	}
+}
+
 void Role::chooseRole(int role)
 {
 	if (role < NROFROLES)
@@ -86,6 +100,8 @@ void Role::chooseRole(int role)
 
 		//consumable.setConsumable(atoi(loadedRoles[role][CONSUMABLE].c_str()));
 		movementSpeed = atof(loadedRoles[role][MOVEMENTSPEED].c_str());
+
+		gainSpecial = true;
 	}
 }
 

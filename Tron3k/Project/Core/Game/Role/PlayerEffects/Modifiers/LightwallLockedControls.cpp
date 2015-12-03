@@ -13,26 +13,49 @@ void LightWallLockedControls::init(Player* myTarget)
 
 	vel = glm::vec3(dir.x, 0, dir.y)*lightWallSpeed;
 	target->setVelocity(vel);
+	specialLower = target->getRole()->getSpecialMeter();
+	target->getRole()->shutOffMeterGain();
 }
 
 
 int LightWallLockedControls::getData(float dt)
 {
+	bool kill = false;
+	specialLower = target->getRole()->getSpecialMeter();
 	if (!target->getGrounded())
-		return 1;
+		kill = true;
 	if (target->getVelocity() != vel)
+		kill = true;
+	if (target->getRole()->getSpecialMeter() <= 0)
+		kill = true;
+
+	if (kill)
+	{
+		target->getRole()->activateMeterGain();
+		target->getRole()->setSpecialMeter(0.0f);
 		return 1;
-	//if (target->getRole()->getSpecialMeter() <= 0)
-	//	return 1;
+	}
 
 	return 0;
 }
 
 int LightWallLockedControls::setData(float dt)
 {
+	bool kill = false;
+	specialLower -= 12.0*dt;
 	target->setVelocity(vel);
+	target->getRole()->setSpecialMeter(specialLower);
 
 	if (Input::getInput()->justPressed(GLFW_KEY_SPACE))
+		kill = true;
+	if (Input::getInput()->justPressed(GLFW_MOUSE_BUTTON_LEFT))
+		kill = true;
+
+	if (kill)
+	{
+		target->getRole()->activateMeterGain();
+		target->getRole()->setSpecialMeter(0.0f);
 		return 1;
+	}
 	return 0;
 }

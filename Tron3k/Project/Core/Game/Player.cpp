@@ -199,7 +199,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					}
 				}
 
-				role.getCurrentWeapon()->update(dt);		//Temp;
+				role.update(dt);		//Temp;
 
 				if (i->justPressed(GLFW_KEY_R))
 				{
@@ -229,7 +229,11 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					/*
 					Add logic (in role) that checks against the applicable special and other conditions
 					*/
-					msg = SPECIALUSE;
+					if (role.getSpecialMeter() - 100.0f < FLT_EPSILON && role.getSpecialMeter() - 100.0f > -FLT_EPSILON)
+					{
+						if (role.getSpecialAbility()->allowedToActivate(this))
+							msg = SPECIALUSE;
+					}
 				}
 
 				if (i->justPressed(GLFW_KEY_Z))					//Temp?
