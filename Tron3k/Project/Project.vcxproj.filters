@@ -67,6 +67,9 @@
     <Filter Include="Source Files\Core\Game\Role\Weapon\WeaponTypes\Destroyer">
       <UniqueIdentifier>{085e6c0f-442d-4884-a1cd-d2529cf146f7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Core\Game\Role\Weapon\BulletTypes\TrapperBullets">
+      <UniqueIdentifier>{72a79f2d-3d7e-4856-bb7b-09a5c0e61b71}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -120,12 +123,6 @@
     <ClCompile Include="Core\Game\Role\Weapon\Weapon.cpp">
       <Filter>Source Files\Core\Game\Role\Weapon</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\BulletPoop.cpp">
-      <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\BulletPulseShot.cpp">
-      <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Game\Role\Special\Special.cpp">
       <Filter>Source Files\Core\Game\Role\Special</Filter>
     </ClCompile>
@@ -167,6 +164,9 @@
     </ClCompile>
     <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\Brute\Shotgun.cpp">
       <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes\Brute</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\TrapperBullets\BulletPulseShot.cpp">
+      <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\TrapperBullets</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -233,12 +233,6 @@
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\AllBullets.h">
       <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\bulletpoop.h">
-      <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\bulletpulseshot.h">
-      <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Game\Role\Weapon\Bullet.h">
       <Filter>Source Files\Core\Game\Role\Weapon</Filter>
     </ClInclude>
@@ -295,6 +289,9 @@
     </ClInclude>
     <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\Manipulator\BatteryFields.h">
       <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes\Manipulator</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\TrapperBullets\bulletpulseshot.h">
+      <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\TrapperBullets</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
