@@ -49,6 +49,7 @@
     <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\Trapper\PulseRifle.cpp" />
     <ClCompile Include="Core\Input.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MultiJump.cpp" />
     <ClCompile Include="Network\Client.cpp" />
     <ClCompile Include="Network\Connection.cpp" />
     <ClCompile Include="Network\Server.cpp" />
@@ -102,6 +103,7 @@
     <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\Trapper\PulseRifle.h" />
     <ClInclude Include="Core\Input.h" />
     <ClInclude Include="Core\ui\Ui.h" />
+    <ClInclude Include="MultiJump.h" />
     <ClInclude Include="Network\Client.h" />
     <ClInclude Include="Network\Connection.h" />
     <ClInclude Include="Network\NetIndex.h" />
