@@ -63,6 +63,8 @@ private:
 	vector<Modifier*> myModifiers;
 	void modifiersGetData(float dt); //Gets relevant data (if any) from the player before update occurs
 	void modifiersSetData(float dt); //Sets player's data as necessary after player's update occurs
+	void cleanseModifiers(bool stickies = false); //Stickies are class passives AND code for mobility abilities
+	bool removeSpecificModifier(MODIFIER_TYPE mt);
 
 	void rotatePlayer(vec3 olddir, vec3 newdir);
 public:

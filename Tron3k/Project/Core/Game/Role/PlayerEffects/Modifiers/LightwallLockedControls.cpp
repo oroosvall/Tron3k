@@ -3,6 +3,7 @@
 
 void LightWallLockedControls::init(Player* myTarget)
 {
+	type = MODIFIER_TYPE::LIGHTWALLCONTROLLOCK;
 	lightWallSpeed = 1.3f;
 
 	target = myTarget;
