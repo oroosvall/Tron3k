@@ -175,7 +175,6 @@ void RenderPipeline::release()
 
 	glDeleteShader(regularShader);
 	glDeleteShader(skeletonAShader);
-	glDeleteShader(computeShader);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -221,9 +220,6 @@ void RenderPipeline::renderIni()
 void RenderPipeline::render()
 {
 	contMan.renderChunks(regularShader, worldMat[0], uniformTextureLocation[0], uniformNormalLocation[0], uniformGlowSpecLocation[0], uniformDynamicGlowColorLocation[0], uniformStaticGlowIntensityLocation[0],  *gBuffer->portal_shaderPtr, gBuffer->portal_model);
-	
-	//Skeleton render here
-	skeletonARender();
 
 	//push the lights of the rendered chunks
 	for (int n = 0; n < contMan.nrChunks; n++)
