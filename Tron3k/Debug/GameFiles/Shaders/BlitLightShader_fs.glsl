@@ -1,6 +1,6 @@
 #version 410
 layout (location = 0) in vec2 UV;
-layout (location = 1) in vec2 blur[25];
+
 uniform int Use;
 	
 uniform sampler2D Position;
@@ -15,6 +15,9 @@ vec4 Diffuse0;
 vec4 Normal0;
 vec4 Depth0;
 vec4 glowValue;
+
+uniform float pixeluvX;
+uniform float pixeluvY;
 
 struct SpotLight
 {
@@ -118,54 +121,41 @@ void main()
 			fragment_color += Diffuse0 * vec4(lights[n].Color, 1) * lights[n].AmbientIntensity;
 		}
 		
+		//fragment_color = fragment_color * Diffuse0 + glowValue;
 		fragment_color = fragment_color * Diffuse0;
 		
-	
-		int count = 0;
-	
-		for(int x = 0; x < 12; x++)
-		{
-			fragment_color += texture(GlowMap, blur[count]) * 0.1 * (1 - ((( 6 - x ) * ( 6 - x )) / 36));
-			count++;
-		}	
-		for(int y = 0; y < 12; y++)
-		{
-			fragment_color += texture(GlowMap, blur[count]) * 0.1 * (1 - ((( 6 - y ) * ( 6 - y )) / 36));
-			count++;
-		}
-	
-
-		////add glow
-		//fragment_color += texture(GlowMap, blur[0])*0.0044299121055113265;
-		//fragment_color += texture(GlowMap, blur[1])*0.00895781211794;
-		//fragment_color += texture(GlowMap, blur[2])*0.0215963866053;
-		//fragment_color += texture(GlowMap, blur[3])*0.0443683338718;
-		//fragment_color += texture(GlowMap, blur[4])*0.0776744219933;
-		//fragment_color += texture(GlowMap, blur[5])*0.115876621105;
-		//fragment_color += texture(GlowMap, blur[6])*0.147308056121;
-		//fragment_color += texture(GlowMap, UV)		*0.159576912161;
-		//fragment_color += texture(GlowMap, blur[7])*0.147308056121;
-		//fragment_color += texture(GlowMap, blur[8])*0.115876621105;
-		//fragment_color += texture(GlowMap, blur[9])*0.0776744219933;
-		//fragment_color += texture(GlowMap, blur[10])*0.0443683338718;
-		//fragment_color += texture(GlowMap, blur[11])*0.0215963866053;
-		//fragment_color += texture(GlowMap, blur[12])*0.00895781211794;
-		//fragment_color += texture(GlowMap, blur[13])*0.0044299121055113265;
-		//
-		//fragment_color += texture(GlowMap, blur[14])*0.0044299121055113265;
-		//fragment_color += texture(GlowMap, blur[15])*0.00895781211794;
-		//fragment_color += texture(GlowMap, blur[16])*0.0215963866053;
-		//fragment_color += texture(GlowMap, blur[17])*0.0443683338718;
-		//fragment_color += texture(GlowMap, blur[18])*0.0776744219933;
-		//fragment_color += texture(GlowMap, blur[19])*0.115876621105;
-		//fragment_color += texture(GlowMap, blur[20])*0.147308056121;
-		//fragment_color += texture(GlowMap, UV)		*0.159576912161;
-		//fragment_color += texture(GlowMap, blur[21])*0.147308056121;
-		//fragment_color += texture(GlowMap, blur[22])*0.115876621105;
-		//fragment_color += texture(GlowMap, blur[23])*0.0776744219933;
-		//fragment_color += texture(GlowMap, blur[24])*0.0443683338718;
-		//fragment_color += texture(GlowMap, blur[25])*0.0215963866053;
-		//fragment_color += texture(GlowMap, blur[26])*0.00895781211794;
-		//fragment_color += texture(GlowMap, blur[27])*0.0044299121055113265;	
+		
+		vec4 sum = vec4(0);
+		
+		//top left quadrant
+		sum += texture(GlowMap, UV + vec2( -pixeluvX * 1 , -pixeluvY * 3 )) * 0.075;
+		sum += texture(GlowMap, UV + vec2( -pixeluvX * 3 , -pixeluvY * 1 )) * 0.075;
+		sum += texture(GlowMap, UV + vec2( -pixeluvX * 2 , -pixeluvY * 2 )) * 0.180;
+		sum += texture(GlowMap, UV + vec2( -pixeluvX * 1 , -pixeluvY * 2 )) * 0.353;
+		sum += texture(GlowMap, UV + vec2( -pixeluvX * 2 , -pixeluvY * 1 )) * 0.353;
+		sum += texture(GlowMap, UV + vec2( -pixeluvX * 1 , -pixeluvY * 1 )) * 0.603;
+		//top right quadrant   
+		sum += texture(GlowMap, UV + vec2( pixeluvX * 1	, -pixeluvY * 3	)) * 0.075;
+		sum += texture(GlowMap, UV + vec2( pixeluvX * 3	, -pixeluvY * 1	)) * 0.075;
+		sum += texture(GlowMap, UV + vec2( pixeluvX * 2 , -pixeluvY * 2	)) * 0.180;
+		sum += texture(GlowMap, UV + vec2( pixeluvX * 1	, -pixeluvY * 2	)) * 0.353;
+		sum += texture(GlowMap, UV + vec2( pixeluvX * 2	, -pixeluvY * 1	)) * 0.353;
+		sum += texture(GlowMap, UV + vec2( pixeluvX * 1	, -pixeluvY * 1	)) * 0.603;
+		//bot left quadrant  
+		sum += texture(GlowMap, UV + vec2( -pixeluvX * 1 , pixeluvY * 3	)) * 0.075;
+		sum += texture(GlowMap, UV + vec2( -pixeluvX * 3 , pixeluvY * 1	)) * 0.075;
+		sum += texture(GlowMap, UV + vec2( -pixeluvX * 2 , pixeluvY * 2	)) * 0.180;
+		sum += texture(GlowMap, UV + vec2( -pixeluvX * 1 , pixeluvY * 2	)) * 0.353;
+		sum += texture(GlowMap, UV + vec2( -pixeluvX * 2 , pixeluvY * 1	)) * 0.353;
+		sum += texture(GlowMap, UV + vec2( -pixeluvX * 1 , pixeluvY * 1	)) * 0.603;
+		//bot left quadrant  
+		sum += texture(GlowMap, UV + vec2( pixeluvX * 1	, pixeluvY * 3	)) * 0.075;
+		sum += texture(GlowMap, UV + vec2( pixeluvX * 3	, pixeluvY * 1	)) * 0.075;
+		sum += texture(GlowMap, UV + vec2( pixeluvX * 2 , pixeluvY * 2	)) * 0.180;
+		sum += texture(GlowMap, UV + vec2( pixeluvX * 1	, pixeluvY * 2	)) * 0.353;
+		sum += texture(GlowMap, UV + vec2( pixeluvX * 2	, pixeluvY * 1	)) * 0.353;
+		sum += texture(GlowMap, UV + vec2( pixeluvX * 1	, pixeluvY * 1	)) * 0.603;
+		
+		fragment_color += sum * 0.1;
 	}	
 }

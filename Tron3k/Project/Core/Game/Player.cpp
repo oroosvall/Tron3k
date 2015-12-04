@@ -85,6 +85,43 @@ void Player::modifiersSetData(float dt)
 	}
 }
 
+void Player::cleanseModifiers(bool stickies)
+{
+	for (int c = myModifiers.size() - 1; c >= 0 ; c++)
+	{
+		if (!stickies)
+		{
+			if (!myModifiers[c]->isSticky())
+			{
+				delete myModifiers[c];
+				myModifiers[c] = myModifiers[myModifiers.size() - 1];
+				myModifiers.pop_back();
+			}
+		}
+		else
+		{
+			delete myModifiers[c];
+			myModifiers[c] = myModifiers[myModifiers.size() - 1];
+			myModifiers.pop_back();
+		}
+	}
+}
+
+bool Player::removeSpecificModifier(MODIFIER_TYPE mt)
+{
+	for (int c = 0; c < myModifiers.size(); c++)
+	{
+		if (myModifiers[c]->getType() == mt)
+		{
+			delete myModifiers[c];
+			myModifiers[c] = myModifiers[myModifiers.size() - 1];
+			myModifiers.pop_back();
+			return true;
+		}
+	}
+	return false;
+}
+
 PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool spectating)
 {
 	PLAYERMSG msg = NONE;
@@ -372,6 +409,7 @@ void Player::addModifier(MODIFIER_TYPE mt)
 	switch (mt)
 	{
 	case LIGHTWALLCONTROLLOCK:
+		removeSpecificModifier(LIGHTWALLCONTROLLOCK);
 		m = new LightWallLockedControls();
 		myModifiers.push_back(m);
 		break;
@@ -381,6 +419,7 @@ void Player::addModifier(MODIFIER_TYPE mt)
 
 void Player::setRole(Role role)
 {
+	cleanseModifiers(true);
 	this->role = role;
 	this->role.chooseRole(TRAPPER);
 }
@@ -394,6 +433,7 @@ void Player::respawn(glm::vec3 respawnPos)
 	worldMat[1].w = pos.y - 0.6f;
 	worldMat[2].w = pos.z;
 	isDead = false;
+	cleanseModifiers();
 	role.returnToLife();
 }
 
