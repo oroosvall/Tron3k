@@ -409,6 +409,7 @@ void Player::addModifier(MODIFIER_TYPE mt)
 	switch (mt)
 	{
 	case LIGHTWALLCONTROLLOCK:
+		removeSpecificModifier(LIGHTWALLCONTROLLOCK);
 		m = new LightWallLockedControls();
 		myModifiers.push_back(m);
 		break;
@@ -432,6 +433,7 @@ void Player::respawn(glm::vec3 respawnPos)
 	worldMat[1].w = pos.y - 0.6f;
 	worldMat[2].w = pos.z;
 	isDead = false;
+	cleanseModifiers();
 	role.returnToLife();
 }
 
