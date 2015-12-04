@@ -37,7 +37,7 @@ void CollideMesh::setAABB(AABB aabb)
 		{
 			temp.corners[j] = aabb.ObbBoxes[i].corners[j];
 		}
-		temp.transform = aabb.ObbBoxes[i].transform;
+		//temp.transform = aabb.ObbBoxes[i].transform;
 
 		boundingBox.ObbBoxes.push_back(temp);
 	}

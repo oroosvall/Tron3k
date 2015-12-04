@@ -6,7 +6,7 @@ void Map::init()
 {
 	currentChunk = 1;
 
-	loadMap("GameFiles/TestFiles/Tron3k_map_3_allStatics.bin");
+	loadMap("GameFiles/TestFiles/Tron3k_map_4_obbFixed.bin");
 
 	for (int i = 0; i < meshCount; i++)
 	{
@@ -157,16 +157,12 @@ void Map::loadMap(std::string mapName)
 		ABB* bounds = new ABB[instanceCount];
 		inFile.read((char*)bounds, sizeof(ABB)*instanceCount);
 		
-	
-		bbPoints = new BBPoint[bbCount];
-		inFile.read((char*)bbPoints, sizeof(BBPoint)*bbCount);
-
 		// temp fix for leaks
 		
 		for (int j = 0; j < instanceCount; j++)
 		{
-			glm::mat4* bbMats = new glm::mat4[bbCount];
-			inFile.read((char*)bbMats, sizeof(glm::mat4)*bbCount);
+			bbPoints = new BBPoint[bbCount];
+			inFile.read((char*)bbPoints, sizeof(BBPoint)*bbCount);
 
 			ABBFinishedCollision abbBox;
 			abbBox.abbBox = bounds[j];
@@ -175,17 +171,15 @@ void Map::loadMap(std::string mapName)
 			{
 				OBB obbBox;
 				obbBox.point = bbPoints[b];
-				obbBox.transform = bbMats[b];
 				abbBox.obbBoxes.push_back(obbBox);
 			}
 
 			chunks[roomIDs[j]].addCollisionMesh(abbBox);
 
-			delete[] bbMats;
+			delete[] bbPoints;
 		}
 
 		delete[] bounds;
-		delete[] bbPoints;
 		delete[] roomIDs;
 	}
 	

@@ -202,7 +202,6 @@ struct Prop
 struct OBB
 {
 	BBPoint point;
-	glm::mat4 transform;
 };
 
 struct ABBFinishedCollision
