@@ -19,8 +19,6 @@
 struct OBB
 {
 	glm::vec4 corners[8];
-
-	glm::mat4 transform;
 };
 
 struct AABB
