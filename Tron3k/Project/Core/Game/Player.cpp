@@ -85,7 +85,7 @@ void Player::modifiersSetData(float dt)
 	}
 }
 
-void Player::cleanseModifiers(bool stickies = false)
+void Player::cleanseModifiers(bool stickies)
 {
 	for (int c = myModifiers.size() - 1; c >= 0 ; c++)
 	{

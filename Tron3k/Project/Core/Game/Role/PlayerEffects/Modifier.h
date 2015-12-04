@@ -2,6 +2,7 @@
 #define MODIFIER_H
 
 #include <glm\glm.hpp>
+#include "../../GameDataIndex.h"
 
 class Player;
 
