@@ -13,6 +13,7 @@ protected:
 	float lifeTimer;
 
 	bool updateLifeTime(float dt);
+	bool sticky = false;
 public:
 	virtual void init(Player* myTarget) = 0;
 	virtual int getData(float dt) = 0;
