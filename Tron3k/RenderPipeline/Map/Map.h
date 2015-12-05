@@ -11,13 +11,6 @@
 
 using std::vector;
 
-struct TextureStruct
-{
-	std::string textureName;
-	GLuint textureID;
-	GLuint fileTexID;
-};
-
 class Map
 {
 

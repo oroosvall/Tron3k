@@ -149,6 +149,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AnimatedMesh.cpp" />
     <ClCompile Include="BlitQuad.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ContentManager.cpp" />
@@ -162,6 +163,7 @@
     <ClCompile Include="Text\TextObject.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AnimatedMesh.h" />
     <ClInclude Include="BlitQuad.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ContentManager.h" />
