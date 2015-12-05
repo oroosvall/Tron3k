@@ -24,6 +24,16 @@ struct SharedFileHDR
 	uint32_t SPCountTeamFFA;
 };
 
+struct CharacterHeader
+{
+	uint32_t materialCount;
+	uint32_t textureCount;
+	uint32_t indicesCount;
+	uint32_t vertexCount;
+	uint32_t animationCount;
+	uint32_t jointCount;
+};
+
 struct MeshDataHDR
 {
 	uint32_t objectType;
@@ -60,10 +70,10 @@ struct SpotLightH
 
 struct Material
 {
-	uint32_t materialID;
-	uint32_t textureMapIndex;
-	uint32_t normalMapIndex;
-	uint32_t specularMapIndex;
+	int32_t materialID;
+	int32_t textureMapIndex;
+	int32_t normalMapIndex;
+	int32_t specularMapIndex;
 };
 
 struct TextureHDR
@@ -74,6 +84,13 @@ struct TextureHDR
 struct TextureData
 {
 	char* texturePath;
+};
+
+struct TextureStruct
+{
+	std::string textureName;
+	GLuint textureID;
+	GLuint fileTexID;
 };
 
 struct PortalDataRead

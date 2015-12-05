@@ -36,6 +36,7 @@
 #debug files
 *.pdb
 *.ilk
+*.enc
 
 *.exp
 

@@ -132,6 +132,10 @@ void ContentManager::init()
 
 	bullet.init(0, 0, 0);
 	bullet.load("GameFiles/TestFiles/bullet.v");
+
+	testAnimationMesh.init();
+	testAnimationMesh.load("GameFiles/CharacterFiles/Tron3k_animTest_2.bin");
+
 }
 
 ContentManager::~ContentManager()
@@ -283,11 +287,14 @@ void ContentManager::renderPlayer(int playerID, glm::mat4 world)
 		glActiveTexture(GL_TEXTURE0 + 2);
 		glBindTexture(GL_TEXTURE_2D, textures[9].textureID);
 
-		glBindVertexArray(playerModels[playerID].vao);
-		glBindBuffer(GL_ARRAY_BUFFER, playerModels[playerID].meshID);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, playerModels[playerID].index);
+		//glBindVertexArray(playerModels[playerID].vao);
+		//glBindBuffer(GL_ARRAY_BUFFER, playerModels[playerID].meshID);
+		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, playerModels[playerID].index);
+		//
+		//glDrawElements(GL_TRIANGLES, playerModels[playerID].facecount * 3, GL_UNSIGNED_SHORT, 0);
 
-		glDrawElements(GL_TRIANGLES, playerModels[playerID].facecount * 3, GL_UNSIGNED_SHORT, 0);
+		testAnimationMesh.draw();
+
 	}
 	else if (playerID == 1)
 	{
@@ -327,6 +334,9 @@ void ContentManager::renderPlayer(int playerID, glm::mat4 world)
 
 		glDrawElements(GL_TRIANGLES, bullet.faceCount * 3, GL_UNSIGNED_SHORT, 0);
 	}
+
+
+
 }
 
 void* ContentManager::getChunkCollisionVectorAsPointer(int chunkID)
