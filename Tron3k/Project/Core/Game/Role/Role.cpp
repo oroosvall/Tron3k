@@ -1,4 +1,5 @@
 #include "Role.h"
+#include "Special\SpecialTypes\MultiJump.h"
 
 Role::Role()
 {
@@ -33,6 +34,10 @@ Role::~Role()
 		delete storageSec;
 	if (specialAbility != nullptr)
 		delete specialAbility;
+	if (mobility != nullptr)
+	{
+		delete mobility;
+	}
 }
 
 void Role::loadWeapons(int role, int wpn)
@@ -65,6 +70,14 @@ void Role::loadSpecialAbility(int role)
 
 	specialAbility = new Lightwall();
 	specialAbility->init();
+
+	if (mobility != nullptr)
+	{
+		delete mobility;
+	}
+
+	mobility = new MultiJump();
+	mobility->init();
 }
 
 float Role::getMovementSpeed()

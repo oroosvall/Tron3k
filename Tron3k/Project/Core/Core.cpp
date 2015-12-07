@@ -315,6 +315,7 @@ void Core::upClient(float dt)
 				SPECIAL_TYPE st = game->getSpecialAbilityUsed(top->getConId(), sid);
 				top->frame_special_use(st, top->getConId(), sid, local->getPos(), local->getDir());
 			}
+
 			//send the package
 			top->network_OUT(dt);
 			tick_timer = 0;

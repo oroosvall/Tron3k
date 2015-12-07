@@ -227,6 +227,18 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					}
 				}
 
+				Special* mobility = role.getMobilityAbility();
+				if (i->justPressed(mobility->getActivationKey()))
+				{
+					if (mobility->allowedToActivate(this))
+					{
+						if (mobility->getActivationCost() < role.getSpecialMeter())
+						{
+							msg = MOBILITYUSE;
+						}
+					}
+				}
+
 				if (i->justPressed(GLFW_KEY_SPACE))
 				{
 					if (grounded)

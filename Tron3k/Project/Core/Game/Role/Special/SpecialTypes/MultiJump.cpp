@@ -1,6 +1,5 @@
 #include "MultiJump.h"
-
-
+#include "../../../Player.h"
 
 MultiJump::MultiJump()
 {
@@ -11,9 +10,9 @@ MultiJump::~MultiJump()
 {
 }
 
-bool MultiJump::allowedToActivate()
+bool MultiJump::allowedToActivate(Player* p)
 {
-	if (this->coolDown < 0.01)
+	if (this->coolDown < 0.01 && !p->getGrounded())
 	{
 		return true;
 	}

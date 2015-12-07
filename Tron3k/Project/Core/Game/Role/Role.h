@@ -37,6 +37,7 @@ class Role
 		float specialMeter;
 		bool gainSpecial;
 
+		Special* mobility;
 		//Consumable* consumable;
 
 	public:
@@ -65,5 +66,7 @@ class Role
 
 		void shutOffMeterGain() { gainSpecial = false; };
 		void activateMeterGain() { gainSpecial = true; };
+
+		Special* getMobilityAbility() { return mobility; };
 };
 #endif

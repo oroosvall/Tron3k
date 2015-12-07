@@ -7,7 +7,6 @@ class MultiJump :
 {
 
 private:
-	int activationCost;
 	float coolDown;
 
 public:
@@ -17,7 +16,6 @@ public:
 	void init();
 	int update(float deltaTime);
 
-	bool allowedToActivate();
-	int getActivationCost() { return activationCost; }
+	bool allowedToActivate(Player* p);
 };
 

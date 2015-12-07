@@ -201,6 +201,10 @@ void Game::playerUpdate(int conid, float dt)
 	{
 		registerSpecial(playerList[conid]);
 	}
+	if (msg == PLAYERMSG::MOBILITYUSE)
+	{
+		registerMobility(playerList[conid]);
+	}
 
 	if (msg == PLAYERMSG::DEATH)
 	{
@@ -453,6 +457,13 @@ void Game::registerSpecial(Player* p)
 	specialActivated = true;
 }
 
+void Game::registerMobility(Player* p)
+{
+	Special* m = p->getRole()->getMobilityAbility();
+	specialUsed = m->getType();
+	specialActivated = true;
+}
+
 void Game::handleWeaponSwitch(int conID, WEAPON_TYPE ws)
 {
 	playerList[conID]->switchWpn(ws);
@@ -633,7 +644,7 @@ void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec
 	case SPECIAL_TYPE::MULTIJUMP:
 	{
 		vec3 vel = p->getVelocity();
-		vel.y += 10.0f;
+		vel.y += 3.0f;
 		p->setVelocity(vel);
 	}
 		break;
