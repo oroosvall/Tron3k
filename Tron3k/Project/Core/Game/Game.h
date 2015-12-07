@@ -56,6 +56,7 @@ private:
 	void registerSwitch(Player* p);
 	void registerSpecial(Player* p);
 	void registerMobility(Player* p);
+	void registerConsumable(Player* p);
 
 	WEAPON_TYPE weaponShotWith;
 	int bulletShot = -1;
@@ -66,10 +67,12 @@ private:
 
 	SPECIAL_TYPE specialUsed;
 	SPECIAL_TYPE mobilityUsed;
-	int specialId = -1;
-
 	bool specialActivated = false;
 	bool mobilityActivated = false;
+	int specialId = -1;
+
+	CONSUMABLE_TYPE itemUsed;
+	bool consumableUsed = false;
 
 	BulletHitPlayerInfo hit;
 	bool playerHit = false;
@@ -111,6 +114,10 @@ public:
 	bool fireEventReady() { return shotsFired; };
 	void getLatestWeaponFired(int localPlayer, WEAPON_TYPE &wt, int &bulletId);
 	void handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm::vec3 pos, glm::vec3 dir);
+
+	bool consumableReady() { return consumableUsed; };
+	CONSUMABLE_TYPE getConsumableUsed(int localPlayer);
+	void handleConsumableUse(int conID, CONSUMABLE_TYPE ct, glm::vec3 pos, glm::vec3 dir);
 
 	bool weaponSwitchReady() { return wpnSwitched; };
 	WEAPON_TYPE getWpnSwitch() { wpnSwitched = false; return weaponSwitchedTo; };

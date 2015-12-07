@@ -25,7 +25,7 @@ void Bullet::initValues(glm::vec3 position, glm::vec3 direction, int pID, int bI
 	worldMat[1].y = 0.2f;
 	worldMat[2].z = 0.2f;
 
-	float angleY = atan2(direction.x, direction.z) - atan2(0, 0);
-	float angleX = acos(direction.y);
-	rotate(angleX, -angleY, 0);
+	double angleY = atan2(direction.x, direction.z) - atan2(0, 0);
+	double angleX = acos(direction.y);
+	rotate(float(angleX), float(-angleY), 0);
 }

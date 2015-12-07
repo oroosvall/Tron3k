@@ -28,6 +28,7 @@ enum NET_FRAME
 	SPECIAL =		int('S'),
 	WPN_SWITCH =	int('W'),
 	NAME_CHANGE =	int('N'),
+	CONSUMABLE =	int('C')
 };
 
 enum NET_COMMAND

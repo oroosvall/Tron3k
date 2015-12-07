@@ -32,6 +32,8 @@ class Weapon
 
 		WEAPON_TYPE getType() { return weaponType; };
 
+		void reset() { currentClipAmmo = maxClipSize; };
+
 		int getBulletId();
 };
 #endif

@@ -43,7 +43,7 @@ int LightWallLockedControls::getData(float dt)
 int LightWallLockedControls::setData(float dt)
 {
 	bool kill = false;
-	specialLower -= 12.0*dt;
+	specialLower -= 12.0f*dt;
 	target->setVelocity(vel);
 	target->getRole()->setSpecialMeter(specialLower);
 

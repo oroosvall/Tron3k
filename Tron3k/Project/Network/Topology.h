@@ -190,6 +190,13 @@ public:
 			dir.x << dir.y << dir.z;
 	};
 
+	virtual void frame_consumable(CONSUMABLE_TYPE ct, int conID, glm::vec3 pos, glm::vec3 dir)
+	{
+		*package << Uint8(NET_FRAME::CONSUMABLE) << Uint8(conID) << Uint8(ct) <<
+			pos.x << pos.y << pos.z <<
+			dir.x << dir.y << dir.z;
+	};
+
 	virtual void frame_special_use(SPECIAL_TYPE st, int conID, int specialId, glm::vec3 pos, glm::vec3 dir)
 	{
 		*package << Uint8(NET_FRAME::SPECIAL) << Uint8(conID) << Uint8(specialId) << Uint8(st) <<
@@ -226,6 +233,18 @@ public:
 		*rec >> pos.x >> pos.y >> pos.z;
 		*rec >> dir.x >> dir.y >> dir.z;
 		gamePtr->handleWeaponFire(conID, bulletId, WEAPON_TYPE(weapontype), pos, dir);
+	}
+
+	virtual void in_frame_consumable(Packet* rec)
+	{
+		Uint8 conID;
+		Uint8 consumabletype;
+		glm::vec3 pos;
+		glm::vec3 dir;
+		*rec >> conID >> consumabletype;
+		*rec >> pos.x >> pos.y >> pos.z;
+		*rec >> dir.x >> dir.y >> dir.z;
+		gamePtr->handleConsumableUse(conID, CONSUMABLE_TYPE(consumabletype), pos, dir);
 	}
 
 	virtual void in_frame_special_use(Packet* rec)
@@ -287,7 +306,8 @@ public:
 			//TO DO: Player function to interpolate for 50ms to new position
 			p->setGoalPos(p_pos);
 			p->setGoalDir(p_dir);
-			p->setVelocity(p_vel);
+			if (!p->isLocal())
+				p->setVelocity(p_vel);
 		}
 		else
 			consolePtr->printMsg("ERROR in_frame_current_pos", "System", 'S');

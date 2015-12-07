@@ -35,9 +35,9 @@ Role::~Role()
 	if (specialAbility != nullptr)
 		delete specialAbility;
 	if (mobility != nullptr)
-	{
 		delete mobility;
-	}
+	if (consumable != nullptr)
+		delete consumable;
 }
 
 void Role::loadWeapons(int role, int wpn)
@@ -63,21 +63,26 @@ void Role::loadWeapons(int role, int wpn)
 	weapons[wpn]->init();
 }
 
-void Role::loadSpecialAbility(int role)
+void Role::loadRoleSpecifics(int role)
 {
 	if (specialAbility != nullptr)
 		delete specialAbility;
-
-	specialAbility = new Lightwall();
-	specialAbility->init();
-
 	if (mobility != nullptr)
-	{
 		delete mobility;
-	}
+	if (consumable != nullptr)
+		delete consumable;
 
-	mobility = new MultiJump();
-	mobility->init();
+	switch (role)
+	{
+	case TRAPPER:
+		specialAbility = new Lightwall();
+		specialAbility->init();
+		mobility = new MultiJump();
+		mobility->init();
+		consumable = new Consumable();
+		consumable->init(CONSUMABLE_TYPE::CLUSTERGRENADE);
+		break;
+	}
 }
 
 float Role::getMovementSpeed()
@@ -109,10 +114,10 @@ void Role::chooseRole(int role)
 		loadWeapons(role, 0);
 		loadWeapons(role, 1);
 
-		loadSpecialAbility(role);
+		loadRoleSpecifics(role);
 
 		//consumable.setConsumable(atoi(loadedRoles[role][CONSUMABLE].c_str()));
-		movementSpeed = atof(loadedRoles[role][MOVEMENTSPEED].c_str());
+		movementSpeed = float(atof(loadedRoles[role][MOVEMENTSPEED].c_str()));
 
 		gainSpecial = true;
 	}
@@ -141,4 +146,12 @@ void Role::heal(int h)
 	health += h;
 	if (h > maxHealth)
 		h = maxHealth;
+}
+
+void Role::returnToLife()
+{
+	health = maxHealth;
+	consumable->reset();
+	weapons[0]->reset();
+	weapons[1]->reset();
 }

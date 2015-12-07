@@ -14,7 +14,7 @@ void Game::release()
 
 	for (int c = 0; c < BULLET_TYPE::NROFBULLETS; c++)
 	{
-		for (int i = 0; i < bullets[c].size(); i++)
+		for (unsigned int i = 0; i < bullets[c].size(); i++)
 		{
 			if (bullets[c][i] != nullptr)
 			{
@@ -23,7 +23,7 @@ void Game::release()
 		}
 	}
 
-	for (int c = 0; c < EFFECT_TYPE::NROFEFFECTS; c++)
+	for (unsigned int c = 0; c < EFFECT_TYPE::NROFEFFECTS; c++)
 	{
 		for (int i = 0; i < effects[c].size(); i++)
 		{
@@ -74,7 +74,7 @@ void Game::loadRoles()
 	ifstream roleFile;
 	for (int i = 0; i < NROFROLES; i++)
 	{
-		for (int y = 0; y < NROFREADPROPERTIES; y += 5)
+		for (int y = 0; y < NROFREADPROPERTIES; y += 4)
 		{
 			roleFile.open(roles[i]);
 
@@ -82,7 +82,6 @@ void Game::loadRoles()
 			getline(roleFile, loadedRoles[i][y + 1]);
 			getline(roleFile, loadedRoles[i][y + 2]);
 			getline(roleFile, loadedRoles[i][y + 3]);
-			getline(roleFile, loadedRoles[i][y + 4]);
 			roleFile.close();
 		}
 	}
@@ -126,7 +125,7 @@ void Game::update(float dt)
 		}
 	}
 	
-	for (int c = 0; c < max_con; c++)
+	for (unsigned int c = 0; c < max_con; c++)
 	{
 		if (playerList[c] != nullptr)
 		{
@@ -134,9 +133,9 @@ void Game::update(float dt)
 		}
 	}
 
-	for (int i = 0; i < BULLET_TYPE::NROFBULLETS; i++)
+	for (unsigned int i = 0; i < BULLET_TYPE::NROFBULLETS; i++)
 	{
-		for (int c = 0; c < bullets[i].size(); c++)
+		for (unsigned int c = 0; c < bullets[i].size(); c++)
 		{
 			int msg = bullets[i][c]->update(dt);
 			if (msg == 1)		//Bullet is dead
@@ -148,12 +147,12 @@ void Game::update(float dt)
 		}
 	}
 
-	for (int i = 0; i < EFFECT_TYPE::NROFEFFECTS; i++)
+	for (unsigned int i = 0; i < EFFECT_TYPE::NROFEFFECTS; i++)
 	{
-		for (int c = 0; c < effects[i].size(); c++)
+		for (unsigned int c = 0; c < effects[i].size(); c++)
 		{
 			int msg = effects[i][c]->update(dt);
-			if (msg == 1)		//Bullet is dead
+			if (msg == 1)		//Effect is dead
 			{
 				delete effects[i][c];
 				effects[i][c] = effects[i][effects[i].size() - 1];
@@ -204,6 +203,10 @@ void Game::playerUpdate(int conid, float dt)
 	if (msg == PLAYERMSG::MOBILITYUSE)
 	{
 		registerMobility(playerList[conid]);
+	}
+	if (msg == PLAYERMSG::USEITEM)
+	{
+		registerConsumable(playerList[conid]);
 	}
 
 	if (msg == PLAYERMSG::DEATH)
@@ -347,9 +350,9 @@ void Game::checkPlayerVBulletCollision()
 		Player* p = playerList[i];
 		if (p != nullptr)
 		{
-			for (int b = 0; b < BULLET_TYPE::NROFBULLETS; b++)
+			for (unsigned int b = 0; b < BULLET_TYPE::NROFBULLETS; b++)
 			{
-				for (int j = 0; j < bullets[b].size(); j++)
+				for (unsigned int j = 0; j < bullets[b].size(); j++)
 				{
 					collides = false;
 					if (bullets[b][j] != nullptr)
@@ -421,9 +424,9 @@ void Game::checkBulletVWorldCollision()
 {
 	bool collides = false;
 
-	for (int b = 0; b < BULLET_TYPE::NROFBULLETS; b++)
+	for (unsigned int b = 0; b < BULLET_TYPE::NROFBULLETS; b++)
 	{
-		for (int j = 0; j < bullets[b].size(); j++)
+		for (unsigned int j = 0; j < bullets[b].size(); j++)
 		{
 			collides = false;
 			if (bullets[b][j] != nullptr)
@@ -469,6 +472,13 @@ void Game::registerMobility(Player* p)
 	specialActivated = true;
 }
 
+void Game::registerConsumable(Player* p)
+{
+	Consumable* c = p->getRole()->getConsumable();
+	itemUsed = c->getType();
+	consumableUsed = true;
+}
+
 void Game::handleWeaponSwitch(int conID, WEAPON_TYPE ws)
 {
 	playerList[conID]->switchWpn(ws);
@@ -482,11 +492,12 @@ int Game::getPlayersOnTeam(int team)
 	case 1: return teamOne.size();
 	case 2: return teamTwo.size();
 	}
+	return 0;
 }
 
 void Game::removeConIDfromTeams(int conID)
 {
-	for (int c = 0; c < teamSpectators.size(); c++)
+	for (unsigned int c = 0; c < teamSpectators.size(); c++)
 	{
 		if (teamSpectators[c] == conID)
 		{
@@ -495,7 +506,7 @@ void Game::removeConIDfromTeams(int conID)
 			return;
 		}
 	}
-	for (int c = 0; c < teamOne.size(); c++)
+	for (unsigned int c = 0; c < teamOne.size(); c++)
 	{
 		if (teamOne[c] == conID)
 		{
@@ -504,7 +515,7 @@ void Game::removeConIDfromTeams(int conID)
 			return;
 		}
 	}
-	for (int c = 0; c < teamTwo.size(); c++)
+	for (unsigned int c = 0; c < teamTwo.size(); c++)
 	{
 		if (teamTwo[c] == conID)
 		{
@@ -568,6 +579,9 @@ void Game::addBulletToList(int conID, int bulletId, BULLET_TYPE bt, glm::vec3 po
 	case BULLET_TYPE::PULSE_SHOT:
 		b = new PulseShot(pos, dir, conID, bulletId, p->getTeam());
 		break;
+	case BULLET_TYPE::CLUSTER_GRENADE:
+		b = new PulseShot(pos, dir, conID, bulletId, p->getTeam());
+		break;
 	}
 	
 	bullets[bt].push_back(b);
@@ -619,6 +633,24 @@ void Game::handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm
 			if (GetSound())
 				GetSound()->playExternalSound(SOUNDS::soundEffectShotGun, pos.x, pos.y, pos.z);
 		addBulletToList(conID, bulletId, BULLET_TYPE::SHOTGUN_PELLET, pos, dir);
+		break;
+	}
+}
+
+CONSUMABLE_TYPE Game::getConsumableUsed(int localPlayer)
+{
+	consumableUsed = false;
+	Player* p = playerList[localPlayer];
+	handleConsumableUse(localPlayer, itemUsed, p->getPos(), p->getDir());
+	return itemUsed;
+}
+
+void Game::handleConsumableUse(int conID, CONSUMABLE_TYPE ct, glm::vec3 pos, glm::vec3 dir)
+{
+	switch (ct)
+	{
+	case CONSUMABLE_TYPE::CLUSTERGRENADE:
+		addBulletToList(conID, 0, BULLET_TYPE::CLUSTER_GRENADE, pos, dir);
 		break;
 	}
 }
@@ -689,7 +721,7 @@ Effect* Game::getEffect(int PID, int SID, EFFECT_TYPE et, int &posInEffectArray)
 
 Bullet* Game::getBulletForRemoval(int PID, int BID, BULLET_TYPE bt, int &posInBulletArray)
 {
-	for (int c = 0; c < bullets[bt].size(); c++)
+	for (unsigned int c = 0; c < bullets[bt].size(); c++)
 	{
 		int p = -1;
 		int b = -1;
@@ -707,7 +739,7 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi, int newHPtotal)
 {
 	glm::vec3 pos = playerList[hi.playerHit]->getPos();
 	if (gameState != Gamestate::SERVER)
-		if (GetSoundActivated)
+		if (GetSoundActivated())
 			GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHit, pos.x, pos.y, pos.z);
 	Player* p = playerList[hi.playerHit];
 	int bulletPosInArray;

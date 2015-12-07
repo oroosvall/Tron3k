@@ -11,6 +11,7 @@ private:
 	float lifeTime;
 	bool expandDong;
 	glm::vec3 playerVel;
+	glm::vec3 endPoint;
 public:
 	LightwallEffect(Player* p);
 	void init(int pid, int eid, glm::vec3 position);

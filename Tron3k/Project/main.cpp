@@ -25,11 +25,11 @@ int main()
 	
 	while (core.windowVisible())
 	{
-		core.update(dt);
+		core.update(float(dt));
 
 		unsigned int temp = clock();
 		dt = unsigned int(temp - start) / double(1000);
-		timePass += dt;
+		timePass += float(dt);
 		start = temp;
 		fps++;
 

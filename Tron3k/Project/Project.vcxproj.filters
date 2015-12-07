@@ -85,6 +85,9 @@
     <Filter Include="Source Files\Core\Game\Role\Weapon\BulletTypes\Manipulator">
       <UniqueIdentifier>{a98a3185-d679-4bf1-8ba3-ba2350c050c4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Core\Game\Role\Consumable">
+      <UniqueIdentifier>{14b63b5f-e9d1-4b83-ab2c-7ee8ff3f3e23}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -121,9 +124,6 @@
       <Filter>Source Files\Core\Game\Role</Filter>
     </ClCompile>
     <ClCompile Include="Core\Game\Role\ActiveEffects\Ability.cpp">
-      <Filter>Source Files\Core\Game\Role\ActiveEffects</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Game\Role\ActiveEffects\Consumable.cpp">
       <Filter>Source Files\Core\Game\Role\ActiveEffects</Filter>
     </ClCompile>
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effect.cpp">
@@ -189,6 +189,9 @@
     <ClCompile Include="Core\Game\Role\Special\SpecialTypes\MultiJump.cpp">
       <Filter>Source Files\Core\Game\Role\Special\SpecialTypes</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Game\Role\Consumable\Consumable.cpp">
+      <Filter>Source Files\Core\Game\Role\Consumable</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Input.h">
@@ -240,9 +243,6 @@
       <Filter>Source Files\Core\Game\Role</Filter>
     </ClInclude>
     <ClInclude Include="Core\Game\Role\ActiveEffects\Ability.h">
-      <Filter>Source Files\Core\Game\Role\ActiveEffects</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Game\Role\ActiveEffects\Consumable.h">
       <Filter>Source Files\Core\Game\Role\ActiveEffects</Filter>
     </ClInclude>
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effect.h">
@@ -352,6 +352,9 @@
     </ClInclude>
     <ClInclude Include="Core\Game\Role\Special\SpecialTypes\MultiJump.h">
       <Filter>Source Files\Core\Game\Role\Special\SpecialTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Consumable\Consumable.h">
+      <Filter>Source Files\Core\Game\Role\Consumable</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

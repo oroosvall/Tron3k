@@ -28,6 +28,8 @@ int LightwallEffect::update(float dt)
 			expandDong = false;
 			lifeTime = 10.0f;
 		}
+		if (expandDong)
+			endPoint = myPlayer->getPos();
 	}
 	
 	return 0;

@@ -182,10 +182,14 @@ void Core::upRoam(float dt)
 
 		if (game->fireEventReady())
 		{
-			Player* p = game->getPlayer(0);
 			WEAPON_TYPE wt;
 			int bID;
 			game->getLatestWeaponFired(0, wt, bID);
+		}
+
+		if (game->consumableReady())
+		{
+			game->getConsumableUsed(0);
 		}
 
 		if (game->specialActivationReady())
@@ -305,8 +309,13 @@ void Core::upClient(float dt)
 				WEAPON_TYPE wt;
 				int bID;
 				game->getLatestWeaponFired(top->getConId(), wt, bID);
-				int team = local->getTeam();
 				top->frame_fire(wt, top->getConId(), bID, local->getPos(), local->getDir());
+			}
+
+			if (game->consumableReady())
+			{
+				CONSUMABLE_TYPE ct = game->getConsumableUsed(top->getConId());
+				top->frame_consumable(ct, top->getConId(), local->getPos(), local->getDir());
 			}
 
 			if (game->specialActivationReady())
@@ -808,7 +817,7 @@ void Core::renderWorld(float dt)
 				light.Direction = p->getDir();
 				if (firstLight)
 				{
-					light.AmbientIntensity = 0.3;
+					light.AmbientIntensity = 0.3f;
 					firstLight = false;
 				}
 				renderPipe->addLight(&light);
@@ -847,7 +856,7 @@ void Core::renderWorld(float dt)
 			dgColor[0] = 0; dgColor[1] = 0; dgColor[2] = 0;
 
 			std::vector<Bullet*> bullets = game->getBullets(BULLET_TYPE(c));
-			for (int i = 0; i < bullets.size(); i++)
+			for (unsigned int i = 0; i < bullets.size(); i++)
 			{
 				renderPipe->renderPlayer(2, bullets[i]->getWorldMat(), dgColor, 1.0f);
 			}

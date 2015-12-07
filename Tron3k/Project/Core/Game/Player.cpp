@@ -7,7 +7,7 @@ Player::Player()
 
 Player::~Player()
 {
-	for (int c = 0; c < myModifiers.size(); c++)
+	for (unsigned int c = 0; c < myModifiers.size(); c++)
 		delete myModifiers[c];
 }
 
@@ -57,7 +57,7 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 
 void Player::modifiersGetData(float dt)
 {
-	for (int c = 0; c < myModifiers.size(); c++)
+	for (unsigned int c = 0; c < myModifiers.size(); c++)
 	{
 		int msg = myModifiers[c]->getData(dt);
 		if (msg == 1)
@@ -72,7 +72,7 @@ void Player::modifiersGetData(float dt)
 
 void Player::modifiersSetData(float dt)
 {
-	for (int c = 0; c < myModifiers.size(); c++)
+	for (unsigned int c = 0; c < myModifiers.size(); c++)
 	{
 		int msg = myModifiers[c]->setData(dt);
 		if (msg == 1)
@@ -109,7 +109,7 @@ void Player::cleanseModifiers(bool stickies)
 
 bool Player::removeSpecificModifier(MODIFIER_TYPE mt)
 {
-	for (int c = 0; c < myModifiers.size(); c++)
+	for (unsigned int c = 0; c < myModifiers.size(); c++)
 	{
 		if (myModifiers[c]->getType() == mt)
 		{
@@ -271,6 +271,13 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				{
 					if (role.getCurrentWeapon()->shoot())
 						msg = SHOOT;
+				}
+
+				if (i->justPressed(GLFW_KEY_C))
+				{
+					Consumable* c = role.getConsumable();
+					if (c->use())
+						msg = USEITEM;
 				}
 
 				if (i->justPressed(GLFW_KEY_E))
