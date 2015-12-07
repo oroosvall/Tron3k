@@ -4,7 +4,7 @@
 
 Lightwall::Lightwall()
 {
-
+	specialId = 0;
 }
 
 Lightwall::~Lightwall()
@@ -25,6 +25,9 @@ int Lightwall::update(float deltaTime)
 bool Lightwall::allowedToActivate(Player* p)
 {
 	if (p->getGrounded())
+	{
+		specialId++;
 		return true;
+	}
 	return false;
 }

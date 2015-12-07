@@ -23,6 +23,17 @@ void Game::release()
 		}
 	}
 
+	for (int c = 0; c < EFFECT_TYPE::NROFEFFECTS; c++)
+	{
+		for (int i = 0; i < effects[c].size(); i++)
+		{
+			if (effects[c][i] != nullptr)
+			{
+				delete effects[c][i];
+			}
+		}
+	}
+
 	physics->release();
 
 	delete templateRole;
@@ -133,6 +144,20 @@ void Game::update(float dt)
 				delete bullets[i][c];
 				bullets[i][c] = bullets[i][bullets[i].size() - 1];
 				bullets[i].pop_back();
+			}
+		}
+	}
+
+	for (int i = 0; i < EFFECT_TYPE::NROFEFFECTS; i++)
+	{
+		for (int c = 0; c < effects[i].size(); c++)
+		{
+			int msg = effects[i][c]->update(dt);
+			if (msg == 1)		//Bullet is dead
+			{
+				delete effects[i][c];
+				effects[i][c] = effects[i][effects[i].size() - 1];
+				effects[i].pop_back();
 			}
 		}
 	}
@@ -554,22 +579,53 @@ void Game::handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm
 	}
 }
 
-SPECIAL_TYPE Game::getSpecialAbilityUsed(int localPlayer)
+SPECIAL_TYPE Game::getSpecialAbilityUsed(int localPlayer, int &sid)
 {
 	specialActivated = false;
 	Player* p = playerList[localPlayer];
-	handleSpecialAbilityUse(localPlayer, specialUsed, p->getPos(), p->getDir());
+	sid = p->getRole()->getSpecialAbility()->getSpecialId();
+	handleSpecialAbilityUse(localPlayer, sid, specialUsed, p->getPos(), p->getDir());
 	return specialUsed;
 }
 
-void Game::handleSpecialAbilityUse(int conID, SPECIAL_TYPE st, glm::vec3 pos, glm::vec3 dir)
+void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec3 pos, glm::vec3 dir)
 {
-	Player* p = playerList[conID];
 	switch (st)
 	{
 	case SPECIAL_TYPE::LIGHTWALL:
-		p->addModifier(MODIFIER_TYPE::LIGHTWALLCONTROLLOCK);
+		playerList[conID]->addModifier(MODIFIER_TYPE::LIGHTWALLCONTROLLOCK);
+		addEffectToList(conID, sID, EFFECT_TYPE::LIGHT_WALL, pos);
 		break;
+	}
+}
+
+void Game::addEffectToList(int conID, int effectId, EFFECT_TYPE et, glm::vec3 pos)
+{
+	Effect* e = nullptr;
+	Player* p = playerList[conID];
+
+	switch (et)
+	{
+	case EFFECT_TYPE::LIGHT_WALL:
+		e = new LightwallEffect(p);
+		break;
+	}
+	e->init(conID, effectId, pos);
+	effects[et].push_back(e);
+}
+
+Effect* Game::getEffect(int PID, int SID, EFFECT_TYPE et, int &posInEffectArray)
+{
+	for (int c = 0; c < bullets[et].size(); c++)
+	{
+		int p = -1;
+		int b = -1;
+		bullets[et][c]->getId(p, b);
+		if (p == PID && b == SID)
+		{
+			posInEffectArray = c;
+			return effects[et][c];
+		}
 	}
 }
 

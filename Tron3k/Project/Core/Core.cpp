@@ -186,13 +186,13 @@ void Core::upRoam(float dt)
 			WEAPON_TYPE wt;
 			int bID;
 			game->getLatestWeaponFired(0, wt, bID);
-			int team = 0;
 		}
 
 		if (game->specialActivationReady())
 		{
 			Player* p = game->getPlayer(0);
-			game->handleSpecialAbilityUse(0, game->getSpecialAbilityUsed(0), p->getPos(), p->getDir());
+			int sid = -1;
+			game->getSpecialAbilityUsed(0, sid);
 		}
 
 		renderWorld(dt);
@@ -263,8 +263,11 @@ void Core::upClient(float dt)
 		//update game
 		game->update(dt);
 
-		GetSound()->setLocalPlayerDir(game->getPlayer(top->getConId())->getDir());
-		GetSound()->setLocalPlayerPos(game->getPlayer(0)->getPos());
+		if (GetSoundActivated())
+		{
+			GetSound()->setLocalPlayerDir(game->getPlayer(0)->getDir());
+			GetSound()->setLocalPlayerPos(game->getPlayer(0)->getPos());
+		}
 
 		//Command and message handle
 		if (console.messageReady())
@@ -308,8 +311,9 @@ void Core::upClient(float dt)
 
 			if (game->specialActivationReady())
 			{
-				SPECIAL_TYPE st = game->getSpecialAbilityUsed(top->getConId());
-				top->frame_special_use(st, top->getConId(), local->getPos(), local->getDir());
+				int sid = -1;
+				SPECIAL_TYPE st = game->getSpecialAbilityUsed(top->getConId(), sid);
+				top->frame_special_use(st, top->getConId(), sid, local->getPos(), local->getDir());
 			}
 			//send the package
 			top->network_OUT(dt);

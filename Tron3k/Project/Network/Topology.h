@@ -190,9 +190,9 @@ public:
 			dir.x << dir.y << dir.z;
 	};
 
-	virtual void frame_special_use(SPECIAL_TYPE st, int conID, glm::vec3 pos, glm::vec3 dir)
+	virtual void frame_special_use(SPECIAL_TYPE st, int conID, int specialId, glm::vec3 pos, glm::vec3 dir)
 	{
-		*package << Uint8(NET_FRAME::SPECIAL) << Uint8(conID) << Uint8(st) <<
+		*package << Uint8(NET_FRAME::SPECIAL) << Uint8(conID) << Uint8(specialId) << Uint8(st) <<
 			pos.x << pos.y << pos.z <<
 			dir.x << dir.y << dir.z;
 	}
@@ -228,13 +228,14 @@ public:
 	virtual void in_frame_special_use(Packet* rec)
 	{
 		Uint8 conID;
+		Uint8 sID;
 		Uint8 specialtype;
 		glm::vec3 pos;
 		glm::vec3 dir;
-		*rec >> conID >> specialtype;
+		*rec >> conID >> sID >> specialtype;
 		*rec >> pos.x >> pos.y >> pos.z;
 		*rec >> dir.x >> dir.y >> dir.z;
-		gamePtr->handleSpecialAbilityUse(conID, SPECIAL_TYPE(specialtype), pos, dir);
+		gamePtr->handleSpecialAbilityUse(conID, sID, SPECIAL_TYPE(specialtype), pos, dir);
 	}
 
 	virtual void in_frame_weapon_switch(Packet* rec)

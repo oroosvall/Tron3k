@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include "GameDataIndex.h"
+#include "Role/PlayerEffects/Effects/AllEffects.h"
 #include "Role/Weapon/BulletTypes/AllBullets.h"
 #include "Player.h"
 #include "../../../Physics/Physics.h"
@@ -21,6 +22,7 @@ class Game
 {
 private:
 	std::vector<Bullet*> bullets[BULLET_TYPE::NROFBULLETS];
+	std::vector<Effect*> effects[EFFECT_TYPE::NROFEFFECTS];
 
 	std::vector<int> teamSpectators; //Team vectors hold connection IDs
 	std::vector<int> teamOne;
@@ -45,6 +47,9 @@ private:
 	void addBulletToList(int conID, int bulletId, BULLET_TYPE bt, glm::vec3 pos, glm::vec3 dir);
 	Bullet* getBulletForRemoval(int PID, int BID, BULLET_TYPE bt, int &posInBulletArray);
 
+	void addEffectToList(int conID, int effectId, EFFECT_TYPE et, glm::vec3 pos);
+	Effect* getEffect(int PID, int SID, EFFECT_TYPE et, int &posInEffectArray);
+
 	void playerUpdate(int conid, float dt);
 
 	void registerWeapon(Player* p);
@@ -59,6 +64,7 @@ private:
 	bool wpnSwitched = false;
 
 	SPECIAL_TYPE specialUsed;
+	int specialId = -1;
 	bool specialActivated = false;
 
 	BulletHitPlayerInfo hit;
@@ -106,8 +112,8 @@ public:
 	void handleWeaponSwitch(int conID, WEAPON_TYPE ws);
 
 	bool specialActivationReady() { return specialActivated; };
-	SPECIAL_TYPE getSpecialAbilityUsed(int localPlayer);
-	void handleSpecialAbilityUse(int conID, SPECIAL_TYPE st, glm::vec3 pos, glm::vec3 dir);
+	SPECIAL_TYPE getSpecialAbilityUsed(int localPlayer, int &sid); //sid is SpecialId, really only used for Lightwalls. I'm so, so sorry
+	void handleSpecialAbilityUse(int conID, int specialId, SPECIAL_TYPE st, glm::vec3 pos, glm::vec3 dir);
 
 	bool hitPlayerEventReady() { return playerHit; };
 	BulletHitPlayerInfo getHitPlayerInfo() { playerHit = false; return hit; };
