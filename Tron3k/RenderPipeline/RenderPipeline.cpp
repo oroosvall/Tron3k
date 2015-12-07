@@ -121,42 +121,6 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	CreateProgram(regularShader, shaderNamesRegular, shaderTypesRegular, 3);
 
 	//Skeleton Animation Shader
-	std::string shaderNamesSkeletonA[] = { "GameFiles/Shaders/SkeletonAnimation_fs.glsl", "SkeletonAnimation_vs.glsl" };
-	GLenum shaderTypesSkeletonA[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
-	CreateProgram(skeletonAShader, shaderNamesSkeletonA, shaderTypesSkeletonA, 2);
-	
-
-	worldMat[0] = glGetUniformLocation(regularShader, "WorldMatrix"); //worldMat regular shader
-	worldMat[1] = glGetUniformLocation(skeletonAShader, "WorldMatrix"); //worldMat skeleton shader
-	viewMat = glGetUniformLocation(regularShader, "ViewMatrix"); //view
-	viewProjMat[0] = glGetUniformLocation(regularShader, "ViewProjMatrix"); //view regular shader
-	viewProjMat[1] = glGetUniformLocation(skeletonAShader, "ViewProjMatrix"); //view skeleton shader
-
-	uniformTextureLocation[0] = glGetUniformLocation(regularShader, "textureSample"); //view regular shader
-	uniformTextureLocation[1] = glGetUniformLocation(skeletonAShader, "textureSample"); //view skeleton shader
-	uniformNormalLocation[0] = glGetUniformLocation(regularShader, "normalSample"); //view regular shader
-	uniformNormalLocation[1] = glGetUniformLocation(skeletonAShader, "normalSample"); //view skeleton shader
-	uniformGlowSpecLocation[0] = glGetUniformLocation(regularShader, "glowSpecSample"); //view regular shader
-	uniformGlowSpecLocation[1] = glGetUniformLocation(skeletonAShader, "glowSpecSample"); //view skeleton shader
-
-	cam.setViewMat(regularShader, viewMat);
-	worldMat[0] = glGetUniformLocation(regularShader, "WorldMatrix"); //worldMat regular shader
-	worldMat[1] = glGetUniformLocation(skeletonAShader, "WorldMatrix"); //worldMat skeleton shader
-	viewMat = glGetUniformLocation(regularShader, "ViewProjMatrix"); //view
-
-	uniformTextureLocation[0] = glGetUniformLocation(regularShader, "textureSample"); //view regular shader
-	uniformTextureLocation[1] = glGetUniformLocation(skeletonAShader, "textureSample"); //view skeleton shader
-
-	uniformDynamicGlowColorLocation[0] = glGetUniformLocation(regularShader, "dynamicGlowColor"); //regular shader
-	uniformDynamicGlowColorLocation[1] = glGetUniformLocation(skeletonAShader, "dynamicGlowColor"); //skeleton shader
-	uniformStaticGlowIntensityLocation[0] = glGetUniformLocation(regularShader, "staticGlowIntensity"); //regular shader
-	uniformStaticGlowIntensityLocation[1] = glGetUniformLocation(skeletonAShader, "staticGlowIntensity"); //skeleton shader
-
-	uniformSkeletonMatrix = glGetUniformLocation(skeletonAShader, "inverseBindpose");
-
-	cam.setViewProjMat(regularShader, viewProjMat[0]);
-	cam.setViewProjMat(skeletonAShader, viewProjMat[0]);
-
 	std::string shaderNamesAnimation[] = { "GameFiles/Shaders/SkeletonAnimation_vs.glsl", "GameFiles/Shaders/SkeletonAnimation_fs.glsl" };
 	GLenum shaderTypesAnimation[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
 	CreateProgram(animationShader, shaderNamesAnimation, shaderTypesAnimation, 2);
@@ -213,7 +177,7 @@ void RenderPipeline::release()
 	// place delete code here
 
 	glDeleteShader(regularShader);
-	glDeleteShader(skeletonAShader);
+	glDeleteShader(animationShader);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -231,8 +195,6 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	//set camera matrixes
 	cam.setViewMat(regularShader, viewMat);
 	cam.setViewProjMat(regularShader, viewProjMat[0]);
-	
-	cam.setViewProjMat(skeletonAShader, viewProjMat[0]);
 
 	cam.setViewProjMat(animationShader, viewProjMat[1]);
 	cam.setViewProjMat(*gBuffer->portal_shaderPtr, gBuffer->portal_vp);
@@ -292,9 +254,6 @@ void RenderPipeline::setChunkColorAndInten(int ID, float* color, float inten)
 
 void RenderPipeline::renderPlayer(int playerID, void* world, float* dgColor, float sgInten)
 {
-
-	glUseProgram(skeletonAShader);
-
 	glUseProgram(regularShader);
 
 	//Glow values for player
@@ -303,14 +262,6 @@ void RenderPipeline::renderPlayer(int playerID, void* world, float* dgColor, flo
 
 	//set temp objects worldmat
 	glProgramUniformMatrix4fv(regularShader, worldMat[0], 1, GL_FALSE, (GLfloat*)world);
-
-	//Set the skeleton animation matrices
-	//glProgramUniformMatrix4fv(skeletonAShader, uniformSkeletonMatrix, /*nrOfMatrices*/, GL_FALSE, /*&skeletonA->MatrixArray[0]*/);
-
-	//Set Texture, Normal and glow map
-	glProgramUniform1i(skeletonAShader, uniformTextureLocation[1], 0); //skeleton shader
-	glProgramUniform1i(skeletonAShader, uniformNormalLocation[1], 1); //skeleton shader
-	glProgramUniform1i(skeletonAShader, uniformGlowSpecLocation[1], 2); //skeleton shader
 	
 	//set temp objects worldmat
 	glProgramUniformMatrix4fv(regularShader, worldMat[0], 1, GL_FALSE, (GLfloat*)world);

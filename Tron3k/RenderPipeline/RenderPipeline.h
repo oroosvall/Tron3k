@@ -38,12 +38,7 @@ private:
 	Gbuffer* gBuffer;
 
 	GLuint regularShader;
-
-	GLuint skeletonAShader;
-	GLuint computeShader;
-
 	GLuint animationShader;
-
 
 	GLuint worldMat[2];
 	GLuint viewProjMat[2];
@@ -54,10 +49,6 @@ private:
 	GLuint uniformGlowSpecLocation[2];
 	GLuint uniformDynamicGlowColorLocation[2];
 	GLuint uniformStaticGlowIntensityLocation[2];
-
-
-	GLuint uniformSkeletonMatrix;
-
 
 	GLuint uniformKeyMatrixLocation;
 
