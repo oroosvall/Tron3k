@@ -41,7 +41,7 @@ void BlitQuad::createData(TriangleVertex* vex)
 {
 	glGenBuffers(1, &vertexDataId);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexDataId);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vex[0]) * 6, &vex[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vex[0]) * 4, &vex[0], GL_STATIC_DRAW);
 	delete[] vex;
 
 	//define vertex data layout
