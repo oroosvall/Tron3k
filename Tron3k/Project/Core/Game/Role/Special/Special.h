@@ -10,6 +10,8 @@ class Special
 	protected:
 		SPECIAL_TYPE specialType;
 		int specialId = -1;
+
+		int key;
 	public:
 		virtual void init() = 0;
 
@@ -20,5 +22,6 @@ class Special
 		int getSpecialId();
 
 		virtual bool allowedToActivate(Player* p) = 0;
+		int getActivationKey() { return key; };
 };
 #endif

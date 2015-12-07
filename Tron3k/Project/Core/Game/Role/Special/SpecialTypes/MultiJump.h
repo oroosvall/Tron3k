@@ -1,5 +1,6 @@
 #pragma once
 #include "../Special.h"
+#include <GLFW\glfw3.h>
 
 class MultiJump :
 	public Special
@@ -17,7 +18,6 @@ public:
 	int update(float deltaTime);
 
 	bool allowedToActivate();
-	int getActivationCost();
-
+	int getActivationCost() { return activationCost; }
 };
 

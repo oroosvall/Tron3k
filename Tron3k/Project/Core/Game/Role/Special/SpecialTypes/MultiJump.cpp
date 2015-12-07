@@ -25,6 +25,7 @@ void MultiJump::init()
 	this->coolDown = 0;
 	this->activationCost = 15;
 	specialType = SPECIAL_TYPE::MULTIJUMP;
+	key = GLFW_KEY_SPACE;
 }
 
 int MultiJump::update(float deltaTime)
