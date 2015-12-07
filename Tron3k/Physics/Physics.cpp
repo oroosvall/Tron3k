@@ -34,7 +34,8 @@ bool Physics::release()
 	return 1;
 }
 
-bool Physics::checkAABBCollision(Geometry* obj1, Geometry* obj2)
+//--------AABB Collisions--------//
+glm::vec3 Physics::checkAABBvAABBCollision(Geometry* obj1, Geometry* obj2)
 {
 	//AABB collision mellan objekt
 	if (obj1->getPos().x + obj1->getSize().x > obj2->getPos().x - obj2->getSize().x &&
@@ -46,15 +47,15 @@ bool Physics::checkAABBCollision(Geometry* obj1, Geometry* obj2)
 			if (obj1->getPos().z + obj1->getSize().z > obj2->getPos().z - obj2->getSize().z &&
 				obj1->getPos().z - obj1->getSize().z < obj2->getPos().z + obj2->getSize().z)//z
 			{
-				return 1;
+				return glm::vec3(1, 1, 1);
 			}
 		}
 	}
 
-	return 0;
+	return glm::vec3(0, 0, 0);
 }
 
-bool Physics::checkAABBCollision(CollideMesh mesh1, CollideMesh mesh2)
+glm::vec3 Physics::checkAABBvAABBCollision(CollideMesh mesh1, CollideMesh mesh2)
 {
 	AABB aabb1 = mesh1.getAABB();
 	AABB aabb2 = mesh2.getAABB();
@@ -76,7 +77,6 @@ bool Physics::checkAABBCollision(CollideMesh mesh1, CollideMesh mesh2)
 
 
 
-
 	if (pos1.x + max1.x > pos2.x + min2.x &&
 		pos1.x + min1.x < pos2.x + max2.x)//x
 	{
@@ -86,43 +86,55 @@ bool Physics::checkAABBCollision(CollideMesh mesh1, CollideMesh mesh2)
 			if (pos1.z + max1.z > pos2.z + min2.z &&
 				pos1.z + min1.z < pos2.z + max2.z)//z
 			{
-				return 1;
+				return glm::vec3(1, 1, 1);
 			}
 		}
 	}
 
-	return 0;
+	return glm::vec3(0, 0, 0);
 }
 
-bool Physics::checkCylindervAABBCollision(CollideMesh mesh1, CollideMesh mesh2)
+glm::vec3 Physics::checkAABBvCylinderCollision(CollideMesh mesh1, CollideMesh mesh2)
 {
-	if (mesh1.getCylinder().pos.y + mesh1.getCylinder().height > mesh2.getAABB().pos.y - mesh2.getAABB().min.y &&
-		mesh1.getCylinder().pos.y - mesh1.getCylinder().height < mesh2.getAABB().pos.y + mesh2.getAABB().max.y)
+	Cylinder cylinder;
+	AABB aabb;
+
+	cylinder = mesh1.getCylinder();
+	aabb = mesh2.getAABB();
+
+	aabb.max = aabb.max - aabb.pos;
+	aabb.min = aabb.min - aabb.pos;
+
+
+
+	if (cylinder.pos.y + cylinder.height > aabb.pos.y - aabb.min.y &&
+		cylinder.pos.y - cylinder.height < aabb.pos.y + aabb.max.y)
 	{
 		//Collides in Y
 
 		//http://stackoverflow.com/questions/401847/circle-rectangle-collision-detection-intersection
-		glm::vec2 dist = glm::vec2(abs(mesh1.getCylinder().pos.x - mesh2.getAABB().pos.x), abs(mesh1.getCylinder().pos.z - mesh2.getAABB().pos.z));
 
-		if (dist.x > mesh2.getAABB().max.x + mesh1.getCylinder().radius)
-			return 0;
-		if (dist.y > mesh2.getAABB().max.z + mesh1.getCylinder().radius)
-			return 0;
+		glm::vec2 dist = glm::vec2(abs(cylinder.pos.x - aabb.pos.x), abs(cylinder.pos.z - aabb.pos.z));
 
-		if (dist.x <= mesh2.getAABB().max.x)
-			return 1;
-		if (dist.y <= mesh2.getAABB().max.z)
-			return 1;
+		if (dist.x > aabb.max.x + cylinder.radius)
+			return glm::vec3(0, 0, 0);
+		if (dist.y > aabb.max.z + cylinder.radius)
+			return glm::vec3(0, 0, 0);
 
-		float cDist = ((dist.x - mesh2.getAABB().min.x) * (dist.x - mesh2.getAABB().min.x)) + ((dist.y - mesh2.getAABB().min.z) * (dist.y - mesh2.getAABB().min.z));
-		
-		if (cDist <= mesh1.getCylinder().radius * mesh1.getCylinder().radius)
-			return 1;
-		return 0;
+		if (dist.x <= aabb.max.x)
+			return glm::vec3(1, 1, 1);
+		if (dist.y <= aabb.max.z)
+			return glm::vec3(1, 1, 1);
+
+		float cDist = ((dist.x - aabb.min.x) * (dist.x - aabb.min.x)) + ((dist.y - aabb.min.z) * (dist.y - aabb.min.z));
+
+		if (cDist <= cylinder.radius * cylinder.radius)
+			return glm::vec3(1, 1, 1);// getCollisionNormal(mesh1, mesh2);
+		return glm::vec3(0, 0, 0);
 
 	}
 
-	return 0;
+	return glm::vec3(0, 0, 0);
 	/*if (mesh1.getAABB().posX + mesh1.getAABB().sizeX > mesh2.getAABB().posX - mesh2.getAABB().sizeX &&
 		mesh1.getAABB().posX - mesh1.getAABB().sizeX < mesh2.getAABB().posX + mesh2.getAABB().sizeX)//x
 	{
@@ -140,17 +152,104 @@ bool Physics::checkCylindervAABBCollision(CollideMesh mesh1, CollideMesh mesh2)
 	return 0;*/
 }
 
-bool Physics::checkOBBCollision(Geometry* obj1, Geometry* obj2)
+glm::vec3 Physics::checkAABBvAngledCylinderCollision(CollideMesh mesh1, CollideMesh mesh2)
 {
-	return 1;
+	return glm::vec3(1, 1, 1);
 }
 
-bool Physics::checkOBBCollision(CollideMesh mesh1, CollideMesh mesh2)
+glm::vec3 Physics::checkAABBvSphereCollision(CollideMesh mesh1, CollideMesh mesh2)
 {
-	return 1;
+	return glm::vec3(1, 1, 1);
+}
+//--------------//--------------//
+
+//--------OBB Collisions--------//
+glm::vec3 Physics::checkOBBvOBBCollision(Geometry* obj1, Geometry* obj2)
+{
+	return glm::vec3(1, 1, 1);
 }
 
-bool Physics::checkPlayerVPlayerCollision(glm::vec3 playerPos1, glm::vec3 playerPos2)
+glm::vec3 Physics::checkOBBvOBBCollision(CollideMesh mesh1, CollideMesh mesh2)
+{
+	return glm::vec3(1, 1, 1);
+}
+
+glm::vec3 Physics::checkOBBvCylinderCollision(CollideMesh mesh1, CollideMesh mesh2)
+{
+	return glm::vec3(1, 1, 1);
+}
+
+glm::vec3 Physics::checkOBBvAngledCylinderCollision(CollideMesh mesh1, CollideMesh mesh2)
+{
+	return glm::vec3(1, 1, 1);
+}
+
+glm::vec3 Physics::checkOBBvSphereCollision(CollideMesh mesh1, CollideMesh mesh2)
+{
+	return glm::vec3(1, 1, 1);
+}
+//--------------//--------------//
+
+//--------Cylinder Collisions--------//
+glm::vec3 Physics::checkCylindervCylinderCollision(CollideMesh mesh1, CollideMesh mesh2)
+{
+	return glm::vec3(1, 1, 1);
+}
+
+glm::vec3 Physics::checkCylindervSphereCollision(CollideMesh mesh1, CollideMesh mesh2)
+{
+	return glm::vec3(1, 1, 1);
+}
+
+glm::vec3 Physics::checkAngledCylindervSphereCollision(CollideMesh mesh1, CollideMesh mesh2)
+{
+	return glm::vec3(1, 1, 1);
+}
+//--------------//--------------//
+
+//------Normal Calculators------//
+glm::vec3 Physics::getCollisionNormal(AABB aabb1, AABB aabb2)
+{
+	return glm::vec3(1, 1, 1);
+}
+
+glm::vec3 Physics::getCollisionNormal(Cylinder cylinder, AABB aabb)
+{
+	return glm::vec3(1, 1, 1);
+}
+
+glm::vec3 Physics::getCollisionNormal(AngledCylinder cylinder, AABB aabb)
+{
+	return glm::vec3(1, 1, 1);
+}
+
+glm::vec3 Physics::getCollisionNormal(Sphere sphere, AABB aabb)
+{
+	return glm::vec3(1, 1, 1);
+}
+
+glm::vec3 Physics::getCollisionNormal(OBB obb1, OBB obb2)
+{
+	return glm::vec3(1, 1, 1);
+}
+
+glm::vec3 Physics::getCollisionNormal(Cylinder cylinder, OBB obb)
+{
+	return glm::vec3(1, 1, 1);
+}
+
+glm::vec3 Physics::getCollisionNormal(AngledCylinder cylinder, OBB obb)
+{
+	return glm::vec3(1, 1, 1);
+}
+
+glm::vec3 Physics::getCollisionNormal(Sphere sphere, OBB obb)
+{
+	return glm::vec3(1, 1, 1);
+}
+//--------------//--------------//
+
+glm::vec3 Physics::checkPlayerVPlayerCollision(glm::vec3 playerPos1, glm::vec3 playerPos2)
 {
 	playerBox.setPos(playerPos1);
 	CollideMesh p2;
@@ -159,45 +258,50 @@ bool Physics::checkPlayerVPlayerCollision(glm::vec3 playerPos1, glm::vec3 player
 	//p2.setSize(playerBox.getSize());
 
 
-	bool collide = checkAABBCollision(playerBox, p2);
+	glm::vec3 collide = checkAABBvAABBCollision(playerBox, p2);
 
 	//if (collide)
 		//collide = checkOBBCollision(&obj1, &obj2);
 	return collide;
 }
 
-bool Physics::checkPlayerVBulletCollision(glm::vec3 playerPos, glm::vec3 bulletPos)
+glm::vec3 Physics::checkPlayerVBulletCollision(glm::vec3 playerPos, glm::vec3 bulletPos)
 {
 	playerBox.setPos(playerPos);
 	bulletBox.setPos(bulletPos);
-	bool collide = false;// checkAABBCollision(playerBox, bulletBox);
+	glm::vec3 collide = glm::vec3(0, 0, 0);// checkAABBCollision(playerBox, bulletBox);
 
+	collide = checkAABBvAABBCollision(playerBox, bulletBox);
 	//if (collide)
 		//collide = checkOBBCollision(&player, &bullet);
 	return collide;
 }
 
 
-bool Physics::checkPlayerVWorldCollision(glm::vec3 playerPos)
+glm::vec3 Physics::checkPlayerVWorldCollision(glm::vec3 playerPos)
 {
 	bool collides = false;
 	playerBox.setPos(playerPos);
 
-	for (int i = 0; i < worldBoxes.size(); i++)
+	glm::vec3 collisionNormal = glm::vec3(0, 0, 0);
+	for (int i = 0; i < worldBoxes.size() && !collides; i++)
 	{
-		for (int j = 0; j < worldBoxes[i].size(); j++)
+		for (int j = 0; j < worldBoxes[i].size() && !collides; j++)
 		{
-			if (checkAABBCollision(playerBox, worldBoxes[i][j]))
+			if (checkAABBvAABBCollision(playerBox, worldBoxes[i][j]) != glm::vec3(0, 0, 0))
+			{
 				//if (checkOBBCollision(playerPos, worldBoxes[i]))
 				collides = true;
+				return collisionNormal = getCollisionNormal(playerBox.getCylinder(), worldBoxes[i][j].getAABB());
+			}
 		}
 	}
-	return collides;
+	return collisionNormal;
 }
 
-bool Physics::checkBulletVWorldCollision(glm::vec3 bulletPos)
+glm::vec3 Physics::checkBulletVWorldCollision(glm::vec3 bulletPos)
 {
-	bool collides = false;
+	glm::vec3 collides = glm::vec3(0, 0, 0);
 	bulletBox.setPos(bulletPos);
 
 	for (int i = 0; i < worldBoxes.size(); i++)
