@@ -15,18 +15,22 @@
 #define ULB 6
 #define URB 7
 
-struct AABB
-{
-	float posX, posY, posZ;
-	float sizeX, sizeY, sizeZ;
-};
 
 struct OBB
 {
-	glm::vec3 pos;
-	glm::vec3 corners[8];
-
+	glm::vec4 corners[8];
 };
+
+struct AABB
+{
+	glm::vec4 pos;
+	glm::vec4 max;
+	glm::vec4 min;
+
+	std::vector<OBB> ObbBoxes;
+};
+
+
 
 struct Cylinder
 {
@@ -41,7 +45,6 @@ class CollideMesh
 {
 private:
 	AABB boundingBox;
-	OBB collisionBox;
 	Cylinder cylinder;
 public:
 	CollideMesh();
@@ -49,18 +52,15 @@ public:
 
 	void init();
 
-	void setAABB(float xPos, float yPos, float zPos, float xSize, float ySize, float zSize);
+	void setAABB(glm::vec3 pos, glm::vec3 max, glm::vec3 min);
+	void setAABB(AABB aabb);
 	AABB getAABB();
 
-	void setOBB(glm::vec3 pos, glm::vec3* corners);
-	OBB getOBB();
+
 	
 	void setCylinder(glm::vec3 pos, float radius, float height);
 	Cylinder getCylinder();
 
 	void setPos(glm::vec3 pos);
-
-	void setSize(glm::vec3 size);
-	glm::vec3 getSize();
 };
 #endif

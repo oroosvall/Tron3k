@@ -10,12 +10,14 @@ uniform sampler2D GlowSpec;
 uniform sampler2D GlowMap;	
 uniform sampler2D Depth;
 
-
 vec4 Position0;
 vec4 Diffuse0;
 vec4 Normal0;
 vec4 Depth0;
 vec4 glowValue;
+
+uniform float pixeluvX;
+uniform float pixeluvY;
 
 struct SpotLight
 {
@@ -119,6 +121,41 @@ void main()
 			fragment_color += Diffuse0 * vec4(lights[n].Color, 1) * lights[n].AmbientIntensity;
 		}
 		
-		fragment_color = fragment_color * Diffuse0 + glowValue;
+		//fragment_color = fragment_color * Diffuse0 + glowValue;
+		fragment_color = fragment_color * Diffuse0;
+		
+		
+		vec4 sum = vec4(0);
+		
+		//top left quadrant
+		sum += texture(GlowMap, UV + vec2( -pixeluvX * 1 , -pixeluvY * 3 )) * 0.075;
+		sum += texture(GlowMap, UV + vec2( -pixeluvX * 3 , -pixeluvY * 1 )) * 0.075;
+		sum += texture(GlowMap, UV + vec2( -pixeluvX * 2 , -pixeluvY * 2 )) * 0.180;
+		sum += texture(GlowMap, UV + vec2( -pixeluvX * 1 , -pixeluvY * 2 )) * 0.353;
+		sum += texture(GlowMap, UV + vec2( -pixeluvX * 2 , -pixeluvY * 1 )) * 0.353;
+		sum += texture(GlowMap, UV + vec2( -pixeluvX * 1 , -pixeluvY * 1 )) * 0.603;
+		//top right quadrant   
+		sum += texture(GlowMap, UV + vec2( pixeluvX * 1	, -pixeluvY * 3	)) * 0.075;
+		sum += texture(GlowMap, UV + vec2( pixeluvX * 3	, -pixeluvY * 1	)) * 0.075;
+		sum += texture(GlowMap, UV + vec2( pixeluvX * 2 , -pixeluvY * 2	)) * 0.180;
+		sum += texture(GlowMap, UV + vec2( pixeluvX * 1	, -pixeluvY * 2	)) * 0.353;
+		sum += texture(GlowMap, UV + vec2( pixeluvX * 2	, -pixeluvY * 1	)) * 0.353;
+		sum += texture(GlowMap, UV + vec2( pixeluvX * 1	, -pixeluvY * 1	)) * 0.603;
+		//bot left quadrant  
+		sum += texture(GlowMap, UV + vec2( -pixeluvX * 1 , pixeluvY * 3	)) * 0.075;
+		sum += texture(GlowMap, UV + vec2( -pixeluvX * 3 , pixeluvY * 1	)) * 0.075;
+		sum += texture(GlowMap, UV + vec2( -pixeluvX * 2 , pixeluvY * 2	)) * 0.180;
+		sum += texture(GlowMap, UV + vec2( -pixeluvX * 1 , pixeluvY * 2	)) * 0.353;
+		sum += texture(GlowMap, UV + vec2( -pixeluvX * 2 , pixeluvY * 1	)) * 0.353;
+		sum += texture(GlowMap, UV + vec2( -pixeluvX * 1 , pixeluvY * 1	)) * 0.603;
+		//bot left quadrant  
+		sum += texture(GlowMap, UV + vec2( pixeluvX * 1	, pixeluvY * 3	)) * 0.075;
+		sum += texture(GlowMap, UV + vec2( pixeluvX * 3	, pixeluvY * 1	)) * 0.075;
+		sum += texture(GlowMap, UV + vec2( pixeluvX * 2 , pixeluvY * 2	)) * 0.180;
+		sum += texture(GlowMap, UV + vec2( pixeluvX * 1	, pixeluvY * 2	)) * 0.353;
+		sum += texture(GlowMap, UV + vec2( pixeluvX * 2	, pixeluvY * 1	)) * 0.353;
+		sum += texture(GlowMap, UV + vec2( pixeluvX * 1	, pixeluvY * 1	)) * 0.603;
+		
+		fragment_color += sum * 0.1;
 	}	
 }
