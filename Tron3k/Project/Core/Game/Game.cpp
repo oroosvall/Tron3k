@@ -618,19 +618,24 @@ SPECIAL_TYPE Game::getSpecialAbilityUsed(int localPlayer, int &sid)
 
 void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec3 pos, glm::vec3 dir)
 {
+	Player* p = playerList[conID];
 	switch (st)
 	{
 	case SPECIAL_TYPE::LIGHTWALL:
-		playerList[conID]->addModifier(MODIFIER_TYPE::LIGHTWALLCONTROLLOCK);
+	{
+		p->addModifier(MODIFIER_TYPE::LIGHTWALLCONTROLLOCK);
 		int arraypos = -1;
 		Effect* lwe = getEffect(conID, sID - 1, EFFECT_TYPE::LIGHT_WALL, arraypos);
 		addEffectToList(conID, sID, EFFECT_TYPE::LIGHT_WALL, pos);
+	}
 		break;
 
 	case SPECIAL_TYPE::MULTIJUMP:
+	{
 		vec3 vel = p->getVelocity();
 		vel.y += 10.0f;
 		p->setVelocity(vel);
+	}
 		break;
 	}
 }

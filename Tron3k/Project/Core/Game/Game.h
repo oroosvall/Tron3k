@@ -55,6 +55,7 @@ private:
 	void registerWeapon(Player* p);
 	void registerSwitch(Player* p);
 	void registerSpecial(Player* p);
+	void registerMobility(Player* p);
 
 	WEAPON_TYPE weaponShotWith;
 	int bulletShot = -1;
@@ -64,8 +65,11 @@ private:
 	bool wpnSwitched = false;
 
 	SPECIAL_TYPE specialUsed;
+	SPECIAL_TYPE mobilityUsed;
 	int specialId = -1;
+
 	bool specialActivated = false;
+	bool mobilityActivated = false;
 
 	BulletHitPlayerInfo hit;
 	bool playerHit = false;
@@ -112,6 +116,9 @@ public:
 	void handleWeaponSwitch(int conID, WEAPON_TYPE ws);
 
 	bool specialActivationReady() { return specialActivated; };
+	bool mobilityActivationReady() { return mobilityActivated; };
+
+	SPECIAL_TYPE getMobilityAbilityUsed(int localPlayer, int &sid);
 	SPECIAL_TYPE getSpecialAbilityUsed(int localPlayer, int &sid); //sid is SpecialId, really only used for Lightwalls. I'm so, so sorry
 	void handleSpecialAbilityUse(int conID, int specialId, SPECIAL_TYPE st, glm::vec3 pos, glm::vec3 dir);
 
