@@ -30,8 +30,6 @@ struct AABB
 	std::vector<OBB> ObbBoxes;
 };
 
-
-
 struct Cylinder
 {
 	glm::vec3 pos;
@@ -40,12 +38,30 @@ struct Cylinder
 	float height;
 };
 
+struct AngledCylinder
+{
+	glm::vec3 pos;
+	glm::vec3 normal;
+
+	float radius;
+	float height;
+};
+
+struct Sphere
+{
+	glm::vec3 pos;
+
+	float radius;
+};
+
 //contains several levels of meshes, one that is just a cube, and then one or several below that is a simple mesh, not sure how to solve yet, might work.
 class CollideMesh
 {
 private:
 	AABB boundingBox;
 	Cylinder cylinder;
+
+	void getCylinderFromAABB();
 public:
 	CollideMesh();
 	~CollideMesh();

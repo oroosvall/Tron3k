@@ -14,6 +14,7 @@ bool MultiJump::allowedToActivate(Player* p)
 {
 	if (this->coolDown < 0.01 && !p->getGrounded())
 	{
+		coolDown = 4.0;
 		return true;
 	}
 	return false;
@@ -29,5 +30,14 @@ void MultiJump::init()
 
 int MultiJump::update(float deltaTime)
 {
+	coolDowntick(deltaTime);
 	return 0;
+}
+
+void MultiJump::coolDowntick(float deltaTime)
+{
+	if (coolDown > FLT_EPSILON)
+	{
+		coolDown -= deltaTime;
+	}
 }

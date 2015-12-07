@@ -17,5 +17,7 @@ public:
 	int update(float deltaTime);
 
 	bool allowedToActivate(Player* p);
+
+	void coolDowntick(float);
 };
 

@@ -124,7 +124,7 @@ void Game::update(float dt)
 			GetSound()->enableSounds();
 		}
 	}
-	
+
 	for (unsigned int c = 0; c < max_con; c++)
 	{
 		if (playerList[c] != nullptr)
@@ -220,7 +220,7 @@ void Game::playerUpdate(int conid, float dt)
 	}
 
 	/*
-	
+
 	THIS IS WHERE WE APPLY ALL EXTERNAL FORCES TO THE PLAYER?
 
 	*/
@@ -288,7 +288,7 @@ void Game::checkPvPCollision()
 	vec3 localPPos = vec3(0, 0, 0);
 	int localP = -1;
 	int localPTeam = -1;
-	for (int i = 0; i < max_con; i++)
+	for (int i = 0; i < max_con && localPPos == vec3(0, 0, 0); i++)
 	{
 		if (playerList[i] != nullptr)
 		{
@@ -309,16 +309,16 @@ void Game::checkPvPCollision()
 
 	//Checks collision between players
 	//TODO: improve so it just checks between ourselves and all other players, we don't care if two other players collided
-	bool collides = false;
+	glm::vec3 collides = glm::vec3(0,0,0);
 	for (int i = 0; i < max_con; i++)
 	{
-		collides = false;
+		collides = glm::vec3(0,0,0);
 		if (playerList[i] != nullptr)
 			collides = physics->checkPlayerVPlayerCollision(localPPos, pPos[i]);
 
-		if (collides)
+		if (collides != glm::vec3(0,0,0))
 		{
-			
+
 			//here we can do things when two objects, collide, cause now we know i and j collided.
 			//int x = 0;
 			//TODO: Add separated collision places for friendly vs hostile
@@ -343,7 +343,7 @@ void Game::checkPvPCollision()
 
 void Game::checkPlayerVBulletCollision()
 {
-	bool collides = false;
+	glm::vec3 collides = glm::vec3(0,0,0);
 
 	for (int i = 0; i < max_con; i++)
 	{
@@ -354,7 +354,7 @@ void Game::checkPlayerVBulletCollision()
 			{
 				for (unsigned int j = 0; j < bullets[b].size(); j++)
 				{
-					collides = false;
+					collides = glm::vec3(0,0,0);
 					if (bullets[b][j] != nullptr)
 					{
 						int pid = -1, bid = -1;
@@ -364,7 +364,7 @@ void Game::checkPlayerVBulletCollision()
 							if (playerList[i]->isAlive()) //Don't shoot dead people
 								collides = physics->checkPlayerVBulletCollision(playerList[i]->getPos(), bullets[b][j]->getPos());
 						}
-						if (collides)
+						if (collides != glm::vec3(0,0,0))
 						{
 							//Code for player on bullet collision goes here
 							/*
@@ -390,28 +390,39 @@ void Game::checkPlayerVBulletCollision()
 				}
 			}
 		}
-		
+
 	}
 }
 
 void Game::checkPlayerVWorldCollision()
 {
 	bool collides = false;
-	for (int i = 0; i < max_con; i++)
+	glm::vec3 collisionNormal = glm::vec3(0, 0, 0);
+	bool foundLocal = false;
+	for (int i = 0; i < max_con && !foundLocal; i++)
 	{
 		if (playerList[i] != nullptr)
 		{
 			if (playerList[i]->isLocal())
 			{
-				collides = physics->checkPlayerVWorldCollision(playerList[i]->getPos());
-				playerList[i]->setGrounded(collides);
-				if (collides)
+				foundLocal = true;
+				
+				collisionNormal = physics->checkPlayerVWorldCollision(playerList[i]->getPos());
+				
+				if (collisionNormal != glm::vec3(0,0,0))
 				{
+					
 					//collision with world here, no gravity etc
+					//TODO: Add proper collision code.
+					//TODO: Return normals from objects we collide with.
+					//TODO: Change direction based on those normals.
+					//TODO: What do we do if we collide with multiple objects?
+
+					playerList[i]->setGrounded(true);
 					glm::vec3 vel = playerList[i]->getVelocity();
 					glm::vec3 pos = playerList[i]->getPos();
 					pos.y += vel.y;
-					
+
 					vel.y = 0.0f;
 					playerList[i]->setVelocity(vel);
 				}
@@ -422,19 +433,19 @@ void Game::checkPlayerVWorldCollision()
 
 void Game::checkBulletVWorldCollision()
 {
-	bool collides = false;
+	glm::vec3 collides = glm::vec3(0,0,0);
 
 	for (unsigned int b = 0; b < BULLET_TYPE::NROFBULLETS; b++)
 	{
 		for (unsigned int j = 0; j < bullets[b].size(); j++)
 		{
-			collides = false;
+			collides = glm::vec3(0,0,0);
 			if (bullets[b][j] != nullptr)
 			{
 				int pid = -1, bid = -1;
 				bullets[b][j]->getId(pid, bid);
 				collides = physics->checkBulletVWorldCollision(bullets[b][j]->getPos());
-				if (collides)
+				if (collides != glm::vec3(0,0,0))
 				{
 					//TODO: remove bullet, add network thing for deleting the bullet
 					//handleBulletHitEvent()
@@ -583,9 +594,9 @@ void Game::addBulletToList(int conID, int bulletId, BULLET_TYPE bt, glm::vec3 po
 		b = new PulseShot(pos, dir, conID, bulletId, p->getTeam());
 		break;
 	}
-	
+
 	bullets[bt].push_back(b);
-	
+
 }
 
 void Game::handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm::vec3 pos, glm::vec3 dir)
@@ -595,14 +606,14 @@ void Game::handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm
 	case WEAPON_TYPE::PULSE_RIFLE:
 		if (gameState != Gamestate::SERVER)
 			if (GetSound())
-				GetSound()->playExternalSound(SOUNDS::soundEffectPusleRifleShot, pos.x, pos.y, pos.z);	
+				GetSound()->playExternalSound(SOUNDS::soundEffectPusleRifleShot, pos.x, pos.y, pos.z);
 		addBulletToList(conID, bulletId, BULLET_TYPE::PULSE_SHOT, pos, dir);
 		break;
 
 
 	case WEAPON_TYPE::ENERGY_BOOST:
 		if (gameState != Gamestate::SERVER)
-			if(GetSound())
+			if (GetSound())
 				GetSound()->playExternalSound(SOUNDS::soundEffectEnergyBoost, pos.x, pos.y, pos.z);
 		playerList[conID]->healing(10);
 		break;
@@ -681,7 +692,13 @@ void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec
 	case SPECIAL_TYPE::MULTIJUMP:
 	{
 		vec3 vel = p->getVelocity();
-		vel.y += 3.0f;
+		if (vel.y<0)
+		{
+			vel.y = 3.0f;
+		}
+		else
+			vel.y += 3.0f;
+		
 		p->setVelocity(vel);
 	}
 		break;
