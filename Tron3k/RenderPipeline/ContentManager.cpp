@@ -138,7 +138,7 @@ void ContentManager::init()
 
 }
 
-ContentManager::~ContentManager()
+void ContentManager::release()
 {
 	for (size_t i = 0; i < meshes.size(); i++)
 	{
@@ -158,7 +158,7 @@ ContentManager::~ContentManager()
 	glDeleteBuffers(1, &playerModels[0].meshID);
 	glDeleteBuffers(1, &playerModels[0].index);
 	glDeleteVertexArrays(1, &playerModels[0].vao);
-
+	
 	delete playerModels;
 	testMap.release();
 
@@ -166,6 +166,16 @@ ContentManager::~ContentManager()
 
 	delete[] renderedChunks;
 	delete[] renderNextChunks;
+
+	testAnimationMesh.release();
+	skybox.release();
+	bullet.release();
+
+}
+
+ContentManager::~ContentManager()
+{
+	
 }
 
 void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation, GLuint DglowColor, GLuint SglowColor, GLuint portal_shader, GLuint portal_world)

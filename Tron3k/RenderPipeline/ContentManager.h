@@ -3,7 +3,7 @@
 
 #include <glm\glm.hpp>
 #include "Mesh.h"
-#include <GL\glew.h>
+#include "Utils\GPUMemoryLeakChecker.h"
 #include "Map\Map.h"
 #include <vector>
 
@@ -52,6 +52,8 @@ public:
 
 	~ContentManager();
 	void init();
+
+	void release();
 
 	void renderChunks(GLuint shader, GLuint shaderLocation, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation, GLuint DglowColor, GLuint SglowColor, GLuint portal_shader, GLuint portal_world);
 

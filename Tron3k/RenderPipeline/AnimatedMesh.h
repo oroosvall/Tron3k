@@ -31,6 +31,7 @@ private:
 public:
 
 	void init();
+	void release();
 
 	~AnimatedMesh();
 

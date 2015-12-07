@@ -39,8 +39,20 @@ void Map::release()
 
 	if (tex)
 	{
+		for (size_t i = 0; i < textureCount; i++)
+		{
+			glDeleteTextures(1, &tex[i].textureID);
+		}
 		delete[] tex;
 		tex = nullptr;
+	}
+
+	for (size_t i = 0; i < chunks.size(); i++)
+	{
+		for (size_t p = 0; p < chunks[i].portals.size(); p++)
+		{
+			chunks[i].portals[p].visualPortal.release();
+		}
 	}
 
 	//if (bbPoints)

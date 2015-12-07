@@ -34,6 +34,9 @@
     <Filter Include="Source Files\Camera">
       <UniqueIdentifier>{d672e48f-2d88-4d01-af47-f86ce387fd15}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\LeakDetect">
+      <UniqueIdentifier>{45ad5fdd-b6a3-4e64-886c-458f3e8fb9f2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RenderPipeline.cpp">
@@ -51,8 +54,6 @@
     <ClCompile Include="GBuffer.cpp">
       <Filter>Source Files\Buffers</Filter>
     </ClCompile>
-    <ClCompile Include="RenderTarget.cpp">
-    </ClCompile>
     <ClCompile Include="ContentManager.cpp">
       <Filter>Source Files\Manager</Filter>
     </ClCompile>
@@ -68,6 +69,12 @@
     <ClCompile Include="StaticMesh.cpp">
       <Filter>Source Files\Mesh</Filter>
     </ClCompile>
+    <ClCompile Include="Utils\GPUMemoryLeakChecker.cpp">
+      <Filter>Source Files\LeakDetect</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTarget.cpp">
+      <Filter>Source Files\Buffers</Filter>
+	</ClCompile>
     <ClCompile Include="AnimatedMesh.cpp">
       <Filter>Source Files\Mesh</Filter>
     </ClCompile>
@@ -97,8 +104,6 @@
     <ClInclude Include="GBuffer.h">
       <Filter>Source Files\Buffers</Filter>
     </ClInclude>
-    <ClInclude Include="RenderTarget.h">
-    </ClInclude>
     <ClInclude Include="Texture.h">
       <Filter>Source Files\Texture</Filter>
     </ClInclude>
@@ -120,6 +125,12 @@
     <ClInclude Include="StaticMesh.h">
       <Filter>Source Files\Mesh</Filter>
     </ClInclude>
+    <ClInclude Include="Utils\GPUMemoryLeakChecker.h">
+      <Filter>Source Files\LeakDetect</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTarget.h">
+      <Filter>Source Files\Buffers</Filter>
+	</ClInclude>
     <ClInclude Include="AnimatedMesh.h">
       <Filter>Source Files\Mesh</Filter>
     </ClInclude>

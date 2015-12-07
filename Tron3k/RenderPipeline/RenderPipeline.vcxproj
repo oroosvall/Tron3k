@@ -161,6 +161,7 @@
     <ClCompile Include="StaticMesh.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Text\TextObject.cpp" />
+    <ClCompile Include="Utils\GPUMemoryLeakChecker.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimatedMesh.h" />
@@ -180,6 +181,7 @@
     <ClInclude Include="StaticMesh.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Text\TextObject.h" />
+    <ClInclude Include="Utils\GPUMemoryLeakChecker.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

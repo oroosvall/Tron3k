@@ -5,6 +5,16 @@ BlitQuad::BlitQuad()
 
 }
 
+BlitQuad::~BlitQuad()
+{
+}
+
+void BlitQuad::release()
+{
+	glDeleteBuffers(1, &vertexDataId);
+	glDeleteVertexArrays(1, &gVertexAttribute);
+}
+
 void BlitQuad::Init(vec3 bl, vec3 tr)
 {
 	TriangleVertex* vex = new TriangleVertex[6];

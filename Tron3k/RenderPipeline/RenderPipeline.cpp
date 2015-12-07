@@ -3,8 +3,7 @@
 #include <GL\glew.h>
 
 #include "Shader.h"
-
-//#include "Map\MapHeaders.h"
+#include "Utils\GPUMemoryLeakChecker.h"
 
 //#include <vld.h>
 
@@ -144,11 +143,6 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 	contMan.init();
 	
-
-	//void* test = contMan.getChunkCollisionVectorAsPointer(1);
-
-	//vector<ChunkCollision>* test2 = (vector<ChunkCollision>*)test;
-
 	return true;
 }
 
@@ -164,6 +158,10 @@ void RenderPipeline::release()
 	delete test;
 
 	delete gBuffer;
+
+	contMan.release();
+
+	reportGPULeaks();
 
 	delete this; // yes this is safe
 }

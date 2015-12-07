@@ -8,7 +8,7 @@ void AnimatedMesh::init()
 
 }
 
-AnimatedMesh::~AnimatedMesh()
+void AnimatedMesh::release()
 {
 	delete[] matOffsets;
 	delete[] indices;
@@ -18,11 +18,19 @@ AnimatedMesh::~AnimatedMesh()
 	{
 		for (int32_t j = 0; j < animationKeyCounts[i]; j++)
 		{
-			delete [] animations[i].keyFrames[j].jointTransform;
+			delete[] animations[i].keyFrames[j].jointTransform;
 		}
 		delete[] animations[i].keyFrames;
 	}
 	delete[] animations;
+
+	glDeleteVertexArrays(1, &vao);
+	glDeleteBuffers(1, &vbo);
+	glDeleteBuffers(1, &ibo);
+}
+
+AnimatedMesh::~AnimatedMesh()
+{
 
 }
 

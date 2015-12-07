@@ -2,7 +2,7 @@
 #define STATICMESH_H
 
 #include <glm\glm.hpp>
-#include <GL\glew.h>
+#include "Utils\GPUMemoryLeakChecker.h"
 
 #include "defines.h"
 

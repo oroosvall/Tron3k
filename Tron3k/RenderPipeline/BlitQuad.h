@@ -1,7 +1,7 @@
 #ifndef BLIT_QUAD_H
 #define BLIT_QUAD_H
 
-#include <gl/glew.h>
+#include "Utils\GPUMemoryLeakChecker.h"
 #include <gl/GL.h>
 #include <glm\glm.hpp>
 #define BUFFER_OFFSET(i) ((char *)nullptr + (i))
@@ -22,6 +22,8 @@ private:
 	void createData(TriangleVertex* vex);
 public:
 	BlitQuad();
+	~BlitQuad();
+	void release();
 	void BindVertData();
 	void Init(vec3 botLeft, vec3 topRight);
 	void Init(vec3 topLeft, vec3 topRight, vec3 botRight, vec3 botLeft);
