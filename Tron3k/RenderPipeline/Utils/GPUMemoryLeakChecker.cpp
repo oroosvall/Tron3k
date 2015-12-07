@@ -124,6 +124,7 @@ void reportGPULeaks()
 
 	if (found)
 	{
+		// if break here u have gpu mem leaks, press break and check console
 		DebugBreak();
 	}
 
