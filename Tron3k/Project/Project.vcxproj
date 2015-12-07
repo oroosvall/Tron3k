@@ -34,6 +34,7 @@
     <ClCompile Include="Core\Game\Role\Role.cpp" />
     <ClCompile Include="Core\Game\Role\Special\Special.cpp" />
     <ClCompile Include="Core\Game\Role\Special\SpecialTypes\Lightwall.cpp" />
+    <ClCompile Include="Core\Game\Role\Special\SpecialTypes\MultiJump.cpp" />
     <ClCompile Include="Core\Game\Role\Weapon\Bullet.cpp" />
     <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\TrapperBullets\BulletPulseShot.cpp" />
     <ClCompile Include="Core\Game\Role\Weapon\Weapon.cpp" />
@@ -49,7 +50,6 @@
     <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\Trapper\PulseRifle.cpp" />
     <ClCompile Include="Core\Input.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MultiJump.cpp" />
     <ClCompile Include="Network\Client.cpp" />
     <ClCompile Include="Network\Connection.cpp" />
     <ClCompile Include="Network\Server.cpp" />
@@ -76,6 +76,7 @@
     <ClInclude Include="Core\Game\Role\Special\Special.h" />
     <ClInclude Include="Core\Game\Role\Special\SpecialTypes\AllSpecials.h" />
     <ClInclude Include="Core\Game\Role\Special\SpecialTypes\Lightwall.h" />
+    <ClInclude Include="Core\Game\Role\Special\SpecialTypes\MultiJump.h" />
     <ClInclude Include="Core\Game\Role\Weapon\Bullet.h" />
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\AllBullets.h" />
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\BruteBullets\GrenadeShot.h" />
@@ -103,7 +104,6 @@
     <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\Trapper\PulseRifle.h" />
     <ClInclude Include="Core\Input.h" />
     <ClInclude Include="Core\ui\Ui.h" />
-    <ClInclude Include="MultiJump.h" />
     <ClInclude Include="Network\Client.h" />
     <ClInclude Include="Network\Connection.h" />
     <ClInclude Include="Network\NetIndex.h" />
