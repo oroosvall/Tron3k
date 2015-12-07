@@ -622,6 +622,8 @@ void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec
 	{
 	case SPECIAL_TYPE::LIGHTWALL:
 		playerList[conID]->addModifier(MODIFIER_TYPE::LIGHTWALLCONTROLLOCK);
+		int arraypos = -1;
+		Effect* lwe = getEffect(conID, sID - 1, EFFECT_TYPE::LIGHT_WALL, arraypos);
 		addEffectToList(conID, sID, EFFECT_TYPE::LIGHT_WALL, pos);
 		break;
 
@@ -661,6 +663,7 @@ Effect* Game::getEffect(int PID, int SID, EFFECT_TYPE et, int &posInEffectArray)
 			return effects[et][c];
 		}
 	}
+	return nullptr;
 }
 
 Bullet* Game::getBulletForRemoval(int PID, int BID, BULLET_TYPE bt, int &posInBulletArray)
@@ -676,6 +679,7 @@ Bullet* Game::getBulletForRemoval(int PID, int BID, BULLET_TYPE bt, int &posInBu
 			return bullets[bt][c];
 		}
 	}
+	return nullptr;
 }
 
 int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi, int newHPtotal)

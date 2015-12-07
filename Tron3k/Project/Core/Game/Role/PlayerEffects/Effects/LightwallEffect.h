@@ -9,6 +9,8 @@ class LightwallEffect : public Effect
 private:
 	Player* myPlayer;
 	float lifeTime;
+	bool expandDong;
+	glm::vec3 playerVel;
 public:
 	LightwallEffect(Player* p);
 	void init(int pid, int eid, glm::vec3 position);

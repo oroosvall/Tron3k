@@ -292,7 +292,7 @@ void Core::upClient(float dt)
 			//Fetch current player position
 			//Add to topology packet
 			Player* local = game->getPlayer(top->getConId());
-			top->frame_pos(top->getConId(), local->getPos(), local->getDir());
+			top->frame_pos(top->getConId(), local->getPos(), local->getDir(), local->getVelocity());
 
 			if (game->weaponSwitchReady())
 			{
