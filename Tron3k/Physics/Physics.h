@@ -19,6 +19,12 @@
 /*
 The first parameter for each collision check is ALWAYS The player or the bullet
 The object we check against will ALWAYS be second parameter
+
+It is ALWAYS the FIRST object COLLIDING with the SECOND
+This means:
+- We check the FIRST object towards a bunch of SECOND ones
+- When we want the normal of the collision, it's the normal against the side of the SECOND OBJECT
+	This is because we want to know in which direction to send the FIRST object
 */
 
 class Physics
@@ -49,11 +55,15 @@ private:
 	glm::vec3 checkOBBvSphereCollision(CollideMesh mesh1, CollideMesh mesh2);
 	//--------------//--------------//
 
-	//-----Cylinder Collisions-----//
+	//-----Cylinder Collisions------//
 	glm::vec3 checkCylindervCylinderCollision(CollideMesh mesh1, CollideMesh mesh2);
 	glm::vec3 checkCylindervSphereCollision(CollideMesh mesh1, CollideMesh mesh2);
 	glm::vec3 checkAngledCylindervSphereCollision(CollideMesh mesh1, CollideMesh mesh2);
 	//--------------//--------------//
+
+	//--------Line Collision--------//
+	bool checkLinevPlaneCollision(glm::vec3 l1, glm::vec3 l2, glm::vec3 p1, glm::vec3 p2, glm::vec3 p3);
+
 
 	//------Normal Calculators------//
 	glm::vec3 getCollisionNormal(AABB aabb1, AABB aabb2);

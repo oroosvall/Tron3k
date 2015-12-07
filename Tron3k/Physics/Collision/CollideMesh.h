@@ -30,8 +30,6 @@ struct AABB
 	std::vector<OBB> ObbBoxes;
 };
 
-
-
 struct Cylinder
 {
 	glm::vec3 pos;
