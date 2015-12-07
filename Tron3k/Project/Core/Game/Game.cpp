@@ -644,7 +644,13 @@ void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec
 	case SPECIAL_TYPE::MULTIJUMP:
 	{
 		vec3 vel = p->getVelocity();
-		vel.y += 3.0f;
+		if (vel.y<0)
+		{
+			vel.y = 3.0f;
+		}
+		else
+			vel.y += 3.0f;
+		
 		p->setVelocity(vel);
 	}
 		break;

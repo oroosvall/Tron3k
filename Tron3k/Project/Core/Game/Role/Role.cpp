@@ -90,6 +90,7 @@ void Role::update(float dt)
 	weapons[0]->update(dt);
 	weapons[1]->update(dt);
 	specialAbility->update(dt);
+	mobility->update(dt);
 
 	if (gainSpecial && specialMeter < 100.0f)
 	{
