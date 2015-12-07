@@ -576,6 +576,34 @@ void Game::handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm
 				GetSound()->playExternalSound(SOUNDS::soundEffectEnergyBoost, pos.x, pos.y, pos.z);
 		playerList[conID]->healing(10);
 		break;
+
+	case WEAPON_TYPE::DISC_GUN:
+		if (gameState != Gamestate::SERVER)
+			if (GetSound())
+				GetSound()->playExternalSound(SOUNDS::soundEffectDiscGun, pos.x, pos.y, pos.z);
+		addBulletToList(conID, bulletId, BULLET_TYPE::DISC_SHOT, pos, dir);
+		break;
+
+	case WEAPON_TYPE::LINK_GUN:
+		if (gameState != Gamestate::SERVER)
+			if (GetSound())
+				GetSound()->playExternalSound(SOUNDS::soundEffectLinkGun, pos.x, pos.y, pos.z);
+		addBulletToList(conID, bulletId, BULLET_TYPE::LINK_SHOT, pos, dir);
+		break;
+
+	case WEAPON_TYPE::GRENADE_LAUNCHER:
+		if (gameState != Gamestate::SERVER)
+			if (GetSound())
+				GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeLauncher, pos.x, pos.y, pos.z);
+		addBulletToList(conID, bulletId, BULLET_TYPE::GRENADE_SHOT, pos, dir);
+		break;
+
+	case WEAPON_TYPE::SHOTGUN:
+		if (gameState != Gamestate::SERVER)
+			if (GetSound())
+				GetSound()->playExternalSound(SOUNDS::soundEffectShotGun, pos.x, pos.y, pos.z);
+		addBulletToList(conID, bulletId, BULLET_TYPE::SHOTGUN_PELLET, pos, dir);
+		break;
 	}
 }
 
@@ -595,6 +623,12 @@ void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec
 	case SPECIAL_TYPE::LIGHTWALL:
 		playerList[conID]->addModifier(MODIFIER_TYPE::LIGHTWALLCONTROLLOCK);
 		addEffectToList(conID, sID, EFFECT_TYPE::LIGHT_WALL, pos);
+		break;
+
+	case SPECIAL_TYPE::MULTIJUMP:
+		vec3 vel = p->getVelocity();
+		vel.y += 10.0f;
+		p->setVelocity(vel);
 		break;
 	}
 }
