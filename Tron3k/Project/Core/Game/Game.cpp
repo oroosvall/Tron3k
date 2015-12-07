@@ -74,7 +74,7 @@ void Game::loadRoles()
 	ifstream roleFile;
 	for (int i = 0; i < NROFROLES; i++)
 	{
-		for (int y = 0; y < NROFREADPROPERTIES; y += 4)
+		for (int y = 0; y < NROFREADPROPERTIES; y += 5)
 		{
 			roleFile.open(roles[i]);
 
@@ -82,6 +82,7 @@ void Game::loadRoles()
 			getline(roleFile, loadedRoles[i][y + 1]);
 			getline(roleFile, loadedRoles[i][y + 2]);
 			getline(roleFile, loadedRoles[i][y + 3]);
+			getline(roleFile, loadedRoles[i][y + 4]);
 			roleFile.close();
 		}
 	}
@@ -697,8 +698,9 @@ void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec
 			vel.y = 3.0f;
 		}
 		else
+		{
 			vel.y += 3.0f;
-		
+		}	
 		p->setVelocity(vel);
 	}
 		break;
