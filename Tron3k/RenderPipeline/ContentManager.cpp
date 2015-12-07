@@ -104,7 +104,7 @@ void ContentManager::init()
 		textures[i].textureID = loadTexture(textures[i].textureName);
 		textures[i].loaded = true;
 	}
-	
+
 	meshes[0].setTexture(textures[1].textureID);
 	meshes[1].setTexture(textures[1].textureID);
 
@@ -132,6 +132,10 @@ void ContentManager::init()
 
 	bullet.init(0, 0, 0);
 	bullet.load("GameFiles/TestFiles/bullet.v");
+
+	testAnimationMesh.init();
+	testAnimationMesh.load("GameFiles/CharacterFiles/Tron3k_animTest_2.bin");
+
 }
 
 void ContentManager::release()
@@ -154,7 +158,7 @@ void ContentManager::release()
 	glDeleteBuffers(1, &playerModels[0].meshID);
 	glDeleteBuffers(1, &playerModels[0].index);
 	glDeleteVertexArrays(1, &playerModels[0].vao);
-
+	
 	delete playerModels;
 	testMap.release();
 
@@ -162,6 +166,11 @@ void ContentManager::release()
 
 	delete[] renderedChunks;
 	delete[] renderNextChunks;
+
+	testAnimationMesh.release();
+	skybox.release();
+	bullet.release();
+
 }
 
 ContentManager::~ContentManager()
@@ -176,6 +185,7 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, textures[1].textureID);
 	//normal & dynamic glow
+
 	glActiveTexture(GL_TEXTURE0 +1 );
 	glBindTexture(GL_TEXTURE_2D, textures[8].textureID);
 	//static glow & spec
@@ -203,7 +213,7 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 			renderedChunks[n] = true;
 		}
 	}
-	
+
 	/* TEMP STUFF*/
 	for (size_t i = 0; i < meshes.size(); i++)
 	{
@@ -211,8 +221,8 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 		//diffuse
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, meshes[i].textureID);
-		 //normal dynamic glow
-		glActiveTexture(GL_TEXTURE0+1);
+		//normal dynamic glow
+		glActiveTexture(GL_TEXTURE0 + 1);
 		glBindTexture(GL_TEXTURE_2D, textures[0].textureID);
 		//static glow
 		glActiveTexture(GL_TEXTURE0 + 2);
@@ -287,11 +297,14 @@ void ContentManager::renderPlayer(int playerID, glm::mat4 world)
 		glActiveTexture(GL_TEXTURE0 + 2);
 		glBindTexture(GL_TEXTURE_2D, textures[9].textureID);
 
-		glBindVertexArray(playerModels[playerID].vao);
-		glBindBuffer(GL_ARRAY_BUFFER, playerModels[playerID].meshID);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, playerModels[playerID].index);
+		//glBindVertexArray(playerModels[playerID].vao);
+		//glBindBuffer(GL_ARRAY_BUFFER, playerModels[playerID].meshID);
+		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, playerModels[playerID].index);
+		//
+		//glDrawElements(GL_TRIANGLES, playerModels[playerID].facecount * 3, GL_UNSIGNED_SHORT, 0);
 
-		glDrawElements(GL_TRIANGLES, playerModels[playerID].facecount * 3, GL_UNSIGNED_SHORT, 0);
+		testAnimationMesh.draw();
+
 	}
 	else if (playerID == 1)
 	{
@@ -331,11 +344,16 @@ void ContentManager::renderPlayer(int playerID, glm::mat4 world)
 
 		glDrawElements(GL_TRIANGLES, bullet.faceCount * 3, GL_UNSIGNED_SHORT, 0);
 	}
+
+
+
 }
 
 void* ContentManager::getChunkCollisionVectorAsPointer(int chunkID)
 {
-	return (void*)testMap.getChunkCollision(chunkID);
+	if (chunkID < nrChunks)
+		return (void*)testMap.getChunkCollision(chunkID);
+	return nullptr;
 }
 
 std::vector<std::vector<float>> ContentManager::getMeshBoxes()

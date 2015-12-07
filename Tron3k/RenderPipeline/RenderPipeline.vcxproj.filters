@@ -31,7 +31,7 @@
     <Filter Include="Source Files\Mesh">
       <UniqueIdentifier>{f55c1ad0-a0c0-48c7-a50a-fb8a95167787}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Buffers\Camera">
+    <Filter Include="Source Files\Camera">
       <UniqueIdentifier>{d672e48f-2d88-4d01-af47-f86ce387fd15}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\LeakDetect">
@@ -46,7 +46,7 @@
       <Filter>Source Files\Text</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
-      <Filter>Source Files\Buffers\Camera</Filter>
+      <Filter>Source Files\Camera</Filter>
     </ClCompile>
     <ClCompile Include="BlitQuad.cpp">
       <Filter>Source Files</Filter>
@@ -74,6 +74,9 @@
     </ClCompile>
     <ClCompile Include="RenderTarget.cpp">
       <Filter>Source Files\Buffers</Filter>
+	</ClCompile>
+    <ClCompile Include="AnimatedMesh.cpp">
+      <Filter>Source Files\Mesh</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -87,7 +90,7 @@
       <Filter>Source Files\Text</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>Source Files\Buffers\Camera</Filter>
+      <Filter>Source Files\Camera</Filter>
     </ClInclude>
     <ClInclude Include="Shader.h">
       <Filter>Source Files</Filter>
@@ -127,6 +130,9 @@
     </ClInclude>
     <ClInclude Include="RenderTarget.h">
       <Filter>Source Files\Buffers</Filter>
+	</ClInclude>
+    <ClInclude Include="AnimatedMesh.h">
+      <Filter>Source Files\Mesh</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

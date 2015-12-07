@@ -102,51 +102,24 @@ void Game::initPhysics()
 }
 
 void Game::update(float dt)
-{	
+{
+	if (Input::getInput()->justPressed(GLFW_KEY_Z))
+	{
+		if (GetSoundActivated() == 0 && GetInitialized() == 0)
+		{
+			InitSound(CreateSound(), 1);
+		}
+		else if (GetInitialized())
+		{
+			GetSound()->enableSounds();
+		}
+	}
+	
 	for (int c = 0; c < max_con; c++)
 	{
 		if (playerList[c] != nullptr)
 		{
-			bool spectatingThis = false;
-			bool spectating = false;
-			if (spectateID > -1)
-			{
-				spectating = true;
-				if (c == spectateID)
-					spectatingThis = true;
-			}
-
-			if (playerList[c]->isLocal())
-			{
-				if(!playerList[c]->getGrounded())
-				playerList[c]->applyGravity(physics, dt);
-			}
-
-			PLAYERMSG msg = playerList[c]->update(dt, freecam, spectatingThis, spectating);
-			if (msg == PLAYERMSG::SHOOT)
-			{
-				//if (gameState != Gamestate::ROAM)
-					registerWeapon(playerList[c]);
-				/*else
-				{
-					registerWeapon(playerList[c]);
-					handleWeaponFire(c, bulletShot, weaponShotWith, playerList[c]->getPos(), playerList[c]->getDir());
-				}*/
-			}
-			if (msg == PLAYERMSG::WPNSWITCH)
-			{
-				registerSwitch(playerList[c]);
-			}
-
-			if (msg == PLAYERMSG::DEATH)
-			{
-				freecam = true;
-			}
-			if (msg == PLAYERMSG::PLAYERRESPAWN)
-			{
-				if (playerList[c]->isLocal())
-					localPlayerWantsRespawn = true;
-			}
+			playerUpdate(c, dt);
 		}
 	}
 
@@ -179,6 +152,54 @@ void Game::update(float dt)
 		checkPlayerVBulletCollision();
 }
 
+void Game::playerUpdate(int conid, float dt)
+{
+	bool spectatingThis = false;
+	bool spectating = false;
+	if (spectateID > -1)
+	{
+		spectating = true;
+		if (conid == spectateID)
+			spectatingThis = true;
+	}
+
+	PLAYERMSG msg = playerList[conid]->update(dt, freecam, spectatingThis, spectating);
+	if (msg == PLAYERMSG::SHOOT)
+	{
+		registerWeapon(playerList[conid]);
+	}
+	if (msg == PLAYERMSG::WPNSWITCH)
+	{
+		registerSwitch(playerList[conid]);
+	}
+	if (msg == PLAYERMSG::SPECIALUSE)
+	{
+		registerSpecial(playerList[conid]);
+	}
+
+	if (msg == PLAYERMSG::DEATH)
+	{
+		freecam = true;
+	}
+	if (msg == PLAYERMSG::PLAYERRESPAWN)
+	{
+		if (playerList[conid]->isLocal())
+			localPlayerWantsRespawn = true;
+	}
+
+	/*
+	
+	THIS IS WHERE WE APPLY ALL EXTERNAL FORCES TO THE PLAYER?
+
+	*/
+	if (playerList[conid]->isLocal())
+	{
+		if (!playerList[conid]->getGrounded())
+			playerList[conid]->applyGravity(physics, dt);
+	}
+
+}
+
 Player* Game::getPlayer(int conID)
 {
 	if (conID < max_con)
@@ -206,6 +227,11 @@ void Game::removePlayer(int conID)
 	delete playerList[conID];
 	playerList[conID] = nullptr;
 	removeConIDfromTeams(conID);
+}
+
+void Game::sendChunkBoxes(int chunkID, void* cBoxes)
+{
+	physics->receiveChunkBoxes(chunkID, cBoxes);
 }
 
 void Game::sendPlayerBox(std::vector<float> pBox)
@@ -395,6 +421,13 @@ void Game::registerSwitch(Player* p)
 	wpnSwitched = true;
 }
 
+void Game::registerSpecial(Player* p)
+{
+	Special* s = p->getPlayerSpecialAbility();
+	specialUsed = s->getType();
+	specialActivated = true;
+}
+
 void Game::handleWeaponSwitch(int conID, WEAPON_TYPE ws)
 {
 	playerList[conID]->switchWpn(ws);
@@ -505,7 +538,6 @@ void Game::handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm
 	switch (weapontype)
 	{
 	case WEAPON_TYPE::PULSE_RIFLE:
-		//To do: Automate generation of bullets
 		if (gameState != Gamestate::SERVER)
 			if (GetSound())
 				GetSound()->playExternalSound(SOUNDS::soundEffectPusleRifleShot, pos.x, pos.y, pos.z);	
@@ -518,6 +550,25 @@ void Game::handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm
 			if(GetSound())
 				GetSound()->playExternalSound(SOUNDS::soundEffectEnergyBoost, pos.x, pos.y, pos.z);
 		playerList[conID]->healing(10);
+		break;
+	}
+}
+
+SPECIAL_TYPE Game::getSpecialAbilityUsed(int localPlayer)
+{
+	specialActivated = false;
+	Player* p = playerList[localPlayer];
+	handleSpecialAbilityUse(localPlayer, specialUsed, p->getPos(), p->getDir());
+	return specialUsed;
+}
+
+void Game::handleSpecialAbilityUse(int conID, SPECIAL_TYPE st, glm::vec3 pos, glm::vec3 dir)
+{
+	Player* p = playerList[conID];
+	switch (st)
+	{
+	case SPECIAL_TYPE::LIGHTWALL:
+		p->addModifier(MODIFIER_TYPE::LIGHTWALLCONTROLLOCK);
 		break;
 	}
 }
@@ -537,7 +588,7 @@ Bullet* Game::getBulletForRemoval(int PID, int BID, BULLET_TYPE bt, int &posInBu
 	}
 }
 
-int Game::handleBulletHitEvent(BulletHitInfo hi, int newHPtotal)
+int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi, int newHPtotal)
 {
 	glm::vec3 pos = playerList[hi.playerHit]->getPos();
 	if (gameState != Gamestate::SERVER)

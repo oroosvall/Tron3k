@@ -5,11 +5,14 @@ BlitQuad::BlitQuad()
 
 }
 
-// todo figure out why deleting buffers breaks everything
 BlitQuad::~BlitQuad()
 {
-	//glDeleteBuffers(1, &vertexDataId);
-	//glDeleteVertexArrays(1, &gVertexAttribute);
+}
+
+void BlitQuad::release()
+{
+	glDeleteBuffers(1, &vertexDataId);
+	glDeleteVertexArrays(1, &gVertexAttribute);
 }
 
 void BlitQuad::Init(vec3 bl, vec3 tr)

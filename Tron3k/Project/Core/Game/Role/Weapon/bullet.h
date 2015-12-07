@@ -11,6 +11,7 @@ class Bullet : public GameObject
 {
 protected:
 	void updateWorldMat();
+	void initValues(glm::vec3 pos, glm::vec3 dir, int pID, int bID, int tID);
 	glm::vec3 pos;
 	glm::vec3 dir;
 	float vel;

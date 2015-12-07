@@ -2,6 +2,9 @@
 #define ROLE_H
 
 #include "Weapon/WeaponTypes/AllWeapons.h"
+#include "Special/Special.h"
+#include "Special/SpecialTypes/AllSpecials.h"
+#include "PlayerEffects/Modifiers/AllModifiers.h"
 #include "Weapon/Weapon.h"
 #include "../GameDataIndex.h"
 #include "ActiveEffects/consumable.h"
@@ -24,10 +27,15 @@ class Role
 		string loadedRoles[NROFROLES][NROFREADPROPERTIES];
 
 		void loadWeapons(int role, int wpn); //wpn = main or sec
+		void loadSpecialAbility(int role);
 
 		Weapon* weapons[2];
 		Weapon* storageMain;
 		Weapon* storageSec;
+
+		Special* specialAbility;
+		float specialMeter;
+		bool gainSpecial;
 
 		//Consumable* consumable;
 
@@ -42,11 +50,20 @@ class Role
 		void swapWeapon(int swapTo);
 		Weapon* getCurrentWeapon();
 
+		void update(float dt);
+
 		void setHealth(int newHealth) { health = newHealth; }; //Used by clients
 		void takeDamage(int dmg); //Used by server
 		void heal(int h); //Used by server
 
 		int getHealth() { return health; };
 		void returnToLife() { health = maxHealth; };
+
+		Special* getSpecialAbility() { return specialAbility; };
+		float getSpecialMeter() { return specialMeter; };
+		void setSpecialMeter(float s) { specialMeter = s; };
+
+		void shutOffMeterGain() { gainSpecial = false; };
+		void activateMeterGain() { gainSpecial = true; };
 };
 #endif

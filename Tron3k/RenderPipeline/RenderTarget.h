@@ -11,6 +11,7 @@ public:
 	virtual void init(int x, int y, int nrTex, bool useDepth);
 
 	virtual ~RenderTarget();
+	static void releaseStatic();
 
 	virtual void resize(int x, int y);
 

@@ -66,6 +66,14 @@ void Gbuffer::init(int x, int y, int nrTex, bool depth)
 	uniformEyePos = glGetUniformLocation(*shaderPtr, "eyepos");
 	uniformNrOfLight = glGetUniformLocation(*shaderPtr, "NumSpotLights");
 	uniformBufferLightPos = glGetUniformBlockIndex(*shaderPtr, "Light");
+	uBlitLightPixelX  = glGetUniformLocation(*shaderPtr, "pixeluvX");
+	uBlitLightPixelY = glGetUniformLocation(*shaderPtr, "pixeluvY");
+
+	float uvPixelX = 4.0f / float(x);
+	float uvPixelY = 4.0f / float(y);
+
+	glProgramUniform1f(*shaderPtr, uBlitLightPixelX, uvPixelX);
+	glProgramUniform1f(*shaderPtr, uBlitLightPixelY, uvPixelY);
 
 	if (depth)
 	{
@@ -119,6 +127,10 @@ Gbuffer::~Gbuffer()
 {
 	delete[] rTexture;
 	delete[] uniformBitsList;
+	for (size_t i = 0; i < 6; i++)
+	{
+		blitQuads[i].release();
+	}
 	delete[] blitQuads;
 	if (initialized)
 	{
@@ -132,6 +144,8 @@ Gbuffer::~Gbuffer()
 	delete shaderPtr;
 	glDeleteShader(*portal_shaderPtr);
 	delete portal_shaderPtr;
+
+	RenderTarget::releaseStatic();
 }
 
 void Gbuffer::resize(int x, int y)

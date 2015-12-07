@@ -85,8 +85,13 @@ void Core::update(float dt)
 	static bool given = false;
 	if (game != nullptr && !given)
 	{
+		bool allchunksSent = false;
+		for (int i = 0; !allchunksSent; i++)
+		{
+			allchunksSent = sendChunkBoxes(i);
+		}
 		sendPlayerBox();
-		sendWorldBoxes();
+		//sendWorldBoxes();
 		given = true;
 	}
 }
@@ -182,7 +187,12 @@ void Core::upRoam(float dt)
 			int bID;
 			game->getLatestWeaponFired(0, wt, bID);
 			int team = 0;
-			game->handleWeaponFire(0, bID, wt, p->getPos(), p->getDir());
+		}
+
+		if (game->specialActivationReady())
+		{
+			Player* p = game->getPlayer(0);
+			game->handleSpecialAbilityUse(0, game->getSpecialAbilityUsed(0), p->getPos(), p->getDir());
 		}
 
 		renderWorld(dt);
@@ -252,11 +262,9 @@ void Core::upClient(float dt)
 
 		//update game
 		game->update(dt);
-		if (GetSound())
-		{
-			GetSound()->setLocalPlayerDir(game->getPlayer(top->getConId())->getDir());
-			GetSound()->setLocalPlayerPos(game->getPlayer(0)->getPos());
-		}
+
+		GetSound()->setLocalPlayerDir(game->getPlayer(top->getConId())->getDir());
+		GetSound()->setLocalPlayerPos(game->getPlayer(0)->getPos());
 
 		//Command and message handle
 		if (console.messageReady())
@@ -296,6 +304,12 @@ void Core::upClient(float dt)
 				game->getLatestWeaponFired(top->getConId(), wt, bID);
 				int team = local->getTeam();
 				top->frame_fire(wt, top->getConId(), bID, local->getPos(), local->getDir());
+			}
+
+			if (game->specialActivationReady())
+			{
+				SPECIAL_TYPE st = game->getSpecialAbilityUsed(top->getConId());
+				top->frame_special_use(st, top->getConId(), local->getPos(), local->getDir());
 			}
 			//send the package
 			top->network_OUT(dt);
@@ -360,11 +374,11 @@ void Core::upServer(float dt)
 			top->scope_out = Uint8(ALL);
 		}
 
-		if (game->hitEventReady())
+		if (game->hitPlayerEventReady())
 		{
-			BulletHitInfo hi = game->getHitInfo();
-			int newHPtotal = game->handleBulletHitEvent(hi);
-			top->event_bullet_hit(hi, newHPtotal);
+			BulletHitPlayerInfo hi = game->getHitPlayerInfo();
+			int newHPtotal = game->handleBulletHitPlayerEvent(hi);
+			top->event_bullet_hit_player(hi, newHPtotal);
 		}
 
 		serverHandleCmds();
@@ -495,7 +509,7 @@ void Core::roamHandleCmds()
 			{
 				int team = stoi(token);
 				game->addPlayerToTeam(0, team);
-				game->allowPlayerRespawn(0, vec3(0,0,0)); //Add new spawn point probably
+				game->allowPlayerRespawn(0, vec3(0,5,0)); //Add new spawn point probably
 				if (team != 0)
 					game->freecam = false;
 				else
@@ -939,6 +953,24 @@ void Core::sendPlayerBox()
 	pBox.push_back(zMin);
 
 	game->sendPlayerBox(pBox);
+}
+
+bool Core::sendChunkBoxes(int chunkID)
+{
+	if (renderPipe != nullptr)
+	{
+		void* cBoxes = renderPipe->getChunkCollisionVectorAsPoint(chunkID);
+
+		if (cBoxes != nullptr)
+		{
+			game->sendChunkBoxes(chunkID, cBoxes);
+			return 0;
+		}
+
+
+	}
+	//when we're done with all chunks, we'll get here cause cBoxes will be nullptr, so we'll end the for-loop
+	return 1;
 }
 
 void Core::sendWorldBoxes()

@@ -19,11 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Collision\Chunk.h" />
     <ClInclude Include="Collision\CollideMesh.h" />
     <ClInclude Include="Collision\Geometry.h" />
     <ClInclude Include="Physics.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Collision\Chunk.cpp" />
     <ClCompile Include="Collision\CollideMesh.cpp" />
     <ClCompile Include="Collision\Geometry.cpp" />
     <ClCompile Include="Physics.cpp" />

@@ -7,6 +7,8 @@
 #include "Map\Map.h"
 #include <vector>
 
+#include "AnimatedMesh.h"
+
 struct PlayerObject
 {
 	GLuint meshID;
@@ -38,6 +40,9 @@ private:
 	Mesh bullet;
 
 	GLuint portalQuery;
+
+	AnimatedMesh testAnimationMesh;
+
 public:
 	Map testMap;
 

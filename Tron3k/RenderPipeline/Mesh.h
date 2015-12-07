@@ -29,6 +29,7 @@ private:
 public:
 
 	~Mesh();
+	void release();
 
 	GLuint vbo;
 	GLuint vao;

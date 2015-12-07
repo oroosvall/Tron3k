@@ -19,7 +19,7 @@ class Physics
 {
 private:
 	//General physics components will go here, and things will be added as we go
-	std::vector<CollideMesh> worldBoxes;
+	std::vector<std::vector<CollideMesh>> worldBoxes; //each CollideMesh is an ABB, and the vector is all CollideMeshes in the chunk
 	CollideMesh playerBox;
 	CollideMesh bulletBox;
 
@@ -30,6 +30,8 @@ private:
 
 	bool checkOBBCollision(CollideMesh mesh1, CollideMesh mesh2);
 	bool checkOBBCollision(Geometry* obj1, Geometry* obj2);
+
+	void storeChunkBox(int chunkID, std::vector<AABB> cBox);
 
 	glm::vec3 minExtremes = glm::vec3(0, 0, 0);
 	glm::vec3 maxExtremes = glm::vec3(0, 0, 0);
@@ -51,6 +53,7 @@ public:
 
 	virtual void addGravity(glm::vec3 &velocity, float dt);
 
+	virtual void receiveChunkBoxes(int chunkID, void* cBoxes);
 	virtual void receiveWorldBoxes(std::vector<std::vector<float>> wBoxes);
 	virtual void receivePlayerBox(std::vector<float> pBox);
 };

@@ -11,13 +11,6 @@
 
 using std::vector;
 
-struct TextureStruct
-{
-	std::string textureName;
-	GLuint textureID;
-	GLuint fileTexID;
-};
-
 class Map
 {
 
@@ -50,7 +43,7 @@ public:
 
 	int getChunkID(glm::vec3 oldPos, glm::vec3 newPos);
 
-	vector<ChunkCollision>* getChunkCollision(int chunkID);
+	ChunkCollision* getChunkCollision(int chunkID);
 };
 
 #endif

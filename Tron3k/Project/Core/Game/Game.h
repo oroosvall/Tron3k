@@ -42,11 +42,14 @@ private:
 	void loadRoles();
 	void initPhysics();
 
-	void registerWeapon(Player* p);
-	void registerSwitch(Player* p);
-
 	void addBulletToList(int conID, int bulletId, BULLET_TYPE bt, glm::vec3 pos, glm::vec3 dir);
 	Bullet* getBulletForRemoval(int PID, int BID, BULLET_TYPE bt, int &posInBulletArray);
+
+	void playerUpdate(int conid, float dt);
+
+	void registerWeapon(Player* p);
+	void registerSwitch(Player* p);
+	void registerSpecial(Player* p);
 
 	WEAPON_TYPE weaponShotWith;
 	int bulletShot = -1;
@@ -55,7 +58,10 @@ private:
 	WEAPON_TYPE weaponSwitchedTo;
 	bool wpnSwitched = false;
 
-	BulletHitInfo hit;
+	SPECIAL_TYPE specialUsed;
+	bool specialActivated = false;
+
+	BulletHitPlayerInfo hit;
 	bool playerHit = false;
 
 	bool localPlayerWantsRespawn = false;
@@ -73,6 +79,7 @@ public:
 
 	void update(float dt);
 
+	void sendChunkBoxes(int chunkID, void* cBoxes);
 	void sendWorldBoxes(std::vector<std::vector<float>> wBoxes);
 	void sendPlayerBox(std::vector<float> pBox);
 
@@ -98,9 +105,13 @@ public:
 	WEAPON_TYPE getWpnSwitch() { wpnSwitched = false; return weaponSwitchedTo; };
 	void handleWeaponSwitch(int conID, WEAPON_TYPE ws);
 
-	bool hitEventReady() { return playerHit; };
-	BulletHitInfo getHitInfo() { playerHit = false; return hit; };
-	int handleBulletHitEvent(BulletHitInfo hi, int newHPtotal = -1); //Returns the new HP total of the player, takes the new HP total instead if info is coming from server
+	bool specialActivationReady() { return specialActivated; };
+	SPECIAL_TYPE getSpecialAbilityUsed(int localPlayer);
+	void handleSpecialAbilityUse(int conID, SPECIAL_TYPE st, glm::vec3 pos, glm::vec3 dir);
+
+	bool hitPlayerEventReady() { return playerHit; };
+	BulletHitPlayerInfo getHitPlayerInfo() { playerHit = false; return hit; };
+	int handleBulletHitPlayerEvent(BulletHitPlayerInfo hi, int newHPtotal = -1); //Returns the new HP total of the player, takes the new HP total instead if info is coming from server
 
 
 	bool freecam; // freecam is active also when in spectate but specctate overides
