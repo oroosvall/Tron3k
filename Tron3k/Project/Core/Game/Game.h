@@ -84,6 +84,7 @@ public:
 
 	Player* getPlayer(int conID);
 	std::vector<Bullet*> getBullets(BULLET_TYPE type);
+	std::vector<Effect*> getEffects(EFFECT_TYPE type);
 	void createPlayer(Player* p, int conID, bool isLocal = false);
 	void removePlayer(int conID);
 

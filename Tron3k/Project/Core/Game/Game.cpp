@@ -241,6 +241,11 @@ std::vector<Bullet*> Game::getBullets(BULLET_TYPE type)
 	return bullets[type];
 }
 
+std::vector<Effect*> Game::getEffects(EFFECT_TYPE type)
+{
+	return effects[type];
+}
+
 void Game::createPlayer(Player* p, int conID, bool isLocal)
 {
 	playerList[conID] = new Player();

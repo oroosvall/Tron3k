@@ -16,8 +16,19 @@ void LightwallEffect::init(int pid, int eid, glm::vec3 position)
 int LightwallEffect::update(float dt)
 {
 	if (!expandDong)
-		return 1;
-	if (myPlayer->getVelocity() != playerVel)
-		expandDong = false;
+	{
+		lifeTime -= dt;
+		if (lifeTime < FLT_EPSILON)
+			return 1;
+	}
+	else
+	{
+		if (myPlayer->getVelocity() != playerVel)
+		{
+			expandDong = false;
+			lifeTime = 10.0f;
+		}
+	}
+	
 	return 0;
 }
