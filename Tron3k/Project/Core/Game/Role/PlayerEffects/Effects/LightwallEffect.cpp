@@ -3,17 +3,21 @@
 LightwallEffect::LightwallEffect(Player* p)
 {
 	myPlayer = p;
+	playerVel = myPlayer->getVelocity();
 }
 
 void LightwallEffect::init(int pid, int eid, glm::vec3 position)
 {
 	playerId = pid; effectId = eid;
 	pos = position;
+	expandDong = true;
 }
 
 int LightwallEffect::update(float dt)
 {
-	if (myPlayer->getRole()->getSpecialMeter() < FLT_EPSILON)
+	if (!expandDong)
 		return 1;
+	if (myPlayer->getVelocity() != playerVel)
+		expandDong = false;
 	return 0;
 }

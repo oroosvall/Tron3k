@@ -207,9 +207,12 @@ public:
 		*package << Uint8(NET_FRAME::NAME_CHANGE) << conid << name;
 	}
 
-	virtual void frame_pos(Uint8 conid, glm::vec3 cPos, glm::vec3 cDir)
+	virtual void frame_pos(Uint8 conid, glm::vec3 cPos, glm::vec3 cDir, glm::vec3 cVel)
 	{
-		*package << Uint8(NET_FRAME::POS) << conid << cPos.x << cPos.y << cPos.z << cDir.x << cDir.y << cDir.z;
+		*package << Uint8(NET_FRAME::POS) << conid <<
+			cPos.x << cPos.y << cPos.z <<
+			cDir.x << cDir.y << cDir.z <<
+			cVel.x << cVel.y << cVel.z;
 	}
 
 	virtual void in_frame_fire(Packet* rec)
@@ -272,9 +275,11 @@ public:
 		Uint8 p_conID;
 		glm::vec3 p_pos;
 		glm::vec3 p_dir;
+		glm::vec3 p_vel;
 		*rec >> p_conID;
 		*rec >> p_pos.x >> p_pos.y >> p_pos.z;
 		*rec >> p_dir.x >> p_dir.y >> p_dir.z;
+		*rec >> p_vel.x >> p_vel.y >> p_vel.z;
 
 		Player* p = gamePtr->getPlayer(p_conID);
 		if (p != nullptr) //Justincase
@@ -282,6 +287,7 @@ public:
 			//TO DO: Player function to interpolate for 50ms to new position
 			p->setGoalPos(p_pos);
 			p->setGoalDir(p_dir);
+			p->setVelocity(p_vel);
 		}
 		else
 			consolePtr->printMsg("ERROR in_frame_current_pos", "System", 'S');
