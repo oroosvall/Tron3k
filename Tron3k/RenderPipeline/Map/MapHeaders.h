@@ -227,6 +227,134 @@ struct ABBFinishedCollision
 	vector<OBB> obbBoxes;
 };
 
+struct TriangleVertex
+{
+	float data[5]; //pos, uv
+};
+
+struct renderDataCube
+{
+	GLuint vertexDataId;
+	GLuint gVertexAttribute;
+
+	void init_ABB(ABB abb)
+	{
+		vec3 corner0 = vec3(abb.points[8], abb.points[9], abb.points[10]);
+		vec3 corner5 = vec3(abb.points[4], abb.points[5], abb.points[6]);
+		
+		vec3 corner1 = vec3(corner5.x, corner0.y, corner0.z);
+		vec3 corner6 = vec3(corner0.x, corner0.y, corner5.z);
+		vec3 corner7 = vec3(corner5.x, corner0.y, corner5.z);
+		
+		vec3 corner2 = vec3(corner0.x, corner5.y, corner0.z);
+		vec3 corner3 = vec3(corner5.x, corner5.y, corner0.z);
+		vec3 corner4 = vec3(corner0.x, corner5.y, corner5.z);
+
+		TriangleVertex* vex = new TriangleVertex[10];
+
+		vec3 a;							
+		a = corner0;	vex[0] = { a.x, a.y, a.z, 0.0f, 0.0f };
+		a = corner1;	vex[1] = { a.x, a.y, a.z, 0.0f, 0.0f };
+		a = corner2;	vex[2] = { a.x, a.y, a.z, 0.0f, 0.0f };
+		a = corner3;	vex[3] = { a.x, a.y, a.z, 0.0f, 0.0f };
+		a = corner5;	vex[4] = { a.x, a.y, a.z, 0.0f, 0.0f };
+		a = corner1;	vex[5] = { a.x, a.y, a.z, 0.0f, 0.0f };
+		a = corner7;	vex[6] = { a.x, a.y, a.z, 0.0f, 0.0f };
+		a = corner1;	vex[7] = { a.x, a.y, a.z, 0.0f, 0.0f };
+		a = corner6;	vex[8] = { a.x, a.y, a.z, 0.0f, 0.0f };
+		a = corner0;	vex[9] = { a.x, a.y, a.z, 0.0f, 0.0f };
+
+		createData(vex);
+	}
+
+	void init_OBB(OBB obb)
+	{
+		TriangleVertex* vex = new TriangleVertex[10];
+
+		Vertex4 v;
+		v = obb.point.BBPos[0];		
+		vex[0] = { v.x, v.y, v.z, 0.0f, 0.0f };
+		v = obb.point.BBPos[1];		
+		vex[1] = { v.x, v.y, v.z, 0.0f, 0.0f };
+		v = obb.point.BBPos[2];		
+		vex[2] = { v.x, v.y, v.z, 0.0f, 0.0f };
+		v = obb.point.BBPos[3];		
+		vex[3] = { v.x, v.y, v.z, 0.0f, 0.0f };
+		v = obb.point.BBPos[5];		
+		vex[4] = { v.x, v.y, v.z, 0.0f, 0.0f };
+		v = obb.point.BBPos[1];		
+		vex[5] = { v.x, v.y, v.z, 0.0f, 0.0f };
+		v = obb.point.BBPos[7];		
+		vex[6] = { v.x, v.y, v.z, 0.0f, 0.0f };
+		v = obb.point.BBPos[1];		
+		vex[7] = { v.x, v.y, v.z, 0.0f, 0.0f };
+		v = obb.point.BBPos[6];		
+		vex[8] = { v.x, v.y, v.z, 0.0f, 0.0f };
+		v = obb.point.BBPos[0];		
+		vex[9] = { v.x, v.y, v.z, 0.0f, 0.0f };
+
+		createData(vex);
+	}
+
+	void createData(TriangleVertex* vex)
+	{
+		glGenBuffers(1, &vertexDataId);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexDataId);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vex[0]) * 10, &vex[0], GL_STATIC_DRAW);
+		delete[] vex;
+
+		//define vertex data layout
+		glGenVertexArrays(1, &gVertexAttribute);
+		glBindVertexArray(gVertexAttribute);
+		glEnableVertexAttribArray(0); //the vertex attribute object will remember its enabled attributes
+		glEnableVertexAttribArray(1);
+		//pos
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), BUFFER_OFFSET(0));
+		//uv
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), BUFFER_OFFSET(sizeof(float) * 3));
+	}
+
+	void BindVertData()
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, vertexDataId);
+		glBindVertexArray(gVertexAttribute);
+	}
+
+	void release()
+	{
+		glDeleteBuffers(1, &vertexDataId);
+		glDeleteVertexArrays(1, &gVertexAttribute);
+	}
+};
+
+struct CollisionRenderABB
+{
+	renderDataCube abbBoxR;
+	vector<renderDataCube> obbBoxesR;
+
+	void in_data(ABBFinishedCollision in)
+	{
+		abbBoxR.init_ABB(in.abbBox);
+		int nrOBBs = in.obbBoxes.size();
+
+		for (int n = 0; n < nrOBBs; n++)
+		{
+			obbBoxesR.push_back(renderDataCube());
+			obbBoxesR[n].init_OBB(in.obbBoxes[n]);
+		}
+	}
+};
+
+struct ChunkCollisionRender
+{
+	void add(ABBFinishedCollision in)
+	{
+		abbRender.push_back(CollisionRenderABB()); //creates a new entry
+		abbRender[abbRender.size() - 1].in_data(in); //fill it with information
+	}
+	vector<CollisionRenderABB> abbRender;
+};
+
 struct ChunkCollision
 {
 	vector<ABBFinishedCollision> abbStuff;
@@ -289,6 +417,7 @@ struct Chunk
 	void addCollisionMesh(ABBFinishedCollision collision)
 	{
 		collisionMesh.abbStuff.push_back(collision);
+		collisionRender.add(collision);
 	}
 
 	ChunkCollision* getChunkCollision()
@@ -308,6 +437,8 @@ struct Chunk
 	vector<SpotLight> lights;
 
 	ChunkCollision collisionMesh;
+
+	ChunkCollisionRender collisionRender;
 
 };
 #endif

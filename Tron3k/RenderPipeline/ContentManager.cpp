@@ -135,15 +135,6 @@ void ContentManager::init()
 
 	testAnimationMesh.init();
 	testAnimationMesh.load("GameFiles/CharacterFiles/Tron3k_animTest_2.bin");
-
-	//collision render init
-	glGenBuffers(1, &CollisionVertexDataId);
-	glGenVertexArrays(1, &CollisionVertexAttribute);
-	glBindVertexArray(CollisionVertexAttribute);
-	glEnableVertexAttribArray(0); //the vertex attribute object will remember its enabled attributes
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), BUFFER_OFFSET(0));
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), BUFFER_OFFSET(sizeof(float) * 3));
 }
 
 void ContentManager::release()
@@ -180,8 +171,19 @@ void ContentManager::release()
 	bullet.release();
 
 	//collision render free
-	glDeleteBuffers(1, &CollisionVertexDataId);
-	glDeleteVertexArrays(1, &CollisionVertexAttribute);
+	for (int c = 0; c < nrChunks; c++)
+	{
+		int nrABB = testMap.chunks[c].collisionRender.abbRender.size();
+
+		for (int a = 0; a < nrABB; a++)
+		{
+			testMap.chunks[c].collisionRender.abbRender[a].abbBoxR.release();
+			int nrObb = testMap.chunks[c].collisionRender.abbRender[a].obbBoxesR.size();
+
+			for (int b = 0; b < nrObb; b++)
+				testMap.chunks[c].collisionRender.abbRender[a].obbBoxesR[b].release();
+		}
+	}
 }
 
 ContentManager::~ContentManager()
@@ -294,78 +296,15 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 		float nrABB = col->abbStuff.size();
 		for (int n = 0; n < nrABB; n++)
 		{
-			ABB abb = col->abbStuff[n].abbBox;
-			
-			//get aabb corners
-			vec3 corner0 = vec3(abb.points[8], abb.points[9], abb.points[10]);
-			vec3 corner5 = vec3(abb.points[4], abb.points[5], abb.points[6]);
-	
-			vec3 corner1 = vec3(corner5.x, corner0.y, corner0.z);
-			vec3 corner6 = vec3(corner0.x, corner0.y, corner5.z);
-			vec3 corner7 = vec3(corner5.x, corner0.y, corner5.z);
-	
-			vec3 corner2 = vec3(corner0.x, corner5.y, corner0.z);
-			vec3 corner3 = vec3(corner5.x, corner5.y, corner0.z);
-			vec3 corner4 = vec3(corner0.x, corner5.y, corner5.z);
-	
-	
-			TriangleVertex* vex = new TriangleVertex[4];
-			vec3 a;							
-			a = corner0;	
-			vex[0] = { a.x, a.y, a.z, 0.0f, 0.0f };
-			a = corner1;	
-			vex[1] = { a.x, a.y, a.z, 0.0f, 0.0f };
-			a = corner2;	
-			vex[2] = { a.x, a.y, a.z, 0.0f, 0.0f };
-			a = corner3;	
-			vex[3] = { a.x, a.y, a.z, 0.0f, 0.0f };
-			//a = corner5;	vex[4] = { a.x, a.y, a.z, 0.0f, 0.0f };
-			//a = corner1;	vex[5] = { a.x, a.y, a.z, 0.0f, 0.0f };
-			//a = corner7;	vex[6] = { a.x, a.y, a.z, 0.0f, 0.0f };
-			//a = corner1;	vex[7] = { a.x, a.y, a.z, 0.0f, 0.0f };
-			//a = corner6;	vex[8] = { a.x, a.y, a.z, 0.0f, 0.0f };
-			//a = corner0;	vex[9] = { a.x, a.y, a.z, 0.0f, 0.0f };
+			testMap.chunks[c].collisionRender.abbRender[n].abbBoxR.BindVertData();	
+			//glDrawArrays(GL_TRIANGLE_STRIP, 0, 10);
 
-			glBindBuffer(GL_ARRAY_BUFFER, CollisionVertexDataId);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(TriangleVertex) * 4, &vex[0], GL_DYNAMIC_DRAW);
-			//render	
-			glBindVertexArray(CollisionVertexAttribute);
-			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-			
-			//render the obb
-			//float nrOBB = col->abbStuff[n].obbBoxes.size();
-			//for (int k = 0; k < nrOBB; k++)
-			//{
-			//	OBB obb = col->abbStuff[n].obbBoxes[k];
-			//	
-			//	Vertex4 v;
-			//	v = obb.point.BBPos[0];		
-			//	vex[0] = { v.x, v.y, v.z, 0.0f, 0.0f };
-			//	v = obb.point.BBPos[1];		
-			//	vex[1] = { v.x, v.y, v.z, 0.0f, 0.0f };
-			//	v = obb.point.BBPos[2];		
-			//	vex[2] = { v.x, v.y, v.z, 0.0f, 0.0f };
-			//	v = obb.point.BBPos[3];		
-			//	vex[3] = { v.x, v.y, v.z, 0.0f, 0.0f };
-			//	v = obb.point.BBPos[5];		
-			//	vex[4] = { v.x, v.y, v.z, 0.0f, 0.0f };
-			//	v = obb.point.BBPos[1];		
-			//	vex[5] = { v.x, v.y, v.z, 0.0f, 0.0f };
-			//	v = obb.point.BBPos[7];		
-			//	vex[6] = { v.x, v.y, v.z, 0.0f, 0.0f };
-			//	v = obb.point.BBPos[1];		
-			//	vex[7] = { v.x, v.y, v.z, 0.0f, 0.0f };
-			//	v = obb.point.BBPos[6];		
-			//	vex[8] = { v.x, v.y, v.z, 0.0f, 0.0f };
-			//	v = obb.point.BBPos[0];		
-			//	vex[9] = { v.x, v.y, v.z, 0.0f, 0.0f };
-			//	glBindBuffer(GL_ARRAY_BUFFER, CollisionVertexDataId);
-			//	glBufferData(GL_ARRAY_BUFFER, sizeof(TriangleVertex) * 4, &vex[0], GL_DYNAMIC_DRAW);
-			//	//render	
-			//	glBindVertexArray(CollisionVertexAttribute);
-			//	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-			//}
-			delete vex;
+			int nrObb = testMap.chunks[c].collisionRender.abbRender[n].obbBoxesR.size();
+			for (int k = 0; k < nrObb; k++)
+			{
+				testMap.chunks[c].collisionRender.abbRender[n].obbBoxesR[k].BindVertData();
+				//glDrawArrays(GL_TRIANGLE_STRIP, 0, 10);
+			}
 		}
 	}
 	glDepthMask(GL_TRUE);

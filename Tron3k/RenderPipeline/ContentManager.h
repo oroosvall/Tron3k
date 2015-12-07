@@ -47,9 +47,6 @@ private:
 	{
 		float pos[5];
 	};
-	//render collision box test
-	GLuint CollisionVertexDataId;
-	GLuint CollisionVertexAttribute;
 public:
 	Map testMap;
 
