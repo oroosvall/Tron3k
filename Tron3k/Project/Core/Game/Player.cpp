@@ -234,6 +234,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					{
 						if (mobility->getActivationCost() < role.getSpecialMeter())
 						{
+							role.setSpecialMeter(role.getSpecialMeter() - mobility->getActivationCost());
 							msg = MOBILITYUSE;
 						}
 					}
