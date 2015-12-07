@@ -833,7 +833,8 @@ void Core::renderWorld(float dt)
 					//static intense based on health
 					float hpval = float(p->getHP()) / 130.0f;
 
-					renderPipe->renderPlayer(0, p->getWorldMat(), dgColor, hpval);
+					//renderPipe->renderPlayer(0, p->getWorldMat(), dgColor, hpval);
+					renderPipe->renderAnimation(0, p->getWorldMat(), dgColor, hpval);
 				}
 			}
 		}

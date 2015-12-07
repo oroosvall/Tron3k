@@ -38,8 +38,12 @@ private:
 	Gbuffer* gBuffer;
 
 	GLuint regularShader;
+
 	GLuint skeletonAShader;
 	GLuint computeShader;
+
+	GLuint animationShader;
+
 
 	GLuint worldMat[2];
 	GLuint viewProjMat[2];
@@ -51,7 +55,11 @@ private:
 	GLuint uniformDynamicGlowColorLocation[2];
 	GLuint uniformStaticGlowIntensityLocation[2];
 
+
 	GLuint uniformSkeletonMatrix;
+
+
+	GLuint uniformKeyMatrixLocation;
 
 
 	float timepass = 0;
@@ -71,6 +79,7 @@ public:
 	virtual void* getView();
 
 	virtual void renderPlayer(int playerID, void* world, float* dgColor, float sgInten);
+	virtual void renderAnimation(int playerID, void* world, float* dgColor, float sgInten);
 
 	virtual std::string getStatus() { return ""; };
 

@@ -271,7 +271,7 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 	glDisable(GL_BLEND);
 }
 
-void ContentManager::renderPlayer(int playerID, glm::mat4 world)
+void ContentManager::renderPlayer(int playerID, glm::mat4 world, GLuint uniformKeyMatrixLocation)
 {
 	if (playerID == 0)
 	{
@@ -287,13 +287,17 @@ void ContentManager::renderPlayer(int playerID, glm::mat4 world)
 		glActiveTexture(GL_TEXTURE0 + 2);
 		glBindTexture(GL_TEXTURE_2D, textures[9].textureID);
 
+		//Bone Matrices
+		//glProgramUniformMatrix4fv();
+
 		//glBindVertexArray(playerModels[playerID].vao);
 		//glBindBuffer(GL_ARRAY_BUFFER, playerModels[playerID].meshID);
 		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, playerModels[playerID].index);
 		//
 		//glDrawElements(GL_TRIANGLES, playerModels[playerID].facecount * 3, GL_UNSIGNED_SHORT, 0);
 
-		testAnimationMesh.draw();
+		testAnimationMesh.update(0);
+		testAnimationMesh.draw(uniformKeyMatrixLocation);
 
 	}
 	else if (playerID == 1)

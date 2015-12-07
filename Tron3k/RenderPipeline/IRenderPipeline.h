@@ -49,6 +49,7 @@ public:
 
 	virtual void* getView() = 0;
 	virtual void renderPlayer(int playerID, void* world, float* dgColor, float sgInten) = 0;
+	virtual void renderAnimation(int playerID, void* world, float* dgColor, float sgInten) = 0;
 
 	virtual std::string getStatus() = 0;
 
