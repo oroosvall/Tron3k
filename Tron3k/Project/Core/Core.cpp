@@ -939,7 +939,17 @@ void Core::initPipeline()
 void Core::setfps(int fps)
 {
 	if (win != nullptr)
-		glfwSetWindowTitle(win, to_string(fps).c_str());
+	{
+		if (game != nullptr)
+		{
+			CameraInput* cam = CameraInput::getCam();
+			string print( "X: " + to_string(cam->getPos().x) + "  Y: " + to_string(cam->getPos().y) + "  Z: " + to_string(cam->getPos().z) + "  FPS: " + to_string(fps));
+			glfwSetWindowTitle(win, print.c_str());
+		}
+		else
+			glfwSetWindowTitle(win, to_string(fps).c_str());
+	}
+		
 }
 
 void Core::sendPlayerBox()
