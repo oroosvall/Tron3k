@@ -26,8 +26,22 @@ bool Lightwall::allowedToActivate(Player* p)
 {
 	if (p->getGrounded())
 	{
-		specialId++;
-		return true;
+		if (activated)
+		{
+			p->getRole()->setSpecialMeter(p->getRole()->getSpecialMeter() - 8.0f);
+		}
+
+		if (p->getRole()->getSpecialMeter() - 100.0f < FLT_EPSILON && p->getRole()->getSpecialMeter() - 100.0f > -FLT_EPSILON)
+		{
+			activated = true;
+			p->getRole()->setSpecialMeter(92.0f);
+		}
+
+		if (activated)
+		{
+			specialId++;
+			return true;
+		}
 	}
 	return false;
 }

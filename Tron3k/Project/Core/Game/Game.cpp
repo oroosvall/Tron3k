@@ -739,7 +739,7 @@ Effect* Game::getEffect(int PID, int SID, EFFECT_TYPE et, int &posInEffectArray)
 	return nullptr;
 }
 
-Bullet* Game::getBulletForRemoval(int PID, int BID, BULLET_TYPE bt, int &posInBulletArray)
+Bullet* Game::getSpecificBullet(int PID, int BID, BULLET_TYPE bt, int &posInBulletArray)
 {
 	for (unsigned int c = 0; c < bullets[bt].size(); c++)
 	{
@@ -763,7 +763,7 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi, int newHPtotal)
 			GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHit, pos.x, pos.y, pos.z);
 	Player* p = playerList[hi.playerHit];
 	int bulletPosInArray;
-	Bullet* theBullet = getBulletForRemoval(hi.bulletPID, hi.bulletBID, hi.bt, bulletPosInArray);
+	Bullet* theBullet = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, bulletPosInArray);
 	p->hitByBullet(theBullet, newHPtotal);
 
 	delete bullets[hi.bt][bulletPosInArray];
