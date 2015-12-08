@@ -46,7 +46,6 @@ void main()
 	bonePos0 = (vec4(bonePos0, 1.0f) * WorldMatrix).xyz;
 	gl_Position = ViewProjMatrix * vec4(bonePos0.xyz, 1.0f);
 	boneUV0 = boneUV;
-	
 	boneNormal0 = boneNormal;
 	boneTagent0 = boneTagent;
 }   
