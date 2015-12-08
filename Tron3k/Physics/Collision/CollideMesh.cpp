@@ -47,6 +47,7 @@ void CollideMesh::setAABB(AABB aabb)
 	boundingBox.max = aabb.max;
 	boundingBox.min = aabb.min;
 
+	boundingBox.ObbBoxes.clear();
 
 	for (int i = 0; i < aabb.ObbBoxes.size(); i++)
 	{

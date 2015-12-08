@@ -287,7 +287,7 @@ glm::vec3 Physics::getCollisionNormal(AABB aabb1, AABB aabb2)
 	if (collides)
 	{
 		//Top plane collision
-		return glm::vec3(0, 1, 0);
+		return glm::vec3(0, -1, 0);
 	}
 
 	p1 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[0]);
@@ -299,7 +299,7 @@ glm::vec3 Physics::getCollisionNormal(AABB aabb1, AABB aabb2)
 	if (collides)
 	{
 		//Bot plane collision
-		return glm::vec3(0, -1, 0);
+		return glm::vec3(0, 1, 0);
 	}
 
 	p1 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[3]);
@@ -444,6 +444,21 @@ glm::vec3 Physics::checkBulletVWorldCollision(glm::vec3 bulletPos)
 void Physics::addGravity(glm::vec3 &vel, float dt)
 {
 	vel.y -= GRAVITY * dt;
+}
+
+glm::vec3 Physics::normalize(glm::vec3 &vec3)
+{
+	float len = abs(vec3.x) + abs(vec3.y) + abs(vec3.z);
+
+	if (len > FLT_EPSILON)
+	{
+		vec3.x = vec3.x / len;
+		vec3.y = vec3.y / len;
+		vec3.z = vec3.z / len;
+	}
+
+	return vec3;
+	
 }
 
 void Physics::receiveChunkBoxes(int chunkID, void* cBoxes)

@@ -86,6 +86,7 @@ public:
 	virtual bool init();
 	virtual bool release();
 
+	virtual glm::vec3 normalize(glm::vec3 &vec3);
 	
 	virtual glm::vec3 checkPlayerVPlayerCollision(glm::vec3 playerPos1, glm::vec3 playerPos2);
 	virtual glm::vec3 checkPlayerVBulletCollision(glm::vec3 playerPos, glm::vec3 bulletPos);

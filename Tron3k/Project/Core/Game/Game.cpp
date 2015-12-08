@@ -416,8 +416,9 @@ void Game::checkPlayerVWorldCollision()
 					//TODO: Return normals from objects we collide with.
 					//TODO: Change direction based on those normals.
 					//TODO: What do we do if we collide with multiple objects?
-					normalize(collisionNormal);
+					//normalize(collisionNormal);
 					playerList[i]->setGrounded(true);
+					physics->normalize(collisionNormal);
 					glm::vec3 vel = playerList[i]->getVelocity();
 					collisionNormal = collisionNormal * glm::dot(vel, collisionNormal);
 					
