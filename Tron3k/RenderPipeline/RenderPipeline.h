@@ -49,10 +49,25 @@ private:
 	GLuint uniformDynamicGlowColorLocation;
 	GLuint uniformStaticGlowIntensityLocation;
 
+	//lightwall
+	GLuint lwVertexDataId;
+	GLuint lwVertexAttribute;
+	float lwPosDefault[6] = { 0 };
+
+	GLuint lw_Shader;
+	GLuint lw_pos1;
+	GLuint lw_pos2;
+	GLuint lw_uv1;
+	GLuint lw_uv2;
+	GLuint lw_tex;
+	GLuint lw_vp;
+
 	float timepass = 0;
 public:
 
 	RenderPipeline() {};
+
+	void renderEffects();
 
 	virtual bool init(unsigned int WindowWidth, unsigned int WindowHeight);
 	virtual void release();

@@ -143,6 +143,27 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 	contMan.init();
 	
+	//light wall init INIT 2 points then change all info though uniforms to build quads
+	glGenBuffers(1, &lwVertexDataId);
+	glBindBuffer(GL_ARRAY_BUFFER, lwVertexDataId);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * 2 , &lwPosDefault[0], GL_STATIC_DRAW);
+	glGenVertexArrays(1, &lwVertexAttribute);
+	glBindVertexArray(lwVertexAttribute);
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, BUFFER_OFFSET(0));
+	//build shader
+	std::string shaderNamesLW[] = { "GameFiles/Shaders/lw_shader_vs.glsl", "GameFiles/Shaders/lw_shader_gs.glsl", "GameFiles/Shaders/lw_shader_fs.glsl" };
+	GLenum shaderTypesLW[] = { GL_VERTEX_SHADER, GL_GEOMETRY_SHADER, GL_FRAGMENT_SHADER };
+	CreateProgram(lw_Shader, shaderNamesLW, shaderTypesLW, 3);
+	//get uniform locations
+	lw_pos1 = glGetUniformLocation(lw_Shader, "pos1");
+	lw_pos2	= glGetUniformLocation(lw_Shader, "pos2");
+	lw_uv1	= glGetUniformLocation(lw_Shader, "uv1");
+	lw_uv2	= glGetUniformLocation(lw_Shader, "uv2");
+	lw_vp	= glGetUniformLocation(lw_Shader, "ViewProjMatrix");
+	lw_tex	= glGetUniformLocation(lw_Shader, "texsample");
+
 	return true;
 }
 
@@ -150,6 +171,10 @@ void RenderPipeline::release()
 {
 	// place delete code here
 
+	glDeleteBuffers(1, &lwVertexDataId);
+	glDeleteVertexArrays(1, &lwVertexAttribute);
+
+	glDeleteShader(lw_Shader);
 	glDeleteShader(regularShader);
 	
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -194,7 +219,6 @@ void RenderPipeline::addLight(SpotLight* newLight)
 	gBuffer->pushLights(newLight, 1);
 }
 
-
 void RenderPipeline::renderIni()
 {
 	glUseProgram(regularShader);
@@ -206,6 +230,13 @@ void RenderPipeline::render()
 {
 	contMan.renderChunks(regularShader, worldMat, uniformTextureLocation, uniformNormalLocation, uniformGlowSpecLocation, uniformDynamicGlowColorLocation, uniformStaticGlowIntensityLocation,  *gBuffer->portal_shaderPtr, gBuffer->portal_model);
 	
+	//glDepthMask(GL_TRUE);glEnable(GL_CULL_FACE);glDisable(GL_BLEND);)
+	renderEffects();
+
+	glDepthMask(GL_TRUE);
+	glEnable(GL_CULL_FACE);
+	glDisable(GL_BLEND);
+
 	//push the lights of the rendered chunks
 	for (int n = 0; n < contMan.nrChunks; n++)
 		if (contMan.renderedChunks[n] == true)
@@ -219,6 +250,40 @@ void RenderPipeline::render()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	gBuffer->render();
+}
+
+void RenderPipeline::renderEffects()
+{
+	glUseProgram(lw_Shader);
+	glProgramUniform1i(lw_Shader, lw_tex, 0);
+	//call contentman and bind the lightwal texture to 0
+	contMan.bindLightwalTexture();
+	cam.setViewProjMat(lw_Shader, lw_vp);
+	glBindBuffer(GL_ARRAY_BUFFER, lwVertexDataId);
+	glBindVertexArray(lwVertexAttribute);
+
+	float of = timepass * 0.1;
+	vec2 uv1 = vec2(of, 0);
+	vec2 uv2 = vec2(3 + of, 0);
+	glProgramUniform2fv(lw_Shader, lw_uv1, 1, &uv1[0]);
+	glProgramUniform2fv(lw_Shader, lw_uv2, 1, &uv2[0]);
+	vec3 pos1 = vec3(0, 3, 0);
+	vec3 pos2 = vec3(0, 3, 6);
+	glProgramUniform3fv(lw_Shader, lw_pos1, 1, &pos1[0]);
+	glProgramUniform3fv(lw_Shader, lw_pos2, 1, &pos2[0]);
+	
+	glDrawArrays(GL_POINTS, 0, 2);
+
+	uv1 = vec2(3 + of, 0);
+	uv2 = vec2(5 + of, 0);
+	glProgramUniform2fv(lw_Shader, lw_uv1, 1, &uv1[0]);
+	glProgramUniform2fv(lw_Shader, lw_uv2, 1, &uv2[0]);
+	pos1 = vec3(0, 3, 6);
+	pos2 = vec3(0, 5, 8);
+	glProgramUniform3fv(lw_Shader, lw_pos1, 1, &pos1[0]);
+	glProgramUniform3fv(lw_Shader, lw_pos2, 1, &pos2[0]);
+
+	glDrawArrays(GL_POINTS, 0, 2);
 }
 
 void* RenderPipeline::getView()

@@ -83,6 +83,12 @@ void ContentManager::init()
 	tex.textureName = "GameFiles/TestFiles/bulletGlow.png";
 	textures.push_back(tex);
 
+	//12
+	tex.loaded = false;
+	tex.textureID = 0;
+	tex.fileTexID = 1;
+	tex.textureName = "GameFiles/TestFiles/lightwall.png";
+	textures.push_back(tex);
 
 	Mesh m;
 	m.init(0, -3, 0);
@@ -307,9 +313,7 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 			}
 		}
 	}
-	glDepthMask(GL_TRUE);
-	glEnable(GL_CULL_FACE);
-	glDisable(GL_BLEND);
+	
 }
 
 void ContentManager::renderPlayer(int playerID, glm::mat4 world)
@@ -398,4 +402,10 @@ std::vector<std::vector<float>> ContentManager::getMeshBoxes()
 
 	//Size is currently a vector containing the extremes for all of our world objects
 	return size;
+}
+
+void ContentManager::bindLightwalTexture()
+{
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, textures[12].textureID);
 }
