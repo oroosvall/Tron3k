@@ -274,7 +274,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 						msg = SHOOT;
 				}
 
-				if (i->justPressed(GLFW_KEY_C))
+				if (i->justPressed(GLFW_KEY_Q))
 				{
 					Consumable* c = role.getConsumable();
 					if (c->use())

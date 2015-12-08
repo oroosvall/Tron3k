@@ -593,7 +593,7 @@ void Game::addBulletToList(int conID, int bulletId, BULLET_TYPE bt, glm::vec3 po
 		b = new PulseShot(pos, dir, conID, bulletId, p->getTeam());
 		break;
 	case BULLET_TYPE::CLUSTER_GRENADE:
-		b = new PulseShot(pos, dir, conID, bulletId, p->getTeam());
+		b = new ClusterGrenade(pos, dir, conID, bulletId, p->getTeam());
 		break;
 	}
 
