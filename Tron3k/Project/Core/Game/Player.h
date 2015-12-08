@@ -13,6 +13,7 @@
 #include "Role/role.h"
 #include "Role/Weapon/Weapon.h"
 #include "Role/Weapon/bullet.h"
+#include "Role/PlayerEffects/Effect.h"
 #include "Role/PlayerEffects/Modifier.h"
 #include "Role/Special/Special.h"
 
@@ -96,6 +97,7 @@ public:
 	glm::vec3 getVelocity() { return vel; };
 
 	void hitByBullet(Bullet* b, int newHPtotal = -1);
+	void hitByEffect(Effect* e, int newHPtotal = -1);
 
 	void addModifier(MODIFIER_TYPE mt);
 

@@ -68,7 +68,8 @@ private:
 	void removeBullet(BULLET_TYPE bt, int posInArray);
 
 	void addEffectToList(int conID, int effectId, EFFECT_TYPE et, glm::vec3 pos);
-	Effect* getEffect(int PID, int SID, EFFECT_TYPE et, int &posInEffectArray);
+	Effect* getSpecificEffect(int PID, int SID, EFFECT_TYPE et, int &posInEffectArray);
+	void removeEffect(EFFECT_TYPE et, int posInArray);
 
 	void playerUpdate(int conid, float dt);
 
@@ -157,6 +158,7 @@ public:
 
 	std::vector<EffectHitPlayerInfo> getAllEffectOnPlayerCollisions();
 	void clearEffectOnPlayerCollisions() { allEffectHitsOnPlayers.clear(); };
+	int handleEffectHitPlayerEvent(EffectHitPlayerInfo hi); //Returns new HP total of player, if we are client then instead simply set HP coming from server
 
 
 	bool freecam; // freecam is active also when in spectate but specctate overides

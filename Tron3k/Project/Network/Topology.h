@@ -189,6 +189,26 @@ public:
 		}
 	}
 
+	virtual void in_event_effect_hit_player(Packet* rec)
+	{
+		EffectHitPlayerInfo hi;
+		Uint8 playerHit, PID, EID, bt, hpTotal;
+		glm::vec3 hitPosition;
+		Uint8 size;
+		*rec >> size;
+		for (int c = 0; c < size; c++)
+		{
+			*rec >> playerHit >> PID >> EID >> bt >> hpTotal;
+			*rec >> hitPosition.x >> hitPosition.y >> hitPosition.z;
+			hi.playerHit = playerHit;
+			hi.et = EFFECT_TYPE(bt);
+			hi.effectID = EID;
+			hi.effectPID = PID;
+			hi.newHPtotal = hpTotal;
+			hi.hitPos = hitPosition;
+			gamePtr->handleEffectHitPlayerEvent(hi);
+		}
+	}
 
 	//Frame package FROM CLIENT
 	virtual void frame_fire(WEAPON_TYPE wt, int conID, int bulletId, glm::vec3 pos, glm::vec3 dir) 

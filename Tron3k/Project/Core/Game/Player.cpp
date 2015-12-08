@@ -406,8 +406,36 @@ void Player::hitByBullet(Bullet* b, int newHPtotal)
 	if (!isLocalPlayer)
 	{
 		if (role.getHealth() == 0)
-		isDead = true;
-		vel = glm::vec3(0, 0, 0);
+		{
+			isDead = true;
+			vel = glm::vec3(0, 0, 0);
+		}
+	}
+}
+
+void Player::hitByEffect(Effect* e, int newHPtotal)
+{
+	/*
+	Big ol' switch case to identify which effect is hitting us and what we should do about it
+	*/
+	if (newHPtotal == -1) //This is the server, dealing damage to the player
+	{
+		/*
+		When applicable, find damage from the effect and all additional things that need to happen
+		*/
+	}
+	else //Hello I'm the client. I accept my new HP.
+	{
+		role.setHealth(newHPtotal);
+	}
+
+	if (!isLocalPlayer) 
+	{
+		if (role.getHealth() == 0)
+		{
+			isDead = true;
+			vel = glm::vec3(0, 0, 0); //If this isn't the local player, we kill him remotely
+		}
 	}
 }
 

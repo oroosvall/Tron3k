@@ -153,9 +153,7 @@ void Game::update(float dt)
 			int msg = effects[i][c]->update(dt);
 			if (msg == 1)		//Effect is dead
 			{
-				delete effects[i][c];
-				effects[i][c] = effects[i][effects[i].size() - 1];
-				effects[i].pop_back();
+				removeEffect(EFFECT_TYPE(i), c);
 			}
 		}
 	}
@@ -687,7 +685,7 @@ void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec
 	{
 		p->addModifier(MODIFIER_TYPE::LIGHTWALLCONTROLLOCK);
 		int arraypos = -1;
-		Effect* lwe = getEffect(conID, sID - 1, EFFECT_TYPE::LIGHT_WALL, arraypos);
+		Effect* lwe = getSpecificEffect(conID, sID - 1, EFFECT_TYPE::LIGHT_WALL, arraypos);
 		addEffectToList(conID, sID, EFFECT_TYPE::LIGHT_WALL, pos);
 	}
 		break;
@@ -724,14 +722,14 @@ void Game::addEffectToList(int conID, int effectId, EFFECT_TYPE et, glm::vec3 po
 	effects[et].push_back(e);
 }
 
-Effect* Game::getEffect(int PID, int SID, EFFECT_TYPE et, int &posInEffectArray)
+Effect* Game::getSpecificEffect(int PID, int SID, EFFECT_TYPE et, int &posInEffectArray)
 {
-	for (int c = 0; c < bullets[et].size(); c++)
+	for (int c = 0; c < effects[et].size(); c++)
 	{
 		int p = -1;
-		int b = -1;
-		bullets[et][c]->getId(p, b);
-		if (p == PID && b == SID)
+		int e = -1;
+		effects[et][c]->getId(p, e);
+		if (p == PID && e == SID)
 		{
 			posInEffectArray = c;
 			return effects[et][c];
@@ -771,6 +769,37 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 
 	int newHP = p->getHP();
 	return newHP;
+}
+
+int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
+{
+	glm::vec3 pos = playerList[hi.playerHit]->getPos();
+	if (gameState != Gamestate::SERVER)
+		if (GetSoundActivated())
+			GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHit, pos.x, pos.y, pos.z);
+	Player* p = playerList[hi.playerHit];
+	int effectPosInArray;
+	Effect* theEffect = getSpecificEffect(hi.effectPID, hi.effectID, hi.et, effectPosInArray);
+	//p->hitByEffect(theEffect, hi.newHPtotal);
+	/*
+	PLAYER COLLIDES WITH EFFECT
+	*/
+
+	removeEffect(hi.et, effectPosInArray);
+	int newHP = p->getHP();
+	return newHP;
+}
+
+void Game::removeEffect(EFFECT_TYPE et, int posInArray)
+{
+	switch (et)
+	{
+	case EFFECT_TYPE::LIGHT_WALL:
+		break;
+	}
+	delete bullets[et][posInArray];
+	bullets[et][posInArray] = bullets[et][bullets[et].size() - 1];
+	bullets[et].pop_back();
 }
 
 void Game::removeBullet(BULLET_TYPE bt, int posInArray)
