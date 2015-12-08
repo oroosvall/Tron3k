@@ -606,11 +606,38 @@ void Game::addBulletToList(int conID, int bulletId, BULLET_TYPE bt, glm::vec3 po
 	case BULLET_TYPE::PLASMA_SHOT:
 		b = new PlasmaShot(pos, dir, conID, bulletId, p->getTeam());
 		break;
+	case BULLET_TYPE::GRENADE_SHOT:
+		b = new GrenadeShot(pos, dir, conID, bulletId, p->getTeam());
+		break;
+	case BULLET_TYPE::SHOTGUN_PELLET:
+		b = new ShotgunPellet(pos, dir, conID, bulletId, p->getTeam());
+		break;
+	case BULLET_TYPE::CLEANSE_BOMB:
+		b = new CleanseBomb(pos, dir, conID, bulletId, p->getTeam());
+		break;
 	case BULLET_TYPE::CLUSTER_GRENADE:
 		b = new ClusterGrenade(pos, dir, conID, bulletId, p->getTeam());
 		break;
 	case BULLET_TYPE::CLUSTERLING:
 		b = new Clusterling(pos, dir, conID, bulletId, p->getTeam());
+		break;
+	case BULLET_TYPE::BATTERY_SLOW_SHOT:
+		b = new BatterySlowShot(pos, dir, conID, bulletId, p->getTeam());
+		break;
+	case BULLET_TYPE::BATTERY_SPEED_SHOT:
+		b = new BatterySpeedShot(pos, dir, conID, bulletId, p->getTeam());
+		break;
+	case BULLET_TYPE::LINK_SHOT:
+		b = new LinkShot(pos, dir, conID, bulletId, p->getTeam());
+		break;
+	case BULLET_TYPE::VACUUM_GRENADE:
+		b = new VacuumGrenade(pos, dir, conID, bulletId, p->getTeam());
+		break;
+	case BULLET_TYPE::DISC_SHOT:
+		b = new DiscShot(pos, dir, conID, bulletId, p->getTeam());
+		break;
+	case BULLET_TYPE::HACKING_DART:
+		b = new HackingDart(pos, dir, conID, bulletId, p->getTeam());
 		break;
 	}
 
