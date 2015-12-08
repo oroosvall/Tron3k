@@ -31,15 +31,15 @@ void main()
 	//boneNormal0 = ((vec4(boneNormal, 1.0f) * inverseBindpose[boneIndices.x].bMatrix) * 1.0f).xyz;
 	//boneTagent0 = ((vec4(boneTagent, 1.0f) * inverseBindpose[boneIndices.x].bMatrix) * 1.0f).xyz;
 	
-	bonePos0 += ((vec4(bonePos0, 1.0f) * inverseBindpose[int(boneIndices.y)].bMatrix) * skinWeights.y).xyz;
+	bonePos0 += ((vec4(bonePos, 1.0f) * inverseBindpose[int(boneIndices.y)].bMatrix) * skinWeights.y).xyz;
 	//boneNormal0 += ((vec4(boneNormal, 1.0f) * inverseBindpose[boneIndices.y].bMatrix) * 1.0f).xyz;
 	//boneTagent0 += ((vec4(boneTagent, 1.0f) * inverseBindpose[boneIndices.y].bMatrix) * 1.0f).xyz;
 	
-	bonePos0 += ((vec4(bonePos0, 1.0f) * inverseBindpose[int(boneIndices.z)].bMatrix) * skinWeights.z).xyz;
+	bonePos0 += ((vec4(bonePos, 1.0f) * inverseBindpose[int(boneIndices.z)].bMatrix) * skinWeights.z).xyz;
 	//boneNormal0 += ((vec4(boneNormal, 1.0f) * inverseBindpose[boneIndices.z].bMatrix) * 1.0f).xyz;
 	//boneTagent0 += ((vec4(boneTagent, 1.0f) * inverseBindpose[boneIndices.z].bMatrix) * 1.0f).xyz;
 	
-	bonePos0 += ((vec4(bonePos0, 1.0f) * inverseBindpose[int(boneIndices.w)].bMatrix) * skinWeights.w).xyz;
+	bonePos0 += ((vec4(bonePos, 1.0f) * inverseBindpose[int(boneIndices.w)].bMatrix) * skinWeights.w).xyz;
 	//boneNormal0 += ((vec4(boneNormal, 1.0f) * inverseBindpose[boneIndices.w].bMatrix) * 1.0f).xyz;
 	//boneTagent0 += ((vec4(boneTagent, 1.0f) * inverseBindpose[boneIndices.w].bMatrix) * 1.0f).xyz;
 
