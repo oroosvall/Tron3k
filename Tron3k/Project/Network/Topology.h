@@ -160,7 +160,9 @@ public:
 			consolePtr->printMsg("ERROR in_event_player_left" , "System", 'S');
 	}
 
-	virtual void event_bullet_hit_player(BulletHitPlayerInfo hi, int newHPtotal) {};
+	virtual void event_bullet_hit_player(std::vector<BulletHitPlayerInfo> allhits) {};
+	virtual void event_bullet_hit_world(int conid, int effectid, EFFECT_TYPE et, glm::vec3 pos) {};
+	virtual void event_effect_hit_player(std::vector<EffectHitPlayerInfo> allhits) {};
 
 	virtual void in_event_respawn_denied(Packet* rec)
 	{
@@ -171,14 +173,20 @@ public:
 
 	virtual void in_event_bullet_hit_player(Packet* rec)
 	{
-		BulletHitPlayerInfo hi = BulletHitPlayerInfo();
+		BulletHitPlayerInfo hi;
 		Uint8 playerHit, PID, BID, bt, hpTotal;
-		*rec >> playerHit >> PID >> BID >> bt >> hpTotal;
-		hi.playerHit = playerHit;
-		hi.bt = BULLET_TYPE(bt);
-		hi.bulletBID = BID;
-		hi.bulletPID = PID;
-		gamePtr->handleBulletHitPlayerEvent(hi, hpTotal);
+		Uint8 size;
+		*rec >> size;
+		for (int c = 0; c < size; c++)
+		{
+			*rec >> playerHit >> PID >> BID >> bt >> hpTotal;
+			hi.playerHit = playerHit;
+			hi.bt = BULLET_TYPE(bt);
+			hi.bulletBID = BID;
+			hi.bulletPID = PID;
+			hi.newHPtotal = hpTotal;
+			gamePtr->handleBulletHitPlayerEvent(hi);
+		}
 	}
 
 

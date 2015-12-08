@@ -388,11 +388,16 @@ void Core::upServer(float dt)
 			top->scope_out = Uint8(ALL);
 		}
 
-		if (game->hitPlayerEventReady())
+		std::vector<BulletHitPlayerInfo> bulletHitsOnPlayer = game->getAllHitPlayerInfo();
+
+		if (bulletHitsOnPlayer.size() != 0)
 		{
-			BulletHitPlayerInfo hi = game->getHitPlayerInfo();
-			int newHPtotal = game->handleBulletHitPlayerEvent(hi);
-			top->event_bullet_hit_player(hi, newHPtotal);
+			for (int c = 0; c < bulletHitsOnPlayer.size(); c++)
+			{
+				int newHP = game->handleBulletHitPlayerEvent(bulletHitsOnPlayer[c]);
+				bulletHitsOnPlayer[c].newHPtotal = newHP;
+			}
+			top->event_bullet_hit_player(bulletHitsOnPlayer);
 		}
 
 		serverHandleCmds();

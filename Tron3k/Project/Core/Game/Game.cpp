@@ -377,12 +377,11 @@ void Game::checkPlayerVBulletCollision()
 							direkt när kollisionen sker, dvs.
 
 							*/
-
+							BulletHitPlayerInfo hit;
 							hit.bt = BULLET_TYPE(b);
 							hit.playerHit = i;
 							bullets[b][j]->getId(hit.bulletPID, hit.bulletBID);
-
-							playerHit = true;
+							hit.newHPtotal = -1;
 							return;
 						}
 					}
@@ -753,7 +752,7 @@ Bullet* Game::getSpecificBullet(int PID, int BID, BULLET_TYPE bt, int &posInBull
 	return nullptr;
 }
 
-int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi, int newHPtotal)
+int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 {
 	glm::vec3 pos = playerList[hi.playerHit]->getPos();
 	if (gameState != Gamestate::SERVER)
@@ -762,7 +761,7 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi, int newHPtotal)
 	Player* p = playerList[hi.playerHit];
 	int bulletPosInArray;
 	Bullet* theBullet = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, bulletPosInArray);
-	p->hitByBullet(theBullet, newHPtotal);
+	p->hitByBullet(theBullet, hi.newHPtotal);
 
 	removeBullet(hi.bt, bulletPosInArray);
 

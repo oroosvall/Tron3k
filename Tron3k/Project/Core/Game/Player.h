@@ -23,14 +23,6 @@
 
 enum PLAYERMSG { NONE, SHOOT, USEITEM, SPECIALUSE, MOBILITYUSE, WPNSWITCH, DEATH, PLAYERRESPAWN};
 
-struct BulletHitPlayerInfo
-{
-	int playerHit;
-	int bulletPID;
-	int bulletBID;
-	BULLET_TYPE bt;
-};
-
 class Player : public GameObject
 {
 private:
