@@ -797,9 +797,9 @@ void Game::removeEffect(EFFECT_TYPE et, int posInArray)
 	case EFFECT_TYPE::LIGHT_WALL:
 		break;
 	}
-	delete bullets[et][posInArray];
-	bullets[et][posInArray] = bullets[et][bullets[et].size() - 1];
-	bullets[et].pop_back();
+	delete effects[et][posInArray];
+	effects[et][posInArray] = effects[et][effects[et].size() - 1];
+	effects[et].pop_back();
 }
 
 void Game::removeBullet(BULLET_TYPE bt, int posInArray)
