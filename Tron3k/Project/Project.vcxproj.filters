@@ -28,9 +28,6 @@
     <Filter Include="Source Files\Core\Game\Role">
       <UniqueIdentifier>{f9189c9f-cdf4-4d69-bfe4-b6f249a1332c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Core\Game\Role\ActiveEffects">
-      <UniqueIdentifier>{27d0cd6e-d8d0-4b62-8fc0-ef2e5cf39da5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Core\Game\Role\PlayerEffects">
       <UniqueIdentifier>{faaa083c-3833-4b81-ba9c-63093dfc3878}</UniqueIdentifier>
     </Filter>
@@ -122,9 +119,6 @@
     </ClCompile>
     <ClCompile Include="Core\Game\Role\Role.cpp">
       <Filter>Source Files\Core\Game\Role</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Game\Role\ActiveEffects\Ability.cpp">
-      <Filter>Source Files\Core\Game\Role\ActiveEffects</Filter>
     </ClCompile>
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effect.cpp">
       <Filter>Source Files\Core\Game\Role\PlayerEffects</Filter>
@@ -277,9 +271,6 @@
     </ClInclude>
     <ClInclude Include="Core\Game\Role\Role.h">
       <Filter>Source Files\Core\Game\Role</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Game\Role\ActiveEffects\Ability.h">
-      <Filter>Source Files\Core\Game\Role\ActiveEffects</Filter>
     </ClInclude>
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effect.h">
       <Filter>Source Files\Core\Game\Role\PlayerEffects</Filter>
