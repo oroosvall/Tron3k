@@ -112,7 +112,7 @@ void AnimatedMesh::load(std::string fileName)
 
 		matrixBufferDataOneKey = new animationMatrices[charHdr.jointCount];
 
-		memcpy(matrixBufferDataOneKey, animations[0].keyFrames[10].jointTransform, sizeof(glm::mat4)*charHdr.jointCount);
+		memcpy(matrixBufferDataOneKey, animations[0].keyFrames[0].jointTransform, sizeof(glm::mat4)*charHdr.jointCount);
 
 
 		Material* materials = new Material[charHdr.materialCount];
