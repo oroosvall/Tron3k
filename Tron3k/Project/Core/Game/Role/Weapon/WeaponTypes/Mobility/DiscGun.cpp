@@ -28,5 +28,7 @@ void DiscGun::init()
 
 int DiscGun::update(float deltaTime)
 {
+	countDownFiringSpeed(deltaTime);
+	countDownReloadTimer(deltaTime);
 	return 0;
 }

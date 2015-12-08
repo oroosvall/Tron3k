@@ -92,6 +92,7 @@ private:
 	bool shotsFired = false;
 
 	WEAPON_TYPE weaponSwitchedTo;
+	int wpnSwapLocation = -1;
 	bool wpnSwitched = false;
 
 	SPECIAL_TYPE specialUsed;
@@ -150,8 +151,8 @@ public:
 	void handleConsumableUse(int conID, CONSUMABLE_TYPE ct, glm::vec3 pos, glm::vec3 dir);
 
 	bool weaponSwitchReady() { return wpnSwitched; };
-	WEAPON_TYPE getWpnSwitch() { wpnSwitched = false; return weaponSwitchedTo; };
-	void handleWeaponSwitch(int conID, WEAPON_TYPE ws);
+	WEAPON_TYPE getWpnSwitch(int &swaploc) { wpnSwitched = false; swaploc = wpnSwapLocation; return weaponSwitchedTo; };
+	void handleWeaponSwitch(int conID, WEAPON_TYPE ws, int swapLoc);
 
 	bool specialActivationReady() { return specialActivated; };
 	bool mobilityActivationReady() { return mobilityActivated; };

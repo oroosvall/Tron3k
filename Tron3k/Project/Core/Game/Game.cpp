@@ -472,6 +472,7 @@ void Game::registerWeapon(Player* p)
 void Game::registerSwitch(Player* p)
 {
 	weaponSwitchedTo = p->getPlayerCurrentWeapon()->getType();
+	wpnSwapLocation = p->getRole()->getWeaponPosition();
 	wpnSwitched = true;
 }
 
@@ -496,9 +497,10 @@ void Game::registerConsumable(Player* p)
 	consumableUsed = true;
 }
 
-void Game::handleWeaponSwitch(int conID, WEAPON_TYPE ws)
+void Game::handleWeaponSwitch(int conID, WEAPON_TYPE ws, int swapLoc)
 {
-	playerList[conID]->switchWpn(ws);
+	if (!playerList[conID]->isLocal())
+		playerList[conID]->switchWpn(ws, swapLoc);
 }
 
 int Game::getPlayersOnTeam(int team)
@@ -596,6 +598,9 @@ void Game::addBulletToList(int conID, int bulletId, BULLET_TYPE bt, glm::vec3 po
 	case BULLET_TYPE::PULSE_SHOT:
 		b = new PulseShot(pos, dir, conID, bulletId, p->getTeam());
 		break;
+	case BULLET_TYPE::PLASMA_SHOT:
+		b = new PlasmaShot(pos, dir, conID, bulletId, p->getTeam());
+		break;
 	case BULLET_TYPE::CLUSTER_GRENADE:
 		b = new ClusterGrenade(pos, dir, conID, bulletId, p->getTeam());
 		break;
@@ -625,6 +630,13 @@ void Game::handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm
 			if (GetSound())
 				GetSound()->playExternalSound(SOUNDS::soundEffectEnergyBoost, pos.x, pos.y, pos.z);
 		playerList[conID]->healing(10);
+		break;
+
+	case WEAPON_TYPE::PLASMA_AUTORIFLE:
+		if (gameState != Gamestate::SERVER)
+			if (GetSound())
+				GetSound()->playExternalSound(SOUNDS::soundEffectPusleRifleShot, pos.x, pos.y, pos.z);
+		addBulletToList(conID, bulletId, BULLET_TYPE::PLASMA_SHOT, pos, dir);
 		break;
 
 	case WEAPON_TYPE::DISC_GUN:

@@ -49,8 +49,10 @@ class Role
 		float getMovementSpeed();
 
 		void chooseRole(int role);
-		void swapWeapon(int swapTo);
+		void swapWeapon(WEAPON_TYPE wt, int swapTo);
+		void swapWeaponLocal(int swapTo);
 		Weapon* getCurrentWeapon();
+		int getWeaponPosition() { return currentWpn; };
 		Consumable* getConsumable() { return consumable; };
 
 		void update(float dt);

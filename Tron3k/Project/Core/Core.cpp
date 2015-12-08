@@ -151,7 +151,7 @@ void Core::upRoam(float dt)
 	case 1:
 		subState++;
 		break;
-	case 2: //main loop
+	case 2: //roam main loop
 
 		/*roamHandleCmds();
 		game->update(dt);
@@ -176,8 +176,9 @@ void Core::upRoam(float dt)
 
 		if (game->weaponSwitchReady())
 		{
-			WEAPON_TYPE wt = game->getWpnSwitch();
-			game->handleWeaponSwitch(0, wt);
+			int swaploc = 0;
+			WEAPON_TYPE wt = game->getWpnSwitch(swaploc);
+			game->handleWeaponSwitch(0, wt, swaploc);
 		}
 
 		if (game->fireEventReady())
@@ -300,8 +301,9 @@ void Core::upClient(float dt)
 
 			if (game->weaponSwitchReady())
 			{
-				WEAPON_TYPE ws = game->getWpnSwitch();
-				top->frame_weapon_switch(top->getConId(), ws);
+				int swaploc = -1;
+				WEAPON_TYPE ws = game->getWpnSwitch(swaploc);
+				top->frame_weapon_switch(top->getConId(), ws, swaploc);
 			}
 
 			if (game->fireEventReady())

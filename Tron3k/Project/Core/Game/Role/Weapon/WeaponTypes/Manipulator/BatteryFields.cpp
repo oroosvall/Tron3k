@@ -28,5 +28,7 @@ void BatteryFields::init()
 
 int BatteryFields::update(float deltaTime)
 {
+	countDownFiringSpeed(deltaTime);
+	countDownReloadTimer(deltaTime);
 	return 0;
 }

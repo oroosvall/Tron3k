@@ -232,9 +232,9 @@ public:
 			dir.x << dir.y << dir.z;
 	}
 
-	virtual void frame_weapon_switch(int conID, WEAPON_TYPE ws)
+	virtual void frame_weapon_switch(int conID, WEAPON_TYPE ws, int swaploc)
 	{
-		*package << Uint8(NET_FRAME::WPN_SWITCH) << Uint8(conID) << Uint8(ws);
+		*package << Uint8(NET_FRAME::WPN_SWITCH) << Uint8(conID) << Uint8(ws) << Uint8(swaploc);
 	}
 
 	virtual void frame_name_change(Uint8 conid, string name)
@@ -291,15 +291,11 @@ public:
 	virtual void in_frame_weapon_switch(Packet* rec)
 	{
 		Uint8 p_conID;
+		Uint8 swapLocation;
 		Uint8 weapontype;
-		*rec >> p_conID >> weapontype;
+		*rec >> p_conID >> weapontype >> swapLocation;
 
-		gamePtr->handleWeaponSwitch(p_conID, WEAPON_TYPE(weapontype));
-
-		if (weapontype == WEAPON_TYPE::PULSE_RIFLE)
-			consolePtr->printMsg(gamePtr->getPlayer(p_conID)->getName() + " switched weapon to Pulse Rifle!", "System", 'S');
-		if (weapontype == WEAPON_TYPE::ENERGY_BOOST)
-			consolePtr->printMsg(gamePtr->getPlayer(p_conID)->getName() + " switched weapon to Energy Boost!", "System", 'S');
+		gamePtr->handleWeaponSwitch(p_conID, WEAPON_TYPE(weapontype), swapLocation);
 	}
 
 	virtual void in_frame_name_change(Packet* rec)

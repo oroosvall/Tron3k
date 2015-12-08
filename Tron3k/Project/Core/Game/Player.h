@@ -83,7 +83,7 @@ public:
 	bool isAlive() { return !isDead; };
 
 	Weapon* getPlayerCurrentWeapon();
-	void switchWpn(WEAPON_TYPE ws);
+	void switchWpn(WEAPON_TYPE ws, int swapLoc);
 
 	Special* getPlayerSpecialAbility() { return role.getSpecialAbility(); };
 

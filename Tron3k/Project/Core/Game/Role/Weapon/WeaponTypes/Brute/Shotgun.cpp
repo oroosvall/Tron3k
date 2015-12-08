@@ -28,5 +28,7 @@ void Shotgun::init()
 
 int Shotgun::update(float deltaTime)
 {
+	countDownFiringSpeed(deltaTime);
+	countDownReloadTimer(deltaTime);
 	return 0;
 }

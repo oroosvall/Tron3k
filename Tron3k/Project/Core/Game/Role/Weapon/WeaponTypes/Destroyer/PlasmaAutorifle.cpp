@@ -28,5 +28,7 @@ void PlasmaAutorifle::init()
 
 int PlasmaAutorifle::update(float deltaTime)
 {
+	countDownFiringSpeed(deltaTime);
+	countDownReloadTimer(deltaTime);
 	return 0;
 }

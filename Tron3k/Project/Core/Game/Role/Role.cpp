@@ -174,7 +174,26 @@ void Role::chooseRole(int role)
 	}
 }
 
-void Role::swapWeapon(int swapTo)
+void Role::swapWeapon(WEAPON_TYPE wt, int swapTo)
+{
+	if (swapTo == 2)
+	{
+		//Swap secwpn with storage
+		//Load tech pickup in secwpn slot
+	}
+	if (swapTo == 3)
+	{
+		//Swap mainwpn with storage
+		//Load super in mainwpn slot
+	}
+	else
+	{
+		if (currentWpn != swapTo)
+			currentWpn = swapTo;
+	}
+}
+
+void Role::swapWeaponLocal(int swapTo)
 {
 	if (currentWpn != swapTo)
 		currentWpn = swapTo;

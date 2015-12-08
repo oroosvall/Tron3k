@@ -258,13 +258,13 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 				if (i->justPressed(GLFW_KEY_1))
 				{
-					role.swapWeapon(0);
+					role.swapWeaponLocal(0);
 					msg = WPNSWITCH;
 				}
 
 				if (i->justPressed(GLFW_KEY_2))
 				{
-					role.swapWeapon(1);
+					role.swapWeaponLocal(1);
 					msg = WPNSWITCH;
 				}
 
@@ -389,9 +389,9 @@ Weapon* Player::getPlayerCurrentWeapon()
 	return role.getCurrentWeapon();
 }
 
-void Player::switchWpn(WEAPON_TYPE ws)
+void Player::switchWpn(WEAPON_TYPE ws, int swapLoc)
 {
-	role.swapWeapon(ws);
+	role.swapWeapon(ws, swapLoc);
 }
 
 void Player::hitByBullet(Bullet* b, int newHPtotal)

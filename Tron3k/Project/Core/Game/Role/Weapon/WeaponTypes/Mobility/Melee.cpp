@@ -28,5 +28,7 @@ void Melee::init()
 
 int Melee::update(float deltaTime)
 {
+	countDownFiringSpeed(deltaTime);
+	countDownReloadTimer(deltaTime);
 	return 0;
 }

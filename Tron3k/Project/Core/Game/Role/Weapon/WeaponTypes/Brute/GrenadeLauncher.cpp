@@ -28,5 +28,7 @@ void GrenadeLauncher::init()
 
 int GrenadeLauncher::update(float deltaTime)
 {
+	countDownFiringSpeed(deltaTime);
+	countDownReloadTimer(deltaTime);
 	return 0;
 }

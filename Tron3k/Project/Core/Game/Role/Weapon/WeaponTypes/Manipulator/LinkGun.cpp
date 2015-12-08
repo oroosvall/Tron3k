@@ -28,5 +28,7 @@ void LinkGun::init()
 
 int LinkGun::update(float deltaTime)
 {
+	countDownFiringSpeed(deltaTime);
+	countDownReloadTimer(deltaTime);
 	return 0;
 }
