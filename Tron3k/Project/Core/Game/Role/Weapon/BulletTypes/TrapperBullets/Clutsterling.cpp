@@ -5,7 +5,7 @@ Clusterling::Clusterling(glm::vec3 position, glm::vec3 direction, int pID, int b
 {
 	initValues(position, direction, pID, bID, tID);
 	ttl = 3;
-	vel = 25.0f;
+	vel = 15.0f;
 	damage = 10;
 
 	direction.y = -direction.y;

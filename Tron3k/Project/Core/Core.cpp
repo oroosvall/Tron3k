@@ -551,6 +551,31 @@ void Core::roamHandleCmds()
 
 			game->spectateID = -1;
 		}
+		else if (token == "/role1")
+		{
+			game->getPlayer(0)->getRole()->chooseRole(TRAPPER);
+			console.printMsg("You have chosen the Trapper", "", ' ');
+		}
+		else if (token == "/role2")
+		{
+			game->getPlayer(0)->getRole()->chooseRole(DESTROYER);
+			console.printMsg("You have chosen the Destroyer", "", ' ');
+		}
+		else if (token == "/role3")
+		{
+			game->getPlayer(0)->getRole()->chooseRole(MOBILITY);
+			console.printMsg("You have chosen the Mobility", "", ' ');
+		}
+		else if (token == "/role4")
+		{
+			game->getPlayer(0)->getRole()->chooseRole(BRUTE);
+			console.printMsg("You have chosen the Brute", "", ' ');
+		}
+		else if (token == "/role5")
+		{
+			game->getPlayer(0)->getRole()->chooseRole(MANIPULATOR);
+			console.printMsg("You have chosen the Manipulator", "", ' ');
+		}
 	}
 }
 
@@ -612,6 +637,31 @@ void Core::clientHandleCmds()
 					console.printMsg(print, "", ' ');
 				}
 			}
+		}
+		else if (token == "/role 1")
+		{
+			game->getPlayer(top->getConId())->getRole()->chooseRole(TRAPPER);
+			console.printMsg("You have chosen the Trapper", "", ' ');
+		}
+		else if (token == "/role 2")
+		{
+			game->getPlayer(top->getConId())->getRole()->chooseRole(DESTROYER);
+			console.printMsg("You have chosen the Destroyer", "", ' ');
+		}
+		else if (token == "/role 3")
+		{
+			game->getPlayer(top->getConId())->getRole()->chooseRole(MOBILITY);
+			console.printMsg("You have chosen the Mobility", "", ' ');
+		}
+		else if (token == "/role 4")
+		{
+			game->getPlayer(top->getConId())->getRole()->chooseRole(BRUTE);
+			console.printMsg("You have chosen the Brute", "", ' ');
+		}
+		else if (token == "/role 5")
+		{
+			game->getPlayer(top->getConId())->getRole()->chooseRole(MANIPULATOR);
+			console.printMsg("You have chosen the Manipulator", "", ' ');
 		}
 		else if (token == "/disconnect")
 			disconnect();

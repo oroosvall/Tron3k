@@ -48,7 +48,7 @@ void Role::loadWeapons(int role, int wpn)
 	PROPERTIES w;
 	if (wpn == 0)
 		w = MAINWEP;
-	if (wpn == 1)
+	else if (wpn == 1)
 		w = SECWEP;
 	switch ((WEAPON_TYPE)atoi(loadedRoles[role][w].c_str()))
 	{
@@ -57,6 +57,30 @@ void Role::loadWeapons(int role, int wpn)
 		break;
 	case ENERGY_BOOST:
 		weapons[wpn] = new EnergyBoost();
+		break;
+	case GRENADE_LAUNCHER:
+		weapons[wpn] = new GrenadeLauncher();
+		break;
+	case SHOTGUN:
+		weapons[wpn] = new Shotgun();
+		break;
+	case ENERGY_SHIELD:
+		weapons[wpn] = new EnergyShield();
+		break;
+	case PLASMA_AUTORIFLE:
+		weapons[wpn] = new PlasmaAutorifle();
+		break;
+	case BATTERYFIELD:
+		weapons[wpn] = new BatteryFields();
+		break;
+	case LINK_GUN:
+		weapons[wpn] = new LinkGun();
+		break;
+	case DISC_GUN:
+		weapons[wpn] = new DiscGun();
+		break;
+	case MELEE:
+		weapons[wpn] = new Melee();
 		break;
 	}
 
@@ -73,14 +97,39 @@ void Role::loadRoleSpecifics(int role)
 		delete consumable;
 
 	switch (role)
+		case TRAPPER:
 	{
-	case TRAPPER:
-		specialAbility = new Lightwall();
-		specialAbility->init();
-		mobility = new MultiJump();
-		mobility->init();
-		break;
+			specialAbility = new Lightwall();
+			specialAbility->init();
+			mobility = new MultiJump();
+			mobility->init();
+			break;
+		case DESTROYER:
+			specialAbility = new Lightwall();
+			specialAbility->init();
+			mobility = new MultiJump();
+			mobility->init();
+			break;
+		case MOBILITY:
+			specialAbility = new Lightwall();
+			specialAbility->init();
+			mobility = new MultiJump();
+			mobility->init();
+			break;
+		case BRUTE:
+			specialAbility = new Lightwall();
+			specialAbility->init();
+			mobility = new MultiJump();
+			mobility->init();
+			break;
+		case MANIPULATOR:
+			specialAbility = new Lightwall();
+			specialAbility->init();
+			mobility = new MultiJump();
+			mobility->init();
+			break;
 	}
+
 }
 
 float Role::getMovementSpeed()
