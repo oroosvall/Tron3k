@@ -12,7 +12,7 @@ BatteryFields::~BatteryFields()
 
 void BatteryFields::init()
 {
-	weaponType = WEAPON_TYPE::BATTERYFIELD;
+	weaponType = WEAPON_TYPE::BATTERYFIELD_SLOW;
 
 	maxClipSize = 2;
 	currentClipAmmo = maxClipSize;
