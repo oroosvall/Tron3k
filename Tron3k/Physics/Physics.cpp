@@ -287,7 +287,7 @@ glm::vec3 Physics::getCollisionNormal(AABB aabb1, AABB aabb2)
 	if (collides)
 	{
 		//Top plane collision
-		return glm::vec3(0, -1, 0);
+		return glm::vec3(0, 1, 0);
 	}
 
 	p1 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[0]);
@@ -299,7 +299,7 @@ glm::vec3 Physics::getCollisionNormal(AABB aabb1, AABB aabb2)
 	if (collides)
 	{
 		//Bot plane collision
-		return glm::vec3(0, 1, 0);
+		return glm::vec3(0, -1, 0);
 	}
 
 	p1 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[3]);

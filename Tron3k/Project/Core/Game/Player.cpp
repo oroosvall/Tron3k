@@ -461,6 +461,7 @@ void Player::setRole(Role role)
 void Player::respawn(glm::vec3 respawnPos)
 {
 	pos = respawnPos;
+	vel = glm::vec3(0, 0, 0);
 	if (isLocalPlayer)
 		cam->setCam(pos, dir);
 	worldMat[0].w = pos.x;

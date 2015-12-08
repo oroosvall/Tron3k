@@ -133,7 +133,7 @@ public:
 	//Collision checks
 	void checkPvPCollision();
 	void checkPlayerVBulletCollision();
-	void checkPlayerVWorldCollision();
+	void checkPlayerVWorldCollision(float dt);
 	void checkBulletVWorldCollision();
 
 	bool playerWantsToRespawn();

@@ -160,14 +160,14 @@ void Game::update(float dt)
 
 	if (gameState == Gamestate::ROAM)
 	{
-		checkPlayerVWorldCollision();
+		checkPlayerVWorldCollision(dt);
 		checkBulletVWorldCollision();
 	}
 
 	if (gameState == Gamestate::CLIENT)
 	{
 		checkPvPCollision();
-		checkPlayerVWorldCollision();
+		checkPlayerVWorldCollision(dt);
 	}
 
 	if (gameState == Gamestate::SERVER)
@@ -392,7 +392,7 @@ void Game::checkPlayerVBulletCollision()
 	}
 }
 
-void Game::checkPlayerVWorldCollision()
+void Game::checkPlayerVWorldCollision(float dt)
 {
 	bool collides = false;
 	glm::vec3 collisionNormal = glm::vec3(0, 0, 0);
@@ -413,9 +413,9 @@ void Game::checkPlayerVWorldCollision()
 					
 					//collision with world here, no gravity etc
 					//TODO: Add proper collision code.
-					//TODO: Return normals from objects we collide with.
-					//TODO: Change direction based on those normals.
-					//TODO: What do we do if we collide with multiple objects?
+					//TODO: Return normals from objects we collide with. - DONE
+					//TODO: Change direction based on those normals. - KINDA DONE
+					//TODO: What do we do if we collide with multiple objects? -SHOULD BE HANDLED, we add the normal of all the objects we collide with
 					//normalize(collisionNormal);
 					playerList[i]->setGrounded(true);
 					physics->normalize(collisionNormal);
@@ -425,7 +425,9 @@ void Game::checkPlayerVWorldCollision()
 					vel = vel - collisionNormal;
 
 					glm::vec3 pos = playerList[i]->getPos();
-					pos.y += vel.y;
+					pos -= vel * collisionNormal * dt;
+					
+					playerList[i]->setPos(pos);
 
 					//vel.y = 0.0f;
 					playerList[i]->setVelocity(vel);
