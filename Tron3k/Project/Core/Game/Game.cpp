@@ -429,7 +429,7 @@ void Game::checkPlayerVWorldCollision(float dt)
 					
 					playerList[i]->setPos(pos);
 
-					//vel.y = 0.0f;
+					vel.y = 0.0f;
 					playerList[i]->setVelocity(vel);
 					
 				}
