@@ -22,6 +22,7 @@ void CollideMesh::setAABB(glm::vec3 pos, glm::vec3 max, glm::vec3 min)
 	boundingBox.max = glm::vec4(max, 1.0f);
 	boundingBox.min = glm::vec4(min, 1.0f);
 
+	boundingBox.ObbBoxes.clear();
 	OBB temp;
 	temp.corners[0] = glm::vec4(min.x, min.y, max.z, 1.0f);
 	temp.corners[1] = glm::vec4(max.x, min.y, max.z, 1.0f);

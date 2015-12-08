@@ -414,6 +414,8 @@ void Game::checkPlayerVWorldCollision()
 				if (collisionNormal != glm::vec3(0,0,0))
 				{
 					
+					if (collisionNormal == glm::vec3(1, 0, 0) || collisionNormal == glm::vec3(-1, 0, 0) || collisionNormal == glm::vec3(0, 0, 1) || collisionNormal == glm::vec3(0, 0, -1))
+						int x = 0;
 					//collision with world here, no gravity etc
 					//TODO: Add proper collision code.
 					//TODO: Return normals from objects we collide with.

@@ -86,7 +86,7 @@ glm::vec3 Physics::checkAABBvAABBCollision(CollideMesh mesh1, CollideMesh mesh2)
 			if (pos1.z + max1.z > pos2.z + min2.z &&
 				pos1.z + min1.z < pos2.z + max2.z)//z
 			{
-				return glm::vec3(1, 1, 1);
+				return getCollisionNormal(aabb1, aabb2);
 			}
 		}
 	}
@@ -190,7 +190,7 @@ glm::vec3 Physics::checkOBBvSphereCollision(CollideMesh mesh1, CollideMesh mesh2
 }
 //--------------//--------------//
 
-//--------Cylinder Collisions--------//
+//-----Cylinder Collisions------//
 glm::vec3 Physics::checkCylindervCylinderCollision(CollideMesh mesh1, CollideMesh mesh2)
 {
 	return glm::vec3(1, 1, 1);
@@ -209,13 +209,45 @@ glm::vec3 Physics::checkAngledCylindervSphereCollision(CollideMesh mesh1, Collid
 
 bool Physics::checkLinevPlaneCollision(glm::vec3 l1, glm::vec3 l2, glm::vec3 p1, glm::vec3 p2, glm::vec3 p3)
 {
+	glm::vec3 p = glm::vec3(0, 0, 0);
+	
+	float x = 1;
+	glm::vec3 l = (l2 - l1);
+	normalize(l);
 
-	return 1;
+	p = glm::cross((p2 - p1), (p3 - p1));
+
+	float d = (p1.x * p.x) + (p1.y * p.y) + (p1.z + p.z);
+
+	//the equation for the plane is now p + d
+	
+	if (glm::dot(l, p) == 0)
+		return 0;
+
+	x = (d - (glm::dot(l1, p))) / (glm::dot(l, p));
+
+	if (x >= 0 && x <= 1)
+		return 1;
+	return 0;
+	
+	///*
+	float dot1 = glm::dot(p, (l1 - p1));
+	float dot2 = glm::dot(p, (l2 - p1));
+
+	if (dot1 <= 0 && dot2 > 0)
+		//collision
+		return 1;
+	else if (dot1 >= 0 && dot2 < 0)
+		//collision
+		return 1;//*/
+
+	return 0;
 }
 
 //------Normal Calculators------//
 glm::vec3 Physics::getCollisionNormal(AABB aabb1, AABB aabb2)
 {
+	//When we get here, we KNOW we collide, we just need to find out from which direction
 	glm::vec3 l1 = glm::vec3(aabb1.pos);
 	glm::vec3 l2 = glm::vec3(aabb2.pos);
 
@@ -263,7 +295,7 @@ glm::vec3 Physics::getCollisionNormal(AABB aabb1, AABB aabb2)
 	if (collides)
 	{
 		//Top plane collision
-		return glm::vec3(0, 1, 0);
+		return glm::vec3(0, -1, 0);
 	}
 
 	p1 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[0]);
@@ -275,7 +307,7 @@ glm::vec3 Physics::getCollisionNormal(AABB aabb1, AABB aabb2)
 	if (collides)
 	{
 		//Bot plane collision
-		return glm::vec3(0, -1, 0);
+		return glm::vec3(0, 1, 0);
 	}
 
 	p1 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[3]);
@@ -388,7 +420,7 @@ glm::vec3 Physics::checkPlayerVWorldCollision(glm::vec3 playerPos)
 			{
 				//if (checkOBBCollision(playerPos, worldBoxes[i]))
 				collides = true;
-				return collisionNormal = getCollisionNormal(playerBox.getCylinder(), worldBoxes[i][j].getAABB());
+				return collisionNormal = getCollisionNormal(playerBox.getAABB(), worldBoxes[i][j].getAABB());//getCollisionNormal(playerBox.getCylinder(), worldBoxes[i][j].getAABB());
 			}
 		}
 	}
