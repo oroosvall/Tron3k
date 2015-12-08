@@ -592,6 +592,9 @@ void Game::addBulletToList(int conID, int bulletId, BULLET_TYPE bt, glm::vec3 po
 	case BULLET_TYPE::CLUSTER_GRENADE:
 		b = new ClusterGrenade(pos, dir, conID, bulletId, p->getTeam());
 		break;
+	case BULLET_TYPE::CLUSTERLING:
+		b = new Clusterling(pos, dir, conID, bulletId, p->getTeam());
+		break;
 	}
 
 	bullets[bt].push_back(b);
@@ -773,8 +776,25 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 {
 	switch (bt)
 	{
-	case BULLET_TYPE::CLUSTER_GRENADE: //FUCKING EVERYTHING
-		break;
+	case BULLET_TYPE::CLUSTER_GRENADE: //FUCKING EVERYTHING	
+	{
+		Bullet* parent = bullets[bt][posInArray];
+		vec3 lingDir;
+		int PID = 0, BID = 0;
+		parent->getId(PID, BID);
+		lingDir = parent->getDir();
+		addBulletToList(PID, BID, CLUSTERLING, parent->getPos(), lingDir);
+		lingDir.x = -lingDir.x;
+		addBulletToList(PID, BID + 1, CLUSTERLING, parent->getPos(), lingDir);
+		lingDir.z = -lingDir.z;
+		addBulletToList(PID, BID + 2, CLUSTERLING, parent->getPos(), lingDir);
+		lingDir.x = -lingDir.x;
+		addBulletToList(PID, BID + 3, CLUSTERLING, parent->getPos(), lingDir);
+	}
+	break;
+	case BULLET_TYPE::CLUSTERLING:
+
+			break;
 	}
 	delete bullets[bt][posInArray];
 	bullets[bt][posInArray] = bullets[bt][bullets[bt].size() - 1];
