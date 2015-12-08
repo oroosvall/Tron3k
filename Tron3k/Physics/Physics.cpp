@@ -89,6 +89,7 @@ glm::vec3 Physics::checkAABBvAABBCollision(CollideMesh mesh1, CollideMesh mesh2,
 			if (pos1.z + max1.z > pos2.z + min2.z &&
 				pos1.z + min1.z < pos2.z + max2.z)//z
 			{
+				//TODO: Add OBB-checks, for dat layered collision
 				return getCollisionNormal(aabb1, aabb2);
 			}
 		}
@@ -389,7 +390,7 @@ glm::vec3 Physics::checkPlayerVPlayerCollision(glm::vec3 playerPos1, glm::vec3 p
 	//p2.setSize(playerBox.getSize());
 
 
-	glm::vec3 collide = checkAABBvAABBCollision(playerBox, p2);
+	glm::vec3 collide = checkAABBvAABBCollision(playerBox, p2, false);
 
 	//if (collide)
 		//collide = checkOBBCollision(&obj1, &obj2);
