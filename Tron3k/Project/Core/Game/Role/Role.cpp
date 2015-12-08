@@ -152,6 +152,8 @@ void Role::heal(int h)
 
 void Role::returnToLife()
 {
+	specialMeter = 0.0f;
+	gainSpecial = true;
 	health = maxHealth;
 	consumable->reset();
 	weapons[0]->reset();

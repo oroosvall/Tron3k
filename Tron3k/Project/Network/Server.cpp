@@ -25,7 +25,7 @@ void Server::event_bullet_hit_player(std::vector<BulletHitPlayerInfo> allhits)
 	Packet* out = new Packet();
 	*out << Uint8(NET_INDEX::EVENT) << Uint8(NET_EVENT::PLAYER_HIT);
 	*out << Uint8(allhits.size());
-	for (int c = 0; c < allhits.size(); c++)
+	for (unsigned int c = 0; c < allhits.size(); c++)
 	{
 		*out << Uint8(allhits[c].playerHit) << Uint8(allhits[c].bulletPID) << Uint8(allhits[c].bulletBID) << Uint8(allhits[c].bt) << Uint8(allhits[c].newHPtotal);
 	}

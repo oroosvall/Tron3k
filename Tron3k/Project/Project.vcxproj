@@ -27,6 +27,7 @@
     <ClCompile Include="Core\Game\Player.cpp" />
     <ClCompile Include="Core\Game\Role\Consumable\Consumable.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effect.cpp" />
+    <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\Explosion.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\LightwallEffect.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Modifier.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Modifiers\LightWallLockedControls.cpp" />
@@ -78,6 +79,7 @@
     <ClInclude Include="Core\Game\Role\Consumable\Consumable.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effect.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\AllEffects.h" />
+    <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\Explosion.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\LightwallEffect.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Modifier.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Modifiers\AllModifiers.h" />

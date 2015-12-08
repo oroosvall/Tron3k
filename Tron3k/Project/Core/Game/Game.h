@@ -37,6 +37,14 @@ struct EffectHitPlayerInfo
 	int newHPtotal;
 };
 
+struct BulletHitWorldInfo
+{
+	int bulletPID;
+	int bulletBID;
+	BULLET_TYPE bt;
+	glm::vec3 hitPos;
+};
+
 class Game
 {
 private:

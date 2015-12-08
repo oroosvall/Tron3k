@@ -13,5 +13,7 @@ public:
 	virtual void init(int pid, int eid, glm::vec3 position) = 0;
 	void getId(int &pid, int &eid) { pid = playerId; eid = effectId; };
 	virtual int update(float dt) = 0;
+
+	virtual int getDamage() { return 0; };
 };
 #endif

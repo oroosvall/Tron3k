@@ -350,6 +350,12 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		dir = (oldDir * (1.0f - t)) + (goaldir * t);
 
 		rotatePlayer(prev, dir);
+
+		if (role.getHealth() == 0)
+		{
+			isDead = true;
+			vel = glm::vec3(0, 0, 0);
+		}
 	}
 
 	modifiersSetData(dt);
@@ -402,15 +408,6 @@ void Player::hitByBullet(Bullet* b, int newHPtotal)
 	{
 		role.setHealth(newHPtotal);
 	}
-
-	if (!isLocalPlayer)
-	{
-		if (role.getHealth() == 0)
-		{
-			isDead = true;
-			vel = glm::vec3(0, 0, 0);
-		}
-	}
 }
 
 void Player::hitByEffect(Effect* e, int newHPtotal)
@@ -420,22 +417,12 @@ void Player::hitByEffect(Effect* e, int newHPtotal)
 	*/
 	if (newHPtotal == -1) //This is the server, dealing damage to the player
 	{
-		/*
-		When applicable, find damage from the effect and all additional things that need to happen
-		*/
+		int dmg = e->getDamage();
+		role.takeDamage(dmg);
 	}
 	else //Hello I'm the client. I accept my new HP.
 	{
 		role.setHealth(newHPtotal);
-	}
-
-	if (!isLocalPlayer) 
-	{
-		if (role.getHealth() == 0)
-		{
-			isDead = true;
-			vel = glm::vec3(0, 0, 0); //If this isn't the local player, we kill him remotely
-		}
 	}
 }
 
