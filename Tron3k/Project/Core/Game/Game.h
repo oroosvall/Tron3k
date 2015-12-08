@@ -46,6 +46,7 @@ private:
 
 	void addBulletToList(int conID, int bulletId, BULLET_TYPE bt, glm::vec3 pos, glm::vec3 dir);
 	Bullet* getSpecificBullet(int PID, int BID, BULLET_TYPE bt, int &posInBulletArray);
+	void removeBullet(BULLET_TYPE bt, int posInArray);
 
 	void addEffectToList(int conID, int effectId, EFFECT_TYPE et, glm::vec3 pos);
 	Effect* getEffect(int PID, int SID, EFFECT_TYPE et, int &posInEffectArray);

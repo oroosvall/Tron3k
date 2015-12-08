@@ -141,9 +141,7 @@ void Game::update(float dt)
 			int msg = bullets[i][c]->update(dt);
 			if (msg == 1)		//Bullet is dead
 			{
-				delete bullets[i][c];
-				bullets[i][c] = bullets[i][bullets[i].size() - 1];
-				bullets[i].pop_back();
+				removeBullet(BULLET_TYPE(i), c); //Removes bullet, also handles effects such as explosions and additionally spawning effects/bullets
 			}
 		}
 	}
@@ -766,12 +764,22 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi, int newHPtotal)
 	Bullet* theBullet = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, bulletPosInArray);
 	p->hitByBullet(theBullet, newHPtotal);
 
-	delete bullets[hi.bt][bulletPosInArray];
-	bullets[hi.bt][bulletPosInArray] = bullets[hi.bt][bullets[hi.bt].size() - 1];
-	bullets[hi.bt].pop_back();
+	removeBullet(hi.bt, bulletPosInArray);
 
 	int newHP = p->getHP();
 	return newHP;
+}
+
+void Game::removeBullet(BULLET_TYPE bt, int posInArray)
+{
+	switch (bt)
+	{
+	case BULLET_TYPE::CLUSTER_GRENADE: //FUCKING EVERYTHING
+		break;
+	}
+	delete bullets[bt][posInArray];
+	bullets[bt][posInArray] = bullets[bt][bullets[bt].size() - 1];
+	bullets[bt].pop_back();
 }
 
 bool Game::playerWantsToRespawn()
