@@ -152,6 +152,7 @@ public:
 	void handleSpecialAbilityUse(int conID, int specialId, SPECIAL_TYPE st, glm::vec3 pos, glm::vec3 dir);
 
 	std::vector<BulletHitPlayerInfo> getAllHitPlayerInfo() { return allBulletHitsOnPlayers; };
+	void clearBulletOnPlayerCollisions() { allBulletHitsOnPlayers.clear();};
 	int handleBulletHitPlayerEvent(BulletHitPlayerInfo hi); //Returns the new HP total of the player, takes the new HP total instead if info is coming from server
 
 	std::vector<EffectHitPlayerInfo> getAllEffectOnPlayerCollisions();

@@ -398,6 +398,7 @@ void Core::upServer(float dt)
 				bulletHitsOnPlayer[c].newHPtotal = newHP;
 			}
 			top->event_bullet_hit_player(bulletHitsOnPlayer);
+			game->clearBulletOnPlayerCollisions();
 		}
 
 		serverHandleCmds();
