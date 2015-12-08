@@ -406,6 +406,7 @@ void Game::checkPlayerVWorldCollision()
 		{
 			if (playerList[i]->isLocal())
 			{
+				playerList[i]->setGrounded(false);
 				foundLocal = true;
 				
 				collisionNormal = physics->checkPlayerVWorldCollision(playerList[i]->getPos());
