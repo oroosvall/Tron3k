@@ -18,7 +18,7 @@ void main ()
 		transp =  1 - (transp / maxlen);
   
 	WorldPosOut	= vec4(0);
-	DiffuseOut = vec4(1.25 - transp , 0 , transp, transp / 4);	
+	DiffuseOut = vec4(0);
 	NormalOut = vec4(0);
-	GlowMap = vec4(0);
+	GlowMap = vec4(1.25 - transp , 0 , transp, transp / 4);	
 }

@@ -250,48 +250,60 @@ struct renderDataCube
 		vec3 corner3 = vec3(corner5.x, corner5.y, corner0.z);
 		vec3 corner4 = vec3(corner0.x, corner5.y, corner5.z);
 
-		TriangleVertex* vex = new TriangleVertex[10];
+		TriangleVertex* vex = new TriangleVertex[20];
 
 		vec3 a;							
 		a = corner0;	vex[0] = { a.x, a.y, a.z, 0.0f, 0.0f };
 		a = corner1;	vex[1] = { a.x, a.y, a.z, 0.0f, 0.0f };
 		a = corner2;	vex[2] = { a.x, a.y, a.z, 0.0f, 0.0f };
 		a = corner3;	vex[3] = { a.x, a.y, a.z, 0.0f, 0.0f };
-		a = corner5;	vex[4] = { a.x, a.y, a.z, 0.0f, 0.0f };
-		a = corner1;	vex[5] = { a.x, a.y, a.z, 0.0f, 0.0f };
-		a = corner7;	vex[6] = { a.x, a.y, a.z, 0.0f, 0.0f };
-		a = corner1;	vex[7] = { a.x, a.y, a.z, 0.0f, 0.0f };
-		a = corner6;	vex[8] = { a.x, a.y, a.z, 0.0f, 0.0f };
-		a = corner0;	vex[9] = { a.x, a.y, a.z, 0.0f, 0.0f };
+		a = corner4;	vex[4] = { a.x, a.y, a.z, 0.0f, 0.0f };
+		a = corner5;	vex[5] = { a.x, a.y, a.z, 0.0f, 0.0f };
+		a = corner6;	vex[6] = { a.x, a.y, a.z, 0.0f, 0.0f };
+		a = corner7;	vex[7] = { a.x, a.y, a.z, 0.0f, 0.0f };
+		a = corner0;	vex[8] = { a.x, a.y, a.z, 0.0f, 0.0f };
+		a = corner1;	vex[9] = { a.x, a.y, a.z, 0.0f, 0.0f };
 
-		createData(vex);
+		a = corner1;	vex[10] = { a.x, a.y, a.z, 0.0f, 0.0f };
+		a = corner7;	vex[11] = { a.x, a.y, a.z, 0.0f, 0.0f };
+		a = corner3;	vex[12] = { a.x, a.y, a.z, 0.0f, 0.0f };
+		a = corner5;	vex[13] = { a.x, a.y, a.z, 0.0f, 0.0f };
+
+		a = corner5;	vex[14] = { a.x, a.y, a.z, 0.0f, 0.0f };
+		a = corner4;	vex[15] = { a.x, a.y, a.z, 0.0f, 0.0f };
+		a = corner4;	vex[16] = { a.x, a.y, a.z, 0.0f, 0.0f };
+		a = corner2;	vex[17] = { a.x, a.y, a.z, 0.0f, 0.0f };
+		a = corner6;	vex[18] = { a.x, a.y, a.z, 0.0f, 0.0f };
+		a = corner0;	vex[19] = { a.x, a.y, a.z, 0.0f, 0.0f };
+
+		//createData(vex);
 	}
 
 	void init_OBB(OBB obb)
 	{
-		TriangleVertex* vex = new TriangleVertex[10];
+		TriangleVertex* vex = new TriangleVertex[20];
 
 		Vertex4 v;
-		v = obb.point.BBPos[0];		
-		vex[0] = { v.x, v.y, v.z, 0.0f, 0.0f };
-		v = obb.point.BBPos[1];		
-		vex[1] = { v.x, v.y, v.z, 0.0f, 0.0f };
-		v = obb.point.BBPos[2];		
-		vex[2] = { v.x, v.y, v.z, 0.0f, 0.0f };
-		v = obb.point.BBPos[3];		
-		vex[3] = { v.x, v.y, v.z, 0.0f, 0.0f };
-		v = obb.point.BBPos[5];		
-		vex[4] = { v.x, v.y, v.z, 0.0f, 0.0f };
-		v = obb.point.BBPos[1];		
-		vex[5] = { v.x, v.y, v.z, 0.0f, 0.0f };
-		v = obb.point.BBPos[7];		
-		vex[6] = { v.x, v.y, v.z, 0.0f, 0.0f };
-		v = obb.point.BBPos[1];		
-		vex[7] = { v.x, v.y, v.z, 0.0f, 0.0f };
-		v = obb.point.BBPos[6];		
-		vex[8] = { v.x, v.y, v.z, 0.0f, 0.0f };
-		v = obb.point.BBPos[0];		
-		vex[9] = { v.x, v.y, v.z, 0.0f, 0.0f };
+		v = obb.point.BBPos[0];		vex[0] = { v.x, v.y, v.z, 0.0f, 0.0f };
+		v = obb.point.BBPos[1];		vex[1] = { v.x, v.y, v.z, 0.0f, 0.0f };
+		v = obb.point.BBPos[2];		vex[2] = { v.x, v.y, v.z, 0.0f, 0.0f };
+		v = obb.point.BBPos[3];		vex[3] = { v.x, v.y, v.z, 0.0f, 0.0f };
+		v = obb.point.BBPos[4];		vex[4] = { v.x, v.y, v.z, 0.0f, 0.0f };
+		v = obb.point.BBPos[5];		vex[5] = { v.x, v.y, v.z, 0.0f, 0.0f };
+		v = obb.point.BBPos[6];		vex[6] = { v.x, v.y, v.z, 0.0f, 0.0f };
+		v = obb.point.BBPos[7];		vex[7] = { v.x, v.y, v.z, 0.0f, 0.0f };
+		v = obb.point.BBPos[0];		vex[8] = { v.x, v.y, v.z, 0.0f, 0.0f };
+		v = obb.point.BBPos[1];		vex[9] = { v.x, v.y, v.z, 0.0f, 0.0f };
+		v = obb.point.BBPos[1];		vex[10] = { v.x, v.y, v.z, 0.0f, 0.0f };
+		v = obb.point.BBPos[7];		vex[11] = { v.x, v.y, v.z, 0.0f, 0.0f };
+		v = obb.point.BBPos[3];		vex[12] = { v.x, v.y, v.z, 0.0f, 0.0f };
+		v = obb.point.BBPos[5];		vex[13] = { v.x, v.y, v.z, 0.0f, 0.0f };
+		v = obb.point.BBPos[5];		vex[14] = { v.x, v.y, v.z, 0.0f, 0.0f };
+		v = obb.point.BBPos[4];		vex[15] = { v.x, v.y, v.z, 0.0f, 0.0f };
+		v = obb.point.BBPos[4];		vex[16] = { v.x, v.y, v.z, 0.0f, 0.0f };
+		v = obb.point.BBPos[2];		vex[17] = { v.x, v.y, v.z, 0.0f, 0.0f };
+		v = obb.point.BBPos[6];		vex[18] = { v.x, v.y, v.z, 0.0f, 0.0f };
+		v = obb.point.BBPos[0];		vex[19] = { v.x, v.y, v.z, 0.0f, 0.0f };
 
 		createData(vex);
 	}
@@ -300,7 +312,7 @@ struct renderDataCube
 	{
 		glGenBuffers(1, &vertexDataId);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexDataId);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vex[0]) * 10, &vex[0], GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vex[0]) * 20, &vex[0], GL_STATIC_DRAW);
 		delete[] vex;
 
 		//define vertex data layout

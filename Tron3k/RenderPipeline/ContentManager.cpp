@@ -297,13 +297,13 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 		for (int n = 0; n < nrABB; n++)
 		{
 			testMap.chunks[c].collisionRender.abbRender[n].abbBoxR.BindVertData();	
-			//glDrawArrays(GL_TRIANGLE_STRIP, 0, 10);
+			//glDrawArrays(GL_TRIANGLE_STRIP, 0, 20);
 
 			int nrObb = testMap.chunks[c].collisionRender.abbRender[n].obbBoxesR.size();
 			for (int k = 0; k < nrObb; k++)
 			{
 				testMap.chunks[c].collisionRender.abbRender[n].obbBoxesR[k].BindVertData();
-				//glDrawArrays(GL_TRIANGLE_STRIP, 0, 10);
+				//glDrawArrays(GL_TRIANGLE_STRIP, 0, 20);
 			}
 		}
 	}
