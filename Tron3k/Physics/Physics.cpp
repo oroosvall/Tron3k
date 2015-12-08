@@ -214,38 +214,26 @@ glm::vec3 Physics::checkAngledCylindervSphereCollision(CollideMesh mesh1, Collid
 bool Physics::checkLinevPlaneCollision(glm::vec3 l1, glm::vec3 l2, glm::vec3 p1, glm::vec3 p2, glm::vec3 p3)
 {
 	glm::vec3 p = glm::vec3(0, 0, 0);
-	
+
 	float x = 1;
 	glm::vec3 l = (l2 - l1);
 	normalize(l);
 
-	p = glm::cross((p2 - p1), (p3 - p1));
+	p = normalize(glm::cross((p2 - p1), (p3 - p1)));
 
 	float d = (p1.x * p.x) + (p1.y * p.y) + (p1.z + p.z);
 
 	//the equation for the plane is now p + d
-	
+
 	if (glm::dot(l, p) == 0)
 		return 0;
 
 	x = (d - (glm::dot(l1, p))) / (glm::dot(l, p));
 
-	if (x >= 0 && x <= 1)
+	if (x > 0 && x < 1)
 		return 1;
 	return 0;
-	
-	///*
-	float dot1 = glm::dot(p, (l1 - p1));
-	float dot2 = glm::dot(p, (l2 - p1));
 
-	if (dot1 <= 0 && dot2 > 0)
-		//collision
-		return 1;
-	else if (dot1 >= 0 && dot2 < 0)
-		//collision
-		return 1;//*/
-
-	return 0;
 }
 
 //------Normal Calculators------//
@@ -299,7 +287,7 @@ glm::vec3 Physics::getCollisionNormal(AABB aabb1, AABB aabb2)
 	if (collides)
 	{
 		//Top plane collision
-		return glm::vec3(0, -1, 0);
+		return glm::vec3(0, 1, 0);
 	}
 
 	p1 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[0]);
@@ -311,7 +299,7 @@ glm::vec3 Physics::getCollisionNormal(AABB aabb1, AABB aabb2)
 	if (collides)
 	{
 		//Bot plane collision
-		return glm::vec3(0, 1, 0);
+		return glm::vec3(0, -1, 0);
 	}
 
 	p1 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[3]);
@@ -416,18 +404,20 @@ glm::vec3 Physics::checkPlayerVWorldCollision(glm::vec3 playerPos)
 	playerBox.setPos(playerPos);
 
 	glm::vec3 collisionNormal = glm::vec3(0, 0, 0);
-	for (int i = 0; i < worldBoxes.size() && !collides; i++)
+	for (int i = 0; i < worldBoxes.size(); i++)
 	{
-		for (int j = 0; j < worldBoxes[i].size() && !collides; j++)
+		for (int j = 0; j < worldBoxes[i].size(); j++)
 		{
 			if (checkAABBvAABBCollision(playerBox, worldBoxes[i][j]) != glm::vec3(0, 0, 0))
 			{
 				//if (checkOBBCollision(playerPos, worldBoxes[i]))
 				collides = true;
-				return collisionNormal = getCollisionNormal(playerBox.getAABB(), worldBoxes[i][j].getAABB());//getCollisionNormal(playerBox.getCylinder(), worldBoxes[i][j].getAABB());
+				collisionNormal += getCollisionNormal(playerBox.getAABB(), worldBoxes[i][j].getAABB());//getCollisionNormal(playerBox.getCylinder(), worldBoxes[i][j].getAABB());
 			}
 		}
 	}
+	if (collisionNormal != glm::vec3(0, 0, 0))
+		normalize(collisionNormal);
 	return collisionNormal;
 }
 
@@ -438,8 +428,14 @@ glm::vec3 Physics::checkBulletVWorldCollision(glm::vec3 bulletPos)
 
 	for (int i = 0; i < worldBoxes.size(); i++)
 	{
-		//if (checkAABBCollision(bulletBox, worldBoxes[i][0]))
-			//collides = true;
+		for (int j = 0; j < worldBoxes[i].size(); j++)
+		{
+
+			if (checkAABBvAABBCollision(bulletBox, worldBoxes[i][j]) != glm::vec3(0, 0, 0))
+			{
+				collides = glm::vec3(1, 1, 1);
+			}
+		}
 	}
 	return collides;
 }

@@ -161,6 +161,7 @@ void Game::update(float dt)
 	if (gameState == Gamestate::ROAM)
 	{
 		checkPlayerVWorldCollision();
+		checkBulletVWorldCollision();
 	}
 
 	if (gameState == Gamestate::CLIENT)
@@ -400,7 +401,7 @@ void Game::checkPlayerVWorldCollision()
 	{
 		if (playerList[i] != nullptr)
 		{
-			if (playerList[i]->isLocal())
+			if (playerList[i]->isLocal() && playerList[i]->isAlive())
 			{
 				playerList[i]->setGrounded(false);
 				foundLocal = true;
@@ -415,14 +416,19 @@ void Game::checkPlayerVWorldCollision()
 					//TODO: Return normals from objects we collide with.
 					//TODO: Change direction based on those normals.
 					//TODO: What do we do if we collide with multiple objects?
-
+					normalize(collisionNormal);
 					playerList[i]->setGrounded(true);
 					glm::vec3 vel = playerList[i]->getVelocity();
+					collisionNormal = collisionNormal * glm::dot(vel, collisionNormal);
+					
+					vel = vel - collisionNormal;
+
 					glm::vec3 pos = playerList[i]->getPos();
 					pos.y += vel.y;
 
-					vel.y = 0.0f;
+					//vel.y = 0.0f;
 					playerList[i]->setVelocity(vel);
+					
 				}
 			}
 		}
@@ -445,6 +451,7 @@ void Game::checkBulletVWorldCollision()
 				collides = physics->checkBulletVWorldCollision(bullets[b][j]->getPos());
 				if (collides != glm::vec3(0,0,0))
 				{
+					int x = 0;
 					//TODO: remove bullet, add network thing for deleting the bullet
 					//handleBulletHitEvent()
 				}
