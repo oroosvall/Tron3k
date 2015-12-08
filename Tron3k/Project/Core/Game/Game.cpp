@@ -784,6 +784,8 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 		int PID = 0, BID = 0;
 		parent->getId(PID, BID);
 		lingDir = parent->getDir();
+		lingDir.x += 0.35;
+		lingDir.z += 0.35;
 		addBulletToList(PID, BID, CLUSTERLING, parent->getPos(), lingDir);
 		lingDir.x = -lingDir.x;
 		addBulletToList(PID, BID + 1, CLUSTERLING, parent->getPos(), lingDir);
