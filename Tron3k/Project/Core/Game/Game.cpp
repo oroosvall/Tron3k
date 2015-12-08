@@ -642,6 +642,8 @@ void Game::handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm
 				GetSound()->playExternalSound(SOUNDS::soundEffectPusleRifleShot, pos.x, pos.y, pos.z);
 		addBulletToList(conID, bulletId, BULLET_TYPE::PLASMA_SHOT, pos, dir);
 		break;
+	case WEAPON_TYPE::ENERGY_SHIELD:
+		break;
 
 	case WEAPON_TYPE::DISC_GUN:
 		if (gameState != Gamestate::SERVER)
@@ -650,11 +652,10 @@ void Game::handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm
 		addBulletToList(conID, bulletId, BULLET_TYPE::DISC_SHOT, pos, dir);
 		break;
 
-	case WEAPON_TYPE::LINK_GUN:
+	case WEAPON_TYPE::MELEE:
 		if (gameState != Gamestate::SERVER)
 			if (GetSound())
-				GetSound()->playExternalSound(SOUNDS::soundEffectLinkGun, pos.x, pos.y, pos.z);
-		addBulletToList(conID, bulletId, BULLET_TYPE::LINK_SHOT, pos, dir);
+				GetSound()->playExternalSound(SOUNDS::soundEffectMelee, pos.x, pos.y, pos.z);
 		break;
 
 	case WEAPON_TYPE::GRENADE_LAUNCHER:
@@ -671,11 +672,19 @@ void Game::handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm
 		addBulletToList(conID, bulletId, BULLET_TYPE::SHOTGUN_PELLET, pos, dir);
 		break;
 
-	case WEAPON_TYPE::MELEE:
+	case WEAPON_TYPE::LINK_GUN:
 		if (gameState != Gamestate::SERVER)
 			if (GetSound())
-				GetSound()->playExternalSound(SOUNDS::soundEffectMelee, pos.x, pos.y, pos.z);
-		addBulletToList(conID, bulletId, BULLET_TYPE::SHOTGUN_PELLET, pos, dir);
+				GetSound()->playExternalSound(SOUNDS::soundEffectLinkGun, pos.x, pos.y, pos.z);
+		addBulletToList(conID, bulletId, BULLET_TYPE::LINK_SHOT, pos, dir);
+		break;
+		
+	case WEAPON_TYPE::BATTERYFIELD_SLOW:
+		addBulletToList(conID, bulletId, BULLET_TYPE::BATTERY_SLOW_SHOT, pos, dir);
+		break;
+
+	case WEAPON_TYPE::BATTERYFIELD_SPEED:
+		addBulletToList(conID, bulletId, BULLET_TYPE::BATTERY_SPEED_SHOT, pos, dir);
 		break;
 	}
 }
