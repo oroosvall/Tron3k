@@ -404,9 +404,9 @@ glm::vec3 Physics::checkPlayerVWorldCollision(glm::vec3 playerPos)
 	playerBox.setPos(playerPos);
 
 	glm::vec3 collisionNormal = glm::vec3(0, 0, 0);
-	for (int i = 0; i < worldBoxes.size(); i++)
+	for (unsigned int i = 0; i < worldBoxes.size(); i++)
 	{
-		for (int j = 0; j < worldBoxes[i].size(); j++)
+		for (unsigned int j = 0; j < worldBoxes[i].size(); j++)
 		{
 			if (checkAABBvAABBCollision(playerBox, worldBoxes[i][j]) != glm::vec3(0, 0, 0))
 			{
@@ -426,9 +426,9 @@ glm::vec3 Physics::checkBulletVWorldCollision(glm::vec3 bulletPos)
 	glm::vec3 collides = glm::vec3(0, 0, 0);
 	bulletBox.setPos(bulletPos);
 
-	for (int i = 0; i < worldBoxes.size(); i++)
+	for (unsigned int i = 0; i < worldBoxes.size(); i++)
 	{
-		for (int j = 0; j < worldBoxes[i].size(); j++)
+		for (unsigned int j = 0; j < worldBoxes[i].size(); j++)
 		{
 
 			if (checkAABBvAABBCollision(bulletBox, worldBoxes[i][j]) != glm::vec3(0, 0, 0))
@@ -477,7 +477,7 @@ void Physics::storeChunkBox(int chunkID, std::vector<AABB> cBoxes)
 	std::vector<CollideMesh> cMeshes;
 	CollideMesh temp;
 
-	for (int i = 0; i < cBoxes.size(); i++)
+	for (unsigned int i = 0; i < cBoxes.size(); i++)
 	{
 		temp = CollideMesh();
 		//stores all the info in a tempmesh
@@ -518,7 +518,7 @@ void Physics::receiveWorldBoxes(std::vector<std::vector<float>> wBoxes)
 	float xSize, ySize, zSize;
 	CollideMesh temp;
 	temp.init();
-	for (int i = 0; i < wBoxes.size(); i++)
+	for (unsigned int i = 0; i < wBoxes.size(); i++)
 	{
 		xSize = abs(wBoxes[i][0] - wBoxes[i][1]) / 2;
 		ySize = abs(wBoxes[i][2] - wBoxes[i][3]) / 2;

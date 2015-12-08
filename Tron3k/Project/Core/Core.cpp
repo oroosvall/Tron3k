@@ -394,7 +394,7 @@ void Core::upServer(float dt)
 
 		if (bulletHitsOnPlayer.size() != 0)
 		{
-			for (int c = 0; c < bulletHitsOnPlayer.size(); c++)
+			for (unsigned int c = 0; c < bulletHitsOnPlayer.size(); c++)
 			{
 				int newHP = game->handleBulletHitPlayerEvent(bulletHitsOnPlayer[c]);
 				bulletHitsOnPlayer[c].newHPtotal = newHP;

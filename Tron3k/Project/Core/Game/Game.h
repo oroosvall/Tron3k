@@ -43,6 +43,8 @@ struct BulletHitWorldInfo
 	int bulletBID;
 	BULLET_TYPE bt;
 	glm::vec3 hitPos;
+	glm::vec3 hitDir; //For bouncing things
+	glm::vec3 collisionNormal;
 };
 
 class Game
@@ -105,8 +107,8 @@ private:
 	bool consumableUsed = false;
 
 	std::vector<BulletHitPlayerInfo> allBulletHitsOnPlayers;
-
 	std::vector<EffectHitPlayerInfo> allEffectHitsOnPlayers;
+	std::vector<BulletHitWorldInfo> allBulletHitsOnWorld;
 
 	bool localPlayerWantsRespawn = false;
 	bool localPlayerRespawnWaiting = false;
@@ -168,6 +170,10 @@ public:
 	std::vector<EffectHitPlayerInfo> getAllEffectOnPlayerCollisions();
 	void clearEffectOnPlayerCollisions() { allEffectHitsOnPlayers.clear(); };
 	int handleEffectHitPlayerEvent(EffectHitPlayerInfo hi); //Returns new HP total of player, if we are client then instead simply set HP coming from server
+
+	std::vector<BulletHitWorldInfo> getAllBulletOnWorldCollisions() { return allBulletHitsOnWorld; };
+	void clearBulletOnWorldCollision() { allBulletHitsOnWorld.clear(); };
+	void handleBulletHitWorldEvent(BulletHitWorldInfo hi);
 
 
 	bool freecam; // freecam is active also when in spectate but specctate overides

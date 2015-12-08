@@ -25,7 +25,7 @@ void Game::release()
 
 	for (unsigned int c = 0; c < EFFECT_TYPE::NROFEFFECTS; c++)
 	{
-		for (int i = 0; i < effects[c].size(); i++)
+		for (unsigned int i = 0; i < effects[c].size(); i++)
 		{
 			if (effects[c][i] != nullptr)
 			{
@@ -126,7 +126,7 @@ void Game::update(float dt)
 		}
 	}
 
-	for (unsigned int c = 0; c < max_con; c++)
+	for (int c = 0; c < max_con; c++)
 	{
 		if (playerList[c] != nullptr)
 		{
@@ -452,9 +452,12 @@ void Game::checkBulletVWorldCollision()
 				collides = physics->checkBulletVWorldCollision(bullets[b][j]->getPos());
 				if (collides != glm::vec3(0,0,0))
 				{
-					int x = 0;
-					//TODO: remove bullet, add network thing for deleting the bullet
-					//handleBulletHitEvent()
+					BulletHitWorldInfo hi;
+					hi.bt = BULLET_TYPE(b); hi.hitPos = bullets[b][j]->getPos(); hi.hitDir = bullets[b][j]->getDir();
+					bullets[b][j]->getId(hi.bulletPID, hi.bulletBID);
+					hi.collisionNormal = collides;
+					allBulletHitsOnWorld.push_back(hi);
+					handleBulletHitWorldEvent(hi);
 				}
 			}
 		}
@@ -624,7 +627,6 @@ void Game::handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm
 		addBulletToList(conID, bulletId, BULLET_TYPE::PULSE_SHOT, pos, dir);
 		break;
 
-
 	case WEAPON_TYPE::ENERGY_BOOST:
 		if (gameState != Gamestate::SERVER)
 			if (GetSound())
@@ -751,7 +753,7 @@ void Game::addEffectToList(int conID, int effectId, EFFECT_TYPE et, glm::vec3 po
 
 Effect* Game::getSpecificEffect(int PID, int SID, EFFECT_TYPE et, int &posInEffectArray)
 {
-	for (int c = 0; c < effects[et].size(); c++)
+	for (unsigned int c = 0; c < effects[et].size(); c++)
 	{
 		int p = -1;
 		int e = -1;
@@ -807,14 +809,27 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 	Player* p = playerList[hi.playerHit];
 	int effectPosInArray;
 	Effect* theEffect = getSpecificEffect(hi.effectPID, hi.effectID, hi.et, effectPosInArray);
-	//p->hitByEffect(theEffect, hi.newHPtotal);
-	/*
-	PLAYER COLLIDES WITH EFFECT
-	*/
+	p->hitByEffect(theEffect, hi.newHPtotal);
 
 	removeEffect(hi.et, effectPosInArray);
 	int newHP = p->getHP();
 	return newHP;
+}
+
+void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
+{
+	int arraypos;
+	Bullet* b = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, arraypos);
+	switch (hi.bt)
+	{
+	case BULLET_TYPE::PULSE_SHOT:
+		removeBullet(hi.bt, arraypos);
+		break;
+	case BULLET_TYPE::CLUSTER_GRENADE:
+		hi.hitDir = glm::reflect(hi.hitDir, hi.collisionNormal);
+		b->setDir(hi.hitDir);
+		break;
+	}
 }
 
 void Game::removeEffect(EFFECT_TYPE et, int posInArray)
@@ -840,8 +855,8 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 		int PID = 0, BID = 0;
 		parent->getId(PID, BID);
 		lingDir = parent->getDir();
-		lingDir.x += 0.35;
-		lingDir.z += 0.35;
+		lingDir.x += 0.35f;
+		lingDir.z += 0.35f;
 		addBulletToList(PID, BID, CLUSTERLING, parent->getPos(), lingDir);
 		lingDir.x = -lingDir.x;
 		addBulletToList(PID, BID + 1, CLUSTERLING, parent->getPos(), lingDir);

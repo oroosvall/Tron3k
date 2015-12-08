@@ -31,6 +31,7 @@ public:
 
 	glm::vec3 getPos() { return pos; };
 	glm::vec3 getDir() { return dir; };
+	void setDir(glm::vec3 newdir) { dir = newdir; };
 	int getDamage() { return damage; };
 
 	virtual int update(float dt) = 0;

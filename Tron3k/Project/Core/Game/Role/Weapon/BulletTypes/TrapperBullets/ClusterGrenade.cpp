@@ -16,7 +16,7 @@ int ClusterGrenade::update(float dt)
 {
 	pos += dir * vel * dt;
 
-	dir.y -= 1.5 * dt;
+	dir.y -= 1.5f * dt;
 
 	updateWorldMat();
 
