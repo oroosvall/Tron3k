@@ -4,6 +4,7 @@
 ClusterGrenade::ClusterGrenade(glm::vec3 position, glm::vec3 direction, int pID, int bID, int tID)
 {
 	initValues(position, direction, pID, bID, tID);
+	ttl = 1;
 	vel = 25.0f;
 	damage = 25;
 }
@@ -14,6 +15,8 @@ ClusterGrenade::~ClusterGrenade()
 int ClusterGrenade::update(float dt)
 {
 	pos += dir * vel * dt;
+
+	dir.y -= 1.5 * dt;
 
 	updateWorldMat();
 

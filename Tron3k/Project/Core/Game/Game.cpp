@@ -141,9 +141,7 @@ void Game::update(float dt)
 			int msg = bullets[i][c]->update(dt);
 			if (msg == 1)		//Bullet is dead
 			{
-				delete bullets[i][c];
-				bullets[i][c] = bullets[i][bullets[i].size() - 1];
-				bullets[i].pop_back();
+				removeBullet(BULLET_TYPE(i), c); //Removes bullet, also handles effects such as explosions and additionally spawning effects/bullets
 			}
 		}
 	}
@@ -379,12 +377,12 @@ void Game::checkPlayerVBulletCollision()
 							direkt när kollisionen sker, dvs.
 
 							*/
-
+							BulletHitPlayerInfo hit;
 							hit.bt = BULLET_TYPE(b);
 							hit.playerHit = i;
 							bullets[b][j]->getId(hit.bulletPID, hit.bulletBID);
-
-							playerHit = true;
+							hit.newHPtotal = -1;
+							allBulletHitsOnPlayers.push_back(hit);
 							return;
 						}
 					}
@@ -595,7 +593,10 @@ void Game::addBulletToList(int conID, int bulletId, BULLET_TYPE bt, glm::vec3 po
 		b = new PulseShot(pos, dir, conID, bulletId, p->getTeam());
 		break;
 	case BULLET_TYPE::CLUSTER_GRENADE:
-		b = new PulseShot(pos, dir, conID, bulletId, p->getTeam());
+		b = new ClusterGrenade(pos, dir, conID, bulletId, p->getTeam());
+		break;
+	case BULLET_TYPE::CLUSTERLING:
+		b = new Clusterling(pos, dir, conID, bulletId, p->getTeam());
 		break;
 	}
 
@@ -741,7 +742,7 @@ Effect* Game::getEffect(int PID, int SID, EFFECT_TYPE et, int &posInEffectArray)
 	return nullptr;
 }
 
-Bullet* Game::getBulletForRemoval(int PID, int BID, BULLET_TYPE bt, int &posInBulletArray)
+Bullet* Game::getSpecificBullet(int PID, int BID, BULLET_TYPE bt, int &posInBulletArray)
 {
 	for (unsigned int c = 0; c < bullets[bt].size(); c++)
 	{
@@ -757,7 +758,7 @@ Bullet* Game::getBulletForRemoval(int PID, int BID, BULLET_TYPE bt, int &posInBu
 	return nullptr;
 }
 
-int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi, int newHPtotal)
+int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 {
 	glm::vec3 pos = playerList[hi.playerHit]->getPos();
 	if (gameState != Gamestate::SERVER)
@@ -765,15 +766,44 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi, int newHPtotal)
 			GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHit, pos.x, pos.y, pos.z);
 	Player* p = playerList[hi.playerHit];
 	int bulletPosInArray;
-	Bullet* theBullet = getBulletForRemoval(hi.bulletPID, hi.bulletBID, hi.bt, bulletPosInArray);
-	p->hitByBullet(theBullet, newHPtotal);
+	Bullet* theBullet = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, bulletPosInArray);
+	p->hitByBullet(theBullet, hi.newHPtotal);
 
-	delete bullets[hi.bt][bulletPosInArray];
-	bullets[hi.bt][bulletPosInArray] = bullets[hi.bt][bullets[hi.bt].size() - 1];
-	bullets[hi.bt].pop_back();
+	removeBullet(hi.bt, bulletPosInArray);
 
 	int newHP = p->getHP();
 	return newHP;
+}
+
+void Game::removeBullet(BULLET_TYPE bt, int posInArray)
+{
+	switch (bt)
+	{
+	case BULLET_TYPE::CLUSTER_GRENADE: //FUCKING EVERYTHING	
+	{
+		Bullet* parent = bullets[bt][posInArray];
+		vec3 lingDir;
+		int PID = 0, BID = 0;
+		parent->getId(PID, BID);
+		lingDir = parent->getDir();
+		lingDir.x += 0.35;
+		lingDir.z += 0.35;
+		addBulletToList(PID, BID, CLUSTERLING, parent->getPos(), lingDir);
+		lingDir.x = -lingDir.x;
+		addBulletToList(PID, BID + 1, CLUSTERLING, parent->getPos(), lingDir);
+		lingDir.z = -lingDir.z;
+		addBulletToList(PID, BID + 2, CLUSTERLING, parent->getPos(), lingDir);
+		lingDir.x = -lingDir.x;
+		addBulletToList(PID, BID + 3, CLUSTERLING, parent->getPos(), lingDir);
+	}
+	break;
+	case BULLET_TYPE::CLUSTERLING:
+
+			break;
+	}
+	delete bullets[bt][posInArray];
+	bullets[bt][posInArray] = bullets[bt][bullets[bt].size() - 1];
+	bullets[bt].pop_back();
 }
 
 bool Game::playerWantsToRespawn()

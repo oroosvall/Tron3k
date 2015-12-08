@@ -34,7 +34,10 @@ public:
 	void in_frame(Packet* rec, Uint8 conID);
 	void in_message(Packet* rec, Uint8 conID);
 
-	void event_bullet_hit_player(BulletHitPlayerInfo hi, int newHPtotal);
+	void event_bullet_hit_player(std::vector<BulletHitPlayerInfo> allhits);
+
+	void event_bullet_hit_world(int conid, int effectid, EFFECT_TYPE et, glm::vec3 pos);
+	void event_effect_hit_player(std::vector<EffectHitPlayerInfo> allhits);
 };
 
 #endif

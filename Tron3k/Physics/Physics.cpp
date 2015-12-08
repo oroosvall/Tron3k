@@ -24,6 +24,7 @@ void Physics::initBulletBox()
 
 	//TEMPORARY
 	glm::vec3 size = glm::vec3(0.2f, 0.2f, 0.2f);
+	bulletBox.setAABB(glm::vec3(0, 0, 0), size, -size);
 
 	//bulletBox.setSize(size);
 }
@@ -55,7 +56,7 @@ glm::vec3 Physics::checkAABBvAABBCollision(Geometry* obj1, Geometry* obj2)
 	return glm::vec3(0, 0, 0);
 }
 
-glm::vec3 Physics::checkAABBvAABBCollision(CollideMesh mesh1, CollideMesh mesh2)
+glm::vec3 Physics::checkAABBvAABBCollision(CollideMesh mesh1, CollideMesh mesh2, bool moveSecond)
 {
 	AABB aabb1 = mesh1.getAABB();
 	AABB aabb2 = mesh2.getAABB();
@@ -69,12 +70,14 @@ glm::vec3 Physics::checkAABBvAABBCollision(CollideMesh mesh1, CollideMesh mesh2)
 	glm::vec3 min1 = glm::vec3(aabb1.min);
 	glm::vec3 min2 = glm::vec3(aabb2.min);
 
-	//max1 = max1 - pos1;
-	max2 = max2 - pos2;
+	if (moveSecond)
+	{
+		//max1 = max1 - pos1;
+		max2 = max2 - pos2;
 
-	//min1 = min1 - pos1;
-	min2 = min2 - pos2;
-
+		//min1 = min1 - pos1;
+		min2 = min2 - pos2;
+	}
 
 
 	if (pos1.x + max1.x > pos2.x + min2.x &&
@@ -399,7 +402,7 @@ glm::vec3 Physics::checkPlayerVBulletCollision(glm::vec3 playerPos, glm::vec3 bu
 	bulletBox.setPos(bulletPos);
 	glm::vec3 collide = glm::vec3(0, 0, 0);// checkAABBCollision(playerBox, bulletBox);
 
-	collide = checkAABBvAABBCollision(playerBox, bulletBox);
+	collide = checkAABBvAABBCollision(playerBox, bulletBox, false);
 	//if (collide)
 		//collide = checkOBBCollision(&player, &bullet);
 	return collide;

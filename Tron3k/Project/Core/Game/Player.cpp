@@ -274,7 +274,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 						msg = SHOOT;
 				}
 
-				if (i->justPressed(GLFW_KEY_C))
+				if (i->justPressed(GLFW_KEY_Q))
 				{
 					Consumable* c = role.getConsumable();
 					if (c->use())
@@ -286,10 +286,9 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					/*
 					Add logic (in role) that checks against the applicable special and other conditions
 					*/
-					if (role.getSpecialMeter() - 100.0f < FLT_EPSILON && role.getSpecialMeter() - 100.0f > -FLT_EPSILON)
+					if (role.getSpecialAbility()->allowedToActivate(this))
 					{
-						if (role.getSpecialAbility()->allowedToActivate(this))
-							msg = SPECIALUSE;
+						msg = SPECIALUSE;
 					}
 				}
 

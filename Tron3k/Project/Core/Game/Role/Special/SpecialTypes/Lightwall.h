@@ -9,7 +9,7 @@
 class Lightwall : public Special
 {
 private:
-	float activeTime;
+	bool activated = false;
 public:
 	Lightwall();
 	~Lightwall();

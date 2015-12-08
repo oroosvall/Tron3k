@@ -18,6 +18,25 @@ enum Gamestate
 	SERVER
 };
 
+struct BulletHitPlayerInfo
+{
+	int playerHit;
+	int bulletPID;
+	int bulletBID;
+	BULLET_TYPE bt;
+	int newHPtotal;
+};
+
+struct EffectHitPlayerInfo
+{
+	int playerHit;
+	int effectPID;
+	int effectID;
+	EFFECT_TYPE et;
+	glm::vec3 hitPos;
+	int newHPtotal;
+};
+
 class Game
 {
 private:
@@ -45,7 +64,8 @@ private:
 	void initPhysics();
 
 	void addBulletToList(int conID, int bulletId, BULLET_TYPE bt, glm::vec3 pos, glm::vec3 dir);
-	Bullet* getBulletForRemoval(int PID, int BID, BULLET_TYPE bt, int &posInBulletArray);
+	Bullet* getSpecificBullet(int PID, int BID, BULLET_TYPE bt, int &posInBulletArray);
+	void removeBullet(BULLET_TYPE bt, int posInArray);
 
 	void addEffectToList(int conID, int effectId, EFFECT_TYPE et, glm::vec3 pos);
 	Effect* getEffect(int PID, int SID, EFFECT_TYPE et, int &posInEffectArray);
@@ -74,8 +94,9 @@ private:
 	CONSUMABLE_TYPE itemUsed;
 	bool consumableUsed = false;
 
-	BulletHitPlayerInfo hit;
-	bool playerHit = false;
+	std::vector<BulletHitPlayerInfo> allBulletHitsOnPlayers;
+
+	std::vector<EffectHitPlayerInfo> allEffectHitsOnPlayers;
 
 	bool localPlayerWantsRespawn = false;
 	bool localPlayerRespawnWaiting = false;
@@ -130,9 +151,12 @@ public:
 	SPECIAL_TYPE getSpecialAbilityUsed(int localPlayer, int &sid); //sid is SpecialId, really only used for Lightwalls. I'm so, so sorry
 	void handleSpecialAbilityUse(int conID, int specialId, SPECIAL_TYPE st, glm::vec3 pos, glm::vec3 dir);
 
-	bool hitPlayerEventReady() { return playerHit; };
-	BulletHitPlayerInfo getHitPlayerInfo() { playerHit = false; return hit; };
-	int handleBulletHitPlayerEvent(BulletHitPlayerInfo hi, int newHPtotal = -1); //Returns the new HP total of the player, takes the new HP total instead if info is coming from server
+	std::vector<BulletHitPlayerInfo> getAllHitPlayerInfo() { return allBulletHitsOnPlayers; };
+	void clearBulletOnPlayerCollisions() { allBulletHitsOnPlayers.clear();};
+	int handleBulletHitPlayerEvent(BulletHitPlayerInfo hi); //Returns the new HP total of the player, takes the new HP total instead if info is coming from server
+
+	std::vector<EffectHitPlayerInfo> getAllEffectOnPlayerCollisions();
+	void clearEffectOnPlayerCollisions() { allEffectHitsOnPlayers.clear(); };
 
 
 	bool freecam; // freecam is active also when in spectate but specctate overides

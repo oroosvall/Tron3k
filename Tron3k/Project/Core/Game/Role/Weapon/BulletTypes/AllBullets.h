@@ -1,6 +1,22 @@
 #ifndef ALLBULLETS_H
 #define ALLBULLETS_H
 
-#include "TrapperBullets/BulletPulseShot.h"
+#include "TrapperBullets\BulletPulseShot.h"
+#include "TrapperBullets\ClusterGrenade.h"
+#include "TrapperBullets\Clusterling.h"
+
+#include "MobilityBullets\DiscShot.h"
+#include "MobilityBullets\HackingDart.h"
+
+#include "ManipulatorBullets\BatterySlowShot.h"
+#include "ManipulatorBullets\BatterySpeedShot.h"
+#include "ManipulatorBullets\LinkShot.h"
+#include "ManipulatorBullets\VacuumGrenade.h"
+
+#include "DestroyerBullets\CleanseBomb.h"
+#include "DestroyerBullets\PlasmaShot.h"
+
+#include "BruteBullets\GrenadeShot.h"
+#include "BruteBullets\ShotgunPellet.h"
 
 #endif

@@ -20,12 +20,16 @@ void Server::disconnected(Uint8 _conID)
 		consolePtr->printMsg("ERROR Disconnect", "System", 'S');
 }
 
-void Server::event_bullet_hit_player(BulletHitPlayerInfo hi, int newHPtotal)
+void Server::event_bullet_hit_player(std::vector<BulletHitPlayerInfo> allhits)
 {
 	Packet* out = new Packet();
 	*out << Uint8(NET_INDEX::EVENT) << Uint8(NET_EVENT::PLAYER_HIT);
-	*out << Uint8(hi.playerHit) << Uint8(hi.bulletPID) << Uint8(hi.bulletBID) << Uint8(hi.bt);
-	*out << Uint8(newHPtotal);
+	*out << Uint8(allhits.size());
+	for (int c = 0; c < allhits.size(); c++)
+	{
+		*out << Uint8(allhits[c].playerHit) << Uint8(allhits[c].bulletPID) << Uint8(allhits[c].bulletBID) << Uint8(allhits[c].bt) << Uint8(allhits[c].newHPtotal);
+	}
+	
 	branch(out, -1);
 	delete out;
 }
@@ -272,3 +276,12 @@ void Server::in_message(Packet* rec, Uint8 conID)
 		consolePtr->printMsg("ERROR in_message", "System", 'S');
 }
 
+void Server::event_bullet_hit_world(int conid, int effectid, EFFECT_TYPE et, glm::vec3 pos)
+{
+
+}
+
+void Server::event_effect_hit_player(std::vector<EffectHitPlayerInfo> allhits)
+{
+
+}
