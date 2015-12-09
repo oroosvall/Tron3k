@@ -62,7 +62,7 @@ private:
 	//--------------//--------------//
 
 	//--------Line Collision--------//
-	bool checkLinevPlaneCollision(glm::vec3 l1, glm::vec3 l2, glm::vec3 p1, glm::vec3 p2, glm::vec3 p3);
+	float checkLinevPlaneCollision(glm::vec3 l1, glm::vec3 l2, glm::vec3 p1, glm::vec3 p2, glm::vec3 p3);
 
 
 	//------Normal Calculators------//

@@ -211,7 +211,7 @@ glm::vec3 Physics::checkAngledCylindervSphereCollision(CollideMesh mesh1, Collid
 }
 //--------------//--------------//
 
-bool Physics::checkLinevPlaneCollision(glm::vec3 l1, glm::vec3 l2, glm::vec3 p1, glm::vec3 p2, glm::vec3 p3)
+float Physics::checkLinevPlaneCollision(glm::vec3 l1, glm::vec3 l2, glm::vec3 p1, glm::vec3 p2, glm::vec3 p3)
 {
 	glm::vec3 p = glm::vec3(0, 0, 0);
 
@@ -219,20 +219,20 @@ bool Physics::checkLinevPlaneCollision(glm::vec3 l1, glm::vec3 l2, glm::vec3 p1,
 	glm::vec3 l = (l2 - l1);
 	normalize(l);
 
-	p = normalize(glm::cross((p2 - p1), (p3 - p1)));
+	p = normalize(glm::cross((p1 - p2), (p3 - p2)));
 
-	float d = (p1.x * p.x) + (p1.y * p.y) + (p1.z + p.z);
+	float d = -((p2.x * p.x) + (p2.y * p.y) + (p2.z + p.z));
 
 	//the equation for the plane is now p + d
 
 	if (glm::dot(l, p) == 0)
-		return 0;
+		return -1;
 
 	x = (d - (glm::dot(l1, p))) / (glm::dot(l, p));
 
-	if (x > 0 && x < 1)
-		return 1;
-	return 0;
+	if (x >= 0 && x <= 1)
+		return x;
+	return -1;
 
 }
 
@@ -252,78 +252,115 @@ glm::vec3 Physics::getCollisionNormal(AABB aabb1, AABB aabb2)
 	glm::vec3 p1, p2, p3;
 	p1 = p2 = p3 = glm::vec3(0, 0, 0);
 
-	bool collides = false;
+	float collides1 = -1;
+	float collides2 = -1;
 
 	p1 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[1]);
 	p2 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[0]);
 	p3 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[2]);
 
-	collides = checkLinevPlaneCollision(l1, l2, p1, p2, p3);
+	collides1 = checkLinevPlaneCollision(l1, l2, p1, p2, p3);
 
-	if (collides)
+	p1 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[1]);
+	p2 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[3]);
+	p3 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[2]);
+
+	collides2 = checkLinevPlaneCollision(l1, l2, p1, p2, p3);
+
+	if (collides1 >= 0.0f || collides2 >= 0.0f)
 	{
 		//Front plane collision
-		return glm::vec3(0, 0, 1);
+		return glm::vec3(0, 0, collides1);
 	}
 
 	p1 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[6]);
 	p2 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[7]);
 	p3 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[5]);
 
-	collides = checkLinevPlaneCollision(l1, l2, p1, p2, p3);
+	collides1 = checkLinevPlaneCollision(l1, l2, p1, p2, p3);
 
-	if (collides)
+	p1 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[6]);
+	p2 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[4]);
+	p3 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[5]);
+
+	collides2 = checkLinevPlaneCollision(l1, l2, p1, p2, p3);
+
+	if (collides1 >= 0.0f || collides2 >= 0.0f)
 	{
 		//Back plane collision
-		return glm::vec3(0, 0, -1);
+		return glm::vec3(0, 0, -collides1);
 	}
 
 	p1 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[2]);
 	p2 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[3]);
 	p3 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[7]);
 
-	collides = checkLinevPlaneCollision(l1, l2, p1, p2, p3);
+	collides1 = checkLinevPlaneCollision(l1, l2, p1, p2, p3);
 
-	if (collides)
+	p1 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[2]);
+	p2 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[6]);
+	p3 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[7]);
+
+	collides2 = checkLinevPlaneCollision(l1, l2, p1, p2, p3);
+
+	if (collides1 >= 0.0f || collides2 >= 0.0f)
 	{
 		//Top plane collision
-		return glm::vec3(0, 1, 0);
+		return glm::vec3(0, collides1, 0);
 	}
 
 	p1 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[0]);
 	p2 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[1]);
 	p3 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[5]);
 
-	collides = checkLinevPlaneCollision(l1, l2, p1, p2, p3);
+	collides1 = checkLinevPlaneCollision(l1, l2, p1, p2, p3);
 
-	if (collides)
+	p1 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[0]);
+	p2 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[4]);
+	p3 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[5]);
+
+	collides2 = checkLinevPlaneCollision(l1, l2, p1, p2, p3);
+
+	if (collides1 >= 0.0f || collides2 >= 0.0f)
 	{
 		//Bot plane collision
-		return glm::vec3(0, -1, 0);
+		return glm::vec3(0, -collides1, 0);
 	}
 
 	p1 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[3]);
 	p2 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[7]);
 	p3 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[5]);
 
-	collides = checkLinevPlaneCollision(l1, l2, p1, p2, p3);
+	collides1 = checkLinevPlaneCollision(l1, l2, p1, p2, p3);
 
-	if (collides)
+	p1 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[3]);
+	p2 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[1]);
+	p3 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[5]);
+
+	collides2 = checkLinevPlaneCollision(l1, l2, p1, p2, p3);
+
+	if (collides1 >= 0.0f || collides2 >= 0.0f)
 	{
 		//Right plane collision
-		return glm::vec3(1, 0, 0);
+		return glm::vec3(collides1, 0, 0);
 	}
 
 	p1 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[2]);
 	p2 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[6]);
 	p3 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[4]);
 
-	collides = checkLinevPlaneCollision(l1, l2, p1, p2, p3);
+	collides1 = checkLinevPlaneCollision(l1, l2, p1, p2, p3);
 
-	if (collides)
+	p1 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[2]);
+	p2 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[0]);
+	p3 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[4]);
+
+	collides2 = checkLinevPlaneCollision(l1, l2, p1, p2, p3);
+
+	if (collides1 >= 0.0f || collides2 >= 0.0f)
 	{
 		//Left plane collision
-		return glm::vec3(-1, 0, 0);
+		return glm::vec3(-collides1, 0, 0);
 	}
 
 
