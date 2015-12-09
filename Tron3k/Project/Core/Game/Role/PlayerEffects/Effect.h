@@ -10,7 +10,6 @@ class Effect
 protected:
 	int playerId;
 	int effectId;
-	glm::vec3 pos;
 	EFFECT_TYPE type;
 public:
 	// orka göra funktion
