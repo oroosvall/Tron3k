@@ -13,7 +13,7 @@
 using namespace std;
 
 enum ROLES { TRAPPER, DESTROYER, MOBILITY, BRUTE, MANIPULATOR, NROFROLES };
-enum PROPERTIES{HEALTH, MAINWEP, SECWEP, CARRIEDITEM, MOVEMENTSPEED, NROFREADPROPERTIES};
+enum PROPERTIES{HEALTH, MAINWEP, SECWEP, JUMPHEIGHT, MOVEMENTSPEED, NROFREADPROPERTIES};
 
 class Role
 {
@@ -22,6 +22,7 @@ class Role
 		int health;
 		int maxHealth;
 		float movementSpeed;
+		float jumpHeight;
 		string roles[NROFROLES];
 		
 		string loadedRoles[NROFROLES][NROFREADPROPERTIES];
@@ -62,6 +63,7 @@ class Role
 		void heal(int h); //Used by server
 
 		int getHealth() { return health; };
+		float getJumpHeight() { return jumpHeight; };
 		void returnToLife();
 
 		Special* getSpecialAbility() { return specialAbility; };

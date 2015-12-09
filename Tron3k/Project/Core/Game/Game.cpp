@@ -768,11 +768,11 @@ void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec
 		vec3 vel = p->getVelocity();
 		if (vel.y<0)
 		{
-			vel.y = 3.0f;
+			vel.y = 1.5f;
 		}
 		else
 		{
-			vel.y += 3.0f;
+			vel.y += 1.5f;
 		}	
 		p->setVelocity(vel);
 	}
@@ -789,6 +789,9 @@ void Game::addEffectToList(int conID, int effectId, EFFECT_TYPE et, glm::vec3 po
 	{
 	case EFFECT_TYPE::LIGHT_WALL:
 		e = new LightwallEffect(p);
+		break;
+	case EFFECT_TYPE::EXPLOSION:
+		e = new Explosion();
 		break;
 	}
 	e->init(conID, effectId, pos);
@@ -908,6 +911,9 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 		addBulletToList(PID, BID + 2, CLUSTERLING, parent->getPos(), lingDir);
 		lingDir.x = -lingDir.x;
 		addBulletToList(PID, BID + 3, CLUSTERLING, parent->getPos(), lingDir);
+
+		addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
+		effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(15.0f);
 	}
 	break;
 	case BULLET_TYPE::CLUSTERLING:
