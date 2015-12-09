@@ -199,8 +199,8 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					if (i->getKeyInfo(GLFW_KEY_D))
 					{
 						vec3 right = cross(dir, vec3(0, 1, 0));
-						tempvec = normalize(vec2(right.x, right.z));
-						right = normalize(right);
+						tempvec = glm::normalize(vec2(right.x, right.z));
+						right = glm::normalize(right);
 						if (grounded)
 						{
 							vel.x += tempvec.x;

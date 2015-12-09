@@ -6,12 +6,16 @@
 
 #include "../../../GameDataIndex.h"
 
+class Role;
+class Player;
+
 class Lightwall : public Special
 {
 private:
+	Role* myRole = nullptr;
 	bool activated = false;
 public:
-	Lightwall();
+	Lightwall(Role* r);
 	~Lightwall();
 
 	void init();

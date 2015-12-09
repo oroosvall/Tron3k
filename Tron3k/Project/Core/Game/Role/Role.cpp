@@ -99,7 +99,7 @@ void Role::loadRoleSpecifics(int role)
 	switch (role)
 		case TRAPPER:
 	{
-			specialAbility = new Lightwall();
+			specialAbility = new Lightwall(this);
 			specialAbility->init();
 			mobility = new MultiJump();
 			mobility->init();
@@ -107,7 +107,7 @@ void Role::loadRoleSpecifics(int role)
 			consumable->init(CONSUMABLE_TYPE::CLUSTERGRENADE);
 			break;
 		case DESTROYER:
-			specialAbility = new Lightwall();
+			specialAbility = new Lightwall(this);
 			specialAbility->init();
 			mobility = new MultiJump();
 			mobility->init();
@@ -115,7 +115,7 @@ void Role::loadRoleSpecifics(int role)
 			consumable->init(CONSUMABLE_TYPE::OVERCHARGE);
 			break;
 		case MOBILITY:
-			specialAbility = new Lightwall();
+			specialAbility = new Lightwall(this);
 			specialAbility->init();
 			mobility = new MultiJump();
 			mobility->init();
@@ -123,7 +123,7 @@ void Role::loadRoleSpecifics(int role)
 			consumable->init(CONSUMABLE_TYPE::LIGHTSPEED);
 			break;
 		case BRUTE:
-			specialAbility = new Lightwall();
+			specialAbility = new Lightwall(this);
 			specialAbility->init();
 			mobility = new MultiJump();
 			mobility->init();
@@ -131,7 +131,7 @@ void Role::loadRoleSpecifics(int role)
 			consumable->init(CONSUMABLE_TYPE::THUNDERDOME);
 			break;
 		case MANIPULATOR:
-			specialAbility = new Lightwall();
+			specialAbility = new Lightwall(this);
 			specialAbility->init();
 			mobility = new MultiJump();
 			mobility->init();
