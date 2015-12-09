@@ -1016,8 +1016,8 @@ void Core::sendPlayerBox()
 	float xMax, xMin, yMax, yMin, zMax, zMin;
 	xMax = 0.5f;
 	xMin = -0.5f;
-	yMax = 1.0f;
-	yMin = -1.0f;
+	yMax = 2.0f;
+	yMin = -2.0f;
 	zMax = 0.2f;
 	zMin = -0.2f;
 

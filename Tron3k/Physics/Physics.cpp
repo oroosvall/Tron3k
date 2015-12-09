@@ -458,7 +458,7 @@ glm::vec3 Physics::normalize(glm::vec3 &vec3)
 	}
 
 	return vec3;
-	
+
 }
 
 void Physics::receiveChunkBoxes(int chunkID, void* cBoxes)
@@ -501,15 +501,15 @@ void Physics::receivePlayerBox(std::vector<float> pBox)
 	float xSize, ySize, zSize;
 	playerBox.init();
 
-	xSize = abs(pBox[0] - pBox[1]) / 2;
-	ySize = abs(pBox[2] - pBox[3]) / 2;
-	zSize = abs(pBox[4] - pBox[5]) / 2;
+	xSize = (abs(pBox[0]) + abs(pBox[1])) / 2;
+	ySize = (abs(pBox[2]) + abs(pBox[3])) / 2;
+	zSize = (abs(pBox[4]) + abs(pBox[5])) / 2;
 
 	xPos = (pBox[0] + pBox[1]) / 2;
 	yPos = (pBox[2] + pBox[3]) / 2;
 	zPos = (pBox[4] + pBox[5]) / 2;
 
-	playerBox.setAABB(glm::vec3(xPos, yPos, zPos), glm::vec3(xSize, ySize, zSize), glm::vec3(-xSize, -ySize, -zSize));
+	playerBox.setAABB(glm::vec3(xPos, yPos, zPos), glm::vec3(pBox[0], pBox[2], pBox[4]), glm::vec3(pBox[1], pBox[3], pBox[5]));
 }
 
 void Physics::receiveWorldBoxes(std::vector<std::vector<float>> wBoxes)
