@@ -244,7 +244,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				{
 					if (grounded)
 					{
-						vel.y = 3.0f;
+						vel.y = role.getJumpHeight();
 						grounded = false;
 					}
 				}
@@ -408,6 +408,8 @@ void Player::hitByBullet(Bullet* b, int newHPtotal)
 	{
 		role.setHealth(newHPtotal);
 	}
+
+	//If hacking dart -> modifier on player
 }
 
 void Player::hitByEffect(Effect* e, int newHPtotal)

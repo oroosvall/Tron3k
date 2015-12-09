@@ -85,6 +85,7 @@ public:
 		{
 		case NET_COMMAND::TEAM_CHANGE: in_command_team_change(rec, conID); break;
 		case NET_COMMAND::RESPAWN: in_command_respawn(rec, conID); break;
+		case NET_COMMAND::ROLESWITCH: in_command_role_change(rec, conID); break;
 		}
 	}
 
@@ -346,6 +347,14 @@ public:
 		delete out;
 	}
 
+	virtual void command_role_change(Uint8 conid, Uint8 role)
+	{
+		Packet* out = new Packet();
+		*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::ROLESWITCH) << conid << role;
+		con->send(out);
+		delete out;
+	}
+
 	virtual void command_respawn(Uint8 conid)
 	{
 		Packet* out = new Packet();
@@ -408,6 +417,31 @@ public:
 		{
 			Packet* out = new Packet();
 			*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::TEAM_CHANGE) << p_conID << team << 0.0f << 0.0f << 0.0f;
+			branch(out, -1);
+			delete out;
+		}
+	}
+
+	virtual void in_command_role_change(Packet* rec, Uint8 conID)
+	{
+		Uint8 p_conID;
+		Uint8 role;
+		*rec >> p_conID >> role;
+
+		Player* p = gamePtr->getPlayer(p_conID);
+		if (p == nullptr)
+		{
+			consolePtr->printMsg("ERROR in_command_role_change", "System", 'S');
+			return;
+		}
+
+		p->getRole()->chooseRole(role-1);
+		consolePtr->printMsg("Player " + p->getName() + " switched class!", "System", 'S');
+
+		if (isClient == false)
+		{
+			Packet* out = new Packet();
+			*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::ROLESWITCH) << p_conID << role;
 			branch(out, -1);
 			delete out;
 		}

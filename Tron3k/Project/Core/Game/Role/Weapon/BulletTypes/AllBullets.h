@@ -18,5 +18,6 @@
 
 #include "BruteBullets\GrenadeShot.h"
 #include "BruteBullets\ShotgunPellet.h"
+#include "BruteBullets\ThunderDome.h"
 
 #endif

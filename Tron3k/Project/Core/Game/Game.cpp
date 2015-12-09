@@ -612,6 +612,9 @@ void Game::addBulletToList(int conID, int bulletId, BULLET_TYPE bt, glm::vec3 po
 	case BULLET_TYPE::SHOTGUN_PELLET:
 		b = new ShotgunPellet(pos, dir, conID, bulletId, p->getTeam());
 		break;
+	case BULLET_TYPE::THUNDERDOME_GRENADE:
+		b = new ThunderDome(pos, dir, conID, bulletId, p->getTeam());
+		break;
 	case BULLET_TYPE::CLEANSE_BOMB:
 		b = new CleanseBomb(pos, dir, conID, bulletId, p->getTeam());
 		break;
@@ -731,6 +734,18 @@ void Game::handleConsumableUse(int conID, CONSUMABLE_TYPE ct, glm::vec3 pos, glm
 	case CONSUMABLE_TYPE::CLUSTERGRENADE:
 		addBulletToList(conID, 0, BULLET_TYPE::CLUSTER_GRENADE, pos, dir);
 		break;
+	case CONSUMABLE_TYPE::CLEANSEBOMB:
+		addBulletToList(conID, 0, BULLET_TYPE::CLEANSE_BOMB, pos, dir);
+		break;
+	case CONSUMABLE_TYPE::VACUUMGRENADE:
+		addBulletToList(conID, 0, BULLET_TYPE::VACUUM_GRENADE, pos, dir);
+		break;
+	case CONSUMABLE_TYPE::HACKINGDART:
+		addBulletToList(conID, 0, BULLET_TYPE::HACKING_DART, pos, dir);
+		break;
+	case CONSUMABLE_TYPE::THUNDERDOME:
+		addBulletToList(conID, 0, BULLET_TYPE::THUNDERDOME_GRENADE, pos, dir);
+		break;
 	}
 }
 
@@ -762,11 +777,11 @@ void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec
 		vec3 vel = p->getVelocity();
 		if (vel.y<0)
 		{
-			vel.y = 3.0f;
+			vel.y = 1.5f;
 		}
 		else
 		{
-			vel.y += 3.0f;
+			vel.y += 1.5f;
 		}	
 		p->setVelocity(vel);
 	}
@@ -783,6 +798,9 @@ void Game::addEffectToList(int conID, int effectId, EFFECT_TYPE et, glm::vec3 po
 	{
 	case EFFECT_TYPE::LIGHT_WALL:
 		e = new LightwallEffect(p);
+		break;
+	case EFFECT_TYPE::EXPLOSION:
+		e = new Explosion();
 		break;
 	}
 	e->init(conID, effectId, pos);
@@ -830,7 +848,7 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 	Player* p = playerList[hi.playerHit];
 	int bulletPosInArray;
 	Bullet* theBullet = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, bulletPosInArray);
-	p->hitByBullet(theBullet, hi.newHPtotal);
+	p->hitByBullet(theBullet, hi.newHPtotal);	//Add support for hacking dart
 
 	removeBullet(hi.bt, bulletPosInArray);
 
@@ -884,13 +902,14 @@ void Game::removeEffect(EFFECT_TYPE et, int posInArray)
 
 void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 {
+	int PID = 0, BID = 0;
+	Bullet* parent = bullets[bt][posInArray];
+
 	switch (bt)
 	{
 	case BULLET_TYPE::CLUSTER_GRENADE: //FUCKING EVERYTHING	
 	{
-		Bullet* parent = bullets[bt][posInArray];
 		vec3 lingDir;
-		int PID = 0, BID = 0;
 		parent->getId(PID, BID);
 		lingDir = parent->getDir();
 		lingDir.x += 0.35f;
@@ -902,11 +921,27 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 		addBulletToList(PID, BID + 2, CLUSTERLING, parent->getPos(), lingDir);
 		lingDir.x = -lingDir.x;
 		addBulletToList(PID, BID + 3, CLUSTERLING, parent->getPos(), lingDir);
-	}
-	break;
-	case BULLET_TYPE::CLUSTERLING:
 
-			break;
+		addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
+		effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(15.0f);
+		break;
+	}
+	case BULLET_TYPE::CLUSTERLING:
+	{
+		addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
+		effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(15.0f);
+		break;
+	}
+	case BULLET_TYPE::CLEANSE_BOMB:
+	{
+		addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
+		effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(15.0f);
+		break;
+	}
+	case BULLET_TYPE::VACUUM_GRENADE:
+		break;
+	case BULLET_TYPE::THUNDERDOME_GRENADE:
+		break;
 	}
 	delete bullets[bt][posInArray];
 	bullets[bt][posInArray] = bullets[bt][bullets[bt].size() - 1];

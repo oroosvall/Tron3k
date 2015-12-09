@@ -3,12 +3,15 @@
 
 #include <glm/glm.hpp>
 
+#include "../../GameDataIndex.h"
+
 class Effect
 {
 protected:
 	int playerId;
 	int effectId;
-
+	glm::vec3 pos;
+	EFFECT_TYPE type;
 public:
 	// orka göra funktion
 	glm::vec3 pos;
@@ -18,5 +21,8 @@ public:
 	virtual int update(float dt) = 0;
 
 	virtual int getDamage() { return 0; };
+	virtual void setInterestingVariable(float f) {};
+
+	EFFECT_TYPE getType() { return type; };
 };
 #endif
