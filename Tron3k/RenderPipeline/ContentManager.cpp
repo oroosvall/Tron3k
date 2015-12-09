@@ -3,6 +3,13 @@
 
 void ContentManager::init()
 {
+	//init flags
+	f_portal_culling = false;
+	f_freeze_portals = false;
+	f_render_chunks = true;
+	f_render_abb = false;
+	f_render_obb = false;
+
 	playerModels = new PlayerObject[1];
 
 	TextureLookup tex;
@@ -141,6 +148,8 @@ void ContentManager::init()
 
 	testAnimationMesh.init();
 	testAnimationMesh.load("GameFiles/CharacterFiles/Tron3k_animTest_2.bin");
+
+
 }
 
 void ContentManager::release()
@@ -222,13 +231,14 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 	//render chunks logged from last frame
 	for (int n = 0; n < nrChunks; n++)
 	{
-		if (renderNextChunks[n] == true)
+		if (renderNextChunks[n] == true || f_portal_culling == false)
 		{
 			//Glow values for world
 			glProgramUniform3fv(shader, DglowColor, 1, (GLfloat*)&testMap.chunks[n].color[0]);
 			glProgramUniform1f(shader, SglowColor, testMap.chunks[n].staticIntes);
 
-			testMap.renderChunk(shader, shaderLocation, n);
+			if(f_render_chunks)
+				testMap.renderChunk(shader, shaderLocation, n);
 			renderedChunks[n] = true;
 		}
 	}
@@ -254,8 +264,9 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 	/* NO MORE STUFF*/
 
 	//reset the renderrednextlist
-	for (int n = 0; n < nrChunks; n++)
-		renderNextChunks[n] = false;
+	if(f_freeze_portals == false)
+		for (int n = 0; n < nrChunks; n++)
+			renderNextChunks[n] = false;
 
 	glUseProgram(portal_shader);
 	glm::mat4 alreadyinworldpace;
@@ -264,56 +275,67 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 	glDisable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
 
-	//render portals from the rendered chunks
-	for (int n = 0; n < nrChunks; n++)
+	if (f_freeze_portals == false)
 	{
-		if (renderedChunks[n] == true)
+		//render portals from the rendered chunks
+		for (int n = 0; n < nrChunks; n++)
 		{
-			int size = testMap.chunks[n].portals.size();
-			for (int p = 0; p < size; p++) // render the portals
+			if (renderedChunks[n] == true)
 			{
-				// dont render if it bridges between chunks that are already in the rendernextqueue
-				if (renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[0]] == false ||
-					renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[1]] == false)
+				int size = testMap.chunks[n].portals.size();
+				for (int p = 0; p < size; p++) // render the portals
 				{
-					glBeginQuery(GL_SAMPLES_PASSED, portalQuery);
-					testMap.chunks[n].portals[p].render();
-					GLint passed = 2222;
-					glEndQuery(GL_SAMPLES_PASSED);
-					glGetQueryObjectiv(portalQuery, GL_QUERY_RESULT, &passed);
-
-					if (passed > 0)
+					// dont render if it bridges between chunks that are already in the rendernextqueue
+					if (renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[0]] == false ||
+						renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[1]] == false)
 					{
-						renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[0]] = true;
-						renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[1]] = true;
+						glBeginQuery(GL_SAMPLES_PASSED, portalQuery);
+						testMap.chunks[n].portals[p].render();
+						GLint passed = 2222;
+						glEndQuery(GL_SAMPLES_PASSED);
+						glGetQueryObjectiv(portalQuery, GL_QUERY_RESULT, &passed);
+
+						if (passed > 0)
+						{
+							renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[0]] = true;
+							renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[1]] = true;
+						}
+					}
+				}
+			}
+		}
+		renderNextChunks[0] = true;
+		renderNextChunks[testMap.currentChunk] = true;
+	}
+
+	if (f_render_abb || f_render_obb)
+	{
+		//render collision boxes
+		for (int c = 0; c < nrChunks; c++)
+		{
+			ChunkCollision* col = testMap.chunks[c].getChunkCollision();
+
+			float nrABB = col->abbStuff.size();
+			for (int n = 0; n < nrABB; n++)
+			{
+				if (f_render_abb)
+				{
+					testMap.chunks[c].collisionRender.abbRender[n].abbBoxR.BindVertData();
+					glDrawArrays(GL_TRIANGLE_STRIP, 0, 20);
+				}
+
+				int nrObb = testMap.chunks[c].collisionRender.abbRender[n].obbBoxesR.size();
+				for (int k = 0; k < nrObb; k++)
+				{
+					if (f_render_obb)
+					{
+						testMap.chunks[c].collisionRender.abbRender[n].obbBoxesR[k].BindVertData();
+						glDrawArrays(GL_TRIANGLE_STRIP, 0, 20);
 					}
 				}
 			}
 		}
 	}
-	renderNextChunks[0] = true;
-	renderNextChunks[testMap.currentChunk] = true;
-
-	//render collision boxes
-	for (int c = 0; c < nrChunks; c++)
-	{
-		ChunkCollision* col = testMap.chunks[c].getChunkCollision();
-
-		float nrABB = col->abbStuff.size();
-		for (int n = 0; n < nrABB; n++)
-		{
-			testMap.chunks[c].collisionRender.abbRender[n].abbBoxR.BindVertData();	
-			//glDrawArrays(GL_TRIANGLE_STRIP, 0, 20);
-
-			int nrObb = testMap.chunks[c].collisionRender.abbRender[n].obbBoxesR.size();
-			for (int k = 0; k < nrObb; k++)
-			{
-				testMap.chunks[c].collisionRender.abbRender[n].obbBoxesR[k].BindVertData();
-				//glDrawArrays(GL_TRIANGLE_STRIP, 0, 20);
-			}
-		}
-	}
-	
 }
 
 void ContentManager::renderPlayer(int playerID, glm::mat4 world)
