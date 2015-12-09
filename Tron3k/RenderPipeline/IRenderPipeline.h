@@ -9,6 +9,13 @@
 
 #include <string>
 #include "Lights.h"
+#include <vector>
+
+struct SpawnpointG
+{
+	glm::vec3 pos;
+	glm::vec3 dir;
+};
 
 enum PIPELINE_SETTINGS
 {
@@ -87,7 +94,7 @@ public:
 	virtual void getWorldBoxes(int &current, float &xMax, float &xMin, float &yMax, float &yMin, float &zMax, float &zMin) = 0;
 	virtual int getNrOfWorldBoxes() = 0;
 	virtual void setRenderFlag(RENDER_FLAGS flag) = 0;
-
+	virtual void getSpawnpoints(std::vector < std::vector < SpawnpointG > > &spoints) = 0;
 };
 
 extern "C" ENGINE_API IRenderPipeline* CreatePipeline();

@@ -47,12 +47,18 @@ struct BulletHitWorldInfo
 	glm::vec3 collisionNormal;
 };
 
+struct Spawnpoint
+{
+	glm::vec3 pos;
+	glm::vec3 dir;
+};
+
 class Game
 {
 private:
 	std::vector<Bullet*> bullets[BULLET_TYPE::NROFBULLETS];
 	std::vector<Effect*> effects[EFFECT_TYPE::NROFEFFECTS];
-
+	std::vector <vector < Spawnpoint >> spawnpoints;
 	std::vector<int> teamSpectators; //Team vectors hold connection IDs
 	std::vector<int> teamOne;
 	std::vector<int> teamTwo;
