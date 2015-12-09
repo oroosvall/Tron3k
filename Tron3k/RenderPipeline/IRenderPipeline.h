@@ -55,6 +55,8 @@ public:
 	PipelineValues getSettings(PIPELINE_SETTINGS type);
 	virtual bool setSetting(PIPELINE_SETTINGS type, PipelineValues value) = 0;
 
+	virtual void renderWallEffect(void* pos1, void* pos2, float uvStartOffset) = 0;
+
 	virtual void forceReset() = 0;
 	virtual unsigned int createText(float x, float y, float z, std::string text) = 0;
 	virtual void removeText(unsigned int textID) = 0;

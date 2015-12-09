@@ -919,6 +919,23 @@ void Core::renderWorld(float dt)
 				renderPipe->renderPlayer(2, bullets[i]->getWorldMat(), dgColor, 1.0f);
 			}
 		}
+
+		
+
+		float herpderpOffset = 0;
+		for (int c = 0; c < EFFECT_TYPE::NROFEFFECTS; c++)
+		{
+			dgColor[0] = 0; dgColor[1] = 0; dgColor[2] = 0;
+
+			std::vector<Effect*> eff = game->getEffects(EFFECT_TYPE(c));
+			for (unsigned int i = 0; i < eff.size(); i++)
+			{
+				LightwallEffect* derp = (LightwallEffect*)eff[i];
+				renderPipe->renderWallEffect(&derp->pos, &derp->endPoint, herpderpOffset);
+
+				herpderpOffset += glm::distance(derp->pos, derp->endPoint);
+			}
+		}
 		renderPipe->render();
 	}
 }
