@@ -34,7 +34,8 @@ enum NET_FRAME
 enum NET_COMMAND
 {
 	TEAM_CHANGE =	int('T'), //request teamchange
-	RESPAWN =		int('R') //Request respawn
+	RESPAWN =		int('R'), //Request respawn
+	ROLESWITCH =	int('C')
 };
 
 enum NET_MESSAGE
