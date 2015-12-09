@@ -276,7 +276,7 @@ struct renderDataCube
 		a = corner6;	vex[18] = { a.x, a.y, a.z, 0.0f, 0.0f };
 		a = corner0;	vex[19] = { a.x, a.y, a.z, 0.0f, 0.0f };
 
-		//createData(vex);
+		createData(vex);
 	}
 
 	void init_OBB(OBB obb)

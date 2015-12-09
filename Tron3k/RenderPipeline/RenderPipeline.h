@@ -109,6 +109,7 @@ public:
 
 	virtual void getPlayerBox(float &xMax, float &xMin, float &yMax, float &yMin, float &zMax, float &zMin);
 	virtual void getWorldBoxes(int &current, float &xMax, float &xMin, float &yMax, float &yMin, float &zMax, float &zMin);
+	virtual void getSpawnpoints(std::vector < std::vector < SpawnpointG > > &spoints);
 	virtual int getNrOfWorldBoxes();
 	virtual void setRenderFlag(RENDER_FLAGS flag);
 

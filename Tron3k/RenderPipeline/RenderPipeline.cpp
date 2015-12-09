@@ -457,3 +457,15 @@ void RenderPipeline::setRenderFlag(RENDER_FLAGS flag)
 		case RENDER_OBB:		contMan.f_render_obb = !contMan.f_render_obb;			break;
 	}
 }
+
+void RenderPipeline::getSpawnpoints(std::vector < std::vector < SpawnpointG > > &spoints)
+{
+	//add teams
+	vector<SpawnpointG> team0;
+	vector<SpawnpointG> team1;
+	vector<SpawnpointG> team2;
+
+	spoints.push_back(team0);
+	spoints.push_back(team1);
+	spoints.push_back(team2);
+}
