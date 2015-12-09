@@ -403,52 +403,58 @@ void Game::checkPlayerVWorldCollision(float dt)
 		{
 			if (playerList[i]->isLocal() && playerList[i]->isAlive())
 			{
-				playerList[i]->setGrounded(false);
+				//playerList[i]->setGrounded(false);
 				foundLocal = true;
 				
 				collisionNormal = physics->checkPlayerVWorldCollision(playerList[i]->getPos());
 				
 				if (collisionNormal != glm::vec3(0,0,0))
 				{
-					
-					//collision with world here, no gravity etc
-					//TODO: Add proper collision code.
-					//TODO: Return normals from objects we collide with. - DONE
-					//TODO: Change direction based on those normals. - KINDA DONE
-					//TODO: What do we do if we collide with multiple objects? -SHOULD BE HANDLED, we add the normal of all the objects we collide with
-					//normalize(collisionNormal);
-					playerList[i]->setGrounded(true);
-					physics->normalize(collisionNormal);
-					glm::vec3 vel = playerList[i]->getVelocity();
-					glm::vec3 collNormal = collisionNormal * glm::dot(vel, collisionNormal);
-					
-	
-					glm::vec3 v = vel;
-
-					physics->normalize(v);
-					
-					glm::vec3 velProj = ((glm::dot(v, collisionNormal) / 
-						glm::dot(collisionNormal, collisionNormal)) * collisionNormal); //korrekt
-					glm::vec3 velRej = vel;
-
-					velRej = v - velProj;
-
-					vel = vel - collNormal;
-					
-					if (velProj != glm::vec3(0, 0, 0))
+					if (!playerList[i]->getGrounded())
 					{
-						playerList[i]->setPos(playerList[i]->getPos() - velRej * dt);//fel
+						//collision with world here, no gravity etc
+						//TODO: Add proper collision code.
+						//TODO: Return normals from objects we collide with. - DONE
+						//TODO: Change direction based on those normals. - KINDA DONE
+						//TODO: What do we do if we collide with multiple objects? -SHOULD BE HANDLED, we add the normal of all the objects we collide with
+						//normalize(collisionNormal);
+						playerList[i]->setGrounded(true);
+						physics->normalize(collisionNormal);
+						glm::vec3 vel = playerList[i]->getVelocity();
+						glm::vec3 collNormal = collisionNormal * glm::dot(vel, collisionNormal);
 
 
-						playerList[i]->setVelocity(velRej); //FEL
-					}
-					else
-					{
-						playerList[i]->setPos(playerList[i]->getPos() - vel * dt); //FEL
-						playerList[i]->setVelocity(velProj);
-						
+						glm::vec3 v = vel;
+
+						physics->normalize(v);
+
+						glm::vec3 velProj = ((glm::dot(v, collisionNormal) /
+							glm::dot(collisionNormal, collisionNormal)) * collisionNormal); //korrekt
+						glm::vec3 velRej = vel;
+
+						velRej = v - velProj;
+
+						vel = vel - collNormal;
+
+						if (velProj != glm::vec3(0, 0, 0))
+						{
+							playerList[i]->setPos(playerList[i]->getPos() - velRej * dt);//fel
+
+
+							playerList[i]->setVelocity(velRej); //FEL
+						}
+						else
+						{
+							playerList[i]->setPos(playerList[i]->getPos() - vel * dt); //FEL
+							playerList[i]->setVelocity(velProj);
+
+						}
 					}
 					
+				}
+				else
+				{
+					playerList[i]->setGrounded(false);
 				}
 			}
 		}
