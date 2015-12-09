@@ -612,9 +612,6 @@ void Game::addBulletToList(int conID, int bulletId, BULLET_TYPE bt, glm::vec3 po
 	case BULLET_TYPE::SHOTGUN_PELLET:
 		b = new ShotgunPellet(pos, dir, conID, bulletId, p->getTeam());
 		break;
-	case BULLET_TYPE::THUNDERDOME_GRENADE:
-		b = new ThunderDome(pos, dir, conID, bulletId, p->getTeam());
-		break;
 	case BULLET_TYPE::CLEANSE_BOMB:
 		b = new CleanseBomb(pos, dir, conID, bulletId, p->getTeam());
 		break;
@@ -734,17 +731,14 @@ void Game::handleConsumableUse(int conID, CONSUMABLE_TYPE ct, glm::vec3 pos, glm
 	case CONSUMABLE_TYPE::CLUSTERGRENADE:
 		addBulletToList(conID, 0, BULLET_TYPE::CLUSTER_GRENADE, pos, dir);
 		break;
-	case CONSUMABLE_TYPE::CLEANSEBOMB:
-		addBulletToList(conID, 0, BULLET_TYPE::CLEANSE_BOMB, pos, dir);
+	case CONSUMABLE_TYPE::OVERCHARGE:
 		break;
 	case CONSUMABLE_TYPE::VACUUMGRENADE:
 		addBulletToList(conID, 0, BULLET_TYPE::VACUUM_GRENADE, pos, dir);
 		break;
-	case CONSUMABLE_TYPE::HACKINGDART:
-		addBulletToList(conID, 0, BULLET_TYPE::HACKING_DART, pos, dir);
+	case CONSUMABLE_TYPE::LIGHTSPEED:
 		break;
 	case CONSUMABLE_TYPE::THUNDERDOME:
-		addBulletToList(conID, 0, BULLET_TYPE::THUNDERDOME_GRENADE, pos, dir);
 		break;
 	}
 }

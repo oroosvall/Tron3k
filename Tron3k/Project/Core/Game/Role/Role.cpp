@@ -112,7 +112,7 @@ void Role::loadRoleSpecifics(int role)
 			mobility = new MultiJump();
 			mobility->init();
 			consumable = new Consumable();
-			consumable->init(CONSUMABLE_TYPE::CLEANSEBOMB);
+			consumable->init(CONSUMABLE_TYPE::OVERCHARGE);
 			break;
 		case MOBILITY:
 			specialAbility = new Lightwall();
@@ -120,7 +120,7 @@ void Role::loadRoleSpecifics(int role)
 			mobility = new MultiJump();
 			mobility->init();
 			consumable = new Consumable();
-			consumable->init(CONSUMABLE_TYPE::HACKINGDART);
+			consumable->init(CONSUMABLE_TYPE::LIGHTSPEED);
 			break;
 		case BRUTE:
 			specialAbility = new Lightwall();
