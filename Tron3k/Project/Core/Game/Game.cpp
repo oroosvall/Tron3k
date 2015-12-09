@@ -422,12 +422,13 @@ void Game::checkPlayerVWorldCollision(float dt)
 					glm::vec3 vel = playerList[i]->getVelocity();
 					glm::vec3 collNormal = collisionNormal * glm::dot(vel, collisionNormal);
 					
-					vel = vel;
+	
+					glm::vec3 v = vel;
 
-					glm::vec3 pos = playerList[i]->getPos();
-					pos -= vel * collisionNormal * dt;
+					physics->normalize(v);
 					
-					glm::vec3 velProj = ((glm::dot(vel, collisionNormal) / glm::dot(collisionNormal, collisionNormal)) * collisionNormal);
+					glm::vec3 velProj = ((glm::dot(v, collisionNormal) / 
+						glm::dot(collisionNormal, collisionNormal)) * collisionNormal); //korrekt
 					glm::vec3 velRej = vel;
 
 					velRej = vel - velProj;
@@ -436,7 +437,7 @@ void Game::checkPlayerVWorldCollision(float dt)
 					
 					if (velProj != glm::vec3(0, 0, 0))
 					{
-						playerList[i]->setPos(playerList[i]->getPos() + velRej * dt);
+						playerList[i]->setPos(playerList[i]->getPos() - velRej * dt);//fel
 
 
 						playerList[i]->setVelocity(velRej); //FEL
