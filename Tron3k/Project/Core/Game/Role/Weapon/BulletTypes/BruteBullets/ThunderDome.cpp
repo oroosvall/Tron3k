@@ -1,20 +1,20 @@
-#include "CleanseBomb.h"
+#include "ThunderDome.h"
 
 
-CleanseBomb::CleanseBomb(glm::vec3 position, glm::vec3 direction, int pID, int bID, int tID)
+ThunderDome::ThunderDome(glm::vec3 position, glm::vec3 direction, int pID, int bID, int tID)
 {
 	initValues(position, direction, pID, bID, tID);
 	vel = 30.0f;
-	damage = 10;
+	damage = 0;
 }
 
-CleanseBomb::~CleanseBomb()
+ThunderDome::~ThunderDome()
 {}
 
-int CleanseBomb::update(float dt)
+int ThunderDome::update(float dt)
 {
 	pos += dir * vel * dt;
-	dir.y -= 1.5f * dt;
+	dir.y -= 2.0f * dt;
 
 	updateWorldMat();
 

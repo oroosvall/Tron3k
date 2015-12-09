@@ -4,8 +4,8 @@
 HackingDart::HackingDart(glm::vec3 position, glm::vec3 direction, int pID, int bID, int tID)
 {
 	initValues(position, direction, pID, bID, tID);
-	vel = 25.0f;
-	damage = 10;
+	vel = 55.0f;
+	damage = 20;
 }
 
 HackingDart::~HackingDart()
