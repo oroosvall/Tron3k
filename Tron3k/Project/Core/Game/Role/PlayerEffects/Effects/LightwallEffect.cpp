@@ -8,6 +8,7 @@ LightwallEffect::LightwallEffect(Player* p)
 
 void LightwallEffect::init(int pid, int eid, glm::vec3 position)
 {
+	type = EFFECT_TYPE::LIGHT_WALL;
 	playerId = pid; effectId = eid;
 	pos = position;
 	expandDong = true;

@@ -1,13 +1,12 @@
 #include "Explosion.h"
 
-Explosion::Explosion()
-{
-
-}
+Explosion::Explosion(){}
 
 void Explosion::init(int pid, int eid, glm::vec3 position)
 {
+	exploRadius = 40.0f;
 	playerId = pid; effectId = eid; pos = position;
+	lifeTime = 0.1f;
 }
 
 int Explosion::update(float dt)

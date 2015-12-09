@@ -103,30 +103,40 @@ void Role::loadRoleSpecifics(int role)
 			specialAbility->init();
 			mobility = new MultiJump();
 			mobility->init();
+			consumable = new Consumable();
+			consumable->init(CONSUMABLE_TYPE::CLUSTERGRENADE);
 			break;
 		case DESTROYER:
 			specialAbility = new Lightwall();
 			specialAbility->init();
 			mobility = new MultiJump();
 			mobility->init();
+			consumable = new Consumable();
+			consumable->init(CONSUMABLE_TYPE::CLUSTERGRENADE);
 			break;
 		case MOBILITY:
 			specialAbility = new Lightwall();
 			specialAbility->init();
 			mobility = new MultiJump();
 			mobility->init();
+			consumable = new Consumable();
+			consumable->init(CONSUMABLE_TYPE::CLUSTERGRENADE);
 			break;
 		case BRUTE:
 			specialAbility = new Lightwall();
 			specialAbility->init();
 			mobility = new MultiJump();
 			mobility->init();
+			consumable = new Consumable();
+			consumable->init(CONSUMABLE_TYPE::CLUSTERGRENADE);
 			break;
 		case MANIPULATOR:
 			specialAbility = new Lightwall();
 			specialAbility->init();
 			mobility = new MultiJump();
 			mobility->init();
+			consumable = new Consumable();
+			consumable->init(CONSUMABLE_TYPE::CLUSTERGRENADE);
 			break;
 	}
 
@@ -163,9 +173,6 @@ void Role::chooseRole(int role)
 		loadWeapons(role, 1);
 
 		loadRoleSpecifics(role);
-
-		consumable = new Consumable();
-		consumable->init(CONSUMABLE_TYPE(0));	// :/
 
 		movementSpeed = float(atof(loadedRoles[role][MOVEMENTSPEED].c_str()));
 		jumpHeight = float(atof(loadedRoles[role][JUMPHEIGHT].c_str()));
