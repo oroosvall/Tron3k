@@ -165,10 +165,10 @@ void Role::chooseRole(int role)
 		loadRoleSpecifics(role);
 
 		consumable = new Consumable();
-		consumable->init(CONSUMABLE_TYPE(atoi(loadedRoles[role][CARRIEDITEM].c_str())));
+		consumable->init(CONSUMABLE_TYPE(0));	// :/
 
-		//consumable.setConsumable(atoi(loadedRoles[role][CONSUMABLE].c_str()));
 		movementSpeed = float(atof(loadedRoles[role][MOVEMENTSPEED].c_str()));
+		jumpHeight = float(atof(loadedRoles[role][JUMPHEIGHT].c_str()));
 
 		gainSpecial = true;
 	}

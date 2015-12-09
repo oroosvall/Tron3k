@@ -762,11 +762,11 @@ void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec
 		vec3 vel = p->getVelocity();
 		if (vel.y<0)
 		{
-			vel.y = 3.0f;
+			vel.y = 1.5f;
 		}
 		else
 		{
-			vel.y += 3.0f;
+			vel.y += 1.5f;
 		}	
 		p->setVelocity(vel);
 	}
