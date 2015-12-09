@@ -247,6 +247,23 @@ void Map::loadMap(std::string mapName)
 
 	delete[] portalData;
 	
+	CapturePoints* cps = new CapturePoints[capCount];
+	inFile.read((char*)cps, sizeof(CapturePoints) * capCount);
+	delete[] cps;
+
+	SpawnPoint* spA = new SpawnPoint[spTACount];
+	SpawnPoint* spB = new SpawnPoint[spTBCount];
+	SpawnPoint* spFFA = new SpawnPoint[spFFACount];
+	
+	inFile.read((char*)spA, sizeof(SpawnPoint) * spTACount);
+	inFile.read((char*)spB, sizeof(SpawnPoint) * spTBCount);
+	inFile.read((char*)spFFA, sizeof(SpawnPoint) * spFFACount);
+
+	delete[] spA;
+	delete[] spB;
+	delete[] spFFA;
+
+
 	inFile.close();
 
 }
