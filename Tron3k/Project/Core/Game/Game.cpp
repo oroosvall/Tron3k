@@ -431,7 +431,7 @@ void Game::checkPlayerVWorldCollision(float dt)
 						glm::dot(collisionNormal, collisionNormal)) * collisionNormal); //korrekt
 					glm::vec3 velRej = vel;
 
-					velRej = vel - velProj;
+					velRej = v - velProj;
 
 					vel = vel - collNormal;
 					
