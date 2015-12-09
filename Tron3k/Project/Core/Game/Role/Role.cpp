@@ -112,7 +112,7 @@ void Role::loadRoleSpecifics(int role)
 			mobility = new MultiJump();
 			mobility->init();
 			consumable = new Consumable();
-			consumable->init(CONSUMABLE_TYPE::CLUSTERGRENADE);
+			consumable->init(CONSUMABLE_TYPE::OVERCHARGE);
 			break;
 		case MOBILITY:
 			specialAbility = new Lightwall();
@@ -120,7 +120,7 @@ void Role::loadRoleSpecifics(int role)
 			mobility = new MultiJump();
 			mobility->init();
 			consumable = new Consumable();
-			consumable->init(CONSUMABLE_TYPE::CLUSTERGRENADE);
+			consumable->init(CONSUMABLE_TYPE::LIGHTSPEED);
 			break;
 		case BRUTE:
 			specialAbility = new Lightwall();
@@ -128,7 +128,7 @@ void Role::loadRoleSpecifics(int role)
 			mobility = new MultiJump();
 			mobility->init();
 			consumable = new Consumable();
-			consumable->init(CONSUMABLE_TYPE::CLUSTERGRENADE);
+			consumable->init(CONSUMABLE_TYPE::THUNDERDOME);
 			break;
 		case MANIPULATOR:
 			specialAbility = new Lightwall();
@@ -136,7 +136,7 @@ void Role::loadRoleSpecifics(int role)
 			mobility = new MultiJump();
 			mobility->init();
 			consumable = new Consumable();
-			consumable->init(CONSUMABLE_TYPE::CLUSTERGRENADE);
+			consumable->init(CONSUMABLE_TYPE::VACUUMGRENADE);
 			break;
 	}
 

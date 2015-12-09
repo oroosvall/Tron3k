@@ -7,6 +7,7 @@
 #include "GBuffer.h"
 
 #include "ContentManager.h"
+#include "Effects\LightWall.h"
 
 enum SETTING_INPUT
 {
@@ -30,6 +31,8 @@ private:
 	SETTING_INPUT getType(PIPELINE_SETTINGS type) const;
 
 	ContentManager contMan;
+
+	LightWall lw;
 
 	TextObject* test;
 
@@ -85,6 +88,7 @@ public:
 	virtual std::string getStatus() { return ""; };
 
 	virtual bool setSetting(PIPELINE_SETTINGS type, PipelineValues value);
+	virtual void renderWallEffect(void* pos1, void* pos2, float uvStartOffset);
 
 	virtual void forceReset() {};
 	virtual unsigned int createText(float x, float y, float z, std::string text) { return 0; };
@@ -106,6 +110,7 @@ public:
 	virtual void getPlayerBox(float &xMax, float &xMin, float &yMax, float &yMin, float &zMax, float &zMin);
 	virtual void getWorldBoxes(int &current, float &xMax, float &xMin, float &yMax, float &yMin, float &zMax, float &zMin);
 	virtual int getNrOfWorldBoxes();
+	virtual void setRenderFlag(RENDER_FLAGS flag);
 
 };
 

@@ -212,6 +212,7 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	glProgramUniform1i(regularShader, uniformGlowSpecLocation, 2);
 
 	gBuffer->clearLights();
+
 }
 
 void RenderPipeline::addLight(SpotLight* newLight)
@@ -252,6 +253,43 @@ void RenderPipeline::render()
 	gBuffer->render();
 }
 
+void RenderPipeline::renderWallEffect(void* pos1, void* pos2, float uvStartOffset)
+{
+	//glDepthMask(GL_FALSE);
+	glDisable(GL_CULL_FACE);
+	//glEnable(GL_BLEND);
+
+	glUseProgram(lw_Shader);
+	glProgramUniform1i(lw_Shader, lw_tex, 0);
+	//call contentman and bind the lightwal texture to 0
+	contMan.bindLightwalTexture();
+	cam.setViewProjMat(lw_Shader, lw_vp);
+
+	glBindBuffer(GL_ARRAY_BUFFER, lwVertexDataId);
+	glBindVertexArray(lwVertexAttribute);
+
+	float of = timepass * 0.1f;
+
+	glm::vec3 wpos1 = *(glm::vec3*)pos1;
+	glm::vec3 wpos2 = *(glm::vec3*)pos2;
+
+	float dist = glm::distance(wpos1, wpos2);
+
+	vec2 uv1 = vec2(uvStartOffset + of, 0);
+	vec2 uv2 = vec2(uvStartOffset + dist + of, 0);
+	glProgramUniform2fv(lw_Shader, lw_uv1, 1, &uv1[0]);
+	glProgramUniform2fv(lw_Shader, lw_uv2, 1, &uv2[0]);
+	glProgramUniform3fv(lw_Shader, lw_pos1, 1, &wpos1[0]);
+	glProgramUniform3fv(lw_Shader, lw_pos2, 1, &wpos2[0]);
+
+	glDrawArrays(GL_POINTS, 0, 2);
+
+	glEnable(GL_CULL_FACE);
+	//glDisable(GL_BLEND);
+	//glDepthMask(GL_TRUE);
+
+}
+
 void RenderPipeline::renderEffects()
 {
 	glUseProgram(lw_Shader);
@@ -259,31 +297,48 @@ void RenderPipeline::renderEffects()
 	//call contentman and bind the lightwal texture to 0
 	contMan.bindLightwalTexture();
 	cam.setViewProjMat(lw_Shader, lw_vp);
+
 	glBindBuffer(GL_ARRAY_BUFFER, lwVertexDataId);
 	glBindVertexArray(lwVertexAttribute);
-
-	float of = timepass * 0.1;
-	vec2 uv1 = vec2(of, 0);
-	vec2 uv2 = vec2(3 + of, 0);
-	glProgramUniform2fv(lw_Shader, lw_uv1, 1, &uv1[0]);
-	glProgramUniform2fv(lw_Shader, lw_uv2, 1, &uv2[0]);
-	vec3 pos1 = vec3(0, 3, 0);
-	vec3 pos2 = vec3(0, 3, 6);
-	glProgramUniform3fv(lw_Shader, lw_pos1, 1, &pos1[0]);
-	glProgramUniform3fv(lw_Shader, lw_pos2, 1, &pos2[0]);
 	
-	glDrawArrays(GL_POINTS, 0, 2);
+	float of = timepass * 0.1f;
 
-	uv1 = vec2(3 + of, 0);
-	uv2 = vec2(5 + of, 0);
-	glProgramUniform2fv(lw_Shader, lw_uv1, 1, &uv1[0]);
-	glProgramUniform2fv(lw_Shader, lw_uv2, 1, &uv2[0]);
-	pos1 = vec3(0, 3, 6);
-	pos2 = vec3(0, 5, 8);
-	glProgramUniform3fv(lw_Shader, lw_pos1, 1, &pos1[0]);
-	glProgramUniform3fv(lw_Shader, lw_pos2, 1, &pos2[0]);
+	for (size_t i = 0; i < lw.playerWall.size(); i++)
+	{
+		for (size_t w = 0; w < lw.playerWall[i].lightQuad.size(); w++)
+		{
+			vec2 uv1 = lw.playerWall[i].lightQuad[w].uv1 + vec2(of, 0);
+			vec2 uv2 = lw.playerWall[i].lightQuad[w].uv2 + vec2(of, 0);
+			glProgramUniform2fv(lw_Shader, lw_uv1, 1, &uv1[0]);
+			glProgramUniform2fv(lw_Shader, lw_uv2, 1, &uv2[0]);
+			glProgramUniform3fv(lw_Shader, lw_pos1, 1, &lw.playerWall[i].lightQuad[w].pos1[0]);
+			glProgramUniform3fv(lw_Shader, lw_pos2, 1, &lw.playerWall[i].lightQuad[w].pos2[0]);
 
-	glDrawArrays(GL_POINTS, 0, 2);
+			glDrawArrays(GL_POINTS, 0, 2);
+		}
+	}
+
+	//vec2 uv1 = vec2(of, 0);
+	//vec2 uv2 = vec2(3 + of, 0);
+	//glProgramUniform2fv(lw_Shader, lw_uv1, 1, &uv1[0]);
+	//glProgramUniform2fv(lw_Shader, lw_uv2, 1, &uv2[0]);
+	//vec3 pos1 = vec3(0, 3, 0);
+	//vec3 pos2 = vec3(0, 3, 6);
+	//glProgramUniform3fv(lw_Shader, lw_pos1, 1, &pos1[0]);
+	//glProgramUniform3fv(lw_Shader, lw_pos2, 1, &pos2[0]);
+	//
+	//glDrawArrays(GL_POINTS, 0, 2);
+	
+	//uv1 = vec2(3 + of, 0);
+	//uv2 = vec2(5 + of, 0);
+	//glProgramUniform2fv(lw_Shader, lw_uv1, 1, &uv1[0]);
+	//glProgramUniform2fv(lw_Shader, lw_uv2, 1, &uv2[0]);
+	////pos1 = vec3(0, 3, 6);
+	////pos2 = vec3(0, 5, 8);
+	//glProgramUniform3fv(lw_Shader, lw_pos1, 1, &pos1[0]);
+	//glProgramUniform3fv(lw_Shader, lw_pos2, 1, &pos2[0]);
+	//
+	//glDrawArrays(GL_POINTS, 0, 2);
 }
 
 void* RenderPipeline::getView()
@@ -389,4 +444,16 @@ IRenderPipeline* CreatePipeline()
 void RenderPipeline::setGBufferWin(unsigned int WindowWidth, unsigned int WindowHeight)
 {
 	gBuffer->resize(WindowWidth, WindowHeight);
+}
+
+void RenderPipeline::setRenderFlag(RENDER_FLAGS flag)
+{
+	switch (flag)
+	{
+		case PORTAL_CULLING:	contMan.f_portal_culling = !contMan.f_portal_culling;	break;
+		case FREEZE_CULLING:	contMan.f_freeze_portals = !contMan.f_freeze_portals;	break;
+		case RENDER_CHUNK:		contMan.f_render_chunks = !contMan.f_render_chunks;		break;
+		case RENDER_ABB:		contMan.f_render_abb = !contMan.f_render_abb;			break;
+		case RENDER_OBB:		contMan.f_render_obb = !contMan.f_render_obb;			break;
+	}
 }

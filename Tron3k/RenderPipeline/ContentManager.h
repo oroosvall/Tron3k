@@ -54,6 +54,13 @@ public:
 	bool* renderedChunks;
 	bool* renderNextChunks;
 
+	//Flags
+	bool f_portal_culling;
+	bool f_freeze_portals;
+	bool f_render_chunks;
+	bool f_render_abb;
+	bool f_render_obb;
+
 	~ContentManager();
 	void init();
 

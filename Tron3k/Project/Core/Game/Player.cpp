@@ -408,6 +408,8 @@ void Player::hitByBullet(Bullet* b, int newHPtotal)
 	{
 		role.setHealth(newHPtotal);
 	}
+
+	//If hacking dart -> modifier on player
 }
 
 void Player::hitByEffect(Effect* e, int newHPtotal)

@@ -23,6 +23,15 @@ enum PIPELINE_SETTINGS
 	FOV
 };
 
+enum RENDER_FLAGS
+{
+	PORTAL_CULLING,
+	FREEZE_CULLING,
+	RENDER_CHUNK,
+	RENDER_ABB,
+	RENDER_OBB
+};
+
 struct PipelineValues
 {
 	enum {INT2, BOOL, FLOAT, FLOAT3} type;
@@ -55,6 +64,8 @@ public:
 	PipelineValues getSettings(PIPELINE_SETTINGS type);
 	virtual bool setSetting(PIPELINE_SETTINGS type, PipelineValues value) = 0;
 
+	virtual void renderWallEffect(void* pos1, void* pos2, float uvStartOffset) = 0;
+
 	virtual void forceReset() = 0;
 	virtual unsigned int createText(float x, float y, float z, std::string text) = 0;
 	virtual void removeText(unsigned int textID) = 0;
@@ -75,6 +86,7 @@ public:
 	virtual void getPlayerBox(float &xMax, float &xMin, float &yMax, float &yMin, float &zMax, float &zMin) = 0;
 	virtual void getWorldBoxes(int &current, float &xMax, float &xMin, float &yMax, float &yMin, float &zMax, float &zMin) = 0;
 	virtual int getNrOfWorldBoxes() = 0;
+	virtual void setRenderFlag(RENDER_FLAGS flag) = 0;
 
 };
 
