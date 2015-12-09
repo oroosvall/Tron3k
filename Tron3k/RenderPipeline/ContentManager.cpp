@@ -237,8 +237,10 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 			glProgramUniform3fv(shader, DglowColor, 1, (GLfloat*)&testMap.chunks[n].color[0]);
 			glProgramUniform1f(shader, SglowColor, testMap.chunks[n].staticIntes);
 
+
 			if(f_render_chunks)
 				testMap.renderChunk(shader, shaderLocation, n);
+
 			renderedChunks[n] = true;
 		}
 	}
@@ -313,11 +315,13 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 		//render collision boxes
 		for (int c = 0; c < nrChunks; c++)
 		{
+
 			ChunkCollision* col = testMap.chunks[c].getChunkCollision();
 
 			float nrABB = col->abbStuff.size();
 			for (int n = 0; n < nrABB; n++)
 			{
+
 				if (f_render_abb)
 				{
 					testMap.chunks[c].collisionRender.abbRender[n].abbBoxR.BindVertData();
@@ -333,6 +337,7 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 						glDrawArrays(GL_TRIANGLE_STRIP, 0, 20);
 					}
 				}
+
 			}
 		}
 	}
