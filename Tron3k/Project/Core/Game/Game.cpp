@@ -440,11 +440,12 @@ void Game::checkPlayerVWorldCollision(float dt)
 						{
 							playerList[i]->setPos(playerList[i]->getPos() - velRej * dt);//fel
 
-
+							velRej.y = 0.0f; //ALBIN DET HÄR VILL DU KANSKE TITTA PÅ
 							playerList[i]->setVelocity(velRej); //FEL
 						}
 						else
 						{
+							velProj.y = 0.0f; //ALBIN DET HÄR VILL DU KANSKE TITTA PÅ
 							playerList[i]->setPos(playerList[i]->getPos() - vel * dt); //FEL
 							playerList[i]->setVelocity(velProj);
 
