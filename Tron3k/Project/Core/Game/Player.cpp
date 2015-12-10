@@ -158,80 +158,66 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				bool stop = true;
 				vec2 tempvec = vec2(0, 0);
 
-				bool collidingWithWalls = false;
-				for (int c = 0; c < collisionNormalSize && !collidingWithWalls; c++)
+				if (i->getKeyInfo(GLFW_KEY_W))
 				{
-					if (collisionNormals[c].x != 0 || collisionNormals[c].z != 0)
+					tempvec = normalize(vec2(dir.x, dir.z));
+					if (grounded)
 					{
-						collidingWithWalls = true;
-						glm::vec3 posch = getPos();
-						posch += collisionNormals[c]*2.0f;
-						setPos(posch);
+						vel.x = tempvec.x;
+						vel.z = tempvec.y;
+						stop = false;
 					}
 				}
-				if (!collidingWithWalls)
+
+				if (i->getKeyInfo(GLFW_KEY_S))
 				{
-					if (i->getKeyInfo(GLFW_KEY_W))
+					tempvec = -normalize(vec2(dir.x, dir.z));
+					if (grounded)
 					{
-						tempvec = normalize(vec2(dir.x, dir.z));
+						vel.x = tempvec.x;
+						vel.z = tempvec.y;
+						stop = false;
+					}
+				}
+
+				if (!(i->getKeyInfo(GLFW_KEY_A) && i->getKeyInfo(GLFW_KEY_D)))
+				{
+					if (i->getKeyInfo(GLFW_KEY_A))
+					{
+						vec3 left = cross(vec3(0, 1, 0), dir);
+						tempvec = normalize(vec2(left.x, left.z));
 						if (grounded)
 						{
-							vel.x = tempvec.x;
-							vel.z = tempvec.y;
+							vel.x += tempvec.x;
+							vel.z += tempvec.y;
 							stop = false;
-						}
-					}
-
-					if (i->getKeyInfo(GLFW_KEY_S))
-					{
-						tempvec = -normalize(vec2(dir.x, dir.z));
-						if (grounded)
-						{
-							vel.x = tempvec.x;
-							vel.z = tempvec.y;
-							stop = false;
-						}
-					}
-
-					if (!(i->getKeyInfo(GLFW_KEY_A) && i->getKeyInfo(GLFW_KEY_D)))
-					{
-						if (i->getKeyInfo(GLFW_KEY_A))
-						{
-							vec3 left = cross(vec3(0, 1, 0), dir);
-							tempvec = normalize(vec2(left.x, left.z));
-							if (grounded)
+							tempvec = vec2(vel.x, vel.z);
+							if (glm::length(tempvec) > 0)
 							{
-								vel.x += tempvec.x;
-								vel.z += tempvec.y;
-								stop = false;
-								tempvec = vec2(vel.x, vel.z);
-								if (glm::length(tempvec) > 0)
-								{
-									tempvec = normalize(tempvec);
-									vel.x = tempvec.x;
-									vel.z = tempvec.y;
-								}
+								tempvec = normalize(tempvec);
+								vel.x = tempvec.x;
+								vel.z = tempvec.y;
 							}
 						}
+					}
 
-						if (i->getKeyInfo(GLFW_KEY_D))
+					if (i->getKeyInfo(GLFW_KEY_D))
+					{
+						vec3 right = cross(dir, vec3(0, 1, 0));
+						tempvec = glm::normalize(vec2(right.x, right.z));
+						right = glm::normalize(right);
+						if (grounded)
 						{
-							vec3 right = cross(dir, vec3(0, 1, 0));
-							tempvec = glm::normalize(vec2(right.x, right.z));
-							right = glm::normalize(right);
-							if (grounded)
-							{
-								vel.x += tempvec.x;
-								vel.z += tempvec.y;
-								stop = false;
-								tempvec = vec2(vel.x, vel.z);
+							vel.x += tempvec.x;
+							vel.z += tempvec.y;
+							stop = false;
+							tempvec = vec2(vel.x, vel.z);
 
-								if (glm::length(tempvec) > 0)
-								{
-									tempvec = normalize(tempvec);
-									vel.x = tempvec.x;
-									vel.z = tempvec.y;
-								}
+							if (glm::length(tempvec) > 0)
+							{
+								tempvec = normalize(tempvec);
+								vel.x = tempvec.x;
+								vel.z = tempvec.y;
 							}
 						}
 					}
