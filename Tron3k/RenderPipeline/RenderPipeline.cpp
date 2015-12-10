@@ -507,6 +507,8 @@ void RenderPipeline::getSpawnpoints(std::vector < std::vector < SpawnpointG > > 
 	vector<SpawnpointG> team1;
 	vector<SpawnpointG> team2;
 
+	float yincrease = 1.0f;
+
 	int size = contMan.testMap.spFFACount;
 	for (int n = 0; n < size; n++)
 	{
@@ -514,7 +516,7 @@ void RenderPipeline::getSpawnpoints(std::vector < std::vector < SpawnpointG > > 
 		mat = transpose(mat);
 		vec3 pos;
 		pos.x = mat[0].w;
-		pos.y = mat[1].w;
+		pos.y = mat[1].w + yincrease;
 		pos.z = mat[2].w;
 		team0.push_back(SpawnpointG());
 		team0[n].pos = pos;
@@ -530,7 +532,7 @@ void RenderPipeline::getSpawnpoints(std::vector < std::vector < SpawnpointG > > 
 		mat = transpose(mat);
 		vec3 pos;
 		pos.x = mat[0].w;
-		pos.y = mat[1].w;
+		pos.y = mat[1].w + yincrease;
 		pos.z = mat[2].w;
 		team1.push_back(SpawnpointG());
 		team1[n].pos = pos;
@@ -546,7 +548,7 @@ void RenderPipeline::getSpawnpoints(std::vector < std::vector < SpawnpointG > > 
 		mat = transpose(mat);
 		vec3 pos;
 		pos.x = mat[0].w;
-		pos.y = mat[1].w;
+		pos.y = mat[1].w + yincrease;
 		pos.z = mat[2].w;
 		team2.push_back(SpawnpointG());
 		team2[n].pos = pos;
