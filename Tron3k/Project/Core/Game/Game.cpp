@@ -114,16 +114,21 @@ void Game::initPhysics()
 
 void Game::update(float dt)
 {
-	if (Input::getInput()->justPressed(GLFW_KEY_Z))
+	if (gameState == Gamestate::ROAM)
 	{
-		if (GetSoundActivated() == 0 && GetInitialized() == 0)
-		{
-			InitSound(CreateSound(), 1);
-		}
-		else if (GetInitialized())
-		{
-			GetSound()->enableSounds();
-		}
+		checkPlayerVWorldCollision(dt);
+		checkBulletVWorldCollision();
+	}
+
+	if (gameState == Gamestate::CLIENT)
+	{
+		checkPvPCollision();
+		checkPlayerVWorldCollision(dt);
+	}
+
+	if (gameState == Gamestate::SERVER)
+	{
+		checkPlayerVBulletCollision();
 	}
 
 	for (int c = 0; c < max_con; c++)
@@ -157,21 +162,6 @@ void Game::update(float dt)
 			}
 		}
 	}
-
-	if (gameState == Gamestate::ROAM)
-	{
-		checkPlayerVWorldCollision(dt);
-		checkBulletVWorldCollision();
-	}
-
-	if (gameState == Gamestate::CLIENT)
-	{
-		checkPvPCollision();
-		checkPlayerVWorldCollision(dt);
-	}
-
-	if (gameState == Gamestate::SERVER)
-		checkPlayerVBulletCollision();
 }
 
 void Game::playerUpdate(int conid, float dt)
@@ -410,6 +400,13 @@ void Game::checkPlayerVWorldCollision(float dt)
 				
 				if (collisionNormal.size() >= 1)
 				{
+					for (int c = 0; c < collisionNormal.size(); c++)
+					{
+						/*
+						Function adds all collision normals to the player, so the player can handle their movement this frame correctly
+						*/
+						playerList[i]->addCollisionNormal(collisionNormal[c]);
+					}
 					if (!playerList[i]->getGrounded())
 					{
 						//collision with world here, no gravity etc
@@ -439,14 +436,13 @@ void Game::checkPlayerVWorldCollision(float dt)
 						if (velProj != glm::vec3(0, 0, 0))
 						{
 							playerList[i]->setPos(playerList[i]->getPos() - velRej * dt);//fel
-
 							velRej.y = 0.0f; //ALBIN DET HÄR VILL DU KANSKE TITTA PÅ
 							playerList[i]->setVelocity(velRej); //FEL
 						}
 						else
 						{
-							velProj.y = 0.0f; //ALBIN DET HÄR VILL DU KANSKE TITTA PÅ
 							playerList[i]->setPos(playerList[i]->getPos() - vel * dt); //FEL
+							velProj.y = 0.0f; //ALBIN DET HÄR VILL DU KANSKE TITTA PÅ
 							playerList[i]->setVelocity(velProj);
 
 						}
