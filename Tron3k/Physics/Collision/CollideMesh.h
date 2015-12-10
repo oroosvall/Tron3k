@@ -58,11 +58,12 @@ struct Sphere
 class CollideMesh
 {
 private:
-	AABB boundingBox;
+	
 	Cylinder cylinder;
 
 	void getCylinderFromAABB();
 public:
+	AABB boundingBox;
 	CollideMesh();
 	~CollideMesh();
 
@@ -70,7 +71,7 @@ public:
 
 	void setAABB(glm::vec3 pos, glm::vec3 max, glm::vec3 min);
 	void setAABB(AABB aabb);
-	AABB getAABB();
+	AABB* getAABB();
 
 
 	

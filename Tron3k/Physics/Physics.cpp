@@ -58,17 +58,17 @@ glm::vec3 Physics::checkAABBvAABBCollision(Geometry* obj1, Geometry* obj2)
 
 glm::vec3 Physics::checkAABBvAABBCollision(CollideMesh mesh1, CollideMesh mesh2, bool moveSecond)
 {
-	AABB aabb1 = mesh1.getAABB();
-	AABB aabb2 = mesh2.getAABB();
+	AABB* aabb1 = mesh1.getAABB();
+	AABB* aabb2 = mesh2.getAABB();
 
-	glm::vec3 pos1 = glm::vec3(aabb1.pos);
-	glm::vec3 pos2 = glm::vec3(aabb2.pos);
+	glm::vec3 pos1 = glm::vec3(aabb1->pos);
+	glm::vec3 pos2 = glm::vec3(aabb2->pos);
 
-	glm::vec3 max1 = glm::vec3(aabb1.max);
-	glm::vec3 max2 = glm::vec3(aabb2.max);
+	glm::vec3 max1 = glm::vec3(aabb1->max);
+	glm::vec3 max2 = glm::vec3(aabb2->max);
 
-	glm::vec3 min1 = glm::vec3(aabb1.min);
-	glm::vec3 min2 = glm::vec3(aabb2.min);
+	glm::vec3 min1 = glm::vec3(aabb1->min);
+	glm::vec3 min2 = glm::vec3(aabb2->min);
 
 	if (moveSecond)
 	{
@@ -101,36 +101,36 @@ glm::vec3 Physics::checkAABBvAABBCollision(CollideMesh mesh1, CollideMesh mesh2,
 glm::vec3 Physics::checkAABBvCylinderCollision(CollideMesh mesh1, CollideMesh mesh2)
 {
 	Cylinder cylinder;
-	AABB aabb;
+	AABB* aabb;
 
 	cylinder = mesh1.getCylinder();
 	aabb = mesh2.getAABB();
 
-	aabb.max = aabb.max - aabb.pos;
-	aabb.min = aabb.min - aabb.pos;
+	glm::vec3 max = glm::vec3(aabb->max - aabb->pos);
+	glm::vec3 min = glm::vec3(aabb->min - aabb->pos);
+	glm::vec3 pos = glm::vec3(aabb->pos);
 
 
-
-	if (cylinder.pos.y + cylinder.height > aabb.pos.y - aabb.min.y &&
-		cylinder.pos.y - cylinder.height < aabb.pos.y + aabb.max.y)
+	if (cylinder.pos.y + cylinder.height > pos.y - min.y &&
+		cylinder.pos.y - cylinder.height < pos.y + max.y)
 	{
 		//Collides in Y
 
 		//http://stackoverflow.com/questions/401847/circle-rectangle-collision-detection-intersection
 
-		glm::vec2 dist = glm::vec2(abs(cylinder.pos.x - aabb.pos.x), abs(cylinder.pos.z - aabb.pos.z));
+		glm::vec2 dist = glm::vec2(abs(cylinder.pos.x - pos.x), abs(cylinder.pos.z - pos.z));
 
-		if (dist.x > aabb.max.x + cylinder.radius)
+		if (dist.x > max.x + cylinder.radius)
 			return glm::vec3(0, 0, 0);
-		if (dist.y > aabb.max.z + cylinder.radius)
+		if (dist.y > max.z + cylinder.radius)
 			return glm::vec3(0, 0, 0);
 
-		if (dist.x <= aabb.max.x)
+		if (dist.x <= max.x)
 			return glm::vec3(1, 1, 1);
-		if (dist.y <= aabb.max.z)
+		if (dist.y <= max.z)
 			return glm::vec3(1, 1, 1);
 
-		float cDist = ((dist.x - aabb.min.x) * (dist.x - aabb.min.x)) + ((dist.y - aabb.min.z) * (dist.y - aabb.min.z));
+		float cDist = ((dist.x - min.x) * (dist.x - min.x)) + ((dist.y - min.z) * (dist.y - min.z));
 
 		if (cDist <= cylinder.radius * cylinder.radius)
 			return glm::vec3(1, 1, 1);// getCollisionNormal(mesh1, mesh2);
@@ -238,18 +238,18 @@ float Physics::checkLinevPlaneCollision(glm::vec3 l1, glm::vec3 l2, glm::vec3 p1
 }
 
 //------Normal Calculators------//
-std::vector<glm::vec3> Physics::getCollisionNormal(AABB aabb1, AABB aabb2)
+std::vector<glm::vec3> Physics::getCollisionNormal(AABB* aabb1, AABB* aabb2)
 {
 	//When we get here, we KNOW we collide, we just need to find out from which direction
-	glm::vec3 l1 = glm::vec3(aabb1.pos);
-	glm::vec3 l2 = glm::vec3(aabb2.pos);
+	glm::vec3 l1 = glm::vec3(aabb1->pos);
+	glm::vec3 l2 = glm::vec3(aabb2->pos);
 
 	CollideMesh temp;
 	temp.init();
 
 	std::vector<glm::vec3> norms;
 
-	temp.setAABB(glm::vec3(aabb2.pos), glm::vec3(aabb2.max - aabb2.pos), glm::vec3(aabb2.min - aabb2.pos));
+	temp.setAABB(glm::vec3(aabb2->pos), glm::vec3(aabb2->max), glm::vec3(aabb2->min));
 
 	//P2 should be center point, just in case
 	glm::vec3 p1, p2, p3;
@@ -258,15 +258,15 @@ std::vector<glm::vec3> Physics::getCollisionNormal(AABB aabb1, AABB aabb2)
 	float collides1 = -1;
 	float collides2 = -1;
 
-	p1 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[2]);
-	p2 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[0]);
-	p3 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[1]);
+	p1 = glm::vec3(temp.boundingBox.ObbBoxes[0].corners[2]);
+	p2 = glm::vec3(temp.boundingBox.ObbBoxes[0].corners[0]);
+	p3 = glm::vec3(temp.boundingBox.ObbBoxes[0].corners[1]);
 
 	collides1 = checkLinevPlaneCollision(l1, l2, p1, p2, p3);
 
-	p1 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[1]);
-	p2 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[3]);
-	p3 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[2]);
+	p1 = glm::vec3(temp.boundingBox.ObbBoxes[0].corners[1]);
+	p2 = glm::vec3(temp.boundingBox.ObbBoxes[0].corners[3]);
+	p3 = glm::vec3(temp.boundingBox.ObbBoxes[0].corners[2]);
 
 	collides2 = checkLinevPlaneCollision(l1, l2, p1, p2, p3);
 
@@ -278,15 +278,15 @@ std::vector<glm::vec3> Physics::getCollisionNormal(AABB aabb1, AABB aabb2)
 		norms.push_back(glm::vec3(0, 0, collides1));
 	}
 
-	p1 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[6]);
-	p2 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[7]);
-	p3 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[5]);
+	p1 = glm::vec3(temp.boundingBox.ObbBoxes[0].corners[6]);
+	p2 = glm::vec3(temp.boundingBox.ObbBoxes[0].corners[7]);
+	p3 = glm::vec3(temp.boundingBox.ObbBoxes[0].corners[5]);
 
 	collides1 = checkLinevPlaneCollision(l1, l2, p1, p2, p3);
 
-	p1 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[5]);
-	p2 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[4]);
-	p3 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[6]);
+	p1 = glm::vec3(temp.boundingBox.ObbBoxes[0].corners[5]);
+	p2 = glm::vec3(temp.boundingBox.ObbBoxes[0].corners[4]);
+	p3 = glm::vec3(temp.boundingBox.ObbBoxes[0].corners[6]);
 
 	collides2 = checkLinevPlaneCollision(l1, l2, p1, p2, p3);
 
@@ -298,15 +298,15 @@ std::vector<glm::vec3> Physics::getCollisionNormal(AABB aabb1, AABB aabb2)
 		norms.push_back(glm::vec3(0, 0, -collides1));
 	}
 
-	p1 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[2]);
-	p2 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[3]);
-	p3 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[7]);
+	p1 = glm::vec3(temp.boundingBox.ObbBoxes[0].corners[2]);
+	p2 = glm::vec3(temp.boundingBox.ObbBoxes[0].corners[3]);
+	p3 = glm::vec3(temp.boundingBox.ObbBoxes[0].corners[7]);
 
 	collides1 = checkLinevPlaneCollision(l1, l2, p1, p2, p3);
 
-	p1 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[7]);
-	p2 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[6]);
-	p3 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[2]);
+	p1 = glm::vec3(temp.boundingBox.ObbBoxes[0].corners[7]);
+	p2 = glm::vec3(temp.boundingBox.ObbBoxes[0].corners[6]);
+	p3 = glm::vec3(temp.boundingBox.ObbBoxes[0].corners[2]);
 
 	collides2 = checkLinevPlaneCollision(l1, l2, p1, p2, p3);
 
@@ -317,15 +317,15 @@ std::vector<glm::vec3> Physics::getCollisionNormal(AABB aabb1, AABB aabb2)
 		norms.push_back(glm::vec3(0, collides1, 0));
 	}
 
-	p1 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[5]);
-	p2 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[1]);
-	p3 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[0]);
+	p1 = glm::vec3(temp.boundingBox.ObbBoxes[0].corners[5]);
+	p2 = glm::vec3(temp.boundingBox.ObbBoxes[0].corners[1]);
+	p3 = glm::vec3(temp.boundingBox.ObbBoxes[0].corners[0]);
 
 	collides1 = checkLinevPlaneCollision(l1, l2, p1, p2, p3);
 
-	p1 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[0]);
-	p2 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[4]);
-	p3 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[5]);
+	p1 = glm::vec3(temp.boundingBox.ObbBoxes[0].corners[0]);
+	p2 = glm::vec3(temp.boundingBox.ObbBoxes[0].corners[4]);
+	p3 = glm::vec3(temp.boundingBox.ObbBoxes[0].corners[5]);
 
 	collides2 = checkLinevPlaneCollision(l1, l2, p1, p2, p3);
 
@@ -336,15 +336,15 @@ std::vector<glm::vec3> Physics::getCollisionNormal(AABB aabb1, AABB aabb2)
 		norms.push_back(glm::vec3(0, -collides1, 0));
 	}
 
-	p1 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[3]);
-	p2 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[7]);
-	p3 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[5]);
+	p1 = glm::vec3(temp.boundingBox.ObbBoxes[0].corners[3]);
+	p2 = glm::vec3(temp.boundingBox.ObbBoxes[0].corners[7]);
+	p3 = glm::vec3(temp.boundingBox.ObbBoxes[0].corners[5]);
 
 	collides1 = checkLinevPlaneCollision(l1, l2, p1, p2, p3);
 
-	p1 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[5]);
-	p2 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[1]);
-	p3 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[3]);
+	p1 = glm::vec3(temp.boundingBox.ObbBoxes[0].corners[5]);
+	p2 = glm::vec3(temp.boundingBox.ObbBoxes[0].corners[1]);
+	p3 = glm::vec3(temp.boundingBox.ObbBoxes[0].corners[3]);
 
 	collides2 = checkLinevPlaneCollision(l1, l2, p1, p2, p3);
 
@@ -356,15 +356,15 @@ std::vector<glm::vec3> Physics::getCollisionNormal(AABB aabb1, AABB aabb2)
 		norms.push_back(glm::vec3(collides1, 0, 0));
 	}
 
-	p1 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[2]);
-	p2 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[6]);
-	p3 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[4]);
+	p1 = glm::vec3(temp.boundingBox.ObbBoxes[0].corners[2]);
+	p2 = glm::vec3(temp.boundingBox.ObbBoxes[0].corners[6]);
+	p3 = glm::vec3(temp.boundingBox.ObbBoxes[0].corners[4]);
 
 	collides1 = checkLinevPlaneCollision(l1, l2, p1, p2, p3);
 
-	p1 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[4]);
-	p2 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[0]);
-	p3 = glm::vec3(temp.getAABB().ObbBoxes[0].corners[2]);
+	p1 = glm::vec3(temp.boundingBox.ObbBoxes[0].corners[4]);
+	p2 = glm::vec3(temp.boundingBox.ObbBoxes[0].corners[0]);
+	p3 = glm::vec3(temp.boundingBox.ObbBoxes[0].corners[2]);
 
 	collides2 = checkLinevPlaneCollision(l1, l2, p1, p2, p3);
 
@@ -466,8 +466,8 @@ std::vector<glm::vec3> Physics::checkPlayerVWorldCollision(glm::vec3 playerPos)
 			{
 				//if (checkOBBCollision(playerPos, worldBoxes[i]))
 				collides = true;
-
-				t = getCollisionNormal(playerBox.getAABB(), worldBoxes[i][j].getAABB());//getCollisionNormal(playerBox.getCylinder(), worldBoxes[i][j].getAABB());
+				
+				t = getCollisionNormal(&playerBox.boundingBox, &worldBoxes[i][j].boundingBox);//getCollisionNormal(playerBox.getCylinder(), worldBoxes[i][j].getAABB());
 
 				cNorms.reserve(cNorms.size() + t.size());
 				std::move(t.begin(), t.end(), std::inserter(cNorms, cNorms.end()));

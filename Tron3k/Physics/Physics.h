@@ -67,7 +67,7 @@ private:
 
 
 	//------Normal Calculators------//
-	std::vector<glm::vec3> getCollisionNormal(AABB aabb1, AABB aabb2);
+	std::vector<glm::vec3> getCollisionNormal(AABB* aabb1, AABB* aabb2);
 	glm::vec3 getCollisionNormal(Cylinder cylinder, AABB aabb);
 	glm::vec3 getCollisionNormal(AngledCylinder cylinder, AABB aabb);
 	glm::vec3 getCollisionNormal(Sphere sphere, AABB aabb);
