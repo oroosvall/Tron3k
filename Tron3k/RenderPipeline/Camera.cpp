@@ -1,11 +1,12 @@
 #include "Camera.h"
 
+#define GLM_FORCE_RADIANS
 #include <glm\gtc\matrix_transform.hpp>
 
 void Camera::init()
 {
 	viewMat = glm::lookAt(glm::vec3(0, 0, 25), glm::vec3(0, 0, 24), glm::vec3(0, 1, 0));
-	projMat = glm::perspective(3.14f*0.45f, 640.f / 480.0f, 0.1f, 1000.0f);
+	projMat = glm::perspective(3.14f*0.35f, 640.f / 480.0f, 0.1f, 1000.0f);
 
 }
 
