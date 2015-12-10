@@ -486,8 +486,8 @@ void RenderPipeline::getSpawnpoints(std::vector < std::vector < SpawnpointG > > 
 		mat = transpose(mat);
 		vec3 pos;
 		pos.x = mat[0].w;
-		pos.y = mat[0].w;
-		pos.z = mat[0].w;
+		pos.y = mat[1].w;
+		pos.z = mat[2].w;
 		team1.push_back(SpawnpointG());
 		team1[n].pos = pos;
 		team1[n].dir = vec3(contMan.testMap.spA[n].dx, contMan.testMap.spA[n].dy, contMan.testMap.spA[n].dz);
@@ -502,8 +502,8 @@ void RenderPipeline::getSpawnpoints(std::vector < std::vector < SpawnpointG > > 
 		mat = transpose(mat);
 		vec3 pos;
 		pos.x = mat[0].w;
-		pos.y = mat[0].w;
-		pos.z = mat[0].w;
+		pos.y = mat[1].w;
+		pos.z = mat[2].w;
 		team2.push_back(SpawnpointG());
 		team2[n].pos = pos;
 		team2[n].dir = vec3(contMan.testMap.spB[n].dx, contMan.testMap.spB[n].dy, contMan.testMap.spB[n].dz);
