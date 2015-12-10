@@ -473,6 +473,7 @@ void RenderPipeline::getSpawnpoints(std::vector < std::vector < SpawnpointG > > 
 		pos.y = mat[1].w;
 		pos.z = mat[2].w;
 		team0.push_back(SpawnpointG());
+		team0[n].pos = pos;
 		team0[n].dir = vec3(contMan.testMap.spFFA[n].dx, contMan.testMap.spFFA[n].dy, contMan.testMap.spFFA[n].dz);
 		team0[n].roomID = contMan.testMap.spFFA[n].roomID;
 	}
@@ -488,6 +489,7 @@ void RenderPipeline::getSpawnpoints(std::vector < std::vector < SpawnpointG > > 
 		pos.y = mat[0].w;
 		pos.z = mat[0].w;
 		team1.push_back(SpawnpointG());
+		team1[n].pos = pos;
 		team1[n].dir = vec3(contMan.testMap.spA[n].dx, contMan.testMap.spA[n].dy, contMan.testMap.spA[n].dz);
 		team1[n].roomID = contMan.testMap.spA[n].roomID;
 	}
@@ -503,6 +505,7 @@ void RenderPipeline::getSpawnpoints(std::vector < std::vector < SpawnpointG > > 
 		pos.y = mat[0].w;
 		pos.z = mat[0].w;
 		team2.push_back(SpawnpointG());
+		team2[n].pos = pos;
 		team2[n].dir = vec3(contMan.testMap.spB[n].dx, contMan.testMap.spB[n].dy, contMan.testMap.spB[n].dz);
 		team2[n].roomID = contMan.testMap.spB[n].roomID;
 	}

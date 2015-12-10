@@ -977,7 +977,7 @@ bool Game::playerWantsToRespawn()
 
 void Game::allowPlayerRespawn(int p_conID, glm::vec3 respawnPosition)
 {
-	playerList[p_conID]->respawn(respawnPosition);
+	playerList[p_conID]->respawn(spawnpoints[playerList[p_conID]->getTeam()][1].pos);
 	localPlayerWantsRespawn = false;
 	localPlayerRespawnWaiting = false;
 	if (playerList[p_conID]->isLocal())
