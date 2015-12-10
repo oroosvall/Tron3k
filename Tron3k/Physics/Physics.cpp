@@ -229,7 +229,7 @@ float Physics::checkLinevPlaneCollision(glm::vec3 l1, glm::vec3 l2, glm::vec3 p1
 	if (glm::dot(l, p) == 0)
 		return -1;
 
-	x = (d - (glm::dot(l1, p))) / (glm::dot(l3, p));
+	x = (glm::dot(p2-l1, p) / (glm::dot(l3, p)));
 
 	if (x >= 0 && x <= 1)
 		return x;
