@@ -3,7 +3,7 @@
 
 #include <glm\glm.hpp>
 #include "Mesh.h"
-#include <GL\glew.h>
+#include "Utils\GPUMemoryLeakChecker.h"
 #include "Map\Map.h"
 #include <vector>
 
@@ -43,6 +43,10 @@ private:
 
 	AnimatedMesh testAnimationMesh;
 
+	struct TriangleVertex
+	{
+		float pos[5];
+	};
 public:
 	Map testMap;
 
@@ -50,8 +54,17 @@ public:
 	bool* renderedChunks;
 	bool* renderNextChunks;
 
+	//Flags
+	bool f_portal_culling;
+	bool f_freeze_portals;
+	bool f_render_chunks;
+	bool f_render_abb;
+	bool f_render_obb;
+
 	~ContentManager();
 	void init();
+
+	void release();
 
 	void renderChunks(GLuint shader, GLuint shaderLocation, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation, GLuint DglowColor, GLuint SglowColor, GLuint portal_shader, GLuint portal_world);
 
@@ -65,7 +78,8 @@ public:
 	void releaseChunk();
 
 	void* getChunkCollisionVectorAsPointer(int chunkID);
-	
+	void bindLightwalTexture();
+
 	std::vector<std::vector<float>> getMeshBoxes(); //Will send out all meshboxes, for now it'll just send a static one
 };
 

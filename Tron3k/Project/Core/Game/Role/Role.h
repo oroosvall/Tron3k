@@ -7,13 +7,13 @@
 #include "PlayerEffects/Modifiers/AllModifiers.h"
 #include "Weapon/Weapon.h"
 #include "../GameDataIndex.h"
-#include "ActiveEffects/consumable.h"
+#include "Consumable/Consumable.h"
 #include<string>
 
 using namespace std;
 
 enum ROLES { TRAPPER, DESTROYER, MOBILITY, BRUTE, MANIPULATOR, NROFROLES };
-enum PROPERTIES{HEALTH, MAINWEP, SECWEP, CONSUMABLE, MOVEMENTSPEED, NROFREADPROPERTIES};
+enum PROPERTIES{HEALTH, MAINWEP, SECWEP, JUMPHEIGHT, MOVEMENTSPEED, NROFREADPROPERTIES};
 
 class Role
 {
@@ -22,22 +22,25 @@ class Role
 		int health;
 		int maxHealth;
 		float movementSpeed;
+		float jumpHeight;
 		string roles[NROFROLES];
 		
 		string loadedRoles[NROFROLES][NROFREADPROPERTIES];
 
 		void loadWeapons(int role, int wpn); //wpn = main or sec
-		void loadSpecialAbility(int role);
+		void loadRoleSpecifics(int role);
 
 		Weapon* weapons[2];
 		Weapon* storageMain;
 		Weapon* storageSec;
 
+		Consumable* consumable;
+
 		Special* specialAbility;
 		float specialMeter;
 		bool gainSpecial;
 
-		//Consumable* consumable;
+		Special* mobility;
 
 	public:
 		Role();
@@ -47,8 +50,11 @@ class Role
 		float getMovementSpeed();
 
 		void chooseRole(int role);
-		void swapWeapon(int swapTo);
+		void swapWeapon(WEAPON_TYPE wt, int swapTo);
+		void swapWeaponLocal(int swapTo);
 		Weapon* getCurrentWeapon();
+		int getWeaponPosition() { return currentWpn; };
+		Consumable* getConsumable() { return consumable; };
 
 		void update(float dt);
 
@@ -57,7 +63,8 @@ class Role
 		void heal(int h); //Used by server
 
 		int getHealth() { return health; };
-		void returnToLife() { health = maxHealth; };
+		float getJumpHeight() { return jumpHeight; };
+		void returnToLife();
 
 		Special* getSpecialAbility() { return specialAbility; };
 		float getSpecialMeter() { return specialMeter; };
@@ -65,5 +72,7 @@ class Role
 
 		void shutOffMeterGain() { gainSpecial = false; };
 		void activateMeterGain() { gainSpecial = true; };
+
+		Special* getMobilityAbility() { return mobility; };
 };
 #endif

@@ -140,6 +140,8 @@ void Core::upRoam(float dt)
 
 		game = new Game();
 		game->init(MAX_CONNECT, current);
+		//map loaded, fetch spawnpoints from render
+		renderPipe->getSpawnpoints(*game->getSpawnpoints());
 
 		Player* p = new Player();
 		p->init("Roam", glm::vec3(0, 0, 0));
@@ -153,7 +155,7 @@ void Core::upRoam(float dt)
 	case 1:
 		subState++;
 		break;
-	case 2: //main loop
+	case 2: //roam main loop
 
 		/*roamHandleCmds();
 		game->update(dt);
@@ -178,23 +180,28 @@ void Core::upRoam(float dt)
 
 		if (game->weaponSwitchReady())
 		{
-			WEAPON_TYPE wt = game->getWpnSwitch();
-			game->handleWeaponSwitch(0, wt);
+			int swaploc = 0;
+			WEAPON_TYPE wt = game->getWpnSwitch(swaploc);
+			game->handleWeaponSwitch(0, wt, swaploc);
 		}
 
 		if (game->fireEventReady())
 		{
-			Player* p = game->getPlayer(0);
 			WEAPON_TYPE wt;
 			int bID;
 			game->getLatestWeaponFired(0, wt, bID);
-			int team = 0;
+		}
+
+		if (game->consumableReady())
+		{
+			game->getConsumableUsed(0);
 		}
 
 		if (game->specialActivationReady())
 		{
 			Player* p = game->getPlayer(0);
-			game->handleSpecialAbilityUse(0, game->getSpecialAbilityUsed(0), p->getPos(), p->getDir());
+			int sid = -1;
+			game->getSpecialAbilityUsed(0, sid);
 		}
 
 		renderWorld(dt);
@@ -227,6 +234,8 @@ void Core::upClient(float dt)
 					delete game;
 				game = new Game();
 				game->init(MAX_CONNECT, current);
+				//map loaded, fetch spawnpoints from render
+				renderPipe->getSpawnpoints(*game->getSpawnpoints());
 				top->setGamePtr(game);
 				subState++;
 				return; //On sucsess
@@ -265,8 +274,11 @@ void Core::upClient(float dt)
 		//update game
 		game->update(dt);
 
-		GetSound()->setLocalPlayerDir(game->getPlayer(top->getConId())->getDir());
-		GetSound()->setLocalPlayerPos(game->getPlayer(0)->getPos());
+		if (GetSoundActivated())
+		{
+			GetSound()->setLocalPlayerDir(game->getPlayer(0)->getDir());
+			GetSound()->setLocalPlayerPos(game->getPlayer(0)->getPos());
+		}
 
 		//Command and message handle
 		if (console.messageReady())
@@ -291,12 +303,13 @@ void Core::upClient(float dt)
 			//Fetch current player position
 			//Add to topology packet
 			Player* local = game->getPlayer(top->getConId());
-			top->frame_pos(top->getConId(), local->getPos(), local->getDir());
+			top->frame_pos(top->getConId(), local->getPos(), local->getDir(), local->getVelocity());
 
 			if (game->weaponSwitchReady())
 			{
-				WEAPON_TYPE ws = game->getWpnSwitch();
-				top->frame_weapon_switch(top->getConId(), ws);
+				int swaploc = -1;
+				WEAPON_TYPE ws = game->getWpnSwitch(swaploc);
+				top->frame_weapon_switch(top->getConId(), ws, swaploc);
 			}
 
 			if (game->fireEventReady())
@@ -304,15 +317,22 @@ void Core::upClient(float dt)
 				WEAPON_TYPE wt;
 				int bID;
 				game->getLatestWeaponFired(top->getConId(), wt, bID);
-				int team = local->getTeam();
 				top->frame_fire(wt, top->getConId(), bID, local->getPos(), local->getDir());
+			}
+
+			if (game->consumableReady())
+			{
+				CONSUMABLE_TYPE ct = game->getConsumableUsed(top->getConId());
+				top->frame_consumable(ct, top->getConId(), local->getPos(), local->getDir());
 			}
 
 			if (game->specialActivationReady())
 			{
-				SPECIAL_TYPE st = game->getSpecialAbilityUsed(top->getConId());
-				top->frame_special_use(st, top->getConId(), local->getPos(), local->getDir());
+				int sid = -1;
+				SPECIAL_TYPE st = game->getSpecialAbilityUsed(top->getConId(), sid);
+				top->frame_special_use(st, top->getConId(), sid, local->getPos(), local->getDir());
 			}
+
 			//send the package
 			top->network_OUT(dt);
 			tick_timer = 0;
@@ -354,6 +374,9 @@ void Core::upServer(float dt)
 			delete game;
 		game = new Game();
 		game->init(MAX_CONNECT, current);
+		//map loaded, fetch spawnpoints from render
+		renderPipe->getSpawnpoints(*game->getSpawnpoints());
+
 		game->freecam = true;
 		//load map
 
@@ -376,11 +399,17 @@ void Core::upServer(float dt)
 			top->scope_out = Uint8(ALL);
 		}
 
-		if (game->hitPlayerEventReady())
+		std::vector<BulletHitPlayerInfo> bulletHitsOnPlayer = game->getAllHitPlayerInfo();
+
+		if (bulletHitsOnPlayer.size() != 0)
 		{
-			BulletHitPlayerInfo hi = game->getHitPlayerInfo();
-			int newHPtotal = game->handleBulletHitPlayerEvent(hi);
-			top->event_bullet_hit_player(hi, newHPtotal);
+			for (unsigned int c = 0; c < bulletHitsOnPlayer.size(); c++)
+			{
+				int newHP = game->handleBulletHitPlayerEvent(bulletHitsOnPlayer[c]);
+				bulletHitsOnPlayer[c].newHPtotal = newHP;
+			}
+			top->event_bullet_hit_player(bulletHitsOnPlayer);
+			game->clearBulletOnPlayerCollisions();
 		}
 
 		serverHandleCmds();
@@ -488,6 +517,7 @@ void Core::roamHandleCmds()
 			console.printMsg("/players", "", ' ');
 			console.printMsg("/free (turns freecam on/off)", "", ' ');
 			console.printMsg("/spec <Number> (spectate player id)", "", ' ');
+			console.printMsg("/rs  show render settings", "", ' ');
 		}
 		else if (token == "/name")
 		{
@@ -532,6 +562,42 @@ void Core::roamHandleCmds()
 				game->freecam = true;
 
 			game->spectateID = -1;
+		}
+		else if (token == "/role")
+		{
+			ss >> token;
+			int role = stoi(token);
+			if (role < 1 || role > 5)
+				console.printMsg("Invalid role. Use /role <1-5>", "System", 'S');
+			else
+			{
+				game->getPlayer(0)->getRole()->chooseRole(role - 1);
+				console.printMsg("You switched class!", "System", 'S');
+			}
+		}
+		//render commands
+		else if (token == "/rs")
+		{
+			ss >> token;
+			if (token == "/rs") // help menu
+			{
+				console.printMsg("Render settings commands", "", ' ');
+				console.printMsg("/rs  portal	PORTAL_CULLING ", "", ' ');
+				console.printMsg("/rs  fportal	FREEZE_CULLING ", "", ' ');
+				console.printMsg("/rs  chunk	RENDER_CHUNK ", "", ' ');
+				console.printMsg("/rs  abb		RENDER_ABB ", "", ' ');
+				console.printMsg("/rs  obb		RENDER_OBB ", "", ' ');
+			}
+			else if (token == "portal")
+				renderPipe->setRenderFlag(PORTAL_CULLING);
+			else if (token == "fportal")
+				renderPipe->setRenderFlag(FREEZE_CULLING);
+			else if (token == "chunk")
+				renderPipe->setRenderFlag(RENDER_CHUNK);
+			else if (token == "abb")
+				renderPipe->setRenderFlag(RENDER_ABB);
+			else if (token == "obb")
+				renderPipe->setRenderFlag(RENDER_OBB);
 		}
 	}
 }
@@ -593,6 +659,17 @@ void Core::clientHandleCmds()
 					print += "ConID: " + to_string(n) + " Team: " + to_string(p->getTeam()) + " Name: " + p->getName();
 					console.printMsg(print, "", ' ');
 				}
+			}
+		}
+		else if (token == "/role")
+		{
+			ss >> token;
+			int role = stoi(token);
+			if (role < 1 || role > 5)
+				console.printMsg("Invalid role. Use /role <1-5>", "System", 'S');
+			else
+			{
+				top->command_role_change(top->getConId(), role);
 			}
 		}
 		else if (token == "/disconnect")
@@ -805,7 +882,7 @@ void Core::renderWorld(float dt)
 				light.Direction = p->getDir();
 				if (firstLight)
 				{
-					light.AmbientIntensity = 0.3;
+					light.AmbientIntensity = 0.3f;
 					firstLight = false;
 				}
 				renderPipe->addLight(&light);
@@ -845,12 +922,30 @@ void Core::renderWorld(float dt)
 			dgColor[0] = 0; dgColor[1] = 0; dgColor[2] = 0;
 
 			std::vector<Bullet*> bullets = game->getBullets(BULLET_TYPE(c));
-			for (int i = 0; i < bullets.size(); i++)
+			for (unsigned int i = 0; i < bullets.size(); i++)
 			{
 				renderPipe->renderPlayer(2, bullets[i]->getWorldMat(), dgColor, 1.0f);
 			}
 		}
+
 		renderPipe->render();
+
+		float herpderpOffset = 0;
+		for (int c = 0; c < EFFECT_TYPE::NROFEFFECTS; c++)
+		{
+			dgColor[0] = 0; dgColor[1] = 0; dgColor[2] = 0;
+
+			std::vector<Effect*> eff = game->getEffects(EFFECT_TYPE(c));
+			for (unsigned int i = 0; i < eff.size(); i++)
+			{
+				LightwallEffect* derp = (LightwallEffect*)eff[i];
+				renderPipe->renderWallEffect(&derp->pos, &derp->endPoint, herpderpOffset);
+
+				herpderpOffset += glm::distance(derp->pos, derp->endPoint);
+			}
+		}
+
+		renderPipe->finalizeRender();
 	}
 }
 
@@ -909,7 +1004,6 @@ void Core::initPipeline()
 	}
 	else
 	{
-
 		PipelineValues pv;
 		pv.type = pv.INT2;
 		pv.xy[0] = winX;
@@ -928,7 +1022,17 @@ void Core::initPipeline()
 void Core::setfps(int fps)
 {
 	if (win != nullptr)
-		glfwSetWindowTitle(win, to_string(fps).c_str());
+	{
+		if (game != nullptr)
+		{
+			CameraInput* cam = CameraInput::getCam();
+			string print( "X: " + to_string(cam->getPos().x) + "  Y: " + to_string(cam->getPos().y) + "  Z: " + to_string(cam->getPos().z) + "  FPS: " + to_string(fps));
+			glfwSetWindowTitle(win, print.c_str());
+		}
+		else
+			glfwSetWindowTitle(win, to_string(fps).c_str());
+	}
+		
 }
 
 void Core::sendPlayerBox()
@@ -937,8 +1041,8 @@ void Core::sendPlayerBox()
 	float xMax, xMin, yMax, yMin, zMax, zMin;
 	xMax = 0.5f;
 	xMin = -0.5f;
-	yMax = 1.0f;
-	yMin = -1.0f;
+	yMax = 2.0f;
+	yMin = -2.0f;
 	zMax = 0.2f;
 	zMin = -0.2f;
 
@@ -969,8 +1073,6 @@ bool Core::sendChunkBoxes(int chunkID)
 			game->sendChunkBoxes(chunkID, cBoxes);
 			return 0;
 		}
-
-
 	}
 	//when we're done with all chunks, we'll get here cause cBoxes will be nullptr, so we'll end the for-loop
 	return 1;

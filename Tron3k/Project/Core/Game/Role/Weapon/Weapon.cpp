@@ -27,7 +27,7 @@ bool Weapon::reload()
 int Weapon::getBulletId()
 {
 	int bid = currentBulletId;
-	if (currentBulletId == -1)
+	if (currentBulletId != -1)
 		currentBulletId++ % 255;
 	return bid;
 }

@@ -85,6 +85,7 @@ public:
 		{
 		case NET_COMMAND::TEAM_CHANGE: in_command_team_change(rec, conID); break;
 		case NET_COMMAND::RESPAWN: in_command_respawn(rec, conID); break;
+		case NET_COMMAND::ROLESWITCH: in_command_role_change(rec, conID); break;
 		}
 	}
 
@@ -160,7 +161,9 @@ public:
 			consolePtr->printMsg("ERROR in_event_player_left" , "System", 'S');
 	}
 
-	virtual void event_bullet_hit_player(BulletHitPlayerInfo hi, int newHPtotal) {};
+	virtual void event_bullet_hit_player(std::vector<BulletHitPlayerInfo> allhits) {};
+	virtual void event_bullet_hit_world(int conid, int effectid, EFFECT_TYPE et, glm::vec3 pos) {};
+	virtual void event_effect_hit_player(std::vector<EffectHitPlayerInfo> allhits) {};
 
 	virtual void in_event_respawn_denied(Packet* rec)
 	{
@@ -171,16 +174,42 @@ public:
 
 	virtual void in_event_bullet_hit_player(Packet* rec)
 	{
-		BulletHitPlayerInfo hi = BulletHitPlayerInfo();
+		BulletHitPlayerInfo hi;
 		Uint8 playerHit, PID, BID, bt, hpTotal;
-		*rec >> playerHit >> PID >> BID >> bt >> hpTotal;
-		hi.playerHit = playerHit;
-		hi.bt = BULLET_TYPE(bt);
-		hi.bulletBID = BID;
-		hi.bulletPID = PID;
-		gamePtr->handleBulletHitPlayerEvent(hi, hpTotal);
+		Uint8 size;
+		*rec >> size;
+		for (int c = 0; c < size; c++)
+		{
+			*rec >> playerHit >> PID >> BID >> bt >> hpTotal;
+			hi.playerHit = playerHit;
+			hi.bt = BULLET_TYPE(bt);
+			hi.bulletBID = BID;
+			hi.bulletPID = PID;
+			hi.newHPtotal = hpTotal;
+			gamePtr->handleBulletHitPlayerEvent(hi);
+		}
 	}
 
+	virtual void in_event_effect_hit_player(Packet* rec)
+	{
+		EffectHitPlayerInfo hi;
+		Uint8 playerHit, PID, EID, bt, hpTotal;
+		glm::vec3 hitPosition;
+		Uint8 size;
+		*rec >> size;
+		for (int c = 0; c < size; c++)
+		{
+			*rec >> playerHit >> PID >> EID >> bt >> hpTotal;
+			*rec >> hitPosition.x >> hitPosition.y >> hitPosition.z;
+			hi.playerHit = playerHit;
+			hi.et = EFFECT_TYPE(bt);
+			hi.effectID = EID;
+			hi.effectPID = PID;
+			hi.newHPtotal = hpTotal;
+			hi.hitPos = hitPosition;
+			gamePtr->handleEffectHitPlayerEvent(hi);
+		}
+	}
 
 	//Frame package FROM CLIENT
 	virtual void frame_fire(WEAPON_TYPE wt, int conID, int bulletId, glm::vec3 pos, glm::vec3 dir) 
@@ -190,16 +219,23 @@ public:
 			dir.x << dir.y << dir.z;
 	};
 
-	virtual void frame_special_use(SPECIAL_TYPE st, int conID, glm::vec3 pos, glm::vec3 dir)
+	virtual void frame_consumable(CONSUMABLE_TYPE ct, int conID, glm::vec3 pos, glm::vec3 dir)
 	{
-		*package << Uint8(NET_FRAME::SPECIAL) << Uint8(conID) << Uint8(st) <<
+		*package << Uint8(NET_FRAME::CONSUMABLE) << Uint8(conID) << Uint8(ct) <<
+			pos.x << pos.y << pos.z <<
+			dir.x << dir.y << dir.z;
+	};
+
+	virtual void frame_special_use(SPECIAL_TYPE st, int conID, int specialId, glm::vec3 pos, glm::vec3 dir)
+	{
+		*package << Uint8(NET_FRAME::SPECIAL) << Uint8(conID) << Uint8(specialId) << Uint8(st) <<
 			pos.x << pos.y << pos.z <<
 			dir.x << dir.y << dir.z;
 	}
 
-	virtual void frame_weapon_switch(int conID, WEAPON_TYPE ws)
+	virtual void frame_weapon_switch(int conID, WEAPON_TYPE ws, int swaploc)
 	{
-		*package << Uint8(NET_FRAME::WPN_SWITCH) << Uint8(conID) << Uint8(ws);
+		*package << Uint8(NET_FRAME::WPN_SWITCH) << Uint8(conID) << Uint8(ws) << Uint8(swaploc);
 	}
 
 	virtual void frame_name_change(Uint8 conid, string name)
@@ -207,9 +243,12 @@ public:
 		*package << Uint8(NET_FRAME::NAME_CHANGE) << conid << name;
 	}
 
-	virtual void frame_pos(Uint8 conid, glm::vec3 cPos, glm::vec3 cDir)
+	virtual void frame_pos(Uint8 conid, glm::vec3 cPos, glm::vec3 cDir, glm::vec3 cVel)
 	{
-		*package << Uint8(NET_FRAME::POS) << conid << cPos.x << cPos.y << cPos.z << cDir.x << cDir.y << cDir.z;
+		*package << Uint8(NET_FRAME::POS) << conid <<
+			cPos.x << cPos.y << cPos.z <<
+			cDir.x << cDir.y << cDir.z <<
+			cVel.x << cVel.y << cVel.z;
 	}
 
 	virtual void in_frame_fire(Packet* rec)
@@ -225,30 +264,39 @@ public:
 		gamePtr->handleWeaponFire(conID, bulletId, WEAPON_TYPE(weapontype), pos, dir);
 	}
 
+	virtual void in_frame_consumable(Packet* rec)
+	{
+		Uint8 conID;
+		Uint8 consumabletype;
+		glm::vec3 pos;
+		glm::vec3 dir;
+		*rec >> conID >> consumabletype;
+		*rec >> pos.x >> pos.y >> pos.z;
+		*rec >> dir.x >> dir.y >> dir.z;
+		gamePtr->handleConsumableUse(conID, CONSUMABLE_TYPE(consumabletype), pos, dir);
+	}
+
 	virtual void in_frame_special_use(Packet* rec)
 	{
 		Uint8 conID;
+		Uint8 sID;
 		Uint8 specialtype;
 		glm::vec3 pos;
 		glm::vec3 dir;
-		*rec >> conID >> specialtype;
+		*rec >> conID >> sID >> specialtype;
 		*rec >> pos.x >> pos.y >> pos.z;
 		*rec >> dir.x >> dir.y >> dir.z;
-		gamePtr->handleSpecialAbilityUse(conID, SPECIAL_TYPE(specialtype), pos, dir);
+		gamePtr->handleSpecialAbilityUse(conID, sID, SPECIAL_TYPE(specialtype), pos, dir);
 	}
 
 	virtual void in_frame_weapon_switch(Packet* rec)
 	{
 		Uint8 p_conID;
+		Uint8 swapLocation;
 		Uint8 weapontype;
-		*rec >> p_conID >> weapontype;
+		*rec >> p_conID >> weapontype >> swapLocation;
 
-		gamePtr->handleWeaponSwitch(p_conID, WEAPON_TYPE(weapontype));
-
-		if (weapontype == WEAPON_TYPE::PULSE_RIFLE)
-			consolePtr->printMsg(gamePtr->getPlayer(p_conID)->getName() + " switched weapon to Pulse Rifle!", "System", 'S');
-		if (weapontype == WEAPON_TYPE::ENERGY_BOOST)
-			consolePtr->printMsg(gamePtr->getPlayer(p_conID)->getName() + " switched weapon to Energy Boost!", "System", 'S');
+		gamePtr->handleWeaponSwitch(p_conID, WEAPON_TYPE(weapontype), swapLocation);
 	}
 
 	virtual void in_frame_name_change(Packet* rec)
@@ -271,9 +319,11 @@ public:
 		Uint8 p_conID;
 		glm::vec3 p_pos;
 		glm::vec3 p_dir;
+		glm::vec3 p_vel;
 		*rec >> p_conID;
 		*rec >> p_pos.x >> p_pos.y >> p_pos.z;
 		*rec >> p_dir.x >> p_dir.y >> p_dir.z;
+		*rec >> p_vel.x >> p_vel.y >> p_vel.z;
 
 		Player* p = gamePtr->getPlayer(p_conID);
 		if (p != nullptr) //Justincase
@@ -281,6 +331,8 @@ public:
 			//TO DO: Player function to interpolate for 50ms to new position
 			p->setGoalPos(p_pos);
 			p->setGoalDir(p_dir);
+			if (!p->isLocal())
+				p->setVelocity(p_vel);
 		}
 		else
 			consolePtr->printMsg("ERROR in_frame_current_pos", "System", 'S');
@@ -291,6 +343,14 @@ public:
 	{
 		Packet* out = new Packet();
 		*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::TEAM_CHANGE) << conid << team << 0.0f << 0.0f << 0.0f;
+		con->send(out);
+		delete out;
+	}
+
+	virtual void command_role_change(Uint8 conid, Uint8 role)
+	{
+		Packet* out = new Packet();
+		*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::ROLESWITCH) << conid << role;
 		con->send(out);
 		delete out;
 	}
@@ -357,6 +417,31 @@ public:
 		{
 			Packet* out = new Packet();
 			*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::TEAM_CHANGE) << p_conID << team << 0.0f << 0.0f << 0.0f;
+			branch(out, -1);
+			delete out;
+		}
+	}
+
+	virtual void in_command_role_change(Packet* rec, Uint8 conID)
+	{
+		Uint8 p_conID;
+		Uint8 role;
+		*rec >> p_conID >> role;
+
+		Player* p = gamePtr->getPlayer(p_conID);
+		if (p == nullptr)
+		{
+			consolePtr->printMsg("ERROR in_command_role_change", "System", 'S');
+			return;
+		}
+
+		p->getRole()->chooseRole(role-1);
+		consolePtr->printMsg("Player " + p->getName() + " switched class!", "System", 'S');
+
+		if (isClient == false)
+		{
+			Packet* out = new Packet();
+			*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::ROLESWITCH) << p_conID << role;
 			branch(out, -1);
 			delete out;
 		}

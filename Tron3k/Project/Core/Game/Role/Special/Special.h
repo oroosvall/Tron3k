@@ -9,6 +9,9 @@ class Special
 {
 	protected:
 		SPECIAL_TYPE specialType;
+		int specialId = -1;
+		int activationCost;
+		int key;
 	public:
 		virtual void init() = 0;
 
@@ -16,6 +19,11 @@ class Special
 
 		SPECIAL_TYPE getType() { return specialType; };
 
+		int getSpecialId();
+
 		virtual bool allowedToActivate(Player* p) = 0;
+		int getActivationKey() { return key; };
+
+		int getActivationCost() { return activationCost; }
 };
 #endif

@@ -7,7 +7,7 @@ Player::Player()
 
 Player::~Player()
 {
-	for (int c = 0; c < myModifiers.size(); c++)
+	for (unsigned int c = 0; c < myModifiers.size(); c++)
 		delete myModifiers[c];
 }
 
@@ -46,6 +46,11 @@ void Player::setGoalDir(glm::vec3 newDir)
 
 void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingThis)
 {
+	/*
+	
+	Lägg till matematik för kollisioner här!!
+	
+	*/
 	glm::vec3 playerVel = vel*role.getMovementSpeed();
 	pos += playerVel * dt; //Here we will also include external forces
 	if (freecam == false || specingThis == true)
@@ -57,7 +62,7 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 
 void Player::modifiersGetData(float dt)
 {
-	for (int c = 0; c < myModifiers.size(); c++)
+	for (unsigned int c = 0; c < myModifiers.size(); c++)
 	{
 		int msg = myModifiers[c]->getData(dt);
 		if (msg == 1)
@@ -72,7 +77,7 @@ void Player::modifiersGetData(float dt)
 
 void Player::modifiersSetData(float dt)
 {
-	for (int c = 0; c < myModifiers.size(); c++)
+	for (unsigned int c = 0; c < myModifiers.size(); c++)
 	{
 		int msg = myModifiers[c]->setData(dt);
 		if (msg == 1)
@@ -109,7 +114,7 @@ void Player::cleanseModifiers(bool stickies)
 
 bool Player::removeSpecificModifier(MODIFIER_TYPE mt)
 {
-	for (int c = 0; c < myModifiers.size(); c++)
+	for (unsigned int c = 0; c < myModifiers.size(); c++)
 	{
 		if (myModifiers[c]->getType() == mt)
 		{
@@ -199,8 +204,8 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					if (i->getKeyInfo(GLFW_KEY_D))
 					{
 						vec3 right = cross(dir, vec3(0, 1, 0));
-						tempvec = normalize(vec2(right.x, right.z));
-						right = normalize(right);
+						tempvec = glm::normalize(vec2(right.x, right.z));
+						right = glm::normalize(right);
 						if (grounded)
 						{
 							vel.x += tempvec.x;
@@ -227,11 +232,24 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					}
 				}
 
+				Special* mobility = role.getMobilityAbility();
+				if (i->justPressed(mobility->getActivationKey()))
+				{
+					if (mobility->allowedToActivate(this))
+					{
+						if (mobility->getActivationCost() < role.getSpecialMeter())
+						{
+							role.setSpecialMeter(role.getSpecialMeter() - mobility->getActivationCost());
+							msg = MOBILITYUSE;
+						}
+					}
+				}
+
 				if (i->justPressed(GLFW_KEY_SPACE))
 				{
 					if (grounded)
 					{
-						vel.y = 3.0f;
+						vel.y = role.getJumpHeight();
 						grounded = false;
 					}
 				}
@@ -245,13 +263,13 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 				if (i->justPressed(GLFW_KEY_1))
 				{
-					role.swapWeapon(0);
+					role.swapWeaponLocal(0);
 					msg = WPNSWITCH;
 				}
 
 				if (i->justPressed(GLFW_KEY_2))
 				{
-					role.swapWeapon(1);
+					role.swapWeaponLocal(1);
 					msg = WPNSWITCH;
 				}
 
@@ -261,15 +279,21 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 						msg = SHOOT;
 				}
 
+				if (i->justPressed(GLFW_KEY_Q))
+				{
+					Consumable* c = role.getConsumable();
+					if (c->use())
+						msg = USEITEM;
+				}
+
 				if (i->justPressed(GLFW_KEY_E))
 				{
 					/*
 					Add logic (in role) that checks against the applicable special and other conditions
 					*/
-					if (role.getSpecialMeter() - 100.0f < FLT_EPSILON && role.getSpecialMeter() - 100.0f > -FLT_EPSILON)
+					if (role.getSpecialAbility()->allowedToActivate(this))
 					{
-						if (role.getSpecialAbility()->allowedToActivate(this))
-							msg = SPECIALUSE;
+						msg = SPECIALUSE;
 					}
 				}
 
@@ -331,6 +355,12 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		dir = (oldDir * (1.0f - t)) + (goaldir * t);
 
 		rotatePlayer(prev, dir);
+
+		if (role.getHealth() == 0)
+		{
+			isDead = true;
+			vel = glm::vec3(0, 0, 0);
+		}
 	}
 
 	modifiersSetData(dt);
@@ -345,7 +375,9 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 	{
 		cam->setCam(pos, dir);
 	}
-	
+
+	clearCollisionNormals(); //Doesn't actually clear the array, just manually sets size to 0. This is to speed things up a little.
+
 	worldMat[0].w = pos.x;
 	worldMat[1].w = pos.y-0.6f;
 	worldMat[2].w = pos.z;
@@ -364,9 +396,9 @@ Weapon* Player::getPlayerCurrentWeapon()
 	return role.getCurrentWeapon();
 }
 
-void Player::switchWpn(WEAPON_TYPE ws)
+void Player::switchWpn(WEAPON_TYPE ws, int swapLoc)
 {
-	role.swapWeapon(ws);
+	role.swapWeapon(ws, swapLoc);
 }
 
 void Player::hitByBullet(Bullet* b, int newHPtotal)
@@ -384,11 +416,22 @@ void Player::hitByBullet(Bullet* b, int newHPtotal)
 		role.setHealth(newHPtotal);
 	}
 
-	if (!isLocalPlayer)
+	//If hacking dart -> modifier on player
+}
+
+void Player::hitByEffect(Effect* e, int newHPtotal)
+{
+	/*
+	Big ol' switch case to identify which effect is hitting us and what we should do about it
+	*/
+	if (newHPtotal == -1) //This is the server, dealing damage to the player
 	{
-		if (role.getHealth() == 0)
-		isDead = true;
-		vel = glm::vec3(0, 0, 0);
+		int dmg = e->getDamage();
+		role.takeDamage(dmg);
+	}
+	else //Hello I'm the client. I accept my new HP.
+	{
+		role.setHealth(newHPtotal);
 	}
 }
 
@@ -427,6 +470,7 @@ void Player::setRole(Role role)
 void Player::respawn(glm::vec3 respawnPos)
 {
 	pos = respawnPos;
+	vel = glm::vec3(0, 0, 0);
 	if (isLocalPlayer)
 		cam->setCam(pos, dir);
 	worldMat[0].w = pos.x;

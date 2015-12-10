@@ -28,12 +28,14 @@ enum NET_FRAME
 	SPECIAL =		int('S'),
 	WPN_SWITCH =	int('W'),
 	NAME_CHANGE =	int('N'),
+	CONSUMABLE =	int('C')
 };
 
 enum NET_COMMAND
 {
 	TEAM_CHANGE =	int('T'), //request teamchange
-	RESPAWN =		int('R') //Request respawn
+	RESPAWN =		int('R'), //Request respawn
+	ROLESWITCH =	int('C')
 };
 
 enum NET_MESSAGE

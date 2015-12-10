@@ -155,7 +155,26 @@ void main()
 		sum += texture(GlowMap, UV + vec2( pixeluvX * 1	, pixeluvY * 2	)) * 0.353;
 		sum += texture(GlowMap, UV + vec2( pixeluvX * 2	, pixeluvY * 1	)) * 0.353;
 		sum += texture(GlowMap, UV + vec2( pixeluvX * 1	, pixeluvY * 1	)) * 0.603;
+		//Cross samples
+		//up
+		sum += texture(GlowMap, UV + vec2( 0	, pixeluvY * 3	)) * 0.137;
+		sum += texture(GlowMap, UV + vec2( 0	, pixeluvY * 2	)) * 0.408;
+		sum += texture(GlowMap, UV + vec2( 0	, pixeluvY * 1	)) * 0.706;
+		//left
+		sum += texture(GlowMap, UV + vec2( pixeluvX * 3	, 0	)) * 0.137;
+		sum += texture(GlowMap, UV + vec2( pixeluvX * 2	, 0	)) * 0.408;
+		sum += texture(GlowMap, UV + vec2( pixeluvX * 1	, 0	)) * 0.706;
+		//right
+		sum += texture(GlowMap, UV + vec2( pixeluvX * 3	, 0	)) * 0.137;
+		sum += texture(GlowMap, UV + vec2( pixeluvX * 2	, 0	)) * 0.408;
+		sum += texture(GlowMap, UV + vec2( pixeluvX * 1	, 0	)) * 0.706;
+		//down
+		sum += texture(GlowMap, UV + vec2( 0	, pixeluvY * 3	)) * 0.137;
+		sum += texture(GlowMap, UV + vec2( 0	, pixeluvY * 2	)) * 0.408;
+		sum += texture(GlowMap, UV + vec2( 0	, pixeluvY * 1	)) * 0.706;
+		//middle sample
+		sum += texture(GlowMap, UV) * 0.941;
 		
-		fragment_color += sum * 0.1;
+		fragment_color += sum * 0.2;
 	}	
 }

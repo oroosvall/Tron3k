@@ -9,6 +9,18 @@ void Mesh::init(float x, float y, float z)
 	world[2].w = z;
 }
 
+void Mesh::release()
+{
+	glDeleteBuffers(1, &vbo);
+	glDeleteBuffers(1, &ibo);
+	glDeleteVertexArrays(1, &vao);
+}
+
+Mesh::~Mesh()
+{
+
+}
+
 void Mesh::load(std::string path)
 {
 

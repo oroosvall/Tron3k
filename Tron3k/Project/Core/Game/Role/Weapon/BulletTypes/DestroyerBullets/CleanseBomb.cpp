@@ -4,7 +4,7 @@
 CleanseBomb::CleanseBomb(glm::vec3 position, glm::vec3 direction, int pID, int bID, int tID)
 {
 	initValues(position, direction, pID, bID, tID);
-	vel = 25.0f;
+	vel = 30.0f;
 	damage = 10;
 }
 
@@ -14,6 +14,7 @@ CleanseBomb::~CleanseBomb()
 int CleanseBomb::update(float dt)
 {
 	pos += dir * vel * dt;
+	dir.y -= 1.5f * dt;
 
 	updateWorldMat();
 

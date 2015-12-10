@@ -4,8 +4,11 @@
 Clusterling::Clusterling(glm::vec3 position, glm::vec3 direction, int pID, int bID, int tID)
 {
 	initValues(position, direction, pID, bID, tID);
-	vel = 25.0f;
+	ttl = 3;
+	vel = 15.0f;
 	damage = 10;
+
+	direction.y = -direction.y;
 }
 
 Clusterling::~Clusterling()
@@ -14,6 +17,7 @@ Clusterling::~Clusterling()
 int Clusterling::update(float dt)
 {
 	pos += dir * vel * dt;
+	dir.y -= 1.5f * dt;
 
 	updateWorldMat();
 

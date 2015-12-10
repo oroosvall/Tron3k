@@ -9,6 +9,8 @@
 
 #include <string>
 #include "Lights.h"
+#include <vector>
+#include "../Project/Core/sharedStructs.h"
 
 enum PIPELINE_SETTINGS
 {
@@ -21,6 +23,15 @@ enum PIPELINE_SETTINGS
 	DOF,
 	DOF_VALUE,
 	FOV
+};
+
+enum RENDER_FLAGS
+{
+	PORTAL_CULLING,
+	FREEZE_CULLING,
+	RENDER_CHUNK,
+	RENDER_ABB,
+	RENDER_OBB
 };
 
 struct PipelineValues
@@ -43,6 +54,7 @@ public:
 	virtual void update(float x, float y, float z, float dt) = 0;
 	virtual void renderIni() = 0;
 	virtual void render() = 0;
+	virtual void finalizeRender() = 0;
 
 	virtual void addLight(SpotLight* newLight) = 0;
 	virtual void setChunkColorAndInten(int ID, float* color, float inten) = 0;
@@ -55,6 +67,8 @@ public:
 
 	PipelineValues getSettings(PIPELINE_SETTINGS type);
 	virtual bool setSetting(PIPELINE_SETTINGS type, PipelineValues value) = 0;
+
+	virtual void renderWallEffect(void* pos1, void* pos2, float uvStartOffset) = 0;
 
 	virtual void forceReset() = 0;
 	virtual unsigned int createText(float x, float y, float z, std::string text) = 0;
@@ -76,7 +90,8 @@ public:
 	virtual void getPlayerBox(float &xMax, float &xMin, float &yMax, float &yMin, float &zMax, float &zMin) = 0;
 	virtual void getWorldBoxes(int &current, float &xMax, float &xMin, float &yMax, float &yMin, float &zMax, float &zMin) = 0;
 	virtual int getNrOfWorldBoxes() = 0;
-
+	virtual void setRenderFlag(RENDER_FLAGS flag) = 0;
+	virtual void getSpawnpoints(std::vector < std::vector < SpawnpointG > > &spoints) = 0;
 };
 
 extern "C" ENGINE_API IRenderPipeline* CreatePipeline();

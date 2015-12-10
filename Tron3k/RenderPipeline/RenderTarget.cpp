@@ -16,6 +16,15 @@ void RenderTarget::init(int x, int y, int nrTex, bool depth)
 
 }
 
+void RenderTarget::releaseStatic()
+{
+	glDeleteBuffers(1, &renderQuad);
+	glDeleteVertexArrays(1, &renderVao);
+
+	renderQuad = 0;
+	renderVao = 0;
+}
+
 RenderTarget::~RenderTarget()
 {
 	glDeleteTextures(1, &targetId);

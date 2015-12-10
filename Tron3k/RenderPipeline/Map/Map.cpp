@@ -5,6 +5,9 @@
 void Map::init()
 {
 	currentChunk = 1;
+	spA = 0;
+	spB = 0;
+	spFFA = 0;
 
 	loadMap("GameFiles/TestFiles/Tron3k_map_4_obbFixed.bin");
 
@@ -16,6 +19,8 @@ void Map::init()
 	{
 		tex[i].textureID = loadTexture("GameFiles/testfiles/" + std::string(tex[i].textureName));
 	}
+
+
 }
 
 void Map::release()
@@ -39,9 +44,28 @@ void Map::release()
 
 	if (tex)
 	{
+		for (size_t i = 0; i < textureCount; i++)
+		{
+			glDeleteTextures(1, &tex[i].textureID);
+		}
 		delete[] tex;
 		tex = nullptr;
 	}
+
+	for (size_t i = 0; i < chunks.size(); i++)
+	{
+		for (size_t p = 0; p < chunks[i].portals.size(); p++)
+		{
+			chunks[i].portals[p].visualPortal.release();
+		}
+	}
+
+	if (spA)
+		delete[] spA;
+	if (spB)
+		delete[] spB;
+	if (spFFA)
+		delete[] spFFA;
 
 	//if (bbPoints)
 	//{
@@ -90,6 +114,7 @@ void Map::loadMap(std::string mapName)
 	
 	cout << sizeof(fileHeader) << endl;
 	
+	roomCount = (int)fileHeader.roomCount;
 	meshCount = (int)fileHeader.meshCount;
 	int pointLightCount = (int)fileHeader.pointLightCount;
 	int spotLightCount = (int)fileHeader.spotLightCount;
@@ -97,9 +122,9 @@ void Map::loadMap(std::string mapName)
 	textureCount = (int)fileHeader.textureCount;
 	int portalCount = (int)fileHeader.portalCount;
 	int capCount = (int)fileHeader.capturePointCount;
-	int spTACount = (int)fileHeader.SPCountTeamA;
-	int spTBCount = (int)fileHeader.SPCountTeamB;
-	int spFFACount = (int)fileHeader.SPCountTeamFFA;
+	spTACount = (int)fileHeader.SPCountTeamA;
+	spTBCount = (int)fileHeader.SPCountTeamB;
+	spFFACount = (int)fileHeader.SPCountTeamFFA;
 	
 	for (size_t i = 0; i < fileHeader.roomCount; i++)
 	{
@@ -235,6 +260,28 @@ void Map::loadMap(std::string mapName)
 
 	delete[] portalData;
 	
+	CapturePoints* cps = new CapturePoints[capCount];
+	inFile.read((char*)cps, sizeof(CapturePoints) * capCount);
+	delete[] cps;
+
+	spA = new SpawnPoint[spTACount];
+	spB = new SpawnPoint[spTBCount];
+	spFFA = new SpawnPoint[spFFACount];
+	
+	inFile.read((char*)spA, sizeof(SpawnPoint) * spTACount);
+	inFile.read((char*)spB, sizeof(SpawnPoint) * spTBCount);
+	inFile.read((char*)spFFA, sizeof(SpawnPoint) * spFFACount);
+
+	ABB* chunkAABB = new ABB[roomCount-1];
+	inFile.read((char*)chunkAABB, sizeof(ABB) * (roomCount-1));
+
+	for (int i = 1; i < roomCount; i++)
+	{
+		chunks[i].roomBox = chunkAABB[i - 1];
+	}
+
+	delete[] chunkAABB;
+
 	inFile.close();
 
 }
@@ -264,4 +311,18 @@ int Map::getChunkID(glm::vec3 oldPos, glm::vec3 newPos)
 ChunkCollision* Map::getChunkCollision(int chunkID)
 {
 	return chunks[chunkID].getChunkCollision();
+}
+
+void Map::deleteSpawnposData()
+{
+	if (spA)
+		delete[] spA;
+	if (spB)
+		delete[] spB;
+	if (spFFA)
+		delete[] spFFA;
+
+	spA = nullptr;
+	spB = nullptr;
+	spFFA = nullptr;
 }

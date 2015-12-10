@@ -2,11 +2,13 @@
 #define GAME_H
 
 #include "GameDataIndex.h"
+#include "Role/PlayerEffects/Effects/AllEffects.h"
 #include "Role/Weapon/BulletTypes/AllBullets.h"
 #include "Player.h"
 #include "../../../Physics/Physics.h"
 #include <vector>
 #include <fstream>
+#include "../sharedStructs.h"
 
 enum Gamestate
 {
@@ -17,11 +19,43 @@ enum Gamestate
 	SERVER
 };
 
+struct BulletHitPlayerInfo
+{
+	int playerHit;
+	int bulletPID;
+	int bulletBID;
+	BULLET_TYPE bt;
+	int newHPtotal;
+};
+
+struct EffectHitPlayerInfo
+{
+	int playerHit;
+	int effectPID;
+	int effectID;
+	EFFECT_TYPE et;
+	glm::vec3 hitPos;
+	int newHPtotal;
+};
+
+struct BulletHitWorldInfo
+{
+	int bulletPID;
+	int bulletBID;
+	BULLET_TYPE bt;
+	glm::vec3 hitPos;
+	glm::vec3 hitDir; //For bouncing things
+	glm::vec3 collisionNormal;
+};
+
 class Game
 {
 private:
-	std::vector<Bullet*> bullets[BULLET_TYPE::NROFBULLETS];
+	std::vector <vector < SpawnpointG >> spawnpoints;
 
+	std::vector<Bullet*> bullets[BULLET_TYPE::NROFBULLETS];
+	std::vector<Effect*> effects[EFFECT_TYPE::NROFEFFECTS];
+	
 	std::vector<int> teamSpectators; //Team vectors hold connection IDs
 	std::vector<int> teamOne;
 	std::vector<int> teamTwo;
@@ -43,30 +77,46 @@ private:
 	void initPhysics();
 
 	void addBulletToList(int conID, int bulletId, BULLET_TYPE bt, glm::vec3 pos, glm::vec3 dir);
-	Bullet* getBulletForRemoval(int PID, int BID, BULLET_TYPE bt, int &posInBulletArray);
+	Bullet* getSpecificBullet(int PID, int BID, BULLET_TYPE bt, int &posInBulletArray);
+	void removeBullet(BULLET_TYPE bt, int posInArray);
+
+	void addEffectToList(int conID, int effectId, EFFECT_TYPE et, glm::vec3 pos);
+	Effect* getSpecificEffect(int PID, int SID, EFFECT_TYPE et, int &posInEffectArray);
+	void removeEffect(EFFECT_TYPE et, int posInArray);
 
 	void playerUpdate(int conid, float dt);
 
 	void registerWeapon(Player* p);
 	void registerSwitch(Player* p);
 	void registerSpecial(Player* p);
+	void registerMobility(Player* p);
+	void registerConsumable(Player* p);
 
 	WEAPON_TYPE weaponShotWith;
 	int bulletShot = -1;
 	bool shotsFired = false;
 
 	WEAPON_TYPE weaponSwitchedTo;
+	int wpnSwapLocation = -1;
 	bool wpnSwitched = false;
 
 	SPECIAL_TYPE specialUsed;
+	SPECIAL_TYPE mobilityUsed;
 	bool specialActivated = false;
+	bool mobilityActivated = false;
+	int specialId = -1;
 
-	BulletHitPlayerInfo hit;
-	bool playerHit = false;
+	CONSUMABLE_TYPE itemUsed;
+	bool consumableUsed = false;
+
+	std::vector<BulletHitPlayerInfo> allBulletHitsOnPlayers;
+	std::vector<EffectHitPlayerInfo> allEffectHitsOnPlayers;
+	std::vector<BulletHitWorldInfo> allBulletHitsOnWorld;
 
 	bool localPlayerWantsRespawn = false;
 	bool localPlayerRespawnWaiting = false;
 public:
+	
 
 	Game();
 	void release();
@@ -74,10 +124,13 @@ public:
 
 	Player* getPlayer(int conID);
 	std::vector<Bullet*> getBullets(BULLET_TYPE type);
+	std::vector<Effect*> getEffects(EFFECT_TYPE type);
 	void createPlayer(Player* p, int conID, bool isLocal = false);
 	void removePlayer(int conID);
 
 	void update(float dt);
+
+	std::vector< std::vector < SpawnpointG > >* getSpawnpoints() { return &spawnpoints; };
 
 	void sendChunkBoxes(int chunkID, void* cBoxes);
 	void sendWorldBoxes(std::vector<std::vector<float>> wBoxes);
@@ -86,7 +139,7 @@ public:
 	//Collision checks
 	void checkPvPCollision();
 	void checkPlayerVBulletCollision();
-	void checkPlayerVWorldCollision();
+	void checkPlayerVWorldCollision(float dt);
 	void checkBulletVWorldCollision();
 
 	bool playerWantsToRespawn();
@@ -101,18 +154,32 @@ public:
 	void getLatestWeaponFired(int localPlayer, WEAPON_TYPE &wt, int &bulletId);
 	void handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm::vec3 pos, glm::vec3 dir);
 
+	bool consumableReady() { return consumableUsed; };
+	CONSUMABLE_TYPE getConsumableUsed(int localPlayer);
+	void handleConsumableUse(int conID, CONSUMABLE_TYPE ct, glm::vec3 pos, glm::vec3 dir);
+
 	bool weaponSwitchReady() { return wpnSwitched; };
-	WEAPON_TYPE getWpnSwitch() { wpnSwitched = false; return weaponSwitchedTo; };
-	void handleWeaponSwitch(int conID, WEAPON_TYPE ws);
+	WEAPON_TYPE getWpnSwitch(int &swaploc) { wpnSwitched = false; swaploc = wpnSwapLocation; return weaponSwitchedTo; };
+	void handleWeaponSwitch(int conID, WEAPON_TYPE ws, int swapLoc);
 
 	bool specialActivationReady() { return specialActivated; };
-	SPECIAL_TYPE getSpecialAbilityUsed(int localPlayer);
-	void handleSpecialAbilityUse(int conID, SPECIAL_TYPE st, glm::vec3 pos, glm::vec3 dir);
+	bool mobilityActivationReady() { return mobilityActivated; };
 
-	bool hitPlayerEventReady() { return playerHit; };
-	BulletHitPlayerInfo getHitPlayerInfo() { playerHit = false; return hit; };
-	int handleBulletHitPlayerEvent(BulletHitPlayerInfo hi, int newHPtotal = -1); //Returns the new HP total of the player, takes the new HP total instead if info is coming from server
+	SPECIAL_TYPE getMobilityAbilityUsed(int localPlayer, int &sid);
+	SPECIAL_TYPE getSpecialAbilityUsed(int localPlayer, int &sid); //sid is SpecialId, really only used for Lightwalls. I'm so, so sorry
+	void handleSpecialAbilityUse(int conID, int specialId, SPECIAL_TYPE st, glm::vec3 pos, glm::vec3 dir);
 
+	std::vector<BulletHitPlayerInfo> getAllHitPlayerInfo() { return allBulletHitsOnPlayers; };
+	void clearBulletOnPlayerCollisions() { allBulletHitsOnPlayers.clear();};
+	int handleBulletHitPlayerEvent(BulletHitPlayerInfo hi); //Returns the new HP total of the player, takes the new HP total instead if info is coming from server
+
+	std::vector<EffectHitPlayerInfo> getAllEffectOnPlayerCollisions();
+	void clearEffectOnPlayerCollisions() { allEffectHitsOnPlayers.clear(); };
+	int handleEffectHitPlayerEvent(EffectHitPlayerInfo hi); //Returns new HP total of player, if we are client then instead simply set HP coming from server
+
+	std::vector<BulletHitWorldInfo> getAllBulletOnWorldCollisions() { return allBulletHitsOnWorld; };
+	void clearBulletOnWorldCollision() { allBulletHitsOnWorld.clear(); };
+	void handleBulletHitWorldEvent(BulletHitWorldInfo hi);
 
 	bool freecam; // freecam is active also when in spectate but specctate overides
 	int spectateID; // -1 = none, else use conID

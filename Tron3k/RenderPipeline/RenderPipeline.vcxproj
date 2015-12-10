@@ -153,6 +153,7 @@
     <ClCompile Include="BlitQuad.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ContentManager.cpp" />
+    <ClCompile Include="Effects\LightWall.cpp" />
     <ClCompile Include="GBuffer.cpp" />
     <ClCompile Include="Map\Map.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -161,6 +162,7 @@
     <ClCompile Include="StaticMesh.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Text\TextObject.cpp" />
+    <ClCompile Include="Utils\GPUMemoryLeakChecker.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimatedMesh.h" />
@@ -168,6 +170,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ContentManager.h" />
     <ClInclude Include="defines.h" />
+    <ClInclude Include="Effects\LightWall.h" />
     <ClInclude Include="GBuffer.h" />
     <ClInclude Include="IRenderPipeline.h" />
     <ClInclude Include="Lights.h" />
@@ -180,6 +183,7 @@
     <ClInclude Include="StaticMesh.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Text\TextObject.h" />
+    <ClInclude Include="Utils\GPUMemoryLeakChecker.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

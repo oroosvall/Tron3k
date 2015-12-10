@@ -2,5 +2,6 @@
 #define ALLSPECIALS_H
 
 #include "Lightwall.h"
+#include "MultiJump.h"
 
 #endif

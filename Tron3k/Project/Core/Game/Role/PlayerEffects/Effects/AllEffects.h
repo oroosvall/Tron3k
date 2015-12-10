@@ -3,5 +3,6 @@
 
 #include "../Effect.h"
 #include "LightwallEffect.h"
+#include "Explosion.h"
 
 #endif

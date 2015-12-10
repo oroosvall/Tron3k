@@ -5,6 +5,16 @@ BlitQuad::BlitQuad()
 
 }
 
+BlitQuad::~BlitQuad()
+{
+}
+
+void BlitQuad::release()
+{
+	glDeleteBuffers(1, &vertexDataId);
+	glDeleteVertexArrays(1, &gVertexAttribute);
+}
+
 void BlitQuad::Init(vec3 bl, vec3 tr)
 {
 	TriangleVertex* vex = new TriangleVertex[6];
@@ -31,7 +41,7 @@ void BlitQuad::createData(TriangleVertex* vex)
 {
 	glGenBuffers(1, &vertexDataId);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexDataId);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vex[0]) * 6, &vex[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vex[0]) * 4, &vex[0], GL_STATIC_DRAW);
 	delete[] vex;
 
 	//define vertex data layout

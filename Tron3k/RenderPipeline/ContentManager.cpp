@@ -3,6 +3,13 @@
 
 void ContentManager::init()
 {
+	//init flags
+	f_portal_culling = false;
+	f_freeze_portals = false;
+	f_render_chunks = true;
+	f_render_abb = false;
+	f_render_obb = false;
+
 	playerModels = new PlayerObject[1];
 
 	TextureLookup tex;
@@ -83,6 +90,12 @@ void ContentManager::init()
 	tex.textureName = "GameFiles/TestFiles/bulletGlow.png";
 	textures.push_back(tex);
 
+	//12
+	tex.loaded = false;
+	tex.textureID = 0;
+	tex.fileTexID = 1;
+	tex.textureName = "GameFiles/TestFiles/lightwall.png";
+	textures.push_back(tex);
 
 	Mesh m;
 	m.init(0, -3, 0);
@@ -136,9 +149,10 @@ void ContentManager::init()
 	testAnimationMesh.init();
 	testAnimationMesh.load("GameFiles/CharacterFiles/Tron3k_animTest_2.bin");
 
+
 }
 
-ContentManager::~ContentManager()
+void ContentManager::release()
 {
 	for (size_t i = 0; i < meshes.size(); i++)
 	{
@@ -158,7 +172,7 @@ ContentManager::~ContentManager()
 	glDeleteBuffers(1, &playerModels[0].meshID);
 	glDeleteBuffers(1, &playerModels[0].index);
 	glDeleteVertexArrays(1, &playerModels[0].vao);
-
+	
 	delete playerModels;
 	testMap.release();
 
@@ -166,6 +180,30 @@ ContentManager::~ContentManager()
 
 	delete[] renderedChunks;
 	delete[] renderNextChunks;
+
+	testAnimationMesh.release();
+	skybox.release();
+	bullet.release();
+
+	//collision render free
+	for (int c = 0; c < nrChunks; c++)
+	{
+		int nrABB = testMap.chunks[c].collisionRender.abbRender.size();
+
+		for (int a = 0; a < nrABB; a++)
+		{
+			testMap.chunks[c].collisionRender.abbRender[a].abbBoxR.release();
+			int nrObb = testMap.chunks[c].collisionRender.abbRender[a].obbBoxesR.size();
+
+			for (int b = 0; b < nrObb; b++)
+				testMap.chunks[c].collisionRender.abbRender[a].obbBoxesR[b].release();
+		}
+	}
+}
+
+ContentManager::~ContentManager()
+{
+	
 }
 
 void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation, GLuint DglowColor, GLuint SglowColor, GLuint portal_shader, GLuint portal_world)
@@ -199,31 +237,24 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 
 		testMap.renderChunk(shader, shaderLocation, n);
 		renderedChunks[n] = true;
-	}
+		if (renderNextChunks[n] == true || f_portal_culling == false)
+		{
+			//Glow values for world
+			glProgramUniform3fv(shader, DglowColor, 1, (GLfloat*)&testMap.chunks[n].color[0]);
+			glProgramUniform1f(shader, SglowColor, testMap.chunks[n].staticIntes);
 
-	/* TEMP STUFF*/
-	for (size_t i = 0; i < meshes.size(); i++)
-	{
-		glProgramUniformMatrix4fv(shader, shaderLocation, 1, GL_FALSE, (GLfloat*)meshes[i].getWorld());
-		//diffuse
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, meshes[i].textureID);
-		//normal dynamic glow
-		glActiveTexture(GL_TEXTURE0 + 1);
-		glBindTexture(GL_TEXTURE_2D, textures[0].textureID);
-		//static glow
-		glActiveTexture(GL_TEXTURE0 + 2);
-		glBindTexture(GL_TEXTURE_2D, textures[6].textureID);
-		glBindVertexArray(meshes[i].vao);
-		glBindBuffer(GL_ARRAY_BUFFER, meshes[i].vbo);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshes[i].ibo);
-		glDrawElements(GL_TRIANGLES, meshes[i].faceCount * 3, GL_UNSIGNED_SHORT, 0);
+
+			if(f_render_chunks)
+				testMap.renderChunk(shader, shaderLocation, n);
+
+			renderedChunks[n] = true;
+		}
 	}
-	/* NO MORE STUFF*/
 
 	//reset the renderrednextlist
-	for (int n = 0; n < nrChunks; n++)
-		renderNextChunks[n] = false;
+	if(f_freeze_portals == false)
+		for (int n = 0; n < nrChunks; n++)
+			renderNextChunks[n] = false;
 
 	glUseProgram(portal_shader);
 	glm::mat4 alreadyinworldpace;
@@ -232,14 +263,70 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 	glDisable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
 
-	
+	if (f_freeze_portals == false)
+	{
+		//render portals from the rendered chunks
+		for (int n = 0; n < nrChunks; n++)
+		{
+			if (renderedChunks[n] == true)
+			{
+				int size = testMap.chunks[n].portals.size();
+				for (int p = 0; p < size; p++) // render the portals
+				{
+					// dont render if it bridges between chunks that are already in the rendernextqueue
+					if (renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[0]] == false ||
+						renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[1]] == false)
+					{
+						glBeginQuery(GL_SAMPLES_PASSED, portalQuery);
+						testMap.chunks[n].portals[p].render();
+						GLint passed = 2222;
+						glEndQuery(GL_SAMPLES_PASSED);
+						glGetQueryObjectiv(portalQuery, GL_QUERY_RESULT, &passed);
 
-	renderNextChunks[0] = true;
-	renderNextChunks[testMap.currentChunk] = true;
+						if (passed > 0)
+						{
+							renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[0]] = true;
+							renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[1]] = true;
+						}
+					}
+				}
+			}
+		}
+		renderNextChunks[0] = true;
+		renderNextChunks[testMap.currentChunk] = true;
+	}
 
-	glDepthMask(GL_TRUE);
-	glEnable(GL_CULL_FACE);
-	glDisable(GL_BLEND);
+	if (f_render_abb || f_render_obb)
+	{
+		//render collision boxes
+		for (int c = 0; c < nrChunks; c++)
+		{
+
+			ChunkCollision* col = testMap.chunks[c].getChunkCollision();
+
+			float nrABB = col->abbStuff.size();
+			for (int n = 0; n < nrABB; n++)
+			{
+
+				if (f_render_abb)
+				{
+					testMap.chunks[c].collisionRender.abbRender[n].abbBoxR.BindVertData();
+					glDrawArrays(GL_TRIANGLE_STRIP, 0, 20);
+				}
+
+				int nrObb = testMap.chunks[c].collisionRender.abbRender[n].obbBoxesR.size();
+				for (int k = 0; k < nrObb; k++)
+				{
+					if (f_render_obb)
+					{
+						testMap.chunks[c].collisionRender.abbRender[n].obbBoxesR[k].BindVertData();
+						glDrawArrays(GL_TRIANGLE_STRIP, 0, 20);
+					}
+				}
+
+			}
+		}
+	}
 }
 
 void ContentManager::renderPlayer(int playerID, glm::mat4 world, GLuint uniformKeyMatrixLocation)
@@ -332,4 +419,10 @@ std::vector<std::vector<float>> ContentManager::getMeshBoxes()
 
 	//Size is currently a vector containing the extremes for all of our world objects
 	return size;
+}
+
+void ContentManager::bindLightwalTexture()
+{
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, textures[12].textureID);
 }

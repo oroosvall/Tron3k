@@ -13,6 +13,7 @@
 #include "Role/role.h"
 #include "Role/Weapon/Weapon.h"
 #include "Role/Weapon/bullet.h"
+#include "Role/PlayerEffects/Effect.h"
 #include "Role/PlayerEffects/Modifier.h"
 #include "Role/Special/Special.h"
 
@@ -21,15 +22,7 @@
 #define interpolationTick 0.050f
 #define respawnTime 5.0f;
 
-enum PLAYERMSG { NONE, SHOOT, SPECIALUSE, WPNSWITCH, DEATH, PLAYERRESPAWN};
-
-struct BulletHitPlayerInfo
-{
-	int playerHit;
-	int bulletPID;
-	int bulletBID;
-	BULLET_TYPE bt;
-};
+enum PLAYERMSG { NONE, SHOOT, USEITEM, SPECIALUSE, MOBILITYUSE, WPNSWITCH, DEATH, PLAYERRESPAWN};
 
 class Player : public GameObject
 {
@@ -43,6 +36,10 @@ private:
 	glm::vec3 vel; //Our velocity i.e. in which direction we're moving
 	void movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingThis);
 	bool grounded = false;
+
+	glm::vec3 collisionNormals[20];
+	int collisionNormalSize = 0;
+	void clearCollisionNormals() { collisionNormalSize = 0; };
 
 	bool isDead = false;
 	float respawnTimer = 0.0f;
@@ -82,6 +79,7 @@ public:
 
 	std::string getName() { return name; };
 	glm::vec3 getPos() { return pos; };
+	void setPos(glm::vec3 pos) { this->pos = pos; }
 	glm::vec3 getDir() { return dir; };
 	int getHP() { return role.getHealth(); };
 	void setHP(int HPfromServer) { role.setHealth(HPfromServer); }; //Used by client
@@ -90,7 +88,7 @@ public:
 	bool isAlive() { return !isDead; };
 
 	Weapon* getPlayerCurrentWeapon();
-	void switchWpn(WEAPON_TYPE ws);
+	void switchWpn(WEAPON_TYPE ws, int swapLoc);
 
 	Special* getPlayerSpecialAbility() { return role.getSpecialAbility(); };
 
@@ -100,10 +98,15 @@ public:
 	void setGrounded(bool grounded) { this->grounded = grounded; };
 	bool getGrounded() { return grounded; };
 
+	void addCollisionNormal(glm::vec3 cn) {if (collisionNormalSize < 20){
+			collisionNormals[collisionNormalSize] = cn; collisionNormalSize++;}
+		};
+
 	void setVelocity(glm::vec3 velocity) { vel = velocity; };
 	glm::vec3 getVelocity() { return vel; };
 
 	void hitByBullet(Bullet* b, int newHPtotal = -1);
+	void hitByEffect(Effect* e, int newHPtotal = -1);
 
 	void addModifier(MODIFIER_TYPE mt);
 

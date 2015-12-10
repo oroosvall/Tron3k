@@ -4,7 +4,7 @@
 #include <string>
 #include <fstream>
 
-#include <gl/glew.h>
+#include "Utils\GPUMemoryLeakChecker.h"
 
 inline std::string readShader(const char *filePath)
 {

@@ -10,7 +10,7 @@ void AnimatedMesh::init()
 	currentKeyFrame = 0;
 }
 
-AnimatedMesh::~AnimatedMesh()
+void AnimatedMesh::release()
 {
 	delete[] matOffsets;
 	delete[] indices;
@@ -20,11 +20,22 @@ AnimatedMesh::~AnimatedMesh()
 	{
 		for (int32_t j = 0; j < animationKeyCounts[i]; j++)
 		{
-			delete [] animations[i].keyFrames[j].jointTransform;
+			delete[] animations[i].keyFrames[j].jointTransform;
 		}
 		delete[] animations[i].keyFrames;
 	}
 	delete[] animations;
+
+	delete[] animationKeyCounts;
+	delete[] animationType;
+	
+	glDeleteVertexArrays(1, &vao);
+	glDeleteBuffers(1, &vbo);
+	glDeleteBuffers(1, &ibo);
+}
+
+AnimatedMesh::~AnimatedMesh()
+{
 
 }
 
@@ -117,6 +128,7 @@ void AnimatedMesh::load(std::string fileName)
 
 		Material* materials = new Material[charHdr.materialCount];
 		file.read((char*)materials, sizeof(Material) * charHdr.materialCount);
+		delete[] materials;
 
 		TextureStruct* tex = new TextureStruct[charHdr.textureCount];
 		TextureHDR* textHeader = new TextureHDR[charHdr.textureCount];
@@ -130,6 +142,7 @@ void AnimatedMesh::load(std::string fileName)
 			delete[] texName;
 		}
 		delete[] textHeader;
+		delete[] tex;
 
 		glGenBuffers(1, &vbo);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);

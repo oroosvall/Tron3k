@@ -7,6 +7,7 @@
 #include "GBuffer.h"
 
 #include "ContentManager.h"
+#include "Effects\LightWall.h"
 
 enum SETTING_INPUT
 {
@@ -31,6 +32,8 @@ private:
 
 	ContentManager contMan;
 
+	LightWall lw;
+
 	TextObject* test;
 
 	Camera cam;
@@ -53,16 +56,32 @@ private:
 	GLuint uniformKeyMatrixLocation;
 
 
+	//lightwall
+	GLuint lwVertexDataId;
+	GLuint lwVertexAttribute;
+	float lwPosDefault[6] = { 0 };
+
+	GLuint lw_Shader;
+	GLuint lw_pos1;
+	GLuint lw_pos2;
+	GLuint lw_uv1;
+	GLuint lw_uv2;
+	GLuint lw_tex;
+	GLuint lw_vp;
+
 	float timepass = 0;
 public:
 
 	RenderPipeline() {};
+
+	void renderEffects();
 
 	virtual bool init(unsigned int WindowWidth, unsigned int WindowHeight);
 	virtual void release();
 	virtual void update(float x, float y, float z, float dt);
 	virtual void renderIni();
 	virtual void render();
+	virtual void finalizeRender();
 
 	virtual void addLight(SpotLight* newLight);
 	virtual void setChunkColorAndInten(int ID, float* color, float inten);
@@ -75,6 +94,7 @@ public:
 	virtual std::string getStatus() { return ""; };
 
 	virtual bool setSetting(PIPELINE_SETTINGS type, PipelineValues value);
+	virtual void renderWallEffect(void* pos1, void* pos2, float uvStartOffset);
 
 	virtual void forceReset() {};
 	virtual unsigned int createText(float x, float y, float z, std::string text) { return 0; };
@@ -95,7 +115,9 @@ public:
 
 	virtual void getPlayerBox(float &xMax, float &xMin, float &yMax, float &yMin, float &zMax, float &zMin);
 	virtual void getWorldBoxes(int &current, float &xMax, float &xMin, float &yMax, float &yMin, float &zMax, float &zMin);
+	virtual void getSpawnpoints(std::vector < std::vector < SpawnpointG > > &spoints);
 	virtual int getNrOfWorldBoxes();
+	virtual void setRenderFlag(RENDER_FLAGS flag);
 
 };
 
