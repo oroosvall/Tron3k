@@ -134,17 +134,17 @@ void ContentManager::init()
 	}
 	glGenQueries(1, &portalQuery);
 
-	Mesh player;
-	player.init(0, 0, 0);
-	player.load("GhostBoss1.v");
-
-	playerModels[0].meshID = player.vbo;
-	playerModels[0].vao = player.vao;
-	playerModels[0].index = player.ibo;
-	playerModels[0].facecount = player.faceCount;
-
-	bullet.init(0, 0, 0);
-	bullet.load("GameFiles/TestFiles/bullet.v");
+	//Mesh player;
+	//player.init(0, 0, 0);
+	//player.load("GhostBoss1.v");
+	//
+	//playerModels[0].meshID = player.vbo;
+	//playerModels[0].vao = player.vao;
+	//playerModels[0].index = player.ibo;
+	//playerModels[0].facecount = player.faceCount;
+	//
+	//bullet.init(0, 0, 0);
+	//bullet.load("GameFiles/TestFiles/bullet.v");
 
 	testAnimationMesh.init();
 	testAnimationMesh.load("GameFiles/CharacterFiles/Tron3k_animTest_2.bin");
@@ -231,6 +231,12 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 	//render chunks logged from last frame
 	for (int n = 0; n < nrChunks; n++)
 	{
+		//Glow values for world
+		glProgramUniform3fv(shader, DglowColor, 1, (GLfloat*)&testMap.chunks[n].color[0]);
+		glProgramUniform1f(shader, SglowColor, testMap.chunks[n].staticIntes);
+
+		testMap.renderChunk(shader, shaderLocation, n);
+		renderedChunks[n] = true;
 		if (renderNextChunks[n] == true || f_portal_culling == false)
 		{
 			//Glow values for world
@@ -244,26 +250,6 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 			renderedChunks[n] = true;
 		}
 	}
-
-	/* TEMP STUFF*/
-	for (size_t i = 0; i < meshes.size(); i++)
-	{
-		glProgramUniformMatrix4fv(shader, shaderLocation, 1, GL_FALSE, (GLfloat*)meshes[i].getWorld());
-		//diffuse
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, meshes[i].textureID);
-		//normal dynamic glow
-		glActiveTexture(GL_TEXTURE0 + 1);
-		glBindTexture(GL_TEXTURE_2D, textures[0].textureID);
-		//static glow
-		glActiveTexture(GL_TEXTURE0 + 2);
-		glBindTexture(GL_TEXTURE_2D, textures[6].textureID);
-		glBindVertexArray(meshes[i].vao);
-		glBindBuffer(GL_ARRAY_BUFFER, meshes[i].vbo);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshes[i].ibo);
-		glDrawElements(GL_TRIANGLES, meshes[i].faceCount * 3, GL_UNSIGNED_SHORT, 0);
-	}
-	/* NO MORE STUFF*/
 
 	//reset the renderrednextlist
 	if(f_freeze_portals == false)
@@ -343,7 +329,7 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 	}
 }
 
-void ContentManager::renderPlayer(int playerID, glm::mat4 world)
+void ContentManager::renderPlayer(int playerID, glm::mat4 world, GLuint uniformKeyMatrixLocation)
 {
 	if (playerID == 0)
 	{
@@ -359,13 +345,17 @@ void ContentManager::renderPlayer(int playerID, glm::mat4 world)
 		glActiveTexture(GL_TEXTURE0 + 2);
 		glBindTexture(GL_TEXTURE_2D, textures[9].textureID);
 
+		//Bone Matrices
+		//glProgramUniformMatrix4fv();
+
 		//glBindVertexArray(playerModels[playerID].vao);
 		//glBindBuffer(GL_ARRAY_BUFFER, playerModels[playerID].meshID);
 		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, playerModels[playerID].index);
 		//
 		//glDrawElements(GL_TRIANGLES, playerModels[playerID].facecount * 3, GL_UNSIGNED_SHORT, 0);
 
-		testAnimationMesh.draw();
+		testAnimationMesh.update(0);
+		testAnimationMesh.draw(uniformKeyMatrixLocation);
 
 	}
 	else if (playerID == 1)

@@ -6,11 +6,18 @@
 #include "Map\MapHeaders.h"
 #include <GL/glew.h>
 
+struct animationMatrices
+{
+	glm::mat4 bMatrix;
+};
+
 class AnimatedMesh
 {
 
 private:
 
+	int activeAnimation;
+	int currentKeyFrame;
 	int* matOffsets;
 	int* indices;
 	AnimVertex* verts;
@@ -28,6 +35,9 @@ private:
 
 	Animation* animations;
 
+	GLuint matricesBuffer;
+	animationMatrices* matrixBufferDataOneKey;
+
 public:
 
 	void init();
@@ -35,9 +45,11 @@ public:
 
 	~AnimatedMesh();
 
+	void update(float deltaTime);
+
 	void load(std::string fileName);
 
-	void draw();
+	void draw(GLuint uniformKeyMatrixLocation);
 };
 
 #endif

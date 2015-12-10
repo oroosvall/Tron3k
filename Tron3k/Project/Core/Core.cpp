@@ -146,6 +146,8 @@ void Core::upRoam(float dt)
 		Player* p = new Player();
 		p->init("Roam", glm::vec3(0, 0, 0));
 		game->createPlayer(p, 0, true);
+		game->addPlayerToTeam(0, 1);
+		game->freecam = true;
 		delete p;
 		subState++;
 		break;
@@ -910,7 +912,8 @@ void Core::renderWorld(float dt)
 					//static intense based on health
 					float hpval = float(p->getHP()) / 130.0f;
 
-					renderPipe->renderPlayer(0, p->getWorldMat(), dgColor, hpval);
+					//renderPipe->renderPlayer(0, p->getWorldMat(), dgColor, hpval);
+					renderPipe->renderAnimation(0, p->getWorldMat(), dgColor, hpval);
 				}
 			}
 		}
