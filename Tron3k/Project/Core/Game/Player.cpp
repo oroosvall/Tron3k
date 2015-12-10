@@ -316,6 +316,8 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					isDead = true;
 					respawnTimer = respawnTime;
 				}
+				if (i->justPressed(GLFW_KEY_M))
+					role.setSpecialMeter(100.0f);
 			} // end of player input
 		} // end of lock control check
 
