@@ -31,6 +31,7 @@ private:
 public:
 	vector<Chunk> chunks;
 	int currentChunk;
+	int roomCount;
 
 	SpawnPoint* spA;	
 	SpawnPoint* spB;	

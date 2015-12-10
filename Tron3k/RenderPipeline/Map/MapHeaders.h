@@ -452,5 +452,7 @@ struct Chunk
 
 	ChunkCollisionRender collisionRender;
 
+	ABB roomBox;
+
 };
 #endif
