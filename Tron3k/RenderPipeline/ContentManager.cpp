@@ -134,17 +134,17 @@ void ContentManager::init()
 	}
 	glGenQueries(1, &portalQuery);
 
-	//Mesh player;
-	//player.init(0, 0, 0);
-	//player.load("GhostBoss1.v");
-	//
-	//playerModels[0].meshID = player.vbo;
-	//playerModels[0].vao = player.vao;
-	//playerModels[0].index = player.ibo;
-	//playerModels[0].facecount = player.faceCount;
-	//
-	//bullet.init(0, 0, 0);
-	//bullet.load("GameFiles/TestFiles/bullet.v");
+	Mesh player;
+	player.init(0, 0, 0);
+	player.load("GhostBoss1.v");
+	
+	playerModels[0].meshID = player.vbo;
+	playerModels[0].vao = player.vao;
+	playerModels[0].index = player.ibo;
+	playerModels[0].facecount = player.faceCount;
+	
+	bullet.init(0, 0, 0);
+	bullet.load("GameFiles/TestFiles/bullet.v");
 
 	testAnimationMesh.init();
 	testAnimationMesh.load("GameFiles/CharacterFiles/Tron3k_animTest_thirdPerson.bin");
