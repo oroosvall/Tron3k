@@ -29,9 +29,12 @@ void AnimatedMesh::release()
 	delete[] animationKeyCounts;
 	delete[] animationType;
 	
+	delete[] matrixBufferDataOneKey;
+
 	glDeleteVertexArrays(1, &vao);
 	glDeleteBuffers(1, &vbo);
 	glDeleteBuffers(1, &ibo);
+	glDeleteBuffers(1, &matricesBuffer);
 }
 
 AnimatedMesh::~AnimatedMesh()

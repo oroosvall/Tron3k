@@ -26,7 +26,7 @@ void Core::init()
 
 	timepass = 0.0f;
 	
-	current = Gamestate::ROAM;
+	current = Gamestate::START;
 	tick_timer = 0;
 }
 
