@@ -183,6 +183,7 @@ void ContentManager::release()
 	delete[] renderNextChunks;
 
 	testAnimationMesh.release();
+	testFirstPerson.release();
 	skybox.release();
 	bullet.release();
 
