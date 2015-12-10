@@ -451,7 +451,7 @@ void Game::checkPlayerVWorldCollision(float dt)
 				}
 				else
 				{
-					//playerList[i]->setGrounded(false);
+					playerList[i]->setGrounded(false);
 				}
 			}
 		}
