@@ -26,7 +26,7 @@ void Core::init()
 
 	timepass = 0.0f;
 	
-	current = Gamestate::ROAM;
+	current = Gamestate::START;
 	tick_timer = 0;
 }
 
@@ -145,8 +145,6 @@ void Core::upRoam(float dt)
 
 		Player* p = new Player();
 		p->init("Roam", glm::vec3(0, 0, 0));
-		renderPipe->setRenderFlag(RENDER_CHUNK);
-		renderPipe->setRenderFlag(RENDER_ABB);
 		game->createPlayer(p, 0, true);
 		game->freecam = true;
 		delete p;
@@ -853,12 +851,12 @@ void Core::renderWorld(float dt)
 		//send chunk glowvalues
 		vec3 color = { 1, 1, 1 };
 		renderPipe->setChunkColorAndInten(0, &color[0], 1);
-		color = { 0.5, 0.5, 0.5 };
+		color = { 0, 0, 1 };
 		renderPipe->setChunkColorAndInten(1, &color[0], 1);
-		//color = { 1, 0, 0 };
-		//renderPipe->setChunkColorAndInten(2, &color[0], 1);
-		//color = { 0, 1, 0 };
-		//renderPipe->setChunkColorAndInten(3, &color[0], 1);
+		color = { 1, 0, 0 };
+		renderPipe->setChunkColorAndInten(2, &color[0], 1);
+		color = { 0, 1, 0 };
+		renderPipe->setChunkColorAndInten(3, &color[0], 1);
 
 		
 		glm::vec3 tmpEyePos = CameraInput::getCam()->getPos();
