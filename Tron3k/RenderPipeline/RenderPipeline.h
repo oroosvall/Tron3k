@@ -41,16 +41,20 @@ private:
 	Gbuffer* gBuffer;
 
 	GLuint regularShader;
+	GLuint animationShader;
 
-	GLuint worldMat;
-	GLuint viewProjMat;
+	GLuint worldMat[2];
+	GLuint viewProjMat[2];
 	GLuint viewMat;
 
-	GLuint uniformTextureLocation;
-	GLuint uniformNormalLocation;
-	GLuint uniformGlowSpecLocation;
-	GLuint uniformDynamicGlowColorLocation;
-	GLuint uniformStaticGlowIntensityLocation;
+	GLuint uniformTextureLocation[2];
+	GLuint uniformNormalLocation[2];
+	GLuint uniformGlowSpecLocation[2];
+	GLuint uniformDynamicGlowColorLocation[2];
+	GLuint uniformStaticGlowIntensityLocation[2];
+
+	GLuint uniformKeyMatrixLocation;
+
 
 	//lightwall
 	GLuint lwVertexDataId;
@@ -85,6 +89,7 @@ public:
 	virtual void* getView();
 
 	virtual void renderPlayer(int playerID, void* world, float* dgColor, float sgInten);
+	virtual void renderAnimation(int playerID, void* world, float* dgColor, float sgInten);
 
 	virtual std::string getStatus() { return ""; };
 

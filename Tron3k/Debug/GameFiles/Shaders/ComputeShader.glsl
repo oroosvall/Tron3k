@@ -1,5 +1,7 @@
 #version 430
 
+uniform mat4 inverseBindpose[100];
+
 struct bones
 {
 	vec3 pos;
@@ -21,19 +23,19 @@ void main()
 {
 	uint boneId =  gl_GlobalInvocationID.x;
 
-	bones[boneId].pos = mul(vec4(bones[boneId].pos, 1.0f), inverseBindpose[bones[boneId].boneIndices.x]) * bones[boneId].skinWeights.x;
-	bones[boneId].normal = mul(vec4(bones[boneId].normal, 1.0f), inverseBindpose[bones[boneId].boneIndices.x]) * bones[boneId].skinWeights.x;
-	bones[boneId].tangent = mul(vec4(bones[boneId].tangent, 1.0f), inverseBindpose[bones[boneId].boneIndices.x]) * bones[boneId].skinWeights.x;
+	bones[boneId].pos = (vec4(bones[boneId].pos, 1.0f) * inverseBindpose[bones[boneId].boneIndices.x]) * bones[boneId].skinWeights.x;
+	bones[boneId].normal = (vec4(bones[boneId].normal, 1.0f) * inverseBindpose[bones[boneId].boneIndices.x]) * bones[boneId].skinWeights.x;
+	bones[boneId].tangent = (vec4(bones[boneId].tangent, 1.0f) * inverseBindpose[bones[boneId].boneIndices.x]) * bones[boneId].skinWeights.x;
 	
-	bones[boneId].pos = mul(vec4(bones[boneId].pos, 1.0f), inverseBindpose[bones[boneId].boneIndices.y]) * bones[boneId].skinWeights.y;
-	bones[boneId].normal = mul(vec4(bones[boneId].normal, 1.0f), inverseBindpose[bones[boneId].boneIndices.y]) * bones[boneId].skinWeights.y;
-	bones[boneId].tangent = mul(vec4(bones[boneId].tangent, 1.0f), inverseBindpose[bones[boneId].boneIndices.y]) * bones[boneId].skinWeights.y;
+	bones[boneId].pos = (vec4(bones[boneId].pos, 1.0f) * inverseBindpose[bones[boneId].boneIndices.y]) * bones[boneId].skinWeights.y;
+	bones[boneId].normal = (vec4(bones[boneId].normal, 1.0f) * inverseBindpose[bones[boneId].boneIndices.y]) * bones[boneId].skinWeights.y;
+	bones[boneId].tangent = (vec4(bones[boneId].tangent, 1.0f) * inverseBindpose[bones[boneId].boneIndices.y]) * bones[boneId].skinWeights.y;
 	
-	bones[boneId].pos = mul(vec4(bones[boneId].pos, 1.0f), inverseBindpose[bones[boneId].boneIndices.z]) * bones[boneId].skinWeights.z;
-	bones[boneId].normal = mul(vec4(bones[boneId].normal, 1.0f), inverseBindpose[bones[boneId].boneIndices.z]) * bones[boneId].skinWeights.z;
-	bones[boneId].tangent = mul(vec4(bones[boneId].tangent, 1.0f), inverseBindpose[bones[boneId].boneIndices.z]) * bones[boneId].skinWeights.z;
+	bones[boneId].pos = (vec4(bones[boneId].pos, 1.0f) * inverseBindpose[bones[boneId].boneIndices.z]) * bones[boneId].skinWeights.z;
+	bones[boneId].normal = (vec4(bones[boneId].normal, 1.0f) * inverseBindpose[bones[boneId].boneIndices.z]) * bones[boneId].skinWeights.z;
+	bones[boneId].tangent = (vec4(bones[boneId].tangent, 1.0f) * inverseBindpose[bones[boneId].boneIndices.z]) * bones[boneId].skinWeights.z;
 	
-	bones[boneId].pos = mul(vec4(bones[boneId].pos, 1.0f), inverseBindpose[bones[boneId].boneIndices.w]) * bones[boneId].skinWeights.w;
-	bones[boneId].normal = mul(vec4(bones[boneId].normal, 1.0f), inverseBindpose[bones[boneId].boneIndices.w]) * bones[boneId].skinWeights.w;
-	bones[boneId].tangent = mul(vec4(bones[boneId].tangent, 1.0f), inverseBindpose[bones[boneId].boneIndices.w]) * bones[boneId].skinWeights.w;
+	bones[boneId].pos = (vec4(bones[boneId].pos, 1.0f) * inverseBindpose[bones[boneId].boneIndices.w]) * bones[boneId].skinWeights.w;
+	bones[boneId].normal = (vec4(bones[boneId].normal, 1.0f) * inverseBindpose[bones[boneId].boneIndices.w]) * bones[boneId].skinWeights.w;
+	bones[boneId].tangent = (vec4(bones[boneId].tangent, 1.0f) * inverseBindpose[bones[boneId].boneIndices.w]) * bones[boneId].skinWeights.w;
 }

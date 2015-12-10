@@ -162,12 +162,12 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				
 				for (int c = 0; c < collisionNormalSize && !collidingWithWalls; c++)
 				{
-					if (collisionNormals[c].x != 0 || collisionNormals[c].z != 0)
+					if (collisionNormals[c].x != 0.0f || collisionNormals[c].z != 0.0f)
 					{
 						collidingWithWalls = true;
-						glm::vec3 posch = getPos();
-						posch += collisionNormals[c]*2.0f;
-						setPos(posch);
+						glm::vec3 p = getPos();
+						p -= collisionNormals[c];
+						setPos(p);
 					}
 				}
 				if (!collidingWithWalls)

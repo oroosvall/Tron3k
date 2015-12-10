@@ -148,7 +148,7 @@ void Core::upRoam(float dt)
 		renderPipe->setRenderFlag(RENDER_CHUNK);
 		renderPipe->setRenderFlag(RENDER_ABB);
 		game->createPlayer(p, 0, true);
-		game->allowPlayerRespawn(0, 0);
+		game->freecam = true;
 		delete p;
 		subState++;
 		break;
@@ -913,7 +913,11 @@ void Core::renderWorld(float dt)
 					//static intense based on health
 					float hpval = float(p->getHP()) / 130.0f;
 
-					renderPipe->renderPlayer(0, p->getWorldMat(), dgColor, hpval);
+					//renderPipe->renderPlayer(0, p->getWorldMat(), dgColor, hpval);
+					if(p->isLocal())
+						renderPipe->renderAnimation(3, p->getWorldMat(), dgColor, hpval);
+					else
+						renderPipe->renderAnimation(0, p->getWorldMat(), dgColor, hpval);
 				}
 			}
 		}
