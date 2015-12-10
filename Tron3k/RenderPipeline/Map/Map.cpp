@@ -5,6 +5,9 @@
 void Map::init()
 {
 	currentChunk = 1;
+	spA = 0;
+	spB = 0;
+	spFFA = 0;
 
 	loadMap("GameFiles/TestFiles/Tron3k_map_4_obbFixed.bin");
 
@@ -16,6 +19,8 @@ void Map::init()
 	{
 		tex[i].textureID = loadTexture("GameFiles/testfiles/" + std::string(tex[i].textureName));
 	}
+
+
 }
 
 void Map::release()
@@ -54,6 +59,13 @@ void Map::release()
 			chunks[i].portals[p].visualPortal.release();
 		}
 	}
+
+	if (spA)
+		delete[] spA;
+	if (spB)
+		delete[] spB;
+	if (spFFA)
+		delete[] spFFA;
 
 	//if (bbPoints)
 	//{
@@ -109,9 +121,9 @@ void Map::loadMap(std::string mapName)
 	textureCount = (int)fileHeader.textureCount;
 	int portalCount = (int)fileHeader.portalCount;
 	int capCount = (int)fileHeader.capturePointCount;
-	int spTACount = (int)fileHeader.SPCountTeamA;
-	int spTBCount = (int)fileHeader.SPCountTeamB;
-	int spFFACount = (int)fileHeader.SPCountTeamFFA;
+	spTACount = (int)fileHeader.SPCountTeamA;
+	spTBCount = (int)fileHeader.SPCountTeamB;
+	spFFACount = (int)fileHeader.SPCountTeamFFA;
 	
 	for (size_t i = 0; i < fileHeader.roomCount; i++)
 	{
@@ -251,18 +263,13 @@ void Map::loadMap(std::string mapName)
 	inFile.read((char*)cps, sizeof(CapturePoints) * capCount);
 	delete[] cps;
 
-	SpawnPoint* spA = new SpawnPoint[spTACount];
-	SpawnPoint* spB = new SpawnPoint[spTBCount];
-	SpawnPoint* spFFA = new SpawnPoint[spFFACount];
+	spA = new SpawnPoint[spTACount];
+	spB = new SpawnPoint[spTBCount];
+	spFFA = new SpawnPoint[spFFACount];
 	
 	inFile.read((char*)spA, sizeof(SpawnPoint) * spTACount);
 	inFile.read((char*)spB, sizeof(SpawnPoint) * spTBCount);
 	inFile.read((char*)spFFA, sizeof(SpawnPoint) * spFFACount);
-
-	delete[] spA;
-	delete[] spB;
-	delete[] spFFA;
-
 
 	inFile.close();
 
@@ -293,4 +300,18 @@ int Map::getChunkID(glm::vec3 oldPos, glm::vec3 newPos)
 ChunkCollision* Map::getChunkCollision(int chunkID)
 {
 	return chunks[chunkID].getChunkCollision();
+}
+
+void Map::deleteSpawnposData()
+{
+	if (spA)
+		delete[] spA;
+	if (spB)
+		delete[] spB;
+	if (spFFA)
+		delete[] spFFA;
+
+	spA = nullptr;
+	spB = nullptr;
+	spFFA = nullptr;
 }

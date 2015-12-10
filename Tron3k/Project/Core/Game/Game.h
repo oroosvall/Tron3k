@@ -8,6 +8,7 @@
 #include "../../../Physics/Physics.h"
 #include <vector>
 #include <fstream>
+#include "../sharedStructs.h"
 
 enum Gamestate
 {
@@ -47,18 +48,14 @@ struct BulletHitWorldInfo
 	glm::vec3 collisionNormal;
 };
 
-struct Spawnpoint
-{
-	glm::vec3 pos;
-	glm::vec3 dir;
-};
-
 class Game
 {
 private:
+	std::vector <vector < SpawnpointG >> spawnpoints;
+
 	std::vector<Bullet*> bullets[BULLET_TYPE::NROFBULLETS];
 	std::vector<Effect*> effects[EFFECT_TYPE::NROFEFFECTS];
-	std::vector <vector < Spawnpoint >> spawnpoints;
+	
 	std::vector<int> teamSpectators; //Team vectors hold connection IDs
 	std::vector<int> teamOne;
 	std::vector<int> teamTwo;
@@ -119,6 +116,7 @@ private:
 	bool localPlayerWantsRespawn = false;
 	bool localPlayerRespawnWaiting = false;
 public:
+	
 
 	Game();
 	void release();
@@ -131,6 +129,8 @@ public:
 	void removePlayer(int conID);
 
 	void update(float dt);
+
+	std::vector< std::vector < SpawnpointG > >* getSpawnpoints() { return &spawnpoints; };
 
 	void sendChunkBoxes(int chunkID, void* cBoxes);
 	void sendWorldBoxes(std::vector<std::vector<float>> wBoxes);
@@ -180,7 +180,6 @@ public:
 	std::vector<BulletHitWorldInfo> getAllBulletOnWorldCollisions() { return allBulletHitsOnWorld; };
 	void clearBulletOnWorldCollision() { allBulletHitsOnWorld.clear(); };
 	void handleBulletHitWorldEvent(BulletHitWorldInfo hi);
-
 
 	bool freecam; // freecam is active also when in spectate but specctate overides
 	int spectateID; // -1 = none, else use conID

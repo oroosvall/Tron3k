@@ -140,6 +140,8 @@ void Core::upRoam(float dt)
 
 		game = new Game();
 		game->init(MAX_CONNECT, current);
+		//map loaded, fetch spawnpoints from render
+		renderPipe->getSpawnpoints(*game->getSpawnpoints());
 
 		Player* p = new Player();
 		p->init("Roam", glm::vec3(0, 0, 0));
@@ -230,6 +232,8 @@ void Core::upClient(float dt)
 					delete game;
 				game = new Game();
 				game->init(MAX_CONNECT, current);
+				//map loaded, fetch spawnpoints from render
+				renderPipe->getSpawnpoints(*game->getSpawnpoints());
 				top->setGamePtr(game);
 				subState++;
 				return; //On sucsess
@@ -368,6 +372,9 @@ void Core::upServer(float dt)
 			delete game;
 		game = new Game();
 		game->init(MAX_CONNECT, current);
+		//map loaded, fetch spawnpoints from render
+		renderPipe->getSpawnpoints(*game->getSpawnpoints());
+
 		game->freecam = true;
 		//load map
 
@@ -993,7 +1000,6 @@ void Core::initPipeline()
 	}
 	else
 	{
-
 		PipelineValues pv;
 		pv.type = pv.INT2;
 		pv.xy[0] = winX;
@@ -1063,8 +1069,6 @@ bool Core::sendChunkBoxes(int chunkID)
 			game->sendChunkBoxes(chunkID, cBoxes);
 			return 0;
 		}
-
-
 	}
 	//when we're done with all chunks, we'll get here cause cBoxes will be nullptr, so we'll end the for-loop
 	return 1;

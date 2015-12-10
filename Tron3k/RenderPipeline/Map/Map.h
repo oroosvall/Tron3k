@@ -28,11 +28,16 @@ private:
 
 	int bbCount;
 
-	
-
 public:
 	vector<Chunk> chunks;
 	int currentChunk;
+
+	SpawnPoint* spA;	
+	SpawnPoint* spB;	
+	SpawnPoint* spFFA;	
+	int spTACount;
+	int spTBCount;
+	int spFFACount;
 
 	void init();
 	void release();
@@ -44,6 +49,8 @@ public:
 	int getChunkID(glm::vec3 oldPos, glm::vec3 newPos);
 
 	ChunkCollision* getChunkCollision(int chunkID);
+
+	void deleteSpawnposData();
 };
 
 #endif

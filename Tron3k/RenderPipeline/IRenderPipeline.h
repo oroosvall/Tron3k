@@ -10,12 +10,7 @@
 #include <string>
 #include "Lights.h"
 #include <vector>
-
-struct SpawnpointG
-{
-	glm::vec3 pos;
-	glm::vec3 dir;
-};
+#include "../Project/Core/sharedStructs.h"
 
 enum PIPELINE_SETTINGS
 {

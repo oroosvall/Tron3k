@@ -395,5 +395,8 @@
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\Explosion.h">
       <Filter>Source Files\Core\Game\Role\PlayerEffects\Effects</Filter>
     </ClInclude>
+    <ClInclude Include="Core\sharedStructs.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

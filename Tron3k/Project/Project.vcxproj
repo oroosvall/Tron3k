@@ -117,6 +117,7 @@
     <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\Trapper\EnergyBoost.h" />
     <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\Trapper\PulseRifle.h" />
     <ClInclude Include="Core\Input.h" />
+    <ClInclude Include="Core\sharedStructs.h" />
     <ClInclude Include="Core\ui\Ui.h" />
     <ClInclude Include="Network\Client.h" />
     <ClInclude Include="Network\Connection.h" />
