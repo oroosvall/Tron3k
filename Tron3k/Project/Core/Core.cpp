@@ -173,7 +173,7 @@ void Core::upRoam(float dt)
 
 		if (game->playerWantsToRespawn())
 		{
-			game->allowPlayerRespawn(0, glm::vec3(0, 0, 0));
+			game->allowPlayerRespawn(0, 0);
 		}
 
 		if (game->weaponSwitchReady())
@@ -539,7 +539,7 @@ void Core::roamHandleCmds()
 			{
 				int team = stoi(token);
 				game->addPlayerToTeam(0, team);
-				game->allowPlayerRespawn(0, vec3(0,5,0)); //Add new spawn point probably
+				game->allowPlayerRespawn(0, 0); //Add new spawn point probably
 				if (team != 0)
 					game->freecam = false;
 				else

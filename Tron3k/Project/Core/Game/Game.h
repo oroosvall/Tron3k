@@ -143,7 +143,7 @@ public:
 	void checkBulletVWorldCollision();
 
 	bool playerWantsToRespawn();
-	void allowPlayerRespawn(int p_conID, glm::vec3 respawnPosition);
+	void allowPlayerRespawn(int p_conID, int respawnPosition);
 	void denyPlayerRespawn(char tryAgain);
 
 	void addPlayerToTeam(int p_conID, int team);
@@ -180,6 +180,8 @@ public:
 	std::vector<BulletHitWorldInfo> getAllBulletOnWorldCollisions() { return allBulletHitsOnWorld; };
 	void clearBulletOnWorldCollision() { allBulletHitsOnWorld.clear(); };
 	void handleBulletHitWorldEvent(BulletHitWorldInfo hi);
+
+	int Game::findPlayerPosInTeam(int conID);
 
 	bool freecam; // freecam is active also when in spectate but specctate overides
 	int spectateID; // -1 = none, else use conID

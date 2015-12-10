@@ -358,7 +358,7 @@ public:
 	virtual void command_respawn(Uint8 conid)
 	{
 		Packet* out = new Packet();
-		*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::RESPAWN) << conid << 0.0f << 0.0f << 0.0f;
+		*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::RESPAWN) << conid << (Uint8)0;
 		con->send(out);
 		delete out;
 	}
@@ -367,8 +367,8 @@ public:
 	{
 		Uint8 p_conID;
 		Uint8 team;
-		glm::vec3 spawnPosition;
-		*rec >> p_conID >> team >> spawnPosition.x >> spawnPosition.y >> spawnPosition.z;
+		int spawnPosition;
+		*rec >> p_conID >> team >> spawnPosition;
 
 		Player* p = gamePtr->getPlayer(p_conID);
 		if (p == nullptr)
@@ -385,8 +385,6 @@ public:
 				TO DO
 				Add logic to give player a new place to spawn after team change
 				*/
-
-				spawnPosition = glm::vec3(0, 0, 0);
 			}
 			else
 			{
@@ -397,6 +395,7 @@ public:
 		}
 
 		gamePtr->addPlayerToTeam(p_conID, team);
+		spawnPosition = gamePtr->findPlayerPosInTeam(conID) % 5;
 		gamePtr->allowPlayerRespawn(p_conID, spawnPosition);
 		if (team == 0)
 			consolePtr->printMsg("Player (" + p->getName() + ") joined team Spectators", "System", 'S');
@@ -416,7 +415,7 @@ public:
 		if (isClient == false)
 		{
 			Packet* out = new Packet();
-			*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::TEAM_CHANGE) << p_conID << team << 0.0f << 0.0f << 0.0f;
+			*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::TEAM_CHANGE) << p_conID << team << spawnPosition;
 			branch(out, -1);
 			delete out;
 		}
@@ -450,8 +449,8 @@ public:
 	virtual void in_command_respawn(Packet* rec, Uint8 conid)
 	{
 		Uint8 p_conID;
-		glm::vec3 respawnPosition; //if sent from client, this will be 0,0,0
-		*rec >> p_conID >> respawnPosition.x >> respawnPosition.y >> respawnPosition.z;
+		Uint8 respawnPosition; //if sent from client, this will be 0
+		*rec >> p_conID >> respawnPosition;
 
 		Player* p = gamePtr->getPlayer(p_conID);
 		if (p == nullptr)
@@ -462,7 +461,7 @@ public:
 
 		if (isClient == false) //Decide if the command is OK
 		{
-			respawnPosition = glm::vec3(0, 0, 0); //Add logic to ask serverside game for respawn position for a given p_conID
+			respawnPosition = gamePtr->findPlayerPosInTeam(conid) % 5; //Add logic to ask serverside game for respawn position for a given p_conID
 			/*
 			Authentication to make sure we actually can respawn - for now always Yes
 			*/
@@ -483,7 +482,7 @@ public:
 		if (isClient == false)
 		{
 			Packet* out = new Packet;
-			*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::RESPAWN) << p_conID << respawnPosition.x << respawnPosition.y << respawnPosition.z;
+			*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::RESPAWN) << p_conID << respawnPosition;
 			branch(out, -1);
 			delete out;
 		}

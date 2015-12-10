@@ -971,9 +971,10 @@ bool Game::playerWantsToRespawn()
 	return localPlayerWantsRespawn;
 }
 
-void Game::allowPlayerRespawn(int p_conID, glm::vec3 respawnPosition)
+void Game::allowPlayerRespawn(int p_conID, int respawnPosition)
 {
-	playerList[p_conID]->respawn(spawnpoints[playerList[p_conID]->getTeam()][1].pos);
+	//playerList[p_conID]->respawn(spawnpoints[playerList[p_conID]->getTeam()][respawnPosition].pos);
+	playerList[p_conID]->respawn(vec3(0,1,0));
 	localPlayerWantsRespawn = false;
 	localPlayerRespawnWaiting = false;
 	if (playerList[p_conID]->isLocal())
@@ -986,4 +987,24 @@ void Game::denyPlayerRespawn(char tryAgain)
 	{
 		localPlayerRespawnWaiting = false;
 	}
+}
+
+int Game::findPlayerPosInTeam(int conID)
+{
+	for (int i = 0; i < maxTeamSize; i++)
+	{
+		if (conID == teamOne[i])
+		{
+			return i;
+		}
+	}
+	for (int i = 0; i < maxTeamSize; i++)
+	{
+		if (conID == teamTwo[i])
+		{
+			return i;
+		}
+	}
+
+	return -1;
 }
