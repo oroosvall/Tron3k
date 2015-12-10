@@ -37,6 +37,10 @@ private:
 	void movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingThis);
 	bool grounded = false;
 
+	glm::vec3 collisionNormals[20];
+	int collisionNormalSize = 0;
+	void clearCollisionNormals() { collisionNormalSize = 0; };
+
 	bool isDead = false;
 	float respawnTimer = 0.0f;
 
@@ -93,6 +97,10 @@ public:
 
 	void setGrounded(bool grounded) { this->grounded = grounded; };
 	bool getGrounded() { return grounded; };
+
+	void addCollisionNormal(glm::vec3 cn) {if (collisionNormalSize < 20){
+			collisionNormals[collisionNormalSize] = cn; collisionNormalSize++;}
+		};
 
 	void setVelocity(glm::vec3 velocity) { vel = velocity; };
 	glm::vec3 getVelocity() { return vel; };

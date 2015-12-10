@@ -46,6 +46,11 @@ void Player::setGoalDir(glm::vec3 newDir)
 
 void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingThis)
 {
+	/*
+	
+	Lägg till matematik för kollisioner här!!
+	
+	*/
 	glm::vec3 playerVel = vel*role.getMovementSpeed();
 	pos += playerVel * dt; //Here we will also include external forces
 	if (freecam == false || specingThis == true)
@@ -370,7 +375,9 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 	{
 		cam->setCam(pos, dir);
 	}
-	
+
+	clearCollisionNormals(); //Doesn't actually clear the array, just manually sets size to 0. This is to speed things up a little.
+
 	worldMat[0].w = pos.x;
 	worldMat[1].w = pos.y-0.6f;
 	worldMat[2].w = pos.z;
