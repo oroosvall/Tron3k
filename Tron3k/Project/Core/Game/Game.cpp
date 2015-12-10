@@ -587,7 +587,7 @@ void Game::addPlayerToTeam(int p_conID, int team)
 		//	delete playerList[p_conID];
 		teamOne.push_back(p_conID);
 		playerList[p_conID]->setTeam(1);
-		allowPlayerRespawn(p_conID, findPlayerPosInTeam(p_conID));
+		allowPlayerRespawn(p_conID, teamOne.size() - 1);
 
 		//if (playerList[p_conID]->isLocal())
 		//{
@@ -600,7 +600,7 @@ void Game::addPlayerToTeam(int p_conID, int team)
 		//	delete playerList[p_conID];
 		teamTwo.push_back(p_conID);
 		playerList[p_conID]->setTeam(2);
-		allowPlayerRespawn(p_conID, findPlayerPosInTeam(p_conID));
+		allowPlayerRespawn(p_conID, teamTwo.size() - 1);
 		break;
 	}
 }
