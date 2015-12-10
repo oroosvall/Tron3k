@@ -159,6 +159,11 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				vec2 tempvec = vec2(0, 0);
 
 				bool collidingWithWalls = false;
+				if (pos.y < -2)
+				{
+					grounded = true;
+					pos.y = -2;
+				}
 				for (int c = 0; c < collisionNormalSize && !collidingWithWalls; c++)
 				{
 					if (collisionNormals[c].x != 0 || collisionNormals[c].z != 0)
