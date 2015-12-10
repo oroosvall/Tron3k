@@ -395,7 +395,7 @@ void Game::checkPlayerVBulletCollision()
 void Game::checkPlayerVWorldCollision(float dt)
 {
 	bool collides = false;
-	glm::vec3 collisionNormal = glm::vec3(0, 0, 0);
+	std::vector<glm::vec3> collisionNormal;
 	bool foundLocal = false;
 	for (int i = 0; i < max_con && !foundLocal; i++)
 	{
@@ -408,7 +408,7 @@ void Game::checkPlayerVWorldCollision(float dt)
 				
 				collisionNormal = physics->checkPlayerVWorldCollision(playerList[i]->getPos());
 				
-				if (collisionNormal != glm::vec3(0,0,0))
+				if (collisionNormal.size() >= 1)
 				{
 					if (!playerList[i]->getGrounded())
 					{
@@ -419,22 +419,22 @@ void Game::checkPlayerVWorldCollision(float dt)
 						//TODO: What do we do if we collide with multiple objects? -SHOULD BE HANDLED, we add the normal of all the objects we collide with
 						//normalize(collisionNormal);
 						playerList[i]->setGrounded(true);
-						physics->normalize(collisionNormal);
+						//physics->normalize(collisionNormal);
 						glm::vec3 vel = playerList[i]->getVelocity();
-						glm::vec3 collNormal = collisionNormal * glm::dot(vel, collisionNormal);
+						//glm::vec3 collNormal = collisionNormal * glm::dot(vel, collisionNormal);
 
 
 						glm::vec3 v = vel;
 
 						physics->normalize(v);
 
-						glm::vec3 velProj = ((glm::dot(v, collisionNormal) /
-							glm::dot(collisionNormal, collisionNormal)) * collisionNormal); //korrekt
+						glm::vec3 velProj;// = ((glm::dot(v, collisionNormal) /
+							//glm::dot(collisionNormal, collisionNormal)) * collisionNormal); //korrekt
 						glm::vec3 velRej = vel;
 
-						velRej = v - velProj;
+						//velRej = v - velProj;
 
-						vel = vel - collNormal;
+						//vel = vel - collNormal;
 
 						if (velProj != glm::vec3(0, 0, 0))
 						{

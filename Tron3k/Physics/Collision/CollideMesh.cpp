@@ -25,14 +25,14 @@ void CollideMesh::setAABB(glm::vec3 pos, glm::vec3 max, glm::vec3 min)
 	boundingBox.ObbBoxes.clear();
 
 	OBB temp;
-	temp.corners[0] = glm::vec4(min.x, min.y, max.z, 1.0f);
-	temp.corners[1] = glm::vec4(max.x, min.y, max.z, 1.0f);
-	temp.corners[2] = glm::vec4(min.x, max.y, max.z, 1.0f);
-	temp.corners[3] = glm::vec4(max.x, max.y, max.z, 1.0f);
-	temp.corners[4] = glm::vec4(min.x, min.y, min.z, 1.0f);
-	temp.corners[5] = glm::vec4(max.x, min.y, min.z, 1.0f);
-	temp.corners[6] = glm::vec4(min.x, max.y, min.z, 1.0f);
-	temp.corners[7] = glm::vec4(max.x, max.y, min.z, 1.0f);
+	temp.corners[DLF] = glm::vec4(min.x, min.y, max.z, 1.0f);
+	temp.corners[DRF] = glm::vec4(max.x, min.y, max.z, 1.0f);
+	temp.corners[ULF] = glm::vec4(min.x, max.y, max.z, 1.0f);
+	temp.corners[URF] = glm::vec4(max.x, max.y, max.z, 1.0f);
+	temp.corners[DLB] = glm::vec4(min.x, min.y, min.z, 1.0f);
+	temp.corners[DRB] = glm::vec4(max.x, min.y, min.z, 1.0f);
+	temp.corners[ULB] = glm::vec4(min.x, max.y, min.z, 1.0f);
+	temp.corners[URB] = glm::vec4(max.x, max.y, min.z, 1.0f);
 
 	boundingBox.ObbBoxes.push_back(temp);
 

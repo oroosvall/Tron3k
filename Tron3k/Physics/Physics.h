@@ -13,6 +13,7 @@
 #include "Collision\Geometry.h"
 #include "Collision\CollideMesh.h"
 #include<vector>
+#include<iterator>
 
 
 //----COLLISION INFO----
@@ -66,7 +67,7 @@ private:
 
 
 	//------Normal Calculators------//
-	glm::vec3 getCollisionNormal(AABB aabb1, AABB aabb2);
+	std::vector<glm::vec3> getCollisionNormal(AABB aabb1, AABB aabb2);
 	glm::vec3 getCollisionNormal(Cylinder cylinder, AABB aabb);
 	glm::vec3 getCollisionNormal(AngledCylinder cylinder, AABB aabb);
 	glm::vec3 getCollisionNormal(Sphere sphere, AABB aabb);
@@ -90,7 +91,7 @@ public:
 	
 	virtual glm::vec3 checkPlayerVPlayerCollision(glm::vec3 playerPos1, glm::vec3 playerPos2);
 	virtual glm::vec3 checkPlayerVBulletCollision(glm::vec3 playerPos, glm::vec3 bulletPos);
-	virtual glm::vec3 checkPlayerVWorldCollision(glm::vec3 playerPos);
+	virtual std::vector<glm::vec3> checkPlayerVWorldCollision(glm::vec3 playerPos);
 	virtual glm::vec3 checkBulletVWorldCollision(glm::vec3 bulletPos);
 
 	virtual void addGravity(glm::vec3 &velocity, float dt);
