@@ -233,22 +233,13 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 	//render chunks logged from last frame
 	for (int n = 0; n < nrChunks; n++)
 	{
-		//Glow values for world
-		glProgramUniform3fv(shader, DglowColor, 1, (GLfloat*)&testMap.chunks[n].color[0]);
-		glProgramUniform1f(shader, SglowColor, testMap.chunks[n].staticIntes);
-
-		testMap.renderChunk(shader, shaderLocation, n);
-		renderedChunks[n] = true;
-		if (renderNextChunks[n] == true || f_portal_culling == false)
+		if (renderNextChunks[n] || f_portal_culling == false)
 		{
 			//Glow values for world
 			glProgramUniform3fv(shader, DglowColor, 1, (GLfloat*)&testMap.chunks[n].color[0]);
 			glProgramUniform1f(shader, SglowColor, testMap.chunks[n].staticIntes);
-
-
-			if(f_render_chunks)
+			if (f_render_chunks)
 				testMap.renderChunk(shader, shaderLocation, n);
-
 			renderedChunks[n] = true;
 		}
 	}
