@@ -80,14 +80,14 @@ glm::vec3 Physics::checkAABBvAABBCollision(CollideMesh mesh1, CollideMesh mesh2,
 	}
 
 
-	if (pos1.x + max1.x > pos2.x + min2.x &&
-		pos1.x + min1.x < pos2.x + max2.x)//x
+	if (pos1.x + max1.x >= pos2.x + min2.x &&
+		pos1.x + min1.x <= pos2.x + max2.x)//x
 	{
-		if (pos1.y + max1.y > pos2.y + min2.y &&
-			pos1.y + min1.y < pos2.y + max2.y)//y
+		if (pos1.y + max1.y >= pos2.y + min2.y &&
+			pos1.y + min1.y <= pos2.y + max2.y)//y
 		{
-			if (pos1.z + max1.z > pos2.z + min2.z &&
-				pos1.z + min1.z < pos2.z + max2.z)//z
+			if (pos1.z + max1.z >= pos2.z + min2.z &&
+				pos1.z + min1.z <= pos2.z + max2.z)//z
 			{
 				//TODO: Add OBB-checks, for dat layered collision
 				return glm::vec3(1, 1, 1);// getCollisionNormal(aabb1, aabb2);
