@@ -26,7 +26,7 @@ void Core::init()
 
 	timepass = 0.0f;
 	
-	current = Gamestate::START;
+	current = Gamestate::ROAM;
 	tick_timer = 0;
 }
 
@@ -144,6 +144,8 @@ void Core::upRoam(float dt)
 		Player* p = new Player();
 		p->init("Roam", glm::vec3(0, 0, 0));
 		game->createPlayer(p, 0, true);
+		game->addPlayerToTeam(0, 1);
+		game->freecam = true;
 		delete p;
 		subState++;
 		break;

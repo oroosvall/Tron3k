@@ -121,17 +121,17 @@ void ContentManager::init()
 	}
 	glGenQueries(1, &portalQuery);
 
-	Mesh player;
-	player.init(0, 0, 0);
-	player.load("GhostBoss1.v");
-
-	playerModels[0].meshID = player.vbo;
-	playerModels[0].vao = player.vao;
-	playerModels[0].index = player.ibo;
-	playerModels[0].facecount = player.faceCount;
-
-	bullet.init(0, 0, 0);
-	bullet.load("GameFiles/TestFiles/bullet.v");
+	//Mesh player;
+	//player.init(0, 0, 0);
+	//player.load("GhostBoss1.v");
+	//
+	//playerModels[0].meshID = player.vbo;
+	//playerModels[0].vao = player.vao;
+	//playerModels[0].index = player.ibo;
+	//playerModels[0].facecount = player.faceCount;
+	//
+	//bullet.init(0, 0, 0);
+	//bullet.load("GameFiles/TestFiles/bullet.v");
 
 	testAnimationMesh.init();
 	testAnimationMesh.load("GameFiles/CharacterFiles/Tron3k_animTest_2.bin");
@@ -193,15 +193,12 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 	//render chunks logged from last frame
 	for (int n = 0; n < nrChunks; n++)
 	{
-		if (renderNextChunks[n] == true)
-		{
-			//Glow values for world
-			glProgramUniform3fv(shader, DglowColor, 1, (GLfloat*)&testMap.chunks[n].color[0]);
-			glProgramUniform1f(shader, SglowColor, testMap.chunks[n].staticIntes);
+		//Glow values for world
+		glProgramUniform3fv(shader, DglowColor, 1, (GLfloat*)&testMap.chunks[n].color[0]);
+		glProgramUniform1f(shader, SglowColor, testMap.chunks[n].staticIntes);
 
-			testMap.renderChunk(shader, shaderLocation, n);
-			renderedChunks[n] = true;
-		}
+		testMap.renderChunk(shader, shaderLocation, n);
+		renderedChunks[n] = true;
 	}
 
 	/* TEMP STUFF*/
@@ -235,33 +232,7 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 	glDisable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
 
-	//render portals from the rendered chunks
-	for (int n = 0; n < nrChunks; n++)
-	{
-		if (renderedChunks[n] == true)
-		{
-			int size = testMap.chunks[n].portals.size();
-			for (int p = 0; p < size; p++) // render the portals
-			{
-				// dont render if it bridges between chunks that are already in the rendernextqueue
-				if (renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[0]] == false ||
-					renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[1]] == false)
-				{
-					glBeginQuery(GL_SAMPLES_PASSED, portalQuery);
-					testMap.chunks[n].portals[p].render();
-					GLint passed = 2222;
-					glEndQuery(GL_SAMPLES_PASSED);
-					glGetQueryObjectiv(portalQuery, GL_QUERY_RESULT, &passed);
-
-					if (passed > 0)
-					{
-						renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[0]] = true;
-						renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[1]] = true;
-					}
-				}
-			}
-		}
-	}
+	
 
 	renderNextChunks[0] = true;
 	renderNextChunks[testMap.currentChunk] = true;
