@@ -19,8 +19,6 @@ void Map::init()
 	{
 		tex[i].textureID = loadTexture("GameFiles/testfiles/" + std::string(tex[i].textureName));
 	}
-
-
 }
 
 void Map::release()
