@@ -7,6 +7,7 @@ struct SpawnpointG
 {
 	glm::vec3 pos;
 	glm::vec3 dir;
+	int roomID;
 };
 
 #endif

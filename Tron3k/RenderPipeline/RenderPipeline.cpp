@@ -474,34 +474,37 @@ void RenderPipeline::getSpawnpoints(std::vector < std::vector < SpawnpointG > > 
 		pos.z = mat[2].w;
 		team0.push_back(SpawnpointG());
 		team0[n].dir = vec3(contMan.testMap.spFFA[n].dx, contMan.testMap.spFFA[n].dy, contMan.testMap.spFFA[n].dz);
+		team0[n].roomID = contMan.testMap.spFFA[n].roomID;
 	}
 	spoints.push_back(team0);
 
 	size = contMan.testMap.spTACount;
 	for (int n = 0; n < size; n++)
 	{
-		glm::mat4 mat = contMan.testMap.spFFA[n].transform;
+		glm::mat4 mat = contMan.testMap.spA[n].transform;
 		mat = transpose(mat);
 		vec3 pos;
 		pos.x = mat[0].w;
 		pos.y = mat[0].w;
 		pos.z = mat[0].w;
 		team1.push_back(SpawnpointG());
-		team1[n].dir = vec3(contMan.testMap.spFFA[n].dx, contMan.testMap.spFFA[n].dy, contMan.testMap.spFFA[n].dz);
+		team1[n].dir = vec3(contMan.testMap.spA[n].dx, contMan.testMap.spA[n].dy, contMan.testMap.spA[n].dz);
+		team1[n].roomID = contMan.testMap.spA[n].roomID;
 	}
 	spoints.push_back(team1);
 
 	size = contMan.testMap.spTBCount;
 	for (int n = 0; n < size; n++)
 	{
-		glm::mat4 mat = contMan.testMap.spFFA[n].transform;
+		glm::mat4 mat = contMan.testMap.spB[n].transform;
 		mat = transpose(mat);
 		vec3 pos;
 		pos.x = mat[0].w;
 		pos.y = mat[0].w;
 		pos.z = mat[0].w;
 		team2.push_back(SpawnpointG());
-		team2[n].dir = vec3(contMan.testMap.spFFA[n].dx, contMan.testMap.spFFA[n].dy, contMan.testMap.spFFA[n].dz);
+		team2[n].dir = vec3(contMan.testMap.spB[n].dx, contMan.testMap.spB[n].dy, contMan.testMap.spB[n].dz);
+		team2[n].roomID = contMan.testMap.spB[n].roomID;
 	}
 	spoints.push_back(team2);
 
