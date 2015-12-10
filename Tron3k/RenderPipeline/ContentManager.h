@@ -42,6 +42,7 @@ private:
 	GLuint portalQuery;
 
 	AnimatedMesh testAnimationMesh;
+	AnimatedMesh testFirstPerson;
 
 	struct TriangleVertex
 	{

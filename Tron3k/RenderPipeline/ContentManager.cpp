@@ -149,7 +149,8 @@ void ContentManager::init()
 	testAnimationMesh.init();
 	testAnimationMesh.load("GameFiles/CharacterFiles/Tron3k_animTest_2.bin");
 
-
+	testFirstPerson.init();
+	testFirstPerson.load("GameFiles/CharacterFiles/Tron3k_animTest_2.bin");
 }
 
 void ContentManager::release()
@@ -397,6 +398,24 @@ void ContentManager::renderPlayer(int playerID, glm::mat4 world, GLuint uniformK
 		glDrawElements(GL_TRIANGLES, bullet.faceCount * 3, GL_UNSIGNED_SHORT, 0);
 	}
 
+	else if (playerID == 3)
+	{
+		//diffuse
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, textures[7].textureID);
+
+		//normal dynamic glow
+		glActiveTexture(GL_TEXTURE0 + 1);
+		glBindTexture(GL_TEXTURE_2D, textures[8].textureID);
+
+		//static glow
+		glActiveTexture(GL_TEXTURE0 + 2);
+		glBindTexture(GL_TEXTURE_2D, textures[9].textureID);
+		
+		testFirstPerson.update(0);
+		testFirstPerson.draw(uniformKeyMatrixLocation);
+
+	}
 
 
 }
