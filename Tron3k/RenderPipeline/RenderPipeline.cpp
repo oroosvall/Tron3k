@@ -232,7 +232,12 @@ void RenderPipeline::render()
 	contMan.renderChunks(regularShader, worldMat, uniformTextureLocation, uniformNormalLocation, uniformGlowSpecLocation, uniformDynamicGlowColorLocation, uniformStaticGlowIntensityLocation,  *gBuffer->portal_shaderPtr, gBuffer->portal_model);
 	
 	//glDepthMask(GL_TRUE);glEnable(GL_CULL_FACE);glDisable(GL_BLEND);)
-	renderEffects();
+	//renderEffects();
+
+}
+
+void RenderPipeline::finalizeRender()
+{
 
 	glDepthMask(GL_TRUE);
 	glEnable(GL_CULL_FACE);
@@ -255,9 +260,6 @@ void RenderPipeline::render()
 
 void RenderPipeline::renderWallEffect(void* pos1, void* pos2, float uvStartOffset)
 {
-	//glDepthMask(GL_FALSE);
-	glDisable(GL_CULL_FACE);
-	//glEnable(GL_BLEND);
 
 	glUseProgram(lw_Shader);
 	glProgramUniform1i(lw_Shader, lw_tex, 0);
@@ -273,7 +275,7 @@ void RenderPipeline::renderWallEffect(void* pos1, void* pos2, float uvStartOffse
 	glm::vec3 wpos1 = *(glm::vec3*)pos1;
 	glm::vec3 wpos2 = *(glm::vec3*)pos2;
 
-	float dist = glm::distance(wpos1, wpos2);
+	float dist = glm::distance(wpos1, wpos2) / 2.0f;
 
 	vec2 uv1 = vec2(uvStartOffset + of, 0);
 	vec2 uv2 = vec2(uvStartOffset + dist + of, 0);
@@ -283,10 +285,6 @@ void RenderPipeline::renderWallEffect(void* pos1, void* pos2, float uvStartOffse
 	glProgramUniform3fv(lw_Shader, lw_pos2, 1, &wpos2[0]);
 
 	glDrawArrays(GL_POINTS, 0, 2);
-
-	glEnable(GL_CULL_FACE);
-	//glDisable(GL_BLEND);
-	//glDepthMask(GL_TRUE);
 
 }
 

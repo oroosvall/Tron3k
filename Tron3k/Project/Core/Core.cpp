@@ -925,7 +925,7 @@ void Core::renderWorld(float dt)
 			}
 		}
 
-		
+		renderPipe->render();
 
 		float herpderpOffset = 0;
 		for (int c = 0; c < EFFECT_TYPE::NROFEFFECTS; c++)
@@ -941,7 +941,8 @@ void Core::renderWorld(float dt)
 				herpderpOffset += glm::distance(derp->pos, derp->endPoint);
 			}
 		}
-		renderPipe->render();
+
+		renderPipe->finalizeRender();
 	}
 }
 

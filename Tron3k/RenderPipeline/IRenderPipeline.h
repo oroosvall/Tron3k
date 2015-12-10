@@ -54,6 +54,7 @@ public:
 	virtual void update(float x, float y, float z, float dt) = 0;
 	virtual void renderIni() = 0;
 	virtual void render() = 0;
+	virtual void finalizeRender() = 0;
 
 	virtual void addLight(SpotLight* newLight) = 0;
 	virtual void setChunkColorAndInten(int ID, float* color, float inten) = 0;
