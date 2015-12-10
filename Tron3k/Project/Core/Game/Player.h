@@ -79,7 +79,10 @@ public:
 
 	std::string getName() { return name; };
 	glm::vec3 getPos() { return pos; };
-	void setPos(glm::vec3 pos) { this->pos = pos; }
+	void setPos(glm::vec3 pos) 
+	{ 
+		this->pos = pos;
+	}
 	glm::vec3 getDir() { return dir; };
 	int getHP() { return role.getHealth(); };
 	void setHP(int HPfromServer) { role.setHealth(HPfromServer); }; //Used by client

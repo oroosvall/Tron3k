@@ -26,7 +26,7 @@ void Core::init()
 
 	timepass = 0.0f;
 	
-	current = Gamestate::START;
+	current = Gamestate::ROAM;
 	tick_timer = 0;
 }
 
@@ -145,7 +145,10 @@ void Core::upRoam(float dt)
 
 		Player* p = new Player();
 		p->init("Roam", glm::vec3(0, 0, 0));
+		renderPipe->setRenderFlag(RENDER_CHUNK);
+		renderPipe->setRenderFlag(RENDER_ABB);
 		game->createPlayer(p, 0, true);
+		game->freecam = true;
 		delete p;
 		subState++;
 		break;
@@ -850,12 +853,12 @@ void Core::renderWorld(float dt)
 		//send chunk glowvalues
 		vec3 color = { 1, 1, 1 };
 		renderPipe->setChunkColorAndInten(0, &color[0], 1);
-		color = { 0, 0, 1 };
+		color = { 0.5, 0.5, 0.5 };
 		renderPipe->setChunkColorAndInten(1, &color[0], 1);
-		color = { 1, 0, 0 };
-		renderPipe->setChunkColorAndInten(2, &color[0], 1);
-		color = { 0, 1, 0 };
-		renderPipe->setChunkColorAndInten(3, &color[0], 1);
+		//color = { 1, 0, 0 };
+		//renderPipe->setChunkColorAndInten(2, &color[0], 1);
+		//color = { 0, 1, 0 };
+		//renderPipe->setChunkColorAndInten(3, &color[0], 1);
 
 		
 		glm::vec3 tmpEyePos = CameraInput::getCam()->getPos();
@@ -910,7 +913,11 @@ void Core::renderWorld(float dt)
 					//static intense based on health
 					float hpval = float(p->getHP()) / 130.0f;
 
-					renderPipe->renderPlayer(0, p->getWorldMat(), dgColor, hpval);
+					//renderPipe->renderPlayer(0, p->getWorldMat(), dgColor, hpval);
+					if(p->isLocal())
+						renderPipe->renderAnimation(3, p->getWorldMat(), dgColor, hpval);
+					else
+						renderPipe->renderAnimation(0, p->getWorldMat(), dgColor, hpval);
 				}
 			}
 		}

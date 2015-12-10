@@ -451,7 +451,7 @@ void Game::checkPlayerVWorldCollision(float dt)
 				}
 				else
 				{
-					playerList[i]->setGrounded(false);
+					//playerList[i]->setGrounded(false);
 				}
 			}
 		}
@@ -587,6 +587,7 @@ void Game::addPlayerToTeam(int p_conID, int team)
 		//	delete playerList[p_conID];
 		teamOne.push_back(p_conID);
 		playerList[p_conID]->setTeam(1);
+		allowPlayerRespawn(p_conID, teamOne.size() - 1);
 
 		//if (playerList[p_conID]->isLocal())
 		//{
@@ -599,6 +600,7 @@ void Game::addPlayerToTeam(int p_conID, int team)
 		//	delete playerList[p_conID];
 		teamTwo.push_back(p_conID);
 		playerList[p_conID]->setTeam(2);
+		allowPlayerRespawn(p_conID, teamTwo.size() - 1);
 		break;
 	}
 }
@@ -973,8 +975,7 @@ bool Game::playerWantsToRespawn()
 
 void Game::allowPlayerRespawn(int p_conID, int respawnPosition)
 {
-	//playerList[p_conID]->respawn(spawnpoints[playerList[p_conID]->getTeam()][respawnPosition].pos);
-	playerList[p_conID]->respawn(vec3(0,1,0));
+	playerList[p_conID]->respawn(spawnpoints[playerList[p_conID]->getTeam()][respawnPosition].pos);
 	localPlayerWantsRespawn = false;
 	localPlayerRespawnWaiting = false;
 	if (playerList[p_conID]->isLocal())
@@ -991,14 +992,14 @@ void Game::denyPlayerRespawn(char tryAgain)
 
 int Game::findPlayerPosInTeam(int conID)
 {
-	for (int i = 0; i < maxTeamSize; i++)
+	for (int i = 0; i < teamOne.size(); i++)
 	{
 		if (conID == teamOne[i])
 		{
 			return i;
 		}
 	}
-	for (int i = 0; i < maxTeamSize; i++)
+	for (int i = 0; i < teamTwo.size(); i++)
 	{
 		if (conID == teamTwo[i])
 		{
@@ -1006,5 +1007,5 @@ int Game::findPlayerPosInTeam(int conID)
 		}
 	}
 
-	return -1;
+	return 0;
 }

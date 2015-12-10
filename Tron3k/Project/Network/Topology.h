@@ -342,7 +342,7 @@ public:
 	virtual void command_team_change(Uint8 conid, Uint8 team)
 	{
 		Packet* out = new Packet();
-		*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::TEAM_CHANGE) << conid << team << 0.0f << 0.0f << 0.0f;
+		*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::TEAM_CHANGE) << conid << team << (Uint8)0;
 		con->send(out);
 		delete out;
 	}
@@ -367,7 +367,7 @@ public:
 	{
 		Uint8 p_conID;
 		Uint8 team;
-		int spawnPosition;
+		Uint8 spawnPosition;
 		*rec >> p_conID >> team >> spawnPosition;
 
 		Player* p = gamePtr->getPlayer(p_conID);
@@ -395,8 +395,6 @@ public:
 		}
 
 		gamePtr->addPlayerToTeam(p_conID, team);
-		spawnPosition = gamePtr->findPlayerPosInTeam(conID) % 5;
-		gamePtr->allowPlayerRespawn(p_conID, spawnPosition);
 		if (team == 0)
 			consolePtr->printMsg("Player (" + p->getName() + ") joined team Spectators", "System", 'S');
 		if (team == 1)
@@ -475,7 +473,6 @@ public:
 				return;
 			}
 		}
-		
 		gamePtr->allowPlayerRespawn(p_conID, respawnPosition);
 		consolePtr->printMsg("Player (" + p->getName() + ") respawned!", "System", 'S');
 

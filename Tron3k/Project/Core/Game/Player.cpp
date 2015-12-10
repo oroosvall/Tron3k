@@ -158,66 +158,81 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				bool stop = true;
 				vec2 tempvec = vec2(0, 0);
 
-				if (i->getKeyInfo(GLFW_KEY_W))
+				bool collidingWithWalls = false;
+				
+				for (int c = 0; c < collisionNormalSize && !collidingWithWalls; c++)
 				{
-					tempvec = normalize(vec2(dir.x, dir.z));
-					if (grounded)
+					if (collisionNormals[c].x != 0.0f || collisionNormals[c].z != 0.0f)
 					{
-						vel.x = tempvec.x;
-						vel.z = tempvec.y;
-						stop = false;
+						collidingWithWalls = true;
+						glm::vec3 posch = getPos();
+						posch += collisionNormals[c] * 2.0f;
+						setPos(posch);
 					}
 				}
-
-				if (i->getKeyInfo(GLFW_KEY_S))
+				if (!collidingWithWalls)
 				{
-					tempvec = -normalize(vec2(dir.x, dir.z));
-					if (grounded)
+					if (i->getKeyInfo(GLFW_KEY_W))
 					{
-						vel.x = tempvec.x;
-						vel.z = tempvec.y;
-						stop = false;
-					}
-				}
-
-				if (!(i->getKeyInfo(GLFW_KEY_A) && i->getKeyInfo(GLFW_KEY_D)))
-				{
-					if (i->getKeyInfo(GLFW_KEY_A))
-					{
-						vec3 left = cross(vec3(0, 1, 0), dir);
-						tempvec = normalize(vec2(left.x, left.z));
+						tempvec = normalize(vec2(dir.x, dir.z));
 						if (grounded)
 						{
-							vel.x += tempvec.x;
-							vel.z += tempvec.y;
+							vel.x = tempvec.x;
+							vel.z = tempvec.y;
 							stop = false;
-							tempvec = vec2(vel.x, vel.z);
-							if (glm::length(tempvec) > 0)
-							{
-								tempvec = normalize(tempvec);
-								vel.x = tempvec.x;
-								vel.z = tempvec.y;
-							}
 						}
 					}
 
-					if (i->getKeyInfo(GLFW_KEY_D))
+					if (i->getKeyInfo(GLFW_KEY_S))
 					{
-						vec3 right = cross(dir, vec3(0, 1, 0));
-						tempvec = glm::normalize(vec2(right.x, right.z));
-						right = glm::normalize(right);
+						tempvec = -normalize(vec2(dir.x, dir.z));
 						if (grounded)
 						{
-							vel.x += tempvec.x;
-							vel.z += tempvec.y;
+							vel.x = tempvec.x;
+							vel.z = tempvec.y;
 							stop = false;
-							tempvec = vec2(vel.x, vel.z);
+						}
+					}
 
-							if (glm::length(tempvec) > 0)
+					if (!(i->getKeyInfo(GLFW_KEY_A) && i->getKeyInfo(GLFW_KEY_D)))
+					{
+						if (i->getKeyInfo(GLFW_KEY_A))
+						{
+							vec3 left = cross(vec3(0, 1, 0), dir);
+							tempvec = normalize(vec2(left.x, left.z));
+							if (grounded)
 							{
-								tempvec = normalize(tempvec);
-								vel.x = tempvec.x;
-								vel.z = tempvec.y;
+								vel.x += tempvec.x;
+								vel.z += tempvec.y;
+								stop = false;
+								tempvec = vec2(vel.x, vel.z);
+								if (glm::length(tempvec) > 0)
+								{
+									tempvec = normalize(tempvec);
+									vel.x = tempvec.x;
+									vel.z = tempvec.y;
+								}
+							}
+						}
+
+						if (i->getKeyInfo(GLFW_KEY_D))
+						{
+							vec3 right = cross(dir, vec3(0, 1, 0));
+							tempvec = glm::normalize(vec2(right.x, right.z));
+							right = glm::normalize(right);
+							if (grounded)
+							{
+								vel.x += tempvec.x;
+								vel.z += tempvec.y;
+								stop = false;
+								tempvec = vec2(vel.x, vel.z);
+
+								if (glm::length(tempvec) > 0)
+								{
+									tempvec = normalize(tempvec);
+									vel.x = tempvec.x;
+									vel.z = tempvec.y;
+								}
 							}
 						}
 					}
@@ -440,12 +455,12 @@ void Player::hitByEffect(Effect* e, int newHPtotal)
 void Player::applyGravity(Physics* p, float dt)
 {
 	p->addGravity(vel, dt);
-	/*if (pos.y <= -10.0f) // Temp code for floor lol
+	if (pos.y <= -2.0f) // Temp code for floor lol
 	{
 		vel.y = 0.0f;
-		pos.y = -10.0f;
+		pos.y = -2.0f;
 		grounded = true;
-	}*/
+	}
 }
 
 void Player::addModifier(MODIFIER_TYPE mt)

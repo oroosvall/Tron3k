@@ -25,14 +25,14 @@ void CollideMesh::setAABB(glm::vec3 pos, glm::vec3 max, glm::vec3 min)
 	boundingBox.ObbBoxes.clear();
 
 	OBB temp;
-	temp.corners[DLF] = glm::vec4(min.x, min.y, max.z, 1.0f);
-	temp.corners[DRF] = glm::vec4(max.x, min.y, max.z, 1.0f);
-	temp.corners[ULF] = glm::vec4(min.x, max.y, max.z, 1.0f);
-	temp.corners[URF] = glm::vec4(max.x, max.y, max.z, 1.0f);
-	temp.corners[DLB] = glm::vec4(min.x, min.y, min.z, 1.0f);
-	temp.corners[DRB] = glm::vec4(max.x, min.y, min.z, 1.0f);
-	temp.corners[ULB] = glm::vec4(min.x, max.y, min.z, 1.0f);
-	temp.corners[URB] = glm::vec4(max.x, max.y, min.z, 1.0f);
+	temp.corners[DLF] = glm::vec4(min.x/* + pos.x*/, min.y/* + pos.y*/, max.z/* + pos.z*/, 1.0f);
+	temp.corners[DRF] = glm::vec4(max.x/* + pos.x*/, min.y/* + pos.y*/, max.z/* + pos.z*/, 1.0f);
+	temp.corners[ULF] = glm::vec4(min.x/* + pos.x*/, max.y/* + pos.y*/, max.z/* + pos.z*/, 1.0f);
+	temp.corners[URF] = glm::vec4(max.x/* + pos.x*/, max.y/* + pos.y*/, max.z/* + pos.z*/, 1.0f);
+	temp.corners[DLB] = glm::vec4(min.x/* + pos.x*/, min.y/* + pos.y*/, min.z/* + pos.z*/, 1.0f);
+	temp.corners[DRB] = glm::vec4(max.x/* + pos.x*/, min.y/* + pos.y*/, min.z/* + pos.z*/, 1.0f);
+	temp.corners[ULB] = glm::vec4(min.x/* + pos.x*/, max.y/* + pos.y*/, min.z/* + pos.z*/, 1.0f);
+	temp.corners[URB] = glm::vec4(max.x/* + pos.x*/, max.y/* + pos.y*/, min.z/* + pos.z*/, 1.0f);
 
 	boundingBox.ObbBoxes.push_back(temp);
 
@@ -64,9 +64,9 @@ void CollideMesh::setAABB(AABB aabb)
 	getCylinderFromAABB();
 }
 
-AABB CollideMesh::getAABB()
+AABB* CollideMesh::getAABB()
 {
-	return boundingBox;
+	return &boundingBox;
 }
 
 void CollideMesh::setCylinder(glm::vec3 pos, float radius, float height)

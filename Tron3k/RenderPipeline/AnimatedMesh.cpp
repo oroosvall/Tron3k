@@ -1,11 +1,13 @@
 #include "AnimatedMesh.h"
 #include <fstream>
+#include <iostream>
 
 using std::ios;
 
 void AnimatedMesh::init()
 {
-
+	activeAnimation = 0;
+	currentKeyFrame = 0;
 }
 
 void AnimatedMesh::release()
@@ -27,14 +29,52 @@ void AnimatedMesh::release()
 	delete[] animationKeyCounts;
 	delete[] animationType;
 	
+	delete[] matrixBufferDataOneKey;
+
 	glDeleteVertexArrays(1, &vao);
 	glDeleteBuffers(1, &vbo);
 	glDeleteBuffers(1, &ibo);
+	glDeleteBuffers(1, &matricesBuffer);
 }
 
 AnimatedMesh::~AnimatedMesh()
 {
 
+}
+
+void AnimatedMesh::update(float deltaTime)
+{
+	activeAnimation;
+
+	currentKeyFrame++;
+
+	if (currentKeyFrame >= animationKeyCounts[activeAnimation])
+	{
+		currentKeyFrame = 0;
+	}
+
+	memcpy(matrixBufferDataOneKey, animations[0].keyFrames[currentKeyFrame].jointTransform, sizeof(glm::mat4)*jointCount);
+	glBindBuffer(GL_UNIFORM_BUFFER, matricesBuffer);
+	glBufferData(GL_UNIFORM_BUFFER, sizeof(animationMatrices)* jointCount, matrixBufferDataOneKey, GL_STATIC_DRAW);
+
+	using namespace std;
+
+	if (false)
+	{
+		for (size_t k = 0; k < jointCount; k++)
+		{
+			for (size_t y = 0; y < 4; y++)
+			{
+				for (size_t x = 0; x < 4; x++)
+				{
+					cout << animations[0].keyFrames[currentKeyFrame].jointTransform[k][y][x] << " ";
+				}
+				cout << endl;
+			}
+			cout << endl;
+		}
+	}
+	
 }
 
 void AnimatedMesh::load(std::string fileName)
@@ -83,6 +123,11 @@ void AnimatedMesh::load(std::string fileName)
 				file.read((char*)animations[i].keyFrames[j].jointTransform, sizeof(glm::mat4) * charHdr.jointCount);
 			}
 		}
+
+		matrixBufferDataOneKey = new animationMatrices[charHdr.jointCount];
+
+		memcpy(matrixBufferDataOneKey, animations[0].keyFrames[0].jointTransform, sizeof(glm::mat4)*charHdr.jointCount);
+
 
 		Material* materials = new Material[charHdr.materialCount];
 		file.read((char*)materials, sizeof(Material) * charHdr.materialCount);
@@ -134,20 +179,27 @@ void AnimatedMesh::load(std::string fileName)
 		// tangent
 		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(AnimVertex), BUFFER_OFFSET(sizeof(float) * 8));
 		// tangent
-		glVertexAttribPointer(4, 4, GL_INT, GL_FALSE, sizeof(AnimVertex), BUFFER_OFFSET(sizeof(float) * 11));
+		glVertexAttribPointer(4, 4, GL_UNSIGNED_INT, GL_FALSE, sizeof(AnimVertex), BUFFER_OFFSET(sizeof(float) * 11));
 		// tangent
-		glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(AnimVertex), BUFFER_OFFSET(sizeof(float) * 14));
+		glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(AnimVertex), BUFFER_OFFSET(sizeof(float) * 15));
 
 		file.close();
+
+		glGenBuffers(1, &matricesBuffer);
+		glBindBuffer(GL_UNIFORM_BUFFER, matricesBuffer);
+		glBufferData(GL_UNIFORM_BUFFER, sizeof(animationMatrices)* jointCount, matrixBufferDataOneKey, GL_STATIC_DRAW);
 
 	}
 }
 
-void AnimatedMesh::draw()
+void AnimatedMesh::draw(GLuint uniformKeyMatrixLocation)
 {
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+
+	glBindBuffer(GL_UNIFORM_BUFFER, matricesBuffer);
+	glBindBufferBase(GL_UNIFORM_BUFFER, uniformKeyMatrixLocation, matricesBuffer);
 
 	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
 
