@@ -130,6 +130,10 @@ bool Player::removeSpecificModifier(MODIFIER_TYPE mt)
 PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool spectating)
 {
 	PLAYERMSG msg = NONE;
+	if (pos.y < -30.0f)
+	{
+		role.setHealth(0);
+	}
 
 	modifiersGetData(dt);
 
@@ -455,12 +459,6 @@ void Player::hitByEffect(Effect* e, int newHPtotal)
 void Player::applyGravity(Physics* p, float dt)
 {
 	p->addGravity(vel, dt);
-	if (pos.y <= -2.0f) // Temp code for floor lol
-	{
-		vel.y = 0.0f;
-		pos.y = -2.0f;
-		grounded = true;
-	}
 }
 
 void Player::addModifier(MODIFIER_TYPE mt)
