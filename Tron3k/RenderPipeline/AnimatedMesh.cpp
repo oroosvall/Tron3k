@@ -1,6 +1,5 @@
 #include "AnimatedMesh.h"
 #include <fstream>
-#include <iostream>
 
 using std::ios;
 
@@ -44,8 +43,6 @@ AnimatedMesh::~AnimatedMesh()
 
 void AnimatedMesh::update(float deltaTime)
 {
-	activeAnimation;
-
 	currentKeyFrame++;
 
 	if (currentKeyFrame / 5 >= animationKeyCounts[activeAnimation])
@@ -56,25 +53,17 @@ void AnimatedMesh::update(float deltaTime)
 	memcpy(matrixBufferDataOneKey, animations[0].keyFrames[currentKeyFrame / 5].jointTransform, sizeof(glm::mat4)*jointCount);
 	glBindBuffer(GL_UNIFORM_BUFFER, matricesBuffer);
 	glBufferData(GL_UNIFORM_BUFFER, sizeof(animationMatrices)* jointCount, matrixBufferDataOneKey, GL_STATIC_DRAW);
-
-	using namespace std;
-
-	if (false)
-	{
-		for (size_t k = 0; k < jointCount; k++)
-		{
-			for (size_t y = 0; y < 4; y++)
-			{
-				for (size_t x = 0; x < 4; x++)
-				{
-					cout << animations[0].keyFrames[currentKeyFrame].jointTransform[k][y][x] << " ";
-				}
-				cout << endl;
-			}
-			cout << endl;
-		}
-	}
 	
+}
+
+void AnimatedMesh::setAnimation(int animID)
+{
+	if (animID < animationCount)
+	{
+		activeAnimation = animID;
+		currentKeyFrame = animationKeyCounts[activeAnimation];
+		update(0);
+	}
 }
 
 void AnimatedMesh::load(std::string fileName)

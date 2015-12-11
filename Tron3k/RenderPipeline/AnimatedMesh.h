@@ -46,6 +46,7 @@ public:
 	~AnimatedMesh();
 
 	void update(float deltaTime);
+	void setAnimation(int animID);
 
 	void load(std::string fileName);
 

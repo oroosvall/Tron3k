@@ -912,7 +912,7 @@ void Core::renderWorld(float dt)
 					float hpval = float(p->getHP()) / 130.0f;
 
 					//renderPipe->renderPlayer(0, p->getWorldMat(), dgColor, hpval);
-					if(p->isLocal())
+					if(p->isLocal() && !game->freecam)
 						renderPipe->renderAnimation(3, p->getWorldMat(), dgColor, hpval);
 					else
 						renderPipe->renderAnimation(0, p->getWorldMat(), dgColor, hpval);
