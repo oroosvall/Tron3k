@@ -462,6 +462,11 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 	{
 		worldMat[1].w -= 1.55f; //head offset. player objects have their origo at their feet
 	}
+
+	if (freecam == false && isLocalPlayer == false && spectatingThisPlayer == false)
+	{
+		worldMat[1].w -= 1.55f;
+	}
 	return msg;
 }
 

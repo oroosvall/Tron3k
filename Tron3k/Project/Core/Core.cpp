@@ -292,7 +292,8 @@ void Core::upClient(float dt)
 
 		if (game->playerWantsToRespawn())
 		{
-			top->command_respawn(top->getConId());
+			if(game->getPlayer(top->getConId())->getTeam() != 0 ) // dont ask for respawns if we are on team 0
+				top->command_respawn(top->getConId());
 		}
 
 		//Frame tick timer. Network out
@@ -898,6 +899,8 @@ void Core::renderWorld(float dt)
 				hacked = game->getPlayer(top->getConId())->getIfHacked();
 			}
 		}
+		else
+			hacked = game->getPlayer(game->spectateID)->getIfHacked();
 	}
 		for (size_t i = 0; i < MAX_CONNECT; i++)
 		{
