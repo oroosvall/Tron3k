@@ -519,7 +519,6 @@ void RenderPipeline::getSpawnpoints(std::vector < std::vector < SpawnpointG > > 
 	for (int n = 0; n < size; n++)
 	{
 		glm::mat4 mat = contMan.testMap.spFFA[n].transform;
-		mat = transpose(mat);
 		vec3 pos;
 		pos.x = mat[0].w;
 		pos.y = mat[1].w + yincrease;
@@ -535,7 +534,6 @@ void RenderPipeline::getSpawnpoints(std::vector < std::vector < SpawnpointG > > 
 	for (int n = 0; n < size; n++)
 	{
 		glm::mat4 mat = contMan.testMap.spA[n].transform;
-		mat = transpose(mat);
 		vec3 pos;
 		pos.x = mat[0].w;
 		pos.y = mat[1].w + yincrease;
@@ -551,7 +549,6 @@ void RenderPipeline::getSpawnpoints(std::vector < std::vector < SpawnpointG > > 
 	for (int n = 0; n < size; n++)
 	{
 		glm::mat4 mat = contMan.testMap.spB[n].transform;
-		mat = transpose(mat);
 		vec3 pos;
 		pos.x = mat[0].w;
 		pos.y = mat[1].w + yincrease;
