@@ -438,8 +438,6 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		}
 	}
 
-	modifiersSetData(dt);
-
 	/*
 	Kind of ugly, but I put it here so it interacts properly with movement-changing modifiers
 	*/
@@ -497,8 +495,11 @@ void Player::hitByBullet(Bullet* b, int newHPtotal)
 	{
 		role.setHealth(newHPtotal);
 	}
-
-	//If hacking dart -> modifier on player
+	
+	if (b->getType() == BULLET_TYPE::HACKING_DART)
+	{
+		addModifier(MODIFIER_TYPE::HACKINGDARTMODIFIER);
+	}
 }
 
 void Player::hitByEffect(Effect* e, int newHPtotal)
@@ -527,11 +528,19 @@ void Player::addModifier(MODIFIER_TYPE mt)
 	Modifier* m = nullptr;
 	switch (mt)
 	{
-	case LIGHTWALLCONTROLLOCK:
-		removeSpecificModifier(LIGHTWALLCONTROLLOCK);
-		m = new LightWallLockedControls();
-		myModifiers.push_back(m);
+		case LIGHTWALLCONTROLLOCK:
+		{
+			removeSpecificModifier(LIGHTWALLCONTROLLOCK);
+			m = new LightWallLockedControls();
+			myModifiers.push_back(m);
+		}
 		break;
+		case MODIFIER_TYPE::HACKINGDARTMODIFIER:
+		{
+			m = new HackingDartModifier();
+			myModifiers.push_back(m);
+		}
+			break;
 	}
 	myModifiers[myModifiers.size() - 1]->init(this);
 }
@@ -560,4 +569,17 @@ void Player::respawn(glm::vec3 respawnPos)
 void Player::healing(int amount)
 {
 	role.setHealth(role.getHealth()+amount);
+}
+
+bool Player::getIfHacked()
+{
+	bool hacked = false;
+
+	for (int i = 0; i < myModifiers.size(); i++)
+	{
+		if (myModifiers[i]->getType() == MODIFIER_TYPE::HACKINGDARTMODIFIER)
+			hacked = true;
+	}
+
+	return hacked;
 }

@@ -122,6 +122,8 @@ public:
 	void healing(int amount);
 
 	Role* getRole() { return &role; };
+
+	bool getIfHacked();
 };
 
 #endif

@@ -618,7 +618,7 @@ void Game::addBulletToList(int conID, int bulletId, BULLET_TYPE bt, glm::vec3 po
 		b = new DiscShot(pos, dir, conID, bulletId, p->getTeam());
 		break;
 	case BULLET_TYPE::HACKING_DART:
-		b = new HackingDart(pos, dir, conID, bulletId, p->getTeam());
+		b = new HackingDart(pos, dir, conID, bulletId, p->getTeam(), BULLET_TYPE::HACKING_DART);
 		break;
 	}
 
@@ -745,22 +745,27 @@ void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec
 		Effect* lwe = getSpecificEffect(conID, sID - 1, EFFECT_TYPE::LIGHT_WALL, arraypos);
 		addEffectToList(conID, sID, EFFECT_TYPE::LIGHT_WALL, pos);
 	}
-		break;
+	break;
 
 	case SPECIAL_TYPE::MULTIJUMP:
 	{
 		vec3 vel = p->getVelocity();
-		if (vel.y<0)
+		if (vel.y < 0)
 		{
 			vel.y = 1.5f;
 		}
 		else
 		{
 			vel.y += 1.5f;
-		}	
+		}
 		p->setVelocity(vel);
 	}
-		break;
+	break;
+	case SPECIAL_TYPE::HACKINGDARTSPECIAL:
+	{
+		addBulletToList(conID, 0, BULLET_TYPE::HACKING_DART, pos, dir);
+	}
+	break;
 	}
 }
 
