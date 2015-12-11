@@ -172,7 +172,7 @@ void Core::upRoam(float dt)
 			GetSound()->setLocalPlayerPos(game->getPlayer(0)->getPos());
 		}
 
-		if (game->playerWantsToRespawn())
+		if (game->playerWantsToRespawn() && game->getPlayer(0)->getTeam() != 0)
 		{
 			game->allowPlayerRespawn(0, 0);
 		}
@@ -889,44 +889,41 @@ void Core::renderWorld(float dt)
 		}
 		
 		//render players
-		if (current != ROAM)		//Dont crash Roam
+	if (current != ROAM)		//Dont crash Roam
+	{
+		hacked = game->getPlayer(top->getConId())->getIfHacked();
+	}
+		for (size_t i = 0; i < MAX_CONNECT; i++)
 		{
-			hacked = game->getPlayer(top->getConId())->getIfHacked();
-		}
-		if(!hacked)	//Normal team colours
-		{
-			for (size_t i = 0; i < MAX_CONNECT; i++)
+			Player* p = game->getPlayer(i);
+			if (p)
 			{
-				Player* p = game->getPlayer(i);
-				if (p)
+				if (p->getTeam() != 0) //Don't render spectators!
 				{
-					if (p->getTeam() != 0) //Don't render spectators!
-					{
 
-						if (p->getHP() <= 0) { // set red
-							dgColor[0] = 1; dgColor[1] = 0; dgColor[2] = 0;
-						}
-		
-						else if (p->getTeam() == 1) { //team 1 color
+					if (p->getHP() <= 0) { // set red
+						dgColor[0] = 1; dgColor[1] = 0; dgColor[2] = 0;
+					}
+	
+					else if (p->getTeam() == 1) { //team 1 color
+						dgColor[0] = 0; dgColor[1] = 1; dgColor[2] = 0;
+					}
+					else if (p->getTeam() == 2) { // team 2 color
+						dgColor[0] = 0.2f; dgColor[1] = 0.2f; dgColor[2] = 1;
+					}
+					else if (p->getTeam() == 0) { // spectate color
+						dgColor[0] = 0; dgColor[1] = 0; dgColor[2] = 0;
+					}
+					if (hacked)		//We are hacked
+					{
+						int ourTeam = game->getPlayer(top->getConId())->getTeam();
+						if (ourTeam == 2)  //team 1 color
+						{
 							dgColor[0] = 0; dgColor[1] = 1; dgColor[2] = 0;
 						}
-						else if (p->getTeam() == 2) { // team 2 color
-							dgColor[0] = 0.2f; dgColor[1] = 0.2f; dgColor[2] = 1;
-						}
-						else if (p->getTeam() == 0) { // spectate color
-							dgColor[0] = 0; dgColor[1] = 0; dgColor[2] = 0;
-						}
-						if (hacked)		//We are hacked
+						else if (ourTeam == 1)  // team 2 color
 						{
-							int ourTeam = game->getPlayer(top->getConId())->getTeam();
-							if (ourTeam == 2)  //team 1 color
-							{
-								dgColor[0] = 0; dgColor[1] = 1; dgColor[2] = 0;
-							}
-							else if (ourTeam == 1)  // team 2 color
-							{
-								dgColor[0] = 0.2f; dgColor[1] = 0.2f; dgColor[2] = 1;
-							}
+							dgColor[0] = 0.2f; dgColor[1] = 0.2f; dgColor[2] = 1;
 						}
 						//static intense based on health
 						float hpval = float(p->getHP()) / 130.0f;
@@ -937,7 +934,16 @@ void Core::renderWorld(float dt)
 						else
 							renderPipe->renderAnimation(0, p->getWorldMat(), dgColor, hpval);
 					}
+
 				}
+				//static intense based on health
+				float hpval = float(p->getHP()) / 130.0f;
+
+				//renderPipe->renderPlayer(0, p->getWorldMat(), dgColor, hpval);
+				if(p->isLocal() && !game->freecam)
+					renderPipe->renderAnimation(3, p->getWorldMat(), dgColor, hpval);
+				else
+					renderPipe->renderAnimation(0, p->getWorldMat(), dgColor, hpval);
 			}
 		}
 
