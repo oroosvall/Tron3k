@@ -92,7 +92,7 @@ void Map::renderChunk(GLuint shader, GLuint shaderLocation, int chunkID)
 
 		for (size_t ins = 0; ins < chunks[chunkID].props[i].mats.size(); ins++)
 		{
-			glProgramUniformMatrix4fv(shader, shaderLocation, 1, GL_TRUE, (GLfloat*)&chunks[chunkID].props[i].mats[ins][0][0]);
+			glProgramUniformMatrix4fv(shader, shaderLocation, 1, GL_FALSE, (GLfloat*)&chunks[chunkID].props[i].mats[ins][0][0]);
 
 			glDrawElements(GL_TRIANGLES, meshes[meshID].indexCount, GL_UNSIGNED_INT, 0);
 		}
