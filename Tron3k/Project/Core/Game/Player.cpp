@@ -44,6 +44,74 @@ void Player::setGoalDir(glm::vec3 newDir)
 	oldDir = dir;
 }
 
+void Player::collisionHandling(float dt)
+{
+	if (collisionNormalSize != 0)
+	{
+		glm::vec3 totalXZCollNormal = glm::vec3(0, 0, 0);
+		glm::vec3 totalYCollNormal = glm::vec3(0, 0, 0);
+		for (int c = 0; c < collisionNormalSize; c++)
+		{
+			totalXZCollNormal.x += collisionNormals[c].x;
+			totalXZCollNormal.z += collisionNormals[c].z;
+			totalYCollNormal.y += collisionNormals[c].y;
+		}
+
+		/*
+		Y-AXIS COLLISION
+		Only triggers when we are actually in the air, no need to collide along Y axis otherwise.
+		
+		CURRENTLY:
+		Does not move player back along collision normal, which might cause people to sink slightly into the ground.
+		*/
+
+		if (totalYCollNormal.y < -FLT_EPSILON || totalYCollNormal.y > FLT_EPSILON)
+		{
+			if (!grounded)
+			{
+				glm::vec3 myVelocity = getVelocity();
+				if (myVelocity.y > 0.0f && totalYCollNormal.y < 0.0f)
+				{
+					vel.y = 0.0f;
+				}
+				else if (myVelocity.y < 0.0f && totalYCollNormal.y > 0.0f)
+				{
+					vel.y = 0.0f;
+					grounded = true;
+				}
+			}
+			//setPos(pos + totalYCollNormal*dt);
+		}
+
+		if ((totalXZCollNormal.x < -FLT_EPSILON || totalXZCollNormal.x > FLT_EPSILON) ||
+			(totalXZCollNormal.z < -FLT_EPSILON || totalXZCollNormal.z > FLT_EPSILON))
+		{
+			setPos(getPos() + totalXZCollNormal*dt);
+			totalXZCollNormal = normalize(totalXZCollNormal);
+			glm::vec3 v = vel;
+			if (v != glm::vec3(0, 0, 0))
+				v = normalize(v);
+
+			glm::vec3 velProj = ((glm::dot(v, totalXZCollNormal) /
+				glm::dot(totalXZCollNormal, totalXZCollNormal)) * totalXZCollNormal); //korrekt
+			glm::vec3 velRej = vel;
+
+			velRej = v - velProj;
+
+			velRej = glm::vec3(velRej.x, 0, velRej.z);
+			velProj = glm::vec3(velProj.x, 0, velProj.z);
+			if (velProj != glm::vec3(0, 0, 0))
+			{
+				setVelocity(velRej*length(vel)); //FEL
+			}
+			else
+			{
+				setVelocity(velProj*length(vel));
+			}
+		}
+	}
+}
+
 void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingThis)
 {
 	/*
@@ -51,6 +119,7 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 	Lägg till matematik för kollisioner här!!
 	
 	*/
+
 	glm::vec3 playerVel = vel*role.getMovementSpeed();
 	pos += playerVel * dt; //Here we will also include external forces
 	if (freecam == false || specingThis == true)
@@ -162,81 +231,66 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				bool stop = true;
 				vec2 tempvec = vec2(0, 0);
 
-				bool collidingWithWalls = false;
-				
-				for (int c = 0; c < collisionNormalSize && !collidingWithWalls; c++)
+				if (i->getKeyInfo(GLFW_KEY_W))
 				{
-					if (collisionNormals[c].x != 0.0f || collisionNormals[c].z != 0.0f)
+					tempvec = normalize(vec2(dir.x, dir.z));
+					if (grounded)
 					{
-						collidingWithWalls = true;
-						glm::vec3 posch = getPos();
-						posch += collisionNormals[c] * 2.0f;
-						setPos(posch);
+						vel.x = tempvec.x;
+						vel.z = tempvec.y;
+						stop = false;
 					}
 				}
-				if (!collidingWithWalls)
+
+				if (i->getKeyInfo(GLFW_KEY_S))
 				{
-					if (i->getKeyInfo(GLFW_KEY_W))
+					tempvec = -normalize(vec2(dir.x, dir.z));
+					if (grounded)
 					{
-						tempvec = normalize(vec2(dir.x, dir.z));
+						vel.x = tempvec.x;
+						vel.z = tempvec.y;
+						stop = false;
+					}
+				}
+
+				if (!(i->getKeyInfo(GLFW_KEY_A) && i->getKeyInfo(GLFW_KEY_D)))
+				{
+					if (i->getKeyInfo(GLFW_KEY_A))
+					{
+						vec3 left = cross(vec3(0, 1, 0), dir);
+						tempvec = normalize(vec2(left.x, left.z));
 						if (grounded)
 						{
-							vel.x = tempvec.x;
-							vel.z = tempvec.y;
+							vel.x += tempvec.x;
+							vel.z += tempvec.y;
 							stop = false;
-						}
-					}
-
-					if (i->getKeyInfo(GLFW_KEY_S))
-					{
-						tempvec = -normalize(vec2(dir.x, dir.z));
-						if (grounded)
-						{
-							vel.x = tempvec.x;
-							vel.z = tempvec.y;
-							stop = false;
-						}
-					}
-
-					if (!(i->getKeyInfo(GLFW_KEY_A) && i->getKeyInfo(GLFW_KEY_D)))
-					{
-						if (i->getKeyInfo(GLFW_KEY_A))
-						{
-							vec3 left = cross(vec3(0, 1, 0), dir);
-							tempvec = normalize(vec2(left.x, left.z));
-							if (grounded)
+							tempvec = vec2(vel.x, vel.z);
+							if (glm::length(tempvec) > 0)
 							{
-								vel.x += tempvec.x;
-								vel.z += tempvec.y;
-								stop = false;
-								tempvec = vec2(vel.x, vel.z);
-								if (glm::length(tempvec) > 0)
-								{
-									tempvec = normalize(tempvec);
-									vel.x = tempvec.x;
-									vel.z = tempvec.y;
-								}
+								tempvec = normalize(tempvec);
+								vel.x = tempvec.x;
+								vel.z = tempvec.y;
 							}
 						}
+					}
 
-						if (i->getKeyInfo(GLFW_KEY_D))
+					if (i->getKeyInfo(GLFW_KEY_D))
+					{
+						vec3 right = cross(dir, vec3(0, 1, 0));
+						tempvec = glm::normalize(vec2(right.x, right.z));
+						right = glm::normalize(right);
+						if (grounded)
 						{
-							vec3 right = cross(dir, vec3(0, 1, 0));
-							tempvec = glm::normalize(vec2(right.x, right.z));
-							right = glm::normalize(right);
-							if (grounded)
-							{
-								vel.x += tempvec.x;
-								vel.z += tempvec.y;
-								stop = false;
-								tempvec = vec2(vel.x, vel.z);
+							vel.x += tempvec.x;
+							vel.z += tempvec.y;
+							stop = false;
+							tempvec = vec2(vel.x, vel.z);
 
-								if (glm::length(tempvec) > 0)
-								{
-									tempvec = normalize(tempvec);
-									vel.x = tempvec.x;
-									vel.z = tempvec.y;
-								}
+							if (glm::length(tempvec) > 0)
+							{
+								tempvec = normalize(tempvec);
+								vel.x = tempvec.x;
+								vel.z = tempvec.y;
 							}
 						}
 					}
@@ -384,14 +438,15 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		}
 	}
 
-	modifiersSetData(dt);
-
 	/*
 	Kind of ugly, but I put it here so it interacts properly with movement-changing modifiers
 	*/
 	if (isLocalPlayer)
+	{
+		collisionHandling(dt);
 		movePlayer(dt, olddir, freecam, spectatingThisPlayer); //Move the player regardless of control lock
-
+	}
+		
 	if (spectatingThisPlayer == true)
 	{
 		cam->setCam(pos, dir);
@@ -440,8 +495,11 @@ void Player::hitByBullet(Bullet* b, int newHPtotal)
 	{
 		role.setHealth(newHPtotal);
 	}
-
-	//If hacking dart -> modifier on player
+	
+	if (b->getType() == BULLET_TYPE::HACKING_DART)
+	{
+		addModifier(MODIFIER_TYPE::HACKINGDARTMODIFIER);
+	}
 }
 
 void Player::hitByEffect(Effect* e, int newHPtotal)
@@ -470,11 +528,19 @@ void Player::addModifier(MODIFIER_TYPE mt)
 	Modifier* m = nullptr;
 	switch (mt)
 	{
-	case LIGHTWALLCONTROLLOCK:
-		removeSpecificModifier(LIGHTWALLCONTROLLOCK);
-		m = new LightWallLockedControls();
-		myModifiers.push_back(m);
+		case LIGHTWALLCONTROLLOCK:
+		{
+			removeSpecificModifier(LIGHTWALLCONTROLLOCK);
+			m = new LightWallLockedControls();
+			myModifiers.push_back(m);
+		}
 		break;
+		case MODIFIER_TYPE::HACKINGDARTMODIFIER:
+		{
+			m = new HackingDartModifier();
+			myModifiers.push_back(m);
+		}
+			break;
 	}
 	myModifiers[myModifiers.size() - 1]->init(this);
 }
@@ -503,4 +569,17 @@ void Player::respawn(glm::vec3 respawnPos)
 void Player::healing(int amount)
 {
 	role.setHealth(role.getHealth()+amount);
+}
+
+bool Player::getIfHacked()
+{
+	bool hacked = false;
+
+	for (int i = 0; i < myModifiers.size(); i++)
+	{
+		if (myModifiers[i]->getType() == MODIFIER_TYPE::HACKINGDARTMODIFIER)
+			hacked = true;
+	}
+
+	return hacked;
 }

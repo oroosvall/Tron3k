@@ -80,14 +80,14 @@ glm::vec3 Physics::checkAABBvAABBCollision(CollideMesh mesh1, CollideMesh mesh2,
 	}
 
 
-	if (pos1.x + max1.x >= pos2.x + min2.x &&
-		pos1.x + min1.x <= pos2.x + max2.x)//x
+	if (pos1.x + max1.x + 0.01f > pos2.x + min2.x - 0.01f &&
+		pos1.x + min1.x - 0.01f < pos2.x + max2.x + 0.01f)//x
 	{
-		if (pos1.y + max1.y >= pos2.y + min2.y &&
-			pos1.y + min1.y <= pos2.y + max2.y)//y
+		if (pos1.y + max1.y + 0.01f > pos2.y + min2.y - 0.01f &&
+			pos1.y + min1.y - 0.01f < pos2.y + max2.y + 0.01f)//y
 		{
-			if (pos1.z + max1.z >= pos2.z + min2.z &&
-				pos1.z + min1.z <= pos2.z + max2.z)//z
+			if (pos1.z + max1.z + 0.01f > pos2.z + min2.z - 0.01f &&
+				pos1.z + min1.z - 0.01f < pos2.z + max2.z + 0.01f)//z
 			{
 				//TODO: Add OBB-checks, for dat layered collision
 				return glm::vec3(1, 1, 1);// getCollisionNormal(aabb1, aabb2);
@@ -258,6 +258,9 @@ std::vector<glm::vec3> Physics::getCollisionNormal(AABB* aabb1, AABB* aabb2)
 	float collides1 = -1;
 	float collides2 = -1;
 
+	bool collideX, collideY, collideZ;
+	collideX = collideY = collideZ = false;
+
 	p1 = glm::vec3(temp.boundingBox.ObbBoxes[0].corners[2]);
 	p2 = glm::vec3(temp.boundingBox.ObbBoxes[0].corners[0]);
 	p3 = glm::vec3(temp.boundingBox.ObbBoxes[0].corners[1]);
@@ -272,9 +275,10 @@ std::vector<glm::vec3> Physics::getCollisionNormal(AABB* aabb1, AABB* aabb2)
 
 
 
-	if (collides1 >= 0.0f || collides2 >= 0.0f)
+	if ((collides1 >= 0.0f || collides2 >= 0.0f) && !collideZ)
 	{
 		//Front plane collision
+		collideZ = true;
 		norms.push_back(glm::vec3(0, 0, collides1));
 	}
 
@@ -292,9 +296,10 @@ std::vector<glm::vec3> Physics::getCollisionNormal(AABB* aabb1, AABB* aabb2)
 
 
 
-	if (collides1 >= 0.0f || collides2 >= 0.0f)
+	if ((collides1 >= 0.0f || collides2 >= 0.0f) && !collideZ)
 	{
 		//Back plane collision
+		collideZ = true;
 		norms.push_back(glm::vec3(0, 0, -collides1));
 	}
 
@@ -311,9 +316,10 @@ std::vector<glm::vec3> Physics::getCollisionNormal(AABB* aabb1, AABB* aabb2)
 	collides2 = checkLinevPlaneCollision(l1, l2, p1, p2, p3);
 
 
-	if (collides1 >= 0.0f || collides2 >= 0.0f)
+	if ((collides1 >= 0.0f || collides2 >= 0.0f) && !collideY)
 	{
 		//Top plane collision
+		collideY = true;
 		norms.push_back(glm::vec3(0, collides1, 0));
 	}
 
@@ -330,9 +336,10 @@ std::vector<glm::vec3> Physics::getCollisionNormal(AABB* aabb1, AABB* aabb2)
 	collides2 = checkLinevPlaneCollision(l1, l2, p1, p2, p3);
 
 
-	if (collides1 >= 0.0f || collides2 >= 0.0f)
+	if ((collides1 >= 0.0f || collides2 >= 0.0f) && !collideY)
 	{
 		//Bot plane collision
+		collideY = true;
 		norms.push_back(glm::vec3(0, -collides1, 0));
 	}
 
@@ -350,9 +357,10 @@ std::vector<glm::vec3> Physics::getCollisionNormal(AABB* aabb1, AABB* aabb2)
 
 
 
-	if (collides1 >= 0.0f || collides2 >= 0.0f)
+	if ((collides1 >= 0.0f || collides2 >= 0.0f) && !collideX)
 	{
 		//Right plane collision
+		collideX = true;
 		norms.push_back(glm::vec3(collides1, 0, 0));
 	}
 
@@ -370,15 +378,12 @@ std::vector<glm::vec3> Physics::getCollisionNormal(AABB* aabb1, AABB* aabb2)
 
 
 
-	if (collides1 >= 0.0f || collides2 >= 0.0f)
+	if ((collides1 >= 0.0f || collides2 >= 0.0f) && !collideX)
 	{
 		//Left plane collision
+		collideX = true;
  		norms.push_back(glm::vec3(-collides1, 0, 0));
 	}
-
-
-
-
 
 	return norms;
 }
@@ -465,8 +470,10 @@ std::vector<glm::vec3> Physics::checkPlayerVWorldCollision(glm::vec3 playerPos)
 			if (checkAABBvAABBCollision(playerBox, worldBoxes[i][j]) != glm::vec3(0, 0, 0))
 			{
 				//if (checkOBBCollision(playerPos, worldBoxes[i]))
-				collides = true;
-				
+				if (i == 1)
+				{
+					int x = 0;
+				}
 				t = getCollisionNormal(&playerBox.boundingBox, &worldBoxes[i][j].boundingBox);//getCollisionNormal(playerBox.getCylinder(), worldBoxes[i][j].getAABB());
 
 				cNorms.reserve(cNorms.size() + t.size());

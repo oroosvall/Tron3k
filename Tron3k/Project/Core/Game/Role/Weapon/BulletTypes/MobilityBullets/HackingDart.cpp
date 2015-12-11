@@ -1,11 +1,12 @@
 #include "HackingDart.h"
 
 
-HackingDart::HackingDart(glm::vec3 position, glm::vec3 direction, int pID, int bID, int tID)
+HackingDart::HackingDart(glm::vec3 position, glm::vec3 direction, int pID, int bID, int tID, int type)
 {
 	initValues(position, direction, pID, bID, tID);
 	vel = 55.0f;
 	damage = 20;
+	this->type = type;
 }
 
 HackingDart::~HackingDart()

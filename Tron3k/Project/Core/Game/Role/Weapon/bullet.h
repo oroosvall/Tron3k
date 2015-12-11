@@ -21,6 +21,7 @@ protected:
 	int teamId;
 	int playerId;
 	int bulletId = 0;
+	int type = 0;
 
 
 public:
@@ -33,6 +34,7 @@ public:
 	glm::vec3 getDir() { return dir; };
 	void setDir(glm::vec3 newdir) { dir = newdir; };
 	int getDamage() { return damage; };
+	int getType() { return type; };
 
 	virtual int update(float dt) = 0;
 

@@ -406,48 +406,7 @@ void Game::checkPlayerVWorldCollision(float dt)
 						Function adds all collision normals to the player, so the player can handle their movement this frame correctly
 						*/
 						playerList[i]->addCollisionNormal(collisionNormal[c]);
-					}
-					if (!playerList[i]->getGrounded())
-					{
-						//collision with world here, no gravity etc
-						//TODO: Add proper collision code.
-						//TODO: Return normals from objects we collide with. - DONE
-						//TODO: Change direction based on those normals. - KINDA DONE
-						//TODO: What do we do if we collide with multiple objects? -SHOULD BE HANDLED, we add the normal of all the objects we collide with
-						//normalize(collisionNormal);
-						playerList[i]->setGrounded(true);
-						//physics->normalize(collisionNormal);
-						glm::vec3 vel = playerList[i]->getVelocity();
-						//glm::vec3 collNormal = collisionNormal * glm::dot(vel, collisionNormal);
-
-
-						glm::vec3 v = vel;
-
-						physics->normalize(v);
-
-						glm::vec3 velProj;// = ((glm::dot(v, collisionNormal) /
-							//glm::dot(collisionNormal, collisionNormal)) * collisionNormal); //korrekt
-						glm::vec3 velRej = vel;
-
-						//velRej = v - velProj;
-
-						//vel = vel - collNormal;
-
-						if (velProj != glm::vec3(0, 0, 0))
-						{
-							playerList[i]->setPos(playerList[i]->getPos() - velRej * dt);//fel
-							velRej.y = 0.0f; //ALBIN DET HÄR VILL DU KANSKE TITTA PÅ
-							playerList[i]->setVelocity(velRej); //FEL
-						}
-						else
-						{
-							playerList[i]->setPos(playerList[i]->getPos() - vel * dt); //FEL
-							velProj.y = 0.0f; //ALBIN DET HÄR VILL DU KANSKE TITTA PÅ
-							playerList[i]->setVelocity(velProj);
-
-						}
-					}
-					
+					}					
 				}
 				else
 				{
@@ -659,7 +618,7 @@ void Game::addBulletToList(int conID, int bulletId, BULLET_TYPE bt, glm::vec3 po
 		b = new DiscShot(pos, dir, conID, bulletId, p->getTeam());
 		break;
 	case BULLET_TYPE::HACKING_DART:
-		b = new HackingDart(pos, dir, conID, bulletId, p->getTeam());
+		b = new HackingDart(pos, dir, conID, bulletId, p->getTeam(), BULLET_TYPE::HACKING_DART);
 		break;
 	}
 
@@ -786,22 +745,27 @@ void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec
 		Effect* lwe = getSpecificEffect(conID, sID - 1, EFFECT_TYPE::LIGHT_WALL, arraypos);
 		addEffectToList(conID, sID, EFFECT_TYPE::LIGHT_WALL, pos);
 	}
-		break;
+	break;
 
 	case SPECIAL_TYPE::MULTIJUMP:
 	{
 		vec3 vel = p->getVelocity();
-		if (vel.y<0)
+		if (vel.y < 0)
 		{
 			vel.y = 1.5f;
 		}
 		else
 		{
 			vel.y += 1.5f;
-		}	
+		}
 		p->setVelocity(vel);
 	}
-		break;
+	break;
+	case SPECIAL_TYPE::HACKINGDARTSPECIAL:
+	{
+		addBulletToList(conID, 0, BULLET_TYPE::HACKING_DART, pos, dir);
+	}
+	break;
 	}
 }
 

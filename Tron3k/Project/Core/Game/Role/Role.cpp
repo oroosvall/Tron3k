@@ -115,7 +115,7 @@ void Role::loadRoleSpecifics(int role)
 			consumable->init(CONSUMABLE_TYPE::OVERCHARGE);
 			break;
 		case MOBILITY:
-			specialAbility = new Lightwall(this);
+			specialAbility = new HackingDartSpecial(this);
 			specialAbility->init();
 			mobility = new MultiJump();
 			mobility->init();
