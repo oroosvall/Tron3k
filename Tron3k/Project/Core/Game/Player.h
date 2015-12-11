@@ -34,6 +34,8 @@ private:
 	glm::vec3 pos; //Current actual position
 	glm::vec3 dir; //Current viewing direction
 	glm::vec3 vel; //Our velocity i.e. in which direction we're moving
+	glm::vec3 collisionVel; //How we ought to be moving based on our collisions
+	void collisionHandling(float dt);
 	void movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingThis);
 	bool grounded = false;
 

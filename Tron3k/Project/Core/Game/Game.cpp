@@ -406,48 +406,7 @@ void Game::checkPlayerVWorldCollision(float dt)
 						Function adds all collision normals to the player, so the player can handle their movement this frame correctly
 						*/
 						playerList[i]->addCollisionNormal(collisionNormal[c]);
-					}
-					if (!playerList[i]->getGrounded())
-					{
-						//collision with world here, no gravity etc
-						//TODO: Add proper collision code.
-						//TODO: Return normals from objects we collide with. - DONE
-						//TODO: Change direction based on those normals. - KINDA DONE
-						//TODO: What do we do if we collide with multiple objects? -SHOULD BE HANDLED, we add the normal of all the objects we collide with
-						//normalize(collisionNormal);
-						playerList[i]->setGrounded(true);
-						//physics->normalize(collisionNormal);
-						glm::vec3 vel = playerList[i]->getVelocity();
-						//glm::vec3 collNormal = collisionNormal * glm::dot(vel, collisionNormal);
-
-
-						glm::vec3 v = vel;
-
-						physics->normalize(v);
-
-						glm::vec3 velProj;// = ((glm::dot(v, collisionNormal) /
-							//glm::dot(collisionNormal, collisionNormal)) * collisionNormal); //korrekt
-						glm::vec3 velRej = vel;
-
-						//velRej = v - velProj;
-
-						//vel = vel - collNormal;
-
-						if (velProj != glm::vec3(0, 0, 0))
-						{
-							playerList[i]->setPos(playerList[i]->getPos() - velRej * dt);//fel
-							velRej.y = 0.0f; //ALBIN DET HÄR VILL DU KANSKE TITTA PÅ
-							playerList[i]->setVelocity(velRej); //FEL
-						}
-						else
-						{
-							playerList[i]->setPos(playerList[i]->getPos() - vel * dt); //FEL
-							velProj.y = 0.0f; //ALBIN DET HÄR VILL DU KANSKE TITTA PÅ
-							playerList[i]->setVelocity(velProj);
-
-						}
-					}
-					
+					}					
 				}
 				else
 				{
