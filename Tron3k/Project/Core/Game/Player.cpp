@@ -165,6 +165,7 @@ void Player::cleanseModifiers(bool stickies)
 	{
 		if (!stickies)
 		{
+
 			if (!myModifiers[c]->isSticky())
 			{
 				delete myModifiers[c];
@@ -199,10 +200,6 @@ bool Player::removeSpecificModifier(MODIFIER_TYPE mt)
 PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool spectating)
 {
 	PLAYERMSG msg = NONE;
-	if (pos.y < -30.0f)
-	{
-		role.setHealth(0);
-	}
 
 	modifiersGetData(dt);
 
@@ -458,9 +455,9 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 	worldMat[1].w = pos.y; //head offset. player objects have their origo at their feet
 	worldMat[2].w = pos.z;
 
-	if (freecam == true)
+	if (freecam == true && spectatingThisPlayer == false)
 	{
-		worldMat[1].w -= 1.55f; //head offset. player objects have their origo at their feet
+		worldMat[1].w -= 1.55f; 
 	}
 
 	if (freecam == false && isLocalPlayer == false && spectatingThisPlayer == false)

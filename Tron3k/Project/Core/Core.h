@@ -30,7 +30,6 @@ class Core
 {
 private:
 	float timepass;	//temp
-	bool hacked = false;
 	Topology* top;
 	Game* game;
 	IRenderPipeline* renderPipe;

@@ -859,7 +859,7 @@ void Core::renderWorld(float dt)
 		color = { 0, 1, 0 };
 		renderPipe->setChunkColorAndInten(3, &color[0], 1);
 
-		
+
 		glm::vec3 tmpEyePos = CameraInput::getCam()->getPos();
 		renderPipe->update(tmpEyePos.x, tmpEyePos.y, tmpEyePos.z, dt); // sets the view/proj matrix
 		renderPipe->renderIni();
@@ -888,104 +888,100 @@ void Core::renderWorld(float dt)
 				renderPipe->addLight(&light);
 			}
 		}
-		
+
 		//render players
-	if (current != ROAM)		//Dont crash Roam
-	{
-		if (game->spectateID == -1)		//We are not spectating
+
+		//find out if we are hacked, or the player we are spectating is hacked
+		int hackedTeam = -1;
+		if (current != ROAM)	//hacking disabled in roam
 		{
-			if (top->getConId() < MAX_CONNECT)
+			if (game->spectateID == -1)		//We are not spectating
 			{
-				hacked = game->getPlayer(top->getConId())->getIfHacked();
+				if (top->is_client()) //server doenst have its own player
+					if(game->getPlayer(top->getConId())->getIfHacked())
+						hackedTeam = game->getPlayer(top->getConId())->getTeam(); //if we are hacked
+			}
+			else
+			{
+				if (game->getPlayer(game->spectateID)->isAlive()) // didnt fix the crash issue when spectating a player with a active hacking dart that dies
+				{
+					if (game->getPlayer(game->spectateID)->getIfHacked())
+						hackedTeam = game->getPlayer(game->spectateID)->getTeam(); //if we are hacked
+				}
 			}
 		}
-		else
-			hacked = game->getPlayer(game->spectateID)->getIfHacked();
-	}
+
 		for (size_t i = 0; i < MAX_CONNECT; i++)
 		{
 			Player* p = game->getPlayer(i);
 			if (p)
 			{
 				if (p->getTeam() != 0) //Don't render spectators!
-				{
-
+				{	
 					if (p->getHP() <= 0) { // set red
 						dgColor[0] = 1; dgColor[1] = 0; dgColor[2] = 0;
 					}
-	
-					else if (p->getTeam() == 1) { //team 1 color
-						dgColor[0] = 0; dgColor[1] = 1; dgColor[2] = 0;
-					}
-					else if (p->getTeam() == 2) { // team 2 color
-						dgColor[0] = 0.2f; dgColor[1] = 0.2f; dgColor[2] = 1;
-					}
-					else if (p->getTeam() == 0) { // spectate color
-						dgColor[0] = 0; dgColor[1] = 0; dgColor[2] = 0;
-					}
-					if (hacked)		//We are hacked
+					else
 					{
-						int ourTeam = game->getPlayer(top->getConId())->getTeam();
-						if (ourTeam == 2)  //team 1 color
-						{
+						if (p->getTeam() == 1) { //team 1 color
 							dgColor[0] = 0; dgColor[1] = 1; dgColor[2] = 0;
 						}
-						else if (ourTeam == 1)  // team 2 color
-						{
+						else if (p->getTeam() == 2) { // team 2 color
 							dgColor[0] = 0.2f; dgColor[1] = 0.2f; dgColor[2] = 1;
 						}
-						//static intense based on health
-						float hpval = float(p->getHP()) / 130.0f;
-
-						//renderPipe->renderPlayer(0, p->getWorldMat(), dgColor, hpval);
-						if (p->isLocal() && !game->freecam)
-							renderPipe->renderAnimation(3, p->getWorldMat(), dgColor, hpval);
-						else
-							renderPipe->renderAnimation(0, p->getWorldMat(), dgColor, hpval);
+						else if (p->getTeam() == 0) { // spectate color
+							dgColor[0] = 0; dgColor[1] = 0; dgColor[2] = 0;
+						}
+						//hacked team colors
+						if (hackedTeam == 1) {
+							dgColor[0] = 0.2f; dgColor[1] = 0.2f; dgColor[2] = 1;
+						}
+						else if (hackedTeam == 2) {
+							dgColor[0] = 0; dgColor[1] = 1; dgColor[2] = 0;
+						}
 					}
+					//static intense based on health
+					float hpval = float(p->getHP()) / 130.0f;
 
+					//renderPipe->renderPlayer(0, p->getWorldMat(), dgColor, hpval);
+					if (p->isLocal() && !game->freecam || game->spectateID == i)
+						renderPipe->renderAnimation(3, p->getWorldMat(), dgColor, hpval);
+					else
+						renderPipe->renderAnimation(0, p->getWorldMat(), dgColor, hpval);
 				}
-				//static intense based on health
-				float hpval = float(p->getHP()) / 130.0f;
-
-				//renderPipe->renderPlayer(0, p->getWorldMat(), dgColor, hpval);
-				if(p->isLocal() && !game->freecam)
-					renderPipe->renderAnimation(3, p->getWorldMat(), dgColor, hpval);
-				else
-					renderPipe->renderAnimation(0, p->getWorldMat(), dgColor, hpval);
 			}
 		}
 
-		for (int c = 0; c < BULLET_TYPE::NROFBULLETS; c++)
-		{
-			dgColor[0] = 0; dgColor[1] = 0; dgColor[2] = 0;
-
-			std::vector<Bullet*> bullets = game->getBullets(BULLET_TYPE(c));
-			for (unsigned int i = 0; i < bullets.size(); i++)
+			for (int c = 0; c < BULLET_TYPE::NROFBULLETS; c++)
 			{
-				renderPipe->renderPlayer(2, bullets[i]->getWorldMat(), dgColor, 1.0f);
+				dgColor[0] = 0; dgColor[1] = 0; dgColor[2] = 0;
+
+				std::vector<Bullet*> bullets = game->getBullets(BULLET_TYPE(c));
+				for (unsigned int i = 0; i < bullets.size(); i++)
+				{
+					renderPipe->renderPlayer(2, bullets[i]->getWorldMat(), dgColor, 1.0f);
+				}
 			}
-		}
 
-		renderPipe->render();
+			renderPipe->render();
 
-		float herpderpOffset = 0;
-		for (int c = 0; c < EFFECT_TYPE::NROFEFFECTS; c++)
-		{
-			dgColor[0] = 0; dgColor[1] = 0; dgColor[2] = 0;
-
-			std::vector<Effect*> eff = game->getEffects(EFFECT_TYPE(c));
-			for (unsigned int i = 0; i < eff.size(); i++)
+			float herpderpOffset = 0;
+			for (int c = 0; c < EFFECT_TYPE::NROFEFFECTS; c++)
 			{
-				LightwallEffect* derp = (LightwallEffect*)eff[i];
-				renderPipe->renderWallEffect(&derp->pos, &derp->endPoint, herpderpOffset);
+				dgColor[0] = 0; dgColor[1] = 0; dgColor[2] = 0;
 
-				herpderpOffset += glm::distance(derp->pos, derp->endPoint);
+				std::vector<Effect*> eff = game->getEffects(EFFECT_TYPE(c));
+				for (unsigned int i = 0; i < eff.size(); i++)
+				{
+					LightwallEffect* derp = (LightwallEffect*)eff[i];
+					renderPipe->renderWallEffect(&derp->pos, &derp->endPoint, herpderpOffset);
+
+					herpderpOffset += glm::distance(derp->pos, derp->endPoint);
+				}
 			}
-		}
 
-		renderPipe->finalizeRender();
-	}
+			renderPipe->finalizeRender();
+		}
 }
 
 void Core::createWindow(int x, int y, bool fullscreen)
