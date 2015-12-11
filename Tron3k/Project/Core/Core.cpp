@@ -891,7 +891,13 @@ void Core::renderWorld(float dt)
 		//render players
 	if (current != ROAM)		//Dont crash Roam
 	{
-		hacked = game->getPlayer(top->getConId())->getIfHacked();
+		if (game->spectateID == -1)		//We are not spectating
+		{
+			if (top->getConId() < MAX_CONNECT)
+			{
+				hacked = game->getPlayer(top->getConId())->getIfHacked();
+			}
+		}
 	}
 		for (size_t i = 0; i < MAX_CONNECT; i++)
 		{
