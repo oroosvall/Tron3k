@@ -456,8 +456,8 @@ void RenderPipeline::getPlayerBox(float &xMax, float &xMin, float &yMax, float &
 	//Will be changed later, this is number for now
 	xMax = 0.5f;
 	xMin = -0.5f;
-	yMax = 1.0f;
-	yMin = -1.0f;
+	yMax = 0.3f;  //distance from camera to head max
+	yMin = -1.55f; //distance from camera to ground
 	zMax = 0.5f;
 	zMin = -0.5f;
 }
@@ -507,7 +507,7 @@ void RenderPipeline::getSpawnpoints(std::vector < std::vector < SpawnpointG > > 
 	vector<SpawnpointG> team1;
 	vector<SpawnpointG> team2;
 
-	float yincrease = 5.0f;
+	float yincrease = 7.0f;
 
 	int size = contMan.testMap.spFFACount;
 	for (int n = 0; n < size; n++)

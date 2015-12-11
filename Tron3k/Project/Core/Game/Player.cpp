@@ -400,9 +400,13 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 	clearCollisionNormals(); //Doesn't actually clear the array, just manually sets size to 0. This is to speed things up a little.
 
 	worldMat[0].w = pos.x;
-	worldMat[1].w = pos.y-0.6f;
+	worldMat[1].w = pos.y; //head offset. player objects have their origo at their feet
 	worldMat[2].w = pos.z;
 
+	if (freecam == true)
+	{
+		worldMat[1].w -= 1.55f; //head offset. player objects have their origo at their feet
+	}
 	return msg;
 }
 
