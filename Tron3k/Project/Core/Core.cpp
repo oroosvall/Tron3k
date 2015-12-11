@@ -887,9 +887,13 @@ void Core::renderWorld(float dt)
 				renderPipe->addLight(&light);
 			}
 		}
-
+		
 		//render players
-		if(!game->getPlayer(top->getConId())->getIfHacked())	//Normal team colours
+		if (current != ROAM)		//Dont crash Roam
+		{
+			hacked = game->getPlayer(top->getConId())->getIfHacked();
+		}
+		if(!hacked)	//Normal team colours
 		{
 			for (size_t i = 0; i < MAX_CONNECT; i++)
 			{
