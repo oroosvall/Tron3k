@@ -70,6 +70,9 @@ private:
 	GLuint lw_vp;
 
 	float timepass = 0;
+
+	bool initialized;
+
 public:
 
 	RenderPipeline() {};

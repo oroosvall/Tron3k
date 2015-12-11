@@ -69,6 +69,11 @@ extern "C"
 bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 {
 	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	if (initialized)
+	{
+		return true;
+	}
+
 	GLenum result = glewInit();
 	if (result != GLEW_OK)
 	{
@@ -186,6 +191,7 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	lw_vp	= glGetUniformLocation(lw_Shader, "ViewProjMatrix");
 	lw_tex	= glGetUniformLocation(lw_Shader, "texsample");
 
+	initialized = true;
 	return true;
 }
 
