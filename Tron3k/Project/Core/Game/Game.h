@@ -130,6 +130,7 @@ public:
 
 	void update(float dt);
 
+	void clearSpectateID() { spectateID = -1; };
 	std::vector< std::vector < SpawnpointG > >* getSpawnpoints() { return &spawnpoints; };
 
 	void sendChunkBoxes(int chunkID, void* cBoxes);

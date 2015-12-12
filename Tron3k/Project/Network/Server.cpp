@@ -2,6 +2,9 @@
 
 void Server::disconnected(Uint8 _conID)
 {
+	if (gamePtr->spectateID == _conID)
+		gamePtr->clearSpectateID();
+
 	Player* p = gamePtr->getPlayer(_conID);
 	if (p != nullptr)
 	{

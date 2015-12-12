@@ -21,6 +21,11 @@ void Player::init(std::string pName, glm::vec3 initPos, bool isLocal)
 	vel = glm::vec3(0, 0, 0);
 	dir = cam->getDir();
 
+	anim_first_current = AnimationState::first_idle;
+	anim_first_framePeak = AnimationState::first_idle;
+	anim_third_current = AnimationState::third_idle;
+	anim_third_framePeak =  AnimationState::third_idle;
+
 	isLocalPlayer = isLocal;
 
 	rotate(0, -3.141592654f, 0);
@@ -200,6 +205,10 @@ bool Player::removeSpecificModifier(MODIFIER_TYPE mt)
 PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool spectating)
 {
 	PLAYERMSG msg = NONE;
+	anim_first_current = AnimationState::first_idle;
+	anim_third_current = AnimationState::third_idle;
+	vec3 animtestpos = pos;
+
 
 	modifiersGetData(dt);
 
@@ -440,8 +449,12 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 	*/
 	if (isLocalPlayer)
 	{
-		collisionHandling(dt);
-		movePlayer(dt, olddir, freecam, spectatingThisPlayer); //Move the player regardless of control lock
+		//ignore if we are spectating
+		if (currentTeam != 0)
+		{
+			collisionHandling(dt);
+			movePlayer(dt, olddir, freecam, spectatingThisPlayer); //Move the player regardless of control lock
+		}
 	}
 		
 	if (spectatingThisPlayer == true)
@@ -457,13 +470,22 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 	if (freecam == true && spectatingThisPlayer == false)
 	{
-		worldMat[1].w -= 1.55f; 
+		worldMat[1].w -= 1.55f;  // move down if 3rd person render
 	}
 
 	if (freecam == false && isLocalPlayer == false && spectatingThisPlayer == false)
 	{
-		worldMat[1].w -= 1.55f;
+		worldMat[1].w -= 1.55f; // move down if 3rd person render
 	}
+
+	if (animtestpos != pos) //if we moved
+		anim_third_current = AnimationState::third_run;
+	//check if anim state should overwrite anim-frame-peak
+	if (checkAnimOverwrite(anim_first_current, anim_first_framePeak))
+		anim_first_framePeak = anim_first_current;
+	if (checkAnimOverwrite(anim_third_current, anim_third_framePeak))
+		anim_third_framePeak = anim_third_current;
+
 	return msg;
 }
 

@@ -159,6 +159,10 @@ public:
 		}
 		else
 			consolePtr->printMsg("ERROR in_event_player_left" , "System", 'S');
+
+		//clear spectate ID if nessesary
+		if (p_conID == gamePtr->spectateID)
+			gamePtr->clearSpectateID();
 	}
 
 	virtual void event_bullet_hit_player(std::vector<BulletHitPlayerInfo> allhits) {};

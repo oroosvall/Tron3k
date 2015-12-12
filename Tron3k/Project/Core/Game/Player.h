@@ -6,6 +6,7 @@
 #include "Animation.h"
 #include "../Input.h"
 #include "../CameraInput.h"
+#include "../sharedStructs.h" //animation states
 
 #include "../../../Physics/Physics.h"
 
@@ -51,6 +52,11 @@ private:
 	glm::vec3 goalpos; //Used by non-local players to move smoothly
 	glm::vec3 goaldir; //Used by non-locals to turn smoothly
 	float goalTimer;
+
+	AnimationState anim_first_current;
+	AnimationState anim_first_framePeak; //send the highest ranked anim used since last frame
+	AnimationState anim_third_current;
+	AnimationState anim_third_framePeak;
 
 	bool isLocalPlayer;
 
