@@ -607,3 +607,52 @@ bool Player::getIfHacked()
 
 	return hacked;
 }
+
+glm::mat4 Player::getFPSmat()
+{
+	mat4 ret;
+	float v, h;
+	float rotateRad;
+	cam->getAngles(v, h);
+
+	//ROTATE 45* AROUND Y BECAUSE WEAPONG IN WIERD ANGLE??
+	//rotateRad = toRADIAN  *  -45.0f;
+	//mat4 rotFix = mat4(cos(rotateRad), 0.0f, -sin(rotateRad), 0.0f,
+	//	0.0f, 1.0f, 0.0f, 0.0f,
+	//	sin(rotateRad), 0.0f, cos(rotateRad), 0.0f,
+	//	0.0f, 0.0f, 0.0f, 1.0f);
+	//ret = ret * rotFix;
+
+	
+	//roatate around X
+	rotateRad = toRADIAN * -v;
+	mat4 rotV = mat4(1.0f , 0.0f, 0.0f, 0.0f,
+					0.0f, cos(rotateRad), -sin(rotateRad), 0.0f,
+					0.0f, sin(rotateRad), cos(rotateRad), 0.0f,
+					0.0f, 0.0f, 0.0f, 1.0f);
+
+	//roatate around Z
+	//rotateRad = toRADIAN * -v;
+	//mat4 rotV = mat4(cos(rotateRad), -sin(rotateRad), 0.0f, 0.0f,
+	//				sin(rotateRad), cos(rotateRad), 0.0f, 0.0f,
+	//				0.0f, 0.0f, 1.0f, 0.0f,
+	//				0.0f, 0.0f, 0.0f, 1.0f);
+
+
+	//roatate around Y
+	rotateRad = toRADIAN * h - 90;
+	mat4 rotH = mat4(cos(rotateRad), 0.0f, sin(rotateRad), 0.0f,
+				0.0f, 1.0f, 0.0f, 0.0f,
+				-sin(rotateRad), 0.0f, cos(rotateRad), 0.0f,
+				0.0f, 0.0f, 0.0f, 1.0f);
+
+	ret = ret * rotV * rotH;
+
+	//set positions       	//move the weapon a bit to the left
+	vec3 weaponPos = pos - normalize(cross(dir, vec3(0, 1, 0))) * 0.2f; // +dir;
+	ret[0].w = weaponPos.x;
+	ret[1].w = weaponPos.y;
+	ret[2].w = weaponPos.z;
+
+	return ret;
+}

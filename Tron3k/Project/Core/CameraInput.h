@@ -55,6 +55,8 @@ public:
 
 	glm::mat4 getSkyboxMat();
 
+	void getAngles(float &vertical, float &horizontal) { vertical = angleV; horizontal = angleH; };
+
 	static void release();
 };
 

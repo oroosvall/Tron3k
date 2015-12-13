@@ -410,5 +410,8 @@
     <ClInclude Include="Core\Game\Role\PlayerEffects\Modifiers\HackingDartModifier.h">
       <Filter>Source Files\Core\Game\Role\PlayerEffects\Modifiers</Filter>
     </ClInclude>
+    <ClInclude Include="Core\AnimationState.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

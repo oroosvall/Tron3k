@@ -6,7 +6,8 @@
 #include "Animation.h"
 #include "../Input.h"
 #include "../CameraInput.h"
-#include "../sharedStructs.h" //animation states
+#include "../sharedStructs.h" //spawnpoints transfere from renderpipe to game/player
+#include "../AnimationState.h"
 
 #include "../../../Physics/Physics.h"
 
@@ -128,6 +129,8 @@ public:
 	void healing(int amount);
 
 	Role* getRole() { return &role; };
+
+	glm::mat4 getFPSmat();
 
 	bool getIfHacked();
 };

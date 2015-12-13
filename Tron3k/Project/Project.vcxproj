@@ -69,6 +69,7 @@
     <ClCompile Include="Network\Server.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Core\AnimationState.h" />
     <ClInclude Include="Core\CameraInput.h" />
     <ClInclude Include="Core\Console.h" />
     <ClInclude Include="Core\Core.h" />

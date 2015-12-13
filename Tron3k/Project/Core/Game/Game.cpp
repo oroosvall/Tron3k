@@ -391,7 +391,7 @@ void Game::checkPlayerVWorldCollision(float dt)
 	{
 		if (playerList[i] != nullptr)
 		{
-			if (playerList[i]->isLocal() && playerList[i]->isAlive())
+			if (playerList[i]->isLocal()) // && playerList[i]->isAlive())
 			{
 				//playerList[i]->setGrounded(false);
 				foundLocal = true;

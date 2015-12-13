@@ -904,10 +904,8 @@ void Core::renderWorld(float dt)
 			else
 			{
 				if (game->getPlayer(game->spectateID)->isAlive()) // didnt fix the crash issue when spectating a player with a active hacking dart that dies
-				{
 					if (game->getPlayer(game->spectateID)->getIfHacked())
 						hackedTeam = game->getPlayer(game->spectateID)->getTeam(); //if we are hacked
-				}
 			}
 		}
 
@@ -918,7 +916,7 @@ void Core::renderWorld(float dt)
 			{
 				if (p->getTeam() != 0) //Don't render spectators!
 				{	
-					if (p->getHP() <= 0) { // set red
+					if (p->getHP() <= 0 || p->isAlive() == false) { // set red
 						dgColor[0] = 1; dgColor[1] = 0; dgColor[2] = 0;
 					}
 					else
@@ -943,11 +941,18 @@ void Core::renderWorld(float dt)
 					//static intense based on health
 					float hpval = float(p->getHP()) / 130.0f;
 
-					//renderPipe->renderPlayer(0, p->getWorldMat(), dgColor, hpval);
+					//If first person render
 					if (p->isLocal() && !game->freecam || game->spectateID == i)
-						renderPipe->renderAnimation(3, p->getWorldMat(), dgColor, hpval);
+					{
+						mat4 third = *p->getWorldMat();
+						mat4 first = p->getFPSmat();
+
+						renderPipe->renderAnimation(3, &p->getFPSmat(), dgColor, hpval);
+					}
 					else
+					{
 						renderPipe->renderAnimation(0, p->getWorldMat(), dgColor, hpval);
+					}
 				}
 			}
 		}

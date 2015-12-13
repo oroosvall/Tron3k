@@ -11,6 +11,7 @@
 #include "Lights.h"
 #include <vector>
 #include "../Project/Core/sharedStructs.h"
+#include "../Project/Core/AnimationState.h"
 
 enum PIPELINE_SETTINGS
 {
