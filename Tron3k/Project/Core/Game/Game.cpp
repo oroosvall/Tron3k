@@ -124,6 +124,7 @@ void Game::update(float dt)
 	{
 		checkPvPCollision();
 		checkPlayerVWorldCollision(dt);
+		checkFootsteps();
 	}
 
 	if (gameState == Gamestate::SERVER)
@@ -138,6 +139,8 @@ void Game::update(float dt)
 			playerUpdate(c, dt);
 		}
 	}
+
+	
 
 	for (unsigned int i = 0; i < BULLET_TYPE::NROFBULLETS; i++)
 	{
@@ -267,6 +270,29 @@ void Game::sendPlayerBox(std::vector<float> pBox)
 void Game::sendWorldBoxes(std::vector<std::vector<float>> wBoxes)
 {
 	physics->receiveWorldBoxes(wBoxes);
+}
+
+void Game::checkFootsteps()
+{
+	for (int i = 0; i < max_con; i++)
+	{
+		glm::vec3 pos;
+		glm::vec3 vel;
+
+		if (playerList[i] != nullptr && !playerList[i]->isLocal())
+		{
+			pos = playerList[i]->getPos();
+			vel = playerList[i]->getVelocity();
+			if (vel.x != 0 || vel.z !=0)
+			{
+				GetSound()->playFootsteps(playerList[i]->getRole()->getRole(), pos.x, pos.y, pos.z);
+				std::cout << vel.x << "     " << vel.y << endl;
+			}
+
+			
+			
+		}
+	}
 }
 
 void Game::checkPvPCollision()

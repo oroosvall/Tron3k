@@ -9,6 +9,7 @@
 #include <vector>
 #include <fstream>
 #include "../sharedStructs.h"
+#include <iostream>
 
 enum Gamestate
 {
@@ -72,6 +73,8 @@ private:
 	int max_con;
 	Player** playerList;
 	Physics* physics;
+
+	void checkFootsteps();
 
 	void loadRoles();
 	void initPhysics();
