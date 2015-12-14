@@ -286,7 +286,6 @@ void Game::checkFootsteps()
 			if (vel.x != 0 || vel.z !=0)
 			{
 				GetSound()->playFootsteps(playerList[i]->getRole()->getRole(), pos.x, pos.y, pos.z);
-				std::cout << vel.x << "     " << vel.y << endl;
 			}
 
 			
