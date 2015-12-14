@@ -219,7 +219,7 @@ void ReleaseSound()
 void SoundPlayer::playFootsteps(int role, float posX, float posY, float posZ)
 {
 	
-		this->footstepsCountdown = 0.7;
+		
 		this->footstepsLoop = false;
 		if (role == 0)
 		{
@@ -245,4 +245,14 @@ void SoundPlayer::footstepsLoopReset(float dt)
 bool SoundPlayer::getFootsteps()
 {
 	return this->footstepsLoop;
+}
+
+void SoundPlayer::setFootstepsCountdown()
+{
+	this->footstepsCountdown = 0.7;
+}
+
+void SoundPlayer::setFootstepsLoop(bool theBool)
+{
+	this->footstepsLoop = theBool;
 }

@@ -51,6 +51,9 @@ public:
 	static bool getSoundEnabler();
 	static bool getInitialized();
 
+	virtual void setFootstepsCountdown();
+	virtual void setFootstepsLoop(bool);
+
 	virtual void setVolumeMusic(float volume);
 	virtual void setVolumeSound(float volume);
 	virtual void setLocalPlayerDir(glm::vec3 playerDir);
