@@ -1,6 +1,7 @@
 #ifndef ROLE_H
 #define ROLE_H
 
+#include<sfml/Audio.hpp>
 #include "Weapon/WeaponTypes/AllWeapons.h"
 #include "Special/Special.h"
 #include "Special/SpecialTypes/AllSpecials.h"
@@ -18,13 +19,13 @@ enum PROPERTIES{HEALTH, MAINWEP, SECWEP, JUMPHEIGHT, MOVEMENTSPEED, NROFREADPROP
 class Role
 {
 	private:
+		int role;
 		int currentWpn;
 		int health;
 		int maxHealth;
 		float movementSpeed;
 		float jumpHeight;
 		string roles[NROFROLES];
-		
 		string loadedRoles[NROFROLES][NROFREADPROPERTIES];
 
 		void loadWeapons(int role, int wpn); //wpn = main or sec
@@ -74,5 +75,7 @@ class Role
 		void activateMeterGain() { gainSpecial = true; };
 
 		Special* getMobilityAbility() { return mobility; };
+
+		int getRole();
 };
 #endif

@@ -29,6 +29,8 @@ private:
 
 	~SoundPlayer();
 
+	bool footstepsLoop = false;
+	float footstepsCountdown = 0;
 
 	sf::Sound sounds[MAXSOUNDS];
 	sf::SoundBuffer soundList[SOUNDS::nrOfSounds];
@@ -59,6 +61,11 @@ public:
 	virtual int playUserGeneratedSound(int sound);
 
 	virtual void rotate(float deltaTime);
+
+	virtual void playFootsteps(int role, float posX, float posY, float posZ);
+	virtual void footstepsLoopReset(float dt);
+
+	virtual bool getFootsteps();
 
 };
 

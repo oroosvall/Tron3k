@@ -12,7 +12,7 @@ enum SOUNDS
 	soundEffectLinkGun,
 	soundEffectMelee,
 	firstBlood,
-
+	soundFootSteps,
 
 	nrOfSounds //leave last
 };

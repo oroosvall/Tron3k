@@ -125,6 +125,18 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 	
 	*/
 
+	if (vel.x != 0 || vel.z != 0)
+	{
+		if (!GetSound()->getFootsteps())
+		{
+			GetSound()->footstepsLoopReset(dt);
+		}
+		if (GetSound()->getFootsteps() && this->getGrounded())
+		{
+			GetSound()->playFootsteps(this->role.getRole(), pos.x, pos.y, pos.z);
+		}
+			
+	}
 	glm::vec3 playerVel = vel*role.getMovementSpeed();
 	pos += playerVel * dt; //Here we will also include external forces
 	if (freecam == false || specingThis == true)

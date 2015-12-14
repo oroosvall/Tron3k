@@ -35,6 +35,7 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->soundList[SOUNDS::soundEffectDiscGun].loadFromFile("GameFiles/Sound/soundEffectDiscGun.ogg");
 		singleton->soundList[SOUNDS::soundEffectLinkGun].loadFromFile("GameFiles/Sound/soundEffectLinkGun.ogg");
 		singleton->soundList[SOUNDS::soundEffectMelee].loadFromFile("GameFiles/Sound/soundEffectMelee.ogg");
+		singleton->soundList[SOUNDS::soundFootSteps].loadFromFile("GameFiles/Sound/soundFootSteps.ogg");
 
 		initialized = true;
 	}
@@ -173,7 +174,7 @@ int SoundPlayer::playMusic(int music)
 			return -1;
 		}
 
-		musicPlayer.play();
+		//musicPlayer.play();
 		musicPlayer.setLoop(true);
 	}
 
@@ -213,4 +214,35 @@ void InitSound(SoundPlayer* sound, int activateSound)
 void ReleaseSound()
 {
 	SoundPlayer::release();
+}
+
+void SoundPlayer::playFootsteps(int role, float posX, float posY, float posZ)
+{
+	
+		this->footstepsCountdown = 0.7;
+		this->footstepsLoop = false;
+		if (role == 0)
+		{
+			playExternalSound(SOUNDS::soundFootSteps, posX, posY, posZ);
+		}
+	
+	
+}
+
+void SoundPlayer::footstepsLoopReset(float dt)
+{
+	if (footstepsCountdown > FLT_EPSILON)
+	{
+		footstepsCountdown -= dt;
+	}
+
+	else
+	{
+		footstepsLoop = true;
+	}
+}
+
+bool SoundPlayer::getFootsteps()
+{
+	return this->footstepsLoop;
 }

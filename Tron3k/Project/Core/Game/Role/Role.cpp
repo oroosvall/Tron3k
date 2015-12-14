@@ -98,7 +98,7 @@ void Role::loadRoleSpecifics(int role)
 
 	switch (role)
 		case TRAPPER:
-	{
+	{		role = 0;
 			specialAbility = new Lightwall(this);
 			specialAbility->init();
 			mobility = new MultiJump();
@@ -107,6 +107,7 @@ void Role::loadRoleSpecifics(int role)
 			consumable->init(CONSUMABLE_TYPE::CLUSTERGRENADE);
 			break;
 		case DESTROYER:
+			role = 1;
 			specialAbility = new Lightwall(this);
 			specialAbility->init();
 			mobility = new MultiJump();
@@ -115,6 +116,7 @@ void Role::loadRoleSpecifics(int role)
 			consumable->init(CONSUMABLE_TYPE::OVERCHARGE);
 			break;
 		case MOBILITY:
+			role = 2;
 			specialAbility = new HackingDartSpecial(this);
 			specialAbility->init();
 			mobility = new MultiJump();
@@ -123,6 +125,7 @@ void Role::loadRoleSpecifics(int role)
 			consumable->init(CONSUMABLE_TYPE::LIGHTSPEED);
 			break;
 		case BRUTE:
+			role = 3;
 			specialAbility = new Lightwall(this);
 			specialAbility->init();
 			mobility = new MultiJump();
@@ -131,6 +134,7 @@ void Role::loadRoleSpecifics(int role)
 			consumable->init(CONSUMABLE_TYPE::THUNDERDOME);
 			break;
 		case MANIPULATOR:
+			role = 4;
 			specialAbility = new Lightwall(this);
 			specialAbility->init();
 			mobility = new MultiJump();
@@ -233,4 +237,9 @@ void Role::returnToLife()
 	consumable->reset();
 	weapons[0]->reset();
 	weapons[1]->reset();
+}
+
+int Role::getRole()
+{
+	return this->role;
 }
