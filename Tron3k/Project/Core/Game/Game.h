@@ -125,6 +125,8 @@ public:
 	void release();
 	void init(int max_connections, int state);
 
+	int getMaxCon();
+	Player** getPlayerList();
 	Player* getPlayer(int conID);
 	std::vector<Bullet*> getBullets(BULLET_TYPE type);
 	std::vector<Effect*> getEffects(EFFECT_TYPE type);

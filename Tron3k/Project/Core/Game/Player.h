@@ -18,6 +18,7 @@
 #include "Role/PlayerEffects/Effect.h"
 #include "Role/PlayerEffects/Modifier.h"
 #include "Role/Special/Special.h"
+#include <iostream>
 
 #include <string>
 
@@ -32,6 +33,9 @@ private:
 	Role role;
 	bool lockControls = false;
 
+
+	bool footstepsLoop = false;
+	float footstepsCountdown = 0;
 	std::string name;
 	glm::vec3 pos; //Current actual position
 	glm::vec3 dir; //Current viewing direction
@@ -77,6 +81,12 @@ public:
 	Player();
 	~Player();
 	void init(std::string name, glm::vec3 pos, bool isLocal = false);
+
+	void footstepsLoopReset(float dt);
+
+	bool getFootsteps();
+	void setFootstepsCountdown();
+	void setFootstepsLoop(bool);
 
 	PLAYERMSG update(float dt, bool freecam, bool spectatingThisPlayer, bool spectating);
 

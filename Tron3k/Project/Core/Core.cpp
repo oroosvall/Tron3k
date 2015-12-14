@@ -168,8 +168,10 @@ void Core::upRoam(float dt)
 		game->update(dt);
 		if (GetSoundActivated())
 		{
-			GetSound()->setLocalPlayerDir(game->getPlayer(0)->getDir());
-			GetSound()->setLocalPlayerPos(game->getPlayer(0)->getPos());
+		
+				GetSound()->setLocalPlayerDir(game->getPlayer(top->getConId())->getDir());
+				GetSound()->setLocalPlayerPos(game->getPlayer(top->getConId())->getPos());
+				
 		}
 
 		if (game->playerWantsToRespawn() && game->getPlayer(0)->getTeam() != 0)
@@ -275,8 +277,8 @@ void Core::upClient(float dt)
 
 		if (GetSoundActivated())
 		{
-			GetSound()->setLocalPlayerDir(game->getPlayer(0)->getDir());
-			GetSound()->setLocalPlayerPos(game->getPlayer(0)->getPos());
+			GetSound()->setLocalPlayerDir(game->getPlayer(top->getConId())->getDir());
+			GetSound()->setLocalPlayerPos(game->getPlayer(top->getConId())->getPos());
 		}
 
 		//Command and message handle

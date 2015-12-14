@@ -276,15 +276,18 @@ void Game::checkFootsteps()
 {
 	for (int i = 0; i < max_con; i++)
 	{
-		glm::vec3 pos;
-		glm::vec3 vel;
+		
 
-		if (playerList[i] != nullptr && !playerList[i]->isLocal())
+		if (playerList[i] != nullptr && !playerList[i]->isLocal() && playerList[i]->getFootsteps())
 		{
+			glm::vec3 pos;
+			glm::vec3 vel;
 			pos = playerList[i]->getPos();
 			vel = playerList[i]->getVelocity();
 			if (vel.x != 0 || vel.z !=0)
 			{
+				playerList[i]->setFootstepsCountdown();
+				playerList[i]->setFootstepsLoop(false);
 				GetSound()->playFootsteps(playerList[i]->getRole()->getRole(), pos.x, pos.y, pos.z);
 			}
 
@@ -292,6 +295,16 @@ void Game::checkFootsteps()
 			
 		}
 	}
+}
+
+int Game::getMaxCon()
+{
+	return this->max_con;
+}
+
+Player** Game::getPlayerList()
+{
+	return this->playerList;
 }
 
 void Game::checkPvPCollision()

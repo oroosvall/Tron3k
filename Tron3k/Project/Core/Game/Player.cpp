@@ -135,7 +135,7 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 		{
 			GetSound()->setFootstepsCountdown();
 			GetSound()->setFootstepsLoop(false);
-			//GetSound()->playFootsteps(this->role.getRole(), pos.x, pos.y, pos.z);
+			GetSound()->playFootsteps(this->role.getRole(), pos.x, pos.y, pos.z);
 		}
 			
 	}
@@ -146,6 +146,25 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 		cam->setCam(pos);
 		rotatePlayer(oldDir, dir);
 	}
+}
+
+void Player::footstepsLoopReset(float dt)
+{
+	if (footstepsCountdown > FLT_EPSILON)
+	{
+		footstepsCountdown -= dt;
+		std::cout << "j";
+	}
+
+	else
+	{
+		footstepsLoop = true;
+	}
+}
+
+bool Player::getFootsteps()
+{
+	return this->footstepsLoop;
 }
 
 void Player::modifiersGetData(float dt)
@@ -161,6 +180,16 @@ void Player::modifiersGetData(float dt)
 			c--;
 		}
 	}
+}
+
+void Player::setFootstepsCountdown()
+{
+	this->footstepsCountdown = 0.7;
+}
+
+void Player::setFootstepsLoop(bool theBool)
+{
+	this->footstepsLoop = theBool;
 }
 
 void Player::modifiersSetData(float dt)
@@ -226,6 +255,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 	modifiersGetData(dt);
 
+	footstepsLoopReset(dt);
 	vec3 olddir = cam->getDir();
 	if (isLocalPlayer) // even if we are the local player we can be dead and spectating some one
 	{
