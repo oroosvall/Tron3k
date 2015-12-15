@@ -220,7 +220,6 @@ void SoundPlayer::playFootsteps(int role, float posX, float posY, float posZ)
 {
 	
 		
-		this->footstepsLoop = false;
 		if (role == 0)
 		{
 			playExternalSound(SOUNDS::soundFootSteps, posX, posY, posZ);
