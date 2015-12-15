@@ -354,6 +354,7 @@ void ContentManager::renderPlayer(int playerID, glm::mat4 world, GLuint uniformK
 	else if (playerID == 1)
 	{
 		glDisable(GL_DEPTH_TEST);
+		glEnable(GL_BLEND);
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, textures[3].textureID);
@@ -371,6 +372,7 @@ void ContentManager::renderPlayer(int playerID, glm::mat4 world, GLuint uniformK
 		glDrawElements(GL_TRIANGLES, skybox.faceCount * 3, GL_UNSIGNED_SHORT, 0);
 
 		glEnable(GL_DEPTH_TEST);
+		glDisable(GL_BLEND);
 	}
 	else if (playerID == 2)
 	{
