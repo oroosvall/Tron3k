@@ -24,6 +24,7 @@ public:
 	void render(/*glm::vec3 playerPos, glm::vec3 playerDir*/);
 
 	void clearLights();
+	void clearBuffers();
 	void pushLights(SpotLight* light, int nrLight);
 
 	GLuint* shaderPtr;

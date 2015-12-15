@@ -218,6 +218,14 @@ void Gbuffer::clearLights()
 	nrOfLights = 0;
 }
 
+void Gbuffer::clearBuffers()
+{
+	float clear = 0.0f;
+	glClear(GL_DEPTH_BUFFER_BIT);
+	//glClearBufferfv(GL_COLOR, 1, &clear);
+	//glClearBufferfv(GL_COLOR, 2, &clear);
+}
+
 void Gbuffer::generate(int x, int y)
 {
 	rTexture = new RenderTarget[nrTextures];
