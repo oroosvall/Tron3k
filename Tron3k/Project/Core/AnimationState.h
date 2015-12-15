@@ -3,6 +3,7 @@
 
 enum AnimationState
 {
+	none,
 	//first person
 	first_idle,
 	first_run,

@@ -949,46 +949,46 @@ void Core::renderWorld(float dt)
 						mat4 third = *p->getWorldMat();
 						mat4 first = p->getFPSmat();
 
-						renderPipe->renderAnimation(3, &p->getFPSmat(), dgColor, hpval);
+						renderPipe->renderAnimation(3, &p->getFPSmat(), AnimationState::none, dgColor, hpval);
 					}
 					else
 					{
-						renderPipe->renderAnimation(0, p->getWorldMat(), dgColor, hpval);
+						renderPipe->renderAnimation(0, p->getWorldMat(), AnimationState::none, dgColor, hpval);
 					}
 				}
 			}
 		}
 
-			for (int c = 0; c < BULLET_TYPE::NROFBULLETS; c++)
+		for (int c = 0; c < BULLET_TYPE::NROFBULLETS; c++)
+		{
+			dgColor[0] = 0; dgColor[1] = 0; dgColor[2] = 0;
+
+			std::vector<Bullet*> bullets = game->getBullets(BULLET_TYPE(c));
+			for (unsigned int i = 0; i < bullets.size(); i++)
 			{
-				dgColor[0] = 0; dgColor[1] = 0; dgColor[2] = 0;
-
-				std::vector<Bullet*> bullets = game->getBullets(BULLET_TYPE(c));
-				for (unsigned int i = 0; i < bullets.size(); i++)
-				{
-					renderPipe->renderPlayer(2, bullets[i]->getWorldMat(), dgColor, 1.0f);
-				}
+				renderPipe->renderPlayer(2, bullets[i]->getWorldMat(), dgColor, 1.0f);
 			}
-
-			renderPipe->render();
-
-			float herpderpOffset = 0;
-			for (int c = 0; c < EFFECT_TYPE::NROFEFFECTS; c++)
-			{
-				dgColor[0] = 0; dgColor[1] = 0; dgColor[2] = 0;
-
-				std::vector<Effect*> eff = game->getEffects(EFFECT_TYPE(c));
-				for (unsigned int i = 0; i < eff.size(); i++)
-				{
-					LightwallEffect* derp = (LightwallEffect*)eff[i];
-					renderPipe->renderWallEffect(&derp->pos, &derp->endPoint, herpderpOffset);
-
-					herpderpOffset += glm::distance(derp->pos, derp->endPoint);
-				}
-			}
-
-			renderPipe->finalizeRender();
 		}
+
+		renderPipe->render();
+
+		float herpderpOffset = 0;
+		for (int c = 0; c < EFFECT_TYPE::NROFEFFECTS; c++)
+		{
+			dgColor[0] = 0; dgColor[1] = 0; dgColor[2] = 0;
+
+			std::vector<Effect*> eff = game->getEffects(EFFECT_TYPE(c));
+			for (unsigned int i = 0; i < eff.size(); i++)
+			{
+				LightwallEffect* derp = (LightwallEffect*)eff[i];
+				renderPipe->renderWallEffect(&derp->pos, &derp->endPoint, herpderpOffset);
+
+				herpderpOffset += glm::distance(derp->pos, derp->endPoint);
+			}
+		}
+
+		renderPipe->finalizeRender();
+	}
 }
 
 void Core::createWindow(int x, int y, bool fullscreen)

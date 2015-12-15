@@ -393,7 +393,7 @@ void RenderPipeline::renderPlayer(int playerID, void* world, float* dgColor, flo
 	contMan.renderPlayer(playerID, *(glm::mat4*)world, uniformKeyMatrixLocation);
 }
 
-void RenderPipeline::renderAnimation(int playerID, void* world, float* dgColor, float sgInten)
+void RenderPipeline::renderAnimation(int playerID, void* world, AnimationState animState, float* dgColor, float sgInten)
 {
 	glUseProgram(animationShader);
 
