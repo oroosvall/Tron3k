@@ -129,6 +129,11 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	GLenum shaderTypesAnimation[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
 	CreateProgram(animationShader, shaderNamesAnimation, shaderTypesAnimation, 2);
 
+	//Glow Shader
+	std::string shaderNamesGlow[] = { "GameFiles/Shaders/GlowFade_vs.glsl", "GameFiles/Shaders/GlowFade_fs.glsl" };
+	GLenum shaderTypesGlow[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
+	CreateProgram(glowShaderTweeks, shaderNamesGlow, shaderTypesGlow, 2);
+
 	worldMat[0] = glGetUniformLocation(regularShader, "WorldMatrix"); //worldMat regular shader
 	viewMat = glGetUniformLocation(regularShader, "ViewMatrix"); //view
 	viewProjMat[0] = glGetUniformLocation(regularShader, "ViewProjMatrix"); //view regular shader
@@ -160,6 +165,10 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	uniformStaticGlowIntensityLocation[1] = glGetUniformLocation(animationShader, "staticGlowIntensity"); //animation shader
 
 	uniformKeyMatrixLocation = glGetUniformBlockIndex(animationShader, "boneMatrices");
+
+	uniformGlowTimeDelta = glGetUniformLocation(glowShaderTweeks, "deltaTime");
+	uniformGlowFalloff = glGetUniformLocation(glowShaderTweeks, "falloff");
+	uniformGlowTexture = glGetUniformLocation(glowShaderTweeks, "glowAdd");
 
 	cam.setViewProjMat(regularShader, viewProjMat[0]);
 	cam.setViewProjMat(animationShader, viewProjMat[1]);
@@ -223,6 +232,7 @@ void RenderPipeline::release()
 void RenderPipeline::update(float x, float y, float z, float dt)
 {
 	timepass += dt;
+	delta = dt;
 	//set camera matrixes
 	cam.setViewMat(regularShader, viewMat);
 	cam.setViewProjMat(regularShader, viewProjMat[0]);
@@ -250,7 +260,9 @@ void RenderPipeline::renderIni()
 {
 	glUseProgram(regularShader);
 	gBuffer->bind(GL_FRAMEBUFFER);
+	
 	gBuffer->clearBuffers();
+
 }
 
 void RenderPipeline::render()
@@ -276,6 +288,12 @@ void RenderPipeline::finalizeRender()
 			{
 				gBuffer->pushLights(&contMan.testMap.chunks[n].lights[k], 1);
 			}
+
+	glUseProgram(glowShaderTweeks);
+	
+	glProgramUniform1fv(glowShaderTweeks, uniformGlowTimeDelta, 1, &delta);
+
+	gBuffer->preRender(glowShaderTweeks, uniformGlowTexture);
 
 	//GBuffer Render
 	glBindFramebuffer(GL_FRAMEBUFFER, NULL);

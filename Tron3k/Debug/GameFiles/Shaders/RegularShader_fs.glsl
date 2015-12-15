@@ -38,5 +38,6 @@ void main()
 	WorldPosOut	= vec4(Position, 1.0);					
 	DiffuseOut	= texture(textureSample, vec2(UV.x, 1-UV.y));	
 	NormalOut = CalcBumpedNormal();
-	GlowMap = (texture(glowSpecSample, vec2(UV.x, 1-UV.y)) * staticGlowIntensity) + vec4((1.0 - normalMap.w) * dynamicGlowColor, 0) + 0.1f;
+	GlowMap = (texture(glowSpecSample, vec2(UV.x, 1-UV.y)) * staticGlowIntensity) + vec4((1.0 - normalMap.w) * dynamicGlowColor, 0);
+	GlowMap = clamp(GlowMap, vec4(0.0f), vec4(1.0f));
 }

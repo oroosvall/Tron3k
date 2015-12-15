@@ -852,13 +852,13 @@ void Core::renderWorld(float dt)
 	if (renderPipe && game)
 	{
 		//send chunk glowvalues
-		vec3 color = { 1, 1, 1 };
+		vec3 color = { 0.3, 0.3, 0.3 };
 		renderPipe->setChunkColorAndInten(0, &color[0], 1);
-		color = { 0, 0, 1 };
+		color = { 0, 0, 0.3 };
 		renderPipe->setChunkColorAndInten(1, &color[0], 1);
-		color = { 1, 0, 0 };
+		color = { 0.3, 0, 0 };
 		renderPipe->setChunkColorAndInten(2, &color[0], 1);
-		color = { 0, 1, 0 };
+		color = { 0, 0.3, 0 };
 		renderPipe->setChunkColorAndInten(3, &color[0], 1);
 
 

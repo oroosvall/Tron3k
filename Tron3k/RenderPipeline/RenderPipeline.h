@@ -42,6 +42,7 @@ private:
 
 	GLuint regularShader;
 	GLuint animationShader;
+	GLuint glowShaderTweeks;
 
 	GLuint worldMat[2];
 	GLuint viewProjMat[2];
@@ -52,6 +53,10 @@ private:
 	GLuint uniformGlowSpecLocation[2];
 	GLuint uniformDynamicGlowColorLocation[2];
 	GLuint uniformStaticGlowIntensityLocation[2];
+
+	GLuint uniformGlowTimeDelta;
+	GLuint uniformGlowFalloff;
+	GLuint uniformGlowTexture;
 
 	GLuint uniformKeyMatrixLocation;
 
@@ -70,6 +75,7 @@ private:
 	GLuint lw_vp;
 
 	float timepass = 0;
+	float delta = 0;
 
 	bool initialized;
 
