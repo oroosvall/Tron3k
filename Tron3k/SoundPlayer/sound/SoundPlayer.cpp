@@ -228,31 +228,3 @@ void SoundPlayer::playFootsteps(int role, float posX, float posY, float posZ)
 	
 	
 }
-
-void SoundPlayer::footstepsLoopReset(float dt)
-{
-	if (footstepsCountdown > FLT_EPSILON)
-	{
-		footstepsCountdown -= dt;
-	}
-
-	else
-	{
-		footstepsLoop = true;
-	}
-}
-
-bool SoundPlayer::getFootsteps()
-{
-	return this->footstepsLoop;
-}
-
-void SoundPlayer::setFootstepsCountdown()
-{
-	this->footstepsCountdown = 0.7;
-}
-
-void SoundPlayer::setFootstepsLoop(bool theBool)
-{
-	this->footstepsLoop = theBool;
-}

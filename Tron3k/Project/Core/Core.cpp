@@ -169,8 +169,8 @@ void Core::upRoam(float dt)
 		if (GetSoundActivated())
 		{
 		
-				GetSound()->setLocalPlayerDir(game->getPlayer(top->getConId())->getDir());
-				GetSound()->setLocalPlayerPos(game->getPlayer(top->getConId())->getPos());
+				GetSound()->setLocalPlayerDir(game->getPlayer(0)->getDir());
+				GetSound()->setLocalPlayerPos(game->getPlayer(0)->getPos());
 				
 		}
 

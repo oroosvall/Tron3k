@@ -127,14 +127,14 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 
 	if (vel.x != 0 || vel.z != 0)
 	{
-		if (!GetSound()->getFootsteps())
+		if (!this->getFootsteps())
 		{
-			GetSound()->footstepsLoopReset(dt);
+			this->footstepsLoopReset(dt);
 		}
-		if (GetSound()->getFootsteps() && this->getGrounded())
+		if (this->getFootsteps() && this->getGrounded())
 		{
-			GetSound()->setFootstepsCountdown();
-			GetSound()->setFootstepsLoop(false);
+			this->setFootstepsCountdown();
+			this->setFootstepsLoop(false);
 			GetSound()->playFootsteps(this->role.getRole(), pos.x, pos.y, pos.z);
 		}
 			
