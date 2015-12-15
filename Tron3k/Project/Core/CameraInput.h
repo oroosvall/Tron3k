@@ -53,6 +53,8 @@ public:
 	void setCam(vec3 _pos, vec3 _dir);
 	void setCam(vec3 _pos);
 
+	glm::mat4* getViewMat() { return viewMat; };
+
 	glm::mat4 getSkyboxMat();
 
 	void getAngles(float &vertical, float &horizontal) { vertical = angleV; horizontal = angleH; };
