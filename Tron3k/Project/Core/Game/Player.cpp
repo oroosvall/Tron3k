@@ -607,7 +607,13 @@ void Player::addModifier(MODIFIER_TYPE mt)
 			m = new HackingDartModifier();
 			myModifiers.push_back(m);
 		}
-			break;
+		break;
+		case MODIFIER_TYPE::LIGHTSPEEDMODIFIER:
+		{
+			m = new LightSpeed();
+			myModifiers.push_back(m);
+		}
+		break;
 	}
 	myModifiers[myModifiers.size() - 1]->init(this);
 }

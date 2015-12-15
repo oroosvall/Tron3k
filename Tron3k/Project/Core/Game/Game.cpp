@@ -667,6 +667,9 @@ void Game::addBulletToList(int conID, int bulletId, BULLET_TYPE bt, glm::vec3 po
 	case BULLET_TYPE::HACKING_DART:
 		b = new HackingDart(pos, dir, conID, bulletId, p->getTeam(), BULLET_TYPE::HACKING_DART);
 		break;
+	case BULLET_TYPE::MELEE_ATTACK:
+		b = new MeleeAttack(pos, dir, conID, bulletId, p->getTeam(), BULLET_TYPE::MELEE_ATTACK);
+		break;
 	}
 
 	bullets[bt].push_back(b);
@@ -711,6 +714,7 @@ void Game::handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm
 		if (gameState != Gamestate::SERVER)
 			if (GetSound())
 				GetSound()->playExternalSound(SOUNDS::soundEffectMelee, pos.x, pos.y, pos.z);
+		addBulletToList(conID, bulletId, BULLET_TYPE::MELEE_ATTACK, pos, dir);
 		break;
 
 	case WEAPON_TYPE::GRENADE_LAUNCHER:
@@ -765,6 +769,7 @@ void Game::handleConsumableUse(int conID, CONSUMABLE_TYPE ct, glm::vec3 pos, glm
 		addBulletToList(conID, 0, BULLET_TYPE::VACUUM_GRENADE, pos, dir);
 		break;
 	case CONSUMABLE_TYPE::LIGHTSPEED:
+		playerList[conID]->addModifier(LIGHTSPEEDMODIFIER);
 		break;
 	case CONSUMABLE_TYPE::THUNDERDOME:
 		break;

@@ -7,6 +7,7 @@
 
 #include "MobilityBullets\DiscShot.h"
 #include "MobilityBullets\HackingDart.h"
+#include "MobilityBullets\MeleeAttack.h"
 
 #include "ManipulatorBullets\BatterySlowShot.h"
 #include "ManipulatorBullets\BatterySpeedShot.h"
