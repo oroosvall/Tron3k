@@ -19,7 +19,7 @@ void PulseRifle::init()
 
 	currentBulletId = 0;
 
-	firingSpeed = 0.3f;
+	firingSpeed = 0.5f;
 	firingSpeedCurrentDelay = 0.0f;
 
 	reloadTime = 1.0f;
