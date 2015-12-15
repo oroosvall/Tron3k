@@ -74,7 +74,7 @@ private:
 	Player** playerList;
 	Physics* physics;
 
-	void checkFootsteps();
+	void checkFootsteps(float dt);
 
 	void loadRoles();
 	void initPhysics();

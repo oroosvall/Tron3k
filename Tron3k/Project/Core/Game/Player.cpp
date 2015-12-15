@@ -124,13 +124,14 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 	Lägg till matematik för kollisioner här!!
 	
 	*/
-
-	if (vel.x != 0 || vel.z != 0)
-	{
-		if (!this->getFootsteps())
+	if (!this->getFootsteps())
 		{
 			this->footstepsLoopReset(dt);
 		}
+
+	if (vel.x != 0 || vel.z != 0)
+	{
+		
 		if (this->getFootsteps() && this->getGrounded())
 		{
 			this->setFootstepsCountdown();
@@ -153,7 +154,6 @@ void Player::footstepsLoopReset(float dt)
 	if (footstepsCountdown > FLT_EPSILON)
 	{
 		footstepsCountdown -= dt;
-		std::cout << "j";
 	}
 
 	else
@@ -255,7 +255,6 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 	modifiersGetData(dt);
 
-	footstepsLoopReset(dt);
 	vec3 olddir = cam->getDir();
 	if (isLocalPlayer) // even if we are the local player we can be dead and spectating some one
 	{

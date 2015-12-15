@@ -124,7 +124,7 @@ void Game::update(float dt)
 	{
 		checkPvPCollision();
 		checkPlayerVWorldCollision(dt);
-		checkFootsteps();
+		checkFootsteps(dt);
 	}
 
 	if (gameState == Gamestate::SERVER)
@@ -272,27 +272,35 @@ void Game::sendWorldBoxes(std::vector<std::vector<float>> wBoxes)
 	physics->receiveWorldBoxes(wBoxes);
 }
 
-void Game::checkFootsteps()
+void Game::checkFootsteps(float dt)
 {
 	for (int i = 0; i < max_con; i++)
 	{
+		if (playerList[i] != nullptr && !playerList[i]->isLocal())
+		{
+			if (!playerList[i]->getFootsteps())
+			{
+				playerList[i]->footstepsLoopReset(dt);
+			}
+			
+		
 		
 
-		if (playerList[i] != nullptr && !playerList[i]->isLocal() && playerList[i]->getFootsteps())
-		{
-			glm::vec3 pos;
-			glm::vec3 vel;
-			pos = playerList[i]->getPos();
-			vel = playerList[i]->getVelocity();
-			if (vel.x != 0 || vel.z !=0)
+			if (playerList[i]->getFootsteps())
 			{
-				playerList[i]->setFootstepsCountdown();
-				playerList[i]->setFootstepsLoop(false);
-				GetSound()->playFootsteps(playerList[i]->getRole()->getRole(), pos.x, pos.y, pos.z);
-			}
+				glm::vec3 pos;
+				glm::vec3 vel;
+				pos = playerList[i]->getPos();
+				vel = playerList[i]->getVelocity();
+				if (vel.x != 0 || vel.z != 0)
+				{
+					playerList[i]->setFootstepsCountdown();
+					playerList[i]->setFootstepsLoop(false);
+					GetSound()->playFootsteps(playerList[i]->getRole()->getRole(), pos.x, pos.y, pos.z);
+				}
 
-			
-			
+
+			}
 		}
 	}
 }
