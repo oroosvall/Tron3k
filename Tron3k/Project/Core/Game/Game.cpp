@@ -296,7 +296,8 @@ void Game::checkFootsteps(float dt)
 				{
 					playerList[i]->setFootstepsCountdown();
 					playerList[i]->setFootstepsLoop(false);
-					GetSound()->playFootsteps(playerList[i]->getRole()->getRole(), pos.x, pos.y, pos.z);
+					if(GetSoundActivated())
+						GetSound()->playFootsteps(playerList[i]->getRole()->getRole(), pos.x, pos.y, pos.z);
 				}
 
 
@@ -393,7 +394,7 @@ void Game::checkPlayerVBulletCollision()
 					{
 						int pid = -1, bid = -1;
 						bullets[b][j]->getId(pid, bid);
-						if (bullets[b][j]->getTeamId() != playerList[i]->getTeam() && playerList[i]->getTeam() != 0) //Don't shoot same team, don't shoot spectators
+						if ((bullets[b][j]->getTeamId() != playerList[i]->getTeam() && playerList[i]->getTeam() != 0) || playerList[i]->getIfHacked()) //Don't shoot same team, don't shoot spectators
 						{
 							if (playerList[i]->isAlive()) //Don't shoot dead people
 								collides = physics->checkPlayerVBulletCollision(playerList[i]->getPos(), bullets[b][j]->getPos());
