@@ -147,10 +147,10 @@ void ContentManager::init()
 	bullet.load("GameFiles/TestFiles/bullet.v");
 
 	testAnimationMesh.init();
-	testAnimationMesh.load("GameFiles/CharacterFiles/Tron3k_animTest_thirdPerson.bin");
+	testAnimationMesh.load("GameFiles/CharacterFiles/trapper_third_person.bin");
 
 	testFirstPerson.init();
-	testFirstPerson.load("GameFiles/CharacterFiles/Tron3k_animTest_firstPerson.bin");
+	testFirstPerson.load("GameFiles/CharacterFiles/trapper_first_person.bin");
 }
 
 void ContentManager::release()
