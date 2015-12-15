@@ -1,9 +1,0 @@
-###### HEADER ######
-MaterialCount: 1
-TextureCount: 0
-IndexCount: 156
-VertexCount: 104
-AnimationCount: 1
-JointCount: 7
-
-Offset: 156
