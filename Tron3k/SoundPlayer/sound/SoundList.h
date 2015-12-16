@@ -13,6 +13,7 @@ enum SOUNDS
 	soundEffectMelee,
 	firstBlood,
 	soundFootSteps,
+	soundStepsManipulator,
 
 	nrOfSounds //leave last
 };

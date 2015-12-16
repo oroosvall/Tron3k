@@ -3,5 +3,7 @@
 
 #include "LightWallLockedControls.h"
 #include "HackingDartModifier.h"
+#include "LightSpeed.h"
+#include "Overcharge.h"
 
 #endif

@@ -14,16 +14,16 @@ void PlasmaAutorifle::init()
 {
 	weaponType = WEAPON_TYPE::PLASMA_AUTORIFLE;
 
-	maxClipSize = 36;
+	maxClipSize = 62;
 	currentClipAmmo = maxClipSize;
 
 	currentBulletId = 0;
 
 	firingSpeed = 0.25f;
-	firingSpeedCurrentDelay = firingSpeed;
+	firingSpeedCurrentDelay = 0.0f;
 
-	reloadTime = 1.0f;
-	rldTimer = reloadTime;
+	reloadTime = 2.5f;
+	rldTimer = 0.0f;
 }
 
 int PlasmaAutorifle::update(float deltaTime)

@@ -76,6 +76,9 @@ class Role
 
 		Special* getMobilityAbility() { return mobility; };
 
+		void setMovementSpeed(float speed) { movementSpeed = speed; };
+		string getLoadedRoleSpecific(int i, int y) { return loadedRoles[i][y]; };
+
 		int getRole();
 };
 #endif

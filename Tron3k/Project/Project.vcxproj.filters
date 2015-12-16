@@ -231,6 +231,15 @@
     <ClCompile Include="Core\Game\Role\PlayerEffects\Modifiers\HackingDartModifier.cpp">
       <Filter>Source Files\Core\Game\Role\PlayerEffects\Modifiers</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\MobilityBullets\MeleeAttack.cpp">
+      <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\MobilityBullets</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Game\Role\PlayerEffects\Modifiers\LightSpeed.cpp">
+      <Filter>Source Files\Core\Game\Role\PlayerEffects\Modifiers</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Game\Role\PlayerEffects\Modifiers\Overcharge.cpp">
+      <Filter>Source Files\Core\Game\Role\PlayerEffects\Modifiers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Input.h">
@@ -412,6 +421,15 @@
     </ClInclude>
     <ClInclude Include="Core\AnimationState.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\MobilityBullets\MeleeAttack.h">
+      <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\MobilityBullets</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\PlayerEffects\Modifiers\LightSpeed.h">
+      <Filter>Source Files\Core\Game\Role\PlayerEffects\Modifiers</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\PlayerEffects\Modifiers\Overcharge.h">
+      <Filter>Source Files\Core\Game\Role\PlayerEffects\Modifiers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

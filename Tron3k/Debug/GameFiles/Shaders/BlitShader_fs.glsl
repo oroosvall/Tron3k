@@ -28,7 +28,8 @@ void main()
 	else if(Use == 3)	 
 		fragment_color = texture(Normal, vec2(UV.x, UV.y));
 	else if(Use == 4)	 
-		fragment_color = texture(UVcord, vec2(UV.x, UV.y));
+		//fragment_color = texture(UVcord, vec2(UV.x, UV.y));
+		fragment_color = vec4(1.0f);
 	else if(Use == 5)
 		fragment_color = texture(Diffuse, vec2(UV.x, UV.y));
 	else

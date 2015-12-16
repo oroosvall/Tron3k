@@ -108,26 +108,88 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_CULL_FACE); 
 
-	gBuffer->shaderPtr = new GLuint();
+	reloadShaders();
+
+	cam.setViewProjMat(regularShader, viewProjMat[0]);
+	cam.setViewProjMat(animationShader, viewProjMat[1]);
+	cam.setViewMat(regularShader, viewMat);
+
+	gBuffer->init(WindowWidth, WindowHeight, 5, true);
+
+	contMan.init();
+
+	
+	//light wall init INIT 2 points then change all info though uniforms to build quads
+	glGenBuffers(1, &lwVertexDataId);
+	glBindBuffer(GL_ARRAY_BUFFER, lwVertexDataId);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * 2 , &lwPosDefault[0], GL_STATIC_DRAW);
+	glGenVertexArrays(1, &lwVertexAttribute);
+	glBindVertexArray(lwVertexAttribute);
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, BUFFER_OFFSET(0));
+
+	initialized = true;
+	return true;
+}
+
+void RenderPipeline::reloadShaders()
+{
+	std::cout << "Loading shaders\n";
+
+	GLuint temp;
+
+	if(gBuffer->shaderPtr == nullptr)
+		gBuffer->shaderPtr = new GLuint();
 	std::string shaderNamesDeffered[] = { "GameFiles/Shaders/BlitLightShader_vs.glsl", "GameFiles/Shaders/BlitLightShader_fs.glsl" };
 	GLenum shaderTypesDeffered[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
-	CreateProgram(*gBuffer->shaderPtr, shaderNamesDeffered, shaderTypesDeffered, 2);
+	CreateProgram(temp, shaderNamesDeffered, shaderTypesDeffered, 2);
+	if (temp != 0)
+	{
+		*gBuffer->shaderPtr = temp;
+		temp = 0;
+	}
 
 	//portal shader
-	gBuffer->portal_shaderPtr = new GLuint();
+	if (gBuffer->portal_shaderPtr == nullptr)
+		gBuffer->portal_shaderPtr = new GLuint();
 	std::string shaderPortalRender[] = { "GameFiles/Shaders/portal_vs.glsl", "GameFiles/Shaders/portal_fs.glsl" };
 	GLenum shaderTypesPortal[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
-	CreateProgram(*gBuffer->portal_shaderPtr, shaderPortalRender, shaderTypesPortal, 2);
-
+	CreateProgram(temp, shaderPortalRender, shaderTypesPortal, 2);
+	if (temp != 0)
+	{
+		*gBuffer->portal_shaderPtr = temp;
+		temp = 0;
+	}
 
 	std::string shaderNamesRegular[] = { "GameFiles/Shaders/RegularShader_vs.glsl", "GameFiles/Shaders/RegularShader_gs.glsl", "GameFiles/Shaders/RegularShader_fs.glsl" };
 	GLenum shaderTypesRegular[] = { GL_VERTEX_SHADER, GL_GEOMETRY_SHADER, GL_FRAGMENT_SHADER };
-	CreateProgram(regularShader, shaderNamesRegular, shaderTypesRegular, 3);
+	CreateProgram(temp, shaderNamesRegular, shaderTypesRegular, 3);
+	if (temp != 0)
+	{
+		regularShader = temp;
+		temp = 0;
+	}
 
 	//Skeleton Animation Shader
 	std::string shaderNamesAnimation[] = { "GameFiles/Shaders/SkeletonAnimation_vs.glsl", "GameFiles/Shaders/SkeletonAnimation_fs.glsl" };
 	GLenum shaderTypesAnimation[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
-	CreateProgram(animationShader, shaderNamesAnimation, shaderTypesAnimation, 2);
+	CreateProgram(temp, shaderNamesAnimation, shaderTypesAnimation, 2);
+	if (temp != 0)
+	{
+		animationShader = temp;
+		temp = 0;
+	}
+
+	//Glow Shader
+	std::string shaderNamesGlow[] = { "GameFiles/Shaders/GlowFade_vs.glsl", "GameFiles/Shaders/GlowFade_fs.glsl" };
+	GLenum shaderTypesGlow[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
+	CreateProgram(temp, shaderNamesGlow, shaderTypesGlow, 2);
+	if (temp != 0)
+	{
+		glowShaderTweeks = temp;
+		temp = 0;
+	}
 
 	worldMat[0] = glGetUniformLocation(regularShader, "WorldMatrix"); //worldMat regular shader
 	viewMat = glGetUniformLocation(regularShader, "ViewMatrix"); //view
@@ -155,44 +217,38 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 	uniformDynamicGlowColorLocation[0] = glGetUniformLocation(regularShader, "dynamicGlowColor"); //regular shader
 	uniformStaticGlowIntensityLocation[0] = glGetUniformLocation(regularShader, "staticGlowIntensity"); //regular shader
+	uniformGlowTrail[0] = glGetUniformLocation(regularShader, "trail"); //regular shader
 
 	uniformDynamicGlowColorLocation[1] = glGetUniformLocation(animationShader, "dynamicGlowColor"); //animation shader
 	uniformStaticGlowIntensityLocation[1] = glGetUniformLocation(animationShader, "staticGlowIntensity"); //animation shader
+	uniformGlowTrail[1] = glGetUniformLocation(animationShader, "trail"); //animation shader
 
 	uniformKeyMatrixLocation = glGetUniformBlockIndex(animationShader, "boneMatrices");
 
-	cam.setViewProjMat(regularShader, viewProjMat[0]);
-	cam.setViewProjMat(animationShader, viewProjMat[1]);
-	cam.setViewMat(regularShader, viewMat);
+	uniformGlowTimeDelta = glGetUniformLocation(glowShaderTweeks, "deltaTime");
+	uniformGlowFalloff = glGetUniformLocation(glowShaderTweeks, "falloff");
+	uniformGlowTexture = glGetUniformLocation(glowShaderTweeks, "glowAdd");
+	uniformGlowSelf = glGetUniformLocation(glowShaderTweeks, "self");
 
-	gBuffer->init(WindowWidth, WindowHeight, 5, true);
-
-	contMan.init();
-
-	
-	//light wall init INIT 2 points then change all info though uniforms to build quads
-	glGenBuffers(1, &lwVertexDataId);
-	glBindBuffer(GL_ARRAY_BUFFER, lwVertexDataId);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * 2 , &lwPosDefault[0], GL_STATIC_DRAW);
-	glGenVertexArrays(1, &lwVertexAttribute);
-	glBindVertexArray(lwVertexAttribute);
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, BUFFER_OFFSET(0));
 	//build shader
 	std::string shaderNamesLW[] = { "GameFiles/Shaders/lw_shader_vs.glsl", "GameFiles/Shaders/lw_shader_gs.glsl", "GameFiles/Shaders/lw_shader_fs.glsl" };
 	GLenum shaderTypesLW[] = { GL_VERTEX_SHADER, GL_GEOMETRY_SHADER, GL_FRAGMENT_SHADER };
-	CreateProgram(lw_Shader, shaderNamesLW, shaderTypesLW, 3);
+	CreateProgram(temp, shaderNamesLW, shaderTypesLW, 3);
+	if (temp != 0)
+	{
+		lw_Shader = temp;
+		temp = 0;
+	}
 	//get uniform locations
 	lw_pos1 = glGetUniformLocation(lw_Shader, "pos1");
-	lw_pos2	= glGetUniformLocation(lw_Shader, "pos2");
-	lw_uv1	= glGetUniformLocation(lw_Shader, "uv1");
-	lw_uv2	= glGetUniformLocation(lw_Shader, "uv2");
-	lw_vp	= glGetUniformLocation(lw_Shader, "ViewProjMatrix");
-	lw_tex	= glGetUniformLocation(lw_Shader, "texsample");
+	lw_pos2 = glGetUniformLocation(lw_Shader, "pos2");
+	lw_uv1 = glGetUniformLocation(lw_Shader, "uv1");
+	lw_uv2 = glGetUniformLocation(lw_Shader, "uv2");
+	lw_vp = glGetUniformLocation(lw_Shader, "ViewProjMatrix");
+	lw_tex = glGetUniformLocation(lw_Shader, "texsample");
 
-	initialized = true;
-	return true;
+	std::cout << "Done loading shaders\n";
+
 }
 
 void RenderPipeline::release()
@@ -251,11 +307,16 @@ void RenderPipeline::renderIni()
 {
 	glUseProgram(regularShader);
 	gBuffer->bind(GL_FRAMEBUFFER);
+	
 	gBuffer->clearBuffers();
+
 }
 
 void RenderPipeline::render()
 {
+
+	glProgramUniform1f(regularShader, uniformGlowTrail[0], 0.0f);
+
 	contMan.renderChunks(regularShader, worldMat[0], uniformTextureLocation[0], uniformNormalLocation[0], uniformGlowSpecLocation[0], uniformDynamicGlowColorLocation[0], uniformStaticGlowIntensityLocation[0],  *gBuffer->portal_shaderPtr, gBuffer->portal_model);
 	
 	//glDepthMask(GL_TRUE);glEnable(GL_CULL_FACE);glDisable(GL_BLEND);)
@@ -277,6 +338,12 @@ void RenderPipeline::finalizeRender()
 			{
 				gBuffer->pushLights(&contMan.testMap.chunks[n].lights[k], 1);
 			}
+
+	glUseProgram(glowShaderTweeks);
+	
+	glProgramUniform1fv(glowShaderTweeks, uniformGlowTimeDelta, 1, &delta);
+
+	gBuffer->preRender(glowShaderTweeks, uniformGlowTexture, uniformGlowSelf);
 
 	//GBuffer Render
 	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
@@ -385,6 +452,11 @@ void RenderPipeline::renderMISC(int miscID, void* world, float* dgColor, float s
 	glProgramUniform1f(regularShader, uniformStaticGlowIntensityLocation[0], sgInten);
 	glProgramUniform3fv(regularShader, uniformDynamicGlowColorLocation[0], 1, (GLfloat*)&dgColor[0]);
 
+	if(miscID != -3)
+		glProgramUniform1f(regularShader, uniformGlowTrail[0], 1.0f);
+	else
+		glProgramUniform1f(regularShader, uniformGlowTrail[0], 0.0f);
+
 	//set temp objects worldmat
 	glProgramUniformMatrix4fv(regularShader, worldMat[0], 1, GL_FALSE, (GLfloat*)world);
 	
@@ -404,6 +476,7 @@ void RenderPipeline::renderAnimation(int playerID, void* world, AnimationState a
 	//Glow values for player
 	glProgramUniform1f(animationShader, uniformStaticGlowIntensityLocation[1], sgInten);
 	glProgramUniform3fv(animationShader, uniformDynamicGlowColorLocation[1], 1, (GLfloat*)&dgColor[0]);
+	glProgramUniform1f(animationShader, uniformGlowTrail[1], 1.0f);
 
 	//Texture for the glow
 	glProgramUniform1i(animationShader, uniformTextureLocation[1], 0);

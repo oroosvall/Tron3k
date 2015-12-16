@@ -5,7 +5,7 @@ PulseShot::PulseShot(glm::vec3 position, glm::vec3 direction, int pID, int bID, 
 {
 	initValues(position, direction, pID, bID, tID);
 	vel = 70.0f;
-	damage = 10;
+	damage = 15;
 }
 
 PulseShot::~PulseShot()

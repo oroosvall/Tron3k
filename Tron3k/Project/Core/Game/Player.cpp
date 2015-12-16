@@ -536,6 +536,7 @@ void Player::rotatePlayer(vec3 olddir, vec3 newdir)
 {
 	float angle = atan2(newdir.x, newdir.z) - atan2(olddir.x, olddir.z);
 	rotate(0, -angle, 0);
+	dir = newdir;
 }
 
 Weapon* Player::getPlayerCurrentWeapon()
@@ -607,7 +608,13 @@ void Player::addModifier(MODIFIER_TYPE mt)
 			m = new HackingDartModifier();
 			myModifiers.push_back(m);
 		}
-			break;
+		break;
+		case MODIFIER_TYPE::LIGHTSPEEDMODIFIER:
+		{
+			m = new LightSpeed();
+			myModifiers.push_back(m);
+		}
+		break;
 	}
 	myModifiers[myModifiers.size() - 1]->init(this);
 }
@@ -619,15 +626,21 @@ void Player::setRole(Role role)
 	this->role.chooseRole(TRAPPER);
 }
 
-void Player::respawn(glm::vec3 respawnPos)
-{
+void Player::respawn(glm::vec3 respawnPos, glm::vec3 _dir)
+{	
+	//reset matrix
+	worldMat = mat4();
+	rotatePlayer(vec3(0 ,0 ,1 ), _dir);
 	pos = respawnPos;
+
+	worldMat[0].w = pos.x;
+	worldMat[1].w = pos.y;
+	worldMat[2].w = pos.z;
+	goaldir = _dir;
+
 	vel = glm::vec3(0, 0, 0);
 	if (isLocalPlayer)
 		cam->setCam(pos, dir);
-	worldMat[0].w = pos.x;
-	worldMat[1].w = pos.y - 0.6f;
-	worldMat[2].w = pos.z;
 	isDead = false;
 	cleanseModifiers();
 	role.returnToLife();

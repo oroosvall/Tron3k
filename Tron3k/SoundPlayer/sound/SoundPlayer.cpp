@@ -36,6 +36,7 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->soundList[SOUNDS::soundEffectLinkGun].loadFromFile("GameFiles/Sound/soundEffectLinkGun.ogg");
 		singleton->soundList[SOUNDS::soundEffectMelee].loadFromFile("GameFiles/Sound/soundEffectMelee.ogg");
 		singleton->soundList[SOUNDS::soundFootSteps].loadFromFile("GameFiles/Sound/soundFootSteps.ogg");
+		singleton->soundList[SOUNDS::soundStepsManipulator].loadFromFile("GameFiles/Sound/SoundStepsManipulator.ogg");
 
 		initialized = true;
 	}
@@ -224,6 +225,27 @@ void SoundPlayer::playFootsteps(int role, float posX, float posY, float posZ)
 		{
 			playExternalSound(SOUNDS::soundFootSteps, posX, posY, posZ);
 		}
+
+		if (role == 1)
+		{
+			playExternalSound(SOUNDS::soundFootSteps, posX, posY, posZ);
+		}
+
+		if (role == 2)
+		{
+			playExternalSound(SOUNDS::soundFootSteps, posX, posY, posZ);
+		}
+
+		if (role == 3)
+		{
+			playExternalSound(SOUNDS::soundFootSteps, posX, posY, posZ);
+		}
+
+		if (role == 4)
+		{
+			playExternalSound(SOUNDS::soundStepsManipulator, posX, posY, posZ);
+		}
 	
 	
 }
+

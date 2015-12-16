@@ -327,7 +327,7 @@ void ContentManager::renderPlayer(int renderID, int keyframe, glm::mat4 world, G
 	if (renderID == -3) //skybox
 	{
 		glDisable(GL_DEPTH_TEST);
-		glEnable(GL_BLEND);
+		//glEnable(GL_BLEND);
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, textures[3].textureID);
@@ -345,7 +345,7 @@ void ContentManager::renderPlayer(int renderID, int keyframe, glm::mat4 world, G
 		glDrawElements(GL_TRIANGLES, skybox.faceCount * 3, GL_UNSIGNED_SHORT, 0);
 
 		glEnable(GL_DEPTH_TEST);
-		glDisable(GL_BLEND);
+		//glDisable(GL_BLEND);
 	}
 	else if (renderID == -2) //bullet
 	{
@@ -353,7 +353,7 @@ void ContentManager::renderPlayer(int renderID, int keyframe, glm::mat4 world, G
 		glBindTexture(GL_TEXTURE_2D, textures[10].textureID);
 
 		glActiveTexture(GL_TEXTURE0 + 1);
-		glBindTexture(GL_TEXTURE_2D, textures[4].textureID);
+		glBindTexture(GL_TEXTURE_2D, textures[8].textureID);
 
 		glActiveTexture(GL_TEXTURE0 + 2);
 		glBindTexture(GL_TEXTURE_2D, textures[11].textureID);

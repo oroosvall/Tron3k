@@ -25,7 +25,7 @@ bool HackingDartSpecial::allowedToActivate(Player* p)
 {
 	bool allowed = false;
 	
-	if (p->getRole()->getSpecialMeter() - 100.0f < FLT_EPSILON && p->getRole()->getSpecialMeter() - 100.0f > -FLT_EPSILON)
+	if (p->getRole()->getSpecialMeter() >= 100)
 	{
 		p->getRole()->setSpecialMeter(0.0f);
 		allowed = true;

@@ -76,10 +76,19 @@ void Core::update(float dt)
 	default:						break;
 	}
 
+	if (renderPipe)
+	{
+		if (i->justPressed(GLFW_KEY_8))
+		{
+			renderPipe->reloadShaders();
+		}
+	}
+
 	i->clearOnPress();
 	console.discardCommandAndLastMsg();
 
 	glfwSwapBuffers(win);
+
 
 	//TEMPORARY
 	static bool given = false;
@@ -546,7 +555,7 @@ void Core::roamHandleCmds()
 			if (token != "/team" || token == "0" || token == "1" || token == "2")
 			{
 				int team = stoi(token);
-				game->addPlayerToTeam(0, team);
+				game->addPlayerToTeam(0, team, 0);
 				game->allowPlayerRespawn(0, 0); //Add new spawn point probably
 				if (team != 0)
 					game->freecam = false;
@@ -856,13 +865,13 @@ void Core::renderWorld(float dt)
 	if (renderPipe && game)
 	{
 		//send chunk glowvalues
-		vec3 color = { 1, 1, 1 };
+		vec3 color = { 0.7, 0.7, 0.7 };
 		renderPipe->setChunkColorAndInten(0, &color[0], 1);
-		color = { 0, 0, 1 };
+		color = { 0, 0, 0.7 };
 		renderPipe->setChunkColorAndInten(1, &color[0], 1);
-		color = { 1, 0, 0 };
+		color = { 0.7, 0, 0 };
 		renderPipe->setChunkColorAndInten(2, &color[0], 1);
-		color = { 0, 1, 0 };
+		color = { 0, 0.7, 0 };
 		renderPipe->setChunkColorAndInten(3, &color[0], 1);
 
 

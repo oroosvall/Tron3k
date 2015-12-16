@@ -55,7 +55,23 @@ void Gbuffer::init(int x, int y, int nrTex, bool depth)
 
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
+	glGenFramebuffers(1, &glowReduce);
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, glowReduce);
+
+	glowTexture.init(x, y, 0, false);
+	glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + 1, GL_TEXTURE_2D, glowTexture.getTargetId(), 0);
+
+	GLenum glowTextureBuffers[2] = { GL_NONE, GL_COLOR_ATTACHMENT0 + 1 };
+	glDrawBuffers(2, glowTextureBuffers);
 	
+	Status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+
+	if (Status != GL_FRAMEBUFFER_COMPLETE) {
+		throw;
+	}
+
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+
 	if (!shaderPtr)
 	{
 		throw;
@@ -176,6 +192,27 @@ void Gbuffer::bind(GLuint target)
 	glBindFramebuffer(target, targetId);
 }
 
+void Gbuffer::preRender(GLuint shader, GLuint texture, GLuint self)
+{
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, rTexture[4].getTargetId());
+	glProgramUniform1i(shader, texture, 0);
+	
+	glActiveTexture(GL_TEXTURE0 + 1);
+	glBindTexture(GL_TEXTURE_2D, glowTexture.getTargetId());
+	glProgramUniform1i(shader, self, 1);
+
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, glowReduce);
+
+	blitQuads[5].BindVertData();
+
+	glDisable(GL_DEPTH_TEST);
+	//glEnable(GL_BLEND);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	glEnable(GL_DEPTH_TEST);
+	//glDisable(GL_BLEND);
+}
+
 void Gbuffer::render(/*glm::vec3 playerPos, glm::vec3 playerDir*/)
 {
 	// bind shader
@@ -185,7 +222,14 @@ void Gbuffer::render(/*glm::vec3 playerPos, glm::vec3 playerDir*/)
 	for (int i = 0; i < nrTextures; i++)
 	{
 		glActiveTexture(GL_TEXTURE0 + i);
-		glBindTexture(GL_TEXTURE_2D, rTexture[i].getTargetId());
+		if (i == 4)
+		{
+			glBindTexture(GL_TEXTURE_2D, glowTexture.getTargetId());
+		}
+		else
+		{
+			glBindTexture(GL_TEXTURE_2D, rTexture[i].getTargetId());
+		}
 		glProgramUniform1i(*shaderPtr, uniformBitsList[i], i);
 	}
 	
@@ -222,8 +266,9 @@ void Gbuffer::clearBuffers()
 {
 	float clear = 0.0f;
 	glClear(GL_DEPTH_BUFFER_BIT);
-	//glClearBufferfv(GL_COLOR, 1, &clear);
-	//glClearBufferfv(GL_COLOR, 2, &clear);
+	glClearBufferfv(GL_COLOR, 1, &clear);
+	glClearBufferfv(GL_COLOR, 2, &clear);
+	glClearBufferfv(GL_COLOR, 3, &clear);
 }
 
 void Gbuffer::generate(int x, int y)

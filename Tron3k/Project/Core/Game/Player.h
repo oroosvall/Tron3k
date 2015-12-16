@@ -144,7 +144,7 @@ public:
 
 	void setRole(Role role);
 
-	void respawn(glm::vec3 respawnPos);
+	void respawn(glm::vec3 respawnPos, glm::vec3 dir);
 
 	void healing(int amount);
 

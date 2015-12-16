@@ -199,7 +199,6 @@ void Game::playerUpdate(int conid, float dt)
 	{
 		registerConsumable(playerList[conid]);
 	}
-
 	if (msg == PLAYERMSG::DEATH)
 	{
 		freecam = true;
@@ -576,7 +575,7 @@ void Game::removeConIDfromTeams(int conID)
 	}
 }
 
-void Game::addPlayerToTeam(int p_conID, int team)
+void Game::addPlayerToTeam(int p_conID, int team, int spawnPosition)
 {
 	switch (team)
 	{
@@ -593,7 +592,7 @@ void Game::addPlayerToTeam(int p_conID, int team)
 		//	delete playerList[p_conID];
 		teamOne.push_back(p_conID);
 		playerList[p_conID]->setTeam(1);
-		allowPlayerRespawn(p_conID, teamOne.size() - 1);
+		allowPlayerRespawn(p_conID, spawnPosition);
 
 		//if (playerList[p_conID]->isLocal())
 		//{
@@ -606,7 +605,7 @@ void Game::addPlayerToTeam(int p_conID, int team)
 		//	delete playerList[p_conID];
 		teamTwo.push_back(p_conID);
 		playerList[p_conID]->setTeam(2);
-		allowPlayerRespawn(p_conID, teamTwo.size() - 1);
+		allowPlayerRespawn(p_conID, spawnPosition);
 		break;
 	}
 }
@@ -667,6 +666,9 @@ void Game::addBulletToList(int conID, int bulletId, BULLET_TYPE bt, glm::vec3 po
 	case BULLET_TYPE::HACKING_DART:
 		b = new HackingDart(pos, dir, conID, bulletId, p->getTeam(), BULLET_TYPE::HACKING_DART);
 		break;
+	case BULLET_TYPE::MELEE_ATTACK:
+		b = new MeleeAttack(pos, dir, conID, bulletId, p->getTeam(), BULLET_TYPE::MELEE_ATTACK);
+		break;
 	}
 
 	bullets[bt].push_back(b);
@@ -711,6 +713,7 @@ void Game::handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm
 		if (gameState != Gamestate::SERVER)
 			if (GetSound())
 				GetSound()->playExternalSound(SOUNDS::soundEffectMelee, pos.x, pos.y, pos.z);
+		addBulletToList(conID, bulletId, BULLET_TYPE::MELEE_ATTACK, pos, dir);
 		break;
 
 	case WEAPON_TYPE::GRENADE_LAUNCHER:
@@ -760,11 +763,13 @@ void Game::handleConsumableUse(int conID, CONSUMABLE_TYPE ct, glm::vec3 pos, glm
 		addBulletToList(conID, 0, BULLET_TYPE::CLUSTER_GRENADE, pos, dir);
 		break;
 	case CONSUMABLE_TYPE::OVERCHARGE:
+		playerList[conID]->addModifier(OVERCHARGEMODIFIER);
 		break;
 	case CONSUMABLE_TYPE::VACUUMGRENADE:
 		addBulletToList(conID, 0, BULLET_TYPE::VACUUM_GRENADE, pos, dir);
 		break;
 	case CONSUMABLE_TYPE::LIGHTSPEED:
+		playerList[conID]->addModifier(LIGHTSPEEDMODIFIER);
 		break;
 	case CONSUMABLE_TYPE::THUNDERDOME:
 		break;
@@ -986,7 +991,7 @@ bool Game::playerWantsToRespawn()
 
 void Game::allowPlayerRespawn(int p_conID, int respawnPosition)
 {
-	playerList[p_conID]->respawn(spawnpoints[playerList[p_conID]->getTeam()][respawnPosition].pos);
+	playerList[p_conID]->respawn(spawnpoints[playerList[p_conID]->getTeam()][respawnPosition].pos, spawnpoints[playerList[p_conID]->getTeam()][respawnPosition].dir);
 	localPlayerWantsRespawn = false;
 	localPlayerRespawnWaiting = false;
 	if (playerList[p_conID]->isLocal())
