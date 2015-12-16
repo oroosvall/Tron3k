@@ -763,6 +763,7 @@ void Game::handleConsumableUse(int conID, CONSUMABLE_TYPE ct, glm::vec3 pos, glm
 		addBulletToList(conID, 0, BULLET_TYPE::CLUSTER_GRENADE, pos, dir);
 		break;
 	case CONSUMABLE_TYPE::OVERCHARGE:
+		playerList[conID]->addModifier(OVERCHARGEMODIFIER);
 		break;
 	case CONSUMABLE_TYPE::VACUUMGRENADE:
 		addBulletToList(conID, 0, BULLET_TYPE::VACUUM_GRENADE, pos, dir);

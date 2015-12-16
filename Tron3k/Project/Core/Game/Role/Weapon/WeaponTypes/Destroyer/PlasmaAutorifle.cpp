@@ -20,10 +20,10 @@ void PlasmaAutorifle::init()
 	currentBulletId = 0;
 
 	firingSpeed = 0.25f;
-	firingSpeedCurrentDelay = firingSpeed;
+	firingSpeedCurrentDelay = 0.0f;
 
 	reloadTime = 2.5f;
-	rldTimer = reloadTime;
+	rldTimer = 0.0f;
 }
 
 int PlasmaAutorifle::update(float deltaTime)
