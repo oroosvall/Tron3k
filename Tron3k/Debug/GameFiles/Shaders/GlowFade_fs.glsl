@@ -11,7 +11,7 @@ layout (location = 1) out vec4 GlowMap;
 
 void main()									
 {	
-	GlowMap += vec4(0.0f, 0.0f, 0.0f, 5.0f * deltaTime);
+	GlowMap += vec4(0.0f, 0.0f, 0.0f, 1.0f);
 	
 	vec4 addColor = texture(glowAdd, UV);
 	
