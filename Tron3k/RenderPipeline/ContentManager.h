@@ -69,7 +69,7 @@ public:
 
 	void renderChunks(GLuint shader, GLuint shaderLocation, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation, GLuint DglowColor, GLuint SglowColor, GLuint portal_shader, GLuint portal_world);
 
-	void renderPlayer(int playerID, glm::mat4 world, GLuint uniformKeyMatrixLocation);
+	void renderPlayer(int renderID, int keyframe, glm::mat4 world, GLuint uniformKeyMatrixLocation);
 
 	int getPortalID(glm::vec3 oldpos, glm::vec3 newpos) { return testMap.getChunkID(oldpos, newpos); }
 

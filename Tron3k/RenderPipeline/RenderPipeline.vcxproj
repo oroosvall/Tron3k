@@ -150,6 +150,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AnimatedMesh.cpp" />
+    <ClCompile Include="AnimManager.cpp" />
     <ClCompile Include="BlitQuad.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ContentManager.cpp" />
@@ -166,6 +167,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimatedMesh.h" />
+    <ClInclude Include="AnimManager.h" />
     <ClInclude Include="BlitQuad.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ContentManager.h" />

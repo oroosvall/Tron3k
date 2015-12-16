@@ -52,9 +52,15 @@ int static getAnimRank(AnimationState test)
 
 bool static checkAnimOverwrite(AnimationState current, AnimationState test)
 {
-	//dont cancle animation if it's the same animation
 	if (current == test)
-		return false;
+	{
+		//idle, run, air, death dont cancel if compared to themselves
+		if(getAnimRank(current) == 0 || getAnimRank(current) == 2)
+			return false;
+		//reload, jumpend and other rank 1 do cancel out themselves
+		return true;
+	}
+		
 
 	//a higher anim index always cancles out current anim
 	if (current < test)

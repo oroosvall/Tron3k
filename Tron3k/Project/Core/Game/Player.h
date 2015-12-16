@@ -97,6 +97,15 @@ public:
 
 	void applyGravity(Physics* p, float dt);
 
+	AnimationState getAnimState_f_c() { return anim_first_current; };
+	AnimationState getAnimState_f_p() { return anim_first_framePeak; };
+	AnimationState getAnimState_t_c() { return anim_third_current; };
+	AnimationState getAnimState_t_p() { return anim_third_framePeak; };
+	void setAnimState_f_c(AnimationState set) { anim_first_current = set; };
+	void setAnimState_f_p(AnimationState set) { anim_first_framePeak = set; };
+	void setAnimState_t_c(AnimationState set) { anim_third_current = set; };
+	void setAnimState_t_p(AnimationState set) { anim_third_framePeak = set; };
+
 	std::string getName() { return name; };
 	glm::vec3 getPos() { return pos; };
 	void setPos(glm::vec3 pos) 

@@ -45,7 +45,7 @@ public:
 
 	~AnimatedMesh();
 
-	void update(float deltaTime);
+	void update(int setFrame);
 	void setAnimation(int animID);
 
 	void load(std::string fileName);

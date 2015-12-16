@@ -41,16 +41,16 @@ AnimatedMesh::~AnimatedMesh()
 
 }
 
-void AnimatedMesh::update(float deltaTime)
+void AnimatedMesh::update(int setFrame)
 {
-	currentKeyFrame++;
+	currentKeyFrame = setFrame;
 
-	if (currentKeyFrame / 5 >= animationKeyCounts[activeAnimation])
+	if (currentKeyFrame >= animationKeyCounts[activeAnimation])
 	{
 		currentKeyFrame = 0;
 	}
 
-	memcpy(matrixBufferDataOneKey, animations[0].keyFrames[currentKeyFrame / 5].jointTransform, sizeof(glm::mat4)*jointCount);
+	memcpy(matrixBufferDataOneKey, animations[0].keyFrames[currentKeyFrame].jointTransform, sizeof(glm::mat4)*jointCount);
 	glBindBuffer(GL_UNIFORM_BUFFER, matricesBuffer);
 	glBufferData(GL_UNIFORM_BUFFER, sizeof(animationMatrices)* jointCount, matrixBufferDataOneKey, GL_STATIC_DRAW);
 	

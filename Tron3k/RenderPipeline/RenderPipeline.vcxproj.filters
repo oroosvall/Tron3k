@@ -84,6 +84,9 @@
     <ClCompile Include="Effects\LightWall.cpp">
       <Filter>Source Files\Effects</Filter>
     </ClCompile>
+    <ClCompile Include="AnimManager.cpp">
+      <Filter>Source Files\Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IRenderPipeline.h">
@@ -142,6 +145,9 @@
     </ClInclude>
     <ClInclude Include="Effects\LightWall.h">
       <Filter>Source Files\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimManager.h">
+      <Filter>Source Files\Manager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

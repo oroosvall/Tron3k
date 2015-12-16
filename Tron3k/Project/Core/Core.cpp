@@ -191,6 +191,8 @@ void Core::upRoam(float dt)
 			WEAPON_TYPE wt;
 			int bID;
 			game->getLatestWeaponFired(0, wt, bID);
+			//test
+			game->getPlayer(0)->setAnimState_f_c(AnimationState::first_reload);
 		}
 
 		if (game->consumableReady())
@@ -320,6 +322,8 @@ void Core::upClient(float dt)
 				int bID;
 				game->getLatestWeaponFired(top->getConId(), wt, bID);
 				top->frame_fire(wt, top->getConId(), bID, local->getPos(), local->getDir());
+				//test
+				game->getPlayer(top->getConId())->setAnimState_f_c(AnimationState::first_reload);
 			}
 
 			if (game->consumableReady())
@@ -870,7 +874,7 @@ void Core::renderWorld(float dt)
 		float dgColor[3];
 		//render skybox
 		dgColor[0] = 0; dgColor[1] = 0; dgColor[2] = 0;
-		renderPipe->renderPlayer(1, (void*)&(CameraInput::getCam()->getSkyboxMat()), dgColor, 0.0f);
+		renderPipe->renderMISC(-3, (void*)&(CameraInput::getCam()->getSkyboxMat()), dgColor, 0.0f);
 
 		//send all lights
 		bool firstLight = true;
@@ -946,14 +950,11 @@ void Core::renderWorld(float dt)
 					//If first person render
 					if (p->isLocal() && !game->freecam || game->spectateID == i)
 					{
-						mat4 third = *p->getWorldMat();
-						mat4 first = p->getFPSmat();
-
-						renderPipe->renderAnimation(3, &p->getFPSmat(), AnimationState::none, dgColor, hpval);
+						renderPipe->renderAnimation(i, &p->getFPSmat(), p->getAnimState_f_c(), dgColor, hpval);
 					}
 					else
 					{
-						renderPipe->renderAnimation(0, p->getWorldMat(), AnimationState::none, dgColor, hpval);
+						renderPipe->renderAnimation(i, p->getWorldMat(), p->getAnimState_t_c(), dgColor, hpval);
 					}
 				}
 			}
@@ -966,7 +967,7 @@ void Core::renderWorld(float dt)
 			std::vector<Bullet*> bullets = game->getBullets(BULLET_TYPE(c));
 			for (unsigned int i = 0; i < bullets.size(); i++)
 			{
-				renderPipe->renderPlayer(2, bullets[i]->getWorldMat(), dgColor, 1.0f);
+				renderPipe->renderMISC(-2, bullets[i]->getWorldMat(), dgColor, 1.0f);
 			}
 		}
 

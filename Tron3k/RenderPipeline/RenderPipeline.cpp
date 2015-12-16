@@ -223,6 +223,7 @@ void RenderPipeline::release()
 void RenderPipeline::update(float x, float y, float z, float dt)
 {
 	timepass += dt;
+	delta = dt;
 	//set camera matrixes
 	cam.setViewMat(regularShader, viewMat);
 	cam.setViewProjMat(regularShader, viewProjMat[0]);
@@ -376,7 +377,7 @@ void RenderPipeline::setChunkColorAndInten(int ID, float* color, float inten)
 	contMan.testMap.chunks[ID].staticIntes = inten;
 }
 
-void RenderPipeline::renderPlayer(int playerID, void* world, float* dgColor, float sgInten)
+void RenderPipeline::renderMISC(int miscID, void* world, float* dgColor, float sgInten)
 {
 	glUseProgram(regularShader);
 
@@ -390,11 +391,14 @@ void RenderPipeline::renderPlayer(int playerID, void* world, float* dgColor, flo
 	//set temp objects worldmat
 	glProgramUniformMatrix4fv(regularShader, worldMat[0], 1, GL_FALSE, (GLfloat*)world);
 
-	contMan.renderPlayer(playerID, *(glm::mat4*)world, uniformKeyMatrixLocation);
+	contMan.renderPlayer(miscID, 0, *(glm::mat4*)world, uniformKeyMatrixLocation);
 }
 
 void RenderPipeline::renderAnimation(int playerID, void* world, AnimationState animState, float* dgColor, float sgInten)
 {
+	//update the animstate
+	anims.updateAnimStates(playerID, 0, animState, delta);
+
 	glUseProgram(animationShader);
 
 	//Glow values for player
@@ -409,7 +413,7 @@ void RenderPipeline::renderAnimation(int playerID, void* world, AnimationState a
 	//set temp objects worldmat
 	glProgramUniformMatrix4fv(animationShader, worldMat[1], 1, GL_FALSE, (GLfloat*)world);
 
-	contMan.renderPlayer(playerID, *(glm::mat4*)world, uniformKeyMatrixLocation);
+	contMan.renderPlayer(anims.animStates[playerID].state , anims.animStates[playerID].frame, *(glm::mat4*)world, uniformKeyMatrixLocation);
 }
 
 bool RenderPipeline::setSetting(PIPELINE_SETTINGS type, PipelineValues value)

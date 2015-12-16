@@ -322,36 +322,9 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 	}
 }
 
-void ContentManager::renderPlayer(int playerID, glm::mat4 world, GLuint uniformKeyMatrixLocation)
+void ContentManager::renderPlayer(int renderID, int keyframe, glm::mat4 world, GLuint uniformKeyMatrixLocation)
 {
-	if (playerID == 0)
-	{
-		//diffuse
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, textures[7].textureID);
-
-		//normal dynamic glow
-		glActiveTexture(GL_TEXTURE0 + 1);
-		glBindTexture(GL_TEXTURE_2D, textures[8].textureID);
-
-		//static glow
-		glActiveTexture(GL_TEXTURE0 + 2);
-		glBindTexture(GL_TEXTURE_2D, textures[9].textureID);
-
-		//Bone Matrices
-		//glProgramUniformMatrix4fv();
-
-		//glBindVertexArray(playerModels[playerID].vao);
-		//glBindBuffer(GL_ARRAY_BUFFER, playerModels[playerID].meshID);
-		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, playerModels[playerID].index);
-		//
-		//glDrawElements(GL_TRIANGLES, playerModels[playerID].facecount * 3, GL_UNSIGNED_SHORT, 0);
-
-		testAnimationMesh.update(0);
-		testAnimationMesh.draw(uniformKeyMatrixLocation);
-
-	}
-	else if (playerID == 1)
+	if (renderID == -3) //skybox
 	{
 		glDisable(GL_DEPTH_TEST);
 		glEnable(GL_BLEND);
@@ -374,7 +347,7 @@ void ContentManager::renderPlayer(int playerID, glm::mat4 world, GLuint uniformK
 		glEnable(GL_DEPTH_TEST);
 		glDisable(GL_BLEND);
 	}
-	else if (playerID == 2)
+	else if (renderID == -2) //bullet
 	{
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, textures[10].textureID);
@@ -392,26 +365,85 @@ void ContentManager::renderPlayer(int playerID, glm::mat4 world, GLuint uniformK
 		glDrawElements(GL_TRIANGLES, bullet.faceCount * 3, GL_UNSIGNED_SHORT, 0);
 	}
 
-	else if (playerID == 3)
+	// ----------- Character Animations ---------- //
+	// --- FPS
+	else if (renderID == 0) //none
 	{
-		//diffuse
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, textures[7].textureID);
-
-		//normal dynamic glow
-		glActiveTexture(GL_TEXTURE0 + 1);
-		glBindTexture(GL_TEXTURE_2D, textures[8].textureID);
-
-		//static glow
-		glActiveTexture(GL_TEXTURE0 + 2);
-		glBindTexture(GL_TEXTURE_2D, textures[9].textureID);
-		
-		testFirstPerson.update(0);
-		testFirstPerson.draw(uniformKeyMatrixLocation);
 
 	}
+	else if (renderID == 1) // first_idle
+	{
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, textures[7].textureID);
+		glActiveTexture(GL_TEXTURE0 + 1);
+		glBindTexture(GL_TEXTURE_2D, textures[8].textureID);
+		glActiveTexture(GL_TEXTURE0 + 2);
+		glBindTexture(GL_TEXTURE_2D, textures[9].textureID);
+		testFirstPerson.update(0);
+		testFirstPerson.draw(uniformKeyMatrixLocation);
+	}
+	else if (renderID == 2) //first_run
+	{
+		
+	}
+	else if (renderID == 3) //first_air
+	{
 
+	}
+	else if (renderID == 4) //first_fire
+	{
 
+	}
+	else if (renderID == 5) //first_reload
+	{
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, textures[7].textureID);
+		glActiveTexture(GL_TEXTURE0 + 1);
+		glBindTexture(GL_TEXTURE_2D, textures[8].textureID);
+		glActiveTexture(GL_TEXTURE0 + 2);
+		glBindTexture(GL_TEXTURE_2D, textures[9].textureID);
+		testFirstPerson.update(keyframe);
+		testFirstPerson.draw(uniformKeyMatrixLocation);
+	}
+	// --- Third Person
+	else if (renderID == 6) //third_idle
+	{
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, textures[7].textureID);
+		glActiveTexture(GL_TEXTURE0 + 1);
+		glBindTexture(GL_TEXTURE_2D, textures[8].textureID);
+		glActiveTexture(GL_TEXTURE0 + 2);
+		glBindTexture(GL_TEXTURE_2D, textures[9].textureID);
+		testAnimationMesh.update(0);
+		testAnimationMesh.draw(uniformKeyMatrixLocation);
+	}
+	else if (renderID == 7) //third_run
+	{
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, textures[7].textureID);
+		glActiveTexture(GL_TEXTURE0 + 1);
+		glBindTexture(GL_TEXTURE_2D, textures[8].textureID);
+		glActiveTexture(GL_TEXTURE0 + 2);
+		glBindTexture(GL_TEXTURE_2D, textures[9].textureID);
+		testAnimationMesh.update(keyframe);
+		testAnimationMesh.draw(uniformKeyMatrixLocation);
+	}
+	else if (renderID == 8) //third_air
+	{
+
+	}
+	else if (renderID == 9) //third_jump_begin
+	{
+
+	}
+	else if (renderID == 10) //third_jump_end
+	{
+
+	}
+	else if (renderID == 11) //third_death
+	{
+
+	}
 }
 
 void* ContentManager::getChunkCollisionVectorAsPointer(int chunkID)

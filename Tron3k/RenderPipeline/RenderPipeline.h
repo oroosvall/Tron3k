@@ -9,6 +9,8 @@
 #include "ContentManager.h"
 #include "Effects\LightWall.h"
 
+#include "AnimManager.h"
+
 enum SETTING_INPUT
 {
 	CLEAR_COLOR_IN = PipelineValues::FLOAT3,
@@ -31,6 +33,7 @@ private:
 	SETTING_INPUT getType(PIPELINE_SETTINGS type) const;
 
 	ContentManager contMan;
+	AnimManager anims;
 
 	LightWall lw;
 
@@ -70,7 +73,7 @@ private:
 	GLuint lw_vp;
 
 	float timepass = 0;
-
+	float delta = 0;
 	bool initialized;
 
 public:
@@ -91,7 +94,7 @@ public:
 
 	virtual void* getView();
 
-	virtual void renderPlayer(int playerID, void* world, float* dgColor, float sgInten);
+	virtual void renderMISC(int miscID, void* world, float* dgColor, float sgInten);
 	virtual void renderAnimation(int playerID, void* world, AnimationState animState, float* dgColor, float sgInten);
 
 	virtual std::string getStatus() { return ""; };
