@@ -170,6 +170,7 @@ void Role::chooseRole(int role)
 {
 	if (role < NROFROLES)
 	{
+		this->role = role;
 		health = atoi(loadedRoles[role][HEALTH].c_str());
 		maxHealth = health;
 
