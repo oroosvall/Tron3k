@@ -398,7 +398,6 @@ public:
 			}
 		}
 
-		gamePtr->addPlayerToTeam(p_conID, team);
 		if (team == 0)
 			consolePtr->printMsg("Player (" + p->getName() + ") joined team Spectators", "System", 'S');
 		if (team == 1)
@@ -413,14 +412,18 @@ public:
 			else
 				gamePtr->freecam = true;
 		}
-
+		//Ugly. Needs a team before he can spawn but need spawnpos before he joins a team
+		gamePtr->addPlayerToTeam(p_conID, team, spawnPosition);
 		if (isClient == false)
 		{
+			spawnPosition = gamePtr->findPlayerPosInTeam(conID) % 5;
 			Packet* out = new Packet();
 			*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::TEAM_CHANGE) << p_conID << team << spawnPosition;
 			branch(out, -1);
 			delete out;
 		}
+		//Adds player to the game in chosen team. Both clients and server
+		gamePtr->addPlayerToTeam(p_conID, team, spawnPosition);
 	}
 
 	virtual void in_command_role_change(Packet* rec, Uint8 conID)

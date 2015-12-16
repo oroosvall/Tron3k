@@ -199,7 +199,6 @@ void Game::playerUpdate(int conid, float dt)
 	{
 		registerConsumable(playerList[conid]);
 	}
-
 	if (msg == PLAYERMSG::DEATH)
 	{
 		freecam = true;
@@ -576,7 +575,7 @@ void Game::removeConIDfromTeams(int conID)
 	}
 }
 
-void Game::addPlayerToTeam(int p_conID, int team)
+void Game::addPlayerToTeam(int p_conID, int team, int spawnPosition)
 {
 	switch (team)
 	{
@@ -593,7 +592,7 @@ void Game::addPlayerToTeam(int p_conID, int team)
 		//	delete playerList[p_conID];
 		teamOne.push_back(p_conID);
 		playerList[p_conID]->setTeam(1);
-		allowPlayerRespawn(p_conID, teamOne.size() - 1);
+		allowPlayerRespawn(p_conID, spawnPosition);
 
 		//if (playerList[p_conID]->isLocal())
 		//{
@@ -606,7 +605,7 @@ void Game::addPlayerToTeam(int p_conID, int team)
 		//	delete playerList[p_conID];
 		teamTwo.push_back(p_conID);
 		playerList[p_conID]->setTeam(2);
-		allowPlayerRespawn(p_conID, teamTwo.size() - 1);
+		allowPlayerRespawn(p_conID, spawnPosition);
 		break;
 	}
 }

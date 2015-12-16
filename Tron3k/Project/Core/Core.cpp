@@ -542,7 +542,7 @@ void Core::roamHandleCmds()
 			if (token != "/team" || token == "0" || token == "1" || token == "2")
 			{
 				int team = stoi(token);
-				game->addPlayerToTeam(0, team);
+				game->addPlayerToTeam(0, team, 0);
 				game->allowPlayerRespawn(0, 0); //Add new spawn point probably
 				if (team != 0)
 					game->freecam = false;

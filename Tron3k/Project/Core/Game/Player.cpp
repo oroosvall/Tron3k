@@ -627,13 +627,15 @@ void Player::setRole(Role role)
 }
 
 void Player::respawn(glm::vec3 respawnPos, glm::vec3 _dir)
-{
-	pos = respawnPos;
-	
-	//reset matrix test
+{	
+	//reset matrix
 	worldMat = mat4();
 	rotatePlayer(vec3(0 ,0 ,1 ), _dir);
+	pos = respawnPos;
 
+	worldMat[0].w = pos.x;
+	worldMat[1].w = pos.y;
+	worldMat[2].w = pos.z;
 	goaldir = _dir;
 
 	vel = glm::vec3(0, 0, 0);
