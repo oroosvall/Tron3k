@@ -192,21 +192,25 @@ void Gbuffer::bind(GLuint target)
 	glBindFramebuffer(target, targetId);
 }
 
-void Gbuffer::preRender(GLuint shader, GLuint texture)
+void Gbuffer::preRender(GLuint shader, GLuint texture, GLuint self)
 {
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, rTexture[4].getTargetId());
 	glProgramUniform1i(shader, texture, 0);
 	
+	glActiveTexture(GL_TEXTURE0 + 1);
+	glBindTexture(GL_TEXTURE_2D, glowTexture.getTargetId());
+	glProgramUniform1i(shader, self, 1);
+
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, glowReduce);
 
 	blitQuads[5].BindVertData();
 
 	glDisable(GL_DEPTH_TEST);
-	glEnable(GL_BLEND);
+	//glEnable(GL_BLEND);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	glEnable(GL_DEPTH_TEST);
-	glDisable(GL_BLEND);
+	//glDisable(GL_BLEND);
 }
 
 void Gbuffer::render(/*glm::vec3 playerPos, glm::vec3 playerDir*/)

@@ -21,7 +21,7 @@ public:
 
 	void bind(GLuint index);
 
-	void preRender(GLuint shader, GLuint texture);
+	void preRender(GLuint shader, GLuint texture, GLuint self);
 	void render(/*glm::vec3 playerPos, glm::vec3 playerDir*/);
 
 	void clearLights();

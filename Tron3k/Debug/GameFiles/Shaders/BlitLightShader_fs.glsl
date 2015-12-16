@@ -104,8 +104,13 @@ void main()
 		fragment_color = texture(Diffuse, vec2(UV.x, UV.y));
 	else if(Use == 3)	 
 		fragment_color = texture(Normal, vec2(UV.x, UV.y));
-	else if(Use == 4)	 
-		fragment_color = texture(GlowMap, vec2(UV.x, UV.y));
+	else if(Use == 4)
+		{	
+			if(UV.x > 0.5f)
+				fragment_color = vec4(texture(GlowMap, vec2(UV.x, UV.y)).w);
+			else
+				fragment_color = texture(GlowMap, vec2(UV.x, UV.y));
+		}
 	else if(Use == 5)
 	{
 		fragment_color = vec4(0,0,0,0);

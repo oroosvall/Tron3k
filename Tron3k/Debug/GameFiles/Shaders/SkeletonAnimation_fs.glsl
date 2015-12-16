@@ -10,6 +10,7 @@ uniform sampler2D glowSpecSample;
 
 uniform vec3 dynamicGlowColor;
 uniform float staticGlowIntensity;
+uniform float trail;
 
 layout (location = 1) out vec4 WorldPosOut;   
 layout (location = 2) out vec4 DiffuseOut;     
@@ -38,4 +39,5 @@ void main()
 	DiffuseOut	= texture(textureSample, vec2(boneUV.x, 1-boneUV.y));	
 	NormalOut = CalcBumpedNormal();
 	GlowMap = (texture(glowSpecSample, vec2(boneUV.x, 1-boneUV.y)) * staticGlowIntensity) + vec4((1.0 - normalMap.w) * dynamicGlowColor, 0);
+	GlowMap.w = trail;
 }

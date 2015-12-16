@@ -54,6 +54,9 @@ public:
 	virtual void release() = 0;
 	virtual void update(float x, float y, float z, float dt) = 0;
 	virtual void renderIni() = 0;
+
+	virtual void reloadShaders() = 0;
+
 	virtual void render() = 0;
 	virtual void finalizeRender() = 0;
 

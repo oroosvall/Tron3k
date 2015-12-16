@@ -380,7 +380,7 @@ void ContentManager::renderPlayer(int playerID, glm::mat4 world, GLuint uniformK
 		glBindTexture(GL_TEXTURE_2D, textures[10].textureID);
 
 		glActiveTexture(GL_TEXTURE0 + 1);
-		glBindTexture(GL_TEXTURE_2D, textures[4].textureID);
+		glBindTexture(GL_TEXTURE_2D, textures[8].textureID);
 
 		glActiveTexture(GL_TEXTURE0 + 2);
 		glBindTexture(GL_TEXTURE_2D, textures[11].textureID);
