@@ -14,5 +14,5 @@ void main()
 	DiffuseOut	= vec4(0);	
 	NormalOut = vec4(0);
 	GlowMap += texture(texsample, vec2(UV.x, 1.0f-UV.y)) * vec4(1.0f, 1.0f, 1.0f, 0.4f);
-    GlowMap.w = length(GlowMap.rgb)/2.0f;
+    //GlowMap.w = length(GlowMap.rgb)*1.2f;
 }

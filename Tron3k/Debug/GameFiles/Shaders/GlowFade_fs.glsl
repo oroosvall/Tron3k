@@ -16,13 +16,23 @@ void main()
 	vec4 addColor = texture(glowAdd, UV);
 	vec4 final;
 	
-    final = vec4(glow.rgb * glow.w, glow.w);
-    
-    final -= deltaTime;
-    final.rgb += addColor.rgb;
-    final.w += addColor.w;
-    
-    final = clamp(final, vec4(0.0f),vec4(1.0f));
+	// 1) copy old
+	final.rgb = glow.rgb * glow.w;
+	final.w = glow.w;
+	
+	// 2) reduce it
+	final -= vec4(deltaTime);
+	
+    // 3) calculate difference
+	
+	vec4 diff = clamp(addColor - final, vec4(0.0f), vec4(1.0f));
+	
+	final += diff;	
+	//final.w += addColor.w;
+	
+	//final.rgb = (addColor.rgb * diff) + addColor.rgb * addColor.w;
+	
+	final = clamp(final, vec4(0.0f),vec4(1.0f));
     
     //final = addColor;
     

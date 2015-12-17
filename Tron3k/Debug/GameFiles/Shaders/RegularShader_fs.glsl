@@ -43,5 +43,5 @@ void main()
 	NormalOut = CalcBumpedNormal();
 	GlowMap = (texture(glowSpecSample, vec2(UV.x, 1-UV.y)) * staticGlowIntensity) + vec4((1.0f - alpha) * dynamicGlowColor, 0);
 	GlowMap = clamp(GlowMap, vec4(0.0f), vec4(1.0f));
-	GlowMap.w = trail;
+	GlowMap.w = trail * dot(vec3(1.0f), GlowMap.rgb);
 }
