@@ -317,6 +317,10 @@ void Core::upClient(float dt)
 			//Add to topology packet
 			Player* local = game->getPlayer(top->getConId());
 			top->frame_pos(top->getConId(), local->getPos(), local->getDir(), local->getVelocity());
+			//send animstates
+			top->frame_anim(top->getConId(), local->getAnimState_f_p(), local->getAnimState_t_p());
+			local->setAnimState_f_p(AnimationState::first_idle);
+			local->setAnimState_t_p(AnimationState::third_idle);
 
 			if (game->weaponSwitchReady())
 			{
@@ -956,14 +960,22 @@ void Core::renderWorld(float dt)
 					//static intense based on health
 					float hpval = float(p->getHP()) / 130.0f;
 
+					
 					//If first person render
 					if (p->isLocal() && !game->freecam || game->spectateID == i)
 					{
-						renderPipe->renderAnimation(i, &p->getFPSmat(), p->getAnimState_f_c(), dgColor, hpval);
+						if(p->isLocal())   //use current anim
+							renderPipe->renderAnimation(i, &p->getFPSmat(), p->getAnimState_f_c(), dgColor, hpval);
+						else			   //use peak anim
+							renderPipe->renderAnimation(i, &p->getFPSmat(), p->getAnimState_f_p(), dgColor, hpval);
 					}
 					else
 					{
-						renderPipe->renderAnimation(i, p->getWorldMat(), p->getAnimState_t_c(), dgColor, hpval);
+						if (p->isLocal()) //use current anim
+							renderPipe->renderAnimation(i, p->getWorldMat(), p->getAnimState_t_c(), dgColor, hpval);
+						else              //use peak anim
+
+							renderPipe->renderAnimation(i, p->getWorldMat(), p->getAnimState_t_p(), dgColor, hpval);
 					}
 				}
 			}

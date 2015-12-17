@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "AnimatedMesh.h"
+#include "../Project/Core/AnimationState.h"
 
 struct PlayerObject
 {
@@ -41,8 +42,10 @@ private:
 
 	GLuint portalQuery;
 
-	AnimatedMesh trapepr_Run_Third;
-	AnimatedMesh trapper_Reload_First;
+	//trapper files
+	AnimatedMesh trapper_idle_third;
+	AnimatedMesh trapper_run_third;
+	AnimatedMesh trapper_reload_first;
 
 	struct TriangleVertex
 	{

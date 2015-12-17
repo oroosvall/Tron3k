@@ -248,10 +248,7 @@ bool Player::removeSpecificModifier(MODIFIER_TYPE mt)
 PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool spectating)
 {
 	PLAYERMSG msg = NONE;
-	anim_first_current = AnimationState::first_idle;
-	anim_third_current = AnimationState::third_idle;
-	vec3 animtestpos = pos;
-
+	
 
 	modifiersGetData(dt);
 
@@ -265,6 +262,10 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			else
 				lockControls = true;
 		}
+
+		//lokal player anim handle
+		anim_first_current = AnimationState::first_idle;
+		anim_third_current = AnimationState::third_idle;
 
 		if (!lockControls)
 		{
@@ -461,7 +462,6 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				//role.returnToLife();
 			}
 		}
-
 	} // end of local player check
 	else
 	{
@@ -497,7 +497,31 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		{
 			collisionHandling(dt);
 			movePlayer(dt, olddir, freecam, spectatingThisPlayer); //Move the player regardless of control lock
+
+
+			// ----   Animation checks -----
+			if (vel.x * vel.x > 0.0001 || vel.z * vel.z > 0.0001)
+			{
+				//check if we are running backwards
+				if (dot(vel, dir) < 0)
+				{
+					if (checkAnimOverwrite(anim_third_current, AnimationState::third_run_rev))
+						anim_third_current = AnimationState::third_run_rev;
+				}
+				else
+				{
+					if (checkAnimOverwrite(anim_third_current, AnimationState::third_run))
+						anim_third_current = AnimationState::third_run;
+				}
+			}	
 		}
+
+		//frame peak overide
+		if (checkAnimOverwrite(anim_first_current, anim_first_framePeak))
+			anim_first_framePeak = anim_first_current;
+
+		if (checkAnimOverwrite(anim_third_current, anim_third_framePeak))
+			anim_third_framePeak = anim_third_current;
 	}
 		
 	if (spectatingThisPlayer == true)
@@ -520,14 +544,6 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 	{
 		worldMat[1].w -= 1.55f; // move down if 3rd person render
 	}
-
-	if (animtestpos != pos) //if we moved
-		anim_third_current = AnimationState::third_run;
-	//check if anim state should overwrite anim-frame-peak
-	if (checkAnimOverwrite(anim_first_current, anim_first_framePeak))
-		anim_first_framePeak = anim_first_current;
-	if (checkAnimOverwrite(anim_third_current, anim_third_framePeak))
-		anim_third_framePeak = anim_third_current;
 
 	return msg;
 }
