@@ -146,11 +146,11 @@ void ContentManager::init()
 	bullet.init(0, 0, 0);
 	bullet.load("GameFiles/TestFiles/bullet.v");
 
-	testAnimationMesh.init();
-	testAnimationMesh.load("GameFiles/CharacterFiles/trapper_third_person.bin");
+	trapepr_Run_Third.init();
+	trapepr_Run_Third.load("GameFiles/CharacterFiles/trapper_third_person.bin");
 
-	testFirstPerson.init();
-	testFirstPerson.load("GameFiles/CharacterFiles/trapper_first_person.bin");
+	trapper_Reload_First.init();
+	trapper_Reload_First.load("GameFiles/CharacterFiles/trapper_first_person.bin");
 }
 
 void ContentManager::release()
@@ -182,8 +182,8 @@ void ContentManager::release()
 	delete[] renderedChunks;
 	delete[] renderNextChunks;
 
-	testAnimationMesh.release();
-	testFirstPerson.release();
+	trapepr_Run_Third.release();
+	trapper_Reload_First.release();
 	skybox.release();
 	bullet.release();
 
@@ -379,8 +379,8 @@ void ContentManager::renderPlayer(int renderID, int keyframe, glm::mat4 world, G
 		glBindTexture(GL_TEXTURE_2D, textures[8].textureID);
 		glActiveTexture(GL_TEXTURE0 + 2);
 		glBindTexture(GL_TEXTURE_2D, textures[9].textureID);
-		testFirstPerson.update(0);
-		testFirstPerson.draw(uniformKeyMatrixLocation);
+		trapper_Reload_First.update(0);
+		trapper_Reload_First.draw(uniformKeyMatrixLocation);
 	}
 	else if (renderID == 2) //first_run
 	{
@@ -402,8 +402,8 @@ void ContentManager::renderPlayer(int renderID, int keyframe, glm::mat4 world, G
 		glBindTexture(GL_TEXTURE_2D, textures[8].textureID);
 		glActiveTexture(GL_TEXTURE0 + 2);
 		glBindTexture(GL_TEXTURE_2D, textures[9].textureID);
-		testFirstPerson.update(keyframe);
-		testFirstPerson.draw(uniformKeyMatrixLocation);
+		trapper_Reload_First.update(keyframe);
+		trapper_Reload_First.draw(uniformKeyMatrixLocation);
 	}
 	// --- Third Person
 	else if (renderID == 6) //third_idle
@@ -414,8 +414,8 @@ void ContentManager::renderPlayer(int renderID, int keyframe, glm::mat4 world, G
 		glBindTexture(GL_TEXTURE_2D, textures[8].textureID);
 		glActiveTexture(GL_TEXTURE0 + 2);
 		glBindTexture(GL_TEXTURE_2D, textures[9].textureID);
-		testAnimationMesh.update(0);
-		testAnimationMesh.draw(uniformKeyMatrixLocation);
+		trapepr_Run_Third.update(0);
+		trapepr_Run_Third.draw(uniformKeyMatrixLocation);
 	}
 	else if (renderID == 7) //third_run
 	{
@@ -425,8 +425,8 @@ void ContentManager::renderPlayer(int renderID, int keyframe, glm::mat4 world, G
 		glBindTexture(GL_TEXTURE_2D, textures[8].textureID);
 		glActiveTexture(GL_TEXTURE0 + 2);
 		glBindTexture(GL_TEXTURE_2D, textures[9].textureID);
-		testAnimationMesh.update(keyframe);
-		testAnimationMesh.draw(uniformKeyMatrixLocation);
+		trapepr_Run_Third.update(keyframe);
+		trapepr_Run_Third.draw(uniformKeyMatrixLocation);
 	}
 	else if (renderID == 8) //third_air
 	{

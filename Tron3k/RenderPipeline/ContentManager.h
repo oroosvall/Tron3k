@@ -41,8 +41,8 @@ private:
 
 	GLuint portalQuery;
 
-	AnimatedMesh testAnimationMesh;
-	AnimatedMesh testFirstPerson;
+	AnimatedMesh trapepr_Run_Third;
+	AnimatedMesh trapper_Reload_First;
 
 	struct TriangleVertex
 	{
