@@ -48,3 +48,4 @@
 *.idb
 Tron3k/Debug/GameFiles/Config/player.ini
 *.opendb
+*.enc

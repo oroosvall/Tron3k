@@ -615,6 +615,12 @@ void Player::addModifier(MODIFIER_TYPE mt)
 			myModifiers.push_back(m);
 		}
 		break;
+		case MODIFIER_TYPE::OVERCHARGEMODIFIER:
+		{
+			m = new Overcharge();
+			myModifiers.push_back(m);
+		}
+		break;
 	}
 	myModifiers[myModifiers.size() - 1]->init(this);
 }
