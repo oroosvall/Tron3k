@@ -59,9 +59,11 @@ void AnimManager::setAnim(animState& current, AnimationState overide)
 	case third_idle:		current.frameEnd = 42;		break;
 	case third_run:			current.frameEnd = 21;		break;
 	case third_run_rev:		current.frameEnd = 21;		break;
-	case third_air:			current.frameEnd = 10;		break;
-	case third_jump_begin:	current.frameEnd = 10;		break;
-	case third_jump_end:	current.frameEnd = 10;		break;
+	case third_strafe_left: current.frameEnd = 21;		break;
+	case third_strafe_right:current.frameEnd = 21;		break;
+	case third_air:			current.frameEnd = 121;		break;
+	case third_jump_begin:	current.frameEnd = 9;		break;
+	case third_jump_end:	current.frameEnd = 9;		break;
 	case third_death:		current.frameEnd = 10;		break;
 	default:				current = animState();		break;
 	}

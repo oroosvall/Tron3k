@@ -868,7 +868,7 @@ void Core::renderWorld(float dt)
 {
 	if (renderPipe && game)
 	{
-		//temp set cam
+		//temp set to see anims in 3p 
 		CameraInput* cam = CameraInput::getCam();
 		vec3 camPos = cam->getPos();
 		vec3 camDir = cam->getDir();

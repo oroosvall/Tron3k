@@ -22,9 +22,12 @@ int main()
 
 	Core core;
 	core.init();
-	
+
 	while (core.windowVisible())
 	{
+		//sleep(milliseconds(100));
+		//dt = 0.01;
+
 		core.update(float(dt));
 
 		unsigned int temp = clock();

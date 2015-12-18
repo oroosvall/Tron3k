@@ -415,10 +415,15 @@ void ContentManager::renderPlayer(int renderID, int keyframe, glm::mat4 world, G
 
 		case third_run:			trapper_third_run.update(keyframe);			trapper_third_run.draw(uniformKeyMatrixLocation);       break;
 		case third_run_rev:		trapper_third_run.update(keyframe);			trapper_third_run.draw(uniformKeyMatrixLocation);		break;
-		case third_air:			trapper_third_jump_air.update(0);    trapper_third_jump_air.draw(uniformKeyMatrixLocation);		break;
 
-		case third_jump_begin:	trapper_third_jump_begin.update(0);	trapper_third_jump_begin.draw(uniformKeyMatrixLocation);		break;
-		case third_jump_end:	trapper_third_jump_end.update(0);    trapper_third_jump_end.draw(uniformKeyMatrixLocation);		break;
+		case third_strafe_left:		trapper_third_strafe_left.update(keyframe);			trapper_third_strafe_left.draw(uniformKeyMatrixLocation);		break;
+		case third_strafe_right:	trapper_third_strafe_right.update(keyframe);			trapper_third_strafe_right.draw(uniformKeyMatrixLocation);		break;
+
+
+		case third_air:			trapper_third_jump_air.update(keyframe);	trapper_third_jump_air.draw(uniformKeyMatrixLocation);		break;
+
+		case third_jump_begin:	trapper_third_jump_begin.update(keyframe);	trapper_third_jump_begin.draw(uniformKeyMatrixLocation);		break;
+		case third_jump_end:	trapper_third_jump_end.update(keyframe);	trapper_third_jump_end.draw(uniformKeyMatrixLocation);		break;
 
 		case third_death:		trapper_third_idle.update(keyframe);		trapper_third_idle.draw(uniformKeyMatrixLocation);		break;
 

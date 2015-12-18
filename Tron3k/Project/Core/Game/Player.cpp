@@ -248,7 +248,7 @@ bool Player::removeSpecificModifier(MODIFIER_TYPE mt)
 PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool spectating)
 {
 	PLAYERMSG msg = NONE;
-	
+	bool animGrounded = grounded;
 
 	modifiersGetData(dt); //Dont Remove Please!
 
@@ -500,20 +500,54 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 
 			// ----   Animation checks -----
-			if (vel.x * vel.x > 0.0001 || vel.z * vel.z > 0.0001)
+			if (grounded)
 			{
-				//check if we are running backwards
-				if (dot(vel, dir) < 0)
+				//Run checks
+				if (vel.x * vel.x > 0.0001 || vel.z * vel.z > 0.0001)
 				{
-					if (checkAnimOverwrite(anim_third_current, AnimationState::third_run_rev))
-						anim_third_current = AnimationState::third_run_rev;
+					if (i->getKeyInfo(GLFW_KEY_A) && !i->getKeyInfo(GLFW_KEY_W) && !i->getKeyInfo(GLFW_KEY_S)) // strage left
+					{
+						if (checkAnimOverwrite(anim_third_current, AnimationState::third_strafe_left))
+							anim_third_current = AnimationState::third_strafe_left;
+					}
+					else if (i->getKeyInfo(GLFW_KEY_D) && !i->getKeyInfo(GLFW_KEY_W) && !i->getKeyInfo(GLFW_KEY_S)) //strafe right
+					{
+						if (checkAnimOverwrite(anim_third_current, AnimationState::third_strafe_right))
+							anim_third_current = AnimationState::third_strafe_right;
+					}
+					//check if we are running backwards
+					else if (dot(vel, dir) < 0)
+					{
+						if (checkAnimOverwrite(anim_third_current, AnimationState::third_run_rev))
+							anim_third_current = AnimationState::third_run_rev;
+					}
+					else //run forward
+					{
+						if (checkAnimOverwrite(anim_third_current, AnimationState::third_run))
+							anim_third_current = AnimationState::third_run;
+					}
 				}
-				else
+			}
+			else //if in air
+			{
+				if (checkAnimOverwrite(anim_third_current, AnimationState::third_air))
+					anim_third_current = AnimationState::third_air;
+			}
+
+			//Jump Checks
+			if (animGrounded != grounded) //grounded chenged this frame
+			{
+				if (grounded) //landed
 				{
-					if (checkAnimOverwrite(anim_third_current, AnimationState::third_run))
-						anim_third_current = AnimationState::third_run;
+					if (checkAnimOverwrite(anim_third_current, AnimationState::third_jump_end))
+						anim_third_current = AnimationState::third_jump_end;
 				}
-			}	
+				else // jump begin
+				{
+					if (checkAnimOverwrite(anim_third_current, AnimationState::third_jump_begin))
+						anim_third_current = AnimationState::third_jump_begin;
+				}
+			}
 		}
 
 		//frame peak overide
