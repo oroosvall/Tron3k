@@ -872,8 +872,7 @@ void Core::renderWorld(float dt)
 		CameraInput* cam = CameraInput::getCam();
 		vec3 camPos = cam->getPos();
 		vec3 camDir = cam->getDir();
-		cam->setCam(camPos, camDir);
-
+		//cam->setCam(vec3(25, 5, -7), vec3(-1, 0, 0));
 
 
 		//send chunk glowvalues
@@ -1018,6 +1017,9 @@ void Core::renderWorld(float dt)
 		}
 
 		renderPipe->finalizeRender();
+
+		//remove!
+		cam->setCam(camPos, camDir);
 	}
 }
 

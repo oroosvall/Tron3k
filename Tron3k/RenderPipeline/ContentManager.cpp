@@ -413,8 +413,8 @@ void ContentManager::renderPlayer(int renderID, int keyframe, glm::mat4 world, G
 
 		case third_idle:		trapper_third_idle.update(keyframe);		trapper_third_idle.draw(uniformKeyMatrixLocation);		break;
 
-		case third_run:			trapper_third_run.update(0);			trapper_third_run.draw(uniformKeyMatrixLocation);       break;
-		case third_run_rev:		trapper_third_run.update(0);			trapper_third_run.draw(uniformKeyMatrixLocation);		break;
+		case third_run:			trapper_third_run.update(keyframe);			trapper_third_run.draw(uniformKeyMatrixLocation);       break;
+		case third_run_rev:		trapper_third_run.update(keyframe);			trapper_third_run.draw(uniformKeyMatrixLocation);		break;
 		case third_air:			trapper_third_jump_air.update(0);    trapper_third_jump_air.draw(uniformKeyMatrixLocation);		break;
 
 		case third_jump_begin:	trapper_third_jump_begin.update(0);	trapper_third_jump_begin.draw(uniformKeyMatrixLocation);		break;
