@@ -5,5 +5,6 @@
 #include "HackingDartModifier.h"
 #include "LightSpeed.h"
 #include "Overcharge.h"
+#include "SprintControlLock.h"
 
 #endif

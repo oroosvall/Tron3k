@@ -790,34 +790,39 @@ void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec
 	Player* p = playerList[conID];
 	switch (st)
 	{
-	case SPECIAL_TYPE::LIGHTWALL:
-	{
-		p->addModifier(MODIFIER_TYPE::LIGHTWALLCONTROLLOCK);
-		int arraypos = -1;
-		Effect* lwe = getSpecificEffect(conID, sID - 1, EFFECT_TYPE::LIGHT_WALL, arraypos);
-		addEffectToList(conID, sID, EFFECT_TYPE::LIGHT_WALL, pos);
-	}
-	break;
+		case SPECIAL_TYPE::LIGHTWALL:
+		{
+			p->addModifier(MODIFIER_TYPE::LIGHTWALLCONTROLLOCK);
+			int arraypos = -1;
+			Effect* lwe = getSpecificEffect(conID, sID - 1, EFFECT_TYPE::LIGHT_WALL, arraypos);
+			addEffectToList(conID, sID, EFFECT_TYPE::LIGHT_WALL, pos);
+		}
+		break;
 
-	case SPECIAL_TYPE::MULTIJUMP:
-	{
-		vec3 vel = p->getVelocity();
-		if (vel.y < 0)
+		case SPECIAL_TYPE::MULTIJUMP:
 		{
-			vel.y = 1.5f;
+			vec3 vel = p->getVelocity();
+			if (vel.y < 0)
+			{
+				vel.y = 1.5f;
+			}
+			else
+			{
+				vel.y += 1.5f;
+			}
+			p->setVelocity(vel);
 		}
-		else
+		break;
+		case SPECIAL_TYPE::HACKINGDARTSPECIAL:
 		{
-			vel.y += 1.5f;
+			addBulletToList(conID, 0, BULLET_TYPE::HACKING_DART, pos, dir);
 		}
-		p->setVelocity(vel);
-	}
-	break;
-	case SPECIAL_TYPE::HACKINGDARTSPECIAL:
-	{
-		addBulletToList(conID, 0, BULLET_TYPE::HACKING_DART, pos, dir);
-	}
-	break;
+		break;
+		case SPECIAL_TYPE::SPRINTD:
+		{
+			p->addModifier(MODIFIER_TYPE::SPRINTCONTROLLOCK);
+		}
+		break;
 	}
 }
 

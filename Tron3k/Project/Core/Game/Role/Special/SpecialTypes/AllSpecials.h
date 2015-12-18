@@ -4,5 +4,6 @@
 #include "Lightwall.h"
 #include "MultiJump.h"
 #include "HackingDartSpecial.h"
+#include "SprintD.h"
 
 #endif

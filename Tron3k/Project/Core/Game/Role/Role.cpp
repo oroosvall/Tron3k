@@ -110,7 +110,7 @@ void Role::loadRoleSpecifics(int role)
 			role = 1;
 			specialAbility = new Lightwall(this);
 			specialAbility->init();
-			mobility = new MultiJump();
+			mobility = new SprintD();
 			mobility->init();
 			consumable = new Consumable();
 			consumable->init(CONSUMABLE_TYPE::OVERCHARGE);

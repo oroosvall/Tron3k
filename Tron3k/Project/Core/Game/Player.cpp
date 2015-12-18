@@ -253,7 +253,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 	vec3 animtestpos = pos;
 
 
-	modifiersGetData(dt);
+	modifiersGetData(dt); //Dont Remove Please!
 
 	vec3 olddir = cam->getDir();
 	if (isLocalPlayer) // even if we are the local player we can be dead and spectating some one
@@ -529,6 +529,8 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 	if (checkAnimOverwrite(anim_third_current, anim_third_framePeak))
 		anim_third_framePeak = anim_third_current;
 
+	modifiersSetData(dt);	//Dont Remove Again Please!
+
 	return msg;
 }
 
@@ -618,6 +620,12 @@ void Player::addModifier(MODIFIER_TYPE mt)
 		case MODIFIER_TYPE::OVERCHARGEMODIFIER:
 		{
 			m = new Overcharge();
+			myModifiers.push_back(m);
+		}
+		break;
+		case MODIFIER_TYPE::SPRINTCONTROLLOCK:
+		{
+			m = new SprintControlLock;
 			myModifiers.push_back(m);
 		}
 		break;
