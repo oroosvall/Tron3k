@@ -545,15 +545,6 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		worldMat[1].w -= 1.55f; // move down if 3rd person render
 	}
 
-
-	if (animtestpos != pos) //if we moved
-		anim_third_current = AnimationState::third_run;
-	//check if anim state should overwrite anim-frame-peak
-	if (checkAnimOverwrite(anim_first_current, anim_first_framePeak))
-		anim_first_framePeak = anim_first_current;
-	if (checkAnimOverwrite(anim_third_current, anim_third_framePeak))
-		anim_third_framePeak = anim_third_current;
-
 	modifiersSetData(dt);	//Dont Remove Again Please!
 
 	return msg;
