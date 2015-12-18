@@ -868,6 +868,14 @@ void Core::renderWorld(float dt)
 {
 	if (renderPipe && game)
 	{
+		//temp set cam
+		CameraInput* cam = CameraInput::getCam();
+		vec3 camPos = cam->getPos();
+		vec3 camDir = cam->getDir();
+		cam->setCam(camPos, camDir);
+
+
+
 		//send chunk glowvalues
 		vec3 color = { 0.7, 0.7, 0.7 };
 		renderPipe->setChunkColorAndInten(0, &color[0], 1);

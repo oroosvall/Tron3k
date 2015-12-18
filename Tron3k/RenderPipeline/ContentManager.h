@@ -43,9 +43,17 @@ private:
 	GLuint portalQuery;
 
 	//trapper files
-	AnimatedMesh trapper_idle_third;
-	AnimatedMesh trapper_run_third;
-	AnimatedMesh trapper_reload_first;
+	AnimatedMesh trapper_first_reload;
+
+	AnimatedMesh trapper_third_idle;
+	AnimatedMesh trapper_third_run;
+
+	AnimatedMesh trapper_third_jump_air;
+	AnimatedMesh trapper_third_jump_begin;
+	AnimatedMesh trapper_third_jump_end;
+	AnimatedMesh trapper_third_strafe_left;
+	AnimatedMesh trapper_third_strafe_right;
+
 
 	struct TriangleVertex
 	{

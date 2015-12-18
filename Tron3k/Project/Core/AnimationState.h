@@ -17,6 +17,8 @@ enum AnimationState
 	third_run,
 	third_run_rev,
 	third_air,
+	third_strafe_left,
+	third_strafe_right,
 
 	third_jump_begin,
 	third_jump_end,
@@ -40,8 +42,11 @@ int static getAnimRank(AnimationState test)
 
 	case third_idle:		return 0;
 	case third_run:			return 0;
-	case third_run_rev:			return 0;
+	case third_run_rev:		return 0;
 	case third_air:			return 0;
+
+	case third_strafe_left:	return 0;
+	case third_strafe_right:return 0;
 
 	case third_jump_begin:	return 1;
 	case third_jump_end:	return 1;
