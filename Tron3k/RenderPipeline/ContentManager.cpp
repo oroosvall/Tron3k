@@ -146,11 +146,14 @@ void ContentManager::init()
 	bullet.init(0, 0, 0);
 	bullet.load("GameFiles/TestFiles/bullet.v");
 
-	trapepr_Run_Third.init();
-	trapepr_Run_Third.load("GameFiles/CharacterFiles/trapper_third_person.bin");
+	trapper_idle_third.init();
+	trapper_idle_third.load("GameFiles/CharacterFiles/trapper_third_idle.bin");
 
-	trapper_Reload_First.init();
-	trapper_Reload_First.load("GameFiles/CharacterFiles/trapper_first_person.bin");
+	trapper_run_third.init();
+	trapper_run_third.load("GameFiles/CharacterFiles/trapper_third_run.bin");
+
+	trapper_reload_first.init();
+	trapper_reload_first.load("GameFiles/CharacterFiles/trapper_first_reload.bin");
 }
 
 void ContentManager::release()
@@ -182,8 +185,9 @@ void ContentManager::release()
 	delete[] renderedChunks;
 	delete[] renderNextChunks;
 
-	trapepr_Run_Third.release();
-	trapper_Reload_First.release();
+	trapper_idle_third.release();
+	trapper_run_third.release();
+	trapper_reload_first.release();
 	skybox.release();
 	bullet.release();
 
@@ -366,83 +370,39 @@ void ContentManager::renderPlayer(int renderID, int keyframe, glm::mat4 world, G
 	}
 
 	// ----------- Character Animations ---------- //
-	// --- FPS
-	else if (renderID == 0) //none
+	
+	if (renderID > -1)
 	{
-
-	}
-	else if (renderID == 1) // first_idle
-	{
+		//pick texture
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, textures[7].textureID);
 		glActiveTexture(GL_TEXTURE0 + 1);
 		glBindTexture(GL_TEXTURE_2D, textures[8].textureID);
 		glActiveTexture(GL_TEXTURE0 + 2);
 		glBindTexture(GL_TEXTURE_2D, textures[9].textureID);
-		trapper_Reload_First.update(0);
-		trapper_Reload_First.draw(uniformKeyMatrixLocation);
-	}
-	else if (renderID == 2) //first_run
-	{
-		
-	}
-	else if (renderID == 3) //first_air
-	{
 
-	}
-	else if (renderID == 4) //first_fire
-	{
+		switch (AnimationState(renderID))
+		{
+		case first_idle:		trapper_reload_first.update(0);			trapper_reload_first.draw(uniformKeyMatrixLocation);	break;
+		case first_run:			trapper_reload_first.update(0);			trapper_reload_first.draw(uniformKeyMatrixLocation);	break;
+		case first_air:			trapper_reload_first.update(0);			trapper_reload_first.draw(uniformKeyMatrixLocation);	break;
 
-	}
-	else if (renderID == 5) //first_reload
-	{
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, textures[7].textureID);
-		glActiveTexture(GL_TEXTURE0 + 1);
-		glBindTexture(GL_TEXTURE_2D, textures[8].textureID);
-		glActiveTexture(GL_TEXTURE0 + 2);
-		glBindTexture(GL_TEXTURE_2D, textures[9].textureID);
-		trapper_Reload_First.update(keyframe);
-		trapper_Reload_First.draw(uniformKeyMatrixLocation);
-	}
-	// --- Third Person
-	else if (renderID == 6) //third_idle
-	{
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, textures[7].textureID);
-		glActiveTexture(GL_TEXTURE0 + 1);
-		glBindTexture(GL_TEXTURE_2D, textures[8].textureID);
-		glActiveTexture(GL_TEXTURE0 + 2);
-		glBindTexture(GL_TEXTURE_2D, textures[9].textureID);
-		trapepr_Run_Third.update(0);
-		trapepr_Run_Third.draw(uniformKeyMatrixLocation);
-	}
-	else if (renderID == 7) //third_run
-	{
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, textures[7].textureID);
-		glActiveTexture(GL_TEXTURE0 + 1);
-		glBindTexture(GL_TEXTURE_2D, textures[8].textureID);
-		glActiveTexture(GL_TEXTURE0 + 2);
-		glBindTexture(GL_TEXTURE_2D, textures[9].textureID);
-		trapepr_Run_Third.update(keyframe);
-		trapepr_Run_Third.draw(uniformKeyMatrixLocation);
-	}
-	else if (renderID == 8) //third_air
-	{
+		case first_fire:		trapper_reload_first.update(0);			trapper_reload_first.draw(uniformKeyMatrixLocation);	break;
+		case first_reload:		trapper_reload_first.update(keyframe);	trapper_reload_first.draw(uniformKeyMatrixLocation);	break;
 
-	}
-	else if (renderID == 9) //third_jump_begin
-	{
+		case third_idle:		trapper_idle_third.update(keyframe);	trapper_idle_third.draw(uniformKeyMatrixLocation);		break;
 
-	}
-	else if (renderID == 10) //third_jump_end
-	{
+		case third_run:			trapper_run_third.update(keyframe);     trapper_run_third.draw(uniformKeyMatrixLocation);       break;
+		case third_run_rev:		trapper_run_third.update(keyframe);     trapper_run_third.draw(uniformKeyMatrixLocation);		break;
+		case third_air:			trapper_run_third.update(keyframe);     trapper_run_third.draw(uniformKeyMatrixLocation);		break;
 
-	}
-	else if (renderID == 11) //third_death
-	{
+		case third_jump_begin:	trapper_run_third.update(keyframe);     trapper_run_third.draw(uniformKeyMatrixLocation);		break;
+		case third_jump_end:	trapper_run_third.update(keyframe);     trapper_run_third.draw(uniformKeyMatrixLocation);		break;
 
+		case third_death:		trapper_idle_third.update(keyframe);	trapper_idle_third.draw(uniformKeyMatrixLocation);		break;
+
+		default:				break;
+		}
 	}
 }
 

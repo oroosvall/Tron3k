@@ -11,8 +11,36 @@ void AnimManager::updateAnimStates(int playerID, int role, AnimationState curren
 	else
 	{
 		animStates[playerID].timepass += dt;
+
+		int rank = getAnimRank(animStates[playerID].state);
+		
+		//If the animation ended
+		if (animStates[playerID].timepass > animStates[playerID].timeLength)
+		{
+			//loop rank 0 anims
+			if (rank == 0)
+			{
+				animStates[playerID].timepass -= animStates[playerID].timeLength;
+			}
+			//fallbank rank 1 anims
+			else if (rank == 1)
+			{
+				animStates[playerID] = animState();
+			}
+			//freeze rank 2 anims
+			else if( rank == 2)
+			{
+				animStates[playerID].timepass = animStates[playerID].timeLength;
+			}
+		}
+
 		float index = animStates[playerID].timepass / animStates[playerID].timeLength;
-		animStates[playerID].frame = animStates[playerID].frameEnd * index;
+
+		//if we should run the animation backwards
+		if(animStates[playerID].state == AnimationState::third_run_rev)
+			animStates[playerID].frame = animStates[playerID].frameEnd - animStates[playerID].frameEnd * index;
+		else
+			animStates[playerID].frame = animStates[playerID].frameEnd * index;
 	}
 }
 
@@ -23,13 +51,14 @@ void AnimManager::setAnim(animState& current, AnimationState overide)
 
 	switch (overide)
 	{
-	case first_idle:		current.frameEnd = 10;		break;
+	case first_idle:		current.frameEnd = 0;		break;
 	case first_run:			current.frameEnd = 21;		break;
 	case first_air:			current.frameEnd = 10;		break;
 	case first_fire:		current.frameEnd = 10;		break;
 	case first_reload:		current.frameEnd = 130;		break;
-	case third_idle:		current.frameEnd = 10;		break;
-	case third_run:			current.frameEnd = 10;		break;
+	case third_idle:		current.frameEnd = 42;		break;
+	case third_run:			current.frameEnd = 21;		break;
+	case third_run_rev:		current.frameEnd = 21;		break;
 	case third_air:			current.frameEnd = 10;		break;
 	case third_jump_begin:	current.frameEnd = 10;		break;
 	case third_jump_end:	current.frameEnd = 10;		break;

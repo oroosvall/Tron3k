@@ -468,15 +468,12 @@ void RenderPipeline::renderMISC(int miscID, void* world, float* dgColor, float s
 
 void RenderPipeline::renderAnimation(int playerID, void* world, AnimationState animState, float* dgColor, float sgInten)
 {
-	//update the animstate
-	anims.updateAnimStates(playerID, 0, animState, delta);
-
 	glUseProgram(animationShader);
 
 	//Glow values for player
 	glProgramUniform1f(animationShader, uniformStaticGlowIntensityLocation[1], sgInten);
 	glProgramUniform3fv(animationShader, uniformDynamicGlowColorLocation[1], 1, (GLfloat*)&dgColor[0]);
-	glProgramUniform1f(animationShader, uniformGlowTrail[1], 1.0f);
+	glProgramUniform1f(animationShader, uniformGlowTrail[1], 0.0f);
 
 	//Texture for the glow
 	glProgramUniform1i(animationShader, uniformTextureLocation[1], 0);
@@ -487,6 +484,10 @@ void RenderPipeline::renderAnimation(int playerID, void* world, AnimationState a
 	glProgramUniformMatrix4fv(animationShader, worldMat[1], 1, GL_FALSE, (GLfloat*)world);
 
 	contMan.renderPlayer(anims.animStates[playerID].state , anims.animStates[playerID].frame, *(glm::mat4*)world, uniformKeyMatrixLocation);
+	
+	//update the animstate AFTER the player was renderd
+	//it not, an animation can timeout and not know what to render
+	anims.updateAnimStates(playerID, 0, animState, delta);
 }
 
 bool RenderPipeline::setSetting(PIPELINE_SETTINGS type, PipelineValues value)

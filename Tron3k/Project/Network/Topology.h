@@ -255,6 +255,11 @@ public:
 			cVel.x << cVel.y << cVel.z;
 	}
 
+	virtual void frame_anim(Uint8 conid, Uint8 anim_peak_first, Uint8 anim_peak_third)
+	{
+		*package << Uint8(NET_FRAME::ANIM) << conid << anim_peak_first << anim_peak_third;
+	}
+
 	virtual void in_frame_fire(Packet* rec)
 	{
 		Uint8 conID;
@@ -330,9 +335,8 @@ public:
 		*rec >> p_vel.x >> p_vel.y >> p_vel.z;
 
 		Player* p = gamePtr->getPlayer(p_conID);
-		if (p != nullptr) //Justincase
+		if (p != nullptr) 
 		{
-			//TO DO: Player function to interpolate for 50ms to new position
 			p->setGoalPos(p_pos);
 			p->setGoalDir(p_dir);
 			if (!p->isLocal())
@@ -340,6 +344,21 @@ public:
 		}
 		else
 			consolePtr->printMsg("ERROR in_frame_current_pos", "System", 'S');
+	}
+
+	virtual void in_frame_anim(Packet* rec)
+	{
+		Uint8 p_conID, anim_peak_first, anim_peak_third;
+		*rec >> p_conID;
+		*rec >> anim_peak_first;
+		*rec >> anim_peak_third;
+
+		Player* p = gamePtr->getPlayer(p_conID);
+		if (p != nullptr)
+		{
+			p->setAnimState_f_p(AnimationState(anim_peak_first));
+			p->setAnimState_t_p(AnimationState(anim_peak_third));
+		}
 	}
 
 	//COMMANDS  From Client  --->  Server  - if ok -> Clients

@@ -15,6 +15,7 @@ enum AnimationState
 	//third person
 	third_idle,
 	third_run,
+	third_run_rev,
 	third_air,
 
 	third_jump_begin,
@@ -39,6 +40,7 @@ int static getAnimRank(AnimationState test)
 
 	case third_idle:		return 0;
 	case third_run:			return 0;
+	case third_run_rev:			return 0;
 	case third_air:			return 0;
 
 	case third_jump_begin:	return 1;
@@ -72,5 +74,7 @@ bool static checkAnimOverwrite(AnimationState current, AnimationState test)
 
 	return false;
 };
+
+
 
 #endif

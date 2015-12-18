@@ -24,6 +24,7 @@ enum NET_EVENT
 enum NET_FRAME
 {
 	POS =			int('P'),
+	ANIM =			int('A'),
 	FIRE =			int('F'),
 	SPECIAL =		int('S'),
 	WPN_SWITCH =	int('W'),
