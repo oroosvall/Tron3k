@@ -551,10 +551,10 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		}
 
 		//frame peak overide
-		if (checkAnimOverwrite(anim_first_current, anim_first_framePeak))
+		if (checkAnimOverwrite(anim_first_framePeak, anim_first_current))
 			anim_first_framePeak = anim_first_current;
 
-		if (checkAnimOverwrite(anim_third_current, anim_third_framePeak))
+		if (checkAnimOverwrite(anim_third_framePeak, anim_third_current))
 			anim_third_framePeak = anim_third_current;
 	}
 		
