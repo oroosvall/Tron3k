@@ -60,7 +60,7 @@ void AnimManager::setAnim(animState& current, AnimationState overide)
 	case first_primary_throw:		current.frameEnd = 20;		break;
 	case first_primary_switch:		current.frameEnd = 60;		break;
 
-	case first_secondary_fire:		current.frameEnd = 10;		break;
+	case first_secondary_fire:		current.frameEnd = 80;		break;
 
 	case third_idle:		current.frameEnd = 42;		break;
 	case third_run:			current.frameEnd = 21;		break;

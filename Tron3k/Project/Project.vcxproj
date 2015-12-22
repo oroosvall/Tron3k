@@ -78,7 +78,6 @@
     <ClInclude Include="Core\CameraInput.h" />
     <ClInclude Include="Core\Console.h" />
     <ClInclude Include="Core\Core.h" />
-    <ClInclude Include="Core\Game\Animation.h" />
     <ClInclude Include="Core\Game\Game.h" />
     <ClInclude Include="Core\Game\GameDataIndex.h" />
     <ClInclude Include="Core\Game\GameMap.h" />

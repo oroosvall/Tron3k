@@ -410,9 +410,16 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					if (role.getCurrentWeapon()->shoot())
 					{
 						msg = SHOOT;
-						//play anim
-						if (checkAnimOverwrite(anim_first_current, AnimationState::first_primary_fire))
-							anim_first_current = AnimationState::first_primary_fire;
+						if (role.getWeaponNRequiped() == 0) //main weapon
+						{
+							if (checkAnimOverwrite(anim_first_current, AnimationState::first_primary_fire))
+								anim_first_current = AnimationState::first_primary_fire;
+						}
+						else // secondary fire
+						{
+							if (checkAnimOverwrite(anim_first_current, AnimationState::first_secondary_fire))
+								anim_first_current = AnimationState::first_secondary_fire;
+						}
 					}
 				}
 

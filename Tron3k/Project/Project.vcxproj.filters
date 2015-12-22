@@ -272,9 +272,6 @@
     <ClInclude Include="Core\ui\Ui.h">
       <Filter>Source Files\Core\Ui</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Game\Animation.h">
-      <Filter>Source Files\Core\Game</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Game\Game.h">
       <Filter>Source Files\Core\Game</Filter>
     </ClInclude>

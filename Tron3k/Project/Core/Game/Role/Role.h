@@ -18,67 +18,68 @@ enum PROPERTIES{HEALTH, MAINWEP, SECWEP, JUMPHEIGHT, MOVEMENTSPEED, NROFREADPROP
 
 class Role
 {
-	private:
-		int role;
-		int currentWpn;
-		int health;
-		int maxHealth;
-		float movementSpeed;
-		float jumpHeight;
-		string roles[NROFROLES];
-		string loadedRoles[NROFROLES][NROFREADPROPERTIES];
+private:
+	int role;
+	int currentWpn;
+	int health;
+	int maxHealth;
+	float movementSpeed;
+	float jumpHeight;
+	string roles[NROFROLES];
+	string loadedRoles[NROFROLES][NROFREADPROPERTIES];
 
-		void loadWeapons(int role, int wpn); //wpn = main or sec
-		void loadRoleSpecifics(int role);
+	void loadWeapons(int role, int wpn); //wpn = main or sec
+	void loadRoleSpecifics(int role);
 
-		Weapon* weapons[2];
-		Weapon* storageMain;
-		Weapon* storageSec;
+	Weapon* weapons[2];
+	Weapon* storageMain;
+	Weapon* storageSec;
 
-		Consumable* consumable;
+	Consumable* consumable;
 
-		Special* specialAbility;
-		float specialMeter;
-		bool gainSpecial;
+	Special* specialAbility;
+	float specialMeter;
+	bool gainSpecial;
 
-		Special* mobility;
+	Special* mobility;
 
-	public:
-		Role();
-		Role(string inLoadedRoles[NROFROLES][NROFREADPROPERTIES]);
-		~Role();
+public:
+	Role();
+	Role(string inLoadedRoles[NROFROLES][NROFREADPROPERTIES]);
+	~Role();
 
-		float getMovementSpeed();
+	float getMovementSpeed();
 
-		void chooseRole(int role);
-		void swapWeapon(WEAPON_TYPE wt, int swapTo);
-		void swapWeaponLocal(int swapTo);
-		Weapon* getCurrentWeapon();
-		int getWeaponPosition() { return currentWpn; };
-		Consumable* getConsumable() { return consumable; };
+	void chooseRole(int role);
+	void swapWeapon(WEAPON_TYPE wt, int swapTo);
+	void swapWeaponLocal(int swapTo);
+	int getWeaponNRequiped() { return currentWpn; };
+	Weapon* getCurrentWeapon();
+	int getWeaponPosition() { return currentWpn; };
+	Consumable* getConsumable() { return consumable; };
 
-		void update(float dt);
+	void update(float dt);
 
-		void setHealth(int newHealth) { health = newHealth; }; //Used by clients
-		void takeDamage(int dmg); //Used by server
-		void heal(int h); //Used by server
+	void setHealth(int newHealth) { health = newHealth; }; //Used by clients
+	void takeDamage(int dmg); //Used by server
+	void heal(int h); //Used by server
 
-		int getHealth() { return health; };
-		float getJumpHeight() { return jumpHeight; };
-		void returnToLife();
+	int getHealth() { return health; };
+	float getJumpHeight() { return jumpHeight; };
+	void returnToLife();
 
-		Special* getSpecialAbility() { return specialAbility; };
-		float getSpecialMeter() { return specialMeter; };
-		void setSpecialMeter(float s) { specialMeter = s; };
+	Special* getSpecialAbility() { return specialAbility; };
+	float getSpecialMeter() { return specialMeter; };
+	void setSpecialMeter(float s) { specialMeter = s; };
 
-		void shutOffMeterGain() { gainSpecial = false; };
-		void activateMeterGain() { gainSpecial = true; };
+	void shutOffMeterGain() { gainSpecial = false; };
+	void activateMeterGain() { gainSpecial = true; };
 
-		Special* getMobilityAbility() { return mobility; };
+	Special* getMobilityAbility() { return mobility; };
 
-		void setMovementSpeed(float speed) { movementSpeed = speed; };
-		string getLoadedRoleSpecific(int i, int y) { return loadedRoles[i][y]; };
+	void setMovementSpeed(float speed) { movementSpeed = speed; };
+	string getLoadedRoleSpecific(int i, int y) { return loadedRoles[i][y]; };
 
-		int getRole();
+	int getRole();
 };
 #endif

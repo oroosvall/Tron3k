@@ -3,7 +3,6 @@
 
 #include "GameObject.h"
 #include "../../SoundPlayer/sound/SoundPlayer.h"
-#include "Animation.h"
 #include "../Input.h"
 #include "../CameraInput.h"
 #include "../sharedStructs.h" //spawnpoints transfere from renderpipe to game/player
