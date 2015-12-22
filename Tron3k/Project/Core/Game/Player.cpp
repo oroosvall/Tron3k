@@ -382,31 +382,49 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				if (i->justPressed(GLFW_KEY_R))
 				{
 					role.getCurrentWeapon()->reload();
+					//play anim
+					if (checkAnimOverwrite(anim_first_current, AnimationState::first_primary_reload))
+						anim_first_current = AnimationState::first_primary_reload;
 				}
 
 				if (i->justPressed(GLFW_KEY_1))
 				{
 					role.swapWeaponLocal(0);
 					msg = WPNSWITCH;
+					//play anim
+					if (checkAnimOverwrite(anim_first_current, AnimationState::first_primary_switch))
+						anim_first_current = AnimationState::first_primary_switch;
 				}
 
 				if (i->justPressed(GLFW_KEY_2))
 				{
 					role.swapWeaponLocal(1);
 					msg = WPNSWITCH;
+					//play anim
+					if (checkAnimOverwrite(anim_first_current, AnimationState::first_primary_switch))
+						anim_first_current = AnimationState::first_primary_switch;
 				}
 
 				if (i->getKeyInfo(GLFW_MOUSE_BUTTON_LEFT))		//Temp
 				{
 					if (role.getCurrentWeapon()->shoot())
+					{
 						msg = SHOOT;
+						//play anim
+						if (checkAnimOverwrite(anim_first_current, AnimationState::first_primary_fire))
+							anim_first_current = AnimationState::first_primary_fire;
+					}
 				}
 
 				if (i->justPressed(GLFW_KEY_Q))
 				{
 					Consumable* c = role.getConsumable();
 					if (c->use())
+					{
 						msg = USEITEM;
+						if (checkAnimOverwrite(anim_first_current, AnimationState::first_primary_throw))
+							anim_first_current = AnimationState::first_primary_throw;
+					}
 				}
 
 				if (i->justPressed(GLFW_KEY_E))
@@ -497,9 +515,6 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		{
 			collisionHandling(dt);
 			movePlayer(dt, olddir, freecam, spectatingThisPlayer); //Move the player regardless of control lock
-
-
-			// ----   Animation checks -----
 
 			// --- Animation checks ---
 
