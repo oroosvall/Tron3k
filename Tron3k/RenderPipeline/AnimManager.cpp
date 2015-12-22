@@ -51,11 +51,17 @@ void AnimManager::setAnim(animState& current, AnimationState overide)
 
 	switch (overide)
 	{
-	case first_idle:		current.frameEnd = 0;		break;
-	case first_run:			current.frameEnd = 21;		break;
-	case first_air:			current.frameEnd = 10;		break;
-	case first_fire:		current.frameEnd = 10;		break;
-	case first_reload:		current.frameEnd = 130;		break;
+	case first_primary_idle:		current.frameEnd = 0;		break;
+	case first_primary_run:			current.frameEnd = 30;		break;
+	case first_primary_air:			current.frameEnd = 10;		break;
+
+	case first_primary_fire:		current.frameEnd = 50;		break;
+	case first_primary_reload:		current.frameEnd = 130;		break;
+	case first_primary_throw:		current.frameEnd = 20;		break;
+	case first_primary_switch:		current.frameEnd = 60;		break;
+
+	case first_secondary_fire:		current.frameEnd = 10;		break;
+
 	case third_idle:		current.frameEnd = 42;		break;
 	case third_run:			current.frameEnd = 21;		break;
 	case third_run_rev:		current.frameEnd = 21;		break;

@@ -177,10 +177,8 @@ void Core::upRoam(float dt)
 		game->update(dt);
 		if (GetSoundActivated())
 		{
-		
 				GetSound()->setLocalPlayerDir(game->getPlayer(0)->getDir());
-				GetSound()->setLocalPlayerPos(game->getPlayer(0)->getPos());
-				
+				GetSound()->setLocalPlayerPos(game->getPlayer(0)->getPos());		
 		}
 
 		if (game->playerWantsToRespawn() && game->getPlayer(0)->getTeam() != 0)
@@ -193,6 +191,7 @@ void Core::upRoam(float dt)
 			int swaploc = 0;
 			WEAPON_TYPE wt = game->getWpnSwitch(swaploc);
 			game->handleWeaponSwitch(0, wt, swaploc);
+			game->getPlayer(0)->setAnimState_f_c(AnimationState::first_primary_switch);
 		}
 
 		if (game->fireEventReady())
@@ -200,13 +199,13 @@ void Core::upRoam(float dt)
 			WEAPON_TYPE wt;
 			int bID;
 			game->getLatestWeaponFired(0, wt, bID);
-			//test
-			game->getPlayer(0)->setAnimState_f_c(AnimationState::first_reload);
+			game->getPlayer(0)->setAnimState_f_c(AnimationState::first_primary_fire);
 		}
 
 		if (game->consumableReady())
 		{
 			game->getConsumableUsed(0);
+			game->getPlayer(0)->setAnimState_f_c(AnimationState::first_primary_throw);
 		}
 
 		if (game->specialActivationReady())
@@ -319,7 +318,7 @@ void Core::upClient(float dt)
 			top->frame_pos(top->getConId(), local->getPos(), local->getDir(), local->getVelocity());
 			//send animstates
 			top->frame_anim(top->getConId(), local->getAnimState_f_p(), local->getAnimState_t_p());
-			local->setAnimState_f_p(AnimationState::first_idle);
+			local->setAnimState_f_p(AnimationState::first_primary_idle);
 			local->setAnimState_t_p(AnimationState::third_idle);
 
 			if (game->weaponSwitchReady())
@@ -327,6 +326,7 @@ void Core::upClient(float dt)
 				int swaploc = -1;
 				WEAPON_TYPE ws = game->getWpnSwitch(swaploc);
 				top->frame_weapon_switch(top->getConId(), ws, swaploc);
+				game->getPlayer(top->getConId())->setAnimState_f_c(AnimationState::first_primary_switch);
 			}
 
 			if (game->fireEventReady())
@@ -335,14 +335,14 @@ void Core::upClient(float dt)
 				int bID;
 				game->getLatestWeaponFired(top->getConId(), wt, bID);
 				top->frame_fire(wt, top->getConId(), bID, local->getPos(), local->getDir());
-				//test
-				game->getPlayer(top->getConId())->setAnimState_f_c(AnimationState::first_reload);
+				game->getPlayer(top->getConId())->setAnimState_f_c(AnimationState::first_primary_fire);
 			}
 
 			if (game->consumableReady())
 			{
 				CONSUMABLE_TYPE ct = game->getConsumableUsed(top->getConId());
 				top->frame_consumable(ct, top->getConId(), local->getPos(), local->getDir());
+				game->getPlayer(top->getConId())->setAnimState_f_c(AnimationState::first_primary_throw);
 			}
 
 			if (game->specialActivationReady())

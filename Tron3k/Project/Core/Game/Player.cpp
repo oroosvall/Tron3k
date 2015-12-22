@@ -21,8 +21,8 @@ void Player::init(std::string pName, glm::vec3 initPos, bool isLocal)
 	vel = glm::vec3(0, 0, 0);
 	dir = cam->getDir();
 
-	anim_first_current = AnimationState::first_idle;
-	anim_first_framePeak = AnimationState::first_idle;
+	anim_first_current = AnimationState::first_primary_idle;
+	anim_first_framePeak = AnimationState::first_primary_idle;
 	anim_third_current = AnimationState::third_idle;
 	anim_third_framePeak =  AnimationState::third_idle;
 
@@ -264,7 +264,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		}
 
 		//lokal player anim handle
-		anim_first_current = AnimationState::first_idle;
+		anim_first_current = AnimationState::first_primary_idle;
 		anim_third_current = AnimationState::third_idle;
 
 		if (!lockControls)
@@ -500,11 +500,17 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 
 			// ----   Animation checks -----
+
+			// --- Animation checks ---
+
 			if (grounded)
 			{
 				//Run checks
 				if (vel.x * vel.x > 0.0001 || vel.z * vel.z > 0.0001)
 				{
+					if (checkAnimOverwrite(anim_first_current, AnimationState::first_primary_run))
+						anim_first_current = AnimationState::first_primary_run;
+
 					if (i->getKeyInfo(GLFW_KEY_A) && !i->getKeyInfo(GLFW_KEY_W) && !i->getKeyInfo(GLFW_KEY_S)) // strage left
 					{
 						if (checkAnimOverwrite(anim_third_current, AnimationState::third_strafe_left))

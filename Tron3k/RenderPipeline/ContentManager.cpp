@@ -147,27 +147,38 @@ void ContentManager::init()
 	bullet.load("GameFiles/TestFiles/bullet.v");
 
 	//Anim files
-	trapper_first_reload.init();
-	trapper_first_reload.load("GameFiles/CharacterFiles/trapper_first_reload.bin");
+	//trapper_first_primary_idle.init();
+	//trapper_first_primary_idle.load("GameFiles/CharacterFiles/trapper_first_primary_idlebin");
+	trapper_first_primary_run.init();
+	trapper_first_primary_run.load("GameFiles/CharacterFiles/trapper_first_primary_run.bin");
+	//trapper_first_primary_air.init();
+	//trapper_first_primary_air.load("GameFiles/CharacterFiles/trapper_first_primary_air.bin");
+
+	trapper_first_primary_fire.init();
+	trapper_first_primary_fire.load("GameFiles/CharacterFiles/trapper_first_primary_fire.bin");
+	trapper_first_primary_reload.init();
+	trapper_first_primary_reload.load("GameFiles/CharacterFiles/trapper_first_primary_reload.bin");
+	trapper_first_primary_throw.init();
+	trapper_first_primary_throw.load("GameFiles/CharacterFiles/trapper_first_primary_throw.bin");
+	trapper_first_primary_switch.init();
+	trapper_first_primary_switch.load("GameFiles/CharacterFiles/trapper_first_primary_switch.bin");
+
+	trapper_first_secondary_fire.init();
+	trapper_first_secondary_fire.load("GameFiles/CharacterFiles/trapper_first_secondary_fire.bin");
 
 	trapper_third_idle.init();
 	trapper_third_idle.load("GameFiles/CharacterFiles/trapper_third_idle.bin");
-
 	trapper_third_run.init();
 	trapper_third_run.load("GameFiles/CharacterFiles/trapper_third_run.bin");
 
 	trapper_third_jump_air.init();
 	trapper_third_jump_air.load("GameFiles/CharacterFiles/trapper_third_jump_air.bin");
-
 	trapper_third_jump_begin.init();
 	trapper_third_jump_begin.load("GameFiles/CharacterFiles/trapper_third_jump_begin.bin");
-
 	trapper_third_jump_end.init();
 	trapper_third_jump_end.load("GameFiles/CharacterFiles/trapper_third_jump_end.bin");
-
 	trapper_third_strafe_left.init();
 	trapper_third_strafe_left.load("GameFiles/CharacterFiles/trapper_third_strafe_left.bin");
-
 	trapper_third_strafe_right.init();
 	trapper_third_strafe_right.load("GameFiles/CharacterFiles/trapper_third_strafe_right.bin");
 }
@@ -201,9 +212,20 @@ void ContentManager::release()
 	delete[] renderedChunks;
 	delete[] renderNextChunks;
 
-	trapper_first_reload.release();
+	//trapper_first_primary_idle.release();
+	trapper_first_primary_run.release();
+	//trapper_first_primary_air.release();
+
+	trapper_first_primary_fire.release();
+	trapper_first_primary_reload.release();
+	trapper_first_primary_throw.release();
+	trapper_first_primary_switch.release();
+
+	trapper_first_secondary_fire.release();
+
 	trapper_third_idle.release();
 	trapper_third_run.release();
+
 	trapper_third_jump_air.release();
 	trapper_third_jump_begin.release();
 	trapper_third_jump_end.release();
@@ -404,28 +426,31 @@ void ContentManager::renderPlayer(int renderID, int keyframe, glm::mat4 world, G
 
 		switch (AnimationState(renderID))
 		{
-		case first_idle:		trapper_first_reload.update(0);				trapper_first_reload.draw(uniformKeyMatrixLocation);	break;
-		case first_run:			trapper_first_reload.update(0);				trapper_first_reload.draw(uniformKeyMatrixLocation);	break;
-		case first_air:			trapper_first_reload.update(0);				trapper_first_reload.draw(uniformKeyMatrixLocation);	break;
+		case first_primary_idle:		trapper_first_primary_reload.update(0);			trapper_first_primary_reload.draw(uniformKeyMatrixLocation);	break;
+		case first_primary_run:			trapper_first_primary_run.update(keyframe);		trapper_first_primary_run.draw(uniformKeyMatrixLocation);		break;
+		case first_primary_air:			trapper_first_primary_reload.update(0);			trapper_first_primary_reload.draw(uniformKeyMatrixLocation);	break;
 
-		case first_fire:		trapper_first_reload.update(0);				trapper_first_reload.draw(uniformKeyMatrixLocation);	break;
-		case first_reload:		trapper_first_reload.update(keyframe);		trapper_first_reload.draw(uniformKeyMatrixLocation);	break;
+		case first_primary_fire:		trapper_first_primary_fire.update(keyframe);	trapper_first_primary_fire.draw(uniformKeyMatrixLocation);		break;
+		case first_primary_reload:		trapper_first_primary_reload.update(keyframe);	trapper_first_primary_reload.draw(uniformKeyMatrixLocation);	break;
+		case first_primary_throw:		trapper_first_primary_throw.update(keyframe);	trapper_first_primary_throw.draw(uniformKeyMatrixLocation);		break;
+		case first_primary_switch:		trapper_first_primary_switch.update(keyframe);	trapper_first_primary_switch.draw(uniformKeyMatrixLocation);	break;
 
-		case third_idle:		trapper_third_idle.update(keyframe);		trapper_third_idle.draw(uniformKeyMatrixLocation);		break;
+		case first_secondary_fire:		trapper_first_secondary_fire.update(keyframe);	trapper_first_secondary_fire.draw(uniformKeyMatrixLocation);	break;
 
-		case third_run:			trapper_third_run.update(keyframe);			trapper_third_run.draw(uniformKeyMatrixLocation);       break;
-		case third_run_rev:		trapper_third_run.update(keyframe);			trapper_third_run.draw(uniformKeyMatrixLocation);		break;
+		case third_idle:				trapper_third_idle.update(keyframe);			trapper_third_idle.draw(uniformKeyMatrixLocation);				break;
 
-		case third_strafe_left:		trapper_third_strafe_left.update(keyframe);			trapper_third_strafe_left.draw(uniformKeyMatrixLocation);		break;
-		case third_strafe_right:	trapper_third_strafe_right.update(keyframe);			trapper_third_strafe_right.draw(uniformKeyMatrixLocation);		break;
+		case third_run:					trapper_third_run.update(keyframe);				trapper_third_run.draw(uniformKeyMatrixLocation);				break;
+		case third_run_rev:				trapper_third_run.update(keyframe);				trapper_third_run.draw(uniformKeyMatrixLocation);				break;
 
+		case third_strafe_left:			trapper_third_strafe_left.update(keyframe);		trapper_third_strafe_left.draw(uniformKeyMatrixLocation);		break;
+		case third_strafe_right:		trapper_third_strafe_right.update(keyframe);	trapper_third_strafe_right.draw(uniformKeyMatrixLocation);		break;
 
-		case third_air:			trapper_third_jump_air.update(keyframe);	trapper_third_jump_air.draw(uniformKeyMatrixLocation);		break;
+		case third_air:					trapper_third_jump_air.update(keyframe);		trapper_third_jump_air.draw(uniformKeyMatrixLocation);			break;
 
-		case third_jump_begin:	trapper_third_jump_begin.update(keyframe);	trapper_third_jump_begin.draw(uniformKeyMatrixLocation);		break;
-		case third_jump_end:	trapper_third_jump_end.update(keyframe);	trapper_third_jump_end.draw(uniformKeyMatrixLocation);		break;
+		case third_jump_begin:			trapper_third_jump_begin.update(keyframe);		trapper_third_jump_begin.draw(uniformKeyMatrixLocation);		break;
+		case third_jump_end:			trapper_third_jump_end.update(keyframe);		trapper_third_jump_end.draw(uniformKeyMatrixLocation);			break;
 
-		case third_death:		trapper_third_idle.update(keyframe);		trapper_third_idle.draw(uniformKeyMatrixLocation);		break;
+		case third_death:				trapper_third_idle.update(keyframe);			trapper_third_idle.draw(uniformKeyMatrixLocation);				break;
 
 		default:				break;
 		}

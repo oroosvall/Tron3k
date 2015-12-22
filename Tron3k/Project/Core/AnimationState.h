@@ -5,12 +5,16 @@ enum AnimationState
 {
 	none,
 	//first person
-	first_idle,
-	first_run,
-	first_air,
+	first_primary_idle, //does not exist yet
+	first_primary_run, //new
+	first_primary_air, //does not exist yet
 
-	first_fire,
-	first_reload,
+	first_primary_fire, //new
+	first_primary_reload,
+	first_primary_throw, //new
+	first_primary_switch, //new
+
+	first_secondary_fire, //new
 
 	//third person
 	third_idle,
@@ -33,12 +37,16 @@ int static getAnimRank(AnimationState test)
 {
 	switch (test)
 	{
-	case first_idle:		return 0;
-	case first_run:			return 0;
-	case first_air:			return 0;
+	case first_primary_idle:		return 0;
+	case first_primary_run:			return 0;
+	case first_primary_air:			return 0;
 
-	case first_fire:		return 1;
-	case first_reload:		return 1;
+	case first_primary_fire:		return 1;
+	case first_primary_reload:		return 1;
+	case first_primary_throw:		return 1;
+	case first_primary_switch:		return 1;
+
+	case first_secondary_fire:		return 1;
 
 	case third_idle:		return 0;
 	case third_run:			return 0;

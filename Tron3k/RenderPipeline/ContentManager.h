@@ -43,7 +43,16 @@ private:
 	GLuint portalQuery;
 
 	//trapper files
-	AnimatedMesh trapper_first_reload;
+	//AnimatedMesh trapper_first_primary_idle;
+	AnimatedMesh trapper_first_primary_run;
+	//AnimatedMesh trapper_first_primary_air;
+
+	AnimatedMesh trapper_first_primary_fire;
+	AnimatedMesh trapper_first_primary_reload;
+	AnimatedMesh trapper_first_primary_throw;
+	AnimatedMesh trapper_first_primary_switch;
+
+	AnimatedMesh trapper_first_secondary_fire;
 
 	AnimatedMesh trapper_third_idle;
 	AnimatedMesh trapper_third_run;
