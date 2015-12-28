@@ -1,10 +1,10 @@
 #ifndef MESH_H
 #define MESH_H
 
-#include "Utils\GPUMemoryLeakChecker.h"
+#include "..\Utils\GPUMemoryLeakChecker.h"
 #include <glm\glm.hpp>
 
-#include "defines.h"
+#include "../defines.h"
 
 #include <string>
 #include <sstream>

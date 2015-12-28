@@ -1,7 +1,7 @@
 #ifndef ANIM_MANAGER_H
 #define ANIM_MANAGER_H
 
-#include "../Project/Core/AnimationState.h"
+#include "../../Project/Core/AnimationState.h"
 
 class AnimManager 
 {

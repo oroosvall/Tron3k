@@ -3,7 +3,7 @@
 
 #include <cstdlib>
 #include "../BlitQuad.h"
-#include "../StaticMesh.h"
+#include "../Mesh/StaticMesh.h"
 #include "../Lights.h"
 #include <vector>
 

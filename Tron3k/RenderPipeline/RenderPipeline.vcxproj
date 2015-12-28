@@ -149,40 +149,38 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AnimatedMesh.cpp" />
-    <ClCompile Include="AnimManager.cpp" />
     <ClCompile Include="BlitQuad.cpp" />
+    <ClCompile Include="Buffer\GBuffer.cpp" />
+    <ClCompile Include="Buffer\RenderTarget.cpp" />
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="ContentManager.cpp" />
-    <ClCompile Include="Effects\LightWall.cpp" />
-    <ClCompile Include="GBuffer.cpp" />
+    <ClCompile Include="Manager\AnimManager.cpp" />
+    <ClCompile Include="Manager\ContentManager.cpp" />
     <ClCompile Include="Map\Map.cpp" />
-    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="Mesh\AnimatedMesh.cpp" />
+    <ClCompile Include="Mesh\Mesh.cpp" />
+    <ClCompile Include="Mesh\StaticMesh.cpp" />
     <ClCompile Include="RenderPipeline.cpp" />
-    <ClCompile Include="RenderTarget.cpp" />
-    <ClCompile Include="StaticMesh.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Text\TextObject.cpp" />
     <ClCompile Include="Utils\GPUMemoryLeakChecker.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AnimatedMesh.h" />
-    <ClInclude Include="AnimManager.h" />
     <ClInclude Include="BlitQuad.h" />
+    <ClInclude Include="Buffer\GBuffer.h" />
+    <ClInclude Include="Buffer\RenderTarget.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="ContentManager.h" />
     <ClInclude Include="defines.h" />
-    <ClInclude Include="Effects\LightWall.h" />
-    <ClInclude Include="GBuffer.h" />
     <ClInclude Include="IRenderPipeline.h" />
     <ClInclude Include="Lights.h" />
+    <ClInclude Include="Manager\AnimManager.h" />
+    <ClInclude Include="Manager\ContentManager.h" />
     <ClInclude Include="Map\Map.h" />
     <ClInclude Include="Map\MapHeaders.h" />
-    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Mesh\AnimatedMesh.h" />
+    <ClInclude Include="Mesh\Mesh.h" />
+    <ClInclude Include="Mesh\StaticMesh.h" />
     <ClInclude Include="RenderPipeline.h" />
-    <ClInclude Include="RenderTarget.h" />
     <ClInclude Include="Shader.h" />
-    <ClInclude Include="StaticMesh.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Text\TextObject.h" />
     <ClInclude Include="Utils\GPUMemoryLeakChecker.h" />

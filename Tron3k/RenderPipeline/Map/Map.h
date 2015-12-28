@@ -1,7 +1,7 @@
 #ifndef MAP_H
 #define MAP_H
 
-#include "../StaticMesh.h"
+#include "../Mesh/StaticMesh.h"
 #include "MapHeaders.h"
 #include "../Texture.h"
 #include <glm\glm.hpp>

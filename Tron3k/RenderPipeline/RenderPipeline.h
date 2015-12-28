@@ -4,12 +4,11 @@
 #include "IRenderPipeline.h"
 #include "Text\TextObject.h"
 #include "Camera.h"
-#include "GBuffer.h"
+#include "Buffer\GBuffer.h"
 
-#include "ContentManager.h"
-#include "Effects\LightWall.h"
+#include "Manager\ContentManager.h"
 
-#include "AnimManager.h"
+#include "Manager\AnimManager.h"
 
 enum SETTING_INPUT
 {
@@ -35,7 +34,7 @@ private:
 	ContentManager contMan;
 	AnimManager anims;
 
-	LightWall lw;
+	//LightWall lw;
 
 	TextObject* test;
 

@@ -141,9 +141,6 @@
     <ClCompile Include="Core\Game\Role\PlayerEffects\Modifiers\LightWallLockedControls.cpp">
       <Filter>Source Files\Core\Game\Role\PlayerEffects\Modifiers</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Game\GameMap.cpp">
-      <Filter>Source Files\Core\Game</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\Trapper\EnergyBoost.cpp">
       <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes\Trapper</Filter>
     </ClCompile>
@@ -322,9 +319,6 @@
     </ClInclude>
     <ClInclude Include="Core\Game\Role\PlayerEffects\Modifiers\LightWallLockedControls.h">
       <Filter>Source Files\Core\Game\Role\PlayerEffects\Modifiers</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Game\GameMap.h">
-      <Filter>Source Files\Core\Game</Filter>
     </ClInclude>
     <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\AllWeapons.h">
       <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes</Filter>

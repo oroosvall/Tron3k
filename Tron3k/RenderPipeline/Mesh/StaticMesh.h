@@ -2,9 +2,9 @@
 #define STATICMESH_H
 
 #include <glm\glm.hpp>
-#include "Utils\GPUMemoryLeakChecker.h"
+#include "..\Utils\GPUMemoryLeakChecker.h"
 
-#include "defines.h"
+#include "../defines.h"
 
 class StaticMesh
 {

@@ -42,7 +42,7 @@ void Map::release()
 
 	if (tex)
 	{
-		for (size_t i = 0; i < textureCount; i++)
+		for (int i = 0; i < textureCount; i++)
 		{
 			glDeleteTextures(1, &tex[i].textureID);
 		}

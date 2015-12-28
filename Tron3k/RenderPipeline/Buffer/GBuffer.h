@@ -4,9 +4,9 @@
 #include <glm\glm.hpp>
 #include <glm\gtc\matrix_transform.hpp>
 #include "RenderTarget.h"
-#include "Lights.h"
+#include "..\Lights.h"
 
-#include "BlitQuad.h"
+#include "..\BlitQuad.h"
 
 class Gbuffer : public RenderTarget
 {

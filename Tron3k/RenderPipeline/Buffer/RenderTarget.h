@@ -1,7 +1,7 @@
 #ifndef RENDERTARGET_H
 #define RENDERTARGET_H
 
-#include "Utils\GPUMemoryLeakChecker.h"
+#include "..\Utils\GPUMemoryLeakChecker.h"
 
 class RenderTarget
 {

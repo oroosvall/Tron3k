@@ -384,31 +384,31 @@ void RenderPipeline::renderWallEffect(void* pos1, void* pos2, float uvStartOffse
 
 void RenderPipeline::renderEffects()
 {
-	glUseProgram(lw_Shader);
-	glProgramUniform1i(lw_Shader, lw_tex, 0);
-	//call contentman and bind the lightwal texture to 0
-	contMan.bindLightwalTexture();
-	cam.setViewProjMat(lw_Shader, lw_vp);
-
-	glBindBuffer(GL_ARRAY_BUFFER, lwVertexDataId);
-	glBindVertexArray(lwVertexAttribute);
-	
-	float of = timepass * 0.1f;
-
-	for (size_t i = 0; i < lw.playerWall.size(); i++)
-	{
-		for (size_t w = 0; w < lw.playerWall[i].lightQuad.size(); w++)
-		{
-			vec2 uv1 = lw.playerWall[i].lightQuad[w].uv1 + vec2(of, 0);
-			vec2 uv2 = lw.playerWall[i].lightQuad[w].uv2 + vec2(of, 0);
-			glProgramUniform2fv(lw_Shader, lw_uv1, 1, &uv1[0]);
-			glProgramUniform2fv(lw_Shader, lw_uv2, 1, &uv2[0]);
-			glProgramUniform3fv(lw_Shader, lw_pos1, 1, &lw.playerWall[i].lightQuad[w].pos1[0]);
-			glProgramUniform3fv(lw_Shader, lw_pos2, 1, &lw.playerWall[i].lightQuad[w].pos2[0]);
-
-			glDrawArrays(GL_POINTS, 0, 2);
-		}
-	}
+	//glUseProgram(lw_Shader);
+	//glProgramUniform1i(lw_Shader, lw_tex, 0);
+	////call contentman and bind the lightwal texture to 0
+	//contMan.bindLightwalTexture();
+	//cam.setViewProjMat(lw_Shader, lw_vp);
+	//
+	//glBindBuffer(GL_ARRAY_BUFFER, lwVertexDataId);
+	//glBindVertexArray(lwVertexAttribute);
+	//
+	//float of = timepass * 0.1f;
+	//
+	//for (size_t i = 0; i < lw.playerWall.size(); i++)
+	//{
+	//	for (size_t w = 0; w < lw.playerWall[i].lightQuad.size(); w++)
+	//	{
+	//		vec2 uv1 = lw.playerWall[i].lightQuad[w].uv1 + vec2(of, 0);
+	//		vec2 uv2 = lw.playerWall[i].lightQuad[w].uv2 + vec2(of, 0);
+	//		glProgramUniform2fv(lw_Shader, lw_uv1, 1, &uv1[0]);
+	//		glProgramUniform2fv(lw_Shader, lw_uv2, 1, &uv2[0]);
+	//		glProgramUniform3fv(lw_Shader, lw_pos1, 1, &lw.playerWall[i].lightQuad[w].pos1[0]);
+	//		glProgramUniform3fv(lw_Shader, lw_pos2, 1, &lw.playerWall[i].lightQuad[w].pos2[0]);
+	//
+	//		glDrawArrays(GL_POINTS, 0, 2);
+	//	}
+	//}
 
 	//vec2 uv1 = vec2(of, 0);
 	//vec2 uv2 = vec2(3 + of, 0);

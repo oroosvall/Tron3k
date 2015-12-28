@@ -2,13 +2,13 @@
 #define CONTENTMANAGER_H
 
 #include <glm\glm.hpp>
-#include "Mesh.h"
-#include "Utils\GPUMemoryLeakChecker.h"
-#include "Map\Map.h"
+#include "..\Mesh\Mesh.h"
+#include "..\Utils\GPUMemoryLeakChecker.h"
+#include "..\Map\Map.h"
 #include <vector>
 
-#include "AnimatedMesh.h"
-#include "../Project/Core/AnimationState.h"
+#include "..\Mesh\AnimatedMesh.h"
+#include "../../Project/Core/AnimationState.h"
 
 struct PlayerObject
 {

@@ -3,7 +3,7 @@
 
 #include <string>
 #include <glm\glm.hpp>
-#include "Map\MapHeaders.h"
+#include "..\Map\MapHeaders.h"
 #include <GL/glew.h>
 
 struct animationMatrices
