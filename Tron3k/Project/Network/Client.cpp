@@ -14,7 +14,7 @@ Client::~Client()
 		delete package;
 }
 
-void Client::init(Console* console, int port, IpAddress addrs)
+void Client::init(Console* console, int port, IpAddress addrs, bool record, bool playback)
 {
 	address = addrs;
 	PORT = port;
@@ -33,7 +33,8 @@ void Client::init(Console* console, int port, IpAddress addrs)
 	conID = -1;
 
 	con = new Connection();
-	con->init();
+	//test recording
+	con->init(record, playback);
 }
 
 bool Client::network_IN(float dt)
@@ -84,6 +85,11 @@ void Client::new_connection_packet(string _name)
 	*out << _name;
 	con->send(out);
 	delete out;
+}
+
+void Client::netlogUpdate(float dt)
+{
+	con->netLogUpdate(dt);
 }
 
 void Client::package_clear()

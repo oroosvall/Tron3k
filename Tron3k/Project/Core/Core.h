@@ -50,7 +50,11 @@ private:
 	Gamestate last;
 	int subState;
 	int lastSubState;
+
+	//network
 	float tick_timer;
+	bool client_record;
+	bool client_playback;
 
 	//gamestate update functions
 	void upStart(float dt);
@@ -61,7 +65,7 @@ private:
 
 	void startHandleCmds();
 	void roamHandleCmds();
-	void clientHandleCmds(); //Handles clientside /-commands
+	void clientHandleCmds(); 
 	void serverHandleCmds();
 
 	void renderWorld(float dt);

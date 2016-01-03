@@ -28,6 +28,8 @@ void Core::init()
 	
 	current = Gamestate::START;
 	tick_timer = 0;
+	client_record = false;
+	client_playback = false;
 }
 
 Core::~Core()
@@ -113,6 +115,8 @@ void Core::upStart(float dt)
 		console.printMsg("[/1] Client", "System", 'S');
 		console.printMsg("[/2] Server", "System", 'S');
 		console.printMsg("[/3] Roam", "System", 'S');
+		console.printMsg("[/4] Client_Record", "System", 'S');
+		console.printMsg("[/5] Client_Playback", "System", 'S');
 
 		loadSettings();
 		subState++;
@@ -226,7 +230,7 @@ void Core::upClient(float dt)
 		if (top)
 			delete top;
 		top = new Client();
-		top->init(&console, _port, _addrs);
+		top->init(&console, _port, _addrs, client_record, client_playback);
 
 		//attempt to connect
 		for (int n = 0; n < 3; n++)
@@ -273,6 +277,7 @@ void Core::upClient(float dt)
 	case 2: //main client loop
 
 		//fetch new network data
+		top->netlogUpdate(dt);
 		if (top->network_IN(dt) == false)
 		{
 			disconnect();
@@ -500,6 +505,8 @@ void Core::startHandleCmds()
 		else if (token == "/1")
 		{
 			current = Gamestate::CLIENT;
+			client_record = false;
+			client_playback = false;
 			subState = 0;
 		}
 
@@ -512,6 +519,20 @@ void Core::startHandleCmds()
 		else if (token == "/3")
 		{
 			current = Gamestate::ROAM;
+			subState = 0;
+		}
+		else if (token == "/4")
+		{
+			current = Gamestate::CLIENT;
+			client_record = true;
+			client_playback = false;
+			subState = 0;
+		}
+		else if (token == "/5")
+		{
+			current = Gamestate::CLIENT;
+			client_record = false;
+			client_playback = true;
 			subState = 0;
 		}
 	}

@@ -15,7 +15,7 @@ private:
 
 	void disconnected(Uint8 _conID);
 public:
-	void init(Console* console, int port, IpAddress addrs);
+	void init(Console* console, int port, IpAddress addrs, bool record = false, bool playback = false);
 	~Client();
 	
 	//Core->Topology com
@@ -28,6 +28,7 @@ public:
 	virtual void setIP(IpAddress addr) { address = addr; };
 	virtual bool firstPackageRecieved() { return packageRecieved; };
 	virtual void new_connection_packet(string name);
+	virtual void netlogUpdate(float dt);
 
 	//package
 	void package_clear();

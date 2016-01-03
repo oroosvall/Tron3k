@@ -38,7 +38,7 @@ public:
 	//--------
 
 	Topology() {};
-	virtual void init(Console* console, int port, IpAddress addrs) = 0;
+	virtual void init(Console* console, int port, IpAddress addrs, bool record = false, bool playback = false) = 0;
 	~Topology()
 	{
 		if (package)
@@ -66,6 +66,7 @@ public:
 	virtual void setIP(IpAddress addr) { };
 	virtual bool firstPackageRecieved() { return false; };
 	virtual void new_connection_packet(string name) {};
+	virtual void netlogUpdate(float dt) {};
 
 	//server only
 	virtual bool bind() { return false; };

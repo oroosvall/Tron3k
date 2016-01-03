@@ -5,25 +5,44 @@ Connection::~Connection()
 	
 }
 
-void Connection::init()
+void Connection::init(bool rec, bool play)
 {
 	socket.setBlocking(false);
 	connected = false;
+
+	recording = rec;
+	playback = play;
+
+	if (recording)
+	{
+		netlog.initREC("test.bin");
+		playback = false; // both cant be true
+	}
+	else if (playback)
+		netlog.initPLAY("test.bin");
 }
 
 bool Connection::connect(IpAddress _address, Int32 _port)
 {
-	socket.setBlocking(true);
-	status = socket.connect(_address, _port, seconds(2));
-	socket.setBlocking(false);
-	if (status != sf::Socket::Done)
+	if (playback == false)
 	{
-		connected = false;
+		socket.setBlocking(true);
+		status = socket.connect(_address, _port, seconds(2));
+		socket.setBlocking(false);
+		if (status != sf::Socket::Done)
+		{
+			connected = false;
+			return connected;
+		}
+
+		connected = true;
 		return connected;
 	}
-
-	connected = true;
-	return connected;
+	else
+	{
+		connected = true;
+		return connected;
+	}
 }
 
 bool Connection::connect(TcpListener* listener)
@@ -46,11 +65,22 @@ void Connection::disconnect()
 
 bool Connection::receive(Packet* ret)
 {
-	status = socket.receive(*ret);
-	if (status == sf::Socket::Disconnected)
-		return false;
+	if (playback == false)
+	{
+		status = socket.receive(*ret);
+		if (status == sf::Socket::Disconnected)
+			return false;
 
-	return true;
+		if (recording)
+			netlog.log(ret);
+
+		return true;
+	}
+	else
+	{
+		netlog.read(ret);
+		return true;
+	}
 }
 
 bool Connection::send(Packet* out)
@@ -60,4 +90,9 @@ bool Connection::send(Packet* out)
 		return false;
 
 	return true;
+}
+
+void Connection::netLogUpdate(float dt)
+{
+	netlog.update(dt);
 }

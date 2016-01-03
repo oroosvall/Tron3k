@@ -70,6 +70,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Network\Client.cpp" />
     <ClCompile Include="Network\Connection.cpp" />
+    <ClCompile Include="Network\Netlog.cpp" />
     <ClCompile Include="Network\Server.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -134,6 +135,7 @@
     <ClInclude Include="Network\Client.h" />
     <ClInclude Include="Network\Connection.h" />
     <ClInclude Include="Network\NetIndex.h" />
+    <ClInclude Include="Network\Netlog.h" />
     <ClInclude Include="Network\Server.h" />
     <ClInclude Include="Network\Topology.h" />
   </ItemGroup>

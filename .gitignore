@@ -49,3 +49,5 @@
 Tron3k/Debug/GameFiles/Config/player.ini
 *.opendb
 *.enc
+*.ipdb
+Tron3k/Release/Physics.iobj

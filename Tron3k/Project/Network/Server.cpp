@@ -45,7 +45,7 @@ Server::~Server()
 		delete package;
 }
 
-void Server::init(Console* console, int port, IpAddress addrs)
+void Server::init(Console* console, int port, IpAddress addrs, bool record, bool playback)
 {
 	PORT = port;
 	consolePtr = console;
