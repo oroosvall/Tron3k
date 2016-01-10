@@ -54,23 +54,30 @@ void Netlog::read(Packet* ret)
 
 		if (file.eof() == false) //if not at end of file
 		{
-			unsigned int time;
-			unsigned int datasize;
+			unsigned int time = 0;
+			unsigned int datasize = 0;
 			file.read((char*)&time, 4);
 			file.read((char*)&datasize, 4);
 			
-			char* data = new char[datasize];
-			file.read(data, datasize);
+			if (datasize != 0) 
+			{
+				char* data = new char[datasize];
+				file.read(data, datasize);
 
-			current_timestamp = ((float)time) / 1000.0f;
-			current = Packet();
-			current.append(data, datasize);
+				current_timestamp = ((float)time) / 1000.0f;
+				current = Packet();
+				current.append(data, datasize);
 
-			delete [] data;
+				delete[] data;
+			}
+			else //end of file
+			{
+				timepass = -10000000000;
+			}
 		}
-		else
+		else // end of file
 		{
-			current_timestamp = 999999999;
+			timepass = -10000000000;
 		}
 	}
 }
