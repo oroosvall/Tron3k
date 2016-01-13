@@ -15,19 +15,44 @@
 #define ULB 6
 #define URB 7
 
-
-struct OBB
+//These are read in engine, sent though core
+struct OBBloaded
 {
 	glm::vec4 corners[8];
 };
 
-struct AABB
+struct AABBloaded
 {
 	glm::vec4 pos;
 	glm::vec4 max;
 	glm::vec4 min;
 
+	std::vector<OBBloaded> ObbBoxes;
+};
+
+struct OBB
+{
+	glm::vec3 corners[8];
+
+	void init(OBBloaded* in)
+	{
+
+	}
+};
+
+struct AABB
+{
+	glm::vec3 pos;
+	glm::vec3 max;
+	glm::vec3 min;
+
 	std::vector<OBB> ObbBoxes;
+
+	void init(AABBloaded* in)
+	{
+
+	}
+
 };
 
 struct Cylinder

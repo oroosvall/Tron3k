@@ -221,8 +221,17 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		{
 			//move camera to where we are looking.
 			//if freecam is true the cam can move on its own
-			if(spectating == false)
-				cam->update(dt, freecam);
+			if (spectating == false)
+			{
+				if (i->getKeyInfo(GLFW_KEY_C)) // flymode
+				{
+					cam->update(dt, true);
+					setPos(cam->getPos());
+					vel *= 0;
+				}
+				else
+					cam->update(dt, freecam);
+			}
 
 			//If freecam or spectating dont take player move input
 			if (freecam == false)
