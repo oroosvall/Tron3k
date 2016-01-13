@@ -56,13 +56,13 @@ void Player::collisionHandling(float dt)
 	glm::vec3 oldVel = vel;
 
 	std::vector < glm::vec4 > cNorms;
-	int sweepCount = 3;
+	int sweepCount = 1;
 
 	for (int n = 0; n < sweepCount; n++)
 	{
 		//move player along the velocity
 		pos += vel * dt;
-		cNorms = physics->checkPlayerVWorldCollision(pos, 2);
+		cNorms = physics->checkPlayerVWorldCollision(pos, 1);
 	}
 	
 }

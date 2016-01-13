@@ -37,7 +37,7 @@ private:
 	CollideMesh bulletBox;
 
 	//--------AABB Collisions--------//
-	bool checkAABBvAABBCollision(CollideMesh mesh1, CollideMesh mesh2, bool moveSecond = true);
+	bool checkAABBvAABBCollision(AABB* mesh1, AABB* mesh2);
 	glm::vec3 checkAABBvAABBCollision(Geometry* obj1, Geometry* obj2); //unnecessary redefinition
 	
 	glm::vec3 checkAABBvAngledCylinderCollision(CollideMesh mesh1, CollideMesh mesh2);
