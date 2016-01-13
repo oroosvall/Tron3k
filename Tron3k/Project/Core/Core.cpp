@@ -157,7 +157,7 @@ void Core::upRoam(float dt)
 		renderPipe->getSpawnpoints(*game->getSpawnpoints());
 
 		Player* p = new Player();
-		p->init("Roam", glm::vec3(0, 0, 0));
+		p->init("Roam", glm::vec3(0, 0, 0), game->getPhysics());
 		game->createPlayer(p, 0, true);
 		game->freecam = true;
 		delete p;

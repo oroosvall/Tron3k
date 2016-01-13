@@ -37,7 +37,7 @@ private:
 	CollideMesh bulletBox;
 
 	//--------AABB Collisions--------//
-	glm::vec3 checkAABBvAABBCollision(CollideMesh mesh1, CollideMesh mesh2, bool moveSecond = true);
+	bool checkAABBvAABBCollision(CollideMesh mesh1, CollideMesh mesh2, bool moveSecond = true);
 	glm::vec3 checkAABBvAABBCollision(Geometry* obj1, Geometry* obj2); //unnecessary redefinition
 	
 	glm::vec3 checkAABBvAngledCylinderCollision(CollideMesh mesh1, CollideMesh mesh2);
@@ -75,6 +75,8 @@ private:
 	glm::vec3 getCollisionNormal(Cylinder cylinder, OBB obb);
 	glm::vec3 getCollisionNormal(AngledCylinder cylinder, OBB obb);
 	glm::vec3 getCollisionNormal(Sphere sphere, OBB obb);
+
+	std::vector<glm::vec4> Physics::sphereVSobbNorms(glm::vec3 pos, float rad, OBB* obb);
 	//--------------//--------------//
 
 	void storeChunkBox(int chunkID, std::vector<AABB> cBox);
@@ -91,7 +93,7 @@ public:
 	
 	virtual glm::vec3 checkPlayerVPlayerCollision(glm::vec3 playerPos1, glm::vec3 playerPos2);
 	virtual glm::vec3 checkPlayerVBulletCollision(glm::vec3 playerPos, glm::vec3 bulletPos);
-	virtual std::vector<glm::vec3> checkPlayerVWorldCollision(glm::vec3 playerPos);
+	virtual std::vector<glm::vec4> checkPlayerVWorldCollision(glm::vec3 playerPos, float rad);
 	virtual glm::vec3 checkBulletVWorldCollision(glm::vec3 bulletPos);
 
 	virtual void addGravity(glm::vec3 &velocity, float dt);

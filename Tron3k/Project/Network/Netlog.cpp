@@ -72,12 +72,12 @@ void Netlog::read(Packet* ret)
 			}
 			else //end of file
 			{
-				timepass = -10000000000;
+				timepass = -10000000000.0f;
 			}
 		}
 		else // end of file
 		{
-			timepass = -10000000000;
+			timepass = -10000000000.0f;
 		}
 	}
 }

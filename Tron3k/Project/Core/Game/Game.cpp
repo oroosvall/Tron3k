@@ -114,16 +114,24 @@ void Game::initPhysics()
 
 void Game::update(float dt)
 {
+	for (int c = 0; c < max_con; c++)
+	{
+		if (playerList[c] != nullptr)
+		{
+			playerUpdate(c, dt);
+		}
+	}
+
 	if (gameState == Gamestate::ROAM)
 	{
-		checkPlayerVWorldCollision(dt);
+		//checkPlayerVWorldCollision(dt);
 		checkBulletVWorldCollision();
 	}
 
 	if (gameState == Gamestate::CLIENT)
 	{
 		checkPvPCollision();
-		checkPlayerVWorldCollision(dt);
+		//checkPlayerVWorldCollision(dt);
 		checkFootsteps(dt);
 	}
 
@@ -132,13 +140,7 @@ void Game::update(float dt)
 		checkPlayerVBulletCollision();
 	}
 
-	for (int c = 0; c < max_con; c++)
-	{
-		if (playerList[c] != nullptr)
-		{
-			playerUpdate(c, dt);
-		}
-	}
+	
 
 	
 
@@ -178,7 +180,16 @@ void Game::playerUpdate(int conid, float dt)
 			spectatingThis = true;
 	}
 
+	// apply gravity vel
+	if (playerList[conid]->isLocal())
+	{
+		if (!playerList[conid]->getGrounded())
+			playerList[conid]->applyGravity(physics, dt);
+	}
+
+	// apply movement vel and then handle collision 
 	PLAYERMSG msg = playerList[conid]->update(dt, freecam, spectatingThis, spectating);
+
 	if (msg == PLAYERMSG::SHOOT)
 	{
 		registerWeapon(playerList[conid]);
@@ -208,18 +219,6 @@ void Game::playerUpdate(int conid, float dt)
 		if (playerList[conid]->isLocal())
 			localPlayerWantsRespawn = true;
 	}
-
-	/*
-
-	THIS IS WHERE WE APPLY ALL EXTERNAL FORCES TO THE PLAYER?
-
-	*/
-	if (playerList[conid]->isLocal())
-	{
-		if (!playerList[conid]->getGrounded())
-			playerList[conid]->applyGravity(physics, dt);
-	}
-
 }
 
 Player* Game::getPlayer(int conID)
@@ -242,7 +241,7 @@ std::vector<Effect*> Game::getEffects(EFFECT_TYPE type)
 void Game::createPlayer(Player* p, int conID, bool isLocal)
 {
 	playerList[conID] = new Player();
-	playerList[conID]->init(p->getName(), p->getPos(), isLocal);
+	playerList[conID]->init(p->getName(), p->getPos(), physics, isLocal);
 	playerList[conID]->setTeam(p->getTeam());
 	playerList[conID]->setRole(*templateRole);
 	if (isLocal)
@@ -425,41 +424,6 @@ void Game::checkPlayerVBulletCollision()
 			}
 		}
 
-	}
-}
-
-void Game::checkPlayerVWorldCollision(float dt)
-{
-	bool collides = false;
-	std::vector<glm::vec3> collisionNormal;
-	bool foundLocal = false;
-	for (int i = 0; i < max_con && !foundLocal; i++)
-	{
-		if (playerList[i] != nullptr)
-		{
-			if (playerList[i]->isLocal()) // && playerList[i]->isAlive())
-			{
-				//playerList[i]->setGrounded(false);
-				foundLocal = true;
-				
-				collisionNormal = physics->checkPlayerVWorldCollision(playerList[i]->getPos());
-				
-				if (collisionNormal.size() >= 1)
-				{
-					for (int c = 0; c < collisionNormal.size(); c++)
-					{
-						/*
-						Function adds all collision normals to the player, so the player can handle their movement this frame correctly
-						*/
-						playerList[i]->addCollisionNormal(collisionNormal[c]);
-					}					
-				}
-				else
-				{
-					playerList[i]->setGrounded(false);
-				}
-			}
-		}
 	}
 }
 

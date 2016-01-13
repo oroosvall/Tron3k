@@ -56,7 +56,7 @@ private:
 
 	std::vector<Bullet*> bullets[BULLET_TYPE::NROFBULLETS];
 	std::vector<Effect*> effects[EFFECT_TYPE::NROFEFFECTS];
-	
+
 	std::vector<int> teamSpectators; //Team vectors hold connection IDs
 	std::vector<int> teamOne;
 	std::vector<int> teamTwo;
@@ -119,7 +119,7 @@ private:
 	bool localPlayerWantsRespawn = false;
 	bool localPlayerRespawnWaiting = false;
 public:
-	
+
 
 	Game();
 	void release();
@@ -143,9 +143,11 @@ public:
 	void sendPlayerBox(std::vector<float> pBox);
 
 	//Collision checks
+	Physics* getPhysics() { return physics; };
+
 	void checkPvPCollision();
 	void checkPlayerVBulletCollision();
-	void checkPlayerVWorldCollision(float dt);
+	void checkPlayerVWorldCollision(float dt, int playerid);
 	void checkBulletVWorldCollision();
 
 	bool playerWantsToRespawn();

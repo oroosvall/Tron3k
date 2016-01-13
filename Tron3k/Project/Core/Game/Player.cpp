@@ -11,10 +11,11 @@ Player::~Player()
 		delete myModifiers[c];
 }
 
-void Player::init(std::string pName, glm::vec3 initPos, bool isLocal)
+void Player::init(std::string pName, glm::vec3 initPos, Physics* phy, bool isLocal)
 {
 	cam = CameraInput::getCam();
 	i = Input::getInput();
+	physics = phy;
 
 	name = pName;
 	pos = initPos;
@@ -49,72 +50,21 @@ void Player::setGoalDir(glm::vec3 newDir)
 	oldDir = dir;
 }
 
-void Player::collisionHandling(float dt)
+void Player::collisionHandling(float dt) 
 {
-	if (collisionNormalSize != 0)
+	glm::vec3 oldPos = pos;
+	glm::vec3 oldVel = vel;
+
+	std::vector < glm::vec4 > cNorms;
+	int sweepCount = 3;
+
+	for (int n = 0; n < sweepCount; n++)
 	{
-		glm::vec3 totalXZCollNormal = glm::vec3(0, 0, 0);
-		glm::vec3 totalYCollNormal = glm::vec3(0, 0, 0);
-		for (int c = 0; c < collisionNormalSize; c++)
-		{
-			totalXZCollNormal.x += collisionNormals[c].x;
-			totalXZCollNormal.z += collisionNormals[c].z;
-			totalYCollNormal.y += collisionNormals[c].y;
-		}
-
-		/*
-		Y-AXIS COLLISION
-		Only triggers when we are actually in the air, no need to collide along Y axis otherwise.
-		
-		CURRENTLY:
-		Does not move player back along collision normal, which might cause people to sink slightly into the ground.
-		*/
-
-		if (totalYCollNormal.y < -FLT_EPSILON || totalYCollNormal.y > FLT_EPSILON)
-		{
-			if (!grounded)
-			{
-				glm::vec3 myVelocity = getVelocity();
-				if (myVelocity.y > 0.0f && totalYCollNormal.y < 0.0f)
-				{
-					vel.y = 0.0f;
-				}
-				else if (myVelocity.y < 0.0f && totalYCollNormal.y > 0.0f)
-				{
-					vel.y = 0.0f;
-					grounded = true;
-				}
-			}
-			//setPos(pos + totalYCollNormal*dt);
-		}
-
-		if ((totalXZCollNormal.x < -FLT_EPSILON || totalXZCollNormal.x > FLT_EPSILON) ||
-			(totalXZCollNormal.z < -FLT_EPSILON || totalXZCollNormal.z > FLT_EPSILON))
-		{
-			setPos(getPos() + totalXZCollNormal*dt);
-			totalXZCollNormal = normalize(totalXZCollNormal);
-			glm::vec3 v = vel;
-			if (v != glm::vec3(0, 0, 0))
-				v = normalize(v);
-
-			glm::vec3 velProj = ((glm::dot(v, totalXZCollNormal) /
-				glm::dot(totalXZCollNormal, totalXZCollNormal)) * totalXZCollNormal); //korrekt
-			glm::vec3 velRej = vel;
-
-			velRej = v - velProj;
-
-			velRej = glm::vec3(velRej.x, 0, velRej.z);
-			velProj = glm::vec3(velProj.x, 0, velProj.z);
-			if (velProj != glm::vec3(0, 0, 0))
-			{
-				setVelocity(velRej*length(vel)); //FEL
-			}
-			else
-			{
-				setVelocity(velProj*length(vel));
-			}
-		}
+		//move player along the velocity
+		pos += vel * dt;
+		cNorms = physics->checkPlayerVWorldCollision(pos, 2);
 	}
+	
 }
 
 void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingThis)
@@ -286,8 +236,12 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					tempvec = normalize(vec2(dir.x, dir.z));
 					if (grounded)
 					{
-						vel.x = tempvec.x;
-						vel.z = tempvec.y;
+						tempvec *= acceleration * dt;
+						vel.x += tempvec.x;
+						vel.z += tempvec.y;
+						if (vel.length() > maxspeed)
+							vel = normalize(vel) * maxspeed;
+
 						stop = false;
 					}
 				}
@@ -297,8 +251,12 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					tempvec = -normalize(vec2(dir.x, dir.z));
 					if (grounded)
 					{
-						vel.x = tempvec.x;
-						vel.z = tempvec.y;
+						tempvec *= acceleration * dt;
+						vel.x += tempvec.x;
+						vel.z += tempvec.y;
+						if (vel.length() > maxspeed)
+							vel = normalize(vel) * maxspeed;
+
 						stop = false;
 					}
 				}
@@ -311,47 +269,30 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 						tempvec = normalize(vec2(left.x, left.z));
 						if (grounded)
 						{
+							tempvec *= acceleration * dt;
 							vel.x += tempvec.x;
 							vel.z += tempvec.y;
+							if (vel.length() > maxspeed)
+								vel = normalize(vel) * maxspeed;
+
 							stop = false;
-							tempvec = vec2(vel.x, vel.z);
-							if (glm::length(tempvec) > 0)
-							{
-								tempvec = normalize(tempvec);
-								vel.x = tempvec.x;
-								vel.z = tempvec.y;
-							}
 						}
 					}
 
 					if (i->getKeyInfo(GLFW_KEY_D))
 					{
 						vec3 right = cross(dir, vec3(0, 1, 0));
-						tempvec = glm::normalize(vec2(right.x, right.z));
-						right = glm::normalize(right);
+						tempvec = normalize(vec2(right.x, right.z));
 						if (grounded)
 						{
+							tempvec *= acceleration * dt;
 							vel.x += tempvec.x;
 							vel.z += tempvec.y;
+							if (vel.length() > maxspeed)
+								vel = normalize(vel) * maxspeed;
+
 							stop = false;
-							tempvec = vec2(vel.x, vel.z);
-
-							if (glm::length(tempvec) > 0)
-							{
-								tempvec = normalize(tempvec);
-								vel.x = tempvec.x;
-								vel.z = tempvec.y;
-							}
 						}
-					}
-				}
-
-				if (stop)
-				{
-					if (grounded)
-					{
-						vel.x = 0;
-						vel.z = 0;
 					}
 				}
 
@@ -521,6 +462,8 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		if (currentTeam != 0)
 		{
 			collisionHandling(dt);
+			
+			// also sets cam
 			movePlayer(dt, olddir, freecam, spectatingThisPlayer); //Move the player regardless of control lock
 
 			// --- Animation checks ---

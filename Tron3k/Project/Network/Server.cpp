@@ -197,7 +197,7 @@ void Server::in_new_connection(Packet* rec, Uint8 conID)
 			if (c == conID)
 			{
 				Player* temp = new Player();
-				temp->init(pName, glm::vec3(0, 0, 0));
+				temp->init(pName, glm::vec3(0, 0, 0), gamePtr->getPhysics());
 				gamePtr->createPlayer(temp, conID);
 				delete temp;
 			}
