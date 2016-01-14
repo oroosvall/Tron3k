@@ -41,8 +41,7 @@ private:
 	glm::vec3 dir; //Current viewing direction
 	glm::vec3 vel; //Our velocity i.e. in which direction we're moving
 
-	float maxspeed = 50.0f;
-	float acceleration = 50.0f;
+	float maxspeed = 5.0f;
 
 	glm::vec3 collisionVel; //How we ought to be moving based on our collisions
 	void collisionHandling(float dt);

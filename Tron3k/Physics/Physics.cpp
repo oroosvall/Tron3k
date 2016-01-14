@@ -398,7 +398,7 @@ vec4 Physics::sphereVSobbNorms(vec3 pos, float rad, OBB* obb)
 	for (int n = 0; n < 12; n++)
 	{
 		test2 = obb->lines[n].sphere_intersects(pos, rad);
-		test2.w *= 0.66f;
+		test2.w *= 0.95f;
 
 		if (test2.w > 0)
 			if (test2.w < t.w) // a new closest dist was found

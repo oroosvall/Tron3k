@@ -56,7 +56,7 @@ void Player::collisionHandling(float dt)
 	glm::vec3 oldVel = vel;
 
 	std::vector < glm::vec4 > cNorms;
-	int sweepCount = 10;
+	int sweepCount = 3;
 
 	grounded = false;
 
@@ -93,8 +93,12 @@ void Player::collisionHandling(float dt)
 
 				for (int k = 0; k < cNorms.size(); k++)
 				{
+
+
 					if (cNorms[k].y > 0)
 						grounded = true;
+					else
+						int debug = 3;
 
 					//push pos away using pendepth
 					posadjust += vec3(cNorms[k]) * cNorms[k].w;
@@ -292,7 +296,6 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			if (freecam == false)
 			{
 				dir = cam->getDir();
-				bool stop = true;
 				vec2 tempvec = vec2(0, 0);
 
 				if (grounded)
@@ -300,70 +303,40 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				else
 					printf("air \n");
 
-				if (i->getKeyInfo(GLFW_KEY_W))
+				if (grounded)
 				{
-					tempvec = normalize(vec2(dir.x, dir.z));
-					if (grounded)
+					if (i->getKeyInfo(GLFW_KEY_W))
 					{
-						tempvec *= acceleration * dt;
-						vel.x += tempvec.x;
-						vel.z += tempvec.y;
-						if (vel.length() > maxspeed)
-							vel = normalize(vel) * maxspeed;
-
-						stop = false;
+						tempvec += normalize(vec2(dir.x, dir.z));
 					}
-				}
 
-				if (i->getKeyInfo(GLFW_KEY_S))
-				{
-					tempvec = -normalize(vec2(dir.x, dir.z));
-					if (grounded)
+					if (i->getKeyInfo(GLFW_KEY_S))
 					{
-						tempvec *= acceleration * dt;
-						vel.x += tempvec.x;
-						vel.z += tempvec.y;
-						if (vel.length() > maxspeed)
-							vel = normalize(vel) * maxspeed;
-
-						stop = false;
+						tempvec += -normalize(vec2(dir.x, dir.z));
 					}
-				}
 
-				if (!(i->getKeyInfo(GLFW_KEY_A) && i->getKeyInfo(GLFW_KEY_D)))
-				{
-					if (i->getKeyInfo(GLFW_KEY_A))
+					if (!(i->getKeyInfo(GLFW_KEY_A) && i->getKeyInfo(GLFW_KEY_D)))
 					{
-						vec3 left = cross(vec3(0, 1, 0), dir);
-						tempvec = normalize(vec2(left.x, left.z));
-						if (grounded)
+						if (i->getKeyInfo(GLFW_KEY_A))
 						{
-							tempvec *= acceleration * dt;
-							vel.x += tempvec.x;
-							vel.z += tempvec.y;
-							if (vel.length() > maxspeed)
-								vel = normalize(vel) * maxspeed;
-
-							stop = false;
+							vec3 left = cross(vec3(0, 1, 0), dir);
+							tempvec += normalize(vec2(left.x, left.z));
+						}
+						if (i->getKeyInfo(GLFW_KEY_D))
+						{
+							vec3 right = cross(dir, vec3(0, 1, 0));
+							tempvec += normalize(vec2(right.x, right.z));
 						}
 					}
 
-					if (i->getKeyInfo(GLFW_KEY_D))
+					if (length(tempvec) > 0)
 					{
-						vec3 right = cross(dir, vec3(0, 1, 0));
-						tempvec = normalize(vec2(right.x, right.z));
-						if (grounded)
-						{
-							tempvec *= acceleration * dt;
-							vel.x += tempvec.x;
-							vel.z += tempvec.y;
-							if (vel.length() > maxspeed)
-								vel = normalize(vel) * maxspeed;
-
-							stop = false;
-						}
+						tempvec = normalize(tempvec) * role.getMovementSpeed();
+						vel.x = tempvec.x;
+						vel.z = tempvec.y;
 					}
 				}
+
 
 				Special* mobility = role.getMobilityAbility();
 				if (i->justPressed(mobility->getActivationKey()))
@@ -378,11 +351,11 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					}
 				}
 
-				if (i->justPressed(GLFW_KEY_SPACE))
+				if (i->getKeyInfo(GLFW_KEY_SPACE))
 				{
 					if (grounded)
 					{
-						vel.y = role.getJumpHeight();
+						vel.y = role.getJumpHeight() * 5;
 					}
 				}
 
