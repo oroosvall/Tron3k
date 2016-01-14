@@ -33,6 +33,45 @@ struct AABBloaded
 	std::vector<OBBloaded> ObbBoxes;
 };
 
+struct OBB_LINES
+{
+	vec3 point1;
+	vec3 point2;
+	vec3 line;
+	vec3 line_inv;
+
+	void init(vec3 _point1, vec3 _point2)
+	{
+		point1 = _point1;
+		point2 = _point2;
+		line = _point2 - _point1;
+		line_inv = -line;
+	}
+
+	vec4 sphere_intersects(vec3 pos, float rad)
+	{
+		//line from corner to the sphere center
+		vec3 p = pos - point1;
+
+		if (dot(p, line) < 0 || dot(p, line_inv) > 0) // if sphere is behind the line, that means a corner will be closer than the line closest
+		{
+			return vec4(0, 0, 0, -1);
+		}
+
+		//project p on the line and multiply by the line
+		float projlen = (dot(p, line) / dot(line, line));
+		vec3 intersection = projlen* line;
+
+		//normal
+		intersection = p - intersection;
+		float len = length(intersection);
+		if(len > rad)
+			return vec4(0, 0, 0, -1);
+
+		return vec4(normalize(intersection), len);
+	}
+};
+
 struct PLANE
 {
 	vec3 p[4];
@@ -93,7 +132,9 @@ struct PLANE
 
 						if (test1 > 0.0001 && test2 > 0.0001)
 						{
-							return vec4(inter, len);
+							//printf("%f \n", t);
+							
+							return vec4(n, t);
 						}
 					}
 				}
@@ -108,6 +149,8 @@ struct OBB
 	vec3 corners[8];
 
 	PLANE planes[6];
+
+	OBB_LINES lines[12];
 
 	void init(OBBloaded* in)
 	{
@@ -124,6 +167,23 @@ struct OBB
 		planes[3].init(corners[3], corners[5], corners[7], corners[1]);
 		planes[4].init(corners[4], corners[5], corners[3], corners[2]);
 		planes[5].init(corners[7], corners[6], corners[0], corners[1]);
+
+		//init all lines
+		lines[0].init(corners[2], corners[3]);
+		lines[1].init(corners[3], corners[1]);
+		lines[2].init(corners[1], corners[0]);
+		lines[3].init(corners[0], corners[2]);
+
+		lines[4].init(corners[2], corners[4]);
+		lines[5].init(corners[3], corners[5]);
+		lines[6].init(corners[1], corners[7]);
+		lines[7].init(corners[0], corners[6]);
+
+		lines[8].init(corners[4], corners[5]);
+		lines[9].init(corners[5], corners[7]);
+		lines[10].init(corners[7], corners[6]);
+		lines[11].init(corners[6], corners[4]);
+
 	}
 };
 

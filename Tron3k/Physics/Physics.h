@@ -7,7 +7,7 @@
 #define PHYSICS_API __declspec( dllimport  )
 #endif
 
-#define GRAVITY 4.0f
+#define GRAVITY 9.0f
 
 
 #include "Collision\Geometry.h"
@@ -76,7 +76,7 @@ private:
 	glm::vec3 getCollisionNormal(AngledCylinder cylinder, OBB obb);
 	glm::vec3 getCollisionNormal(Sphere sphere, OBB obb);
 
-	std::vector<glm::vec4> Physics::sphereVSobbNorms(glm::vec3 pos, float rad, OBB* obb);
+	vec4 Physics::sphereVSobbNorms(glm::vec3 pos, float rad, OBB* obb);
 	//--------------//--------------//
 
 	void storeChunkBox(int chunkID, std::vector<AABB> cBox);

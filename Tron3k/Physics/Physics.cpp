@@ -355,28 +355,61 @@ std::vector<vec3> Physics::getCollisionNormal(AABB* aabb1, AABB* aabb2)
 	return norms;
 }
 
-std::vector<vec4> Physics::sphereVSobbNorms(vec3 pos, float rad, OBB* obb)
+vec4 Physics::sphereVSobbNorms(vec3 pos, float rad, OBB* obb)
 {
-	std::vector<vec4> norms;
 	vec4 t;
 
 	//test vs all planes
 	for (int n = 0; n < 6; n++)
 	{
 		// send inverse plane normal as dir
+		// t.w will be distance to the wall -1 if no wall was close enough
 		t = obb->planes[n].intersects(pos, -obb->planes[n].n, rad);
 		
-		if (t.w > 0)
-			norms.push_back(t);
+		if (t.w > 0) // if a valid intersection found
+		{
+			return t;
+		}
 	}
 
-	//check obb corners
-	if (norms.size == 0)
+	//if no plane intersections found
+	//test all lines and corners and save the closest one
+
+	t.w = 99999999;
+	vec3 test;
+	float test_len;
+	//each corner
+	for (int n = 0; n < 8; n++)
 	{
+		test = obb->corners[n] - pos;
+		test_len = length(test);
 
+		if (test_len < t.w)
+		{
+			t.x = test.x; t.y = test.y; t.z = test.z;
+			t.w = test_len;
+		}
 	}
 
-	return norms;
+	// t  holds the distance to the closest and vector
+	vec4 test2;
+
+	//test each corner-line 
+	for (int n = 0; n < 12; n++)
+	{
+		test2 = obb->lines[n].sphere_intersects(pos, rad);
+		test2.w *= 0.66f;
+
+		if (test2.w > 0)
+			if (test2.w < t.w) // a new closest dist was found
+				t = test2;
+	}
+
+	// if the closest one if fourther than sphere rad = no intersection
+	if (t.w > rad)
+		t.w = -1;
+
+	return t;
 }
 
 vec3 Physics::getCollisionNormal(Cylinder cylinder, AABB aabb)
@@ -450,7 +483,7 @@ std::vector<vec4> Physics::checkPlayerVWorldCollision(vec3 playerPos, float rad)
 	playerBox.setAABB(box);
 
 	std::vector<vec4> cNorms;
-	std::vector<vec4> t;
+	vec4 t;
 	vec3 collisionNormal = vec3(0, 0, 0);
 
 	//each chunk
@@ -459,6 +492,11 @@ std::vector<vec4> Physics::checkPlayerVWorldCollision(vec3 playerPos, float rad)
 		//each abb
 		for (unsigned int j = 0; j < worldBoxes[i].size(); j++)
 		{
+
+			//if (i != 2 || j != 0)
+			//	break;
+
+
 			if (checkAABBvAABBCollision(&playerBox.boundingBox, &worldBoxes[i][j].boundingBox))
 			{
 				//printf("%d %d \n", i, j); // test for abbs so they register
@@ -468,10 +506,12 @@ std::vector<vec4> Physics::checkPlayerVWorldCollision(vec3 playerPos, float rad)
 				for (int n = 0; n < size; n++)
 				{
 					t = sphereVSobbNorms(playerPos, rad, &worldBoxes[i][j].boundingBox.ObbBoxes[n]);
-				
-					cNorms.reserve(cNorms.size() + t.size());
-					std::move(t.begin(), t.end(), std::inserter(cNorms, cNorms.end()));
-					t.clear();
+					t.w = rad - t.w; //penetration depth instead of collision distance 
+					if (t.w > 0 && t.w < rad)
+					{
+						t = vec4(normalize(vec3(t)), t.w);
+						cNorms.push_back(t);
+					}
 				}
 			}
 		}

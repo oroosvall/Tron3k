@@ -180,13 +180,6 @@ void Game::playerUpdate(int conid, float dt)
 			spectatingThis = true;
 	}
 
-	// apply gravity vel
-	if (playerList[conid]->isLocal())
-	{
-		if (!playerList[conid]->getGrounded())
-			playerList[conid]->applyGravity(physics, dt);
-	}
-
 	// apply movement vel and then handle collision 
 	PLAYERMSG msg = playerList[conid]->update(dt, freecam, spectatingThis, spectating);
 

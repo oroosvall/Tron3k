@@ -56,15 +56,65 @@ void Player::collisionHandling(float dt)
 	glm::vec3 oldVel = vel;
 
 	std::vector < glm::vec4 > cNorms;
-	int sweepCount = 1;
+	int sweepCount = 10;
+
+	grounded = false;
+
+	vec3 posadjust(0);
 
 	for (int n = 0; n < sweepCount; n++)
 	{
 		//move player along the velocity
-		pos += vel * dt;
+		pos = oldPos + posadjust + vel * dt;
 		cNorms = physics->checkPlayerVWorldCollision(pos, 1);
+
+		//if we collided with something
+		if (cNorms.size() > 0)
+		{
+			//if this is the last sweep and we collided
+			// set the old pos and set vel to 0;
+			if (n + 1 == sweepCount)
+			{
+				pos = oldPos;
+				vel *= 0;
+			}
+			else
+			{
+				//find the closest normal and ignore the others
+				//int closestIndex = 0;
+				//for (int k = 1; k < cNorms.size(); k++)
+				//{
+				//	if (cNorms[k].w > cNorms[closestIndex].w)
+				//		closestIndex = k;
+				//}
+				//
+				//if(cNorms[closestIndex].y > 0)
+				//	grounded = true;
+
+				for (int k = 0; k < cNorms.size(); k++)
+				{
+					if (cNorms[k].y > 0)
+						grounded = true;
+
+					//push pos away using pendepth
+					posadjust += vec3(cNorms[k]) * cNorms[k].w;
+
+					vec3 velchange = vec3(cNorms[k]) * length(vel);
+
+					//project normal on velchange and add them
+					float projlen = (dot(vel, velchange) / dot(vel, vel));
+					velchange = projlen* vel;
+
+					if(length(velchange) > 0)
+						vel += velchange;
+				}	
+			}
+		}
+		else
+		{
+			return;
+		}
 	}
-	
 }
 
 void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingThis)
@@ -90,8 +140,7 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 		}
 			
 	}
-	glm::vec3 playerVel = vel*role.getMovementSpeed();
-	pos += playerVel * dt; //Here we will also include external forces
+
 	if (freecam == false || specingThis == true)
 	{
 		cam->setCam(pos);
@@ -217,13 +266,19 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		anim_first_current = AnimationState::first_primary_idle;
 		anim_third_current = AnimationState::third_idle;
 
+		if(noclip)
+			vel *= 0;
+
 		if (!lockControls)
 		{
 			//move camera to where we are looking.
 			//if freecam is true the cam can move on its own
 			if (spectating == false)
 			{
-				if (i->getKeyInfo(GLFW_KEY_C)) // flymode
+				if (i->justPressed(GLFW_KEY_C)) // flymode
+					noclip = !noclip;
+
+				if(noclip)
 				{
 					cam->update(dt, true);
 					setPos(cam->getPos());
@@ -239,6 +294,11 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				dir = cam->getDir();
 				bool stop = true;
 				vec2 tempvec = vec2(0, 0);
+
+				if (grounded)
+					printf("grounded \n");
+				else
+					printf("air \n");
 
 				if (i->getKeyInfo(GLFW_KEY_W))
 				{
@@ -323,7 +383,6 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					if (grounded)
 					{
 						vel.y = role.getJumpHeight();
-						grounded = false;
 					}
 				}
 
@@ -470,6 +529,8 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		//ignore if we are spectating
 		if (currentTeam != 0)
 		{
+			applyGravity(dt);
+
 			collisionHandling(dt);
 			
 			// also sets cam
@@ -618,9 +679,9 @@ void Player::hitByEffect(Effect* e, int newHPtotal)
 	}
 }
 
-void Player::applyGravity(Physics* p, float dt)
+void Player::applyGravity(float dt)
 {
-	p->addGravity(vel, dt);
+	physics->addGravity(vel, dt);
 }
 
 void Player::addModifier(MODIFIER_TYPE mt)
