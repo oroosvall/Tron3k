@@ -56,9 +56,7 @@ void Player::collisionHandling(float dt)
 	glm::vec3 oldVel = vel;
 
 	std::vector < glm::vec4 > cNorms;
-	int sweepCount = 3;
-
-	grounded = false;
+	int sweepCount = 5;
 
 	vec3 posadjust(0);
 
@@ -93,8 +91,6 @@ void Player::collisionHandling(float dt)
 
 				for (int k = 0; k < cNorms.size(); k++)
 				{
-
-
 					if (cNorms[k].y > 0)
 						grounded = true;
 					else
@@ -106,8 +102,8 @@ void Player::collisionHandling(float dt)
 					vec3 velchange = vec3(cNorms[k]) * length(vel);
 
 					//project normal on velchange and add them
-					float projlen = (dot(vel, velchange) / dot(vel, vel));
-					velchange = projlen* vel;
+					float projlen = (dot(velchange , vel) / dot(velchange, velchange));
+					velchange *= -projlen;
 
 					if(length(velchange) > 0)
 						vel += velchange;
@@ -123,11 +119,6 @@ void Player::collisionHandling(float dt)
 
 void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingThis)
 {
-	/*
-	
-	Lägg till matematik för kollisioner här!!
-	
-	*/
 	if (!this->getFootsteps())
 		{
 			this->footstepsLoopReset(dt);
@@ -335,6 +326,11 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 						vel.x = tempvec.x;
 						vel.z = tempvec.y;
 					}
+					else // stop
+					{
+						vel.x = 0;
+						vel.z = 0;
+					}
 				}
 
 
@@ -504,8 +500,15 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		{
 			applyGravity(dt);
 
+			float lastHeight = pos.y;
+
 			collisionHandling(dt);
-			
+
+			float threshold = 1 * dt;
+
+			if (pos.y < lastHeight - threshold || pos.y > lastHeight + threshold)
+				grounded = false;
+
 			// also sets cam
 			movePlayer(dt, olddir, freecam, spectatingThisPlayer); //Move the player regardless of control lock
 
