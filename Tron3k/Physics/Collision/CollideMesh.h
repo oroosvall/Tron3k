@@ -51,13 +51,17 @@ struct OBB_LINES
 	vec4 sphere_intersects(vec3 pos, float rad)
 	{
 		//line from corner to the sphere center
-		vec3 p = pos - point1;
-
-		if (dot(p, line) < 0 || dot(p, line_inv) > 0) // if sphere is behind the line, that means a corner will be closer than the line closest
-		{
+		vec3 p = pos - point2;
+		
+		// if sphere is behind the line, that means a corner will be closer than the closest line 
+		if(dot(p, line_inv) < 0)
 			return vec4(0, 0, 0, -1);
-		}
 
+		p = pos - point1;
+
+		if (dot(p, line) < 0)
+			return vec4(0, 0, 0, -1);
+			
 		//project p on the line and multiply by the line
 		float projlen = (dot(p, line) / dot(line, line));
 		vec3 intersection = projlen* line;

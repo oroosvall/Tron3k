@@ -381,12 +381,12 @@ vec4 Physics::sphereVSobbNorms(vec3 pos, float rad, OBB* obb)
 	for (int n = 0; n < 12; n++)
 	{
 		t = obb->lines[n].sphere_intersects(pos, rad);
-
+	
 		if (t.w > 0)
 			if (t.w < closest.w) // a new closest dist was found
 				closest = t;
 	}
-
+	
 	//if we found a line intersection it will always be closer
 	//than all the corner intersections
 	if (closest.w < 9999999.0f)
@@ -397,7 +397,7 @@ vec4 Physics::sphereVSobbNorms(vec3 pos, float rad, OBB* obb)
 	//each corner
 	for (int n = 0; n < 8; n++)
 	{
-		test = obb->corners[n] - pos;
+		test = pos - obb->corners[n];
 		test_len = length(test);
 
 		if (test_len < closest.w)

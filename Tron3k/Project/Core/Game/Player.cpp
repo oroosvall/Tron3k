@@ -263,6 +263,12 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		if(noclip)
 			vel *= 0;
 
+		//friction
+		if (grounded)
+		{
+			vel -= vec3(vel.x, 0, vel.z) * dt * 10.0f;
+		}
+
 		if (!lockControls)
 		{
 			//move camera to where we are looking.
@@ -325,13 +331,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 						vel.x = tempvec.x;
 						vel.z = tempvec.y;
 					}
-					else // stop
-					{
-						vel.x = 0;
-						vel.z = 0;
-					}
 				}
-
 
 				Special* mobility = role.getMobilityAbility();
 				if (i->justPressed(mobility->getActivationKey()))
