@@ -56,7 +56,7 @@ void Player::collisionHandling(float dt)
 	glm::vec3 oldVel = vel;
 
 	std::vector < glm::vec4 > cNorms;
-	int sweepCount = 5;
+	int sweepCount = 2;
 
 	vec3 posadjust(0);
 
@@ -64,6 +64,8 @@ void Player::collisionHandling(float dt)
 	{
 		//move player along the velocity
 		pos = oldPos + posadjust + vel * dt;
+
+		posadjust = vec3(0);
 
 		cNorms = physics->checkPlayerVWorldCollision(pos, 1);
 
@@ -293,11 +295,6 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			{
 				dir = cam->getDir();
 				vec2 tempvec = vec2(0, 0);
-
-				if (grounded)
-					printf("grounded \n");
-				else
-					printf("air \n");
 
 				if (grounded)
 				{

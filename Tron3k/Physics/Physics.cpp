@@ -496,17 +496,17 @@ std::vector<vec4> Physics::checkPlayerVWorldCollision(vec3 playerPos, float rad)
 		{
 			bool contin = false;
 
-			if (i == 1 && j == 0)
-				contin = true;
-			if (i == 2 && j == 2)
-				contin = true;
-
-			if (!contin)
-				continue;
+			//if (i == 1 && j == 0)
+			//	contin = true;
+			//if (i == 2 && j == 2)
+			//	contin = true;
+			//
+			//if (!contin)
+			//	continue;
 
 			if (checkAABBvAABBCollision(&playerBox.boundingBox, &worldBoxes[i][j].boundingBox))
 			{
-				printf("%d %d \n", i, j); // test for abbs so they register
+				//printf("%d %d \n", i, j); // test for abbs so they register
 
 				//for each obb contained in that abb
 				int size = worldBoxes[i][j].boundingBox.ObbBoxes.size();

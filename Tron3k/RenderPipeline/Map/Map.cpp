@@ -75,26 +75,8 @@ void Map::release()
 
 void Map::renderChunk(GLuint shader, GLuint shaderLocation, int chunkID)
 {
-
-
-
-	if (chunkID == 3)
-		return;
-
-
-
 	for (size_t i = 0; i < chunks[chunkID].props.size(); i++)
 	{
-
-		if (chunkID == 1)
-			if (i != 0)
-				continue;
-		
-		if(chunkID == 2)
-			if (i != 1)
-				continue;
-
-
 		int meshID = chunks[chunkID].props[i].id;
 
 		glActiveTexture(GL_TEXTURE0);
