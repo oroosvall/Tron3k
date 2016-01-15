@@ -137,12 +137,9 @@ void Game::update(float dt)
 
 	if (gameState == Gamestate::SERVER)
 	{
+		checkBulletVWorldCollision();
 		checkPlayerVBulletCollision();
 	}
-
-	
-
-	
 
 	for (unsigned int i = 0; i < BULLET_TYPE::NROFBULLETS; i++)
 	{
@@ -274,9 +271,6 @@ void Game::checkFootsteps(float dt)
 				playerList[i]->footstepsLoopReset(dt);
 			}
 			
-		
-		
-
 			if (playerList[i]->getFootsteps())
 			{
 				glm::vec3 pos;
@@ -290,8 +284,6 @@ void Game::checkFootsteps(float dt)
 					if(GetSoundActivated())
 						GetSound()->playFootsteps(playerList[i]->getRole()->getRole(), pos.x, pos.y, pos.z);
 				}
-
-
 			}
 		}
 	}
@@ -422,30 +414,75 @@ void Game::checkPlayerVBulletCollision()
 
 void Game::checkBulletVWorldCollision()
 {
-	glm::vec3 collides = glm::vec3(0,0,0);
+	//glm::vec3 collides = glm::vec3(0,0,0);
+	//
+	//for (unsigned int b = 0; b < BULLET_TYPE::NROFBULLETS; b++)
+	//{
+	//	for (unsigned int j = 0; j < bullets[b].size(); j++)
+	//	{
+	//		collides = glm::vec3(0,0,0);
+	//		if (bullets[b][j] != nullptr)
+	//		{
+	//			int pid = -1, bid = -1;
+	//			bullets[b][j]->getId(pid, bid);
+	//			collides = physics->checkBulletVWorldCollision(bullets[b][j]->getPos());
+	//			if (collides != glm::vec3(0,0,0))
+	//			{
+	//				BulletHitWorldInfo hi;
+	//				hi.bt = BULLET_TYPE(b); hi.hitPos = bullets[b][j]->getPos(); hi.hitDir = bullets[b][j]->getDir();
+	//				bullets[b][j]->getId(hi.bulletPID, hi.bulletBID);
+	//				hi.collisionNormal = collides;
+	//				allBulletHitsOnWorld.push_back(hi);
+	//				handleBulletHitWorldEvent(hi);
+	//			}
+	//		}
+	//	}
+	//}
 
+	// reflection test code
+
+	std::vector<glm::vec4> collides;
+	
 	for (unsigned int b = 0; b < BULLET_TYPE::NROFBULLETS; b++)
 	{
 		for (unsigned int j = 0; j < bullets[b].size(); j++)
 		{
-			collides = glm::vec3(0,0,0);
 			if (bullets[b][j] != nullptr)
 			{
 				int pid = -1, bid = -1;
 				bullets[b][j]->getId(pid, bid);
-				collides = physics->checkBulletVWorldCollision(bullets[b][j]->getPos());
-				if (collides != glm::vec3(0,0,0))
+				collides = physics->sphereVWorldCollision(bullets[b][j]->getPos(), 0.4);
+
+				if (collides.size())
 				{
-					BulletHitWorldInfo hi;
-					hi.bt = BULLET_TYPE(b); hi.hitPos = bullets[b][j]->getPos(); hi.hitDir = bullets[b][j]->getDir();
-					bullets[b][j]->getId(hi.bulletPID, hi.bulletBID);
-					hi.collisionNormal = collides;
-					allBulletHitsOnWorld.push_back(hi);
-					handleBulletHitWorldEvent(hi);
+					vec4 combinedNormal(0);
+					for (unsigned int n = 0; n < collides.size(); n++)
+					{
+						combinedNormal += collides[n];
+					}
+
+					// the w component holds the pendepth which i ignore here
+					vec3 combinedNormal2 = vec3(combinedNormal);
+
+					//reflect!!
+					if (combinedNormal2 != glm::vec3(0, 0, 0))
+					{
+						combinedNormal2 = normalize(combinedNormal2);
+						bullets[b][j]->setDir(reflect(bullets[b][j]->getDir(), combinedNormal2));
+
+						// remove bullet code
+						//BulletHitWorldInfo hi;
+						//hi.bt = BULLET_TYPE(b); hi.hitPos = bullets[b][j]->getPos(); hi.hitDir = bullets[b][j]->getDir();
+						//bullets[b][j]->getId(hi.bulletPID, hi.bulletBID);
+						//hi.collisionNormal = collides;
+						//allBulletHitsOnWorld.push_back(hi);
+						//handleBulletHitWorldEvent(hi);
+					}
 				}
 			}
 		}
 	}
+
 }
 
 void Game::registerWeapon(Player* p)

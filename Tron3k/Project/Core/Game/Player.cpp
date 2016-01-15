@@ -67,7 +67,7 @@ void Player::collisionHandling(float dt)
 
 		posadjust = vec3(0);
 
-		cNorms = physics->checkPlayerVWorldCollision(pos, 1);
+		cNorms = physics->sphereVWorldCollision(pos, 1);
 
 		//if we collided with something
 		if (cNorms.size() > 0)

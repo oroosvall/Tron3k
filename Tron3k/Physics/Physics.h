@@ -93,7 +93,7 @@ public:
 	
 	virtual glm::vec3 checkPlayerVPlayerCollision(glm::vec3 playerPos1, glm::vec3 playerPos2);
 	virtual glm::vec3 checkPlayerVBulletCollision(glm::vec3 playerPos, glm::vec3 bulletPos);
-	virtual std::vector<glm::vec4> checkPlayerVWorldCollision(glm::vec3 playerPos, float rad);
+	virtual std::vector<glm::vec4> sphereVWorldCollision(glm::vec3 playerPos, float rad);
 	virtual glm::vec3 checkBulletVWorldCollision(glm::vec3 bulletPos);
 
 	virtual void addGravity(glm::vec3 &velocity, float dt);

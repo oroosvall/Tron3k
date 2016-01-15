@@ -477,7 +477,7 @@ vec3 Physics::checkPlayerVBulletCollision(vec3 playerPos, vec3 bulletPos)
 	return collide;
 }
 
-std::vector<vec4> Physics::checkPlayerVWorldCollision(vec3 playerPos, float rad)
+std::vector<vec4> Physics::sphereVWorldCollision(vec3 playerPos, float rad)
 {
 	AABB box;
 	box.max = playerPos + vec3(rad, rad, rad);
