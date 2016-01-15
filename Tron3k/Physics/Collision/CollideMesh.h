@@ -65,8 +65,6 @@ struct OBB_LINES
 		//normal
 		intersection = p - intersection;
 		float len = length(intersection);
-		if(len > rad)
-			return vec4(0, 0, 0, -1);
 
 		return vec4(normalize(intersection), len);
 	}

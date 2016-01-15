@@ -358,6 +358,8 @@ std::vector<vec3> Physics::getCollisionNormal(AABB* aabb1, AABB* aabb2)
 vec4 Physics::sphereVSobbNorms(vec3 pos, float rad, OBB* obb)
 {
 	vec4 t;
+	vec4 closest;
+	closest.w = 9999999999.0f;
 
 	//test vs all planes
 	for (int n = 0; n < 6; n++)
@@ -366,16 +368,30 @@ vec4 Physics::sphereVSobbNorms(vec3 pos, float rad, OBB* obb)
 		// t.w will be distance to the wall -1 if no wall was close enough
 		t = obb->planes[n].intersects(pos, -obb->planes[n].n, rad);
 		
-		if (t.w > 0) // if a valid intersection found
+		// if a valid intersection found
+		//plane intersection will always be closer than all other intersections on the obb
+		if (t.w > 0) 
 		{
 			return t;
 		}
 	}
 
 	//if no plane intersections found
-	//test all lines and corners and save the closest one
+	//test all lines  
+	for (int n = 0; n < 12; n++)
+	{
+		t = obb->lines[n].sphere_intersects(pos, rad);
 
-	t.w = 99999999;
+		if (t.w > 0)
+			if (t.w < closest.w) // a new closest dist was found
+				closest = t;
+	}
+
+	//if we found a line intersection it will always be closer
+	//than all the corner intersections
+	if (closest.w < 9999999.0f)
+		return closest;
+
 	vec3 test;
 	float test_len;
 	//each corner
@@ -384,32 +400,18 @@ vec4 Physics::sphereVSobbNorms(vec3 pos, float rad, OBB* obb)
 		test = obb->corners[n] - pos;
 		test_len = length(test);
 
-		if (test_len < t.w)
+		if (test_len < closest.w)
 		{
-			t.x = test.x; t.y = test.y; t.z = test.z;
-			t.w = test_len;
+			closest.x = test.x; closest.y = test.y; closest.z = test.z;
+			closest.w = test_len;
 		}
 	}
 
-	// t  holds the distance to the closest and vector
-	vec4 test2;
-
-	//test each corner-line 
-	for (int n = 0; n < 12; n++)
-	{
-		test2 = obb->lines[n].sphere_intersects(pos, rad);
-		test2.w *= 0.95f;
-
-		if (test2.w > 0)
-			if (test2.w < t.w) // a new closest dist was found
-				t = test2;
-	}
-
 	// if the closest one if fourther than sphere rad = no intersection
-	if (t.w > rad)
-		t.w = -1;
+	if (closest.w > rad)
+		closest.w = -1;
 
-	return t;
+	return closest;
 }
 
 vec3 Physics::getCollisionNormal(Cylinder cylinder, AABB aabb)
@@ -492,14 +494,19 @@ std::vector<vec4> Physics::checkPlayerVWorldCollision(vec3 playerPos, float rad)
 		//each abb
 		for (unsigned int j = 0; j < worldBoxes[i].size(); j++)
 		{
+			bool contin = false;
 
-			//if (i != 2 || j != 0)
-			//	break;
+			if (i == 1 && j == 0)
+				contin = true;
+			if (i == 2 && j == 2)
+				contin = true;
 
+			if (!contin)
+				continue;
 
 			if (checkAABBvAABBCollision(&playerBox.boundingBox, &worldBoxes[i][j].boundingBox))
 			{
-				//printf("%d %d \n", i, j); // test for abbs so they register
+				printf("%d %d \n", i, j); // test for abbs so they register
 
 				//for each obb contained in that abb
 				int size = worldBoxes[i][j].boundingBox.ObbBoxes.size();
@@ -512,6 +519,9 @@ std::vector<vec4> Physics::checkPlayerVWorldCollision(vec3 playerPos, float rad)
 						t = vec4(normalize(vec3(t)), t.w);
 						cNorms.push_back(t);
 					}
+
+					if (cNorms.size() > 1)
+						int k = 3;
 				}
 			}
 		}

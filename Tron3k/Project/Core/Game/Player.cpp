@@ -64,6 +64,7 @@ void Player::collisionHandling(float dt)
 	{
 		//move player along the velocity
 		pos = oldPos + posadjust + vel * dt;
+
 		cNorms = physics->checkPlayerVWorldCollision(pos, 1);
 
 		//if we collided with something
@@ -93,8 +94,6 @@ void Player::collisionHandling(float dt)
 				{
 					if (cNorms[k].y > 0)
 						grounded = true;
-					else
-						int debug = 3;
 
 					//push pos away using pendepth
 					posadjust += vec3(cNorms[k]) * cNorms[k].w;
