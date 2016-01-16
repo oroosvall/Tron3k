@@ -52,61 +52,125 @@ void Player::setGoalDir(glm::vec3 newDir)
 
 void Player::collisionHandling(float dt) 
 {
+	//glm::vec3 oldPos = pos;
+	//glm::vec3 oldVel = vel;
+	//
+	//std::vector < glm::vec4 > cNorms;
+	//int sweepCount = 3;
+	//
+	//vec3 posadjust(0);
+	//
+	//for (int n = 0; n < sweepCount; n++)
+	//{
+	//	//move player along the velocity
+	//	pos = oldPos + posadjust + vel * dt;
+	//
+	//	posadjust = vec3(0);
+	//												//lower with distance from eyes to center
+	//	cNorms = physics->sphereVWorldCollision(pos - (vec3(0, 0.55f, 0 )), 1);
+	//
+	//	//if we collided with something
+	//	if (cNorms.size() > 0)
+	//	{
+	//
+	//		for (int k = 0; k < cNorms.size(); k++)
+	//		{
+	//			if (cNorms[k].y > 0)
+	//				grounded = true;
+	//
+	//			//push pos away using pendepth
+	//			vec3 pendepth = vec3(cNorms[k]) * cNorms[k].w;
+	//				
+	//			// abslut value, if two collisions from the same angle they should move us twice the distance
+	//			//if (posadjust.x * posadjust.x < pendepth.x * pendepth.x)
+	//			//	posadjust.x = pendepth.x;
+	//			//if (posadjust.y * posadjust.y < pendepth.y * pendepth.y)
+	//			//	posadjust.y = pendepth.y;
+	//			//if (posadjust.z * posadjust.z < pendepth.z * pendepth.z)
+	//			//	posadjust.z = pendepth.z;
+	//
+	//			posadjust += pendepth;
+	//
+	//			vec3 velchange = vec3(cNorms[k]) * length(vel);
+	//
+	//			//project normal on velchange and add them
+	//			float projlen = (dot(velchange , vel) / dot(velchange, velchange));
+	//			velchange *= -projlen;
+	//
+	//			if(length(velchange) > 0)
+	//				vel += velchange;
+	//		}	
+	//	}
+	//	else
+	//	{
+	//		return;
+	//	}
+	//}
+	//
+	//pos = oldPos;
+	//vel *= 0;
+	//return;
+
+
+	// ** SLIDE WORKING! **
 	glm::vec3 oldPos = pos;
 	glm::vec3 oldVel = vel;
-
+	
 	std::vector < glm::vec4 > cNorms;
 	int sweepCount = 3;
-
+	
 	vec3 posadjust(0);
-
+	
 	for (int n = 0; n < sweepCount; n++)
 	{
 		//move player along the velocity
-		pos = oldPos + posadjust + vel * dt;
-
-		posadjust = vec3(0);
-													//lower with distance from eyes to center
-		cNorms = physics->sphereVWorldCollision(pos - (vec3(0, 0.55f, 0 )), 1);
-
+		pos = oldPos + vel * dt;
+		pos.y += 0.1f * dt;
+		//lower with distance from eyes to center
+		cNorms = physics->sphereVWorldCollision(pos - (vec3(0, 0.55f, 0)), 1);
+	
 		//if we collided with something
 		if (cNorms.size() > 0)
 		{
+			if (cNorms.size() > 1)
+				int debug = 0;
 	
 			for (int k = 0; k < cNorms.size(); k++)
 			{
 				if (cNorms[k].y > 0)
 					grounded = true;
-
-				//push pos away using pendepth
-				vec3 pendepth = vec3(cNorms[k]) * cNorms[k].w;
-					
-				// abslut value, if two collisions from the same angle they should move us twice the distance
-				//if (posadjust.x * posadjust.x < pendepth.x * pendepth.x)
-				//	posadjust.x = pendepth.x;
-				//if (posadjust.y * posadjust.y < pendepth.y * pendepth.y)
-				//	posadjust.y = pendepth.y;
-				//if (posadjust.z * posadjust.z < pendepth.z * pendepth.z)
-				//	posadjust.z = pendepth.z;
-
-				posadjust += pendepth;
-
+	
 				vec3 velchange = vec3(cNorms[k]) * length(vel);
+	
+				if (velchange.y < 0)
+				{
+					// i dont set velchange to a 0 vector in the case of a normal that has (0, -1, 0)
+					bool upvector = true;
 
+ 					if (velchange.x > 0.000001f || velchange.x < -0.000001f)
+						upvector = false;
+
+					if (velchange.z > 0.000001f || velchange.z < -0.000001f || !upvector)
+					{
+						velchange.y = 0;
+						velchange = normalize(velchange) * length(vel);
+					}
+				}
+	
 				//project normal on velchange and add them
-				float projlen = (dot(velchange , vel) / dot(velchange, velchange));
+				float projlen = (dot(velchange, vel) / dot(velchange, velchange));
 				velchange *= -projlen;
-
-				if(length(velchange) > 0)
+	
+				if (length(velchange) > 0)
 					vel += velchange;
-			}	
+			}
 		}
 		else
 		{
 			return;
 		}
 	}
-
+	
 	pos = oldPos;
 	vel *= 0;
 	return;
