@@ -453,11 +453,13 @@ void Game::checkBulletVWorldCollision()
 				bullets[b][j]->getId(pid, bid);
 				collides = physics->sphereVWorldCollision(bullets[b][j]->getPos(), 0.4);
 
-				if (collides.size())
+				if (collides.size() > 0)
 				{
-					vec4 combinedNormal(0);
+					vec4 combinedNormal(0); // all normals added together and then normalized
+					vec4 posadjust(0); //pendepths combined
 					for (unsigned int n = 0; n < collides.size(); n++)
 					{
+						posadjust += collides[n] * collides[n].w;
 						combinedNormal += collides[n];
 					}
 
@@ -469,6 +471,8 @@ void Game::checkBulletVWorldCollision()
 					{
 						combinedNormal2 = normalize(combinedNormal2);
 						bullets[b][j]->setDir(reflect(bullets[b][j]->getDir(), combinedNormal2));
+
+						bullets[b][j]->setPos(bullets[b][j]->getPos() + vec3(posadjust));
 
 						// remove bullet code
 						//BulletHitWorldInfo hi;
