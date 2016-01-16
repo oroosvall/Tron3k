@@ -56,7 +56,7 @@ void Player::collisionHandling(float dt)
 	glm::vec3 oldVel = vel;
 
 	std::vector < glm::vec4 > cNorms;
-	int sweepCount = 5;
+	int sweepCount = 3;
 
 	vec3 posadjust(0);
 
@@ -72,47 +72,87 @@ void Player::collisionHandling(float dt)
 		//if we collided with something
 		if (cNorms.size() > 0)
 		{
-			//if this is the last sweep and we collided
-			// set the old pos and set vel to 0;
-			if (n + 1 == sweepCount)
+	
+			for (int k = 0; k < cNorms.size(); k++)
 			{
-				pos = oldPos;
-				vel *= 0;
-			}
-			else
-			{
-				for (int k = 0; k < cNorms.size(); k++)
-				{
-					if (cNorms[k].y > 0)
-						grounded = true;
+				if (cNorms[k].y > 0)
+					grounded = true;
 
-					//push pos away using pendepth
-					vec3 pendepth = vec3(cNorms[k]) * cNorms[k].w;
+				//push pos away using pendepth
+				vec3 pendepth = vec3(cNorms[k]) * cNorms[k].w;
 					
-					// abslut value, if two collisions from the same angle they should move us twice the distance
-					if (posadjust.x * posadjust.x < pendepth.x * pendepth.x)
-						posadjust.x = pendepth.x;
-					if (posadjust.y * posadjust.y < pendepth.y * pendepth.y)
-						posadjust.y = pendepth.y;
-					if (posadjust.z * posadjust.z < pendepth.z * pendepth.z)
-						posadjust.z = pendepth.z;
+				// abslut value, if two collisions from the same angle they should move us twice the distance
+				//if (posadjust.x * posadjust.x < pendepth.x * pendepth.x)
+				//	posadjust.x = pendepth.x;
+				//if (posadjust.y * posadjust.y < pendepth.y * pendepth.y)
+				//	posadjust.y = pendepth.y;
+				//if (posadjust.z * posadjust.z < pendepth.z * pendepth.z)
+				//	posadjust.z = pendepth.z;
 
-					vec3 velchange = vec3(cNorms[k]) * length(vel);
+				posadjust += pendepth;
 
-					//project normal on velchange and add them
-					float projlen = (dot(velchange , vel) / dot(velchange, velchange));
-					velchange *= -projlen;
+				vec3 velchange = vec3(cNorms[k]) * length(vel);
 
-					if(length(velchange) > 0)
-						vel += velchange;
-				}	
-			}
+				//project normal on velchange and add them
+				float projlen = (dot(velchange , vel) / dot(velchange, velchange));
+				velchange *= -projlen;
+
+				if(length(velchange) > 0)
+					vel += velchange;
+			}	
 		}
 		else
 		{
 			return;
 		}
 	}
+
+	pos = oldPos;
+	vel *= 0;
+	return;
+
+	//*** Pendepth Atempt ***
+
+	//move player along the velocity
+	//pos += vel * dt;
+	//
+	//vec3 posadjust = vec3(0);
+	////lower with distance from eyes to center
+	//std::vector<vec4> cNorms = physics->sphereVWorldCollision(pos - (vec3(0, 0.55f, 0)), 1);
+
+	//if we collided with something
+	//if (cNorms.size() > 0)
+	//{
+	//	for (int k = 0; k < cNorms.size(); k++)
+	//	{
+	//		if (cNorms[k].y > 0)
+	//			grounded = true;
+	//
+	//		//push pos away using pendepth
+	//		vec3 pendepth = vec3(cNorms[k]) * cNorms[k].w;
+	//
+	//		//lower the velocity in the normal collision direction * pendepth
+	//		//if( dot(vel, pendepth) < 0)
+	//		vel += pendepth;
+	//		pos += pendepth;
+	//
+	//		// abslut value, if two collisions from the same angle they should not move us twice the distance
+	//		if (posadjust.x * posadjust.x < pendepth.x * pendepth.x)
+	//			posadjust.x = pendepth.x;
+	//		if (posadjust.y * posadjust.y < pendepth.y * pendepth.y)
+	//			posadjust.y = pendepth.y;
+	//		if (posadjust.z * posadjust.z < pendepth.z * pendepth.z)
+	//			posadjust.z = pendepth.z;
+	//
+	//		posadjust += pendepth;
+	//	}
+	//
+	//	//vel += posadjust;
+	//	//pos += posadjust;
+	//
+	//}
+	//
+	//return;
 }
 
 void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingThis)
