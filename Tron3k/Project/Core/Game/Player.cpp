@@ -56,7 +56,7 @@ void Player::collisionHandling(float dt)
 	glm::vec3 oldVel = vel;
 
 	std::vector < glm::vec4 > cNorms;
-	int sweepCount = 2;
+	int sweepCount = 5;
 
 	vec3 posadjust(0);
 
@@ -66,8 +66,8 @@ void Player::collisionHandling(float dt)
 		pos = oldPos + posadjust + vel * dt;
 
 		posadjust = vec3(0);
-
-		cNorms = physics->sphereVWorldCollision(pos, 1);
+													//lower with distance from eyes to center
+		cNorms = physics->sphereVWorldCollision(pos - (vec3(0, 0.55f, 0 )), 1);
 
 		//if we collided with something
 		if (cNorms.size() > 0)
@@ -81,24 +81,21 @@ void Player::collisionHandling(float dt)
 			}
 			else
 			{
-				//find the closest normal and ignore the others
-				//int closestIndex = 0;
-				//for (int k = 1; k < cNorms.size(); k++)
-				//{
-				//	if (cNorms[k].w > cNorms[closestIndex].w)
-				//		closestIndex = k;
-				//}
-				//
-				//if(cNorms[closestIndex].y > 0)
-				//	grounded = true;
-
 				for (int k = 0; k < cNorms.size(); k++)
 				{
 					if (cNorms[k].y > 0)
 						grounded = true;
 
 					//push pos away using pendepth
-					posadjust += vec3(cNorms[k]) * cNorms[k].w;
+					vec3 pendepth = vec3(cNorms[k]) * cNorms[k].w;
+					
+					// abslut value, if two collisions from the same angle they should move us twice the distance
+					if (posadjust.x * posadjust.x < pendepth.x * pendepth.x)
+						posadjust.x = pendepth.x;
+					if (posadjust.y * posadjust.y < pendepth.y * pendepth.y)
+						posadjust.y = pendepth.y;
+					if (posadjust.z * posadjust.z < pendepth.z * pendepth.z)
+						posadjust.z = pendepth.z;
 
 					vec3 velchange = vec3(cNorms[k]) * length(vel);
 
@@ -243,7 +240,6 @@ bool Player::removeSpecificModifier(MODIFIER_TYPE mt)
 PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool spectating)
 {
 	PLAYERMSG msg = NONE;
-	bool animGrounded = grounded;
 
 	modifiersGetData(dt); //Dont Remove Please!
 
@@ -266,9 +262,15 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			vel *= 0;
 
 		//friction
+		//if (grounded)
+		//{
+		//	vel -= vec3(vel.x, 0, vel.z) * dt * 30.0f;
+		//}
+		
+		//instant stop
 		if (grounded)
 		{
-			vel -= vec3(vel.x, 0, vel.z) * dt * 10.0f;
+			vel = vec3(0);
 		}
 
 		if (!lockControls)
@@ -494,26 +496,37 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		//ignore if we are spectating
 		if (currentTeam != 0)
 		{
-			applyGravity(dt);
+			if(!noclip)
+				applyGravity(dt);
 
 			float lastHeight = pos.y;
 
+			grounded = false;
+
 			collisionHandling(dt);
 
-			float threshold = 1 * dt;
-
-			if (pos.y < lastHeight - threshold || pos.y > lastHeight + threshold)
-				grounded = false;
-
-			// also sets cam
-			movePlayer(dt, olddir, freecam, spectatingThisPlayer); //Move the player regardless of control lock
+			//sets player rotations and cam
+			movePlayer(dt, olddir, freecam, spectatingThisPlayer); 
 
 			// --- Animation checks ---
+			
+			bool animGroundedLast = animGrounded;
+			
+			if (grounded == false)
+				animAirTimer += dt;
+			else
+			{
+				animAirTimer = 0;
+				animGrounded = true;
+			}
 
-			if (grounded)
+			if (animAirTimer > 0.3f)
+				animGrounded = false;
+
+			if (animGrounded)
 			{
 				//Run checks
-				if (vel.x * vel.x > 0.0001 || vel.z * vel.z > 0.0001)
+				if (vel.x * vel.x > 1 || vel.z * vel.z > 1)
 				{
 					if (checkAnimOverwrite(anim_first_current, AnimationState::first_primary_run))
 						anim_first_current = AnimationState::first_primary_run;
@@ -548,9 +561,9 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			}
 
 			//Jump Checks
-			if (animGrounded != grounded) //grounded chenged this frame
+			if (animGrounded != animGroundedLast) //grounded chenged this frame
 			{
-				if (grounded) //landed
+				if (animGrounded) //landed
 				{
 					if (checkAnimOverwrite(anim_third_current, AnimationState::third_jump_end))
 						anim_third_current = AnimationState::third_jump_end;

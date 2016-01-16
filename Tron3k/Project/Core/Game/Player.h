@@ -66,6 +66,9 @@ private:
 	AnimationState anim_third_current;
 	AnimationState anim_third_framePeak;
 
+	bool animGrounded = false;
+	int animAirTimer = 0.0f;
+
 	bool isLocalPlayer;
 
 	int currentTeam;
