@@ -50,7 +50,7 @@ public:
 	bool justPressed(int key); //Used for both keyboard and mouse, returns whether a key was pressed this frame
 
 	void getCursor(double &x, double &y);
-	void centerCursor();
+	void centerCursor(int xcenter, int ycenter);
 
 	double getScrollValue();
 

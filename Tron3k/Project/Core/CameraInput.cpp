@@ -10,8 +10,10 @@ CameraInput::CameraInput()
 
 }
 
-void CameraInput::init(glm::mat4* view)
+void CameraInput::init(glm::mat4* view, int centerX, int centerY)
 {
+	setScreenCenter(centerX, centerY);
+
 	viewMat = view;
 
 	i = Input::getInput();
@@ -23,12 +25,18 @@ void CameraInput::init(glm::mat4* view)
 	setCam(vec3(0, 0, 25), vec3(0, -0.5, -1));
 }
 
+void CameraInput::setScreenCenter(int _centerX, int _centerY)
+{
+	centerX = _centerX;
+	centerY = _centerY;
+}
+
 void CameraInput::update(float dt, bool freeCam)
 {
 	i->getCursor(x_new, y_new);
 
-	int x = x_new - 400.0;
-	int y = y_new - 400.0;
+	int x = x_new - centerX;
+	int y = y_new - centerY;
 	mousepan(x, y);
 	
 	if(freeCam)
@@ -37,7 +45,7 @@ void CameraInput::update(float dt, bool freeCam)
 	if(freeCam)
 		*viewMat = lookAt(pos, pos + dir, vec3(0, 1, 0));
 	
-	i->centerCursor();
+	i->centerCursor(centerX, centerY);
 }
 
 void CameraInput::keypan(float dt)

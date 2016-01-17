@@ -16,8 +16,6 @@ private:
 	static CameraInput* singleton;
 	CameraInput();
 
-
-
 	Input* i;
 
 	glm::mat4* viewMat;
@@ -25,6 +23,8 @@ private:
 	vec3 pos;
 	vec3 dir;
 	vec3 start;
+
+	int centerX, centerY;
 
 	float angleH;
 	float angleV;
@@ -44,7 +44,9 @@ private:
 public:
 	static CameraInput* getCam();
 
-	void init(glm::mat4* viewMat);
+	void init(glm::mat4* viewMat, int _xres, int _yres);
+	//dont need to do this when we have a real crosshair in the game
+	void setScreenCenter(int centerx, int centery);
 
 	void update(float dt, bool freeCam);
 

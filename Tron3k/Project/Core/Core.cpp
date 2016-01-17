@@ -21,6 +21,7 @@ void Core::init()
 	fullscreen = false;
 	winX = winY = 800;
 	//winX = 1280; winY = 720;
+	//winX = 1920, winY = 1080;
 
 	createWindow(winX, winY, fullscreen);
 
@@ -1101,7 +1102,8 @@ void Core::initPipeline()
 		pv.xy[1] = winY;
 
 		CameraInput* cam = CameraInput::getCam();
-		cam->init((glm::mat4*)renderPipe->getView());
+		//s
+		cam->init((glm::mat4*)renderPipe->getView(), winX / 2, winY / 2);
 
 		if (!renderPipe->setSetting(PIPELINE_SETTINGS::VIEWPORT, pv))
 		{

@@ -609,7 +609,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			}
 
 			//Jump Checks
-			if (animGrounded != animGroundedLast) //grounded chenged this frame
+			if (animGrounded != animGroundedLast) //grounded changed this frame
 			{
 				if (animGrounded) //landed
 				{

@@ -67,7 +67,7 @@ private:
 	AnimationState anim_third_framePeak;
 
 	bool animGrounded = false;
-	int animAirTimer = 0.0f;
+	float animAirTimer = 0.0f;
 
 	bool isLocalPlayer;
 
