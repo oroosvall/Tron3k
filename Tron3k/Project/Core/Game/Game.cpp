@@ -463,7 +463,7 @@ void Game::checkBulletVWorldCollision()
 						combinedNormal += collides[n];
 					}
 
-					// the w component holds the pendepth which i ignore here
+					// the w component holds the pendepth
 					vec3 combinedNormal2 = vec3(combinedNormal);
 
 					//reflect!!
@@ -472,6 +472,7 @@ void Game::checkBulletVWorldCollision()
 						combinedNormal2 = normalize(combinedNormal2);
 						bullets[b][j]->setDir(reflect(bullets[b][j]->getDir(), combinedNormal2));
 
+						//use pendepth to set a new pos 
 						bullets[b][j]->setPos(bullets[b][j]->getPos() + vec3(posadjust));
 
 						// remove bullet code

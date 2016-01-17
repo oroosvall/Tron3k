@@ -19,7 +19,9 @@ void Core::init()
 
 	recreate = false;
 	fullscreen = false;
-	winX = winY = 800;
+	//winX = winY = 800;
+	winX = 1280;
+	winY = 720;
 	createWindow(winX, winY, fullscreen);
 
 	serverRender = false;

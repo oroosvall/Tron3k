@@ -52,54 +52,105 @@ void Player::setGoalDir(glm::vec3 newDir)
 
 void Player::collisionHandling(float dt) 
 {
+	//*** Pendepth ***
+
+	//move player along the velocity
+	pos += vel * dt;
+
+	vec3 posadjust = vec3(0);
+	//lower with distance from eyes to center
+	std::vector<vec4> cNorms = physics->sphereVWorldCollision(pos - (vec3(0, 0.55f, 0)), 1);
+
+	//if we collided with something
+	if (cNorms.size() > 0)
+	{
+		if (cNorms.size() > 1)
+
+			int debug = 1;
+
+		bool ceiling = false;
+		for (int k = 0; k < cNorms.size(); k++)
+		{
+			//push pos away and lower velocity using pendepth
+			vec3 pendepth = vec3(cNorms[k]) * cNorms[k].w;
+			if (cNorms[k].y < 0)
+				ceiling = true;
+
+			//vel += pendepth;
+			//pos += pendepth;
+
+			//ramp factor and grounded
+			if (cNorms[k].y > 0)
+			{
+				grounded = true;			
+				//float rampfactor = dot(vec3(cNorms[k]), vec3(0, 1, 0));
+				//pendepth *= 2 - rampfactor;
+			}
+
+			// abslut value, if two collisions from the same angle they should not move us twice the distance
+				posadjust.x += pendepth.x;
+			if (posadjust.y * posadjust.y < pendepth.y * pendepth.y)
+				posadjust.y = pendepth.y;
+				posadjust.z += pendepth.z;
+
+
+			//posadjust += pendepth;
+		}
+
+		vel += posadjust / dt * 0.5f;
+
+		if (ceiling)
+			posadjust.y = 0;
+
+		pos += posadjust;
+	}
+
+	return;
+
+	//*** Vector Redirect ***
+
 	//glm::vec3 oldPos = pos;
 	//glm::vec3 oldVel = vel;
 	//
 	//std::vector < glm::vec4 > cNorms;
-	//int sweepCount = 3;
-	//
-	//vec3 posadjust(0);
+	//int sweepCount = 5;
 	//
 	//for (int n = 0; n < sweepCount; n++)
 	//{
 	//	//move player along the velocity
-	//	pos = oldPos + posadjust + vel * dt;
+	//	pos = oldPos + vel * dt;
+	//	//to not get stuck on top edge
+	//	pos.y += 0.1f * dt;
 	//
-	//	posadjust = vec3(0);
-	//												//lower with distance from eyes to center
-	//	cNorms = physics->sphereVWorldCollision(pos - (vec3(0, 0.55f, 0 )), 1);
+	//	//Get collision normals and pendepths,    lower with distance from eyes to center
+	//	cNorms = physics->sphereVWorldCollision(pos - (vec3(0, 0.55f, 0)), 1);
 	//
 	//	//if we collided with something
 	//	if (cNorms.size() > 0)
 	//	{
-	//
+	//		if (cNorms.size() > 1)
+	//			int debug = 0;
+	//		
 	//		for (int k = 0; k < cNorms.size(); k++)
 	//		{
 	//			if (cNorms[k].y > 0)
 	//				grounded = true;
 	//
-	//			//push pos away using pendepth
-	//			vec3 pendepth = vec3(cNorms[k]) * cNorms[k].w;
-	//				
-	//			// abslut value, if two collisions from the same angle they should move us twice the distance
-	//			//if (posadjust.x * posadjust.x < pendepth.x * pendepth.x)
-	//			//	posadjust.x = pendepth.x;
-	//			//if (posadjust.y * posadjust.y < pendepth.y * pendepth.y)
-	//			//	posadjust.y = pendepth.y;
-	//			//if (posadjust.z * posadjust.z < pendepth.z * pendepth.z)
-	//			//	posadjust.z = pendepth.z;
-	//
-	//			posadjust += pendepth;
-	//
 	//			vec3 velchange = vec3(cNorms[k]) * length(vel);
 	//
 	//			//project normal on velchange and add them
-	//			float projlen = (dot(velchange , vel) / dot(velchange, velchange));
+	//			float projlen = (dot(velchange, vel) / dot(velchange, velchange));
 	//			velchange *= -projlen;
 	//
-	//			if(length(velchange) > 0)
+	//			if (length(velchange) > 0)
+	//			{
+	//				//if (cNorms[k].y > 0)
+	//				//	if (cNorms[k].y < 0.4f) // maximum angle allowed
+	//				//		velchange.y = 0;
+	//
 	//				vel += velchange;
-	//		}	
+	//			}
+	//		}
 	//	}
 	//	else
 	//	{
@@ -109,113 +160,6 @@ void Player::collisionHandling(float dt)
 	//
 	//pos = oldPos;
 	//vel *= 0;
-	//return;
-
-
-	// ** SLIDE WORKING! **
-	glm::vec3 oldPos = pos;
-	glm::vec3 oldVel = vel;
-	
-	std::vector < glm::vec4 > cNorms;
-	int sweepCount = 3;
-	
-	vec3 posadjust(0);
-	
-	for (int n = 0; n < sweepCount; n++)
-	{
-		//move player along the velocity
-		pos = oldPos + vel * dt;
-		pos.y += 0.1f * dt;
-		//lower with distance from eyes to center
-		cNorms = physics->sphereVWorldCollision(pos - (vec3(0, 0.55f, 0)), 1);
-	
-		//if we collided with something
-		if (cNorms.size() > 0)
-		{
-			if (cNorms.size() > 1)
-				int debug = 0;
-	
-			for (int k = 0; k < cNorms.size(); k++)
-			{
-				if (cNorms[k].y > 0)
-					grounded = true;
-	
-				vec3 velchange = vec3(cNorms[k]) * length(vel);
-	
-				if (velchange.y < 0)
-				{
-					// i dont set velchange to a 0 vector in the case of a normal that has (0, -1, 0)
-					bool upvector = true;
-
- 					if (velchange.x > 0.000001f || velchange.x < -0.000001f)
-						upvector = false;
-
-					if (velchange.z > 0.000001f || velchange.z < -0.000001f || !upvector)
-					{
-						velchange.y = 0;
-						velchange = normalize(velchange) * length(vel);
-					}
-				}
-	
-				//project normal on velchange and add them
-				float projlen = (dot(velchange, vel) / dot(velchange, velchange));
-				velchange *= -projlen;
-	
-				if (length(velchange) > 0)
-					vel += velchange;
-			}
-		}
-		else
-		{
-			return;
-		}
-	}
-	
-	pos = oldPos;
-	vel *= 0;
-	return;
-
-	//*** Pendepth Atempt ***
-
-	//move player along the velocity
-	//pos += vel * dt;
-	//
-	//vec3 posadjust = vec3(0);
-	////lower with distance from eyes to center
-	//std::vector<vec4> cNorms = physics->sphereVWorldCollision(pos - (vec3(0, 0.55f, 0)), 1);
-
-	//if we collided with something
-	//if (cNorms.size() > 0)
-	//{
-	//	for (int k = 0; k < cNorms.size(); k++)
-	//	{
-	//		if (cNorms[k].y > 0)
-	//			grounded = true;
-	//
-	//		//push pos away using pendepth
-	//		vec3 pendepth = vec3(cNorms[k]) * cNorms[k].w;
-	//
-	//		//lower the velocity in the normal collision direction * pendepth
-	//		//if( dot(vel, pendepth) < 0)
-	//		vel += pendepth;
-	//		pos += pendepth;
-	//
-	//		// abslut value, if two collisions from the same angle they should not move us twice the distance
-	//		if (posadjust.x * posadjust.x < pendepth.x * pendepth.x)
-	//			posadjust.x = pendepth.x;
-	//		if (posadjust.y * posadjust.y < pendepth.y * pendepth.y)
-	//			posadjust.y = pendepth.y;
-	//		if (posadjust.z * posadjust.z < pendepth.z * pendepth.z)
-	//			posadjust.z = pendepth.z;
-	//
-	//		posadjust += pendepth;
-	//	}
-	//
-	//	//vel += posadjust;
-	//	//pos += posadjust;
-	//
-	//}
-	//
 	//return;
 }
 
