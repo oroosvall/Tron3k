@@ -31,8 +31,7 @@ class ContentManager
 {
 
 private:
-	std::vector<Mesh> meshes;
-	std::vector<TextureLookup> textures;
+	//std::vector<TextureLookup> textures;
 	PlayerObject* playerModels;
 
 	//skybox
@@ -92,11 +91,6 @@ public:
 	void renderPlayer(int renderID, int keyframe, glm::mat4 world, GLuint uniformKeyMatrixLocation);
 
 	int getPortalID(glm::vec3 oldpos, glm::vec3 newpos) { return testMap.getChunkID(oldpos, newpos); }
-
-	void renderPortals(GLuint shader, GLuint world);
-
-	void loadChunk();
-	void releaseChunk();
 
 	void* getChunkCollisionVectorAsPointer(int chunkID);
 	void bindLightwalTexture();
