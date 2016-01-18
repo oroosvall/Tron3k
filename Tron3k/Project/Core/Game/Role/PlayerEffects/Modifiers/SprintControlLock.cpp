@@ -35,7 +35,7 @@ int SprintControlLock::getData(float dt)
 
 int SprintControlLock::setData(float dt)
 {
-	vel = vel + vel * vec3(1.001 * dt);
+	vel = vel + (vel * vec3(1.001 * dt)) * vec3(0.5);	//Icke vackert
 	vel.y = target->getVelocity().y;
 	target->setVelocity(vel);
 
