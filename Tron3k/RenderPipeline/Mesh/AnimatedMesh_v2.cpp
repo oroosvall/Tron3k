@@ -27,6 +27,10 @@ void AnimatedMeshV2::release()
 	}
 	if (tex)
 		delete[] tex;
+	
+	if(materials)
+		delete[] materials;
+
 }
 
 AnimatedMeshV2::~AnimatedMeshV2()
@@ -49,20 +53,15 @@ void AnimatedMeshV2::load(std::string fileName)
 
 		matOffsets = new int[charHdr.materialCount];
 		file.read((char*)matOffsets, sizeof(int)*charHdr.materialCount);
-		int a = 0;
 
 		indices = new int[charHdr.indicesCount];
 		file.read((char*)indices, sizeof(int)*charHdr.indicesCount);
-		int b = 0;
 
 		verts = new AnimVertex[charHdr.vertexCount];
 		file.read((char*)verts, sizeof(AnimVertex)*charHdr.vertexCount);
-		int c = 0;
 
-		Material* materials = new Material[charHdr.materialCount];
+		materials = new Material[charHdr.materialCount];
 		file.read((char*)materials, sizeof(Material) * charHdr.materialCount);
-		int k = 0;
-		delete[] materials;
 
 		textureCount = charHdr.textureCount;
 
@@ -133,15 +132,54 @@ void AnimatedMeshV2::draw(GLuint uniformKeyMatrixLocation)
 
 	if (GetAsyncKeyState(VK_F8))
 	{
-		glDeleteTextures(1, &tex[0].textureID);
-		tex[0].textureID = loadTexture(tex[0].textureName);
+		if (materials[0].textureMapIndex != -1)
+		{
+			glDeleteTextures(1, &tex[materials[0].textureMapIndex].textureID);
+			tex[materials[0].textureMapIndex].textureID = loadTexture(tex[materials[0].textureMapIndex].textureName);
+		}
+
+		if (materials[0].normalMapIndex != -1)
+		{
+			glDeleteTextures(1, &tex[materials[0].normalMapIndex].textureID);
+			tex[materials[0].normalMapIndex].textureID = loadTexture(tex[materials[0].normalMapIndex].textureName);
+		}
+		if (materials[0].specularMapIndex != -1)
+		{
+			glDeleteTextures(1, &tex[materials[0].specularMapIndex].textureID);
+			tex[materials[0].specularMapIndex].textureID = loadTexture(tex[materials[0].specularMapIndex].textureName);
+		}
 	}
 
-	glActiveTexture(GL_TEXTURE0);
 	if (tex)
-		glBindTexture(GL_TEXTURE_2D, tex[0].textureID);
-	else
-		glBindTexture(GL_TEXTURE_2D, blank_diffuse);
+	{
+		glActiveTexture(GL_TEXTURE0);
+		if (materials[0].textureMapIndex != -1)
+		{
+			glBindTexture(GL_TEXTURE_2D, tex[materials[0].textureMapIndex].textureID);
+		}
+		else
+		{
+			glBindTexture(GL_TEXTURE_2D, blank_normal);
+		}
+		glActiveTexture(GL_TEXTURE0 + 1);
+		if (materials[0].normalMapIndex != -1)
+		{
+			glBindTexture(GL_TEXTURE_2D, tex[materials[0].normalMapIndex].textureID);
+		}
+		else
+		{
+			glBindTexture(GL_TEXTURE_2D, blank_normal);
+		}
+		glActiveTexture(GL_TEXTURE0 + 2);
+		if (materials[0].specularMapIndex != -1)
+		{
+			glBindTexture(GL_TEXTURE_2D, tex[materials[0].specularMapIndex].textureID);
+		}
+		else
+		{
+			glBindTexture(GL_TEXTURE_2D, blank_glow);
+		}
+	}
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);

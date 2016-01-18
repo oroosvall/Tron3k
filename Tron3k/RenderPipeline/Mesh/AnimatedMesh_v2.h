@@ -23,6 +23,8 @@ private:
 	TextureStruct* tex;
 	int textureCount;
 
+	Material* materials;
+
 	// todo add animation states & animation data
 
 public:

@@ -43,9 +43,9 @@ void main()
 	boneNormal0 += ((vec4(boneNormal, 1.0f) * inverseBindpose[int(boneIndices.w)].bMatrix) * skinWeights.w).xyz;
 	boneTagent0 += ((vec4(boneTagent, 1.0f) * inverseBindpose[int(boneIndices.w)].bMatrix) * skinWeights.w).xyz;
 
-	bonePos0 = (vec4(bonePos0, 1.0f) * WorldMatrix).xyz;
-	boneNormal0 = (vec4(boneNormal0, 0.0f) * WorldMatrix).xyz;
-	boneTagent0 = (vec4(boneTagent0, 0.0f) * WorldMatrix).xyz;
-	gl_Position = ViewProjMatrix * vec4(bonePos.xyz, 1.0f);
+	bonePos0 = (vec4(bonePos, 1.0f) * WorldMatrix).xyz;
+	boneNormal0 = (vec4(boneNormal, 0.0f) * WorldMatrix).xyz;
+	boneTagent0 = (vec4(boneTagent, 0.0f) * WorldMatrix).xyz;
+	gl_Position = ViewProjMatrix * vec4(bonePos0.xyz, 1.0f);
 	boneUV0 = boneUV;
 }   
