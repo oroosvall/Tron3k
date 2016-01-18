@@ -246,6 +246,9 @@
     <ClCompile Include="Network\Netlog.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Game\Role\Special\SpecialTypes\WallJump.cpp">
+      <Filter>Source Files\Core\Game\Role\PlayerEffects\Modifiers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Input.h">
@@ -439,6 +442,9 @@
     </ClInclude>
     <ClInclude Include="Network\Netlog.h">
       <Filter>Source Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Special\SpecialTypes\WallJump.h">
+      <Filter>Source Files\Core\Game\Role\PlayerEffects\Modifiers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

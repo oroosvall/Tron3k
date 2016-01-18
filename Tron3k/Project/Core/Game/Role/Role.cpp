@@ -1,5 +1,6 @@
 #include "Role.h"
 #include "Special\SpecialTypes\MultiJump.h"
+#include "Special/SpecialTypes/WallJump.h"
 
 Role::Role()
 {
@@ -119,7 +120,7 @@ void Role::loadRoleSpecifics(int role)
 			role = 2;
 			specialAbility = new HackingDartSpecial(this);
 			specialAbility->init();
-			mobility = new MultiJump();
+			mobility = new WallJump();
 			mobility->init();
 			consumable = new Consumable();
 			consumable->init(CONSUMABLE_TYPE::LIGHTSPEED);

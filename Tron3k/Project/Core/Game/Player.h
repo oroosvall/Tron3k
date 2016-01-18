@@ -101,6 +101,7 @@ public:
 
 
 	void setCollisionInfo(std::vector<glm::vec4> collNormals);
+	glm::vec4* getCollisionNormalsForFrame(int &size) { size = collisionNormalSize; return collisionNormals; };
 	void applyGravity (float vel);
 
 	AnimationState getAnimState_f_c() { return anim_first_current; };

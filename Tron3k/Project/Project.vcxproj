@@ -40,6 +40,7 @@
     <ClCompile Include="Core\Game\Role\Special\SpecialTypes\Lightwall.cpp" />
     <ClCompile Include="Core\Game\Role\Special\SpecialTypes\MultiJump.cpp" />
     <ClCompile Include="Core\Game\Role\Special\SpecialTypes\SprintD.cpp" />
+    <ClCompile Include="Core\Game\Role\Special\SpecialTypes\WallJump.cpp" />
     <ClCompile Include="Core\Game\Role\Weapon\Bullet.cpp" />
     <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\BruteBullets\GrenadeShot.cpp" />
     <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\BruteBullets\ShotgunPellet.cpp" />
@@ -101,6 +102,7 @@
     <ClInclude Include="Core\Game\Role\Special\SpecialTypes\Lightwall.h" />
     <ClInclude Include="Core\Game\Role\Special\SpecialTypes\MultiJump.h" />
     <ClInclude Include="Core\Game\Role\Special\SpecialTypes\SprintD.h" />
+    <ClInclude Include="Core\Game\Role\Special\SpecialTypes\WallJump.h" />
     <ClInclude Include="Core\Game\Role\Weapon\Bullet.h" />
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\AllBullets.h" />
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\BruteBullets\GrenadeShot.h" />

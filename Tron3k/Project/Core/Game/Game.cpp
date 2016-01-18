@@ -851,11 +851,41 @@ void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec
 		p->setVelocity(vel);
 	}
 	break;
+
+	case SPECIAL_TYPE::WALLJUMP:
+	{
+		int size = 0;
+		glm::vec4* cNorms = p->getCollisionNormalsForFrame(size);
+		bool jumped = false;
+		for (int c = 0; c < size && !jumped; c++)
+		{
+			if (cNorms[c].y < 0.2f && cNorms[c].y > -0.2f)
+			{
+				jumped = true;
+				glm::vec3 reflect = normalize(glm::vec3(cNorms[c].x, 0, cNorms[c].z));
+				glm::vec3 vel = p->getVelocity();
+				float y = vel.y;
+				vel = glm::reflect(vel, reflect);
+				vel.y = y;
+				if (vel.y < 0)
+				{
+					vel.y = 8.0f;
+				}
+				else
+				{
+					vel.y += 8.0f;
+				}
+			}
+		}
+	}
+	break;
+
 	case SPECIAL_TYPE::HACKINGDARTSPECIAL:
 	{
 		addBulletToList(conID, 0, BULLET_TYPE::HACKING_DART, pos, dir);
 	}
 	break;
+
 	case SPECIAL_TYPE::SPRINTD:
 	{
 		p->addModifier(MODIFIER_TYPE::SPRINTCONTROLLOCK);
