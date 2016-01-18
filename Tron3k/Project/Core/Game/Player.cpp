@@ -103,6 +103,9 @@ void Player::collisionHandling(float dt)
 			posadjust.y = 0;
 
 		pos += posadjust;
+
+		if (ceiling && vel.y > 0)
+			vel.y = 0;
 	}
 
 	return;
@@ -253,7 +256,6 @@ void Player::cleanseModifiers(bool stickies)
 	{
 		if (!stickies)
 		{
-
 			if (!myModifiers[c]->isSticky())
 			{
 				delete myModifiers[c];
@@ -308,6 +310,12 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 		if(noclip)
 			vel *= 0;
+
+		//grounded printf
+		//if (grounded)
+		//	printf("ground \n");
+		//else
+		//	printf("air \n");
 
 		//friction
 		//if (grounded)
