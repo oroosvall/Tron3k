@@ -49,125 +49,6 @@ void Player::setGoalDir(glm::vec3 newDir)
 	oldDir = dir;
 }
 
-void Player::collisionHandling(float dt)
-{
-	/*
-	//*** Pendepth ***
-
-	//move player along the velocity
-	pos += vel * dt;
-
-	vec3 posadjust = vec3(0);
-	//lower with distance from eyes to center
-	std::vector<vec4> cNorms = physics->sphereVWorldCollision(pos - (vec3(0, 0.55f, 0)), 1);
-
-	//if we collided with something
-	if (cNorms.size() > 0)
-	{
-		if (cNorms.size() > 1)
-			int debug = 1;
-
-		bool ceiling = false;
-		for (int k = 0; k < cNorms.size(); k++)
-		{
-			//push pos away and lower velocity using pendepth
-			vec3 pendepth = vec3(cNorms[k]) * cNorms[k].w;
-			if (cNorms[k].y < 0)
-				ceiling = true;
-
-			//vel += pendepth;
-			//pos += pendepth;
-
-			//ramp factor and grounded
-			if (cNorms[k].y > 0) // test ramp!!
-			{
-				grounded = true;
-				//float rampfactor = dot(vec3(cNorms[k]), vec3(0, 1, 0));
-				//pendepth *= 2 - rampfactor;
-			}
-			/*
-			// abslut value, if two collisions from the same angle they should not move us twice the distance
-				posadjust.x += pendepth.x;
-			if (posadjust.y * posadjust.y < pendepth.y * pendepth.y)
-				posadjust.y = pendepth.y;
-				posadjust.z += pendepth.z;
-
-			posadjust += pendepth;
-		}
-
-		/*if(length(posadjust) > 0)
-			if(normalize(posadjust).y > 0.45f)
-				grounded = true;
-
-		vel += posadjust / dt * 0.5f;
-
-		if (ceiling)
-			posadjust.y = 0;
-
-		pos += posadjust;
-
-		if (ceiling && vel.y > 0)
-			vel.y = 0;
-	}
-
-	return;
-
-	//*** Vector Redirect ***
-	/*
-	glm::vec3 oldPos = pos;
-	glm::vec3 oldVel = vel;
-
-	std::vector < glm::vec4 > cNorms;
-	int sweepCount = 5;
-
-	for (int n = 0; n < sweepCount; n++)
-	{
-		//move player along the velocity
-		pos = oldPos + vel * dt;
-		//to not get stuck on top edge
-		pos.y += 0.1f * dt;
-
-		//Get collision normals and pendepths,    lower with distance from eyes to center
-		cNorms = physics->sphereVWorldCollision(pos - (vec3(0, 0.55f, 0)), 1);
-
-		//if we collided with something
-		if (cNorms.size() > 0)
-		{
-			if (cNorms.size() > 1)
-				int debug = 0;
-
-			for (int k = 0; k < cNorms.size(); k++)
-			{
-				if (cNorms[k].y > 0)
-					grounded = true;
-
-				vec3 velchange = vec3(cNorms[k]) * length(vel);
-
-				//project normal on velchange and add them
-				float projlen = (dot(velchange, vel) / dot(velchange, velchange));
-				velchange *= -projlen;
-
-				if (length(velchange) > 0)
-				{
-					//if (cNorms[k].y > 0)
-					//	if (cNorms[k].y < 0.4f) // maximum angle allowed
-					//		velchange.y = 0;
-
-					vel += velchange;
-				}
-			}
-		}
-		else
-		{
-			return;
-		}
-	}
-
-	pos = oldPos;
-	vel *= 0;
-	return;*/
-}
-
 void Player::setCollisionInfo(std::vector<glm::vec4> collNormals)
 {
 	if (collNormals.size() < 20 - collisionNormalSize)
@@ -200,12 +81,6 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 		}
 
 	}
-	
-	/*
-
-	Lägg till matematik för kollisioner här!!
-
-	*/
 
 	glm::vec3 playerVel = vec3(0);
 	playerVel.x = vel.x*role.getMovementSpeed();
@@ -223,26 +98,13 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 		if (collisionNormals[k].y < 0)
 			ceiling = true;
 
-		//ramp factor and grounded
 		if (collisionNormals[k].y > 0) // test ramp!!
 		{
 			grounded = true;
-			//float rampfactor = dot(vec3(cNorms[k]), vec3(0, 1, 0));
-			//pendepth *= 2 - rampfactor;
-		}
-		/*
-		// abslut value, if two collisions from the same angle they should not move us twice the distance
-		posadjust.x += pendepth.x;
-		if (posadjust.y * posadjust.y < pendepth.y * pendepth.y)
-		posadjust.y = pendepth.y;
-		posadjust.z += pendepth.z;*/
 
+		}
 		posadjust += pendepth;
 	}
-
-	/*if(length(posadjust) > 0)
-	if(normalize(posadjust).y > 0.45f)
-	grounded = true;*/
 
 	playerVel += posadjust / dt * 0.5f;
 
@@ -257,7 +119,7 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 	clearCollisionNormals();
 
 	//End of collision adjustement
-	
+
 
 	if (freecam == false || specingThis == true)
 	{
@@ -637,8 +499,6 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			grounded = false;
 
 			modifiersSetData(dt);	//Dont Remove Again Please!
-
-			collisionHandling(dt);	//Moves the player but shouldnt
 
 			//sets player rotations and cam
 
