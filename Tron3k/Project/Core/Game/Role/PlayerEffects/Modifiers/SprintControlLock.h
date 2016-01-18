@@ -8,7 +8,7 @@ class SprintControlLock : public Modifier
 private:
 	float sprintSpeed;
 	glm::vec3 vel;
-	float maxDuration = 5.0f;
+	float oldVelY;
 public:
 	void init(Player* myTarget);
 	int getData(float dt);

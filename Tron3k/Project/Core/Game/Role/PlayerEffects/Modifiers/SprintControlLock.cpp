@@ -4,10 +4,10 @@
 void SprintControlLock::init(Player* myTarget)
 {
 	type = MODIFIER_TYPE::SPRINTCONTROLLOCK;
-	sprintSpeed = 1.3f;
+	sprintSpeed = 8.3f;
 
 	target = myTarget;
-	lifeTime = 5;
+	lifeTime = 7.0f;
 
 	glm::vec2 dir = glm::vec2(target->getDir().x, target->getDir().z);
 	dir = normalize(dir);
@@ -20,19 +20,23 @@ void SprintControlLock::init(Player* myTarget)
 int SprintControlLock::getData(float dt)
 {
  	bool kill = false;
-	maxDuration -= dt;
+	lifeTime -= dt;
 
-	if (target->getVelocity().x != vel.x)
+	if (target->getVelocity().x != vel.x || target->getVelocity().z != vel.z)
 		kill = true;
-	if (maxDuration <= 0.0f)
+	if (lifeTime <= 0.0f)
 		kill = true;
+
+	if (kill)
+		return 1;
 
 	return 0;
 }
 
 int SprintControlLock::setData(float dt)
 {
-	vel *= 1.1 * dt;
+	vel = vel + vel * vec3(1.001 * dt);
+	vel.y = target->getVelocity().y;
 	target->setVelocity(vel);
 
 	return 0;

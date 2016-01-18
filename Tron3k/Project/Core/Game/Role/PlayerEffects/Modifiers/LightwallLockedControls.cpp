@@ -23,7 +23,7 @@ int LightWallLockedControls::getData(float dt)
 	bool kill = false;
 	if (!target->getGrounded())
 		kill = true;
-	if (target->getVelocity().x != vel.x && target->getVelocity().z != vel.z)
+	if (target->getVelocity().x != vel.x || target->getVelocity().z != vel.z)
 		kill = true;
 	if (target->getRole()->getSpecialMeter() <= 0)
 		kill = true;
