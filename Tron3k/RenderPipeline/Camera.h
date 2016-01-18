@@ -16,7 +16,7 @@ private:
 
 public:
 
-	void init();
+	void init(int xres, int yres);
 
 	void changeFoV(float newFoV);
 

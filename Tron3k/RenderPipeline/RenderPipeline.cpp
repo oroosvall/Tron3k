@@ -80,7 +80,7 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 		return false;
 	}
 
-	cam.init();
+	cam.init(WindowWidth, WindowHeight);
 
 	gBuffer = new Gbuffer();
 	
