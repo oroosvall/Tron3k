@@ -412,32 +412,38 @@ void Game::checkPlayerVBulletCollision()
 	}
 }
 
+void Game::checkPlayerVWorldCollision(float dt, int playerID)
+{
+	return;
+}
+
 void Game::checkBulletVWorldCollision()
 {
-	//glm::vec3 collides = glm::vec3(0,0,0);
-	//
-	//for (unsigned int b = 0; b < BULLET_TYPE::NROFBULLETS; b++)
-	//{
-	//	for (unsigned int j = 0; j < bullets[b].size(); j++)
-	//	{
-	//		collides = glm::vec3(0,0,0);
-	//		if (bullets[b][j] != nullptr)
-	//		{
-	//			int pid = -1, bid = -1;
-	//			bullets[b][j]->getId(pid, bid);
-	//			collides = physics->checkBulletVWorldCollision(bullets[b][j]->getPos());
-	//			if (collides != glm::vec3(0,0,0))
-	//			{
-	//				BulletHitWorldInfo hi;
-	//				hi.bt = BULLET_TYPE(b); hi.hitPos = bullets[b][j]->getPos(); hi.hitDir = bullets[b][j]->getDir();
-	//				bullets[b][j]->getId(hi.bulletPID, hi.bulletBID);
-	//				hi.collisionNormal = collides;
-	//				allBulletHitsOnWorld.push_back(hi);
-	//				handleBulletHitWorldEvent(hi);
-	//			}
-	//		}
-	//	}
-	//}
+	/*
+	glm::vec3 collides = glm::vec3(0,0,0);
+	
+	for (unsigned int b = 0; b < BULLET_TYPE::NROFBULLETS; b++)
+	{
+		for (unsigned int j = 0; j < bullets[b].size(); j++)
+		{
+			collides = glm::vec3(0,0,0);
+			if (bullets[b][j] != nullptr)
+			{
+				int pid = -1, bid = -1;
+				bullets[b][j]->getId(pid, bid);
+				collides = physics->checkBulletVWorldCollision(bullets[b][j]->getPos());
+				if (collides != glm::vec3(0,0,0))
+				{
+					BulletHitWorldInfo hi;
+					hi.bt = BULLET_TYPE(b); hi.hitPos = bullets[b][j]->getPos(); hi.hitDir = bullets[b][j]->getDir();
+					bullets[b][j]->getId(hi.bulletPID, hi.bulletBID);
+					hi.collisionNormal = collides;
+					allBulletHitsOnWorld.push_back(hi);
+					handleBulletHitWorldEvent(hi);
+				}
+			}
+		}
+	}*/
 
 	// reflection test code
 
