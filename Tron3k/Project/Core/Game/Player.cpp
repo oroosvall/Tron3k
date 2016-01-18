@@ -415,6 +415,9 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 				if (i->justPressed(GLFW_KEY_R))
 				{
+					if (this->role.getRole() == 0)
+						GetSound()->playUserGeneratedSound(SOUNDS::soundEffectTrapperReload);
+
 					role.getCurrentWeapon()->reload();
 					//play anim
 					if (checkAnimOverwrite(anim_first_current, AnimationState::first_primary_reload))

@@ -14,6 +14,7 @@ enum SOUNDS
 	firstBlood,
 	soundFootSteps,
 	soundStepsManipulator,
+	soundEffectTrapperReload,
 
 	nrOfSounds //leave last
 };
