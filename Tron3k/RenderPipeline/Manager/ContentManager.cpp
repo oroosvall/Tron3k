@@ -16,6 +16,8 @@ void ContentManager::init()
 	blank_normal = loadTexture("GameFiles/Textures/blank_n.png");
 	blank_glow = loadTexture("GameFiles/Textures/blank_g.png");
 
+	trapperV2.load("GameFiles/CharacterFiles/Trapper/chr_trapper.bin");
+
 	TextureLookup tex;
 
 	//0
@@ -237,6 +239,8 @@ void ContentManager::release()
 				testMap.chunks[c].collisionRender.abbRender[a].obbBoxesR[b].release();
 		}
 	}
+
+	trapperV2.release();
 }
 
 ContentManager::~ContentManager()
@@ -364,14 +368,14 @@ void ContentManager::renderPlayer(int renderID, int keyframe, glm::mat4 world, G
 		glDisable(GL_DEPTH_TEST);
 		//glEnable(GL_BLEND);
 
-		//glActiveTexture(GL_TEXTURE0);
-		//glBindTexture(GL_TEXTURE_2D, textures[3].textureID);
-		//
-		//glActiveTexture(GL_TEXTURE0 + 1);
-		//glBindTexture(GL_TEXTURE_2D, textures[4].textureID);
-		//
-		//glActiveTexture(GL_TEXTURE0 + 2);
-		//glBindTexture(GL_TEXTURE_2D, textures[6].textureID);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, blank_normal);
+		
+		glActiveTexture(GL_TEXTURE0 + 1);
+		glBindTexture(GL_TEXTURE_2D, blank_normal);
+		
+		glActiveTexture(GL_TEXTURE0 + 2);
+		glBindTexture(GL_TEXTURE_2D, blank_glow);
 
 		glBindVertexArray(skybox.vao);
 		glBindBuffer(GL_ARRAY_BUFFER, skybox.vbo);
@@ -417,31 +421,33 @@ void ContentManager::renderPlayer(int renderID, int keyframe, glm::mat4 world, G
 		case first_primary_idle:		trapper_first_primary_reload.update(0);			trapper_first_primary_reload.draw(uniformKeyMatrixLocation);	break;
 		case first_primary_run:			trapper_first_primary_run.update(keyframe);		trapper_first_primary_run.draw(uniformKeyMatrixLocation);		break;
 		case first_primary_air:			trapper_first_primary_reload.update(0);			trapper_first_primary_reload.draw(uniformKeyMatrixLocation);	break;
-
+		
 		case first_primary_fire:		trapper_first_primary_fire.update(keyframe);	trapper_first_primary_fire.draw(uniformKeyMatrixLocation);		break;
 		case first_primary_reload:		trapper_first_primary_reload.update(keyframe);	trapper_first_primary_reload.draw(uniformKeyMatrixLocation);	break;
 		case first_primary_throw:		trapper_first_primary_throw.update(keyframe);	trapper_first_primary_throw.draw(uniformKeyMatrixLocation);		break;
 		case first_primary_switch:		trapper_first_primary_switch.update(keyframe);	trapper_first_primary_switch.draw(uniformKeyMatrixLocation);	break;
-
+		
 		case first_secondary_fire:		trapper_first_secondary_fire.update(keyframe);	trapper_first_secondary_fire.draw(uniformKeyMatrixLocation);	break;
-
-		case third_idle:				trapper_third_idle.update(keyframe);			trapper_third_idle.draw(uniformKeyMatrixLocation);				break;
-
+		
+		case third_idle:				trapper_third_idle.update(keyframe);			/*trapper_third_idle.draw(uniformKeyMatrixLocation);*/				break;
+		
 		case third_run:					trapper_third_run.update(keyframe);				trapper_third_run.draw(uniformKeyMatrixLocation);				break;
 		case third_run_rev:				trapper_third_run.update(keyframe);				trapper_third_run.draw(uniformKeyMatrixLocation);				break;
-
+		
 		case third_strafe_left:			trapper_third_strafe_left.update(keyframe);		trapper_third_strafe_left.draw(uniformKeyMatrixLocation);		break;
 		case third_strafe_right:		trapper_third_strafe_right.update(keyframe);	trapper_third_strafe_right.draw(uniformKeyMatrixLocation);		break;
-
+		
 		case third_air:					trapper_third_jump_air.update(keyframe);		trapper_third_jump_air.draw(uniformKeyMatrixLocation);			break;
-
+		
 		case third_jump_begin:			trapper_third_jump_begin.update(keyframe);		trapper_third_jump_begin.draw(uniformKeyMatrixLocation);		break;
 		case third_jump_end:			trapper_third_jump_end.update(keyframe);		trapper_third_jump_end.draw(uniformKeyMatrixLocation);			break;
-
+		
 		case third_death:				trapper_third_idle.update(keyframe);			trapper_third_idle.draw(uniformKeyMatrixLocation);				break;
 
 		default:				break;
 		}
+
+		trapperV2.draw(0);
 	}
 }
 

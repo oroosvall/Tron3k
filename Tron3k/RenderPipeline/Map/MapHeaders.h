@@ -34,6 +34,14 @@ struct CharacterHeader
 	uint32_t jointCount;
 };
 
+struct CharacterHeaderV2
+{
+	uint32_t materialCount;
+	uint32_t textureCount;
+	uint32_t indicesCount;
+	uint32_t vertexCount;
+};
+
 struct MeshDataHDR
 {
 	uint32_t objectType;

@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "..\Mesh\AnimatedMesh.h"
+#include "..\Mesh\AnimatedMesh_v2.h"
 #include "../../Project/Core/AnimationState.h"
 
 struct PlayerObject
@@ -42,6 +43,7 @@ private:
 	GLuint portalQuery;
 
 	//trapper files
+	AnimatedMeshV2 trapperV2;
 	//AnimatedMesh trapper_first_primary_idle;
 	AnimatedMesh trapper_first_primary_run;
 	//AnimatedMesh trapper_first_primary_air;
