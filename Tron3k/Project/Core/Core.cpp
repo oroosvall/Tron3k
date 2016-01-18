@@ -897,13 +897,13 @@ void Core::renderWorld(float dt)
 
 		//send chunk glowvalues
 		vec3 color = { 0.1, 0.1, 0.1 };
-		renderPipe->setChunkColorAndInten(0, &color[0], 1);
-		color = { 0, 0, 0.7 };
-		renderPipe->setChunkColorAndInten(1, &color[0], 1);
-		color = { 0.7, 0, 0 };
-		renderPipe->setChunkColorAndInten(2, &color[0], 1);
-		color = { 0, 0.7, 0 };
-		renderPipe->setChunkColorAndInten(3, &color[0], 1);
+		renderPipe->setChunkColorAndInten(0, &color[0], 0);
+		//color = { 0, 0, 0.7 };
+		renderPipe->setChunkColorAndInten(1, &color[0], 0);
+		//color = { 0.7, 0, 0 };
+		renderPipe->setChunkColorAndInten(2, &color[0], 0);
+		//color = { 0, 0.7, 0 };
+		renderPipe->setChunkColorAndInten(3, &color[0], 0);
 
 		glm::vec3 tmpEyePos = CameraInput::getCam()->getPos();
 		renderPipe->update(tmpEyePos.x, tmpEyePos.y, tmpEyePos.z, dt); // sets the view/proj matrix
