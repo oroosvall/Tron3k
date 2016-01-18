@@ -559,12 +559,12 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 			grounded = false;
 
-			collisionHandling(dt);
-
 			modifiersSetData(dt);	//Dont Remove Again Please!
 
+			collisionHandling(dt);	//Moves the player but shouldnt
+
 			//sets player rotations and cam
-			movePlayer(dt, olddir, freecam, spectatingThisPlayer); 
+			movePlayer(dt, olddir, freecam, spectatingThisPlayer); //does not move the player but should
 
 			// --- Animation checks ---
 			
