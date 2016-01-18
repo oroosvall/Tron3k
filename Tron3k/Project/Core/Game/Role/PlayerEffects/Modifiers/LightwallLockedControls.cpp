@@ -4,15 +4,15 @@
 void LightWallLockedControls::init(Player* myTarget)
 {
 	type = MODIFIER_TYPE::LIGHTWALLCONTROLLOCK;
-	lightWallSpeed = 1.3f;
+	lightWallSpeed = 10.3f;
 
 	target = myTarget;
 	lifeTime = -1;
 
 	glm::vec2 dir = glm::vec2(target->getDir().x, target->getDir().z);
-	dir = normalize(dir);
+	//dir = normalize(dir);		Unnecessary?
 
-	vel = glm::vec3(dir.x, 0, dir.y)*lightWallSpeed;
+	vel = glm::vec3(dir.x, -0.1, dir.y)*lightWallSpeed;
 	target->setVelocity(vel);
 	target->getRole()->shutOffMeterGain();
 }
@@ -23,7 +23,7 @@ int LightWallLockedControls::getData(float dt)
 	bool kill = false;
 	if (!target->getGrounded())
 		kill = true;
-	if (target->getVelocity() != vel)
+	if (target->getVelocity().x != vel.x && target->getVelocity().z != vel.z)
 		kill = true;
 	if (target->getRole()->getSpecialMeter() <= 0)
 		kill = true;

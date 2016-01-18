@@ -17,6 +17,7 @@ class Map
 private:
 
 	Material* materials;
+
 	
 	TextureStruct* tex;
 
@@ -25,6 +26,7 @@ private:
 
 	int meshCount;
 	int textureCount;
+	int materialCount;
 
 	int bbCount;
 
