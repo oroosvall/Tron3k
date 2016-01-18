@@ -19,6 +19,7 @@ void Map::init()
 	{
 		tex[i].textureID = loadTexture("GameFiles/testfiles/" + std::string(tex[i].textureName));
 	}
+
 }
 
 void Map::release()
@@ -80,11 +81,20 @@ void Map::renderChunk(GLuint shader, GLuint shaderLocation, int chunkID)
 		int meshID = chunks[chunkID].props[i].id;
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].textureMapIndex].textureID);
-		//glActiveTexture(GL_TEXTURE0 + 1);
-		//glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].textureMapIndex].textureID);
-		//glActiveTexture(GL_TEXTURE0 + 2);
-		//glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].textureMapIndex].textureID);
+		if(materials[meshes[meshID].material].textureMapIndex != -1)
+			glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].textureMapIndex].textureID);
+		else
+			glBindTexture(GL_TEXTURE_2D, blank_diffuse);
+		glActiveTexture(GL_TEXTURE0 + 1);
+		if (materials[meshes[meshID].material].normalMapIndex != -1)
+			glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].normalMapIndex].textureID);
+		else
+			glBindTexture(GL_TEXTURE_2D, blank_normal);
+		glActiveTexture(GL_TEXTURE0 + 2);
+		if (materials[meshes[meshID].material].specularMapIndex != -1)
+			glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].specularMapIndex].textureID);
+		else
+			glBindTexture(GL_TEXTURE_2D, blank_glow);
 		
 		glBindVertexArray(meshes[meshID].vertexArray);
 		glBindBuffer(GL_ARRAY_BUFFER, meshes[meshID].vertexBuffer);
@@ -116,7 +126,7 @@ void Map::loadMap(std::string mapName)
 	meshCount = (int)fileHeader.meshCount;
 	int pointLightCount = (int)fileHeader.pointLightCount;
 	int spotLightCount = (int)fileHeader.spotLightCount;
-	int materialCount = (int)fileHeader.materialCount;
+	materialCount = (int)fileHeader.materialCount;
 	textureCount = (int)fileHeader.textureCount;
 	int portalCount = (int)fileHeader.portalCount;
 	int capCount = (int)fileHeader.capturePointCount;

@@ -38,6 +38,9 @@ private:
 	GLuint matricesBuffer;
 	animationMatrices* matrixBufferDataOneKey;
 
+	TextureStruct* tex;
+	int textureCount;
+
 public:
 
 	void init();

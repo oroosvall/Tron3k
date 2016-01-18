@@ -1,6 +1,8 @@
 #include "AnimatedMesh.h"
 #include <fstream>
 
+#include "../Texture.h"
+
 using std::ios;
 
 void AnimatedMesh::init()
@@ -34,6 +36,13 @@ void AnimatedMesh::release()
 	glDeleteBuffers(1, &vbo);
 	glDeleteBuffers(1, &ibo);
 	glDeleteBuffers(1, &matricesBuffer);
+
+	for (int i = 0; i < textureCount; i++)
+	{
+		glDeleteTextures(1, &tex[i].textureID);
+	}
+	if(tex)
+		delete[] tex;
 }
 
 AnimatedMesh::~AnimatedMesh()
@@ -122,19 +131,28 @@ void AnimatedMesh::load(std::string fileName)
 		file.read((char*)materials, sizeof(Material) * charHdr.materialCount);
 		delete[] materials;
 
-		TextureStruct* tex = new TextureStruct[charHdr.textureCount];
-		TextureHDR* textHeader = new TextureHDR[charHdr.textureCount];
-		file.read((char*)textHeader, sizeof(TextureHDR) * charHdr.textureCount);
+		textureCount = charHdr.textureCount;
 
-		for (uint32_t i = 0; i < charHdr.textureCount; i++)
+		if (textureCount > 0)
 		{
-			char* texName = new char[(unsigned int)textHeader[i].textureSize];
-			file.read(texName, sizeof(char) * (unsigned int)textHeader[i].textureSize);
-			tex[i].textureName = std::string(texName, textHeader[i].textureSize);
-			delete[] texName;
+			tex = new TextureStruct[charHdr.textureCount];
+			TextureHDR* textHeader = new TextureHDR[charHdr.textureCount];
+			file.read((char*)textHeader, sizeof(TextureHDR) * charHdr.textureCount);
+
+			for (uint32_t i = 0; i < charHdr.textureCount; i++)
+			{
+				char* texName = new char[(unsigned int)textHeader[i].textureSize];
+				file.read(texName, sizeof(char) * (unsigned int)textHeader[i].textureSize);
+				tex[i].textureName = "GameFiles/TestFiles/" + std::string(texName, textHeader[i].textureSize);
+				delete[] texName;
+			}
+			delete[] textHeader;
+
+			for (int i = 0; i < textureCount; i++)
+			{
+				tex[i].textureID = loadTexture(tex[i].textureName);
+			}
 		}
-		delete[] textHeader;
-		delete[] tex;
 
 		glGenBuffers(1, &vbo);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -183,6 +201,11 @@ void AnimatedMesh::load(std::string fileName)
 
 void AnimatedMesh::draw(GLuint uniformKeyMatrixLocation)
 {
+	glActiveTexture(GL_TEXTURE0);
+	if(tex)
+		glBindTexture(GL_TEXTURE_2D, tex[0].textureID);
+	else
+		glBindTexture(GL_TEXTURE_2D, blank_diffuse);
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
