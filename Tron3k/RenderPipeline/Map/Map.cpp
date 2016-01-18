@@ -9,7 +9,7 @@ void Map::init()
 	spB = 0;
 	spFFA = 0;
 
-	loadMap("GameFiles/TestFiles/Tron3k_map_4_obbFixed.bin");
+	loadMap("GameFiles/TestFiles/map_with_collisiontest.bin");
 
 	for (int i = 0; i < meshCount; i++)
 	{

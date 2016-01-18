@@ -32,7 +32,7 @@ class Player : public GameObject
 private:
 	Role role;
 	bool lockControls = false;
-
+	bool noclip = false;
 
 	bool footstepsLoop = false;
 	float footstepsCountdown = 0;
@@ -40,6 +40,9 @@ private:
 	glm::vec3 pos; //Current actual position
 	glm::vec3 dir; //Current viewing direction
 	glm::vec3 vel; //Our velocity i.e. in which direction we're moving
+
+	float maxspeed = 5.0f;
+
 	glm::vec3 collisionVel; //How we ought to be moving based on our collisions
 	void collisionHandling(float dt);
 	void movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingThis);
@@ -63,12 +66,16 @@ private:
 	AnimationState anim_third_current;
 	AnimationState anim_third_framePeak;
 
+	bool animGrounded = false;
+	float animAirTimer = 0.0f;
+
 	bool isLocalPlayer;
 
 	int currentTeam;
 
 	Input* i;
 	CameraInput* cam;
+	Physics* physics;
 
 	vector<Modifier*> myModifiers;
 	void modifiersGetData(float dt); //Gets relevant data (if any) from the player before update occurs
@@ -80,7 +87,7 @@ private:
 public:
 	Player();
 	~Player();
-	void init(std::string name, glm::vec3 pos, bool isLocal = false);
+	void init(std::string name, glm::vec3 pos, Physics* phy, bool isLocal = false);
 
 	void footstepsLoopReset(float dt);
 
@@ -94,7 +101,7 @@ public:
 	void setGoalPos(glm::vec3 newPos);
 	void setGoalDir(glm::vec3 newDir);
 
-	void applyGravity(Physics* p, float dt);
+	void applyGravity (float dt);
 
 	AnimationState getAnimState_f_c() { return anim_first_current; };
 	AnimationState getAnimState_f_p() { return anim_first_framePeak; };

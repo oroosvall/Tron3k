@@ -993,7 +993,7 @@ char Input::keyToChar(int key)
 	}
 }
 
-void Input::centerCursor()
+void Input::centerCursor(int centerx, int centeryr)
 {
-	glfwSetCursorPos(window, 400, 400);
+	glfwSetCursorPos(window, centerx, centeryr);
 }

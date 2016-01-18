@@ -18,27 +18,33 @@ void CollideMesh::init()
 
 void CollideMesh::setAABB(glm::vec3 pos, glm::vec3 max, glm::vec3 min)
 {
-	boundingBox.pos = glm::vec4(pos, 1.0f);
-	boundingBox.max = glm::vec4(max, 1.0f);
-	boundingBox.min = glm::vec4(min, 1.0f);
+	boundingBox.pos = pos;
+	boundingBox.max = max;
+	boundingBox.min = min;
 
 	boundingBox.ObbBoxes.clear();
 
 	OBB temp;
-	temp.corners[DLF] = glm::vec4(min.x/* + pos.x*/, min.y/* + pos.y*/, max.z/* + pos.z*/, 1.0f);
-	temp.corners[DRF] = glm::vec4(max.x/* + pos.x*/, min.y/* + pos.y*/, max.z/* + pos.z*/, 1.0f);
-	temp.corners[ULF] = glm::vec4(min.x/* + pos.x*/, max.y/* + pos.y*/, max.z/* + pos.z*/, 1.0f);
-	temp.corners[URF] = glm::vec4(max.x/* + pos.x*/, max.y/* + pos.y*/, max.z/* + pos.z*/, 1.0f);
-	temp.corners[DLB] = glm::vec4(min.x/* + pos.x*/, min.y/* + pos.y*/, min.z/* + pos.z*/, 1.0f);
-	temp.corners[DRB] = glm::vec4(max.x/* + pos.x*/, min.y/* + pos.y*/, min.z/* + pos.z*/, 1.0f);
-	temp.corners[ULB] = glm::vec4(min.x/* + pos.x*/, max.y/* + pos.y*/, min.z/* + pos.z*/, 1.0f);
-	temp.corners[URB] = glm::vec4(max.x/* + pos.x*/, max.y/* + pos.y*/, min.z/* + pos.z*/, 1.0f);
-
+	temp.corners[DLF] = glm::vec3(min.x/* + pos.x*/, min.y/* + pos.y*/, max.z/* + pos.z*/);
+	temp.corners[DRF] = glm::vec3(max.x/* + pos.x*/, min.y/* + pos.y*/, max.z/* + pos.z*/);
+	temp.corners[ULF] = glm::vec3(min.x/* + pos.x*/, max.y/* + pos.y*/, max.z/* + pos.z*/);
+	temp.corners[URF] = glm::vec3(max.x/* + pos.x*/, max.y/* + pos.y*/, max.z/* + pos.z*/);
+	temp.corners[DLB] = glm::vec3(min.x/* + pos.x*/, min.y/* + pos.y*/, min.z/* + pos.z*/);
+	temp.corners[DRB] = glm::vec3(max.x/* + pos.x*/, min.y/* + pos.y*/, min.z/* + pos.z*/);
+	temp.corners[ULB] = glm::vec3(min.x/* + pos.x*/, max.y/* + pos.y*/, min.z/* + pos.z*/);
+	temp.corners[URB] = glm::vec3(max.x/* + pos.x*/, max.y/* + pos.y*/, min.z/* + pos.z*/);
+																					
 	boundingBox.ObbBoxes.push_back(temp);
 
-	getCylinderFromAABB();
+	//getCylinderFromAABB();
 }
 
+//sets up collidemesh from a Loaded collision mesh
+
+void CollideMesh::setAABB(AABBloaded* aabb)
+{
+	boundingBox.init(aabb);
+}
 
 void CollideMesh::setAABB(AABB aabb)
 {
@@ -56,12 +62,9 @@ void CollideMesh::setAABB(AABB aabb)
 		{
 			temp.corners[j] = aabb.ObbBoxes[i].corners[j];
 		}
-		//temp.transform = aabb.ObbBoxes[i].transform;
 
 		boundingBox.ObbBoxes.push_back(temp);
 	}
-
-	getCylinderFromAABB();
 }
 
 AABB* CollideMesh::getAABB()
@@ -119,7 +122,7 @@ void CollideMesh::getCylinderFromAABB()
 
 void CollideMesh::setPos(glm::vec3 pos)
 {
-	boundingBox.pos = glm::vec4(pos, 1.0f);
+	boundingBox.pos = glm::vec3(pos);
 
 	cylinder.pos = pos;
 }

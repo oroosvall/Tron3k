@@ -114,24 +114,6 @@ void Game::initPhysics()
 
 void Game::update(float dt)
 {
-	if (gameState == Gamestate::ROAM)
-	{
-		checkPlayerVWorldCollision(dt);
-		checkBulletVWorldCollision();
-	}
-
-	if (gameState == Gamestate::CLIENT)
-	{
-		checkPvPCollision();
-		checkPlayerVWorldCollision(dt);
-		checkFootsteps(dt);
-	}
-
-	if (gameState == Gamestate::SERVER)
-	{
-		checkPlayerVBulletCollision();
-	}
-
 	for (int c = 0; c < max_con; c++)
 	{
 		if (playerList[c] != nullptr)
@@ -140,7 +122,24 @@ void Game::update(float dt)
 		}
 	}
 
-	
+	if (gameState == Gamestate::ROAM)
+	{
+		//checkPlayerVWorldCollision(dt);
+		checkBulletVWorldCollision();
+	}
+
+	if (gameState == Gamestate::CLIENT)
+	{
+		checkPvPCollision();
+		//checkPlayerVWorldCollision(dt);
+		checkFootsteps(dt);
+	}
+
+	if (gameState == Gamestate::SERVER)
+	{
+		checkBulletVWorldCollision();
+		checkPlayerVBulletCollision();
+	}
 
 	for (unsigned int i = 0; i < BULLET_TYPE::NROFBULLETS; i++)
 	{
@@ -178,7 +177,9 @@ void Game::playerUpdate(int conid, float dt)
 			spectatingThis = true;
 	}
 
+	// apply movement vel and then handle collision 
 	PLAYERMSG msg = playerList[conid]->update(dt, freecam, spectatingThis, spectating);
+
 	if (msg == PLAYERMSG::SHOOT)
 	{
 		registerWeapon(playerList[conid]);
@@ -208,18 +209,6 @@ void Game::playerUpdate(int conid, float dt)
 		if (playerList[conid]->isLocal())
 			localPlayerWantsRespawn = true;
 	}
-
-	/*
-
-	THIS IS WHERE WE APPLY ALL EXTERNAL FORCES TO THE PLAYER?
-
-	*/
-	if (playerList[conid]->isLocal())
-	{
-		if (!playerList[conid]->getGrounded())
-			playerList[conid]->applyGravity(physics, dt);
-	}
-
 }
 
 Player* Game::getPlayer(int conID)
@@ -242,7 +231,7 @@ std::vector<Effect*> Game::getEffects(EFFECT_TYPE type)
 void Game::createPlayer(Player* p, int conID, bool isLocal)
 {
 	playerList[conID] = new Player();
-	playerList[conID]->init(p->getName(), p->getPos(), isLocal);
+	playerList[conID]->init(p->getName(), p->getPos(), physics, isLocal);
 	playerList[conID]->setTeam(p->getTeam());
 	playerList[conID]->setRole(*templateRole);
 	if (isLocal)
@@ -282,9 +271,6 @@ void Game::checkFootsteps(float dt)
 				playerList[i]->footstepsLoopReset(dt);
 			}
 			
-		
-		
-
 			if (playerList[i]->getFootsteps())
 			{
 				glm::vec3 pos;
@@ -298,8 +284,6 @@ void Game::checkFootsteps(float dt)
 					if(GetSoundActivated())
 						GetSound()->playFootsteps(playerList[i]->getRole()->getRole(), pos.x, pos.y, pos.z);
 				}
-
-
 			}
 		}
 	}
@@ -428,67 +412,82 @@ void Game::checkPlayerVBulletCollision()
 	}
 }
 
-void Game::checkPlayerVWorldCollision(float dt)
-{
-	bool collides = false;
-	std::vector<glm::vec3> collisionNormal;
-	bool foundLocal = false;
-	for (int i = 0; i < max_con && !foundLocal; i++)
-	{
-		if (playerList[i] != nullptr)
-		{
-			if (playerList[i]->isLocal()) // && playerList[i]->isAlive())
-			{
-				//playerList[i]->setGrounded(false);
-				foundLocal = true;
-				
-				collisionNormal = physics->checkPlayerVWorldCollision(playerList[i]->getPos());
-				
-				if (collisionNormal.size() >= 1)
-				{
-					for (int c = 0; c < collisionNormal.size(); c++)
-					{
-						/*
-						Function adds all collision normals to the player, so the player can handle their movement this frame correctly
-						*/
-						playerList[i]->addCollisionNormal(collisionNormal[c]);
-					}					
-				}
-				else
-				{
-					playerList[i]->setGrounded(false);
-				}
-			}
-		}
-	}
-}
-
 void Game::checkBulletVWorldCollision()
 {
-	glm::vec3 collides = glm::vec3(0,0,0);
+	//glm::vec3 collides = glm::vec3(0,0,0);
+	//
+	//for (unsigned int b = 0; b < BULLET_TYPE::NROFBULLETS; b++)
+	//{
+	//	for (unsigned int j = 0; j < bullets[b].size(); j++)
+	//	{
+	//		collides = glm::vec3(0,0,0);
+	//		if (bullets[b][j] != nullptr)
+	//		{
+	//			int pid = -1, bid = -1;
+	//			bullets[b][j]->getId(pid, bid);
+	//			collides = physics->checkBulletVWorldCollision(bullets[b][j]->getPos());
+	//			if (collides != glm::vec3(0,0,0))
+	//			{
+	//				BulletHitWorldInfo hi;
+	//				hi.bt = BULLET_TYPE(b); hi.hitPos = bullets[b][j]->getPos(); hi.hitDir = bullets[b][j]->getDir();
+	//				bullets[b][j]->getId(hi.bulletPID, hi.bulletBID);
+	//				hi.collisionNormal = collides;
+	//				allBulletHitsOnWorld.push_back(hi);
+	//				handleBulletHitWorldEvent(hi);
+	//			}
+	//		}
+	//	}
+	//}
 
+	// reflection test code
+
+	std::vector<glm::vec4> collides;
+	
 	for (unsigned int b = 0; b < BULLET_TYPE::NROFBULLETS; b++)
 	{
 		for (unsigned int j = 0; j < bullets[b].size(); j++)
 		{
-			collides = glm::vec3(0,0,0);
 			if (bullets[b][j] != nullptr)
 			{
 				int pid = -1, bid = -1;
 				bullets[b][j]->getId(pid, bid);
-				collides = physics->checkBulletVWorldCollision(bullets[b][j]->getPos());
-				if (collides != glm::vec3(0,0,0))
+				collides = physics->sphereVWorldCollision(bullets[b][j]->getPos(), 0.4);
+
+				if (collides.size() > 0)
 				{
-					BulletHitWorldInfo hi;
-					hi.bt = BULLET_TYPE(b); hi.hitPos = bullets[b][j]->getPos(); hi.hitDir = bullets[b][j]->getDir();
-					bullets[b][j]->getId(hi.bulletPID, hi.bulletBID);
-					hi.collisionNormal = collides;
-					allBulletHitsOnWorld.push_back(hi);
-					handleBulletHitWorldEvent(hi);
+					vec4 combinedNormal(0); // all normals added together and then normalized
+					vec4 posadjust(0); //pendepths combined
+					for (unsigned int n = 0; n < collides.size(); n++)
+					{
+						posadjust += collides[n] * collides[n].w;
+						combinedNormal += collides[n];
+					}
+
+					// the w component holds the pendepth
+					vec3 combinedNormal2 = vec3(combinedNormal);
+
+					//reflect!!
+					if (combinedNormal2 != glm::vec3(0, 0, 0))
+					{
+						combinedNormal2 = normalize(combinedNormal2);
+						bullets[b][j]->setDir(reflect(bullets[b][j]->getDir(), combinedNormal2));
+
+						//use pendepth to set a new pos 
+						bullets[b][j]->setPos(bullets[b][j]->getPos() + vec3(posadjust));
+
+						// remove bullet code
+						//BulletHitWorldInfo hi;
+						//hi.bt = BULLET_TYPE(b); hi.hitPos = bullets[b][j]->getPos(); hi.hitDir = bullets[b][j]->getDir();
+						//bullets[b][j]->getId(hi.bulletPID, hi.bulletBID);
+						//hi.collisionNormal = collides;
+						//allBulletHitsOnWorld.push_back(hi);
+						//handleBulletHitWorldEvent(hi);
+					}
 				}
 			}
 		}
 	}
+
 }
 
 void Game::registerWeapon(Player* p)

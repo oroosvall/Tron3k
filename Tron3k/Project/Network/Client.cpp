@@ -119,7 +119,7 @@ void Client::in_new_connection(Packet* rec, Uint8 _conID)
 		{
 			temp = new Player();
 			*rec >> pName;
-			temp->init(pName, glm::vec3(0, 0, 0));
+			temp->init(pName, glm::vec3(0, 0, 0), gamePtr->getPhysics());
 			*rec >> team;
 			temp->setTeam(team);
 			gamePtr->createPlayer(temp, c);
@@ -128,7 +128,7 @@ void Client::in_new_connection(Packet* rec, Uint8 _conID)
 	}
 
 	temp = new Player();
-	temp->init("ClientName", glm::vec3(0, 0, 0));
+	temp->init("ClientName", glm::vec3(0, 0, 0), gamePtr->getPhysics());
 	gamePtr->createPlayer(temp, conID, true);
 	delete temp;
 	
