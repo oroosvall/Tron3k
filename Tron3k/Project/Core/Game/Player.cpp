@@ -11,10 +11,11 @@ Player::~Player()
 		delete myModifiers[c];
 }
 
-void Player::init(std::string pName, glm::vec3 initPos, bool isLocal)
+void Player::init(std::string pName, glm::vec3 initPos, Physics* phy, bool isLocal)
 {
 	cam = CameraInput::getCam();
 	i = Input::getInput();
+	physics = phy;
 
 	name = pName;
 	pos = initPos;
@@ -49,81 +50,124 @@ void Player::setGoalDir(glm::vec3 newDir)
 	oldDir = dir;
 }
 
-void Player::collisionHandling(float dt)
+void Player::collisionHandling(float dt) 
 {
-	if (collisionNormalSize != 0)
+	//*** Pendepth ***
+
+	//move player along the velocity
+	pos += vel * dt;
+
+	vec3 posadjust = vec3(0);
+	//lower with distance from eyes to center
+	std::vector<vec4> cNorms = physics->sphereVWorldCollision(pos - (vec3(0, 0.55f, 0)), 1);
+
+	//if we collided with something
+	if (cNorms.size() > 0)
 	{
-		glm::vec3 totalXZCollNormal = glm::vec3(0, 0, 0);
-		glm::vec3 totalYCollNormal = glm::vec3(0, 0, 0);
-		for (int c = 0; c < collisionNormalSize; c++)
+		if (cNorms.size() > 1)
+
+			int debug = 1;
+
+		bool ceiling = false;
+		for (int k = 0; k < cNorms.size(); k++)
 		{
-			totalXZCollNormal.x += collisionNormals[c].x;
-			totalXZCollNormal.z += collisionNormals[c].z;
-			totalYCollNormal.y += collisionNormals[c].y;
+			//push pos away and lower velocity using pendepth
+			vec3 pendepth = vec3(cNorms[k]) * cNorms[k].w;
+			if (cNorms[k].y < 0)
+				ceiling = true;
+
+			//vel += pendepth;
+			//pos += pendepth;
+
+			//ramp factor and grounded
+			if (cNorms[k].y > 0)
+			{
+				grounded = true;			
+				//float rampfactor = dot(vec3(cNorms[k]), vec3(0, 1, 0));
+				//pendepth *= 2 - rampfactor;
+			}
+
+			// abslut value, if two collisions from the same angle they should not move us twice the distance
+				posadjust.x += pendepth.x;
+			if (posadjust.y * posadjust.y < pendepth.y * pendepth.y)
+				posadjust.y = pendepth.y;
+				posadjust.z += pendepth.z;
+
+
+			//posadjust += pendepth;
 		}
 
-		/*
-		Y-AXIS COLLISION
-		Only triggers when we are actually in the air, no need to collide along Y axis otherwise.
-		
-		CURRENTLY:
-		Does not move player back along collision normal, which might cause people to sink slightly into the ground.
-		*/
+		vel += posadjust / dt * 0.5f;
 
-		if (totalYCollNormal.y < -FLT_EPSILON || totalYCollNormal.y > FLT_EPSILON)
-		{
-			if (!grounded)
-			{
-				glm::vec3 myVelocity = getVelocity();
-				if (myVelocity.y > 0.0f && totalYCollNormal.y < 0.0f)
-				{
-					vel.y = 0.0f;
-				}
-				else if (myVelocity.y < 0.0f && totalYCollNormal.y > 0.0f)
-				{
-					vel.y = 0.0f;
-					grounded = true;
-				}
-			}
-			//setPos(pos + totalYCollNormal*dt);
-		}
+		if (ceiling)
+			posadjust.y = 0;
 
-		if ((totalXZCollNormal.x < -FLT_EPSILON || totalXZCollNormal.x > FLT_EPSILON) ||
-			(totalXZCollNormal.z < -FLT_EPSILON || totalXZCollNormal.z > FLT_EPSILON))
-		{
-			setPos(getPos() + totalXZCollNormal*dt);
-			totalXZCollNormal = normalize(totalXZCollNormal);
-			glm::vec3 v = vel;
-			if (v != glm::vec3(0, 0, 0))
-				v = normalize(v);
+		pos += posadjust;
 
-			glm::vec3 velProj = ((glm::dot(v, totalXZCollNormal) /
-				glm::dot(totalXZCollNormal, totalXZCollNormal)) * totalXZCollNormal); //korrekt
-			glm::vec3 velRej = vel;
-
-			velRej = v - velProj;
-
-			velRej = glm::vec3(velRej.x, 0, velRej.z);
-			velProj = glm::vec3(velProj.x, 0, velProj.z);
-			if (velProj != glm::vec3(0, 0, 0))
-			{
-				setVelocity(velRej*length(vel)); //FEL
-			}
-			else
-			{
-				setVelocity(velProj*length(vel));
-			}
-		}
+		if (ceiling && vel.y > 0)
+			vel.y = 0;
 	}
+
+	return;
+
+	//*** Vector Redirect ***
+
+	//glm::vec3 oldPos = pos;
+	//glm::vec3 oldVel = vel;
+	//
+	//std::vector < glm::vec4 > cNorms;
+	//int sweepCount = 5;
+	//
+	//for (int n = 0; n < sweepCount; n++)
+	//{
+	//	//move player along the velocity
+	//	pos = oldPos + vel * dt;
+	//	//to not get stuck on top edge
+	//	pos.y += 0.1f * dt;
+	//
+	//	//Get collision normals and pendepths,    lower with distance from eyes to center
+	//	cNorms = physics->sphereVWorldCollision(pos - (vec3(0, 0.55f, 0)), 1);
+	//
+	//	//if we collided with something
+	//	if (cNorms.size() > 0)
+	//	{
+	//		if (cNorms.size() > 1)
+	//			int debug = 0;
+	//		
+	//		for (int k = 0; k < cNorms.size(); k++)
+	//		{
+	//			if (cNorms[k].y > 0)
+	//				grounded = true;
+	//
+	//			vec3 velchange = vec3(cNorms[k]) * length(vel);
+	//
+	//			//project normal on velchange and add them
+	//			float projlen = (dot(velchange, vel) / dot(velchange, velchange));
+	//			velchange *= -projlen;
+	//
+	//			if (length(velchange) > 0)
+	//			{
+	//				//if (cNorms[k].y > 0)
+	//				//	if (cNorms[k].y < 0.4f) // maximum angle allowed
+	//				//		velchange.y = 0;
+	//
+	//				vel += velchange;
+	//			}
+	//		}
+	//	}
+	//	else
+	//	{
+	//		return;
+	//	}
+	//}
+	//
+	//pos = oldPos;
+	//vel *= 0;
+	//return;
 }
 
 void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingThis)
 {
-	/*
-	
-	Lägg till matematik för kollisioner här!!
-	
-	*/
 	if (!this->getFootsteps())
 		{
 			this->footstepsLoopReset(dt);
@@ -140,8 +184,7 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 		}
 			
 	}
-	glm::vec3 playerVel = vel*role.getMovementSpeed();
-	pos += playerVel * dt; //Here we will also include external forces
+
 	if (freecam == false || specingThis == true)
 	{
 		cam->setCam(pos);
@@ -213,7 +256,6 @@ void Player::cleanseModifiers(bool stickies)
 	{
 		if (!stickies)
 		{
-
 			if (!myModifiers[c]->isSticky())
 			{
 				delete myModifiers[c];
@@ -248,7 +290,6 @@ bool Player::removeSpecificModifier(MODIFIER_TYPE mt)
 PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool spectating)
 {
 	PLAYERMSG msg = NONE;
-	bool animGrounded = grounded;
 
 	modifiersGetData(dt); //Dont Remove Please!
 
@@ -267,13 +308,37 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		anim_first_current = AnimationState::first_primary_idle;
 		anim_third_current = AnimationState::third_idle;
 
+		if(noclip)
+			vel *= 0;
+
+		//grounded printf
+		//if (grounded)
+		//	printf("ground \n");
+		//else
+		//	printf("air \n");
+
+		//friction
+		//if (grounded)
+		//{
+		//	vel -= vec3(vel.x, 0, vel.z) * dt * 30.0f;
+		//}
+		
+		//instant stop
+		if (grounded)
+		{
+			vel = vec3(0);
+		}
+
 		if (!lockControls)
 		{
 			//move camera to where we are looking.
 			//if freecam is true the cam can move on its own
 			if (spectating == false)
 			{
-				if (i->getKeyInfo(GLFW_KEY_C)) // flymode
+				if (i->justPressed(GLFW_KEY_C)) // flymode
+					noclip = !noclip;
+
+				if(noclip)
 				{
 					cam->update(dt, true);
 					setPos(cam->getPos());
@@ -287,80 +352,39 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			if (freecam == false)
 			{
 				dir = cam->getDir();
-				bool stop = true;
 				vec2 tempvec = vec2(0, 0);
 
-				if (i->getKeyInfo(GLFW_KEY_W))
+				if (grounded)
 				{
-					tempvec = normalize(vec2(dir.x, dir.z));
-					if (grounded)
+					if (i->getKeyInfo(GLFW_KEY_W))
 					{
-						vel.x = tempvec.x;
-						vel.z = tempvec.y;
-						stop = false;
+						tempvec += normalize(vec2(dir.x, dir.z));
 					}
-				}
 
-				if (i->getKeyInfo(GLFW_KEY_S))
-				{
-					tempvec = -normalize(vec2(dir.x, dir.z));
-					if (grounded)
+					if (i->getKeyInfo(GLFW_KEY_S))
 					{
-						vel.x = tempvec.x;
-						vel.z = tempvec.y;
-						stop = false;
+						tempvec += -normalize(vec2(dir.x, dir.z));
 					}
-				}
 
-				if (!(i->getKeyInfo(GLFW_KEY_A) && i->getKeyInfo(GLFW_KEY_D)))
-				{
-					if (i->getKeyInfo(GLFW_KEY_A))
+					if (!(i->getKeyInfo(GLFW_KEY_A) && i->getKeyInfo(GLFW_KEY_D)))
 					{
-						vec3 left = cross(vec3(0, 1, 0), dir);
-						tempvec = normalize(vec2(left.x, left.z));
-						if (grounded)
+						if (i->getKeyInfo(GLFW_KEY_A))
 						{
-							vel.x += tempvec.x;
-							vel.z += tempvec.y;
-							stop = false;
-							tempvec = vec2(vel.x, vel.z);
-							if (glm::length(tempvec) > 0)
-							{
-								tempvec = normalize(tempvec);
-								vel.x = tempvec.x;
-								vel.z = tempvec.y;
-							}
+							vec3 left = cross(vec3(0, 1, 0), dir);
+							tempvec += normalize(vec2(left.x, left.z));
+						}
+						if (i->getKeyInfo(GLFW_KEY_D))
+						{
+							vec3 right = cross(dir, vec3(0, 1, 0));
+							tempvec += normalize(vec2(right.x, right.z));
 						}
 					}
 
-					if (i->getKeyInfo(GLFW_KEY_D))
+					if (length(tempvec) > 0)
 					{
-						vec3 right = cross(dir, vec3(0, 1, 0));
-						tempvec = glm::normalize(vec2(right.x, right.z));
-						right = glm::normalize(right);
-						if (grounded)
-						{
-							vel.x += tempvec.x;
-							vel.z += tempvec.y;
-							stop = false;
-							tempvec = vec2(vel.x, vel.z);
-
-							if (glm::length(tempvec) > 0)
-							{
-								tempvec = normalize(tempvec);
-								vel.x = tempvec.x;
-								vel.z = tempvec.y;
-							}
-						}
-					}
-				}
-
-				if (stop)
-				{
-					if (grounded)
-					{
-						vel.x = 0;
-						vel.z = 0;
+						tempvec = normalize(tempvec) * role.getMovementSpeed();
+						vel.x = tempvec.x;
+						vel.z = tempvec.y;
 					}
 				}
 
@@ -377,12 +401,11 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					}
 				}
 
-				if (i->justPressed(GLFW_KEY_SPACE))
+				if (i->getKeyInfo(GLFW_KEY_SPACE))
 				{
 					if (grounded)
 					{
-						vel.y = role.getJumpHeight();
-						grounded = false;
+						vel.y = role.getJumpHeight() * 5;
 					}
 				}
 
@@ -529,15 +552,37 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		//ignore if we are spectating
 		if (currentTeam != 0)
 		{
+			if(!noclip)
+				applyGravity(dt);
+
+			float lastHeight = pos.y;
+
+			grounded = false;
+
 			collisionHandling(dt);
-			movePlayer(dt, olddir, freecam, spectatingThisPlayer); //Move the player regardless of control lock
+
+			//sets player rotations and cam
+			movePlayer(dt, olddir, freecam, spectatingThisPlayer); 
 
 			// --- Animation checks ---
+			
+			bool animGroundedLast = animGrounded;
+			
+			if (grounded == false)
+				animAirTimer += dt;
+			else
+			{
+				animAirTimer = 0;
+				animGrounded = true;
+			}
 
-			if (grounded)
+			if (animAirTimer > 0.3f)
+				animGrounded = false;
+
+			if (animGrounded)
 			{
 				//Run checks
-				if (vel.x * vel.x > 0.0001 || vel.z * vel.z > 0.0001)
+				if (vel.x * vel.x > 1 || vel.z * vel.z > 1)
 				{
 					if (checkAnimOverwrite(anim_first_current, AnimationState::first_primary_run))
 						anim_first_current = AnimationState::first_primary_run;
@@ -572,9 +617,9 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			}
 
 			//Jump Checks
-			if (animGrounded != grounded) //grounded chenged this frame
+			if (animGrounded != animGroundedLast) //grounded changed this frame
 			{
-				if (grounded) //landed
+				if (animGrounded) //landed
 				{
 					if (checkAnimOverwrite(anim_third_current, AnimationState::third_jump_end))
 						anim_third_current = AnimationState::third_jump_end;
@@ -675,9 +720,9 @@ void Player::hitByEffect(Effect* e, int newHPtotal)
 	}
 }
 
-void Player::applyGravity(Physics* p, float dt)
+void Player::applyGravity(float dt)
 {
-	p->addGravity(vel, dt);
+	physics->addGravity(vel, dt);
 }
 
 void Player::addModifier(MODIFIER_TYPE mt)
