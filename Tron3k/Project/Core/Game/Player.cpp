@@ -409,7 +409,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					}
 				}
 
-				role.update(dt);		//Temp;
+				role.update(dt);		//Temp?
 
 				if (i->justPressed(GLFW_KEY_R))
 				{
@@ -561,6 +561,8 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 			collisionHandling(dt);
 
+			modifiersSetData(dt);	//Dont Remove Again Please!
+
 			//sets player rotations and cam
 			movePlayer(dt, olddir, freecam, spectatingThisPlayer); 
 
@@ -646,7 +648,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 	}
 
 	clearCollisionNormals(); //Doesn't actually clear the array, just manually sets size to 0. This is to speed things up a little.
-
+	
 	worldMat[0].w = pos.x;
 	worldMat[1].w = pos.y; //head offset. player objects have their origo at their feet
 	worldMat[2].w = pos.z;
@@ -660,8 +662,6 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 	{
 		worldMat[1].w -= 1.55f; // move down if 3rd person render
 	}
-
-	modifiersSetData(dt);	//Dont Remove Again Please!
 
 	return msg;
 }
