@@ -705,6 +705,8 @@ void Game::handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm
 		addBulletToList(conID, bulletId, BULLET_TYPE::PLASMA_SHOT, pos, dir);
 		break;
 	case WEAPON_TYPE::ENERGY_SHIELD:
+		if (GetSound())
+			GetSound()->playExternalSound(SOUNDS::soundEffectShield, pos.x, pos.y, pos.z);
 		break;
 
 	case WEAPON_TYPE::DISC_GUN:
