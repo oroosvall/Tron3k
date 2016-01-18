@@ -65,7 +65,6 @@ void Player::collisionHandling(float dt)
 	if (cNorms.size() > 0)
 	{
 		if (cNorms.size() > 1)
-
 			int debug = 1;
 
 		bool ceiling = false;
@@ -80,22 +79,26 @@ void Player::collisionHandling(float dt)
 			//pos += pendepth;
 
 			//ramp factor and grounded
-			if (cNorms[k].y > 0)
+			if (cNorms[k].y > 0) // test ramp!!
 			{
-				grounded = true;			
+				grounded = true;
 				//float rampfactor = dot(vec3(cNorms[k]), vec3(0, 1, 0));
 				//pendepth *= 2 - rampfactor;
 			}
 
-			// abslut value, if two collisions from the same angle they should not move us twice the distance
-				posadjust.x += pendepth.x;
-			if (posadjust.y * posadjust.y < pendepth.y * pendepth.y)
-				posadjust.y = pendepth.y;
-				posadjust.z += pendepth.z;
+			//// abslut value, if two collisions from the same angle they should not move us twice the distance
+			//	posadjust.x += pendepth.x;
+			//if (posadjust.y * posadjust.y < pendepth.y * pendepth.y)
+			//	posadjust.y = pendepth.y;
+			//	posadjust.z += pendepth.z;
 
 
-			//posadjust += pendepth;
+			posadjust += pendepth;
 		}
+
+		/*if(length(posadjust) > 0)
+			if(normalize(posadjust).y > 0.45f)
+				grounded = true;*/
 
 		vel += posadjust / dt * 0.5f;
 
