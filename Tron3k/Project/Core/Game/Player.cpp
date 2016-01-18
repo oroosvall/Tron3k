@@ -2,7 +2,7 @@
 
 Player::Player()
 {
-	
+
 }
 
 Player::~Player()
@@ -25,7 +25,7 @@ void Player::init(std::string pName, glm::vec3 initPos, Physics* phy, bool isLoc
 	anim_first_current = AnimationState::first_primary_idle;
 	anim_first_framePeak = AnimationState::first_primary_idle;
 	anim_third_current = AnimationState::third_idle;
-	anim_third_framePeak =  AnimationState::third_idle;
+	anim_third_framePeak = AnimationState::third_idle;
 
 	isLocalPlayer = isLocal;
 
@@ -50,7 +50,7 @@ void Player::setGoalDir(glm::vec3 newDir)
 	oldDir = dir;
 }
 
-void Player::collisionHandling(float dt) 
+void Player::collisionHandling(float dt)
 {
 	//*** Pendepth ***
 
@@ -65,7 +65,6 @@ void Player::collisionHandling(float dt)
 	if (cNorms.size() > 0)
 	{
 		if (cNorms.size() > 1)
-
 			int debug = 1;
 
 		bool ceiling = false;
@@ -80,22 +79,25 @@ void Player::collisionHandling(float dt)
 			//pos += pendepth;
 
 			//ramp factor and grounded
-			if (cNorms[k].y > 0)
+			if (cNorms[k].y > 0) // test ramp!!
 			{
-				grounded = true;			
+				grounded = true;
 				//float rampfactor = dot(vec3(cNorms[k]), vec3(0, 1, 0));
 				//pendepth *= 2 - rampfactor;
 			}
-
+			/*
 			// abslut value, if two collisions from the same angle they should not move us twice the distance
 				posadjust.x += pendepth.x;
 			if (posadjust.y * posadjust.y < pendepth.y * pendepth.y)
 				posadjust.y = pendepth.y;
-				posadjust.z += pendepth.z;
+				posadjust.z += pendepth.z;*/
 
-
-			//posadjust += pendepth;
+			posadjust += pendepth;
 		}
+
+		/*if(length(posadjust) > 0)
+			if(normalize(posadjust).y > 0.45f)
+				grounded = true;*/
 
 		vel += posadjust / dt * 0.5f;
 
@@ -111,78 +113,78 @@ void Player::collisionHandling(float dt)
 	return;
 
 	//*** Vector Redirect ***
+	/*
+	glm::vec3 oldPos = pos;
+	glm::vec3 oldVel = vel;
 
-	//glm::vec3 oldPos = pos;
-	//glm::vec3 oldVel = vel;
-	//
-	//std::vector < glm::vec4 > cNorms;
-	//int sweepCount = 5;
-	//
-	//for (int n = 0; n < sweepCount; n++)
-	//{
-	//	//move player along the velocity
-	//	pos = oldPos + vel * dt;
-	//	//to not get stuck on top edge
-	//	pos.y += 0.1f * dt;
-	//
-	//	//Get collision normals and pendepths,    lower with distance from eyes to center
-	//	cNorms = physics->sphereVWorldCollision(pos - (vec3(0, 0.55f, 0)), 1);
-	//
-	//	//if we collided with something
-	//	if (cNorms.size() > 0)
-	//	{
-	//		if (cNorms.size() > 1)
-	//			int debug = 0;
-	//		
-	//		for (int k = 0; k < cNorms.size(); k++)
-	//		{
-	//			if (cNorms[k].y > 0)
-	//				grounded = true;
-	//
-	//			vec3 velchange = vec3(cNorms[k]) * length(vel);
-	//
-	//			//project normal on velchange and add them
-	//			float projlen = (dot(velchange, vel) / dot(velchange, velchange));
-	//			velchange *= -projlen;
-	//
-	//			if (length(velchange) > 0)
-	//			{
-	//				//if (cNorms[k].y > 0)
-	//				//	if (cNorms[k].y < 0.4f) // maximum angle allowed
-	//				//		velchange.y = 0;
-	//
-	//				vel += velchange;
-	//			}
-	//		}
-	//	}
-	//	else
-	//	{
-	//		return;
-	//	}
-	//}
-	//
-	//pos = oldPos;
-	//vel *= 0;
-	//return;
+	std::vector < glm::vec4 > cNorms;
+	int sweepCount = 5;
+
+	for (int n = 0; n < sweepCount; n++)
+	{
+		//move player along the velocity
+		pos = oldPos + vel * dt;
+		//to not get stuck on top edge
+		pos.y += 0.1f * dt;
+
+		//Get collision normals and pendepths,    lower with distance from eyes to center
+		cNorms = physics->sphereVWorldCollision(pos - (vec3(0, 0.55f, 0)), 1);
+
+		//if we collided with something
+		if (cNorms.size() > 0)
+		{
+			if (cNorms.size() > 1)
+				int debug = 0;
+
+			for (int k = 0; k < cNorms.size(); k++)
+			{
+				if (cNorms[k].y > 0)
+					grounded = true;
+
+				vec3 velchange = vec3(cNorms[k]) * length(vel);
+
+				//project normal on velchange and add them
+				float projlen = (dot(velchange, vel) / dot(velchange, velchange));
+				velchange *= -projlen;
+
+				if (length(velchange) > 0)
+				{
+					//if (cNorms[k].y > 0)
+					//	if (cNorms[k].y < 0.4f) // maximum angle allowed
+					//		velchange.y = 0;
+
+					vel += velchange;
+				}
+			}
+		}
+		else
+		{
+			return;
+		}
+	}
+
+	pos = oldPos;
+	vel *= 0;
+	return;*/
 }
 
 void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingThis)
 {
 	if (!this->getFootsteps())
-		{
-			this->footstepsLoopReset(dt);
-		}
+	{
+		this->footstepsLoopReset(dt);
+	}
 
 	if (vel.x != 0 || vel.z != 0)
 	{
-		
+
 		if (this->getFootsteps() && this->getGrounded() && GetSoundActivated())
 		{
 			this->setFootstepsCountdown();
 			this->setFootstepsLoop(false);
 			GetSound()->playFootsteps(this->role.getRole(), pos.x, pos.y, pos.z);
 		}
-			
+
 	}
 
 	if (freecam == false || specingThis == true)
@@ -252,7 +254,7 @@ void Player::modifiersSetData(float dt)
 
 void Player::cleanseModifiers(bool stickies)
 {
-	for (int c = myModifiers.size() - 1; c >= 0 ; c++)
+	for (int c = myModifiers.size() - 1; c >= 0; c++)
 	{
 		if (!stickies)
 		{
@@ -308,7 +310,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		anim_first_current = AnimationState::first_primary_idle;
 		anim_third_current = AnimationState::third_idle;
 
-		if(noclip)
+		if (noclip)
 			vel *= 0;
 
 		//grounded printf
@@ -322,7 +324,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		//{
 		//	vel -= vec3(vel.x, 0, vel.z) * dt * 30.0f;
 		//}
-		
+
 		//instant stop
 		if (grounded)
 		{
@@ -338,7 +340,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				if (i->justPressed(GLFW_KEY_C)) // flymode
 					noclip = !noclip;
 
-				if(noclip)
+				if (noclip)
 				{
 					cam->update(dt, true);
 					setPos(cam->getPos());
@@ -552,7 +554,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		//ignore if we are spectating
 		if (currentTeam != 0)
 		{
-			if(!noclip)
+			if (!noclip)
 				applyGravity(dt);
 
 			float lastHeight = pos.y;
@@ -564,12 +566,13 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			collisionHandling(dt);	//Moves the player but shouldnt
 
 			//sets player rotations and cam
+
 			movePlayer(dt, olddir, freecam, spectatingThisPlayer); //does not move the player but should
 
 			// --- Animation checks ---
-			
+
 			bool animGroundedLast = animGrounded;
-			
+
 			if (grounded == false)
 				animAirTimer += dt;
 			else
@@ -641,14 +644,14 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		if (checkAnimOverwrite(anim_third_framePeak, anim_third_current))
 			anim_third_framePeak = anim_third_current;
 	}
-		
+
 	if (spectatingThisPlayer == true)
 	{
 		cam->setCam(pos, dir);
 	}
 
 	clearCollisionNormals(); //Doesn't actually clear the array, just manually sets size to 0. This is to speed things up a little.
-	
+
 	worldMat[0].w = pos.x;
 	worldMat[1].w = pos.y; //head offset. player objects have their origo at their feet
 	worldMat[2].w = pos.z;
@@ -697,7 +700,7 @@ void Player::hitByBullet(Bullet* b, int newHPtotal)
 	{
 		role.setHealth(newHPtotal);
 	}
-	
+
 	if (b->getType() == BULLET_TYPE::HACKING_DART)
 	{
 		addModifier(MODIFIER_TYPE::HACKINGDARTMODIFIER);
@@ -730,37 +733,37 @@ void Player::addModifier(MODIFIER_TYPE mt)
 	Modifier* m = nullptr;
 	switch (mt)
 	{
-		case LIGHTWALLCONTROLLOCK:
-		{
-			removeSpecificModifier(LIGHTWALLCONTROLLOCK);
-			m = new LightWallLockedControls();
-			myModifiers.push_back(m);
-		}
-		break;
-		case MODIFIER_TYPE::HACKINGDARTMODIFIER:
-		{
-			m = new HackingDartModifier();
-			myModifiers.push_back(m);
-		}
-		break;
-		case MODIFIER_TYPE::LIGHTSPEEDMODIFIER:
-		{
-			m = new LightSpeed();
-			myModifiers.push_back(m);
-		}
-		break;
-		case MODIFIER_TYPE::OVERCHARGEMODIFIER:
-		{
-			m = new Overcharge();
-			myModifiers.push_back(m);
-		}
-		break;
-		case MODIFIER_TYPE::SPRINTCONTROLLOCK:
-		{
-			m = new SprintControlLock;
-			myModifiers.push_back(m);
-		}
-		break;
+	case LIGHTWALLCONTROLLOCK:
+	{
+		removeSpecificModifier(LIGHTWALLCONTROLLOCK);
+		m = new LightWallLockedControls();
+		myModifiers.push_back(m);
+	}
+	break;
+	case MODIFIER_TYPE::HACKINGDARTMODIFIER:
+	{
+		m = new HackingDartModifier();
+		myModifiers.push_back(m);
+	}
+	break;
+	case MODIFIER_TYPE::LIGHTSPEEDMODIFIER:
+	{
+		m = new LightSpeed();
+		myModifiers.push_back(m);
+	}
+	break;
+	case MODIFIER_TYPE::OVERCHARGEMODIFIER:
+	{
+		m = new Overcharge();
+		myModifiers.push_back(m);
+	}
+	break;
+	case MODIFIER_TYPE::SPRINTCONTROLLOCK:
+	{
+		m = new SprintControlLock;
+		myModifiers.push_back(m);
+	}
+	break;
 	}
 	myModifiers[myModifiers.size() - 1]->init(this);
 }
@@ -773,10 +776,10 @@ void Player::setRole(Role role)
 }
 
 void Player::respawn(glm::vec3 respawnPos, glm::vec3 _dir)
-{	
+{
 	//reset matrix
 	worldMat = mat4();
-	rotatePlayer(vec3(0 ,0 ,1 ), _dir);
+	rotatePlayer(vec3(0, 0, 1), _dir);
 	pos = respawnPos;
 
 	worldMat[0].w = pos.x;
@@ -794,7 +797,7 @@ void Player::respawn(glm::vec3 respawnPos, glm::vec3 _dir)
 
 void Player::healing(int amount)
 {
-	role.setHealth(role.getHealth()+amount);
+	role.setHealth(role.getHealth() + amount);
 }
 
 bool Player::getIfHacked()

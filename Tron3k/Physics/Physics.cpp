@@ -389,7 +389,7 @@ vec4 Physics::sphereVSobbNorms(vec3 pos, float rad, OBB* obb)
 	
 	//if we found a line intersection it will always be closer
 	//than all the corner intersections
-	if (closest.w < 9999999.0f)
+	if (closest.w < 9999999999.0f)
 		return closest;
 
 	vec3 test;
