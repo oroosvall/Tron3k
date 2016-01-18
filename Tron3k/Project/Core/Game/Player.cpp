@@ -116,8 +116,6 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 	if (ceiling && playerVel.y > 0)
 		vel.y = 0;
 
-	clearCollisionNormals();
-
 	//End of collision adjustement
 
 
@@ -352,9 +350,9 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					if (GetSound())
 					{
 						if (this->role.getRole() == 0)
-						GetSound()->playUserGeneratedSound(SOUNDS::soundEffectTrapperReload);
+							GetSound()->playUserGeneratedSound(SOUNDS::soundEffectTrapperReload);
 					}
-					
+
 
 					role.getCurrentWeapon()->reload();
 					//play anim
@@ -495,6 +493,8 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		//ignore if we are spectating
 		if (currentTeam != 0)
 		{
+			modifiersSetData(dt);	//Dont Remove Again Please!
+
 			if (!noclip)
 				applyGravity(dt);
 
@@ -502,7 +502,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 			grounded = false;
 
-			modifiersSetData(dt);	//Dont Remove Again Please!
+
 
 			//sets player rotations and cam
 
@@ -664,7 +664,8 @@ void Player::hitByEffect(Effect* e, int newHPtotal)
 
 void Player::applyGravity(float vel)
 {
-	this->vel.y -= vel;
+	if (!grounded)
+		this->vel.y -= vel;
 }
 
 void Player::addModifier(MODIFIER_TYPE mt)
