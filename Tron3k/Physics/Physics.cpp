@@ -355,7 +355,7 @@ std::vector<vec3> Physics::getCollisionNormal(AABB* aabb1, AABB* aabb2)
 	return norms;
 }
 
-vec4 Physics::sphereVSobbNorms(vec3 pos, float rad, OBB* obb)
+vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb)
 {
 	vec4 t;
 	vec4 closest;
@@ -504,7 +504,7 @@ std::vector<vec4> Physics::sphereVWorldCollision(vec3 playerPos, float rad)
 				int size = worldBoxes[i][j].boundingBox.ObbBoxes.size();
 				for (int n = 0; n < size; n++)
 				{
-					t = sphereVSobbNorms(playerPos, rad, &worldBoxes[i][j].boundingBox.ObbBoxes[n]);
+					t = getSpherevOBBNorms(playerPos, rad, &worldBoxes[i][j].boundingBox.ObbBoxes[n]);
 					t.w = rad - t.w; //penetration depth instead of collision distance 
 					if (t.w > 0 && t.w < rad)
 					{
@@ -539,9 +539,9 @@ vec3 Physics::checkBulletVWorldCollision(vec3 bulletPos)
 	return collides;
 }
 
-void Physics::addGravity(vec3 &vel, float dt)
+float Physics::addGravity(float dt)
 {
-	vel.y -= GRAVITY * dt;
+	return GRAVITY * dt;
 }
 
 vec3 Physics::normalize(vec3 &vec3)

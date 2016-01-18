@@ -48,7 +48,7 @@ private:
 	void movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingThis);
 	bool grounded = false;
 
-	glm::vec3 collisionNormals[20];
+	glm::vec4 collisionNormals[20];
 	int collisionNormalSize = 0;
 	void clearCollisionNormals() { collisionNormalSize = 0; };
 
@@ -75,7 +75,6 @@ private:
 
 	Input* i;
 	CameraInput* cam;
-	Physics* physics;
 
 	vector<Modifier*> myModifiers;
 	void modifiersGetData(float dt); //Gets relevant data (if any) from the player before update occurs
@@ -87,7 +86,7 @@ private:
 public:
 	Player();
 	~Player();
-	void init(std::string name, glm::vec3 pos, Physics* phy, bool isLocal = false);
+	void init(std::string name, glm::vec3 pos, bool isLocal = false);
 
 	void footstepsLoopReset(float dt);
 
@@ -101,7 +100,9 @@ public:
 	void setGoalPos(glm::vec3 newPos);
 	void setGoalDir(glm::vec3 newDir);
 
-	void applyGravity (float dt);
+
+	void setCollisionInfo(std::vector<glm::vec4> collNormals);
+	void applyGravity (float vel);
 
 	AnimationState getAnimState_f_c() { return anim_first_current; };
 	AnimationState getAnimState_f_p() { return anim_first_framePeak; };
@@ -136,7 +137,7 @@ public:
 	void setGrounded(bool grounded) { this->grounded = grounded; };
 	bool getGrounded() { return grounded; };
 
-	void addCollisionNormal(glm::vec3 cn) {if (collisionNormalSize < 20){
+	void addCollisionNormal(glm::vec4 cn) {if (collisionNormalSize < 20){
 			collisionNormals[collisionNormalSize] = cn; collisionNormalSize++;}
 		};
 

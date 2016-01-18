@@ -119,19 +119,23 @@ void Game::update(float dt)
 		if (playerList[c] != nullptr)
 		{
 			playerUpdate(c, dt);
+			if (playerList[c]->isLocal())
+				playerApplyForces(c, dt);
+
+			//TODO: Send collision results to player
 		}
 	}
 
 	if (gameState == Gamestate::ROAM)
 	{
-		//checkPlayerVWorldCollision(dt);
+		checkPlayerVWorldCollision(dt);
 		checkBulletVWorldCollision();
 	}
 
 	if (gameState == Gamestate::CLIENT)
 	{
 		checkPvPCollision();
-		//checkPlayerVWorldCollision(dt);
+		checkPlayerVWorldCollision(dt);
 		checkFootsteps(dt);
 	}
 
@@ -211,6 +215,11 @@ void Game::playerUpdate(int conid, float dt)
 	}
 }
 
+void Game::playerApplyForces(int conid, float dt)
+{
+	playerList[conid]->applyGravity(physics->addGravity(dt));
+}
+
 Player* Game::getPlayer(int conID)
 {
 	if (conID < max_con)
@@ -231,7 +240,7 @@ std::vector<Effect*> Game::getEffects(EFFECT_TYPE type)
 void Game::createPlayer(Player* p, int conID, bool isLocal)
 {
 	playerList[conID] = new Player();
-	playerList[conID]->init(p->getName(), p->getPos(), physics, isLocal);
+	playerList[conID]->init(p->getName(), p->getPos(), isLocal);
 	playerList[conID]->setTeam(p->getTeam());
 	playerList[conID]->setRole(*templateRole);
 	if (isLocal)
@@ -270,7 +279,7 @@ void Game::checkFootsteps(float dt)
 			{
 				playerList[i]->footstepsLoopReset(dt);
 			}
-			
+
 			if (playerList[i]->getFootsteps())
 			{
 				glm::vec3 pos;
@@ -281,7 +290,7 @@ void Game::checkFootsteps(float dt)
 				{
 					playerList[i]->setFootstepsCountdown();
 					playerList[i]->setFootstepsLoop(false);
-					if(GetSoundActivated())
+					if (GetSoundActivated())
 						GetSound()->playFootsteps(playerList[i]->getRole()->getRole(), pos.x, pos.y, pos.z);
 				}
 			}
@@ -327,14 +336,14 @@ void Game::checkPvPCollision()
 
 	//Checks collision between players
 	//TODO: improve so it just checks between ourselves and all other players, we don't care if two other players collided
-	glm::vec3 collides = glm::vec3(0,0,0);
+	glm::vec3 collides = glm::vec3(0, 0, 0);
 	for (int i = 0; i < max_con; i++)
 	{
-		collides = glm::vec3(0,0,0);
+		collides = glm::vec3(0, 0, 0);
 		if (playerList[i] != nullptr)
 			collides = physics->checkPlayerVPlayerCollision(localPPos, pPos[i]);
 
-		if (collides != glm::vec3(0,0,0))
+		if (collides != glm::vec3(0, 0, 0))
 		{
 
 			//here we can do things when two objects, collide, cause now we know i and j collided.
@@ -361,7 +370,7 @@ void Game::checkPvPCollision()
 
 void Game::checkPlayerVBulletCollision()
 {
-	glm::vec3 collides = glm::vec3(0,0,0);
+	glm::vec3 collides = glm::vec3(0, 0, 0);
 
 	for (int i = 0; i < max_con; i++)
 	{
@@ -372,7 +381,7 @@ void Game::checkPlayerVBulletCollision()
 			{
 				for (unsigned int j = 0; j < bullets[b].size(); j++)
 				{
-					collides = glm::vec3(0,0,0);
+					collides = glm::vec3(0, 0, 0);
 					if (bullets[b][j] != nullptr)
 					{
 						int pid = -1, bid = -1;
@@ -382,7 +391,7 @@ void Game::checkPlayerVBulletCollision()
 							if (playerList[i]->isAlive()) //Don't shoot dead people
 								collides = physics->checkPlayerVBulletCollision(playerList[i]->getPos(), bullets[b][j]->getPos());
 						}
-						if (collides != glm::vec3(0,0,0))
+						if (collides != glm::vec3(0, 0, 0))
 						{
 							//Code for player on bullet collision goes here
 							/*
@@ -412,16 +421,149 @@ void Game::checkPlayerVBulletCollision()
 	}
 }
 
-void Game::checkPlayerVWorldCollision(float dt, int playerID)
+void Game::checkPlayerVWorldCollision(float dt)
 {
-	return;
+	int localP = -1;
+	for (int i = 0; i < max_con; i++)
+	{
+		if (playerList[i] != nullptr)
+			if (playerList[i]->isLocal())
+				localP = i;
+	}
+
+	if (localP != -1)
+	{
+		//collision goes here
+		//*** Pendepth ***
+
+		//move player along the velocity
+		//already happens in moveplayer
+
+		vec3 posadjust = vec3(0);
+		//lower with distance from eyes to center
+		std::vector<vec4> cNorms = physics->sphereVWorldCollision(playerList[localP]->getPos() - (vec3(0, playerList[localP]->getRole()->getBoxModifier(), 0)), 1);
+
+		//if we collided with something
+		if (cNorms.size() > 0)
+		{
+			playerList[localP]->setCollisionInfo(cNorms);
+
+			//Rest is handled by player
+
+			/*
+			if (cNorms.size() > 1)
+				int debug = 1;
+
+			bool ceiling = false;
+			for (int k = 0; k < cNorms.size(); k++)
+			{
+				//push pos away and lower velocity using pendepth
+				vec3 pendepth = vec3(cNorms[k]) * cNorms[k].w;
+				if (cNorms[k].y < 0)
+					ceiling = true;
+
+				//vel += pendepth;
+				//pos += pendepth;
+
+				//ramp factor and grounded
+				if (cNorms[k].y > 0) // test ramp!!
+				{
+					grounded = true;
+
+
+					//float rampfactor = dot(vec3(cNorms[k]), vec3(0, 1, 0));
+					//pendepth *= 2 - rampfactor;
+				}
+				/*
+				// abslut value, if two collisions from the same angle they should not move us twice the distance
+				posadjust.x += pendepth.x;
+				if (posadjust.y * posadjust.y < pendepth.y * pendepth.y)
+				posadjust.y = pendepth.y;
+				posadjust.z += pendepth.z;
+
+				posadjust += pendepth;
+			}
+
+			/*if(length(posadjust) > 0)
+			if(normalize(posadjust).y > 0.45f)
+			grounded = true;
+
+			vel += posadjust / dt * 0.5f;
+
+			if (ceiling)
+				posadjust.y = 0;
+
+			pos += posadjust;
+
+			if (ceiling && vel.y > 0)
+				vel.y = 0;
+		}
+
+		return;*/
+
+		//*** Vector Redirect ***
+		/*
+		glm::vec3 oldPos = pos;
+		glm::vec3 oldVel = vel;
+
+		std::vector < glm::vec4 > cNorms;
+		int sweepCount = 5;
+
+		for (int n = 0; n < sweepCount; n++)
+		{
+		//move player along the velocity
+		pos = oldPos + vel * dt;
+		//to not get stuck on top edge
+		pos.y += 0.1f * dt;
+
+		//Get collision normals and pendepths,    lower with distance from eyes to center
+		cNorms = physics->sphereVWorldCollision(pos - (vec3(0, 0.55f, 0)), 1);
+
+		//if we collided with something
+		if (cNorms.size() > 0)
+		{
+		if (cNorms.size() > 1)
+		int debug = 0;
+
+		for (int k = 0; k < cNorms.size(); k++)
+		{
+		if (cNorms[k].y > 0)
+		grounded = true;
+
+		vec3 velchange = vec3(cNorms[k]) * length(vel);
+
+		//project normal on velchange and add them
+		float projlen = (dot(velchange, vel) / dot(velchange, velchange));
+		velchange *= -projlen;
+
+		if (length(velchange) > 0)
+		{
+		//if (cNorms[k].y > 0)
+		//	if (cNorms[k].y < 0.4f) // maximum angle allowed
+		//		velchange.y = 0;
+
+		vel += velchange;
+		}
+		}
+		}
+		else
+		{
+		return;
+		}
+		}
+
+		pos = oldPos;
+		vel *= 0;
+		return;*/
+		}
+	}
 }
 
 void Game::checkBulletVWorldCollision()
 {
 	/*
 	glm::vec3 collides = glm::vec3(0,0,0);
-	
+
 	for (unsigned int b = 0; b < BULLET_TYPE::NROFBULLETS; b++)
 	{
 		for (unsigned int j = 0; j < bullets[b].size(); j++)
@@ -448,7 +590,7 @@ void Game::checkBulletVWorldCollision()
 	// reflection test code
 
 	std::vector<glm::vec4> collides;
-	
+
 	for (unsigned int b = 0; b < BULLET_TYPE::NROFBULLETS; b++)
 	{
 		for (unsigned int j = 0; j < bullets[b].size(); j++)
@@ -743,7 +885,7 @@ void Game::handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm
 				GetSound()->playExternalSound(SOUNDS::soundEffectLinkGun, pos.x, pos.y, pos.z);
 		addBulletToList(conID, bulletId, BULLET_TYPE::LINK_SHOT, pos, dir);
 		break;
-		
+
 	case WEAPON_TYPE::BATTERYFIELD_SLOW:
 		addBulletToList(conID, bulletId, BULLET_TYPE::BATTERY_SLOW_SHOT, pos, dir);
 		break;
@@ -797,39 +939,39 @@ void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec
 	Player* p = playerList[conID];
 	switch (st)
 	{
-		case SPECIAL_TYPE::LIGHTWALL:
-		{
-			p->addModifier(MODIFIER_TYPE::LIGHTWALLCONTROLLOCK);
-			int arraypos = -1;
-			Effect* lwe = getSpecificEffect(conID, sID - 1, EFFECT_TYPE::LIGHT_WALL, arraypos);
-			addEffectToList(conID, sID, EFFECT_TYPE::LIGHT_WALL, pos);
-		}
-		break;
+	case SPECIAL_TYPE::LIGHTWALL:
+	{
+		p->addModifier(MODIFIER_TYPE::LIGHTWALLCONTROLLOCK);
+		int arraypos = -1;
+		Effect* lwe = getSpecificEffect(conID, sID - 1, EFFECT_TYPE::LIGHT_WALL, arraypos);
+		addEffectToList(conID, sID, EFFECT_TYPE::LIGHT_WALL, pos);
+	}
+	break;
 
-		case SPECIAL_TYPE::MULTIJUMP:
+	case SPECIAL_TYPE::MULTIJUMP:
+	{
+		vec3 vel = p->getVelocity();
+		if (vel.y < 0)
 		{
-			vec3 vel = p->getVelocity();
-			if (vel.y < 0)
-			{
-				vel.y = 8.0f;
-			}
-			else
-			{
-				vel.y += 8.0f;
-			}
-			p->setVelocity(vel);
+			vel.y = 8.0f;
 		}
-		break;
-		case SPECIAL_TYPE::HACKINGDARTSPECIAL:
+		else
 		{
-			addBulletToList(conID, 0, BULLET_TYPE::HACKING_DART, pos, dir);
+			vel.y += 8.0f;
 		}
-		break;
-		case SPECIAL_TYPE::SPRINTD:
-		{
-			p->addModifier(MODIFIER_TYPE::SPRINTCONTROLLOCK);
-		}
-		break;
+		p->setVelocity(vel);
+	}
+	break;
+	case SPECIAL_TYPE::HACKINGDARTSPECIAL:
+	{
+		addBulletToList(conID, 0, BULLET_TYPE::HACKING_DART, pos, dir);
+	}
+	break;
+	case SPECIAL_TYPE::SPRINTD:
+	{
+		p->addModifier(MODIFIER_TYPE::SPRINTCONTROLLOCK);
+	}
+	break;
 	}
 }
 

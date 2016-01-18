@@ -88,6 +88,7 @@ private:
 	void removeEffect(EFFECT_TYPE et, int posInArray);
 
 	void playerUpdate(int conid, float dt);
+	void playerApplyForces(int conid, float dt);
 
 	void registerWeapon(Player* p);
 	void registerSwitch(Player* p);
@@ -147,7 +148,7 @@ public:
 
 	void checkPvPCollision();
 	void checkPlayerVBulletCollision();
-	void checkPlayerVWorldCollision(float dt, int playerid);
+	void checkPlayerVWorldCollision(float dt);
 	void checkBulletVWorldCollision();
 
 	bool playerWantsToRespawn();

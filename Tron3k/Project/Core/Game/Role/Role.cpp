@@ -182,6 +182,8 @@ void Role::chooseRole(int role)
 		movementSpeed = float(atof(loadedRoles[role][MOVEMENTSPEED].c_str()));
 		jumpHeight = float(atof(loadedRoles[role][JUMPHEIGHT].c_str()));
 
+		boundingBoxModifier = 0.55f;
+
 		gainSpecial = true;
 	}
 }

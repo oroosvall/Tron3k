@@ -11,11 +11,10 @@ Player::~Player()
 		delete myModifiers[c];
 }
 
-void Player::init(std::string pName, glm::vec3 initPos, Physics* phy, bool isLocal)
+void Player::init(std::string pName, glm::vec3 initPos, bool isLocal)
 {
 	cam = CameraInput::getCam();
 	i = Input::getInput();
-	physics = phy;
 
 	name = pName;
 	pos = initPos;
@@ -52,6 +51,7 @@ void Player::setGoalDir(glm::vec3 newDir)
 
 void Player::collisionHandling(float dt)
 {
+	/*
 	//*** Pendepth ***
 
 	//move player along the velocity
@@ -90,14 +90,14 @@ void Player::collisionHandling(float dt)
 				posadjust.x += pendepth.x;
 			if (posadjust.y * posadjust.y < pendepth.y * pendepth.y)
 				posadjust.y = pendepth.y;
-				posadjust.z += pendepth.z;*/
+				posadjust.z += pendepth.z;
 
 			posadjust += pendepth;
 		}
 
 		/*if(length(posadjust) > 0)
 			if(normalize(posadjust).y > 0.45f)
-				grounded = true;*/
+				grounded = true;
 
 		vel += posadjust / dt * 0.5f;
 
@@ -168,8 +168,22 @@ void Player::collisionHandling(float dt)
 	return;*/
 }
 
+void Player::setCollisionInfo(std::vector<glm::vec4> collNormals)
+{
+	if (collNormals.size() < 20 - collisionNormalSize)
+	{
+		for (int i = 0; i < collNormals.size(); i++)
+		{
+			collisionNormals[i + collisionNormalSize] = collNormals[i];
+		}
+
+		collisionNormalSize += collNormals.size();
+	}
+}
+
 void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingThis)
 {
+
 	if (!this->getFootsteps())
 	{
 		this->footstepsLoopReset(dt);
@@ -186,6 +200,64 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 		}
 
 	}
+	
+	/*
+
+	Lägg till matematik för kollisioner här!!
+
+	*/
+
+	glm::vec3 playerVel = vec3(0);
+	playerVel.x = vel.x*role.getMovementSpeed();
+	playerVel.z = vel.z*role.getMovementSpeed();
+	playerVel.y = vel.y;
+	pos += playerVel * dt; //Here we will also include external forces.. EDIT: External forces moved, for now
+
+	//Collision handling here, after movement
+	bool ceiling = false;
+	vec3 posadjust = vec3(0);
+	for (int k = 0; k < collisionNormalSize; k++)
+	{
+		//push pos away and lower velocity using pendepth
+		vec3 pendepth = vec3(collisionNormals[k]) * collisionNormals[k].w;
+		if (collisionNormals[k].y < 0)
+			ceiling = true;
+
+		//ramp factor and grounded
+		if (collisionNormals[k].y > 0) // test ramp!!
+		{
+			grounded = true;
+			//float rampfactor = dot(vec3(cNorms[k]), vec3(0, 1, 0));
+			//pendepth *= 2 - rampfactor;
+		}
+		/*
+		// abslut value, if two collisions from the same angle they should not move us twice the distance
+		posadjust.x += pendepth.x;
+		if (posadjust.y * posadjust.y < pendepth.y * pendepth.y)
+		posadjust.y = pendepth.y;
+		posadjust.z += pendepth.z;*/
+
+		posadjust += pendepth;
+	}
+
+	/*if(length(posadjust) > 0)
+	if(normalize(posadjust).y > 0.45f)
+	grounded = true;*/
+
+	playerVel += posadjust / dt * 0.5f;
+
+	if (ceiling)
+		posadjust.y = 0;
+
+	pos += posadjust;
+
+	if (ceiling && playerVel.y > 0)
+		vel.y = 0;
+
+	clearCollisionNormals();
+
+	//End of collision adjustement
+	
 
 	if (freecam == false || specingThis == true)
 	{
@@ -726,9 +798,9 @@ void Player::hitByEffect(Effect* e, int newHPtotal)
 	}
 }
 
-void Player::applyGravity(float dt)
+void Player::applyGravity(float vel)
 {
-	physics->addGravity(vel, dt);
+	this->vel.y -= vel;
 }
 
 void Player::addModifier(MODIFIER_TYPE mt)
