@@ -864,17 +864,12 @@ void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec
 				jumped = true;
 				glm::vec3 reflect = normalize(glm::vec3(cNorms[c].x, 0, cNorms[c].z));
 				glm::vec3 vel = p->getVelocity();
-				float y = vel.y;
+				vel.y = 0;
 				vel = glm::reflect(vel, reflect);
-				vel.y = y;
-				if (vel.y < 0)
-				{
-					vel.y = 8.0f;
-				}
-				else
-				{
-					vel.y += 8.0f;
-				}
+				vel.y = 10.0f;
+				vel.x *= 0.7;
+				vel.y *= 0.7;
+				p->setVelocity(vel);
 			}
 		}
 	}

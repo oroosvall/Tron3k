@@ -12,13 +12,19 @@ WallJump::~WallJump()
 
 bool WallJump::allowedToActivate(Player* p)
 {
-	int size = 0;
-	glm::vec4* cNorms = p->getCollisionNormalsForFrame(size);
-	
-	for (int c = 0; c < size; c++)
+	if (!p->getGrounded())
 	{
-		if (cNorms[c].y < 0.2f && cNorms[c].y > -0.2f)
-			return true;
+		int size = 0;
+		glm::vec4* cNorms = p->getCollisionNormalsForFrame(size);
+
+		for (int c = 0; c < size; c++)
+		{
+			if (cNorms[c].y < 0.2f && cNorms[c].y > -0.2f)
+			{
+				printf("Walljump\n");
+				return true;
+			}
+		}
 	}
 	return false;
 }
