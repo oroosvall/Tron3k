@@ -115,14 +115,18 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 
 		playerVel += posadjust / dt * 0.5f;
 
-		if (ceiling)
-			posadjust.y = 0;
+		if (vel != vec3(0, 0, 0))//IF we don't move, we don't want to be moved
+		{
+			if (ceiling)
+				posadjust.y = 0;
 
-		//if(vel.x != 0 && vel.z != 0)//IF we don't move, we don't want to be moved
-		pos += posadjust;
+			//if(vel.x != 0 && vel.z != 0)
+			pos += posadjust;
+			//vel += posadjust * dt * 0.5f;
 
-		if (ceiling && playerVel.y > 0)
-			vel.y = 0;
+			if (ceiling && playerVel.y > 0)
+				vel.y = 0;
+		}
 	}
 	else
 	{//no collision = in air
@@ -507,12 +511,10 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		{
 			modifiersSetData(dt);	//Dont Remove Again Please!
 
-			if (!noclip)
-				applyGravity(dt);
 
 			float lastHeight = pos.y;
 
-			
+
 
 
 
@@ -520,7 +522,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 			movePlayer(dt, olddir, freecam, spectatingThisPlayer); //does not move the player but should
 
-			
+
 			// --- Animation checks ---
 
 			bool animGroundedLast = animGrounded;
