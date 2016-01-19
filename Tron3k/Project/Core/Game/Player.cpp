@@ -177,7 +177,15 @@ void Player::modifiersGetData(float dt)
 
 void Player::setFootstepsCountdown()
 {
-	this->footstepsCountdown = 0.7;
+	if (this->role.getRole() == 2)
+	{
+		this->footstepsCountdown = 0.2;
+	}
+	else
+	{
+		this->footstepsCountdown = 0.7;
+	}
+	
 }
 
 void Player::setFootstepsLoop(bool theBool)

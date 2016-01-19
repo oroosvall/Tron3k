@@ -40,6 +40,8 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->soundList[SOUNDS::soundEffectTrapperReload].loadFromFile("GameFiles/Sound/soundEffectTrapperReload2.ogg");
 		singleton->soundList[SOUNDS::soundEffectShield].loadFromFile("GameFiles/Sound/soundShield.ogg");
 		singleton->soundList[SOUNDS::soundEffectDiscBounce].loadFromFile("GameFiles/Sound/soundEffectDiscBounce.ogg");
+		singleton->soundList[SOUNDS::soundEffectBruteSteps].loadFromFile("GameFiles/Sound/soundEffectBruteSteps.ogg");
+		singleton->soundList[SOUNDS::soundEffectShankerSteps].loadFromFile("GameFiles/Sound/soundEffectShankerSteps.ogg");
 
 		initialized = true;
 	}
@@ -236,12 +238,12 @@ void SoundPlayer::playFootsteps(int role, float posX, float posY, float posZ)
 
 		if (role == 2)
 		{
-			playExternalSound(SOUNDS::soundFootSteps, posX, posY, posZ);
+			playExternalSound(SOUNDS::soundEffectShankerSteps, posX, posY, posZ);
 		}
 
 		if (role == 3)
 		{
-			playExternalSound(SOUNDS::soundFootSteps, posX, posY, posZ);
+			playExternalSound(SOUNDS::soundEffectBruteSteps, posX, posY, posZ);
 		}
 
 		if (role == 4)
