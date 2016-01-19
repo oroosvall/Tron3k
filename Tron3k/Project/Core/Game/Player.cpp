@@ -340,7 +340,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 					if (length(tempvec) > 0)
 					{
-						tempvec = normalize(tempvec) * role.getMovementSpeed();
+						tempvec = normalize(tempvec);
 						vel.x = tempvec.x;
 						vel.z = tempvec.y;
 					}
