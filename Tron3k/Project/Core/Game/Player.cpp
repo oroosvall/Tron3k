@@ -95,7 +95,8 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 	{
 		//grounded set to true at start of frame
 		grounded = true;
-
+		if (collisionNormalSize > 1)
+			int x = 0;
 		for (int k = 0; k < collisionNormalSize; k++)
 		{
 			//push pos away and lower velocity using pendepth
@@ -122,8 +123,12 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 
 			//if(vel.x != 0 && vel.z != 0)
 			pos += posadjust;
-			//vel += posadjust * dt * 0.5f;
-
+			if (posadjust != vec3(0, 0, 0))
+			{
+				
+				vel = ((normalize(posadjust) * dot(normalize(vel), normalize(posadjust))) - vel) * dt;
+				//vel += posadjust;// / dt * 0.5f;
+			}
 			if (ceiling && playerVel.y > 0)
 				vel.y = 0;
 		}
