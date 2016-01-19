@@ -19,6 +19,7 @@ enum SOUNDS
 	soundEffectDiscBounce,
 	soundEffectBruteSteps,
 	soundEffectShankerSteps,
+	soundEffectDestroyerSteps,
 
 	nrOfSounds //leave last
 };
