@@ -145,6 +145,26 @@ void Game::update(float dt)
 		checkPlayerVBulletCollision();
 	}
 
+	for (int c = 0; c < max_con; c++)
+	{
+		if (playerList[c] != nullptr)
+		{
+			if (playerList[c]->isLocal())
+			{
+				bool spectatingThis = false;
+				bool spectating = false;
+				if (spectateID > -1)
+				{
+					spectating = true;
+					if (c == spectateID)
+						spectatingThis = true;
+				}
+				playerList[c]->movementUpdates(dt, freecam, spectatingThis, spectating);
+			}
+			//TODO: Send collision results to player
+		}
+	}
+
 	for (unsigned int i = 0; i < BULLET_TYPE::NROFBULLETS; i++)
 	{
 		for (unsigned int c = 0; c < bullets[i].size(); c++)

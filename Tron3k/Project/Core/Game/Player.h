@@ -94,6 +94,7 @@ public:
 	void setFootstepsLoop(bool);
 
 	PLAYERMSG update(float dt, bool freecam, bool spectatingThisPlayer, bool spectating);
+	void movementUpdates(float dt, bool freecam, bool spectatingThisPlayer, bool spectating);
 
 	void setName(std::string newName);
 	void setGoalPos(glm::vec3 newPos);

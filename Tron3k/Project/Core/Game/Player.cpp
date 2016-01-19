@@ -476,6 +476,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				//role.returnToLife();
 			}
 		}
+		movePlayer(dt, olddir, freecam, spectatingThisPlayer); //This moves the player regardless of what we might end up colliding with
 	} // end of local player check
 	else
 	{
@@ -500,9 +501,17 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			vel = glm::vec3(0, 0, 0);
 		}
 	}
+	clearCollisionNormals(); //Doesn't actually clear the array, just manually sets size to 0. This is to speed things up a little.
+	return msg;
+}
 
+void Player::movementUpdates(float dt, bool freecam, bool spectatingThisPlayer, bool spectating)
+{
 	/*
-	Kind of ugly, but I put it here so it interacts properly with movement-changing modifiers
+	This update loop has information about collisions, and as such will place the player in a legal position while maintaining frame-perfect collision data
+	aka we are no longer 1 frame desynced
+
+	In this update, we also take care of external forces such as explosions and gravity
 	*/
 	if (isLocalPlayer)
 	{
@@ -515,10 +524,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 			//sets player rotations and cam
 
-			movePlayer(dt, olddir, freecam, spectatingThisPlayer); //does not move the player but should
-
-
-			// --- Animation checks ---
+		   // --- Animation checks ---
 
 			bool animGroundedLast = animGrounded;
 
@@ -599,8 +605,6 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		cam->setCam(pos, dir);
 	}
 
-	clearCollisionNormals(); //Doesn't actually clear the array, just manually sets size to 0. This is to speed things up a little.
-
 	worldMat[0].w = pos.x;
 	worldMat[1].w = pos.y; //head offset. player objects have their origo at their feet
 	worldMat[2].w = pos.z;
@@ -614,8 +618,6 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 	{
 		worldMat[1].w -= 1.55f; // move down if 3rd person render
 	}
-
-	return msg;
 }
 
 void Player::rotatePlayer(vec3 olddir, vec3 newdir)
