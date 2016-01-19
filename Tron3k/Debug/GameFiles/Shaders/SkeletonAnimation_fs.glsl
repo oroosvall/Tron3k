@@ -18,6 +18,7 @@ layout (location = 3) out vec4 NormalOut;
 layout (location = 4) out vec4 GlowMap;
 
 vec4 normalMap;
+vec4 glowSpec;
 
 vec4 CalcBumpedNormal()
 {
@@ -29,15 +30,16 @@ vec4 CalcBumpedNormal()
 	mat3 TBN = mat3(tan, bitangent, boneNormal);
 	newnormal.xyz = TBN * newnormal.xyz;
 	newnormal.xyz = normalize(newnormal.xyz);
-	newnormal.w = 1;
 	return newnormal;
 }
 
 void main()
 {
-	WorldPosOut	= vec4(bonePosition, 1.0);					
-	DiffuseOut	= texture(textureSample, vec2(boneUV.x, 1-boneUV.y));	
+	WorldPosOut = vec4(bonePosition, 1.0);					
+	DiffuseOut = texture(textureSample, vec2(boneUV.x, 1-boneUV.y));	
 	NormalOut = CalcBumpedNormal();
-	GlowMap = (texture(glowSpecSample, vec2(boneUV.x, 1-boneUV.y)) * staticGlowIntensity) + vec4((1.0 - normalMap.w) * dynamicGlowColor, 0);
+	glowSpec = texture(glowSpecSample, vec2(boneUV.x, 1-boneUV.y));
+	NormalOut.w = glowSpec.w;
+	GlowMap = glowSpec * staticGlowIntensity + vec4((1.0 - normalMap.w) * dynamicGlowColor, 0);
 	GlowMap.w = trail;
 }

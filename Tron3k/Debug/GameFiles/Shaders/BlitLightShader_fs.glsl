@@ -36,7 +36,7 @@ layout (std140) uniform Light
 uniform int NumSpotLights;
 uniform vec3 eyepos;
 
-float gSpecularPower = 20;
+float gSpecularPower = 200;
 float gMatSpecularIntensity = 0.4;
 
 out vec4 fragment_color;
@@ -58,7 +58,7 @@ vec4 CalcLightInternal(SpotLight l, vec3 LightDirection, vec3 Normal)
 		float SpecularFactor = dot(VertexToEye, LightReflect);                              
 		SpecularFactor = pow(SpecularFactor, gSpecularPower);                               
 		if (SpecularFactor > 0)                                                           
-			SpecularColor = vec4(l.Color, 1.0f) * (1- Normal0.w) * SpecularFactor; 				
+			SpecularColor = vec4(l.Color, 1.0f) * ( 1 - Normal0.w) * SpecularFactor; 				
 	}                                                                                                                                                                         
 	return (DiffuseColor + SpecularColor);                                   
 }               
