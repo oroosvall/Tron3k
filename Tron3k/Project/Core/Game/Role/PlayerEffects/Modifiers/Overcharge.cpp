@@ -4,7 +4,7 @@
 void Overcharge::init(Player* myTarget)
 {
 	type = MODIFIER_TYPE::OVERCHARGEMODIFIER;
-	timer = 8.0f;
+	timer = 5.0f;
 	target = myTarget;
 	startHealth = target->getHP();
 }

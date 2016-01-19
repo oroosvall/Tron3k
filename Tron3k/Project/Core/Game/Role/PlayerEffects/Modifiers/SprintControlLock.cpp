@@ -7,7 +7,7 @@ void SprintControlLock::init(Player* myTarget)
 	sprintSpeed = 2.5f;
 
 	target = myTarget;
-	lifeTime = 7.0f;
+	lifeTime = 4.0f;
 
 	glm::vec2 dir = glm::vec2(target->getDir().x, target->getDir().z);
 	dir = normalize(dir);
@@ -35,7 +35,7 @@ int SprintControlLock::getData(float dt)
 
 int SprintControlLock::setData(float dt)
 {
-	vel += vec3(0.1, 0.0, 0.1) * vel * dt;
+	vel += vec3(0.3, 0.0, 0.3) * vel * dt;
 	vel.y = target->getVelocity().y;
 	target->setVelocity(vel);
 

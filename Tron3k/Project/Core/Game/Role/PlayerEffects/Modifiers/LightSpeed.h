@@ -6,8 +6,10 @@
 class LightSpeed : public Modifier
 {
 private:
-	float lightSpeed = 50.0;
-	float timer = 8;
+	float lightSpeed = 1.3f;
+	float timer = 5.0f;
+	float oldTime = timer;
+	glm::vec3 speed;
 public:
 	void init(Player* myTarget);
 	int getData(float dt);
