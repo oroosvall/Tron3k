@@ -112,6 +112,16 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 			else //If we don't collide to anything that is a floor, we don't touch ground
 				grounded = false;
 			posadjust += pendepth;
+
+			//test code
+			/*same effect as actual code
+			pendepth = -pendepth;
+			pendepth.y = 0;
+			float projectionval = 0;
+			if(dot(pendepth, pendepth) != 0)
+			projectionval = dot(vel, pendepth) / dot(pendepth, pendepth);
+			
+			vel -= pendepth * projectionval;*/
 		}
 
 		playerVel += posadjust / dt * 0.5f;
@@ -125,8 +135,12 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 			pos += posadjust;
 			if (posadjust != vec3(0, 0, 0))
 			{
-				
+				//test equaitons
 				vel = ((normalize(posadjust) * dot(normalize(vel), normalize(posadjust))) - vel) * dt;
+				//same effect
+				//vel = normalize(((normalize(posadjust) * dot(normalize(vel), normalize(posadjust))) - vel)) * length(vel);
+				
+
 				//vel += posadjust;// / dt * 0.5f;
 			}
 			if (ceiling && playerVel.y > 0)
