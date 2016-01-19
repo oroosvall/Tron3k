@@ -511,12 +511,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		{
 			modifiersSetData(dt);	//Dont Remove Again Please!
 
-
 			float lastHeight = pos.y;
-
-
-
-
 
 			//sets player rotations and cam
 
