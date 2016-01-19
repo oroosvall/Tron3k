@@ -1,5 +1,5 @@
 Hälsa
 Main vapen
 Secondary vapen
-consumable
+Jump Height
 Speed
