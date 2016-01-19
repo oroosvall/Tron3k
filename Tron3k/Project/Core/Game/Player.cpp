@@ -91,31 +91,37 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 	//Collision handling here, after movement
 	bool ceiling = false;
 	vec3 posadjust = vec3(0);
-	for (int k = 0; k < collisionNormalSize; k++)
+	if (collisionNormalSize > 0)
 	{
-		//push pos away and lower velocity using pendepth
-		vec3 pendepth = vec3(collisionNormals[k]) * collisionNormals[k].w;
-		if (collisionNormals[k].y < 0)
-			ceiling = true;
-
-		if (collisionNormals[k].y > 0) // test ramp!!
+		for (int k = 0; k < collisionNormalSize; k++)
 		{
-			grounded = true;
+			//push pos away and lower velocity using pendepth
+			vec3 pendepth = vec3(collisionNormals[k]) * collisionNormals[k].w;
+			if (collisionNormals[k].y < 0)
+				ceiling = true;
 
+			if (collisionNormals[k].y > 0) // test ramp!!
+			{
+				grounded = true;
+
+			}
+			posadjust += pendepth;
 		}
-		posadjust += pendepth;
+
+		playerVel += posadjust / dt * 0.5f;
+
+		if (ceiling)
+			posadjust.y = 0;
+
+		pos += posadjust;
+
+		if (ceiling && playerVel.y > 0)
+			vel.y = 0;
 	}
-
-	playerVel += posadjust / dt * 0.5f;
-
-	if (ceiling)
-		posadjust.y = 0;
-
-	pos += posadjust;
-
-	if (ceiling && playerVel.y > 0)
-		vel.y = 0;
-
+	else
+	{
+		grounded = false;
+	}
 	//End of collision adjustement
 
 
@@ -500,7 +506,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 			float lastHeight = pos.y;
 
-			grounded = false;
+			
 
 
 
@@ -508,6 +514,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 			movePlayer(dt, olddir, freecam, spectatingThisPlayer); //does not move the player but should
 
+			
 			// --- Animation checks ---
 
 			bool animGroundedLast = animGrounded;
