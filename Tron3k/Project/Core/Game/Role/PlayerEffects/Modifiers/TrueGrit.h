@@ -3,13 +3,17 @@
 
 #include "../Modifier.h"
 
+
+
 class TrueGrit : public Modifier
 {
 private:
+	float healDelay = 0.1;
 	int oldHealth;
 	int damageTaken;
 	bool dashDone = false;
 	float endTime;
+	float timer = healDelay;
 public:
 	void init(Player* myTarget);
 	int getData(float dt);

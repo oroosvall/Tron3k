@@ -88,7 +88,7 @@ void Role::loadWeapons(int role, int wpn)
 	weapons[wpn]->init();
 }
 
-void Role::loadRoleSpecifics(int role)
+void Role::loadRoleSpecifics(int _role)
 {
 	if (specialAbility != nullptr)
 		delete specialAbility;
@@ -97,7 +97,7 @@ void Role::loadRoleSpecifics(int role)
 	if (consumable != nullptr)
 		delete consumable;
 
-	switch (role)
+	switch (_role)
 		case TRAPPER:
 	{		role = 0;
 			specialAbility = new Lightwall(this);
@@ -132,7 +132,7 @@ void Role::loadRoleSpecifics(int role)
 			mobility = new Dash();
 			mobility->init();
 			consumable = new Consumable();
-			consumable->init(CONSUMABLE_TYPE::THUNDERDOME);
+			consumable->init(CONSUMABLE_TYPE::THERMITEGRENADE);
 			break;
 		case MANIPULATOR:
 			role = 4;
@@ -245,5 +245,5 @@ void Role::returnToLife()
 
 int Role::getRole()
 {
-	return this->role;
+	return role;
 }

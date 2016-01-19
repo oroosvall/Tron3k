@@ -695,6 +695,9 @@ void Game::addBulletToList(int conID, int bulletId, BULLET_TYPE bt, glm::vec3 po
 	case BULLET_TYPE::SHOTGUN_PELLET:
 		b = new ShotgunPellet(pos, dir, conID, bulletId, p->getTeam());
 		break;
+	case BULLET_TYPE::THERMITE_GRENADE:
+		b = new ThermiteGrenade(pos, dir, conID, bulletId, p->getTeam());
+		break;
 	case BULLET_TYPE::CLEANSE_BOMB:
 		b = new CleanseBomb(pos, dir, conID, bulletId, p->getTeam());
 		break;
@@ -829,7 +832,8 @@ void Game::handleConsumableUse(int conID, CONSUMABLE_TYPE ct, glm::vec3 pos, glm
 	case CONSUMABLE_TYPE::LIGHTSPEED:
 		playerList[conID]->addModifier(LIGHTSPEEDMODIFIER);
 		break;
-	case CONSUMABLE_TYPE::THUNDERDOME:
+	case CONSUMABLE_TYPE::THERMITEGRENADE:
+		addBulletToList(conID, 0, BULLET_TYPE::THERMITE_GRENADE, pos, dir);
 		break;
 	}
 }
@@ -897,7 +901,7 @@ void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec
 		addBulletToList(conID, 0, BULLET_TYPE::HACKING_DART, pos, dir);
 	}
 	break;
-	case SPECIAL_TYPE::SPRINTD:
+	case SPECIAL_TYPE::SPRINTD:		// D = Destroyer
 	{
 		p->addModifier(MODIFIER_TYPE::SPRINTCONTROLLOCK);
 	}
@@ -1061,7 +1065,9 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 	}
 	case BULLET_TYPE::VACUUM_GRENADE:
 		break;
-	case BULLET_TYPE::THUNDERDOME_GRENADE:
+	case BULLET_TYPE::THERMITE_GRENADE:
+		addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
+		effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(35.0f);
 		break;
 	}
 	delete bullets[bt][posInArray];

@@ -46,6 +46,7 @@
     <ClCompile Include="Core\Game\Role\Weapon\Bullet.cpp" />
     <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\BruteBullets\GrenadeShot.cpp" />
     <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\BruteBullets\ShotgunPellet.cpp" />
+    <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\BruteBullets\ThermiteGrenade.cpp" />
     <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\DestroyerBullets\CleanseBomb.cpp" />
     <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\DestroyerBullets\PlasmaShot.cpp" />
     <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\BatterySlowShot.cpp" />
@@ -111,6 +112,7 @@
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\AllBullets.h" />
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\BruteBullets\GrenadeShot.h" />
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\BruteBullets\ShotgunPellet.h" />
+    <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\BruteBullets\ThermiteGrenade.h" />
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\DestroyerBullets\CleanseBomb.h" />
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\DestroyerBullets\PlasmaShot.h" />
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\BatterySlowShot.h" />

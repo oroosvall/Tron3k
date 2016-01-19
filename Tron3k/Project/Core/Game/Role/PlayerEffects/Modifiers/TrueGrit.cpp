@@ -44,12 +44,14 @@ int TrueGrit::setData(float dt)
 			dashDone = true;
 	}
 
-	if (damageTaken > 0)
+	if (damageTaken > 0 && timer <= 0)		//Heal atm since damage reduction was impossibru
 	{
-		damageTaken *= 0.5;
-		oldHealth -= damageTaken;
+		oldHealth++;
 		target->setHP(oldHealth);
+		timer = healDelay;
 	}
+	else
+		timer--;
 
 	return 0;
 }

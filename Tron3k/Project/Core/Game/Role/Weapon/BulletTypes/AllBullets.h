@@ -19,5 +19,6 @@
 
 #include "BruteBullets\GrenadeShot.h"
 #include "BruteBullets\ShotgunPellet.h"
+#include "BruteBullets\ThermiteGrenade.h"
 
 #endif

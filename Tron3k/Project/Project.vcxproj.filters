@@ -255,6 +255,9 @@
     <ClCompile Include="Core\Game\Role\Special\SpecialTypes\Dash.cpp">
       <Filter>Source Files\Core\Game\Role\Special\SpecialTypes</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\BruteBullets\ThermiteGrenade.cpp">
+      <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\BruteBullets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Input.h">
@@ -457,6 +460,9 @@
     </ClInclude>
     <ClInclude Include="Core\Game\Role\Special\SpecialTypes\Dash.h">
       <Filter>Source Files\Core\Game\Role\Special\SpecialTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\BruteBullets\ThermiteGrenade.h">
+      <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\BruteBullets</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
