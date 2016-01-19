@@ -6,7 +6,6 @@ uniform int Use;
 uniform sampler2D Position;
 uniform sampler2D Diffuse;
 uniform sampler2D Normal;
-uniform sampler2D GlowSpec;
 uniform sampler2D GlowMap;	
 uniform sampler2D Depth;
 
@@ -59,7 +58,7 @@ vec4 CalcLightInternal(SpotLight l, vec3 LightDirection, vec3 Normal)
 		float SpecularFactor = dot(VertexToEye, LightReflect);                              
 		SpecularFactor = pow(SpecularFactor, gSpecularPower);                               
 		if (SpecularFactor > 0)                                                           
-			SpecularColor = vec4(l.Color, 1.0f) * gMatSpecularIntensity * SpecularFactor; 				
+			SpecularColor = vec4(l.Color, 1.0f) * (1- Normal0.w) * SpecularFactor; 				
 	}                                                                                                                                                                         
 	return (DiffuseColor + SpecularColor);                                   
 }               
