@@ -252,6 +252,9 @@
     <ClCompile Include="Core\Game\Role\PlayerEffects\Modifiers\TrueGrit.cpp">
       <Filter>Source Files\Core\Game\Role\PlayerEffects\Modifiers</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Game\Role\Special\SpecialTypes\Dash.cpp">
+      <Filter>Source Files\Core\Game\Role\Special\SpecialTypes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Input.h">
@@ -451,6 +454,9 @@
     </ClInclude>
     <ClInclude Include="Core\Game\Role\PlayerEffects\Modifiers\TrueGrit.h">
       <Filter>Source Files\Core\Game\Role\PlayerEffects\Modifiers</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Special\SpecialTypes\Dash.h">
+      <Filter>Source Files\Core\Game\Role\Special\SpecialTypes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

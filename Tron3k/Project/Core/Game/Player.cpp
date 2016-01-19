@@ -724,6 +724,12 @@ void Player::addModifier(MODIFIER_TYPE mt)
 		myModifiers.push_back(m);
 	}
 	break;
+	case MODIFIER_TYPE::TRUEGRITMODIFIER:
+	{
+		m = new TrueGrit();
+		myModifiers.push_back(m);
+	}
+	break;
 	}
 	myModifiers[myModifiers.size() - 1]->init(this);
 }

@@ -8,6 +8,8 @@ class TrueGrit : public Modifier
 private:
 	int oldHealth;
 	int damageTaken;
+	bool dashDone = false;
+	float endTime;
 public:
 	void init(Player* myTarget);
 	int getData(float dt);

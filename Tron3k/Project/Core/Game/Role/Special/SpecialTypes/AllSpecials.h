@@ -5,5 +5,6 @@
 #include "MultiJump.h"
 #include "HackingDartSpecial.h"
 #include "SprintD.h"
+#include "Dash.h"
 
 #endif

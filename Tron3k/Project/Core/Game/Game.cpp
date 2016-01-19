@@ -856,7 +856,6 @@ void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec
 		addEffectToList(conID, sID, EFFECT_TYPE::LIGHT_WALL, pos);
 	}
 	break;
-
 	case SPECIAL_TYPE::MULTIJUMP:
 	{
 		vec3 vel = p->getVelocity();
@@ -871,7 +870,6 @@ void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec
 		p->setVelocity(vel);
 	}
 	break;
-
 	case SPECIAL_TYPE::WALLJUMP:
 	{
 		int size = 0;
@@ -894,16 +892,19 @@ void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec
 		}
 	}
 	break;
-
 	case SPECIAL_TYPE::HACKINGDARTSPECIAL:
 	{
 		addBulletToList(conID, 0, BULLET_TYPE::HACKING_DART, pos, dir);
 	}
 	break;
-
 	case SPECIAL_TYPE::SPRINTD:
 	{
 		p->addModifier(MODIFIER_TYPE::SPRINTCONTROLLOCK);
+	}
+	break;
+	case SPECIAL_TYPE::DASH:
+	{
+		p->addModifier(MODIFIER_TYPE::TRUEGRITMODIFIER);
 	}
 	break;
 	}
