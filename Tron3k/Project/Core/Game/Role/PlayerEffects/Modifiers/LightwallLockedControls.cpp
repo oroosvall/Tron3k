@@ -4,7 +4,7 @@
 void LightWallLockedControls::init(Player* myTarget)
 {
 	type = MODIFIER_TYPE::LIGHTWALLCONTROLLOCK;
-	lightWallSpeed = 10.3f;
+	lightWallSpeed = 3.7f;
 
 	target = myTarget;
 	lifeTime = -1;

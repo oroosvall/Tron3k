@@ -4,7 +4,7 @@
 void SprintControlLock::init(Player* myTarget)
 {
 	type = MODIFIER_TYPE::SPRINTCONTROLLOCK;
-	sprintSpeed = 8.3f;
+	sprintSpeed = 2.5f;
 
 	target = myTarget;
 	lifeTime = 7.0f;
@@ -35,7 +35,7 @@ int SprintControlLock::getData(float dt)
 
 int SprintControlLock::setData(float dt)
 {
-	vel = vel + (vel * vec3(1.001 * dt)) * vec3(0.5);	//Icke vackert
+	vel += vec3(0.1, 0.0, 0.1) * vel * dt;
 	vel.y = target->getVelocity().y;
 	target->setVelocity(vel);
 
