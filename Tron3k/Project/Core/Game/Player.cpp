@@ -181,6 +181,10 @@ void Player::setFootstepsCountdown()
 	{
 		this->footstepsCountdown = 0.2;
 	}
+	else if (this->role.getRole() == 4)
+	{
+		this->footstepsCountdown = 0.29;
+	}
 	else
 	{
 		this->footstepsCountdown = 0.7;
