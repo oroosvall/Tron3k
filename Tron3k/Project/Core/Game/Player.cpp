@@ -93,6 +93,9 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 	vec3 posadjust = vec3(0);
 	if (collisionNormalSize > 0)
 	{
+		//grounded set to true at start of frame
+		grounded = true;
+
 		for (int k = 0; k < collisionNormalSize; k++)
 		{
 			//push pos away and lower velocity using pendepth
@@ -102,9 +105,11 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 
 			if (collisionNormals[k].y > 0) // test ramp!!
 			{
-				grounded = true;
+				//grounded = true;
 
 			}
+			else //If we don't collide to anything that is a floor, we don't touch ground
+				grounded = false;
 			posadjust += pendepth;
 		}
 
@@ -113,13 +118,14 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 		if (ceiling)
 			posadjust.y = 0;
 
+		//if(vel.x != 0 && vel.z != 0)//IF we don't move, we don't want to be moved
 		pos += posadjust;
 
 		if (ceiling && playerVel.y > 0)
 			vel.y = 0;
 	}
 	else
-	{
+	{//no collision = in air
 		grounded = false;
 	}
 	//End of collision adjustement
