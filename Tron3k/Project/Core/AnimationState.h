@@ -28,9 +28,7 @@ enum AnimationState
 
 	third_death,
 
-	none,
-
-	iteration
+	none
 };
 
 // static functions can only be seen classes that includes it.

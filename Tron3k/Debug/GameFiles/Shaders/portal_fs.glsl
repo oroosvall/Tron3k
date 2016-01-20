@@ -21,5 +21,5 @@ void main ()
 	DiffuseOut = vec4(0);
 	NormalOut = vec4(0);
 	GlowMap = vec4(1.25 - transp , 0 , transp, transp / 4);
-    GlowMap.w = 0.0f;
+    GlowMap.w = 0.2;
 }

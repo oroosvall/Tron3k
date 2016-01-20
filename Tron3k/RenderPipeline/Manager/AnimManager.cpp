@@ -8,9 +8,15 @@ void AnimManager::updateAnimStates(int playerID, int role, AnimationState curren
 		overide = true;
 	}
 
+	if (current == AnimationState::third_run)
+	{
+		int smt = 1;
+	}
+
 	if (overide) // replace animation with the new one
 	{
 		setAnim(animStates[playerID], current);
+		animStates[playerID].timeout = false;
 	}
 	else
 	{
@@ -57,7 +63,7 @@ void AnimManager::updateAnimStates(int playerID, int role, AnimationState curren
 
 void AnimManager::setAnim(animState& current, AnimationState overide)
 {
-	if (keyFrameLenghts[current.role*AnimationState::iteration + overide] == 0)
+	if (keyFrameLenghts[current.role*AnimationState::none + overide] == 0)
 	{
 		return;
 	}
@@ -65,7 +71,7 @@ void AnimManager::setAnim(animState& current, AnimationState overide)
 	current.state = overide;
 
 
-	current.frameEnd = keyFrameLenghts[current.role*AnimationState::iteration + current.state];
+	current.frameEnd = keyFrameLenghts[current.role*AnimationState::none + current.state];
 
 	current.timeLength = current.frameEnd * current.speed;
 }

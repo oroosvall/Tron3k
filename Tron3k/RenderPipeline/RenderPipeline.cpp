@@ -463,9 +463,6 @@ void RenderPipeline::renderMISC(int miscID, void* world, float* dgColor, float s
 
 	//set temp objects worldmat
 	glProgramUniformMatrix4fv(regularShader, worldMat[0], 1, GL_FALSE, (GLfloat*)world);
-	
-	//set temp objects worldmat
-	glProgramUniformMatrix4fv(regularShader, worldMat[0], 1, GL_FALSE, (GLfloat*)world);
 
 	contMan.renderMisc(miscID);
 }

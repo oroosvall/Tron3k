@@ -162,9 +162,9 @@ int* AnimatedMeshV2::loadAnimations(std::string character)
 	animations[AnimationState::third_jump_begin].load("GameFiles/CharacterFiles/Trapper/trapper_third_jumpIn.bin");
 	animations[AnimationState::third_jump_end].load("GameFiles/CharacterFiles/Trapper/trapper_third_jumpOut.bin");
 
-	int frames[AnimationState::iteration];
+	int frames[AnimationState::none];
 
-	for (int i = 0; i < AnimationState::iteration; i++)
+	for (int i = 0; i < AnimationState::none; i++)
 	{
 		frames[i] = animations[i].header.keyCount;
 	}

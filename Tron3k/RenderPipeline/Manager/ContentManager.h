@@ -56,7 +56,7 @@ public:
 
 	int nrChunks;
 
-	int keyFrameLengths[5 * AnimationState::iteration];
+	int keyFrameLengths[5 * AnimationState::none];
 
 	bool* renderedChunks;
 	bool* renderNextChunks;

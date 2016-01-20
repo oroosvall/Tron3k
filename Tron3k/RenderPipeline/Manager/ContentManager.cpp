@@ -19,9 +19,9 @@ void ContentManager::init()
 	playerCharacters[0].load("GameFiles/CharacterFiles/Trapper/chr_trapper.bin");
 	int* lengths = playerCharacters[0].loadAnimations("");
 
-	for (int i = 0; i < AnimationState::iteration; i++)
+	for (int i = 0; i < AnimationState::none; i++)
 	{
-		keyFrameLengths[0 * AnimationState::iteration + i] = lengths[i];
+		keyFrameLengths[0 * AnimationState::none + i] = lengths[i];
 	}
 
 	//Skybox
