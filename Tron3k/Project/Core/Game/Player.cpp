@@ -74,14 +74,30 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 	if (vel.x != 0 || vel.z != 0)
 	{
 
-		if (this->getFootsteps() && this->getGrounded() && GetSoundActivated())
+		if (this->getFootsteps() && this->getGrounded() && GetSoundActivated() && this->role.getRole() != 1)
 		{
 			this->setFootstepsCountdown();
 			this->setFootstepsLoop(false);
 			GetSound()->playFootsteps(this->role.getRole(), pos.x, pos.y, pos.z);
 		}
 
+		if (this->role.getRole() == 1 && GetSound()->destroyerPaused == true)
+		{
+			
+			GetSound()->playFootsteps(this->role.getRole(), pos.x, pos.y, pos.z);
+			GetSound()->destroyerPaused = false;
+		}
 	}
+	
+	else
+	{
+			if (this->role.getRole() == 1 && GetSound()->destroyerPaused == false)
+			{
+				GetSound()->stopDestroyer(pos.x, pos.y, pos.z);
+			}
+	}
+
+	
 
 	glm::vec3 playerVel = vec3(0);
 	playerVel.x = vel.x*role.getMovementSpeed();
@@ -252,7 +268,7 @@ void Player::setFootstepsCountdown()
 	}
 	else if (this->role.getRole() == 1)
 	{
-		this->footstepsCountdown = 20;
+		this->footstepsCountdown = 2000000000000;
 	}
 	else
 	{

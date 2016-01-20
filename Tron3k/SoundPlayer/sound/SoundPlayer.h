@@ -33,6 +33,9 @@ private:
 	float footstepsCountdown = 0;
 
 	sf::Sound sounds[MAXSOUNDS];
+	sf::Sound destroyerSteps;
+	sf::Sound destroyerStop;
+	sf::Sound destroyerStart;
 	sf::SoundBuffer soundList[SOUNDS::nrOfSounds];
 	string musicList[MUSIC::nrOfMusic];
 
@@ -46,6 +49,7 @@ public:
 	static void release();
 	static void init(SoundPlayer* sound, int activateSound);
 	static SoundPlayer* getSound();
+	bool destroyerPaused = true;
 
 	virtual void enableSounds();
 	static bool getSoundEnabler();
@@ -60,6 +64,16 @@ public:
 
 	virtual int playExternalSound(int sound, float posX, float posY, float posZ);
 	virtual int playUserGeneratedSound(int sound);
+	virtual int playDestroyer(float x, float y, float z);
+	virtual int playDestroyerStop(float x, float y, float z);
+	virtual int playDestroyerStart(float x, float y, float z);
+	void stopDestroyer(float x, float y, float z)
+	{
+		destroyerSteps.pause();
+		destroyerPaused = true;
+		playDestroyerStop(x, y, z);
+
+	}
 
 	virtual void rotate(float deltaTime);
 

@@ -44,6 +44,8 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->soundList[SOUNDS::soundEffectShankerSteps].loadFromFile("GameFiles/Sound/soundEffectShankerSteps.ogg");
 		singleton->soundList[SOUNDS::soundEffectDestroyerSteps].loadFromFile("GameFiles/Sound/soundEffectDestroyerSteps.ogg");
 		singleton->soundList[SOUNDS::soundEffectClusterGrenade].loadFromFile("GameFiles/Sound/soundEffectClusterGrenadeExplosion.ogg");
+		singleton->soundList[SOUNDS::soundEffectDestroyerStop].loadFromFile("GameFiles/Sound/soundEffectDestroyerStop.ogg");
+		singleton->soundList[SOUNDS::soundEffectDestroyerStart].loadFromFile("GameFiles/Sound/soundEffectDestroyerStart.ogg");
 
 		initialized = true;
 	}
@@ -119,6 +121,123 @@ int SoundPlayer::playUserGeneratedSound(int sound)
 	return 0;
 }
 
+int SoundPlayer::playDestroyer(float x, float y, float z)
+{
+	playDestroyerStart(x, y, z);
+	if (soundEnabler && initialized == 1)
+	{
+
+		sf::Listener::setDirection(playerDir.x, playerDir.y, playerDir.z);			//Set the direction of the player
+		if (sf::Listener::getPosition().x > x - 0.1 && sf::Listener::getPosition().x < x + 0.1)
+		{
+			if (sf::Listener::getPosition().z > z - 0.1 && sf::Listener::getPosition().z < z + 0.1)
+			{
+				destroyerSteps.setRelativeToListener(true);
+				destroyerSteps.setPosition(0, 0, 0);
+
+			}
+		}
+
+		else
+		{
+			destroyerSteps.setRelativeToListener(false);
+			destroyerSteps.setPosition(x, y, z);			//Set the sound's position in the world. Could be passed in through a parameter.
+		}
+
+		//std::cout << "x: " << sf::Listener::getPosition().x << " y: " << sf::Listener::getPosition().y << " z: " << sf::Listener::getPosition().z << endl;
+		//std::cout << "x: " << x << " y: " << y << " z: " << z << endl;
+		//sounds[nrOfSoundsPlaying].isRelativeToListener();
+		destroyerSteps.setMinDistance(10.0f);		//Set the sound's distance it travels before it starts to attenuate. Could be passed in through a parameter.
+
+		destroyerSteps.setBuffer(soundList[SOUNDS::soundEffectDestroyerSteps]);
+		destroyerSteps.setVolume(50);
+		destroyerSteps.setLoop(true);
+		destroyerSteps.play();
+		nrOfSoundsPlaying++;
+		nrOfSoundsPlaying %= MAXSOUNDS;
+	}
+
+	return 0;
+}
+
+int SoundPlayer::playDestroyerStop(float x, float y, float z)
+{
+
+	if (soundEnabler && initialized == 1)
+	{
+
+		sf::Listener::setDirection(playerDir.x, playerDir.y, playerDir.z);			//Set the direction of the player
+		if (sf::Listener::getPosition().x > x - 0.1 && sf::Listener::getPosition().x < x + 0.1)
+		{
+			if (sf::Listener::getPosition().z > z - 0.1 && sf::Listener::getPosition().z < z + 0.1)
+			{
+				destroyerStop.setRelativeToListener(true);
+				destroyerStop.setPosition(0, 0, 0);
+
+			}
+		}
+
+		else
+		{
+			destroyerStop.setRelativeToListener(false);
+			destroyerStop.setPosition(x, y, z);			//Set the sound's position in the world. Could be passed in through a parameter.
+		}
+
+		//std::cout << "x: " << sf::Listener::getPosition().x << " y: " << sf::Listener::getPosition().y << " z: " << sf::Listener::getPosition().z << endl;
+		//std::cout << "x: " << x << " y: " << y << " z: " << z << endl;
+		//sounds[nrOfSoundsPlaying].isRelativeToListener();
+		destroyerStop.setMinDistance(10.0f);		//Set the sound's distance it travels before it starts to attenuate. Could be passed in through a parameter.
+
+		destroyerStop.setBuffer(soundList[SOUNDS::soundEffectDestroyerStop]);
+		destroyerStop.setVolume(50);
+		destroyerStop.setLoop(false);
+		destroyerStop.play();
+		nrOfSoundsPlaying++;
+		nrOfSoundsPlaying %= MAXSOUNDS;
+	}
+
+	return 0;
+}
+
+int SoundPlayer::playDestroyerStart(float x, float y, float z)
+{
+
+	if (soundEnabler && initialized == 1)
+	{
+
+		sf::Listener::setDirection(playerDir.x, playerDir.y, playerDir.z);			//Set the direction of the player
+		if (sf::Listener::getPosition().x > x - 0.1 && sf::Listener::getPosition().x < x + 0.1)
+		{
+			if (sf::Listener::getPosition().z > z - 0.1 && sf::Listener::getPosition().z < z + 0.1)
+			{
+				destroyerStart.setRelativeToListener(true);
+				destroyerStart.setPosition(0, 0, 0);
+
+			}
+		}
+
+		else
+		{
+			destroyerStart.setRelativeToListener(false);
+			destroyerStart.setPosition(x, y, z);			//Set the sound's position in the world. Could be passed in through a parameter.
+		}
+
+		//std::cout << "x: " << sf::Listener::getPosition().x << " y: " << sf::Listener::getPosition().y << " z: " << sf::Listener::getPosition().z << endl;
+		//std::cout << "x: " << x << " y: " << y << " z: " << z << endl;
+		//sounds[nrOfSoundsPlaying].isRelativeToListener();
+		destroyerStop.setMinDistance(10.0f);		//Set the sound's distance it travels before it starts to attenuate. Could be passed in through a parameter.
+
+		destroyerStart.setBuffer(soundList[SOUNDS::soundEffectDestroyerStart]);
+		destroyerStart.setVolume(50);
+		destroyerStart.setLoop(false);
+		destroyerStart.play();
+		nrOfSoundsPlaying++;
+		nrOfSoundsPlaying %= MAXSOUNDS;
+	}
+
+	return 0;
+}
+
 int SoundPlayer::playExternalSound(int sound, float x, float y, float z)
 {
 	if (soundEnabler && initialized == 1)
@@ -155,6 +274,7 @@ int SoundPlayer::playExternalSound(int sound, float x, float y, float z)
 
 	return 0;
 }
+
 
 void SoundPlayer::setLocalPlayerDir(glm::vec3 playerDir)
 {
@@ -235,8 +355,7 @@ void SoundPlayer::playFootsteps(int role, float posX, float posY, float posZ)
 
 		if (role == 1)
 		{
-			GetSound()->sounds[6].setLoop(true);
-			playExternalSound(SOUNDS::soundEffectDestroyerSteps, posX, posY, posZ);
+			playDestroyer(posX, posY, posZ);
 		}
 
 		if (role == 2)
