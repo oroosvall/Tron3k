@@ -1035,15 +1035,12 @@ void Game::bounceBullet(BulletHitWorldInfo hwi, Bullet* theBullet)
 
 void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 {
-	int arraypos;
+	int arraypos = -1;
 	Bullet* b = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, arraypos);
 	if (b != nullptr)
 	{
 		switch (hi.bt)
 		{
-		case BULLET_TYPE::PULSE_SHOT:
-			removeBullet(hi.bt, arraypos);
-			break;
 		case BULLET_TYPE::CLUSTER_GRENADE:
 			bounceBullet(hi, b);
 			break;
@@ -1058,6 +1055,9 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 			break;
 		case BULLET_TYPE::DISC_SHOT:
 			bounceBullet(hi, b);
+			break;
+		default:
+			removeBullet(hi.bt, arraypos);
 			break;
 		}
 	}
