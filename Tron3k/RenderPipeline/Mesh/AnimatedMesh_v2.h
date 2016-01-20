@@ -6,6 +6,10 @@
 #include "..\Map\MapHeaders.h"
 #include "../Utils/GPUMemoryLeakChecker.h"
 
+#include "AnimationData.h"
+#include "../../Project/Core/AnimationState.h"
+
+
 class AnimatedMeshV2
 {
 private:
@@ -25,6 +29,8 @@ private:
 
 	Material* materials;
 
+	GLuint matricesBuffer;
+	AnimData animations[AnimationState::none];
 	// todo add animation states & animation data
 
 public:
@@ -34,9 +40,12 @@ public:
 
 	~AnimatedMeshV2();
 
-	void load(std::string fileName);
+	void update();
 
-	void draw(GLuint uniformKeyMatrixLocation);
+	void load(std::string fileName);
+	int* loadAnimations(std::string character);
+
+	void draw(GLuint uniformKeyMatrixLocation, int animationID, int keyFrame);
 
 };
 

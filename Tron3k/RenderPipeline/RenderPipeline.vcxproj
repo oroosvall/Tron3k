@@ -158,6 +158,7 @@
     <ClCompile Include="Map\Map.cpp" />
     <ClCompile Include="Mesh\AnimatedMesh.cpp" />
     <ClCompile Include="Mesh\AnimatedMesh_v2.cpp" />
+    <ClCompile Include="mesh\AnimationData.cpp" />
     <ClCompile Include="Mesh\Mesh.cpp" />
     <ClCompile Include="Mesh\StaticMesh.cpp" />
     <ClCompile Include="RenderPipeline.cpp" />
@@ -179,6 +180,7 @@
     <ClInclude Include="Map\MapHeaders.h" />
     <ClInclude Include="Mesh\AnimatedMesh.h" />
     <ClInclude Include="Mesh\AnimatedMesh_v2.h" />
+    <ClInclude Include="Mesh\AnimationData.h" />
     <ClInclude Include="Mesh\Mesh.h" />
     <ClInclude Include="Mesh\StaticMesh.h" />
     <ClInclude Include="RenderPipeline.h" />

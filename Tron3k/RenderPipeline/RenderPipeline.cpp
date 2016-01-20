@@ -118,6 +118,10 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 	contMan.init();
 
+	for (size_t i = 0; i < 5*AnimationState::none; i++)
+	{
+		anims.keyFrameLenghts[i] = contMan.keyFrameLengths[i];
+	}
 	
 	//light wall init INIT 2 points then change all info though uniforms to build quads
 	glGenBuffers(1, &lwVertexDataId);
@@ -463,10 +467,10 @@ void RenderPipeline::renderMISC(int miscID, void* world, float* dgColor, float s
 	//set temp objects worldmat
 	glProgramUniformMatrix4fv(regularShader, worldMat[0], 1, GL_FALSE, (GLfloat*)world);
 
-	contMan.renderPlayer(miscID, 0, *(glm::mat4*)world, uniformKeyMatrixLocation);
+	//contMan.renderPlayer(miscID, 0, *(glm::mat4*)world, uniformKeyMatrixLocation);
 }
 
-void RenderPipeline::renderAnimation(int playerID, void* world, AnimationState animState, float* dgColor, float sgInten)
+void RenderPipeline::renderAnimation(int playerID, int roleID, void* world, AnimationState animState, float* dgColor, float sgInten)
 {
 	glUseProgram(animationShader);
 
@@ -483,11 +487,11 @@ void RenderPipeline::renderAnimation(int playerID, void* world, AnimationState a
 	//set temp objects worldmat
 	glProgramUniformMatrix4fv(animationShader, worldMat[1], 1, GL_FALSE, (GLfloat*)world);
 
-	contMan.renderPlayer(anims.animStates[playerID].state , anims.animStates[playerID].frame, *(glm::mat4*)world, uniformKeyMatrixLocation);
+	contMan.renderPlayer(anims.animStates[playerID], *(glm::mat4*)world, uniformKeyMatrixLocation);
 	
 	//update the animstate AFTER the player was renderd
 	//it not, an animation can timeout and not know what to render
-	anims.updateAnimStates(playerID, 0, animState, delta);
+	anims.updateAnimStates(playerID, roleID, animState, delta);
 }
 
 bool RenderPipeline::setSetting(PIPELINE_SETTINGS type, PipelineValues value)

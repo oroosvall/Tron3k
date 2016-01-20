@@ -3,7 +3,6 @@
 
 enum AnimationState
 {
-	none,
 	//first person
 	first_primary_idle, //does not exist yet
 	first_primary_run, //new
@@ -27,7 +26,11 @@ enum AnimationState
 	third_jump_begin,
 	third_jump_end,
 
-	third_death
+	third_death,
+
+	none,
+
+	iteration
 };
 
 // static functions can only be seen classes that includes it.

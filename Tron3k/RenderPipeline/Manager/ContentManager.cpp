@@ -16,104 +16,17 @@ void ContentManager::init()
 	blank_normal = loadTexture("GameFiles/Textures/blank_n.png");
 	blank_glow = loadTexture("GameFiles/Textures/blank_g.png");
 
-	trapperV2.load("GameFiles/CharacterFiles/Trapper/chr_trapper.bin");
+	playerCharacters[0].load("GameFiles/CharacterFiles/Trapper/chr_trapper.bin");
+	int* lengths = playerCharacters[0].loadAnimations("");
 
-	TextureLookup tex;
-
-	//0
-	tex.loaded = false;
-	tex.textureID = 0;
-	tex.fileTexID = 0;
-	tex.textureName = "GameFiles/TestFiles/Normal.png";
-	//textures.push_back(tex);
-	//1
-	tex.loaded = false;
-	tex.textureID = 0;
-	tex.fileTexID = 1;
-	tex.textureName = "GameFiles/TestFiles/Diffuse.png";
-	//textures.push_back(tex);
-	//2
-	tex.loaded = false;
-	tex.textureID = 0;
-	tex.fileTexID = 1;
-	tex.textureName = "GameFiles/TestFiles/sphere_n.png";
-	//textures.push_back(tex);
-	//3
-	//skybox
-	tex.loaded = false;
-	tex.textureID = 0;
-	tex.fileTexID = 1;
-	tex.textureName = "GameFiles/TestFiles/skybox.jpg";
-	//textures.push_back(tex);
-	//4
-	tex.loaded = false;
-	tex.textureID = 0;
-	tex.fileTexID = 1;
-	tex.textureName = "GameFiles/TestFiles/Blank_normal.png";
-	//textures.push_back(tex);
-	//5
-	tex.loaded = false;
-	tex.textureID = 0;
-	tex.fileTexID = 1;
-	tex.textureName = "GameFiles/TestFiles/GlowMap.png";
-	//textures.push_back(tex);
-	//6
-	tex.loaded = false;
-	tex.textureID = 0;
-	tex.fileTexID = 1;
-	tex.textureName = "GameFiles/TestFiles/EmptyStaticGlowSpec.png";
-	//textures.push_back(tex);
-
-	//7
-	tex.loaded = false;
-	tex.textureID = 0;
-	tex.fileTexID = 1;
-	tex.textureName = "GameFiles/TestFiles/player.png";
-	//textures.push_back(tex);
-
-	//8
-	tex.loaded = false;
-	tex.textureID = 0;
-	tex.fileTexID = 1;
-	tex.textureName = "GameFiles/TestFiles/Blank_normal_50glow.png";
-	//textures.push_back(tex);
-	//9
-	tex.loaded = false;
-	tex.textureID = 0;
-	tex.fileTexID = 1;
-	tex.textureName = "GameFiles/TestFiles/playerglow.png";
-	//textures.push_back(tex);
-	//10
-	tex.loaded = false;
-	tex.textureID = 0;
-	tex.fileTexID = 1;
-	tex.textureName = "GameFiles/TestFiles/bullet_texture.png";
-	//textures.push_back(tex);
-	//11
-	tex.loaded = false;
-	tex.textureID = 0;
-	tex.fileTexID = 1;
-	tex.textureName = "GameFiles/TestFiles/bulletGlow.png";
-	//textures.push_back(tex);
-
-	//12
-	tex.loaded = false;
-	tex.textureID = 0;
-	tex.fileTexID = 1;
-	tex.textureName = "GameFiles/TestFiles/lightwall.png";
-	//textures.push_back(tex);
+	for (int i = 0; i < AnimationState::iteration; i++)
+	{
+		keyFrameLengths[0 * AnimationState::iteration + i] = lengths[i];
+	}
 
 	//Skybox
 	skybox.init(0, 0, 0);
 	skybox.load("GameFiles/TestFiles/Skybox.v");
-
-	//for (size_t i = 0; i < textures.size(); i++)
-	//{
-	//	textures[i].textureID = loadTexture(textures[i].textureName);
-	//	textures[i].loaded = true;
-	//}
-
-	//skybox.setTexture(textures[3].textureID);
 
 	testMap.init();
 	nrChunks = testMap.chunks.size();
@@ -138,41 +51,6 @@ void ContentManager::init()
 	bullet.init(0, 0, 0);
 	bullet.load("GameFiles/TestFiles/bullet.v");
 
-	//Anim files
-	//trapper_first_primary_idle.init();
-	//trapper_first_primary_idle.load("GameFiles/CharacterFiles/trapper_first_primary_idlebin");
-	trapper_first_primary_run.init();
-	trapper_first_primary_run.load("GameFiles/CharacterFiles/trapper_first_primary_run.bin");
-	//trapper_first_primary_air.init();
-	//trapper_first_primary_air.load("GameFiles/CharacterFiles/trapper_first_primary_air.bin");
-
-	trapper_first_primary_fire.init();
-	trapper_first_primary_fire.load("GameFiles/CharacterFiles/trapper_first_primary_fire.bin");
-	trapper_first_primary_reload.init();
-	trapper_first_primary_reload.load("GameFiles/CharacterFiles/trapper_first_primary_reload.bin");
-	trapper_first_primary_throw.init();
-	trapper_first_primary_throw.load("GameFiles/CharacterFiles/trapper_first_primary_throw.bin");
-	trapper_first_primary_switch.init();
-	trapper_first_primary_switch.load("GameFiles/CharacterFiles/trapper_first_primary_switch.bin");
-
-	trapper_first_secondary_fire.init();
-	trapper_first_secondary_fire.load("GameFiles/CharacterFiles/trapper_first_secondary_fire.bin");
-
-	trapper_third_idle.init();
-	trapper_third_idle.load("GameFiles/CharacterFiles/trapper_third_idle.bin");
-	trapper_third_run.init();
-	trapper_third_run.load("GameFiles/CharacterFiles/trapper_third_run.bin");
-
-	trapper_third_jump_air.init();
-	trapper_third_jump_air.load("GameFiles/CharacterFiles/trapper_third_jump_air.bin");
-	trapper_third_jump_begin.init();
-	trapper_third_jump_begin.load("GameFiles/CharacterFiles/trapper_third_jump_begin.bin");
-	trapper_third_jump_end.init();
-	trapper_third_jump_end.load("GameFiles/CharacterFiles/trapper_third_jump_end.bin");
-	trapper_third_strafe_left.init();
-	trapper_third_strafe_left.load("GameFiles/CharacterFiles/trapper_third_strafe_left.bin");
-	trapper_third_strafe_right.init();
-	trapper_third_strafe_right.load("GameFiles/CharacterFiles/trapper_third_strafe_right.bin");
 }
 
 void ContentManager::release()
@@ -202,26 +80,6 @@ void ContentManager::release()
 	delete[] renderedChunks;
 	delete[] renderNextChunks;
 
-	//trapper_first_primary_idle.release();
-	trapper_first_primary_run.release();
-	//trapper_first_primary_air.release();
-
-	trapper_first_primary_fire.release();
-	trapper_first_primary_reload.release();
-	trapper_first_primary_throw.release();
-	trapper_first_primary_switch.release();
-
-	trapper_first_secondary_fire.release();
-
-	trapper_third_idle.release();
-	trapper_third_run.release();
-
-	trapper_third_jump_air.release();
-	trapper_third_jump_begin.release();
-	trapper_third_jump_end.release();
-	trapper_third_strafe_left.release();
-	trapper_third_strafe_right.release();
-
 	skybox.release();
 	bullet.release();
 
@@ -240,7 +98,10 @@ void ContentManager::release()
 		}
 	}
 
-	trapperV2.release();
+	for (int i = 0; i < 5; i++)
+	{
+		playerCharacters[i].release();
+	}
 }
 
 ContentManager::~ContentManager()
@@ -361,94 +222,55 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 	}
 }
 
-void ContentManager::renderPlayer(int renderID, int keyframe, glm::mat4 world, GLuint uniformKeyMatrixLocation)
+void ContentManager::renderPlayer(AnimManager::animState state, glm::mat4 world, GLuint uniformKeyMatrixLocation)
 {
-	if (renderID == -3) //skybox
-	{
-		glDisable(GL_DEPTH_TEST);
-		//glEnable(GL_BLEND);
-
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, blank_normal);
-		
-		glActiveTexture(GL_TEXTURE0 + 1);
-		glBindTexture(GL_TEXTURE_2D, blank_normal);
-		
-		glActiveTexture(GL_TEXTURE0 + 2);
-		glBindTexture(GL_TEXTURE_2D, blank_glow);
-
-		glBindVertexArray(skybox.vao);
-		glBindBuffer(GL_ARRAY_BUFFER, skybox.vbo);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, skybox.ibo);
-
-		glDrawElements(GL_TRIANGLES, skybox.faceCount * 3, GL_UNSIGNED_SHORT, 0);
-
-		glEnable(GL_DEPTH_TEST);
-		//glDisable(GL_BLEND);
-	}
-	else if (renderID == -2) //bullet
-	{
-		//glActiveTexture(GL_TEXTURE0);
-		//glBindTexture(GL_TEXTURE_2D, textures[10].textureID);
-		//
-		//glActiveTexture(GL_TEXTURE0 + 1);
-		//glBindTexture(GL_TEXTURE_2D, textures[8].textureID);
-		//
-		//glActiveTexture(GL_TEXTURE0 + 2);
-		//glBindTexture(GL_TEXTURE_2D, textures[11].textureID);
-
-		glBindVertexArray(bullet.vao);
-		glBindBuffer(GL_ARRAY_BUFFER, bullet.vbo);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bullet.ibo);
-
-		glDrawElements(GL_TRIANGLES, bullet.faceCount * 3, GL_UNSIGNED_SHORT, 0);
-	}
+	//if (renderID == -3) //skybox
+	//{
+	//	glDisable(GL_DEPTH_TEST);
+	//	//glEnable(GL_BLEND);
+	//
+	//	glActiveTexture(GL_TEXTURE0);
+	//	glBindTexture(GL_TEXTURE_2D, blank_normal);
+	//	
+	//	glActiveTexture(GL_TEXTURE0 + 1);
+	//	glBindTexture(GL_TEXTURE_2D, blank_normal);
+	//	
+	//	glActiveTexture(GL_TEXTURE0 + 2);
+	//	glBindTexture(GL_TEXTURE_2D, blank_glow);
+	//
+	//	glBindVertexArray(skybox.vao);
+	//	glBindBuffer(GL_ARRAY_BUFFER, skybox.vbo);
+	//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, skybox.ibo);
+	//
+	//	glDrawElements(GL_TRIANGLES, skybox.faceCount * 3, GL_UNSIGNED_SHORT, 0);
+	//
+	//	glEnable(GL_DEPTH_TEST);
+	//	//glDisable(GL_BLEND);
+	//}
+	//else if (renderID == -2) //bullet
+	//{
+	//	//glActiveTexture(GL_TEXTURE0);
+	//	//glBindTexture(GL_TEXTURE_2D, textures[10].textureID);
+	//	//
+	//	//glActiveTexture(GL_TEXTURE0 + 1);
+	//	//glBindTexture(GL_TEXTURE_2D, textures[8].textureID);
+	//	//
+	//	//glActiveTexture(GL_TEXTURE0 + 2);
+	//	//glBindTexture(GL_TEXTURE_2D, textures[11].textureID);
+	//
+	//	glBindVertexArray(bullet.vao);
+	//	glBindBuffer(GL_ARRAY_BUFFER, bullet.vbo);
+	//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bullet.ibo);
+	//
+	//	glDrawElements(GL_TRIANGLES, bullet.faceCount * 3, GL_UNSIGNED_SHORT, 0);
+	//}
 
 	// ----------- Character Animations ---------- //
 	
-	if (renderID > -1)
-	{
-		//pick texture
-		//glActiveTexture(GL_TEXTURE0);
-		//glBindTexture(GL_TEXTURE_2D, textures[7].textureID);
-		//glActiveTexture(GL_TEXTURE0 + 1);
-		//glBindTexture(GL_TEXTURE_2D, blank_normal);
-		//glActiveTexture(GL_TEXTURE0 + 2);
-		//glBindTexture(GL_TEXTURE_2D, blank_glow);
-
-		//switch (AnimationState(renderID))
-		//{
-		//case first_primary_idle:		trapper_first_primary_reload.update(0);			trapper_first_primary_reload.draw(uniformKeyMatrixLocation);	break;
-		//case first_primary_run:			trapper_first_primary_run.update(keyframe);		trapper_first_primary_run.draw(uniformKeyMatrixLocation);		break;
-		//case first_primary_air:			trapper_first_primary_reload.update(0);			trapper_first_primary_reload.draw(uniformKeyMatrixLocation);	break;
-		//
-		//case first_primary_fire:		trapper_first_primary_fire.update(keyframe);	trapper_first_primary_fire.draw(uniformKeyMatrixLocation);		break;
-		//case first_primary_reload:		trapper_first_primary_reload.update(keyframe);	trapper_first_primary_reload.draw(uniformKeyMatrixLocation);	break;
-		//case first_primary_throw:		trapper_first_primary_throw.update(keyframe);	trapper_first_primary_throw.draw(uniformKeyMatrixLocation);		break;
-		//case first_primary_switch:		trapper_first_primary_switch.update(keyframe);	trapper_first_primary_switch.draw(uniformKeyMatrixLocation);	break;
-		//
-		//case first_secondary_fire:		trapper_first_secondary_fire.update(keyframe);	trapper_first_secondary_fire.draw(uniformKeyMatrixLocation);	break;
-		//
-		//case third_idle:				trapper_third_idle.update(keyframe);			/*trapper_third_idle.draw(uniformKeyMatrixLocation);*/				break;
-		//
-		//case third_run:					trapper_third_run.update(keyframe);				trapper_third_run.draw(uniformKeyMatrixLocation);				break;
-		//case third_run_rev:				trapper_third_run.update(keyframe);				trapper_third_run.draw(uniformKeyMatrixLocation);				break;
-		//
-		//case third_strafe_left:			trapper_third_strafe_left.update(keyframe);		trapper_third_strafe_left.draw(uniformKeyMatrixLocation);		break;
-		//case third_strafe_right:		trapper_third_strafe_right.update(keyframe);	trapper_third_strafe_right.draw(uniformKeyMatrixLocation);		break;
-		//
-		//case third_air:					trapper_third_jump_air.update(keyframe);		trapper_third_jump_air.draw(uniformKeyMatrixLocation);			break;
-		//
-		//case third_jump_begin:			trapper_third_jump_begin.update(keyframe);		trapper_third_jump_begin.draw(uniformKeyMatrixLocation);		break;
-		//case third_jump_end:			trapper_third_jump_end.update(keyframe);		trapper_third_jump_end.draw(uniformKeyMatrixLocation);			break;
-		//
-		//case third_death:				trapper_third_idle.update(keyframe);			trapper_third_idle.draw(uniformKeyMatrixLocation);				break;
-		//
-		//default:				break;
-		//}
-
-		trapperV2.draw(0);
-	}
+	//if (state.state < AnimationState::none)
+	//{
+		playerCharacters[state.role].draw(uniformKeyMatrixLocation, state.state, state.frame);
+	//}
 }
 
 void* ContentManager::getChunkCollisionVectorAsPointer(int chunkID)

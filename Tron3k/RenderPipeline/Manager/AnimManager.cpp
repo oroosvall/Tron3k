@@ -3,6 +3,10 @@
 void AnimManager::updateAnimStates(int playerID, int role, AnimationState current, float dt)
 {
 	bool overide = checkAnimOverwrite(animStates[playerID].state, current);
+	if (animStates[playerID].timeout)
+	{
+		overide = true;
+	}
 
 	if (overide) // replace animation with the new one
 	{
@@ -13,7 +17,7 @@ void AnimManager::updateAnimStates(int playerID, int role, AnimationState curren
 		animStates[playerID].timepass += dt;
 
 		int rank = getAnimRank(animStates[playerID].state);
-		
+
 		//If the animation ended
 		if (animStates[playerID].timepass > animStates[playerID].timeLength)
 		{
@@ -25,10 +29,11 @@ void AnimManager::updateAnimStates(int playerID, int role, AnimationState curren
 			//fallbank rank 1 anims
 			else if (rank == 1)
 			{
-				animStates[playerID] = animState();
+				//animStates[playerID] = animState();
+				animStates[playerID].timeout = true;
 			}
 			//freeze rank 2 anims
-			else if( rank == 2)
+			else if (rank == 2)
 			{
 				animStates[playerID].timepass = animStates[playerID].timeLength;
 			}
@@ -37,42 +42,30 @@ void AnimManager::updateAnimStates(int playerID, int role, AnimationState curren
 		float index = animStates[playerID].timepass / animStates[playerID].timeLength;
 
 		//if we should run the animation backwards
-		if(animStates[playerID].state == AnimationState::third_run_rev)
+		if (animStates[playerID].state == AnimationState::third_run_rev)
 			animStates[playerID].frame = animStates[playerID].frameEnd - animStates[playerID].frameEnd * index;
 		else
+		{
 			animStates[playerID].frame = animStates[playerID].frameEnd * index;
+			if (animStates[playerID].frame >= animStates[playerID].frameEnd)
+				animStates[playerID].frame = 0;
+		}
+		if (animStates[playerID].timeout)
+			animStates[playerID].frame = animStates[playerID].frameEnd-1;
 	}
 }
 
 void AnimManager::setAnim(animState& current, AnimationState overide)
 {
+	if (keyFrameLenghts[current.role*AnimationState::iteration + overide] == 0)
+	{
+		return;
+	}
 	current = animState();
 	current.state = overide;
 
-	switch (overide)
-	{
-	case first_primary_idle:		current.frameEnd = 0;		break;
-	case first_primary_run:			current.frameEnd = 30;		break;
-	case first_primary_air:			current.frameEnd = 10;		break;
 
-	case first_primary_fire:		current.frameEnd = 50;		break;
-	case first_primary_reload:		current.frameEnd = 130;		break;
-	case first_primary_throw:		current.frameEnd = 20;		break;
-	case first_primary_switch:		current.frameEnd = 60;		break;
-
-	case first_secondary_fire:		current.frameEnd = 80;		break;
-
-	case third_idle:		current.frameEnd = 42;		break;
-	case third_run:			current.frameEnd = 21;		break;
-	case third_run_rev:		current.frameEnd = 21;		break;
-	case third_strafe_left: current.frameEnd = 21;		break;
-	case third_strafe_right:current.frameEnd = 21;		break;
-	case third_air:			current.frameEnd = 121;		break;
-	case third_jump_begin:	current.frameEnd = 9;		break;
-	case third_jump_end:	current.frameEnd = 9;		break;
-	case third_death:		current.frameEnd = 10;		break;
-	default:				current = animState();		break;
-	}
+	current.frameEnd = keyFrameLenghts[current.role*AnimationState::iteration + current.state];
 
 	current.timeLength = current.frameEnd * current.speed;
 }

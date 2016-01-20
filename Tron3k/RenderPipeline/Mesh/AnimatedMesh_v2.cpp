@@ -20,6 +20,7 @@ void AnimatedMeshV2::release()
 	glDeleteVertexArrays(1, &vao);
 	glDeleteBuffers(1, &vbo);
 	glDeleteBuffers(1, &ibo);
+	glDeleteBuffers(1, &matricesBuffer);
 
 	for (int i = 0; i < textureCount; i++)
 	{
@@ -31,10 +32,19 @@ void AnimatedMeshV2::release()
 	if(materials)
 		delete[] materials;
 
+	for (int i = 0; i < AnimationState::none; i++)
+	{
+		animations[i].release();
+	}	
 }
 
 AnimatedMeshV2::~AnimatedMeshV2()
 {
+}
+
+void AnimatedMeshV2::update()
+{
+
 }
 
 void AnimatedMeshV2::load(std::string fileName)
@@ -107,7 +117,7 @@ void AnimatedMeshV2::load(std::string fileName)
 		glEnableVertexAttribArray(4);
 		glEnableVertexAttribArray(5);
 
-#define BUFFER_OFFSET(i) ((char *)nullptr + (i))
+		#define BUFFER_OFFSET(i) ((char *)nullptr + (i))
 
 		//pos
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(AnimVertex), BUFFER_OFFSET(0));
@@ -124,10 +134,45 @@ void AnimatedMeshV2::load(std::string fileName)
 
 		file.close();
 
+		glGenBuffers(1, &matricesBuffer);
+		glBindBuffer(GL_UNIFORM_BUFFER, matricesBuffer);
+		//glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4)* animIdle->header.jointCount, animIdle->keyFrames[0].jointTransform, GL_STATIC_DRAW);
 	}
 }
 
-void AnimatedMeshV2::draw(GLuint uniformKeyMatrixLocation)
+int* AnimatedMeshV2::loadAnimations(std::string character)
+{
+	//animIdle = new AnimData();
+	//
+	//animations[AnimationState::first_primary_idle].load("GameFiles/CharacterFiles/Trapper/trapper_anim_run.bin");
+	//animations[AnimationState::first_primary_run].load("GameFiles/CharacterFiles/Trapper/trapper_anim_run.bin");
+	//animations[AnimationState::first_primary_fire].load("GameFiles/CharacterFiles/Trapper/trapper_anim_run.bin");
+	//animations[AnimationState::first_primary_reload].load("GameFiles/CharacterFiles/Trapper/trapper_anim_run.bin");
+	//animations[AnimationState::first_primary_run].load("GameFiles/CharacterFiles/Trapper/trapper_anim_run.bin");
+	//animations[AnimationState::first_primary_switch].load("GameFiles/CharacterFiles/Trapper/trapper_anim_run.bin");
+	//animations[AnimationState::first_primary_throw].load("GameFiles/CharacterFiles/Trapper/trapper_anim_run.bin");
+	//animations[AnimationState::first_secondary_fire].load("GameFiles/CharacterFiles/Trapper/trapper_anim_run.bin");
+
+	animations[AnimationState::third_idle].load("GameFiles/CharacterFiles/Trapper/trapper_third_idle.bin");
+	animations[AnimationState::third_death].load("GameFiles/CharacterFiles/Trapper/trapper_third_death.bin");
+	animations[AnimationState::third_air].load("GameFiles/CharacterFiles/Trapper/trapper_third_jumpAir.bin");
+	animations[AnimationState::third_run].load("GameFiles/CharacterFiles/Trapper/trapper_third_run.bin");
+	animations[AnimationState::third_strafe_left].load("GameFiles/CharacterFiles/Trapper/trapper_third_strafeLeft.bin");
+	animations[AnimationState::third_strafe_right].load("GameFiles/CharacterFiles/Trapper/trapper_third_strafeRight.bin");
+	animations[AnimationState::third_jump_begin].load("GameFiles/CharacterFiles/Trapper/trapper_third_jumpIn.bin");
+	animations[AnimationState::third_jump_end].load("GameFiles/CharacterFiles/Trapper/trapper_third_jumpOut.bin");
+
+	int frames[AnimationState::iteration];
+
+	for (int i = 0; i < AnimationState::iteration; i++)
+	{
+		frames[i] = animations[i].header.keyCount;
+	}
+
+	return frames;
+}
+
+void AnimatedMeshV2::draw(GLuint uniformKeyMatrixLocation,int animationID, int keyFrame)
 {
 
 	if (GetAsyncKeyState(VK_F8))
@@ -184,6 +229,14 @@ void AnimatedMeshV2::draw(GLuint uniformKeyMatrixLocation)
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 
-	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
-
+	glBindBuffer(GL_UNIFORM_BUFFER, matricesBuffer);
+	glBindBufferBase(GL_UNIFORM_BUFFER, uniformKeyMatrixLocation, matricesBuffer);
+	
+	if (animations[animationID].header.keyCount > 0)
+	{
+		glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4)* animations[animationID].header.jointCount, animations[animationID].keyFrames[keyFrame].jointTransform, GL_STATIC_DRAW);
+		glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
+	}
+	
+	
 }
