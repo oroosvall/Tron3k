@@ -783,7 +783,7 @@ void Player::shoot()
 			anim_first_current = AnimationState::first_secondary_fire;
 	}
 
-	dir += vec3(0.1, 0.1, 0.0);
+	//dir += vec3(0.1, 0.1, 0.0);
 }
 
 void Player::hitByBullet(Bullet* b, int newHPtotal)

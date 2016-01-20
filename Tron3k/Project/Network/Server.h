@@ -36,7 +36,7 @@ public:
 
 	void event_bullet_hit_player(std::vector<BulletHitPlayerInfo> allhits);
 
-	void event_bullet_hit_world(int conid, int effectid, EFFECT_TYPE et, glm::vec3 pos);
+	void event_bullet_hit_world(std::vector<BulletHitWorldInfo> allhits);
 	void event_effect_hit_player(std::vector<EffectHitPlayerInfo> allhits);
 };
 

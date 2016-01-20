@@ -220,6 +220,16 @@ void Core::upRoam(float dt)
 			game->getSpecialAbilityUsed(0, sid);
 		}
 
+		std::vector<BulletHitWorldInfo> bulletHitsOnWorld = game->getAllBulletOnWorldCollisions();
+		if (bulletHitsOnWorld.size() != 0)
+		{
+			for (unsigned int c = 0; c < bulletHitsOnWorld.size(); c++)
+			{
+				game->handleBulletHitWorldEvent(bulletHitsOnWorld[c]);
+			}
+			game->clearBulletOnWorldCollision();
+		}
+
 		renderWorld(dt);
 		break;
 	}
@@ -433,6 +443,17 @@ void Core::upServer(float dt)
 			}
 			top->event_bullet_hit_player(bulletHitsOnPlayer);
 			game->clearBulletOnPlayerCollisions();
+		}
+
+		std::vector<BulletHitWorldInfo> bulletHitsOnWorld = game->getAllBulletOnWorldCollisions();
+		if (bulletHitsOnWorld.size() != 0)
+		{
+			for (unsigned int c = 0; c < bulletHitsOnWorld.size(); c++)
+			{
+				game->handleBulletHitWorldEvent(bulletHitsOnWorld[c]);
+			}
+			top->event_bullet_hit_world(bulletHitsOnWorld);
+			game->clearBulletOnWorldCollision();
 		}
 
 		serverHandleCmds();

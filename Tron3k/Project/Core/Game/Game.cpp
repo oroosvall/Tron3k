@@ -475,27 +475,24 @@ void Game::checkPlayerVWorldCollision(float dt)
 
 void Game::checkBulletVWorldCollision()
 {
-	
-	glm::vec3 collides = glm::vec3(0,0,0);
+	std::vector<glm::vec4> collides;
 
 	for (unsigned int b = 0; b < BULLET_TYPE::NROFBULLETS; b++)
 	{
 		for (unsigned int j = 0; j < bullets[b].size(); j++)
 		{
-			collides = glm::vec3(0,0,0);
 			if (bullets[b][j] != nullptr)
 			{
 				int pid = -1, bid = -1;
 				bullets[b][j]->getId(pid, bid);
-				collides = physics->checkBulletVWorldCollision(bullets[b][j]->getPos());
-				if (collides != glm::vec3(0,0,0))
+				collides = physics->sphereVWorldCollision(bullets[b][j]->getPos(), 0.4f);
+				if (collides.size() > 0)
 				{
 					BulletHitWorldInfo hi;
 					hi.bt = BULLET_TYPE(b); hi.hitPos = bullets[b][j]->getPos(); hi.hitDir = bullets[b][j]->getDir();
 					bullets[b][j]->getId(hi.bulletPID, hi.bulletBID);
-					hi.collisionNormal = collides;
+					hi.collisionNormal = collides[0];
 					allBulletHitsOnWorld.push_back(hi);
-					handleBulletHitWorldEvent(hi);
 				}
 			}
 		}
@@ -1002,6 +999,36 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 	return newHP;
 }
 
+void Game::bounceBullet(BulletHitWorldInfo hwi, Bullet* theBullet)
+{
+	vec4 combinedNormal(0); // all normals added together and then normalized
+	vec4 posadjust(0); //pendepths combined
+
+	posadjust += hwi.collisionNormal * hwi.collisionNormal.w;
+	combinedNormal += hwi.collisionNormal;
+
+	// the w component holds the pendepth
+	vec3 combinedNormal2 = vec3(combinedNormal);
+
+	//reflect!!
+	if (combinedNormal2 != glm::vec3(0, 0, 0))
+	{
+		combinedNormal2 = normalize(combinedNormal2);
+		theBullet->setDir(reflect(theBullet->getDir(), combinedNormal2));
+
+		//use pendepth to set a new pos 
+		theBullet->setPos(theBullet->getPos() + vec3(posadjust));
+
+		// remove bullet code
+		//BulletHitWorldInfo hi;
+		//hi.bt = BULLET_TYPE(b); hi.hitPos = bullets[b][j]->getPos(); hi.hitDir = bullets[b][j]->getDir();
+		//bullets[b][j]->getId(hi.bulletPID, hi.bulletBID);
+		//hi.collisionNormal = collides;
+		//allBulletHitsOnWorld.push_back(hi);
+		//handleBulletHitWorldEvent(hi);
+	}
+}
+
 void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 {
 	int arraypos;
@@ -1012,8 +1039,10 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 		removeBullet(hi.bt, arraypos);
 		break;
 	case BULLET_TYPE::CLUSTER_GRENADE:
-		hi.hitDir = glm::reflect(hi.hitDir, hi.collisionNormal);
-		b->setDir(hi.hitDir);
+		
+		break;
+	case BULLET_TYPE::DISC_SHOT:
+		bounceBullet(hi, b);
 		break;
 	}
 }

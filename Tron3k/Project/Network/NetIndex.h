@@ -18,6 +18,7 @@ enum NET_EVENT
 	PLAYER_JOINED =		int('J'),
 	PLAYER_LEFT =		int('L'),
 	PLAYER_HIT =		int('H'),
+	WORLD_HIT =			int('W'),
 	RESPAWN_DENIED =	int('R') //Used by command_respawn to deny respawn auth to client
 };
 

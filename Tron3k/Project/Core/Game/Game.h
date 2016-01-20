@@ -46,7 +46,7 @@ struct BulletHitWorldInfo
 	BULLET_TYPE bt;
 	glm::vec3 hitPos;
 	glm::vec3 hitDir; //For bouncing things
-	glm::vec3 collisionNormal;
+	glm::vec4 collisionNormal;
 };
 
 class Game
@@ -82,6 +82,7 @@ private:
 	void addBulletToList(int conID, int bulletId, BULLET_TYPE bt, glm::vec3 pos, glm::vec3 dir);
 	Bullet* getSpecificBullet(int PID, int BID, BULLET_TYPE bt, int &posInBulletArray);
 	void removeBullet(BULLET_TYPE bt, int posInArray);
+	void bounceBullet(BulletHitWorldInfo hwi, Bullet* theBullet);
 
 	void addEffectToList(int conID, int effectId, EFFECT_TYPE et, glm::vec3 pos);
 	Effect* getSpecificEffect(int PID, int SID, EFFECT_TYPE et, int &posInEffectArray);

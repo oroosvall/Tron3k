@@ -149,6 +149,7 @@ void Client::in_event(Packet* rec, Uint8 _conID)
 		case NET_EVENT::PLAYER_JOINED:	in_event_player_joined(rec);	break;
 		case NET_EVENT::PLAYER_LEFT: in_event_player_left(rec); break;
 		case NET_EVENT::PLAYER_HIT: in_event_bullet_hit_player(rec); break;
+		case NET_EVENT::WORLD_HIT: in_event_bullet_hit_world(rec); break;
 		case NET_EVENT::RESPAWN_DENIED: in_event_respawn_denied(rec); break;
 		}
 	}

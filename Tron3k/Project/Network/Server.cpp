@@ -37,6 +37,30 @@ void Server::event_bullet_hit_player(std::vector<BulletHitPlayerInfo> allhits)
 	delete out;
 }
 
+void Server::event_bullet_hit_world(std::vector<BulletHitWorldInfo> allhits)
+{
+	Packet* out = new Packet();
+	*out << Uint8(NET_INDEX::EVENT) << Uint8(NET_EVENT::WORLD_HIT);
+	*out << Uint8(allhits.size());
+	for (unsigned int c = 0; c < allhits.size(); c++)
+	{
+		*out << Uint8(allhits[c].bulletPID) << Uint8(allhits[c].bulletBID);
+		*out << Uint8(allhits[c].bt);
+		*out << allhits[c].hitPos.x << allhits[c].hitPos.y << allhits[c].hitPos.z;
+		*out << allhits[c].hitDir.x << allhits[c].hitDir.y << allhits[c].hitDir.z;
+		*out << allhits[c].collisionNormal.x << allhits[c].collisionNormal.y <<
+			allhits[c].collisionNormal.z << allhits[c].collisionNormal.w;
+	}
+
+	branch(out, -1);
+	delete out;
+}
+
+void Server::event_effect_hit_player(std::vector<EffectHitPlayerInfo> allhits)
+{
+
+}
+
 Server::~Server()
 {
 	if (con)
@@ -278,14 +302,4 @@ void Server::in_message(Packet* rec, Uint8 conID)
 	}
 	else
 		consolePtr->printMsg("ERROR in_message", "System", 'S');
-}
-
-void Server::event_bullet_hit_world(int conid, int effectid, EFFECT_TYPE et, glm::vec3 pos)
-{
-
-}
-
-void Server::event_effect_hit_player(std::vector<EffectHitPlayerInfo> allhits)
-{
-
 }

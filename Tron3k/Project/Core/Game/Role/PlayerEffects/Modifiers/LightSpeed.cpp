@@ -5,7 +5,6 @@ void LightSpeed::init(Player* myTarget)
 {
 	type = MODIFIER_TYPE::LIGHTSPEEDMODIFIER;
 	target = myTarget;
-	speed = vec3(1.5, 0.0, 1.5);
 }
 
 int LightSpeed::getData(float dt)
@@ -24,9 +23,11 @@ int LightSpeed::setData(float dt)
 
 	glm::vec3 vel = target->getVelocity();
 
-	vel += speed * vel * dt;
-	vel.y = target->getVelocity().y;
-	target->setVelocity(vel);
-
+	if (target->getGrounded())
+	{
+		vel.x *= lightSpeed;
+		vel.z *= lightSpeed;
+		target->setVelocity(vel);
+	}
 	return 0;
 }
