@@ -33,7 +33,6 @@ vec4 CalcBumpedNormal()
   mat3 TBN = mat3(tan, bitangent, Normal);
   newnormal.xyz = TBN * newnormal.xyz;
   newnormal.xyz = normalize(newnormal.xyz);
-  newnormal.w = 1;
   return newnormal;
  }
 

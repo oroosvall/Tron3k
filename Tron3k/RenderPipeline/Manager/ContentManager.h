@@ -8,7 +8,9 @@
 #include <vector>
 
 #include "..\Mesh\AnimatedMesh.h"
+#include "..\Mesh\AnimatedMesh_v2.h"
 #include "../../Project/Core/AnimationState.h"
+#include "AnimManager.h"
 
 struct PlayerObject
 {
@@ -42,25 +44,7 @@ private:
 	GLuint portalQuery;
 
 	//trapper files
-	//AnimatedMesh trapper_first_primary_idle;
-	AnimatedMesh trapper_first_primary_run;
-	//AnimatedMesh trapper_first_primary_air;
-
-	AnimatedMesh trapper_first_primary_fire;
-	AnimatedMesh trapper_first_primary_reload;
-	AnimatedMesh trapper_first_primary_throw;
-	AnimatedMesh trapper_first_primary_switch;
-
-	AnimatedMesh trapper_first_secondary_fire;
-
-	AnimatedMesh trapper_third_idle;
-	AnimatedMesh trapper_third_run;
-
-	AnimatedMesh trapper_third_jump_air;
-	AnimatedMesh trapper_third_jump_begin;
-	AnimatedMesh trapper_third_jump_end;
-	AnimatedMesh trapper_third_strafe_left;
-	AnimatedMesh trapper_third_strafe_right;
+	AnimatedMeshV2 playerCharacters[5];
 
 
 	struct TriangleVertex
@@ -71,6 +55,9 @@ public:
 	Map testMap;
 
 	int nrChunks;
+
+	int keyFrameLengths[5 * AnimationState::iteration];
+
 	bool* renderedChunks;
 	bool* renderNextChunks;
 
@@ -88,7 +75,9 @@ public:
 
 	void renderChunks(GLuint shader, GLuint shaderLocation, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation, GLuint DglowColor, GLuint SglowColor, GLuint portal_shader, GLuint portal_world);
 
-	void renderPlayer(int renderID, int keyframe, glm::mat4 world, GLuint uniformKeyMatrixLocation);
+	void renderMisc(int renderID);
+
+	void renderPlayer(AnimManager::animState, glm::mat4 world, GLuint uniformKeyMatrixLocation);
 
 	int getPortalID(glm::vec3 oldpos, glm::vec3 newpos) { return testMap.getChunkID(oldpos, newpos); }
 

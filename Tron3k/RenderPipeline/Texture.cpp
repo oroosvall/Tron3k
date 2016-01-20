@@ -3,6 +3,10 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stbImage\stb_image.h"
 
+GLuint blank_diffuse;
+GLuint blank_normal;
+GLuint blank_glow;
+
 GLuint loadTexture(std::string texturePath)
 {
 	int x;

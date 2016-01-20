@@ -991,17 +991,17 @@ void Core::renderWorld(float dt)
 					if (p->isLocal() && !game->freecam || game->spectateID == i)
 					{
 						if(p->isLocal())   //use current anim
-							renderPipe->renderAnimation(i, &p->getFPSmat(), p->getAnimState_f_c(), dgColor, hpval);
+							renderPipe->renderAnimation(i, p->getRole()->getRole(), &glm::mat4(), p->getAnimState_f_c(), dgColor, hpval);
 						else			   //use peak anim
-							renderPipe->renderAnimation(i, &p->getFPSmat(), p->getAnimState_f_p(), dgColor, hpval);
+							renderPipe->renderAnimation(i, p->getRole()->getRole(), &p->getFPSmat(), p->getAnimState_f_p(), dgColor, hpval);
 					}
 					else
 					{
 						if (p->isLocal()) //use current anim
-							renderPipe->renderAnimation(i, p->getWorldMat(), p->getAnimState_t_c(), dgColor, hpval);
+							renderPipe->renderAnimation(i, p->getRole()->getRole(), p->getWorldMat(), p->getAnimState_t_c(), dgColor, hpval);
 						else              //use peak anim
 
-							renderPipe->renderAnimation(i, p->getWorldMat(), p->getAnimState_t_p(), dgColor, hpval);
+							renderPipe->renderAnimation(i, p->getRole()->getRole(), p->getWorldMat(), p->getAnimState_t_p(), dgColor, hpval);
 					}
 				}
 			}
