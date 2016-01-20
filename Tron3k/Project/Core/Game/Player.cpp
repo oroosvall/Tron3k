@@ -540,9 +540,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 				if (i->justPressed(GLFW_KEY_O))
 				{
-					msg = DEATH;
-					isDead = true;
-					respawnTimer = respawnTime;
+					role.setHealth(0);
 				}
 				if (i->justPressed(GLFW_KEY_M))
 					role.setSpecialMeter(100.0f);
@@ -560,6 +558,9 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			msg = DEATH;
 			respawnTimer = respawnTime;
 			vel = glm::vec3(0, 0, 0);
+			if (checkAnimOverwrite(anim_third_current, AnimationState::third_death))
+				anim_third_current = AnimationState::third_death;
+
 		}
 
 		if (isDead && respawnTimer != 0.0f)
@@ -900,6 +901,16 @@ void Player::respawn(glm::vec3 respawnPos, glm::vec3 _dir)
 	worldMat = mat4();
 	rotatePlayer(vec3(0, 0, 1), _dir);
 	pos = respawnPos;
+
+	setAnimState_f_c(AnimationState::first_primary_idle);
+	setAnimState_f_p(AnimationState::first_primary_idle);
+	setAnimState_t_c(AnimationState::third_idle);
+	setAnimState_t_p(AnimationState::third_idle);
+
+	/*anim_first_current = AnimationState();
+	anim_first_framePeak= AnimationState();
+	anim_third_current = AnimationState();
+	anim_third_framePeak = AnimationState();*/
 
 	worldMat[0].w = pos.x;
 	worldMat[1].w = pos.y;

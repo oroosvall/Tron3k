@@ -53,8 +53,10 @@ void AnimManager::updateAnimStates(int playerID, int role, AnimationState curren
 		else
 		{
 			animStates[playerID].frame = animStates[playerID].frameEnd * index;
-			if (animStates[playerID].frame >= animStates[playerID].frameEnd)
+			if (animStates[playerID].frame >= animStates[playerID].frameEnd && rank != 2)
 				animStates[playerID].frame = 0;
+			else
+				animStates[playerID].frame = animStates[playerID].frameEnd-1;
 		}
 		if (animStates[playerID].timeout)
 			animStates[playerID].frame = animStates[playerID].frameEnd-1;
