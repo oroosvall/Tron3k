@@ -20,10 +20,10 @@ void Melee::init()
 	currentBulletId = 0;
 
 	firingSpeed = 1.0f;
-	firingSpeedCurrentDelay = firingSpeed;
+	firingSpeedCurrentDelay = 0;
 
 	reloadTime = 0.0f;
-	rldTimer = reloadTime;
+	rldTimer = 0;
 }
 
 int Melee::update(float deltaTime)

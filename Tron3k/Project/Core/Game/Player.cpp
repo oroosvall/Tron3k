@@ -499,12 +499,15 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 				if (i->justPressed(GLFW_KEY_Q))
 				{
-					Consumable* c = role.getConsumable();
-					if (c->use())
+					if (role.getCurrentWeapon()->getIfReloading())
 					{
-						msg = USEITEM;
-						if (checkAnimOverwrite(anim_first_current, AnimationState::first_primary_throw))
-							anim_first_current = AnimationState::first_primary_throw;
+						Consumable* c = role.getConsumable();
+						if (c->use())
+						{
+							msg = USEITEM;
+							if (checkAnimOverwrite(anim_first_current, AnimationState::first_primary_throw))
+								anim_first_current = AnimationState::first_primary_throw;
+						}
 					}
 				}
 

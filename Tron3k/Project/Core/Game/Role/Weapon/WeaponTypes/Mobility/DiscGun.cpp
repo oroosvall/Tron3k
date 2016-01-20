@@ -20,10 +20,10 @@ void DiscGun::init()
 	currentBulletId = 0;
 
 	firingSpeed = 1.2f;
-	firingSpeedCurrentDelay = firingSpeed;
+	firingSpeedCurrentDelay = 0;
 
 	reloadTime = 2.0f;
-	rldTimer = reloadTime;
+	rldTimer = 0;
 }
 
 int DiscGun::update(float deltaTime)

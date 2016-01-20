@@ -20,10 +20,10 @@ void LinkGun::init()
 	currentBulletId = 0;
 
 	firingSpeed = 2.0f;
-	firingSpeedCurrentDelay = firingSpeed;
+	firingSpeedCurrentDelay = 0;
 
 	reloadTime = 3.0f;
-	rldTimer = reloadTime;
+	rldTimer = 0;
 }
 
 int LinkGun::update(float deltaTime)

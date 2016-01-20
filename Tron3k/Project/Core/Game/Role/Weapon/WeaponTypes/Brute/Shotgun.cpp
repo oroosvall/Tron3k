@@ -20,10 +20,10 @@ void Shotgun::init()
 	currentBulletId = 0;
 
 	firingSpeed = 1.5f;
-	firingSpeedCurrentDelay = firingSpeed;
+	firingSpeedCurrentDelay = 0;
 
 	reloadTime = 2.5f;
-	rldTimer = reloadTime;
+	rldTimer = 0;
 }
 
 int Shotgun::update(float deltaTime)

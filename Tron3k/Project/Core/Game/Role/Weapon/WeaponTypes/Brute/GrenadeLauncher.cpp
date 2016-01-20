@@ -20,10 +20,10 @@ void GrenadeLauncher::init()
 	currentBulletId = 0;
 
 	firingSpeed = 1.0f;
-	firingSpeedCurrentDelay = firingSpeed;
+	firingSpeedCurrentDelay = 0;
 
 	reloadTime = 3.5f;
-	rldTimer = reloadTime;
+	rldTimer = 0;
 }
 
 int GrenadeLauncher::update(float deltaTime)

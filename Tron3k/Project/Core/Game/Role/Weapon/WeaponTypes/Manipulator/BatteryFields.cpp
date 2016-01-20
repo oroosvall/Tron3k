@@ -48,10 +48,10 @@ void BatteryFields::init()
 	currentBulletId = 0;
 
 	firingSpeed = 0.0f;
-	firingSpeedCurrentDelay = firingSpeed;
+	firingSpeedCurrentDelay = 0;
 
 	reloadTime = 3.5f;
-	rldTimer = reloadTime;
+	rldTimer = 0;
 }
 
 int BatteryFields::update(float deltaTime)
