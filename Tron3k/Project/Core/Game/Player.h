@@ -123,6 +123,7 @@ public:
 	{ 
 		this->pos = pos;
 	}
+	void setDir(glm::vec3 wantedDir) { dir = wantedDir; };
 	glm::vec3 getDir() { return dir; };
 	int getHP() { return role.getHealth(); };
 	void setHP(int HPfromServer) { role.setHealth(HPfromServer); }; //Used by client
