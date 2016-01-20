@@ -139,30 +139,35 @@ void Game::update(float dt)
 		checkFootsteps(dt);
 	}
 
-	if (gameState == Gamestate::SERVER)
-	{
-		checkBulletVWorldCollision();
-		checkPlayerVBulletCollision();
-	}
+
 
 	for (int c = 0; c < max_con; c++)
 	{
 		if (playerList[c] != nullptr)
 		{
+			bool spectatingThis = false;
+			bool spectating = false;
 			if (playerList[c]->isLocal())
 			{
-				bool spectatingThis = false;
-				bool spectating = false;
+				
 				if (spectateID > -1)
 				{
 					spectating = true;
 					if (c == spectateID)
 						spectatingThis = true;
 				}
-				playerList[c]->movementUpdates(dt, freecam, spectatingThis, spectating);
+				
 			}
+			if(playerList[c] != nullptr)
+				playerList[c]->movementUpdates(dt, freecam, spectatingThis, spectating);
 			//TODO: Send collision results to player
 		}
+	}
+
+	if (gameState == Gamestate::SERVER)
+	{
+		checkBulletVWorldCollision();
+		checkPlayerVBulletCollision();
 	}
 
 	for (unsigned int i = 0; i < BULLET_TYPE::NROFBULLETS; i++)
@@ -409,7 +414,7 @@ void Game::checkPlayerVBulletCollision()
 						if ((bullets[b][j]->getTeamId() != playerList[i]->getTeam() && playerList[i]->getTeam() != 0) || (playerList[pid]->getIfHacked() && pid != i)) //Don't shoot same team, don't shoot spectators
 						{
 							if (playerList[i]->isAlive()) //Don't shoot dead people
-								collides = physics->checkPlayerVBulletCollision(playerList[i]->getPos(), bullets[b][j]->getPos());
+								collides = physics->checkPlayerVBulletCollision(playerList[i]->getPos() - (vec3(0, playerList[i]->getRole()->getBoxModifier(), 0)), bullets[b][j]->getPos());
 						}
 						if (collides != glm::vec3(0, 0, 0))
 						{
