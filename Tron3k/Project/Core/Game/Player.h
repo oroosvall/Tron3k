@@ -30,7 +30,7 @@ enum PLAYERMSG { NONE, SHOOT, USEITEM, SPECIALUSE, MOBILITYUSE, WPNSWITCH, DEATH
 class Player : public GameObject
 {
 private:
-	Physics* physics;
+	//Physics* physics;
 	Role role;
 	bool lockControls = false;
 	bool noclip = false;
@@ -46,6 +46,7 @@ private:
 
 	glm::vec3 collisionVel; //How we ought to be moving based on our collisions
 	void movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingThis);
+	void movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool specingThis);
 	bool grounded = false;
 
 	glm::vec4 collisionNormals[20];
@@ -86,7 +87,7 @@ private:
 public:
 	Player();
 	~Player();
-	void init(std::string name, glm::vec3 pos, Physics* phy, bool isLocal = false);
+	void init(std::string name, glm::vec3 pos, bool isLocal = false);
 
 	void footstepsLoopReset(float dt);
 
