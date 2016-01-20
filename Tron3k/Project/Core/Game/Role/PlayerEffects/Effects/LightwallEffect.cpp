@@ -10,7 +10,7 @@ void LightwallEffect::init(int pid, int eid, glm::vec3 position)
 {
 	type = EFFECT_TYPE::LIGHT_WALL;
 	playerId = pid; effectId = eid;
-	pos = position;
+	endPoint = pos = position;
 	expandDong = true;
 }
 
@@ -24,10 +24,12 @@ int LightwallEffect::update(float dt)
 	}
 	else
 	{
-		if (myPlayer->getVelocity() != playerVel)
+		if (myPlayer->getVelocity().x != playerVel.x || myPlayer->getVelocity().z != playerVel.z)
 		{
 			expandDong = false;
 			lifeTime = 10.0f;
+			if (length(endPoint - pos) < 1.5f)
+				return 1;
 		}
 		if (expandDong)
 			endPoint = myPlayer->getPos();

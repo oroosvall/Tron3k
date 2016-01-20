@@ -545,6 +545,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				//role.returnToLife();
 			}
 		}
+		modifiersSetData(dt);	//Dont Remove Again Please!
 		movePlayer(dt, olddir, freecam, spectatingThisPlayer); //This moves the player regardless of what we might end up colliding with
 	} // end of local player check
 	else
@@ -589,9 +590,7 @@ void Player::movementUpdates(float dt, bool freecam, bool spectatingThisPlayer, 
 		//ignore if we are spectating
 		if (currentTeam != 0)
 		{
-
 			movePlayerCollided(dt, olddir, freecam, spectatingThisPlayer);
-			modifiersSetData(dt);	//Dont Remove Again Please!
 
 			float lastHeight = pos.y;
 

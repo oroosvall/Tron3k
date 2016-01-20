@@ -12,7 +12,7 @@ void LightWallLockedControls::init(Player* myTarget)
 	glm::vec2 dir = glm::vec2(target->getDir().x, target->getDir().z);
 	//dir = normalize(dir);		Unnecessary?
 
-	vel = glm::vec3(dir.x, -0.1, dir.y)*lightWallSpeed;
+	vel = glm::vec3(dir.x, 0.0f, dir.y)*lightWallSpeed;
 	target->setVelocity(vel);
 	target->getRole()->shutOffMeterGain();
 }
@@ -31,7 +31,8 @@ int LightWallLockedControls::getData(float dt)
 	if (kill)
 	{
 		target->getRole()->activateMeterGain();
-		target->getRole()->setSpecialMeter(0.0f);
+		if (target->getRole()->getSpecialMeter() < 90.0f)
+			target->getRole()->setSpecialMeter(0.0f);
 		return 1;
 	}
 
