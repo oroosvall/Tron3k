@@ -364,7 +364,7 @@ void Core::upClient(float dt)
 			//send animstates
 			top->frame_anim(top->getConId(), local->getAnimState_f_p(), local->getAnimState_t_p());
 			local->setAnimState_f_p(AnimationState::first_primary_idle);
-			local->setAnimState_t_p(AnimationState::third_idle);
+			local->setAnimState_t_p(AnimationState::third_primary_idle);
 
 			//send the package
 			top->network_OUT(dt);

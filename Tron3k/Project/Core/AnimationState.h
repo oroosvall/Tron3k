@@ -3,30 +3,56 @@
 
 enum AnimationState
 {
-	//first person
-	first_primary_idle, //does not exist yet
-	first_primary_run, //new
-	first_primary_air, //does not exist yet
+	first_primary_idle,				// Trapper	| Destroyer	| Shankbot | Brute | Manipulator |
+	first_primary_run, 				// Trapper	| Destroyer	| Shankbot | Brute | Manipulator |
+	first_primary_fire,				// Trapper	| Destroyer	| Shankbot | Brute | Manipulator |	
+	first_primary_air, 				// Trapper	| Destroyer	| Shankbot | Brute | Manipulator |
+	first_primary_reload,			// Trapper	| Destroyer	| Shankbot | Brute | Manipulator |
+	first_primary_throw, 			// Trapper	| use fire?	|		   | Brute | Manipulator |
+	first_primary_switch,			//      	| Destroyer	| Shankbot | Brute | Manipulator |
 
-	first_primary_fire, //new
-	first_primary_reload,
-	first_primary_throw, //new
-	first_primary_switch, //new
+	first_secondary_idle, 			//			| Destroyer | Shankbot | Brute | Manipulator |
+	first_secondary_run,			//			| Destroyer | Shankbot | Brute | Manipulator |
+	first_secondary_fire,			// Trapper	| Destroyer | Shankbot | Brute | Manipulator |
+	first_secondary_air,			//			| Destroyer | Shankbot | Brute | Manipulator |
+	first_secondary_reload,			//			| Destroyer |		   | Brute | Manipulator |
+	first_secondary_throw, 			//			| Destroyer |          | Brute | Manipulator |
+	first_secondary_switch,			//      	| Destroyer | Shankbot | Brute | Manipulator |
 
-	first_secondary_fire, //new
+	third_primary_idle,				// Trapper	| Destroyer | Shankbot | Brute | Manipulator |
+	third_primary_run,				// Trapper	| Destroyer | Shankbot | Brute | Manipulator |
+	third_primary_run_rev,			// Trapper	| Destroyer | Shankbot | Brute | Manipulator |
+	third_primary_air,				// Trapper	| idle,run? | Shankbot | Brute | Manipulator |
+	third_primary_strafe_left,		// Trapper	| Destroyer | Shankbot | Brute | Manipulator |
+	third_primary_strafe_right,		// Trapper	| Destroyer | Shankbot | Brute | Manipulator |
+	third_primary_jump_begin,		// Trapper	|		    | Shankbot | Brute | Manipulator |
+	third_primary_jump_end,			// Trapper	| Destroyer | Shankbot | Brute | Manipulator |
 
-	//third person
-	third_idle,
-	third_run,
-	third_run_rev,
-	third_air,
-	third_strafe_left,
-	third_strafe_right,
+									//special case Brute & Manipulator need 2nd set of third animations because of their weapons
+	third_secondary_idle,			//			|			|		   | Brute | Manipulator |
+	third_secondary_run,			//			|			|		   | Brute | Manipulator |
+	third_secondary_run_rev,		//			|			|		   | Brute | Manipulator |
+	third_secondary_air,			//			|			|		   | Brute | Manipulator |
+	third_secondary_strafe_left,	//			|			|		   | Brute | Manipulator |
+	third_secondary_strafe_right,	//			|			|		   | Brute | Manipulator |
+	third_secondary_jump_begin,		//			|			|		   | Brute | Manipulator |
+	third_secondary_jump_end,		//			|			|		   | Brute | Manipulator |
 
-	third_jump_begin,
-	third_jump_end,
+									//special case Brute & Manipulator change weapon 3rd, special death animations for each weapon.
+	third_primary_switch,			//			|			|		   | Brute | Manipulator |
+	third_secondary_switch,			//			|			|		   | Brute | Manipulator |
 
-	third_death,
+									//destroyer tracks							 					   	
+	third_turn_left,				//			| Destroyer |		   |       |             |
+	third_turn_right,				//			| Destroyer |		   |       |             |
+
+									//shank bot 								 						
+	third_melee_standing,			//			|			| Shankbot |	   |	         |
+	third_melee_run,				//			|			| Shankbot |	   |	         |
+	third_shankbot_charge,			//			|			| Shankbot |	   |	         |
+
+	third_primary_death,			// Trapper	| Destroyer | Shankbot | Brute | Manipulator |
+	third_secondary_death,			//			|			|		   | Brute | Manipulator |
 
 	none
 };
@@ -38,31 +64,58 @@ int static getAnimRank(AnimationState test)
 {
 	switch (test)
 	{
-	case first_primary_idle:		return 0;
-	case first_primary_run:			return 0;
-	case first_primary_air:			return 0;
+	case first_primary_idle:			return 0;
+	case first_primary_run:				return 0;
+	case first_primary_air:				return 0;
+	case first_primary_fire:			return 1;
+	case first_primary_reload:			return 1;
+	case first_primary_throw:			return 1;
+	case first_primary_switch:			return 1;
 
-	case first_primary_fire:		return 1;
-	case first_primary_reload:		return 1;
-	case first_primary_throw:		return 1;
-	case first_primary_switch:		return 1;
+	case first_secondary_idle:			return 0;
+	case first_secondary_run:			return 0;
+	case first_secondary_air:			return 0;
+	case first_secondary_fire:			return 1;
+	case first_secondary_reload:		return 1;
+	case first_secondary_throw:			return 1;
+	case first_secondary_switch:		return 1;
 
-	case first_secondary_fire:		return 1;
+	case third_primary_idle:			return 0;
+	case third_primary_run:				return 0;
+	case third_primary_run_rev:			return 0;
+	case third_primary_air:				return 0;
+	case third_primary_strafe_left:		return 0;
+	case third_primary_strafe_right:	return 0;
+	case third_primary_jump_begin:		return 1;
+	case third_primary_jump_end:		return 1;
 
-	case third_idle:		return 0;
-	case third_run:			return 0;
-	case third_run_rev:		return 0;
-	case third_air:			return 0;
+	case third_secondary_idle:			return 0;
+	case third_secondary_run:			return 0;
+	case third_secondary_run_rev:		return 0;
+	case third_secondary_air:			return 0;
+	case third_secondary_strafe_left:	return 0;
+	case third_secondary_strafe_right:	return 0;
+	case third_secondary_jump_begin:	return 1;
+	case third_secondary_jump_end:		return 1;
 
-	case third_strafe_left:	return 0;
-	case third_strafe_right:return 0;
+		//destroyer tracks				
+	case third_turn_left:				return 0;
+	case third_turn_right:				return 0;
 
-	case third_jump_begin:	return 1;
-	case third_jump_end:	return 1;
+		//shank bot 					
+	case third_shankbot_charge:			return 0;
+	case third_melee_standing:			return 1;
+	case third_melee_run:				return 1;
 
-	case third_death:		return 2;
+		//special case Brute & Manipula
+	case third_primary_switch:			return 1;
+	case third_secondary_switch:		return 1;
 
-	default:				return -1;
+	case third_primary_death:			return 2;
+	case third_secondary_death:			return 2;
+
+	default:
+	case none: return -1;
 	}
 };
 
