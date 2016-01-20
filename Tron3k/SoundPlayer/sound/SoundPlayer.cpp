@@ -43,6 +43,7 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->soundList[SOUNDS::soundEffectBruteSteps].loadFromFile("GameFiles/Sound/soundEffectBruteSteps2.ogg");
 		singleton->soundList[SOUNDS::soundEffectShankerSteps].loadFromFile("GameFiles/Sound/soundEffectShankerSteps.ogg");
 		singleton->soundList[SOUNDS::soundEffectDestroyerSteps].loadFromFile("GameFiles/Sound/soundEffectDestroyerSteps.ogg");
+		singleton->soundList[SOUNDS::soundEffectClusterGrenade].loadFromFile("GameFiles/Sound/soundEffectClusterGrenadeExplosion.ogg");
 
 		initialized = true;
 	}
@@ -234,6 +235,7 @@ void SoundPlayer::playFootsteps(int role, float posX, float posY, float posZ)
 
 		if (role == 1)
 		{
+			GetSound()->sounds[6].setLoop(true);
 			playExternalSound(SOUNDS::soundEffectDestroyerSteps, posX, posY, posZ);
 		}
 

@@ -20,6 +20,7 @@ enum SOUNDS
 	soundEffectBruteSteps,
 	soundEffectShankerSteps,
 	soundEffectDestroyerSteps,
+	soundEffectClusterGrenade,
 
 	nrOfSounds //leave last
 };
