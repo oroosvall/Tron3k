@@ -1064,6 +1064,8 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 		break;
 	}
 	case BULLET_TYPE::VACUUM_GRENADE:
+		addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
+		effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(15.0f);
 		break;
 	case BULLET_TYPE::THERMITE_GRENADE:
 		addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
