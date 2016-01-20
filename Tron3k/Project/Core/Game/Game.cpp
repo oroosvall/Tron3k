@@ -860,7 +860,7 @@ void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec
 	{
 		p->addModifier(MODIFIER_TYPE::LIGHTWALLCONTROLLOCK);
 		int arraypos = -1;
-		Effect* lwe = getSpecificEffect(conID, sID - 1, EFFECT_TYPE::LIGHT_WALL, arraypos);
+		//Effect* lwe = getSpecificEffect(conID, sID - 1, EFFECT_TYPE::LIGHT_WALL, arraypos);
 		addEffectToList(conID, sID, EFFECT_TYPE::LIGHT_WALL, pos);
 	}
 	break;

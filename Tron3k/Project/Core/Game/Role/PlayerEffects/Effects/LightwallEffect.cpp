@@ -3,7 +3,7 @@
 LightwallEffect::LightwallEffect(Player* p)
 {
 	myPlayer = p;
-	playerVel = myPlayer->getVelocity();
+	playerVel = normalize(myPlayer->getVelocity());
 }
 
 void LightwallEffect::init(int pid, int eid, glm::vec3 position)
@@ -24,20 +24,9 @@ int LightwallEffect::update(float dt)
 	}
 	else
 	{
-		if (!myPlayer->isLocal())
-		{
-			//Solution to lightwall problem goes here
-			//Non-local players can't make comparisons to velocity
-			/*if (endPoint.x + playerVel.x != myPlayer->getPos().x ||
-				endPoint.z + playerVel.z != myPlayer->getPos().y)
-			{
-				expandDong = false;
-				lifeTime = 10.0f;
-				if (length(endPoint - pos) < 1.5f)
-					return 1;
-			}*/
-		}
-		if (myPlayer->getVelocity().x != playerVel.x || myPlayer->getVelocity().z != playerVel.z)
+		glm::vec3 curVel = normalize(myPlayer->getVelocity());
+		if (curVel.x != playerVel.x || curVel.z != playerVel.z ||
+			endPoint.y < pos.y - FLT_EPSILON || endPoint.y > pos.y + FLT_EPSILON)
 		{
 			expandDong = false;
 			lifeTime = 10.0f;
