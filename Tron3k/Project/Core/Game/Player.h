@@ -68,9 +68,10 @@ private:
 	AnimationState anim_first_framePeak; //send the highest ranked anim used since last frame
 	AnimationState anim_third_current;
 	AnimationState anim_third_framePeak;
-
 	bool animGrounded = false;
+	bool animGroundedLast = false;
 	float animAirTimer = 0.0f;
+	void movementAnimationChecks(float dt);
 
 	bool isLocalPlayer;
 

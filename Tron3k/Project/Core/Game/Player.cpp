@@ -389,10 +389,6 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				lockControls = true;
 		}
 
-		//lokal player anim handle
-		anim_first_current = AnimationState::first_primary_idle;
-		anim_third_current = AnimationState::third_primary_idle;
-
 		if (noclip)
 			vel *= 0;
 
@@ -551,18 +547,14 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				{
 					role.swapWeaponLocal(0);
 					msg = WPNSWITCH;
-					//play anim
-					if (checkAnimOverwrite(anim_first_current, AnimationState::first_primary_switch))
-						anim_first_current = AnimationState::first_primary_switch;
+					animOverideIfPriority(anim_first_current, AnimationState::first_primary_switch);
 				}
 
 				if (i->justPressed(GLFW_KEY_2))
 				{
 					role.swapWeaponLocal(1);
 					msg = WPNSWITCH;
-					//play anim
-					if (checkAnimOverwrite(anim_first_current, AnimationState::first_primary_switch))
-						anim_first_current = AnimationState::first_primary_switch;
+					animOverideIfPriority(anim_first_current, AnimationState::first_primary_switch);
 				}
 
 				if (i->getKeyInfo(GLFW_MOUSE_BUTTON_LEFT))		//Temp
@@ -589,8 +581,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 						if (c->use())
 						{
 							msg = USEITEM;
-							if (checkAnimOverwrite(anim_first_current, AnimationState::first_primary_throw))
-								anim_first_current = AnimationState::first_primary_throw;
+							animOverideIfPriority(anim_first_current, AnimationState::first_primary_throw);
 						}
 					}
 				}
@@ -639,9 +630,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			msg = DEATH;
 			respawnTimer = respawnTime;
 			vel = glm::vec3(0, 0, 0);
-			if (checkAnimOverwrite(anim_third_current, AnimationState::third_primary_death))
-				anim_third_current = AnimationState::third_primary_death;
-
+			animOverideIfPriority(anim_third_current, AnimationState::third_primary_death);
 		}
 
 		if (isDead && respawnTimer != 0.0f)
@@ -655,80 +644,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			}
 		}
 
-		// --- Animation checks ---
-
-		bool animGroundedLast = animGrounded;
-
-		if (grounded == false)
-			animAirTimer += dt;
-		else
-		{
-			animAirTimer = 0;
-			animGrounded = true;
-		}
-
-		if (animAirTimer > 0.3f)
-			animGrounded = false;
-
-		if (animGrounded)
-		{
-			//Run checks
-			if (vel.x != 0 || vel.z != 0)
-			{
-				if (checkAnimOverwrite(anim_first_current, AnimationState::first_primary_run))
-					anim_first_current = AnimationState::first_primary_run;
-
-				if (i->getKeyInfo(GLFW_KEY_A) && !i->getKeyInfo(GLFW_KEY_W) && !i->getKeyInfo(GLFW_KEY_S)) // strage left
-				{
-					if (checkAnimOverwrite(anim_third_current, AnimationState::third_primary_strafe_left))
-						anim_third_current = AnimationState::third_primary_strafe_left;
-				}
-				else if (i->getKeyInfo(GLFW_KEY_D) && !i->getKeyInfo(GLFW_KEY_W) && !i->getKeyInfo(GLFW_KEY_S)) //strafe right
-				{
-					if (checkAnimOverwrite(anim_third_current, AnimationState::third_primary_strafe_right))
-						anim_third_current = AnimationState::third_primary_strafe_right;
-				}
-				//check if we are running backwards
-				else if (dot(vel, dir) < 0)
-				{
-					if (checkAnimOverwrite(anim_third_current, AnimationState::third_primary_run_rev))
-						anim_third_current = AnimationState::third_primary_run_rev;
-				}
-				else //run forward
-				{
-					if (checkAnimOverwrite(anim_third_current, AnimationState::third_primary_run))
-						anim_third_current = AnimationState::third_primary_run;
-				}
-			}
-		}
-		else //if in air
-		{
-			if (checkAnimOverwrite(anim_third_current, AnimationState::third_primary_air))
-				anim_third_current = AnimationState::third_primary_air;
-		}
-
-		//Jump Checks
-		if (animGrounded != animGroundedLast) //grounded changed this frame
-		{
-			if (animGrounded) //landed
-			{
-				if (checkAnimOverwrite(anim_third_current, AnimationState::third_primary_jump_end))
-					anim_third_current = AnimationState::third_primary_jump_end;
-			}
-			else // jump begin
-			{
-				if (checkAnimOverwrite(anim_third_current, AnimationState::third_primary_jump_begin))
-					anim_third_current = AnimationState::third_primary_jump_begin;
-			}
-		}
-
-
-		//frame peak overide
-		if (checkAnimOverwrite(anim_first_framePeak, anim_first_current))
-			anim_first_framePeak = anim_first_current;
-
-		if (checkAnimOverwrite(anim_third_framePeak, anim_third_current))
-			anim_third_framePeak = anim_third_current;
+		movementAnimationChecks(dt);
 
 		modifiersSetData(dt);	//Dont Remove Again Please!
 		movePlayer(dt, olddir, freecam, spectatingThisPlayer); //This moves the player regardless of what we might end up colliding with
@@ -1031,4 +947,69 @@ glm::mat4 Player::getFPSmat()
 	ret[1].w += cam->getPos().y;
 	ret[2].w += cam->getPos().z;
 	return ret;
+}
+
+void Player::movementAnimationChecks(float dt)
+{
+	// --- Animation checks ---
+	bool animGroundedLast = animGrounded;
+	if (grounded == false)
+		animAirTimer += dt;
+	else
+	{
+		animAirTimer = 0;
+		animGrounded = true;
+	}
+	if (animAirTimer > 0.3f)
+		animGrounded = false;
+	
+	//default movement anims
+	anim_first_current = AnimationState::first_primary_idle;
+	anim_third_current = AnimationState::third_primary_idle;
+
+	if (grounded)
+	{
+		//Run checks
+		if (vel.x != 0 || vel.z != 0)
+		{
+			//first person run
+			animOverideIfPriority(anim_first_current, AnimationState::first_primary_run);
+
+			// strafe left
+			if (i->getKeyInfo(GLFW_KEY_A) && !i->getKeyInfo(GLFW_KEY_W) && !i->getKeyInfo(GLFW_KEY_S))
+				animOverideIfPriority(anim_third_current, AnimationState::third_primary_strafe_left);
+
+			// strafe right
+			else if (i->getKeyInfo(GLFW_KEY_D) && !i->getKeyInfo(GLFW_KEY_W) && !i->getKeyInfo(GLFW_KEY_S))
+				animOverideIfPriority(anim_third_current, AnimationState::third_primary_strafe_right);
+
+			//check if we are running backwards
+			else if (dot(vel, dir) < 0)
+				animOverideIfPriority(anim_third_current, AnimationState::third_primary_run_rev);
+
+			else //run forward
+				animOverideIfPriority(anim_third_current, AnimationState::third_primary_run);
+		}
+	}
+	else //if in air
+		animOverideIfPriority(anim_third_current, AnimationState::third_primary_air);
+
+	//Jump Checks
+	if (grounded != animGroundedLast) //grounded changed this frame
+	{
+		if (grounded) //landed
+			animOverideIfPriority(anim_third_current, AnimationState::third_primary_jump_end);
+
+		else // jump begin
+			animOverideIfPriority(anim_third_current, AnimationState::third_primary_jump_begin);
+	}
+
+	animGroundedLast = grounded;
+
+	//frame peak overide
+	if (checkAnimOverwrite(anim_first_framePeak, anim_first_current))
+		anim_first_framePeak = anim_first_current;
+
+	if (checkAnimOverwrite(anim_third_framePeak, anim_third_current))
+		anim_third_framePeak = anim_third_current;
 }
