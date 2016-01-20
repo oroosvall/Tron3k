@@ -220,23 +220,23 @@ int* AnimatedMeshV2::loadAnimations(std::string character)
 {
 	std::string file = "GameFiles/CharacterFiles/anim_" + character;
 	
-	animations[AnimationState::first_primary_idle].load(file + "_first_fire.bin");
-	animations[AnimationState::first_primary_run].load(file + "_first_run.bin");
-	animations[AnimationState::first_primary_fire].load(file + "_first_fire.bin");
-	//animations[AnimationState::first_primary_reload].load(file + "_first_B_Shoot_50.bin");
+	animations[AnimationState::first_primary_idle].load(file + "_first_B_Shoot_50.bin");
+	//animations[AnimationState::first_primary_run].load("GameFiles/CharacterFiles/Trapper/trapper_anim_run.bin");
+	//animations[AnimationState::first_primary_fire].load("GameFiles/CharacterFiles/Trapper/trapper_anim_run.bin");
+	//animations[AnimationState::first_primary_reload].load("GameFiles/CharacterFiles/Trapper/trapper_anim_run.bin");
 	//animations[AnimationState::first_primary_run].load("GameFiles/CharacterFiles/Trapper/trapper_anim_run.bin");
 	//animations[AnimationState::first_primary_switch].load("GameFiles/CharacterFiles/Trapper/trapper_anim_run.bin");
 	//animations[AnimationState::first_primary_throw].load("GameFiles/CharacterFiles/Trapper/trapper_anim_run.bin");
 	//animations[AnimationState::first_secondary_fire].load("GameFiles/CharacterFiles/Trapper/trapper_anim_run.bin");
 
-	animations[AnimationState::third_primary_idle].load(file + "_third_idle.bin");
-	animations[AnimationState::third_primary_death].load(file + "_third_death.bin");
-	animations[AnimationState::third_primary_air].load(file + "_third_jumpAir.bin");
-	animations[AnimationState::third_primary_run].load(file + "_third_run.bin");
-	animations[AnimationState::third_primary_strafe_left].load(file + "_third_strafeLeft.bin");
-	animations[AnimationState::third_primary_strafe_right].load(file + "_third_strafeRight.bin");
-	animations[AnimationState::third_primary_jump_begin].load(file + "_third_jumpIn.bin");
-	animations[AnimationState::third_primary_jump_end].load(file + "_third_jumpOut.bin");
+	animations[AnimationState::third_idle].load(file + "_third_idle.bin");
+	animations[AnimationState::third_death].load(file + "_third_death.bin");
+	animations[AnimationState::third_air].load(file + "_third_jumpAir.bin");
+	animations[AnimationState::third_run].load(file + "_third_run.bin");
+	animations[AnimationState::third_strafe_left].load(file + "_third_strafeLeft.bin");
+	animations[AnimationState::third_strafe_right].load(file + "_third_strafeRight.bin");
+	animations[AnimationState::third_jump_begin].load(file + "_third_jumpIn.bin");
+	animations[AnimationState::third_jump_end].load(file + "_third_jumpOut.bin");
 
 	int frames[AnimationState::none];
 
