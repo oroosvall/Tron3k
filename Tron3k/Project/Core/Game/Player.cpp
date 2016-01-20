@@ -209,10 +209,12 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 	vec3 posadjust = vec3(0);
 
 	grounded = false;
+	collided = false;
 
 	//if we collided with something
 	if (collisionNormalSize > 0)
 	{
+		collided = true;
 		if (collisionNormalSize > 1)
 
 			int debug = 1;
@@ -409,7 +411,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		//instant stop
 		if (grounded)
 		{
-			vel = vec3(0);
+			airVelocity = vel = vec3(0);
 		}
 
 		if (!lockControls)
@@ -437,7 +439,48 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				dir = cam->getDir();
 				vec2 tempvec = vec2(0, 0);
 
-				if (grounded)
+				if (!collided)//IN THE AIR YO
+				{
+					if (i->getKeyInfo(GLFW_KEY_W))
+					{
+						if (length(glm::vec2(airVelocity.x, airVelocity.z)) < role.getMovementSpeed())
+						{
+							airVelocity += normalize(glm::vec3(dir.x, 0, dir.z))*dt*0.5f;
+						}
+					}
+
+					if (i->getKeyInfo(GLFW_KEY_S))
+					{
+						if (length(glm::vec2(airVelocity.x, airVelocity.z)) > -role.getMovementSpeed())
+						{
+							airVelocity -= normalize(glm::vec3(dir.x, 0, dir.z))*dt*0.5f;
+						}
+					}
+
+					if (!(i->getKeyInfo(GLFW_KEY_A) && i->getKeyInfo(GLFW_KEY_D)))
+					{
+						if (i->getKeyInfo(GLFW_KEY_A))
+						{
+							vec3 left = cross(vec3(0, 1, 0), dir);
+							if (length(left) > 0)
+							{
+								airVelocity += normalize(left)*dt;
+							}
+						}
+						if (i->getKeyInfo(GLFW_KEY_D))
+						{
+							vec3 right = cross(dir, vec3(0, 1, 0));
+							if (length(right) > 0)
+							{
+								airVelocity += normalize(right)*dt;
+							}
+						}
+					}
+
+					vel.x = airVelocity.x;
+					vel.z = airVelocity.z;
+				}
+				else if (grounded)
 				{
 					if (i->getKeyInfo(GLFW_KEY_W))
 					{
@@ -471,6 +514,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					}
 				}
 
+
 				Special* mobility = role.getMobilityAbility();
 				if (i->justPressed(mobility->getActivationKey()))
 				{
@@ -489,6 +533,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					if (grounded)
 					{
 						vel.y = role.getJumpHeight() * 5;
+						airVelocity = vel;
 					}
 				}
 

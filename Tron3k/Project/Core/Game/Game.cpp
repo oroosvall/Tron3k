@@ -165,16 +165,16 @@ void Game::update(float dt)
 			bool spectating = false;
 			if (playerList[c]->isLocal())
 			{
-
+				
 				if (spectateID > -1)
 				{
 					spectating = true;
 					if (c == spectateID)
 						spectatingThis = true;
 				}
-
+				
 			}
-			if (playerList[c] != nullptr)
+			if(playerList[c] != nullptr)
 				playerList[c]->movementUpdates(dt, freecam, spectatingThis, spectating);
 			//TODO: Send collision results to player
 		}
@@ -182,7 +182,7 @@ void Game::update(float dt)
 
 
 
-
+	
 
 	for (unsigned int i = 0; i < EFFECT_TYPE::NROFEFFECTS; i++)
 	{
@@ -487,7 +487,7 @@ void Game::checkBulletVWorldCollision()
 			{
 				int pid = -1, bid = -1;
 				bullets[b][j]->getId(pid, bid);
-				collides = physics->sphereVWorldCollision(bullets[b][j]->getPos(), 0.5f);
+				collides = physics->sphereVWorldCollision(bullets[b][j]->getPos(), 0.4f);
 				if (collides.size() > 0)
 				{
 					BulletHitWorldInfo hi;
@@ -499,7 +499,7 @@ void Game::checkBulletVWorldCollision()
 			}
 		}
 	}
-
+	
 	// reflection test code
 	/*
 	std::vector<glm::vec4> collides;
@@ -533,7 +533,7 @@ void Game::checkBulletVWorldCollision()
 						combinedNormal2 = normalize(combinedNormal2);
 						bullets[b][j]->setDir(reflect(bullets[b][j]->getDir(), combinedNormal2));
 
-						//use pendepth to set a new pos
+						//use pendepth to set a new pos 
 						bullets[b][j]->setPos(bullets[b][j]->getPos() + vec3(posadjust));
 
 						// remove bullet code
@@ -1035,13 +1035,14 @@ void Game::bounceBullet(BulletHitWorldInfo hwi, Bullet* theBullet)
 
 void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 {
-	int arraypos = -1;
+	int arraypos;
 	Bullet* b = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, arraypos);
-	
+	if (b != nullptr)
+	{
 		switch (hi.bt)
 		{
-		case BULLET_TYPE::DISC_SHOT:
-			bounceBullet(hi, b);
+		case BULLET_TYPE::PULSE_SHOT:
+			removeBullet(hi.bt, arraypos);
 			break;
 		case BULLET_TYPE::CLUSTER_GRENADE:
 			bounceBullet(hi, b);
@@ -1055,11 +1056,11 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 		case BULLET_TYPE::VACUUM_GRENADE:
 			bounceBullet(hi, b);
 			break;
-		default:
-			removeBullet(hi.bt, arraypos);
+		case BULLET_TYPE::DISC_SHOT:
+			bounceBullet(hi, b);
 			break;
 		}
-	
+	}
 }
 
 void Game::removeEffect(EFFECT_TYPE et, int posInArray)

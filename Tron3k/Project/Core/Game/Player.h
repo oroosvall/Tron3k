@@ -41,6 +41,7 @@ private:
 	glm::vec3 pos; //Current actual position
 	glm::vec3 dir; //Current viewing direction
 	glm::vec3 vel; //Our velocity i.e. in which direction we're moving
+	glm::vec3 airVelocity; //Saves the velocity we hold in the air
 
 	float maxspeed = 5.0f;
 
@@ -48,6 +49,7 @@ private:
 	void movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingThis);
 	void movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool specingThis);
 	bool grounded = false;
+	bool collided = false;
 
 	glm::vec4 collisionNormals[20];
 	int collisionNormalSize = 0;
