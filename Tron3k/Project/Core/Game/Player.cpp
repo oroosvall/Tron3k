@@ -639,8 +639,8 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			msg = DEATH;
 			respawnTimer = respawnTime;
 			vel = glm::vec3(0, 0, 0);
-			if (checkAnimOverwrite(anim_third_current, AnimationState::third_death))
-				anim_third_current = AnimationState::third_death;
+			if (checkAnimOverwrite(anim_third_current, AnimationState::third_primary_death))
+				anim_third_current = AnimationState::third_primary_death;
 
 		}
 
@@ -985,8 +985,8 @@ void Player::respawn(glm::vec3 respawnPos, glm::vec3 _dir)
 
 	setAnimState_f_c(AnimationState::first_primary_idle);
 	setAnimState_f_p(AnimationState::first_primary_idle);
-	setAnimState_t_c(AnimationState::third_idle);
-	setAnimState_t_p(AnimationState::third_idle);
+	setAnimState_t_c(AnimationState::third_primary_idle);
+	setAnimState_t_p(AnimationState::third_primary_idle);
 
 	/*anim_first_current = AnimationState();
 	anim_first_framePeak= AnimationState();
