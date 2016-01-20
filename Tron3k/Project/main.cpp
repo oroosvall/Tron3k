@@ -28,6 +28,9 @@ int main()
 		//sleep(milliseconds(24));
 		//dt = 0.100;
 
+		if (dt > 0.1)
+			dt = 0.1;
+
 		core.update(float(dt));
 
 		unsigned int temp = clock();

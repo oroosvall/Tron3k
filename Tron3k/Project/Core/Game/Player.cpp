@@ -24,8 +24,8 @@ void Player::init(std::string pName, glm::vec3 initPos, bool isLocal)
 
 	anim_first_current = AnimationState::first_primary_idle;
 	anim_first_framePeak = AnimationState::first_primary_idle;
-	anim_third_current = AnimationState::third_idle;
-	anim_third_framePeak = AnimationState::third_idle;
+	anim_third_current = AnimationState::third_primary_idle;
+	anim_third_framePeak = AnimationState::third_primary_idle;
 
 	isLocalPlayer = isLocal;
 
@@ -353,7 +353,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 		//lokal player anim handle
 		anim_first_current = AnimationState::first_primary_idle;
-		anim_third_current = AnimationState::third_idle;
+		anim_third_current = AnimationState::third_primary_idle;
 
 		if (noclip)
 			vel *= 0;
@@ -592,38 +592,38 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		if (animGrounded)
 		{
 			//Run checks
-			if (vel.x * vel.x > 1 || vel.z * vel.z > 1)
+			if (vel.x != 0 || vel.z != 0)
 			{
 				if (checkAnimOverwrite(anim_first_current, AnimationState::first_primary_run))
 					anim_first_current = AnimationState::first_primary_run;
 
 				if (i->getKeyInfo(GLFW_KEY_A) && !i->getKeyInfo(GLFW_KEY_W) && !i->getKeyInfo(GLFW_KEY_S)) // strage left
 				{
-					if (checkAnimOverwrite(anim_third_current, AnimationState::third_strafe_left))
-						anim_third_current = AnimationState::third_strafe_left;
+					if (checkAnimOverwrite(anim_third_current, AnimationState::third_primary_strafe_left))
+						anim_third_current = AnimationState::third_primary_strafe_left;
 				}
 				else if (i->getKeyInfo(GLFW_KEY_D) && !i->getKeyInfo(GLFW_KEY_W) && !i->getKeyInfo(GLFW_KEY_S)) //strafe right
 				{
-					if (checkAnimOverwrite(anim_third_current, AnimationState::third_strafe_right))
-						anim_third_current = AnimationState::third_strafe_right;
+					if (checkAnimOverwrite(anim_third_current, AnimationState::third_primary_strafe_right))
+						anim_third_current = AnimationState::third_primary_strafe_right;
 				}
 				//check if we are running backwards
 				else if (dot(vel, dir) < 0)
 				{
-					if (checkAnimOverwrite(anim_third_current, AnimationState::third_run_rev))
-						anim_third_current = AnimationState::third_run_rev;
+					if (checkAnimOverwrite(anim_third_current, AnimationState::third_primary_run_rev))
+						anim_third_current = AnimationState::third_primary_run_rev;
 				}
 				else //run forward
 				{
-					if (checkAnimOverwrite(anim_third_current, AnimationState::third_run))
-						anim_third_current = AnimationState::third_run;
+					if (checkAnimOverwrite(anim_third_current, AnimationState::third_primary_run))
+						anim_third_current = AnimationState::third_primary_run;
 				}
 			}
 		}
 		else //if in air
 		{
-			if (checkAnimOverwrite(anim_third_current, AnimationState::third_air))
-				anim_third_current = AnimationState::third_air;
+			if (checkAnimOverwrite(anim_third_current, AnimationState::third_primary_air))
+				anim_third_current = AnimationState::third_primary_air;
 		}
 
 		//Jump Checks
@@ -631,13 +631,13 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		{
 			if (animGrounded) //landed
 			{
-				if (checkAnimOverwrite(anim_third_current, AnimationState::third_jump_end))
-					anim_third_current = AnimationState::third_jump_end;
+				if (checkAnimOverwrite(anim_third_current, AnimationState::third_primary_jump_end))
+					anim_third_current = AnimationState::third_primary_jump_end;
 			}
 			else // jump begin
 			{
-				if (checkAnimOverwrite(anim_third_current, AnimationState::third_jump_begin))
-					anim_third_current = AnimationState::third_jump_begin;
+				if (checkAnimOverwrite(anim_third_current, AnimationState::third_primary_jump_begin))
+					anim_third_current = AnimationState::third_primary_jump_begin;
 			}
 		}
 

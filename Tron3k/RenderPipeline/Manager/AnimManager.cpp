@@ -8,9 +8,10 @@ void AnimManager::updateAnimStates(int playerID, int role, AnimationState curren
 		overide = true;
 	}
 
-	if (current == AnimationState::third_run)
+	if (animStates[playerID].role != role)
 	{
-		int smt = 1;
+		overide = true;
+		animStates[playerID].role = role;
 	}
 
 	if (overide) // replace animation with the new one
@@ -48,7 +49,7 @@ void AnimManager::updateAnimStates(int playerID, int role, AnimationState curren
 		float index = animStates[playerID].timepass / animStates[playerID].timeLength;
 
 		//if we should run the animation backwards
-		if (animStates[playerID].state == AnimationState::third_run_rev)
+		if (animStates[playerID].state == AnimationState::third_primary_run_rev)
 			animStates[playerID].frame = animStates[playerID].frameEnd - animStates[playerID].frameEnd * index;
 		else
 		{
@@ -61,6 +62,7 @@ void AnimManager::updateAnimStates(int playerID, int role, AnimationState curren
 		if (animStates[playerID].timeout)
 			animStates[playerID].frame = animStates[playerID].frameEnd-1;
 	}
+
 }
 
 void AnimManager::setAnim(animState& current, AnimationState overide)
@@ -69,8 +71,10 @@ void AnimManager::setAnim(animState& current, AnimationState overide)
 	{
 		return;
 	}
+	int role = current.role;
 	current = animState();
 	current.state = overide;
+	current.role = role;
 
 
 	current.frameEnd = keyFrameLenghts[current.role*AnimationState::none + current.state];
