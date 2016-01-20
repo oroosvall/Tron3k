@@ -133,6 +133,7 @@ public:
 
 	Weapon* getPlayerCurrentWeapon();
 	void switchWpn(WEAPON_TYPE ws, int swapLoc);
+	void shoot();
 
 	Special* getPlayerSpecialAbility() { return role.getSpecialAbility(); };
 

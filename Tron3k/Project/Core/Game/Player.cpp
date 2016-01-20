@@ -476,16 +476,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 						else
 						{
 							msg = SHOOT;
-							if (role.getWeaponNRequiped() == 0) //main weapon
-							{
-								if (checkAnimOverwrite(anim_first_current, AnimationState::first_primary_fire))
-									anim_first_current = AnimationState::first_primary_fire;
-							}
-							else // secondary fire
-							{
-								if (checkAnimOverwrite(anim_first_current, AnimationState::first_secondary_fire))
-									anim_first_current = AnimationState::first_secondary_fire;
-							}
+							shoot();
 						}
 					}
 				}
@@ -758,6 +749,22 @@ Weapon* Player::getPlayerCurrentWeapon()
 void Player::switchWpn(WEAPON_TYPE ws, int swapLoc)
 {
 	role.swapWeapon(ws, swapLoc);
+}
+
+void Player::shoot()
+{
+	if (role.getWeaponNRequiped() == 0) //main weapon
+	{
+		if (checkAnimOverwrite(anim_first_current, AnimationState::first_primary_fire))
+			anim_first_current = AnimationState::first_primary_fire;
+	}
+	else // secondary fire
+	{
+		if (checkAnimOverwrite(anim_first_current, AnimationState::first_secondary_fire))
+			anim_first_current = AnimationState::first_secondary_fire;
+	}
+
+	dir += vec3(0.1, 0.1, 0.0);
 }
 
 void Player::hitByBullet(Bullet* b, int newHPtotal)
