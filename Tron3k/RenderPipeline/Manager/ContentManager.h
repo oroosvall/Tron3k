@@ -69,7 +69,7 @@ public:
 
 	void renderMisc(int renderID);
 
-	void renderPlayer(AnimManager::animState, glm::mat4 world, GLuint uniformKeyMatrixLocation);
+	void renderPlayer(AnimManager::animState, glm::mat4 world, GLuint uniformKeyMatrixLocation, bool first);
 
 	int getPortalID(glm::vec3 oldpos, glm::vec3 newpos) { return testMap.getChunkID(oldpos, newpos); }
 

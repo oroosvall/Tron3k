@@ -9,25 +9,35 @@
 #include "AnimationData.h"
 #include "../../Project/Core/AnimationState.h"
 
-
-class AnimatedMeshV2
+struct PlayerMesh
 {
-private:
+
+	void load(string fileName);
+	void release();
+	void render();
 
 	int* matOffsets;
 	int* indices;
 	AnimVertex* verts;
+
+	TextureStruct* tex;
+	int textureCount;
+
+	Material* materials;
 
 	GLuint vbo;
 	GLuint ibo;
 	GLuint vao;
 
 	int indexCount;
+};
 
-	TextureStruct* tex;
-	int textureCount;
+class AnimatedMeshV2
+{
+private:
 
-	Material* materials;
+	PlayerMesh first;
+	PlayerMesh third;
 
 	GLuint matricesBuffer;
 	AnimData animations[AnimationState::none];
@@ -45,7 +55,7 @@ public:
 	void load(std::string fileName);
 	int* loadAnimations(std::string character);
 
-	void draw(GLuint uniformKeyMatrixLocation, int animationID, int keyFrame);
+	void draw(GLuint uniformKeyMatrixLocation, int animationID, int keyFrame, bool first);
 
 };
 

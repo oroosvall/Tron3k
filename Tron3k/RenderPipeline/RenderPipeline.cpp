@@ -467,7 +467,7 @@ void RenderPipeline::renderMISC(int miscID, void* world, float* dgColor, float s
 	contMan.renderMisc(miscID);
 }
 
-void RenderPipeline::renderAnimation(int playerID, int roleID, void* world, AnimationState animState, float* dgColor, float sgInten)
+void RenderPipeline::renderAnimation(int playerID, int roleID, void* world, AnimationState animState, float* dgColor, float sgInten, bool first)
 {
 	glUseProgram(animationShader);
 
@@ -484,7 +484,7 @@ void RenderPipeline::renderAnimation(int playerID, int roleID, void* world, Anim
 	//set temp objects worldmat
 	glProgramUniformMatrix4fv(animationShader, worldMat[1], 1, GL_FALSE, (GLfloat*)world);
 
-	contMan.renderPlayer(anims.animStates[playerID], *(glm::mat4*)world, uniformKeyMatrixLocation);
+	contMan.renderPlayer(anims.animStates[playerID], *(glm::mat4*)world, uniformKeyMatrixLocation, first);
 	
 	//update the animstate AFTER the player was renderd
 	//it not, an animation can timeout and not know what to render

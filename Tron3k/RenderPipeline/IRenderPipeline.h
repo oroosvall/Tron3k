@@ -65,7 +65,7 @@ public:
 
 	virtual void* getView() = 0;
 	virtual void renderMISC(int miscID, void* world, float* dgColor, float sgInten) = 0;
-	virtual void renderAnimation(int playerID, int roleID, void* world, AnimationState animState, float* dgColor, float sgInten) = 0;
+	virtual void renderAnimation(int playerID, int roleID, void* world, AnimationState animState, float* dgColor, float sgInten, bool first) = 0;
 
 	virtual std::string getStatus() = 0;
 

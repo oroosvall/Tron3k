@@ -16,8 +16,8 @@ void ContentManager::init()
 
 	skyTexture = loadTexture("GameFiles/TestFiles/skybox.jpg");
 
-	playerCharacters[0].load("GameFiles/CharacterFiles/Trapper/chr_trapper.bin");
-	int* lengths = playerCharacters[0].loadAnimations("");
+	playerCharacters[0].load("trapper");
+	int* lengths = playerCharacters[0].loadAnimations("trapper");
 
 	for (int i = 0; i < AnimationState::none; i++)
 	{
@@ -255,14 +255,14 @@ void ContentManager::renderMisc(int renderID)
 	}
 }
 
-void ContentManager::renderPlayer(AnimManager::animState state, glm::mat4 world, GLuint uniformKeyMatrixLocation)
+void ContentManager::renderPlayer(AnimManager::animState state, glm::mat4 world, GLuint uniformKeyMatrixLocation, bool first)
 {
 
 	// ----------- Character Animations ---------- //
 	
 	//if (state.state < AnimationState::none)
 	//{
-		playerCharacters[state.role].draw(uniformKeyMatrixLocation, state.state, state.frame);
+		playerCharacters[state.role].draw(uniformKeyMatrixLocation, state.state, state.frame, first);
 	//}
 }
 

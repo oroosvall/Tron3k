@@ -105,7 +105,7 @@ public:
 	virtual void* getView();
 
 	virtual void renderMISC(int miscID, void* world, float* dgColor, float sgInten);
-	virtual void renderAnimation(int playerID, int roleID, void* world, AnimationState animState, float* dgColor, float sgInten);
+	virtual void renderAnimation(int playerID, int roleID, void* world, AnimationState animState, float* dgColor, float sgInten, bool first);
 
 	virtual std::string getStatus() { return ""; };
 

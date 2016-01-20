@@ -1012,17 +1012,17 @@ void Core::renderWorld(float dt)
 					if (p->isLocal() && !game->freecam || game->spectateID == i)
 					{
 						if(p->isLocal())   //use current anim
-							renderPipe->renderAnimation(i, p->getRole()->getRole(), &glm::mat4(), p->getAnimState_f_c(), dgColor, hpval);
+							renderPipe->renderAnimation(i, p->getRole()->getRole(), &p->getFPSmat(), p->getAnimState_f_c(), dgColor, hpval, true);
 						else			   //use peak anim
-							renderPipe->renderAnimation(i, p->getRole()->getRole(), &p->getFPSmat(), p->getAnimState_f_p(), dgColor, hpval);
+							renderPipe->renderAnimation(i, p->getRole()->getRole(), &p->getFPSmat(), p->getAnimState_f_p(), dgColor, hpval, true);
 					}
 					else
 					{
 						if (p->isLocal()) //use current anim
-							renderPipe->renderAnimation(i, p->getRole()->getRole(), p->getWorldMat(), p->getAnimState_t_c(), dgColor, hpval);
+							renderPipe->renderAnimation(i, p->getRole()->getRole(), p->getWorldMat(), p->getAnimState_t_c(), dgColor, hpval, false);
 						else              //use peak anim
 
-							renderPipe->renderAnimation(i, p->getRole()->getRole(), p->getWorldMat(), p->getAnimState_t_p(), dgColor, hpval);
+							renderPipe->renderAnimation(i, p->getRole()->getRole(), p->getWorldMat(), p->getAnimState_t_p(), dgColor, hpval, false);
 					}
 				}
 			}

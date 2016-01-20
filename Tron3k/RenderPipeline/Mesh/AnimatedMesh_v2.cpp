@@ -7,47 +7,8 @@
 
 using std::ios;
 
-void AnimatedMeshV2::init()
-{
-}
 
-void AnimatedMeshV2::release()
-{
-	delete[] matOffsets;
-	delete[] indices;
-	delete[] verts;
-
-	glDeleteVertexArrays(1, &vao);
-	glDeleteBuffers(1, &vbo);
-	glDeleteBuffers(1, &ibo);
-	glDeleteBuffers(1, &matricesBuffer);
-
-	for (int i = 0; i < textureCount; i++)
-	{
-		glDeleteTextures(1, &tex[i].textureID);
-	}
-	if (tex)
-		delete[] tex;
-	
-	if(materials)
-		delete[] materials;
-
-	for (int i = 0; i < AnimationState::none; i++)
-	{
-		animations[i].release();
-	}	
-}
-
-AnimatedMeshV2::~AnimatedMeshV2()
-{
-}
-
-void AnimatedMeshV2::update()
-{
-
-}
-
-void AnimatedMeshV2::load(std::string fileName)
+void PlayerMesh::load(string fileName)
 {
 	std::ifstream file;
 	file.open(fileName, ios::in | ios::binary);
@@ -117,7 +78,7 @@ void AnimatedMeshV2::load(std::string fileName)
 		glEnableVertexAttribArray(4);
 		glEnableVertexAttribArray(5);
 
-		#define BUFFER_OFFSET(i) ((char *)nullptr + (i))
+#define BUFFER_OFFSET(i) ((char *)nullptr + (i))
 
 		//pos
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(AnimVertex), BUFFER_OFFSET(0));
@@ -133,48 +94,32 @@ void AnimatedMeshV2::load(std::string fileName)
 		glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(AnimVertex), BUFFER_OFFSET(sizeof(float) * 15));
 
 		file.close();
-
-		glGenBuffers(1, &matricesBuffer);
-		glBindBuffer(GL_UNIFORM_BUFFER, matricesBuffer);
-		//glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4)* animIdle->header.jointCount, animIdle->keyFrames[0].jointTransform, GL_STATIC_DRAW);
 	}
 }
 
-int* AnimatedMeshV2::loadAnimations(std::string character)
+void PlayerMesh::release()
 {
-	//animIdle = new AnimData();
-	//
-	//animations[AnimationState::first_primary_idle].load("GameFiles/CharacterFiles/Trapper/trapper_anim_run.bin");
-	//animations[AnimationState::first_primary_run].load("GameFiles/CharacterFiles/Trapper/trapper_anim_run.bin");
-	//animations[AnimationState::first_primary_fire].load("GameFiles/CharacterFiles/Trapper/trapper_anim_run.bin");
-	//animations[AnimationState::first_primary_reload].load("GameFiles/CharacterFiles/Trapper/trapper_anim_run.bin");
-	//animations[AnimationState::first_primary_run].load("GameFiles/CharacterFiles/Trapper/trapper_anim_run.bin");
-	//animations[AnimationState::first_primary_switch].load("GameFiles/CharacterFiles/Trapper/trapper_anim_run.bin");
-	//animations[AnimationState::first_primary_throw].load("GameFiles/CharacterFiles/Trapper/trapper_anim_run.bin");
-	//animations[AnimationState::first_secondary_fire].load("GameFiles/CharacterFiles/Trapper/trapper_anim_run.bin");
+	delete[] matOffsets;
+	delete[] indices;
+	delete[] verts;
 
-	animations[AnimationState::third_idle].load("GameFiles/CharacterFiles/Trapper/trapper_third_idle.bin");
-	animations[AnimationState::third_death].load("GameFiles/CharacterFiles/Trapper/trapper_third_death.bin");
-	animations[AnimationState::third_air].load("GameFiles/CharacterFiles/Trapper/trapper_third_jumpAir.bin");
-	animations[AnimationState::third_run].load("GameFiles/CharacterFiles/Trapper/trapper_third_run.bin");
-	animations[AnimationState::third_strafe_left].load("GameFiles/CharacterFiles/Trapper/trapper_third_strafeLeft.bin");
-	animations[AnimationState::third_strafe_right].load("GameFiles/CharacterFiles/Trapper/trapper_third_strafeRight.bin");
-	animations[AnimationState::third_jump_begin].load("GameFiles/CharacterFiles/Trapper/trapper_third_jumpIn.bin");
-	animations[AnimationState::third_jump_end].load("GameFiles/CharacterFiles/Trapper/trapper_third_jumpOut.bin");
+	glDeleteVertexArrays(1, &vao);
+	glDeleteBuffers(1, &vbo);
+	glDeleteBuffers(1, &ibo);
 
-	int frames[AnimationState::none];
-
-	for (int i = 0; i < AnimationState::none; i++)
+	for (int i = 0; i < textureCount; i++)
 	{
-		frames[i] = animations[i].header.keyCount;
+		glDeleteTextures(1, &tex[i].textureID);
 	}
+	if (tex)
+		delete[] tex;
 
-	return frames;
+	if (materials)
+		delete[] materials;
 }
 
-void AnimatedMeshV2::draw(GLuint uniformKeyMatrixLocation,int animationID, int keyFrame)
+void PlayerMesh::render()
 {
-
 	if (GetAsyncKeyState(VK_F8))
 	{
 		if (materials[0].textureMapIndex != -1)
@@ -229,14 +174,94 @@ void AnimatedMeshV2::draw(GLuint uniformKeyMatrixLocation,int animationID, int k
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 
+	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
+
+}
+
+
+void AnimatedMeshV2::init()
+{
+}
+
+void AnimatedMeshV2::release()
+{
+	third.release();
+	first.release();
+
+	glDeleteBuffers(1, &matricesBuffer);
+
+	for (int i = 0; i < AnimationState::none; i++)
+	{
+		animations[i].release();
+	}	
+}
+
+AnimatedMeshV2::~AnimatedMeshV2()
+{
+}
+
+void AnimatedMeshV2::update()
+{
+
+}
+
+void AnimatedMeshV2::load(std::string character)
+{
+	std::string file = "GameFiles/CharacterFiles/mesh_" + character;
+
+	third.load(file + "_third.bin");
+	first.load(file + "_first.bin");
+	glGenBuffers(1, &matricesBuffer);
+	glBindBuffer(GL_UNIFORM_BUFFER, matricesBuffer);
+	//glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4)* animIdle->header.jointCount, animIdle->keyFrames[0].jointTransform, GL_STATIC_DRAW);
+}
+
+int* AnimatedMeshV2::loadAnimations(std::string character)
+{
+	std::string file = "GameFiles/CharacterFiles/anim_" + character;
+	
+	animations[AnimationState::first_primary_idle].load(file + "_first_B_Shoot_50.bin");
+	//animations[AnimationState::first_primary_run].load("GameFiles/CharacterFiles/Trapper/trapper_anim_run.bin");
+	//animations[AnimationState::first_primary_fire].load("GameFiles/CharacterFiles/Trapper/trapper_anim_run.bin");
+	//animations[AnimationState::first_primary_reload].load("GameFiles/CharacterFiles/Trapper/trapper_anim_run.bin");
+	//animations[AnimationState::first_primary_run].load("GameFiles/CharacterFiles/Trapper/trapper_anim_run.bin");
+	//animations[AnimationState::first_primary_switch].load("GameFiles/CharacterFiles/Trapper/trapper_anim_run.bin");
+	//animations[AnimationState::first_primary_throw].load("GameFiles/CharacterFiles/Trapper/trapper_anim_run.bin");
+	//animations[AnimationState::first_secondary_fire].load("GameFiles/CharacterFiles/Trapper/trapper_anim_run.bin");
+
+	animations[AnimationState::third_idle].load(file + "_third_idle.bin");
+	animations[AnimationState::third_death].load(file + "_third_death.bin");
+	animations[AnimationState::third_air].load(file + "_third_jumpAir.bin");
+	animations[AnimationState::third_run].load(file + "_third_run.bin");
+	animations[AnimationState::third_strafe_left].load(file + "_third_strafeLeft.bin");
+	animations[AnimationState::third_strafe_right].load(file + "_third_strafeRight.bin");
+	animations[AnimationState::third_jump_begin].load(file + "_third_jumpIn.bin");
+	animations[AnimationState::third_jump_end].load(file + "_third_jumpOut.bin");
+
+	int frames[AnimationState::none];
+
+	for (int i = 0; i < AnimationState::none; i++)
+	{
+		frames[i] = animations[i].header.keyCount;
+	}
+
+	return frames;
+}
+
+void AnimatedMeshV2::draw(GLuint uniformKeyMatrixLocation,int animationID, int keyFrame, bool _first)
+{
+
 	glBindBuffer(GL_UNIFORM_BUFFER, matricesBuffer);
 	glBindBufferBase(GL_UNIFORM_BUFFER, uniformKeyMatrixLocation, matricesBuffer);
-	
+
 	if (animations[animationID].header.keyCount > 0)
 	{
 		glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4)* animations[animationID].header.jointCount, animations[animationID].keyFrames[keyFrame].jointTransform, GL_STATIC_DRAW);
-		glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
+		if(_first)
+			first.render();	
+		else
+			third.render();
 	}
-	
-	
+
+
 }
