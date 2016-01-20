@@ -475,8 +475,9 @@ vec3 Physics::checkPlayerVBulletCollision(vec3 playerPos, vec3 bulletPos)
 	box.min = playerPos - vec3(1, 1, 1);
 	playerBox.setAABB(box);
 
-	box.max = bulletPos + vec3(1, 1, 1);
-	box.min = bulletPos - vec3(1, 1, 1);
+	//TEMPORARY
+	box.max = bulletPos + vec3(0.2f, 0.2f, 0.2f);
+	box.min = bulletPos - vec3(0.2f, 0.2f, 0.2f);
 	bulletBox.setAABB(box);
 
 
