@@ -8,7 +8,6 @@ class MultiJump :
 
 private:
 	float coolDown;
-
 public:
 	MultiJump();
 	~MultiJump();

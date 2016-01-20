@@ -24,6 +24,19 @@ int LightwallEffect::update(float dt)
 	}
 	else
 	{
+		if (!myPlayer->isLocal())
+		{
+			//Solution to lightwall problem goes here
+			//Non-local players can't make comparisons to velocity
+			/*if (endPoint.x + playerVel.x != myPlayer->getPos().x ||
+				endPoint.z + playerVel.z != myPlayer->getPos().y)
+			{
+				expandDong = false;
+				lifeTime = 10.0f;
+				if (length(endPoint - pos) < 1.5f)
+					return 1;
+			}*/
+		}
 		if (myPlayer->getVelocity().x != playerVel.x || myPlayer->getVelocity().z != playerVel.z)
 		{
 			expandDong = false;
