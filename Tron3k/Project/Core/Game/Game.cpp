@@ -128,7 +128,7 @@ void Game::update(float dt)
 
 	if (gameState == Gamestate::ROAM)
 	{
-		checkPlayerVWorldCollision(dt);
+		//checkPlayerVWorldCollision(dt);
 		checkBulletVWorldCollision();
 	}
 
@@ -260,7 +260,7 @@ std::vector<Effect*> Game::getEffects(EFFECT_TYPE type)
 void Game::createPlayer(Player* p, int conID, bool isLocal)
 {
 	playerList[conID] = new Player();
-	playerList[conID]->init(p->getName(), p->getPos(), isLocal);
+	playerList[conID]->init(p->getName(), p->getPos(), physics, isLocal);
 	playerList[conID]->setTeam(p->getTeam());
 	playerList[conID]->setRole(*templateRole);
 	if (isLocal)

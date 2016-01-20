@@ -11,8 +11,9 @@ Player::~Player()
 		delete myModifiers[c];
 }
 
-void Player::init(std::string pName, glm::vec3 initPos, bool isLocal)
+void Player::init(std::string pName, glm::vec3 initPos, Physics* phy, bool isLocal)
 {
+	physics = phy;
 	cam = CameraInput::getCam();
 	i = Input::getInput();
 
@@ -88,71 +89,56 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 	playerVel.y = vel.y;
 	pos += playerVel * dt; //Here we will also include external forces.. EDIT: External forces moved, for now
 
+	//get normals
+	std::vector<vec4> cNorms = physics->sphereVWorldCollision(pos - (vec3(0, 0.55f, 0)), 1);
+
 	//Collision handling here, after movement
 	bool ceiling = false;
 	vec3 posadjust = vec3(0);
-	if (collisionNormalSize > 0)
+
+	grounded = false;
+
+	//if we collided with something
+	if (cNorms.size() > 0)
 	{
-		//grounded set to true at start of frame
-		grounded = true;
-		if (collisionNormalSize > 1)
-			int x = 0;
-		for (int k = 0; k < collisionNormalSize; k++)
+		if (cNorms.size() > 1)
+
+			int debug = 1;
+
+		bool ceiling = false;
+		for (int k = 0; k < cNorms.size(); k++)
 		{
 			//push pos away and lower velocity using pendepth
-			vec3 pendepth = vec3(collisionNormals[k]) * collisionNormals[k].w;
-			if (collisionNormals[k].y < 0)
+			vec3 pendepth = vec3(cNorms[k]) * cNorms[k].w;
+			if (cNorms[k].y < 0)
 				ceiling = true;
 
-			if (collisionNormals[k].y > 0) // test ramp!!
+			//ramp factor and grounded
+			if (cNorms[k].y > 0)
 			{
-				//grounded = true;
-
+				grounded = true;
 			}
-			else //If we don't collide to anything that is a floor, we don't touch ground
-				grounded = false;
-			posadjust += pendepth;
 
-			//test code
-			/*same effect as actual code
-			pendepth = -pendepth;
-			pendepth.y = 0;
-			float projectionval = 0;
-			if(dot(pendepth, pendepth) != 0)
-			projectionval = dot(vel, pendepth) / dot(pendepth, pendepth);
-			
-			vel -= pendepth * projectionval;*/
+			// abslut value, if two collisions from the same angle they should not move us twice the distance
+			posadjust.x += pendepth.x;
+			if (posadjust.y * posadjust.y < pendepth.y * pendepth.y)
+				posadjust.y = pendepth.y;
+			posadjust.z += pendepth.z;
 		}
 
-		playerVel += posadjust / dt * 0.5f;
+		// this is for air only since grounded will set the vel to 0 later
+		// the dt * 0.5 is supposed to remove almost all velocity in that dir
+		// while + posajust w/o  /dt  will remove it slower
+		vel += posadjust;// / dt * 0.5f;
 
-		if (vel != vec3(0, 0, 0))//IF we don't move, we don't want to be moved
-		{
-			if (ceiling)
-				posadjust.y = 0;
+		if (ceiling)
+			posadjust.y = 0;
 
-			//if(vel.x != 0 && vel.z != 0)
-			pos += posadjust;
-			if (posadjust != vec3(0, 0, 0))
-			{
-				//test equaitons
-				vel = ((normalize(posadjust) * dot(normalize(vel), normalize(posadjust))) - vel) * dt;
-				//same effect
-				//vel = normalize(((normalize(posadjust) * dot(normalize(vel), normalize(posadjust))) - vel)) * length(vel);
-				
+		pos += posadjust;
 
-				//vel += posadjust;// / dt * 0.5f;
-			}
-			if (ceiling && playerVel.y > 0)
-				vel.y = 0;
-		}
+		if (ceiling && vel.y > 0)
+			vel.y = 0;
 	}
-	else
-	{//no collision = in air
-		grounded = false;
-	}
-	//End of collision adjustement
-
 
 	if (freecam == false || specingThis == true)
 	{

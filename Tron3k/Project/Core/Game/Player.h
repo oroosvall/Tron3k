@@ -30,6 +30,7 @@ enum PLAYERMSG { NONE, SHOOT, USEITEM, SPECIALUSE, MOBILITYUSE, WPNSWITCH, DEATH
 class Player : public GameObject
 {
 private:
+	Physics* physics;
 	Role role;
 	bool lockControls = false;
 	bool noclip = false;
@@ -85,7 +86,7 @@ private:
 public:
 	Player();
 	~Player();
-	void init(std::string name, glm::vec3 pos, bool isLocal = false);
+	void init(std::string name, glm::vec3 pos, Physics* phy, bool isLocal = false);
 
 	void footstepsLoopReset(float dt);
 

@@ -25,7 +25,7 @@ int main()
 
 	while (core.windowVisible())
 	{
-		//sleep(milliseconds(17));
+		//sleep(milliseconds(24));
 		//dt = 0.100;
 
 		core.update(float(dt));
