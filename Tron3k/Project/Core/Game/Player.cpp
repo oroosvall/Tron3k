@@ -258,7 +258,7 @@ void Player::setFootstepsCountdown()
 	{
 		this->footstepsCountdown = 0.7;
 	}
-	
+
 }
 
 void Player::setFootstepsLoop(bool theBool)
@@ -605,7 +605,7 @@ void Player::movementUpdates(float dt, bool freecam, bool spectatingThisPlayer, 
 			float lastHeight = pos.y;
 
 			//sets player rotations and cam
-			
+
 		   // --- Animation checks ---
 
 			bool animGroundedLast = animGrounded;
@@ -733,17 +733,21 @@ void Player::rotatePlayer(vec3 olddir, vec3 newdir)
 
 void Player::reloadCurrentWeapon()
 {
-	if (GetSound())
+	if (!role.getCurrentWeapon()->getIfFullAmmo())
 	{
-		if (this->role.getRole() == 0)
-			GetSound()->playUserGeneratedSound(SOUNDS::soundEffectTrapperReload);
+		if (GetSound())
+		{
+			if (this->role.getRole() == 0)
+				GetSound()->playUserGeneratedSound(SOUNDS::soundEffectTrapperReload);
+		}
+
+		role.getCurrentWeapon()->reload();
+		//play anim
+		if (checkAnimOverwrite(anim_first_current, AnimationState::first_primary_reload))
+			anim_first_current = AnimationState::first_primary_reload;
+		role.getCurrentWeapon()->reload();
 	}
 
-	role.getCurrentWeapon()->reload();
-	//play anim
-	if (checkAnimOverwrite(anim_first_current, AnimationState::first_primary_reload))
-		anim_first_current = AnimationState::first_primary_reload;
-	role.getCurrentWeapon()->reload();
 }
 
 Weapon* Player::getPlayerCurrentWeapon()
