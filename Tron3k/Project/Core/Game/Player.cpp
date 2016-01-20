@@ -782,8 +782,7 @@ void Player::shoot()
 		if (checkAnimOverwrite(anim_first_current, AnimationState::first_secondary_fire))
 			anim_first_current = AnimationState::first_secondary_fire;
 	}
-
-	dir += vec3(0.1, 0.1, 0.0);
+	//Add a bullet recoil factor that is multiplied by a random number and smooth it out
 }
 
 void Player::hitByBullet(Bullet* b, int newHPtotal)
