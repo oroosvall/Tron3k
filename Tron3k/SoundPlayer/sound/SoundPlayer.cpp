@@ -46,6 +46,7 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->soundList[SOUNDS::soundEffectClusterGrenade].loadFromFile("GameFiles/Sound/soundEffectClusterGrenadeExplosion.ogg");
 		singleton->soundList[SOUNDS::soundEffectDestroyerStop].loadFromFile("GameFiles/Sound/soundEffectDestroyerStop.ogg");
 		singleton->soundList[SOUNDS::soundEffectDestroyerStart].loadFromFile("GameFiles/Sound/soundEffectDestroyerStart.ogg");
+		singleton->soundList[SOUNDS::soundEffectVacuumGrenade].loadFromFile("GameFiles/Sound/soundEffectVacuumGrenade.ogg");
 
 		initialized = true;
 	}
@@ -123,9 +124,10 @@ int SoundPlayer::playUserGeneratedSound(int sound)
 
 int SoundPlayer::playDestroyer(float x, float y, float z)
 {
-	playDestroyerStart(x, y, z);
+	
 	if (soundEnabler && initialized == 1)
 	{
+		playDestroyerStart(x, y, z);
 
 		sf::Listener::setDirection(playerDir.x, playerDir.y, playerDir.z);			//Set the direction of the player
 		if (sf::Listener::getPosition().x > x - 0.1 && sf::Listener::getPosition().x < x + 0.1)

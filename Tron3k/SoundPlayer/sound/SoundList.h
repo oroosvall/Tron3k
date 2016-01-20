@@ -20,6 +20,7 @@ enum SOUNDS
 	soundEffectBruteSteps,
 	soundEffectShankerSteps,
 	soundEffectClusterGrenade,
+	soundEffectVacuumGrenade,
 	
 	soundEffectDestroyerStart,
 	soundEffectDestroyerStop,
