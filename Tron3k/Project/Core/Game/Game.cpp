@@ -151,7 +151,11 @@ void Game::update(float dt)
 		checkFootsteps(dt);
 	}
 
-
+	if (gameState == Gamestate::SERVER)
+	{
+		checkBulletVWorldCollision();
+		checkPlayerVBulletCollision();
+	}
 
 	for (int c = 0; c < max_con; c++)
 	{
@@ -176,11 +180,7 @@ void Game::update(float dt)
 		}
 	}
 
-	if (gameState == Gamestate::SERVER)
-	{
-		checkBulletVWorldCollision();
-		checkPlayerVBulletCollision();
-	}
+
 
 	
 
