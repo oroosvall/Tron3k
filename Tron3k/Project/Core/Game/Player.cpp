@@ -83,21 +83,21 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 
 		if (this->role.getRole() == 1 && GetSound()->destroyerPaused == true)
 		{
-			
+
 			GetSound()->playFootsteps(this->role.getRole(), pos.x, pos.y, pos.z);
 			GetSound()->destroyerPaused = false;
 		}
 	}
-	
+
 	else
 	{
-			if (this->role.getRole() == 1 && GetSound()->destroyerPaused == false)
-			{
-				GetSound()->stopDestroyer(pos.x, pos.y, pos.z);
-			}
+		if (this->role.getRole() == 1 && GetSound()->destroyerPaused == false)
+		{
+			GetSound()->stopDestroyer(pos.x, pos.y, pos.z);
+		}
 	}
 
-	
+
 
 	glm::vec3 playerVel = vec3(0);
 	playerVel.x = vel.x*role.getMovementSpeed();
@@ -561,6 +561,82 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				//role.returnToLife();
 			}
 		}
+
+		// --- Animation checks ---
+
+		bool animGroundedLast = animGrounded;
+
+		if (grounded == false)
+			animAirTimer += dt;
+		else
+		{
+			animAirTimer = 0;
+			animGrounded = true;
+		}
+
+		if (animAirTimer > 0.3f)
+			animGrounded = false;
+
+		if (animGrounded)
+		{
+			//Run checks
+			if (vel.x * vel.x > 1 || vel.z * vel.z > 1)
+			{
+				if (checkAnimOverwrite(anim_first_current, AnimationState::first_primary_run))
+					anim_first_current = AnimationState::first_primary_run;
+
+				if (i->getKeyInfo(GLFW_KEY_A) && !i->getKeyInfo(GLFW_KEY_W) && !i->getKeyInfo(GLFW_KEY_S)) // strage left
+				{
+					if (checkAnimOverwrite(anim_third_current, AnimationState::third_strafe_left))
+						anim_third_current = AnimationState::third_strafe_left;
+				}
+				else if (i->getKeyInfo(GLFW_KEY_D) && !i->getKeyInfo(GLFW_KEY_W) && !i->getKeyInfo(GLFW_KEY_S)) //strafe right
+				{
+					if (checkAnimOverwrite(anim_third_current, AnimationState::third_strafe_right))
+						anim_third_current = AnimationState::third_strafe_right;
+				}
+				//check if we are running backwards
+				else if (dot(vel, dir) < 0)
+				{
+					if (checkAnimOverwrite(anim_third_current, AnimationState::third_run_rev))
+						anim_third_current = AnimationState::third_run_rev;
+				}
+				else //run forward
+				{
+					if (checkAnimOverwrite(anim_third_current, AnimationState::third_run))
+						anim_third_current = AnimationState::third_run;
+				}
+			}
+		}
+		else //if in air
+		{
+			if (checkAnimOverwrite(anim_third_current, AnimationState::third_air))
+				anim_third_current = AnimationState::third_air;
+		}
+
+		//Jump Checks
+		if (animGrounded != animGroundedLast) //grounded changed this frame
+		{
+			if (animGrounded) //landed
+			{
+				if (checkAnimOverwrite(anim_third_current, AnimationState::third_jump_end))
+					anim_third_current = AnimationState::third_jump_end;
+			}
+			else // jump begin
+			{
+				if (checkAnimOverwrite(anim_third_current, AnimationState::third_jump_begin))
+					anim_third_current = AnimationState::third_jump_begin;
+			}
+		}
+
+
+		//frame peak overide
+		if (checkAnimOverwrite(anim_first_framePeak, anim_first_current))
+			anim_first_framePeak = anim_first_current;
+
+		if (checkAnimOverwrite(anim_third_framePeak, anim_third_current))
+			anim_third_framePeak = anim_third_current;
+
 		modifiersSetData(dt);	//Dont Remove Again Please!
 		movePlayer(dt, olddir, freecam, spectatingThisPlayer); //This moves the player regardless of what we might end up colliding with
 	} // end of local player check
@@ -613,80 +689,7 @@ void Player::movementUpdates(float dt, bool freecam, bool spectatingThisPlayer, 
 
 			//sets player rotations and cam
 
-		   // --- Animation checks ---
-
-			bool animGroundedLast = animGrounded;
-
-			if (grounded == false)
-				animAirTimer += dt;
-			else
-			{
-				animAirTimer = 0;
-				animGrounded = true;
-			}
-
-			if (animAirTimer > 0.3f)
-				animGrounded = false;
-
-			if (animGrounded)
-			{
-				//Run checks
-				if (vel.x * vel.x > 1 || vel.z * vel.z > 1)
-				{
-					if (checkAnimOverwrite(anim_first_current, AnimationState::first_primary_run))
-						anim_first_current = AnimationState::first_primary_run;
-
-					if (i->getKeyInfo(GLFW_KEY_A) && !i->getKeyInfo(GLFW_KEY_W) && !i->getKeyInfo(GLFW_KEY_S)) // strage left
-					{
-						if (checkAnimOverwrite(anim_third_current, AnimationState::third_strafe_left))
-							anim_third_current = AnimationState::third_strafe_left;
-					}
-					else if (i->getKeyInfo(GLFW_KEY_D) && !i->getKeyInfo(GLFW_KEY_W) && !i->getKeyInfo(GLFW_KEY_S)) //strafe right
-					{
-						if (checkAnimOverwrite(anim_third_current, AnimationState::third_strafe_right))
-							anim_third_current = AnimationState::third_strafe_right;
-					}
-					//check if we are running backwards
-					else if (dot(vel, dir) < 0)
-					{
-						if (checkAnimOverwrite(anim_third_current, AnimationState::third_run_rev))
-							anim_third_current = AnimationState::third_run_rev;
-					}
-					else //run forward
-					{
-						if (checkAnimOverwrite(anim_third_current, AnimationState::third_run))
-							anim_third_current = AnimationState::third_run;
-					}
-				}
-			}
-			else //if in air
-			{
-				if (checkAnimOverwrite(anim_third_current, AnimationState::third_air))
-					anim_third_current = AnimationState::third_air;
-			}
-
-			//Jump Checks
-			if (animGrounded != animGroundedLast) //grounded changed this frame
-			{
-				if (animGrounded) //landed
-				{
-					if (checkAnimOverwrite(anim_third_current, AnimationState::third_jump_end))
-						anim_third_current = AnimationState::third_jump_end;
-				}
-				else // jump begin
-				{
-					if (checkAnimOverwrite(anim_third_current, AnimationState::third_jump_begin))
-						anim_third_current = AnimationState::third_jump_begin;
-				}
-			}
 		}
-
-		//frame peak overide
-		if (checkAnimOverwrite(anim_first_framePeak, anim_first_current))
-			anim_first_framePeak = anim_first_current;
-
-		if (checkAnimOverwrite(anim_third_framePeak, anim_third_current))
-			anim_third_framePeak = anim_third_current;
 	}
 	else
 	{

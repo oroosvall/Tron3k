@@ -475,7 +475,7 @@ void Game::checkPlayerVWorldCollision(float dt)
 
 void Game::checkBulletVWorldCollision()
 {
-	/*
+	
 	glm::vec3 collides = glm::vec3(0,0,0);
 
 	for (unsigned int b = 0; b < BULLET_TYPE::NROFBULLETS; b++)
@@ -499,10 +499,10 @@ void Game::checkBulletVWorldCollision()
 				}
 			}
 		}
-	}*/
-
+	}
+	
 	// reflection test code
-
+	/*
 	std::vector<glm::vec4> collides;
 
 	for (unsigned int b = 0; b < BULLET_TYPE::NROFBULLETS; b++)
@@ -548,7 +548,7 @@ void Game::checkBulletVWorldCollision()
 				}
 			}
 		}
-	}
+	}*/
 
 }
 
