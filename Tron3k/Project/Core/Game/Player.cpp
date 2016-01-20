@@ -398,17 +398,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 				if (i->justPressed(GLFW_KEY_R))
 				{
-					if (GetSound())
-					{
-						if (this->role.getRole() == 0)
-							GetSound()->playUserGeneratedSound(SOUNDS::soundEffectTrapperReload);
-					}
-
-
-					role.getCurrentWeapon()->reload();
-					//play anim
-					if (checkAnimOverwrite(anim_first_current, AnimationState::first_primary_reload))
-						anim_first_current = AnimationState::first_primary_reload;
+					reloadCurrentWeapon();
 				}
 
 				if (i->justPressed(GLFW_KEY_1))
@@ -433,16 +423,23 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				{
 					if (role.getCurrentWeapon()->shoot())
 					{
-						msg = SHOOT;
-						if (role.getWeaponNRequiped() == 0) //main weapon
+						if (role.getCurrentWeapon()->getCurrentAmmo() == 0)
 						{
-							if (checkAnimOverwrite(anim_first_current, AnimationState::first_primary_fire))
-								anim_first_current = AnimationState::first_primary_fire;
+							reloadCurrentWeapon();
 						}
-						else // secondary fire
+						else
 						{
-							if (checkAnimOverwrite(anim_first_current, AnimationState::first_secondary_fire))
-								anim_first_current = AnimationState::first_secondary_fire;
+							msg = SHOOT;
+							if (role.getWeaponNRequiped() == 0) //main weapon
+							{
+								if (checkAnimOverwrite(anim_first_current, AnimationState::first_primary_fire))
+									anim_first_current = AnimationState::first_primary_fire;
+							}
+							else // secondary fire
+							{
+								if (checkAnimOverwrite(anim_first_current, AnimationState::first_secondary_fire))
+									anim_first_current = AnimationState::first_secondary_fire;
+							}
 						}
 					}
 				}
@@ -660,6 +657,21 @@ void Player::rotatePlayer(vec3 olddir, vec3 newdir)
 	float angle = atan2(newdir.x, newdir.z) - atan2(olddir.x, olddir.z);
 	rotate(0, -angle, 0);
 	dir = newdir;
+}
+
+void Player::reloadCurrentWeapon()
+{
+	if (GetSound())
+	{
+		if (this->role.getRole() == 0)
+			GetSound()->playUserGeneratedSound(SOUNDS::soundEffectTrapperReload);
+	}
+
+	role.getCurrentWeapon()->reload();
+	//play anim
+	if (checkAnimOverwrite(anim_first_current, AnimationState::first_primary_reload))
+		anim_first_current = AnimationState::first_primary_reload;
+	role.getCurrentWeapon()->reload();
 }
 
 Weapon* Player::getPlayerCurrentWeapon()
