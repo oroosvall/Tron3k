@@ -11,7 +11,7 @@ void SprintControlLock::init(Player* myTarget)
 
 	dir = target->getDir();
 
-	vel = glm::vec3(dir.x, 0, dir.y)*sprintSpeed;
+	vel = glm::vec3(dir.x, 0.0f, dir.z)*sprintSpeed;
 	target->setVelocity(vel);
 }
 
@@ -24,6 +24,8 @@ int SprintControlLock::getData(float dt)
 	if (target->getVelocity().x != vel.x || target->getVelocity().z != vel.z)
 		kill = true;
 	if (lifeTime <= 0.0f)
+		kill = true;
+	if (!target->getGrounded())
 		kill = true;
 
 	if (kill)
