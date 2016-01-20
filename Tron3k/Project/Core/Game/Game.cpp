@@ -126,6 +126,18 @@ void Game::update(float dt)
 		}
 	}
 
+	for (unsigned int i = 0; i < BULLET_TYPE::NROFBULLETS; i++)
+	{
+		for (unsigned int c = 0; c < bullets[i].size(); c++)
+		{
+			int msg = bullets[i][c]->update(dt);
+			if (msg == 1)		//Bullet is dead
+			{
+				removeBullet(BULLET_TYPE(i), c); //Removes bullet, also handles effects such as explosions and additionally spawning effects/bullets
+			}
+		}
+	}
+
 	if (gameState == Gamestate::ROAM)
 	{
 		checkPlayerVWorldCollision(dt);
@@ -170,17 +182,7 @@ void Game::update(float dt)
 		checkPlayerVBulletCollision();
 	}
 
-	for (unsigned int i = 0; i < BULLET_TYPE::NROFBULLETS; i++)
-	{
-		for (unsigned int c = 0; c < bullets[i].size(); c++)
-		{
-			int msg = bullets[i][c]->update(dt);
-			if (msg == 1)		//Bullet is dead
-			{
-				removeBullet(BULLET_TYPE(i), c); //Removes bullet, also handles effects such as explosions and additionally spawning effects/bullets
-			}
-		}
-	}
+	
 
 	for (unsigned int i = 0; i < EFFECT_TYPE::NROFEFFECTS; i++)
 	{
@@ -1033,17 +1035,29 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 {
 	int arraypos;
 	Bullet* b = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, arraypos);
-	switch (hi.bt)
+	if (b != nullptr)
 	{
-	case BULLET_TYPE::PULSE_SHOT:
-		removeBullet(hi.bt, arraypos);
-		break;
-	case BULLET_TYPE::CLUSTER_GRENADE:
-		
-		break;
-	case BULLET_TYPE::DISC_SHOT:
-		bounceBullet(hi, b);
-		break;
+		switch (hi.bt)
+		{
+		case BULLET_TYPE::PULSE_SHOT:
+			removeBullet(hi.bt, arraypos);
+			break;
+		case BULLET_TYPE::CLUSTER_GRENADE:
+			bounceBullet(hi, b);
+			break;
+		case BULLET_TYPE::CLUSTERLING:
+			bounceBullet(hi, b);
+			break;
+		case BULLET_TYPE::THERMITE_GRENADE:
+			bounceBullet(hi, b);
+			break;
+		case BULLET_TYPE::VACUUM_GRENADE:
+			bounceBullet(hi, b);
+			break;
+		case BULLET_TYPE::DISC_SHOT:
+			bounceBullet(hi, b);
+			break;
+		}
 	}
 }
 
@@ -1106,6 +1120,7 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 		effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(35.0f);
 		break;
 	}
+
 	delete bullets[bt][posInArray];
 	bullets[bt][posInArray] = bullets[bt][bullets[bt].size() - 1];
 	bullets[bt].pop_back();
