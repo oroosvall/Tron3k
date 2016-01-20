@@ -1,5 +1,6 @@
 #include "Role.h"
 #include "Special\SpecialTypes\MultiJump.h"
+#include "Special/SpecialTypes/WallJump.h"
 
 Role::Role()
 {
@@ -119,7 +120,7 @@ void Role::loadRoleSpecifics(int _role)
 			role = 2;
 			specialAbility = new HackingDartSpecial(this);
 			specialAbility->init();
-			mobility = new MultiJump();
+			mobility = new WallJump();
 			mobility->init();
 			consumable = new Consumable();
 			consumable->init(CONSUMABLE_TYPE::LIGHTSPEED);
@@ -128,10 +129,10 @@ void Role::loadRoleSpecifics(int _role)
 			role = 3;
 			specialAbility = new Lightwall(this);
 			specialAbility->init();
-			mobility = new MultiJump();
+			mobility = new Dash();
 			mobility->init();
 			consumable = new Consumable();
-			consumable->init(CONSUMABLE_TYPE::THUNDERDOME);
+			consumable->init(CONSUMABLE_TYPE::THERMITEGRENADE);
 			break;
 		case MANIPULATOR:
 			role = 4;
@@ -181,6 +182,8 @@ void Role::chooseRole(int role)
 
 		movementSpeed = float(atof(loadedRoles[role][MOVEMENTSPEED].c_str()));
 		jumpHeight = float(atof(loadedRoles[role][JUMPHEIGHT].c_str()));
+
+		boundingBoxModifier = 0.55f;
 
 		gainSpecial = true;
 	}
@@ -242,5 +245,5 @@ void Role::returnToLife()
 
 int Role::getRole()
 {
-	return this->role;
+	return role;
 }

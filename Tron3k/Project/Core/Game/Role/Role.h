@@ -24,6 +24,7 @@ private:
 	int health;
 	int maxHealth;
 	float movementSpeed;
+	float boundingBoxModifier;
 	float jumpHeight;
 	string roles[NROFROLES];
 	string loadedRoles[NROFROLES][NROFREADPROPERTIES];
@@ -79,6 +80,8 @@ public:
 
 	void setMovementSpeed(float speed) { movementSpeed = speed; };
 	string getLoadedRoleSpecific(int i, int y) { return loadedRoles[i][y]; };
+
+	float getBoxModifier() { return boundingBoxModifier; }
 
 	int getRole();
 };

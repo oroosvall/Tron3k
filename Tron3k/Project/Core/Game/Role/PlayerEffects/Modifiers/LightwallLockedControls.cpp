@@ -4,7 +4,7 @@
 void LightWallLockedControls::init(Player* myTarget)
 {
 	type = MODIFIER_TYPE::LIGHTWALLCONTROLLOCK;
-	lightWallSpeed = 10.3f;
+	lightWallSpeed = 3.7f;
 
 	target = myTarget;
 	lifeTime = -1;
@@ -23,7 +23,7 @@ int LightWallLockedControls::getData(float dt)
 	bool kill = false;
 	if (!target->getGrounded())
 		kill = true;
-	if (target->getVelocity().x != vel.x && target->getVelocity().z != vel.z)
+	if (target->getVelocity().x != vel.x || target->getVelocity().z != vel.z)
 		kill = true;
 	if (target->getRole()->getSpecialMeter() <= 0)
 		kill = true;

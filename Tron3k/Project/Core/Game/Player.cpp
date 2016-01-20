@@ -11,11 +11,11 @@ Player::~Player()
 		delete myModifiers[c];
 }
 
-void Player::init(std::string pName, glm::vec3 initPos, Physics* phy, bool isLocal)
+void Player::init(std::string pName, glm::vec3 initPos, bool isLocal)
 {
+	//physics = phy;
 	cam = CameraInput::getCam();
 	i = Input::getInput();
-	physics = phy;
 
 	name = pName;
 	pos = initPos;
@@ -50,126 +50,22 @@ void Player::setGoalDir(glm::vec3 newDir)
 	oldDir = dir;
 }
 
-void Player::collisionHandling(float dt)
+void Player::setCollisionInfo(std::vector<glm::vec4> collNormals)
 {
-	//*** Pendepth ***
-
-	//move player along the velocity
-	pos += vel * dt;
-
-	vec3 posadjust = vec3(0);
-	//lower with distance from eyes to center
-	std::vector<vec4> cNorms = physics->sphereVWorldCollision(pos - (vec3(0, 0.55f, 0)), 1);
-
-	//if we collided with something
-	if (cNorms.size() > 0)
+	if (collNormals.size() < 20 - collisionNormalSize)
 	{
-		if (cNorms.size() > 1)
-			int debug = 1;
-
-		bool ceiling = false;
-		for (int k = 0; k < cNorms.size(); k++)
+		for (int i = 0; i < collNormals.size(); i++)
 		{
-			//push pos away and lower velocity using pendepth
-			vec3 pendepth = vec3(cNorms[k]) * cNorms[k].w;
-			if (cNorms[k].y < 0)
-				ceiling = true;
-
-			//vel += pendepth;
-			//pos += pendepth;
-
-			//ramp factor and grounded
-			if (cNorms[k].y > 0) // test ramp!!
-			{
-				grounded = true;
-				//float rampfactor = dot(vec3(cNorms[k]), vec3(0, 1, 0));
-				//pendepth *= 2 - rampfactor;
-			}
-			/*
-			// abslut value, if two collisions from the same angle they should not move us twice the distance
-				posadjust.x += pendepth.x;
-			if (posadjust.y * posadjust.y < pendepth.y * pendepth.y)
-				posadjust.y = pendepth.y;
-				posadjust.z += pendepth.z;*/
-
-			posadjust += pendepth;
+			collisionNormals[i + collisionNormalSize] = collNormals[i];
 		}
 
-		/*if(length(posadjust) > 0)
-			if(normalize(posadjust).y > 0.45f)
-				grounded = true;*/
-
-		vel += posadjust / dt * 0.5f;
-
-		if (ceiling)
-			posadjust.y = 0;
-
-		pos += posadjust;
-
-		if (ceiling && vel.y > 0)
-			vel.y = 0;
+		collisionNormalSize += collNormals.size();
 	}
-
-	return;
-
-	//*** Vector Redirect ***
-	/*
-	glm::vec3 oldPos = pos;
-	glm::vec3 oldVel = vel;
-
-	std::vector < glm::vec4 > cNorms;
-	int sweepCount = 5;
-
-	for (int n = 0; n < sweepCount; n++)
-	{
-		//move player along the velocity
-		pos = oldPos + vel * dt;
-		//to not get stuck on top edge
-		pos.y += 0.1f * dt;
-
-		//Get collision normals and pendepths,    lower with distance from eyes to center
-		cNorms = physics->sphereVWorldCollision(pos - (vec3(0, 0.55f, 0)), 1);
-
-		//if we collided with something
-		if (cNorms.size() > 0)
-		{
-			if (cNorms.size() > 1)
-				int debug = 0;
-
-			for (int k = 0; k < cNorms.size(); k++)
-			{
-				if (cNorms[k].y > 0)
-					grounded = true;
-
-				vec3 velchange = vec3(cNorms[k]) * length(vel);
-
-				//project normal on velchange and add them
-				float projlen = (dot(velchange, vel) / dot(velchange, velchange));
-				velchange *= -projlen;
-
-				if (length(velchange) > 0)
-				{
-					//if (cNorms[k].y > 0)
-					//	if (cNorms[k].y < 0.4f) // maximum angle allowed
-					//		velchange.y = 0;
-
-					vel += velchange;
-				}
-			}
-		}
-		else
-		{
-			return;
-		}
-	}
-
-	pos = oldPos;
-	vel *= 0;
-	return;*/
 }
 
 void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingThis)
 {
+
 	if (!this->getFootsteps())
 	{
 		this->footstepsLoopReset(dt);
@@ -185,6 +81,123 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 			GetSound()->playFootsteps(this->role.getRole(), pos.x, pos.y, pos.z);
 		}
 
+	}
+
+	glm::vec3 playerVel = vec3(0);
+	playerVel.x = vel.x*role.getMovementSpeed();
+	playerVel.z = vel.z*role.getMovementSpeed();
+	playerVel.y = vel.y;
+	pos += playerVel * dt; //Here we will also include external forces.. EDIT: External forces moved, for now
+
+	//get normals
+	//std::vector<vec4> cNorms = physics->sphereVWorldCollision(pos - (vec3(0, 0.55f, 0)), 1);
+
+	/*//Collision handling here, after movement
+	bool ceiling = false;
+	vec3 posadjust = vec3(0);
+
+	grounded = false;
+
+	//if we collided with something
+	if (cNorms.size() > 0)
+	{
+		if (cNorms.size() > 1)
+
+			int debug = 1;
+
+		bool ceiling = false;
+		for (int k = 0; k < cNorms.size(); k++)
+		{
+			//push pos away and lower velocity using pendepth
+			vec3 pendepth = vec3(cNorms[k]) * cNorms[k].w;
+			if (cNorms[k].y < 0)
+				ceiling = true;
+
+			//ramp factor and grounded
+			if (cNorms[k].y > 0)
+			{
+				grounded = true;
+			}
+
+			// abslut value, if two collisions from the same angle they should not move us twice the distance
+			posadjust.x += pendepth.x;
+			if (posadjust.y * posadjust.y < pendepth.y * pendepth.y)
+				posadjust.y = pendepth.y;
+			posadjust.z += pendepth.z;
+		}
+
+		// this is for air only since grounded will set the vel to 0 later
+		// the dt * 0.5 is supposed to remove almost all velocity in that dir
+		// while + posajust w/o  /dt  will remove it slower
+		vel += posadjust;// / dt * 0.5f;
+
+		if (ceiling)
+			posadjust.y = 0;
+
+		pos += posadjust;
+
+		if (ceiling && vel.y > 0)
+			vel.y = 0;
+	}
+
+	if (freecam == false || specingThis == true)
+	{
+		cam->setCam(pos);
+		rotatePlayer(oldDir, dir);
+	}*/
+}
+
+void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool specingThis)
+{
+	//get normals
+	//std::vector<vec4> cNorms = physics->sphereVWorldCollision(pos - (vec3(0, 0.55f, 0)), 1);
+
+	//Collision handling here, after movement
+	bool ceiling = false;
+	vec3 posadjust = vec3(0);
+
+	grounded = false;
+
+	//if we collided with something
+	if (collisionNormalSize > 0)
+	{
+		if (collisionNormalSize > 1)
+
+			int debug = 1;
+
+		bool ceiling = false;
+		for (int k = 0; k < collisionNormalSize; k++)
+		{
+			//push pos away and lower velocity using pendepth
+			vec3 pendepth = vec3(collisionNormals[k]) * collisionNormals[k].w;
+			if (collisionNormals[k].y < 0)
+				ceiling = true;
+
+			//ramp factor and grounded
+			if (collisionNormals[k].y > 0)
+			{
+				grounded = true;
+			}
+
+			// abslut value, if two collisions from the same angle they should not move us twice the distance
+			posadjust.x += pendepth.x;
+			if (posadjust.y * posadjust.y < pendepth.y * pendepth.y)
+				posadjust.y = pendepth.y;
+			posadjust.z += pendepth.z;
+		}
+
+		// this is for air only since grounded will set the vel to 0 later
+		// the dt * 0.5 is supposed to remove almost all velocity in that dir
+		// while + posajust w/o  /dt  will remove it slower
+		vel += posadjust;// / dt * 0.5f;
+
+		if (ceiling)
+			posadjust.y = 0;
+
+		pos += posadjust;
+
+		if (ceiling && vel.y > 0)
+			vel.y = 0;
 	}
 
 	if (freecam == false || specingThis == true)
@@ -229,7 +242,23 @@ void Player::modifiersGetData(float dt)
 
 void Player::setFootstepsCountdown()
 {
-	this->footstepsCountdown = 0.7;
+	if (this->role.getRole() == 2)
+	{
+		this->footstepsCountdown = 0.2;
+	}
+	else if (this->role.getRole() == 4)
+	{
+		this->footstepsCountdown = 0.29;
+	}
+	else if (this->role.getRole() == 1)
+	{
+		this->footstepsCountdown = 20;
+	}
+	else
+	{
+		this->footstepsCountdown = 0.7;
+	}
+
 }
 
 void Player::setFootstepsLoop(bool theBool)
@@ -254,7 +283,7 @@ void Player::modifiersSetData(float dt)
 
 void Player::cleanseModifiers(bool stickies)
 {
-	for (int c = myModifiers.size() - 1; c >= 0; c++)
+	for (int c = myModifiers.size() - 1; c >= 0; c--)
 	{
 		if (!stickies)
 		{
@@ -384,7 +413,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 					if (length(tempvec) > 0)
 					{
-						tempvec = normalize(tempvec) * role.getMovementSpeed();
+						tempvec = normalize(tempvec);
 						vel.x = tempvec.x;
 						vel.z = tempvec.y;
 					}
@@ -415,13 +444,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 				if (i->justPressed(GLFW_KEY_R))
 				{
-					if (this->role.getRole() == 0)
-						GetSound()->playUserGeneratedSound(SOUNDS::soundEffectTrapperReload);
-
-					role.getCurrentWeapon()->reload();
-					//play anim
-					if (checkAnimOverwrite(anim_first_current, AnimationState::first_primary_reload))
-						anim_first_current = AnimationState::first_primary_reload;
+					reloadCurrentWeapon();
 				}
 
 				if (i->justPressed(GLFW_KEY_1))
@@ -446,16 +469,23 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				{
 					if (role.getCurrentWeapon()->shoot())
 					{
-						msg = SHOOT;
-						if (role.getWeaponNRequiped() == 0) //main weapon
+						if (role.getCurrentWeapon()->getCurrentAmmo() == 0)
 						{
-							if (checkAnimOverwrite(anim_first_current, AnimationState::first_primary_fire))
-								anim_first_current = AnimationState::first_primary_fire;
+							reloadCurrentWeapon();
 						}
-						else // secondary fire
+						else
 						{
-							if (checkAnimOverwrite(anim_first_current, AnimationState::first_secondary_fire))
-								anim_first_current = AnimationState::first_secondary_fire;
+							msg = SHOOT;
+							if (role.getWeaponNRequiped() == 0) //main weapon
+							{
+								if (checkAnimOverwrite(anim_first_current, AnimationState::first_primary_fire))
+									anim_first_current = AnimationState::first_primary_fire;
+							}
+							else // secondary fire
+							{
+								if (checkAnimOverwrite(anim_first_current, AnimationState::first_secondary_fire))
+									anim_first_current = AnimationState::first_secondary_fire;
+							}
 						}
 					}
 				}
@@ -524,6 +554,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				//role.returnToLife();
 			}
 		}
+		movePlayer(dt, olddir, freecam, spectatingThisPlayer); //This moves the player regardless of what we might end up colliding with
 	} // end of local player check
 	else
 	{
@@ -548,31 +579,34 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			vel = glm::vec3(0, 0, 0);
 		}
 	}
+	clearCollisionNormals(); //Doesn't actually clear the array, just manually sets size to 0. This is to speed things up a little.
+	return msg;
+}
 
+void Player::movementUpdates(float dt, bool freecam, bool spectatingThisPlayer, bool spectating)
+{
 	/*
-	Kind of ugly, but I put it here so it interacts properly with movement-changing modifiers
+	This update loop has information about collisions, and as such will place the player in a legal position while maintaining frame-perfect collision data
+	aka we are no longer 1 frame desynced
+
+	In this update, we also take care of external forces such as explosions and gravity
 	*/
+
+	vec3 olddir = cam->getDir();
 	if (isLocalPlayer)
 	{
 		//ignore if we are spectating
 		if (currentTeam != 0)
 		{
-			if (!noclip)
-				applyGravity(dt);
+
+			movePlayerCollided(dt, olddir, freecam, spectatingThisPlayer);
+			modifiersSetData(dt);	//Dont Remove Again Please!
 
 			float lastHeight = pos.y;
 
-			grounded = false;
-
-			modifiersSetData(dt);	//Dont Remove Again Please!
-
-			collisionHandling(dt);	//Moves the player but shouldnt
-
 			//sets player rotations and cam
 
-			movePlayer(dt, olddir, freecam, spectatingThisPlayer); //does not move the player but should
-
-			// --- Animation checks ---
+		   // --- Animation checks ---
 
 			bool animGroundedLast = animGrounded;
 
@@ -647,13 +681,33 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		if (checkAnimOverwrite(anim_third_framePeak, anim_third_current))
 			anim_third_framePeak = anim_third_current;
 	}
+	else
+	{
+		/*
+		THIS IS NOT THE LOCAL PLAYER
+		*/
+		goalTimer += dt;
+		float t = goalTimer / interpolationTick;
 
+		if (t > 1.0f)
+			t = 1.0f;
+
+		pos = (oldPos * (1.0f - t)) + (goalpos * t);
+		glm::vec3 prev = dir;
+		dir = (oldDir * (1.0f - t)) + (goaldir * t);
+
+		rotatePlayer(prev, dir);
+
+		if (role.getHealth() == 0)
+		{
+			isDead = true;
+			vel = glm::vec3(0, 0, 0);
+		}
+	}
 	if (spectatingThisPlayer == true)
 	{
 		cam->setCam(pos, dir);
 	}
-
-	clearCollisionNormals(); //Doesn't actually clear the array, just manually sets size to 0. This is to speed things up a little.
 
 	worldMat[0].w = pos.x;
 	worldMat[1].w = pos.y; //head offset. player objects have their origo at their feet
@@ -668,8 +722,6 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 	{
 		worldMat[1].w -= 1.55f; // move down if 3rd person render
 	}
-
-	return msg;
 }
 
 void Player::rotatePlayer(vec3 olddir, vec3 newdir)
@@ -677,6 +729,25 @@ void Player::rotatePlayer(vec3 olddir, vec3 newdir)
 	float angle = atan2(newdir.x, newdir.z) - atan2(olddir.x, olddir.z);
 	rotate(0, -angle, 0);
 	dir = newdir;
+}
+
+void Player::reloadCurrentWeapon()
+{
+	if (!role.getCurrentWeapon()->getIfFullAmmo())
+	{
+		if (GetSound())
+		{
+			if (this->role.getRole() == 0)
+				GetSound()->playUserGeneratedSound(SOUNDS::soundEffectTrapperReload);
+		}
+
+		role.getCurrentWeapon()->reload();
+		//play anim
+		if (checkAnimOverwrite(anim_first_current, AnimationState::first_primary_reload))
+			anim_first_current = AnimationState::first_primary_reload;
+		role.getCurrentWeapon()->reload();
+	}
+
 }
 
 Weapon* Player::getPlayerCurrentWeapon()
@@ -726,9 +797,10 @@ void Player::hitByEffect(Effect* e, int newHPtotal)
 	}
 }
 
-void Player::applyGravity(float dt)
+void Player::applyGravity(float vel)
 {
-	physics->addGravity(vel, dt);
+	if (!grounded)
+		this->vel.y -= vel;
 }
 
 void Player::addModifier(MODIFIER_TYPE mt)
@@ -764,6 +836,12 @@ void Player::addModifier(MODIFIER_TYPE mt)
 	case MODIFIER_TYPE::SPRINTCONTROLLOCK:
 	{
 		m = new SprintControlLock;
+		myModifiers.push_back(m);
+	}
+	break;
+	case MODIFIER_TYPE::TRUEGRITMODIFIER:
+	{
+		m = new TrueGrit();
 		myModifiers.push_back(m);
 	}
 	break;

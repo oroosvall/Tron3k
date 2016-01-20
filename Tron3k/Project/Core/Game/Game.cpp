@@ -119,20 +119,49 @@ void Game::update(float dt)
 		if (playerList[c] != nullptr)
 		{
 			playerUpdate(c, dt);
+			if (playerList[c]->isLocal())
+				playerApplyForces(c, dt);
+
+			//TODO: Send collision results to player
 		}
 	}
 
 	if (gameState == Gamestate::ROAM)
 	{
-		//checkPlayerVWorldCollision(dt);
+		checkPlayerVWorldCollision(dt);
 		checkBulletVWorldCollision();
 	}
 
 	if (gameState == Gamestate::CLIENT)
 	{
 		checkPvPCollision();
-		//checkPlayerVWorldCollision(dt);
+		checkPlayerVWorldCollision(dt);
 		checkFootsteps(dt);
+	}
+
+
+
+	for (int c = 0; c < max_con; c++)
+	{
+		if (playerList[c] != nullptr)
+		{
+			bool spectatingThis = false;
+			bool spectating = false;
+			if (playerList[c]->isLocal())
+			{
+				
+				if (spectateID > -1)
+				{
+					spectating = true;
+					if (c == spectateID)
+						spectatingThis = true;
+				}
+				
+			}
+			if(playerList[c] != nullptr)
+				playerList[c]->movementUpdates(dt, freecam, spectatingThis, spectating);
+			//TODO: Send collision results to player
+		}
 	}
 
 	if (gameState == Gamestate::SERVER)
@@ -211,6 +240,11 @@ void Game::playerUpdate(int conid, float dt)
 	}
 }
 
+void Game::playerApplyForces(int conid, float dt)
+{
+	playerList[conid]->applyGravity(physics->addGravity(dt));
+}
+
 Player* Game::getPlayer(int conID)
 {
 	if (conID < max_con)
@@ -231,7 +265,7 @@ std::vector<Effect*> Game::getEffects(EFFECT_TYPE type)
 void Game::createPlayer(Player* p, int conID, bool isLocal)
 {
 	playerList[conID] = new Player();
-	playerList[conID]->init(p->getName(), p->getPos(), physics, isLocal);
+	playerList[conID]->init(p->getName(), p->getPos(), isLocal);
 	playerList[conID]->setTeam(p->getTeam());
 	playerList[conID]->setRole(*templateRole);
 	if (isLocal)
@@ -270,7 +304,7 @@ void Game::checkFootsteps(float dt)
 			{
 				playerList[i]->footstepsLoopReset(dt);
 			}
-			
+
 			if (playerList[i]->getFootsteps())
 			{
 				glm::vec3 pos;
@@ -281,7 +315,7 @@ void Game::checkFootsteps(float dt)
 				{
 					playerList[i]->setFootstepsCountdown();
 					playerList[i]->setFootstepsLoop(false);
-					if(GetSoundActivated())
+					if (GetSoundActivated())
 						GetSound()->playFootsteps(playerList[i]->getRole()->getRole(), pos.x, pos.y, pos.z);
 				}
 			}
@@ -327,14 +361,14 @@ void Game::checkPvPCollision()
 
 	//Checks collision between players
 	//TODO: improve so it just checks between ourselves and all other players, we don't care if two other players collided
-	glm::vec3 collides = glm::vec3(0,0,0);
+	glm::vec3 collides = glm::vec3(0, 0, 0);
 	for (int i = 0; i < max_con; i++)
 	{
-		collides = glm::vec3(0,0,0);
+		collides = glm::vec3(0, 0, 0);
 		if (playerList[i] != nullptr)
 			collides = physics->checkPlayerVPlayerCollision(localPPos, pPos[i]);
 
-		if (collides != glm::vec3(0,0,0))
+		if (collides != glm::vec3(0, 0, 0))
 		{
 
 			//here we can do things when two objects, collide, cause now we know i and j collided.
@@ -361,7 +395,7 @@ void Game::checkPvPCollision()
 
 void Game::checkPlayerVBulletCollision()
 {
-	glm::vec3 collides = glm::vec3(0,0,0);
+	glm::vec3 collides = glm::vec3(0, 0, 0);
 
 	for (int i = 0; i < max_con; i++)
 	{
@@ -372,7 +406,7 @@ void Game::checkPlayerVBulletCollision()
 			{
 				for (unsigned int j = 0; j < bullets[b].size(); j++)
 				{
-					collides = glm::vec3(0,0,0);
+					collides = glm::vec3(0, 0, 0);
 					if (bullets[b][j] != nullptr)
 					{
 						int pid = -1, bid = -1;
@@ -380,9 +414,9 @@ void Game::checkPlayerVBulletCollision()
 						if ((bullets[b][j]->getTeamId() != playerList[i]->getTeam() && playerList[i]->getTeam() != 0) || (playerList[pid]->getIfHacked() && pid != i)) //Don't shoot same team, don't shoot spectators
 						{
 							if (playerList[i]->isAlive()) //Don't shoot dead people
-								collides = physics->checkPlayerVBulletCollision(playerList[i]->getPos(), bullets[b][j]->getPos());
+								collides = physics->checkPlayerVBulletCollision(playerList[i]->getPos() - (vec3(0, playerList[i]->getRole()->getBoxModifier(), 0)), bullets[b][j]->getPos());
 						}
-						if (collides != glm::vec3(0,0,0))
+						if (collides != glm::vec3(0, 0, 0))
 						{
 							//Code for player on bullet collision goes here
 							/*
@@ -412,16 +446,38 @@ void Game::checkPlayerVBulletCollision()
 	}
 }
 
-void Game::checkPlayerVWorldCollision(float dt, int playerID)
+void Game::checkPlayerVWorldCollision(float dt)
 {
-	return;
+	int localP = -1;
+	for (int i = 0; i < max_con; i++)
+	{
+		if (playerList[i] != nullptr)
+			if (playerList[i]->isLocal())
+				localP = i;
+	}
+
+	if (localP != -1)
+	{
+
+		vec3 posadjust = vec3(0);
+		//lower with distance from eyes to center
+		std::vector<vec4> cNorms = physics->sphereVWorldCollision(playerList[localP]->getPos() - (vec3(0, playerList[localP]->getRole()->getBoxModifier(), 0)), 1);
+
+		//if we collided with something
+		if (cNorms.size() > 0)
+		{
+			playerList[localP]->setCollisionInfo(cNorms);
+
+			//Rest is handled by player
+		}
+	}
 }
 
 void Game::checkBulletVWorldCollision()
 {
 	/*
 	glm::vec3 collides = glm::vec3(0,0,0);
-	
+
 	for (unsigned int b = 0; b < BULLET_TYPE::NROFBULLETS; b++)
 	{
 		for (unsigned int j = 0; j < bullets[b].size(); j++)
@@ -448,7 +504,7 @@ void Game::checkBulletVWorldCollision()
 	// reflection test code
 
 	std::vector<glm::vec4> collides;
-	
+
 	for (unsigned int b = 0; b < BULLET_TYPE::NROFBULLETS; b++)
 	{
 		for (unsigned int j = 0; j < bullets[b].size(); j++)
@@ -644,6 +700,9 @@ void Game::addBulletToList(int conID, int bulletId, BULLET_TYPE bt, glm::vec3 po
 	case BULLET_TYPE::SHOTGUN_PELLET:
 		b = new ShotgunPellet(pos, dir, conID, bulletId, p->getTeam());
 		break;
+	case BULLET_TYPE::THERMITE_GRENADE:
+		b = new ThermiteGrenade(pos, dir, conID, bulletId, p->getTeam());
+		break;
 	case BULLET_TYPE::CLEANSE_BOMB:
 		b = new CleanseBomb(pos, dir, conID, bulletId, p->getTeam());
 		break;
@@ -705,6 +764,8 @@ void Game::handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm
 		addBulletToList(conID, bulletId, BULLET_TYPE::PLASMA_SHOT, pos, dir);
 		break;
 	case WEAPON_TYPE::ENERGY_SHIELD:
+		if (GetSound())
+			GetSound()->playExternalSound(SOUNDS::soundEffectShield, pos.x, pos.y, pos.z);
 		break;
 
 	case WEAPON_TYPE::DISC_GUN:
@@ -741,7 +802,7 @@ void Game::handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm
 				GetSound()->playExternalSound(SOUNDS::soundEffectLinkGun, pos.x, pos.y, pos.z);
 		addBulletToList(conID, bulletId, BULLET_TYPE::LINK_SHOT, pos, dir);
 		break;
-		
+
 	case WEAPON_TYPE::BATTERYFIELD_SLOW:
 		addBulletToList(conID, bulletId, BULLET_TYPE::BATTERY_SLOW_SHOT, pos, dir);
 		break;
@@ -776,7 +837,8 @@ void Game::handleConsumableUse(int conID, CONSUMABLE_TYPE ct, glm::vec3 pos, glm
 	case CONSUMABLE_TYPE::LIGHTSPEED:
 		playerList[conID]->addModifier(LIGHTSPEEDMODIFIER);
 		break;
-	case CONSUMABLE_TYPE::THUNDERDOME:
+	case CONSUMABLE_TYPE::THERMITEGRENADE:
+		addBulletToList(conID, 0, BULLET_TYPE::THERMITE_GRENADE, pos, dir);
 		break;
 	}
 }
@@ -795,39 +857,65 @@ void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec
 	Player* p = playerList[conID];
 	switch (st)
 	{
-		case SPECIAL_TYPE::LIGHTWALL:
+	case SPECIAL_TYPE::LIGHTWALL:
+	{
+		p->addModifier(MODIFIER_TYPE::LIGHTWALLCONTROLLOCK);
+		int arraypos = -1;
+		Effect* lwe = getSpecificEffect(conID, sID - 1, EFFECT_TYPE::LIGHT_WALL, arraypos);
+		addEffectToList(conID, sID, EFFECT_TYPE::LIGHT_WALL, pos);
+	}
+	break;
+	case SPECIAL_TYPE::MULTIJUMP:
+	{
+		vec3 vel = p->getVelocity();
+		if (vel.y < 0)
 		{
-			p->addModifier(MODIFIER_TYPE::LIGHTWALLCONTROLLOCK);
-			int arraypos = -1;
-			Effect* lwe = getSpecificEffect(conID, sID - 1, EFFECT_TYPE::LIGHT_WALL, arraypos);
-			addEffectToList(conID, sID, EFFECT_TYPE::LIGHT_WALL, pos);
+			vel.y = 8.0f;
 		}
-		break;
-
-		case SPECIAL_TYPE::MULTIJUMP:
+		else
 		{
-			vec3 vel = p->getVelocity();
-			if (vel.y < 0)
+			vel.y += 8.0f;
+		}
+		p->setVelocity(vel);
+	}
+	break;
+	case SPECIAL_TYPE::WALLJUMP:
+	{
+		int size = 0;
+		glm::vec4* cNorms = p->getCollisionNormalsForFrame(size);
+		bool jumped = false;
+		for (int c = 0; c < size && !jumped; c++)
+		{
+			if (cNorms[c].y < 0.2f && cNorms[c].y > -0.2f)
 			{
-				vel.y = 8.0f;
+				jumped = true;
+				glm::vec3 reflect = normalize(glm::vec3(cNorms[c].x, 0, cNorms[c].z));
+				glm::vec3 vel = p->getVelocity();
+				vel.y = 0;
+				vel = glm::reflect(vel, reflect);
+				vel.y = 10.0f;
+				vel.x *= 0.7;
+				vel.y *= 0.7;
+				p->setVelocity(vel);
 			}
-			else
-			{
-				vel.y += 8.0f;
-			}
-			p->setVelocity(vel);
 		}
-		break;
-		case SPECIAL_TYPE::HACKINGDARTSPECIAL:
-		{
-			addBulletToList(conID, 0, BULLET_TYPE::HACKING_DART, pos, dir);
-		}
-		break;
-		case SPECIAL_TYPE::SPRINTD:
-		{
-			p->addModifier(MODIFIER_TYPE::SPRINTCONTROLLOCK);
-		}
-		break;
+	}
+	break;
+	case SPECIAL_TYPE::HACKINGDARTSPECIAL:
+	{
+		addBulletToList(conID, 0, BULLET_TYPE::HACKING_DART, pos, dir);
+	}
+	break;
+	case SPECIAL_TYPE::SPRINTD:		// D = Destroyer
+	{
+		p->addModifier(MODIFIER_TYPE::SPRINTCONTROLLOCK);
+	}
+	break;
+	case SPECIAL_TYPE::DASH:
+	{
+		p->addModifier(MODIFIER_TYPE::TRUEGRITMODIFIER);
+	}
+	break;
 	}
 }
 
@@ -981,8 +1069,12 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 		break;
 	}
 	case BULLET_TYPE::VACUUM_GRENADE:
+		addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
+		effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(15.0f);
 		break;
-	case BULLET_TYPE::THUNDERDOME_GRENADE:
+	case BULLET_TYPE::THERMITE_GRENADE:
+		addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
+		effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(35.0f);
 		break;
 	}
 	delete bullets[bt][posInArray];

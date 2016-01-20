@@ -16,5 +16,8 @@ public:
 	void init();
 	int update(float deltaTime);
 
+	bool shoot();
+	bool reload();
+
 };
 #endif

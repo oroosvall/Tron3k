@@ -37,7 +37,13 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->soundList[SOUNDS::soundEffectMelee].loadFromFile("GameFiles/Sound/soundEffectMelee.ogg");
 		singleton->soundList[SOUNDS::soundFootSteps].loadFromFile("GameFiles/Sound/soundFootSteps.ogg");
 		singleton->soundList[SOUNDS::soundStepsManipulator].loadFromFile("GameFiles/Sound/SoundStepsManipulator.ogg");
-		singleton->soundList[SOUNDS::soundEffectTrapperReload].loadFromFile("GameFiles/Sound/soundEffectTrapperReload.ogg");
+		singleton->soundList[SOUNDS::soundEffectTrapperReload].loadFromFile("GameFiles/Sound/soundEffectTrapperReload2.ogg");
+		singleton->soundList[SOUNDS::soundEffectShield].loadFromFile("GameFiles/Sound/soundShield.ogg");
+		singleton->soundList[SOUNDS::soundEffectDiscBounce].loadFromFile("GameFiles/Sound/soundEffectDiscBounce.ogg");
+		singleton->soundList[SOUNDS::soundEffectBruteSteps].loadFromFile("GameFiles/Sound/soundEffectBruteSteps2.ogg");
+		singleton->soundList[SOUNDS::soundEffectShankerSteps].loadFromFile("GameFiles/Sound/soundEffectShankerSteps.ogg");
+		singleton->soundList[SOUNDS::soundEffectDestroyerSteps].loadFromFile("GameFiles/Sound/soundEffectDestroyerSteps.ogg");
+		singleton->soundList[SOUNDS::soundEffectClusterGrenade].loadFromFile("GameFiles/Sound/soundEffectClusterGrenadeExplosion.ogg");
 
 		initialized = true;
 	}
@@ -229,17 +235,18 @@ void SoundPlayer::playFootsteps(int role, float posX, float posY, float posZ)
 
 		if (role == 1)
 		{
-			playExternalSound(SOUNDS::soundFootSteps, posX, posY, posZ);
+			GetSound()->sounds[6].setLoop(true);
+			playExternalSound(SOUNDS::soundEffectDestroyerSteps, posX, posY, posZ);
 		}
 
 		if (role == 2)
 		{
-			playExternalSound(SOUNDS::soundFootSteps, posX, posY, posZ);
+			playExternalSound(SOUNDS::soundEffectShankerSteps, posX, posY, posZ);
 		}
 
 		if (role == 3)
 		{
-			playExternalSound(SOUNDS::soundFootSteps, posX, posY, posZ);
+			playExternalSound(SOUNDS::soundEffectBruteSteps, posX, posY, posZ);
 		}
 
 		if (role == 4)

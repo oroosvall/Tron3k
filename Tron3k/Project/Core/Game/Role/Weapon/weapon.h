@@ -35,5 +35,7 @@ class Weapon
 		void reset() { currentClipAmmo = maxClipSize; };
 
 		int getBulletId();
+		int getCurrentAmmo() { return currentClipAmmo; };
+		bool getIfFullAmmo() { return currentClipAmmo == maxClipSize; };
 };
 #endif

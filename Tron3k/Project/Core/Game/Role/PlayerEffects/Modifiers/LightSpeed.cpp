@@ -5,24 +5,28 @@ void LightSpeed::init(Player* myTarget)
 {
 	type = MODIFIER_TYPE::LIGHTSPEEDMODIFIER;
 	target = myTarget;
-
-	target->getRole()->setMovementSpeed(lightSpeed);
+	speed = vec3(1.5, 0.0, 1.5);
 }
 
 int LightSpeed::getData(float dt)
 {
-	timer -= dt;
-
-	if (timer <= 0)
-	{
-		target->getRole()->setMovementSpeed((atof(target->getRole()->getLoadedRoleSpecific(TRAPPER, MOVEMENTSPEED).c_str())));
-		return 1;
-	}
-
 	return 0;
 }
 
 int LightSpeed::setData(float dt)
 {
+	timer -= dt;
+
+	if (timer <= 0)
+	{
+		return 1;
+	}
+
+	glm::vec3 vel = target->getVelocity();
+
+	vel += speed * vel * dt;
+	vel.y = target->getVelocity().y;
+	target->setVelocity(vel);
+
 	return 0;
 }

@@ -30,6 +30,7 @@ enum PLAYERMSG { NONE, SHOOT, USEITEM, SPECIALUSE, MOBILITYUSE, WPNSWITCH, DEATH
 class Player : public GameObject
 {
 private:
+	//Physics* physics;
 	Role role;
 	bool lockControls = false;
 	bool noclip = false;
@@ -44,11 +45,11 @@ private:
 	float maxspeed = 5.0f;
 
 	glm::vec3 collisionVel; //How we ought to be moving based on our collisions
-	void collisionHandling(float dt);
 	void movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingThis);
+	void movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool specingThis);
 	bool grounded = false;
 
-	glm::vec3 collisionNormals[20];
+	glm::vec4 collisionNormals[20];
 	int collisionNormalSize = 0;
 	void clearCollisionNormals() { collisionNormalSize = 0; };
 
@@ -75,7 +76,6 @@ private:
 
 	Input* i;
 	CameraInput* cam;
-	Physics* physics;
 
 	vector<Modifier*> myModifiers;
 	void modifiersGetData(float dt); //Gets relevant data (if any) from the player before update occurs
@@ -84,10 +84,11 @@ private:
 	bool removeSpecificModifier(MODIFIER_TYPE mt);
 
 	void rotatePlayer(vec3 olddir, vec3 newdir);
+	void reloadCurrentWeapon();
 public:
 	Player();
 	~Player();
-	void init(std::string name, glm::vec3 pos, Physics* phy, bool isLocal = false);
+	void init(std::string name, glm::vec3 pos, bool isLocal = false);
 
 	void footstepsLoopReset(float dt);
 
@@ -96,12 +97,16 @@ public:
 	void setFootstepsLoop(bool);
 
 	PLAYERMSG update(float dt, bool freecam, bool spectatingThisPlayer, bool spectating);
+	void movementUpdates(float dt, bool freecam, bool spectatingThisPlayer, bool spectating);
 
 	void setName(std::string newName);
 	void setGoalPos(glm::vec3 newPos);
 	void setGoalDir(glm::vec3 newDir);
 
-	void applyGravity (float dt);
+
+	void setCollisionInfo(std::vector<glm::vec4> collNormals);
+	glm::vec4* getCollisionNormalsForFrame(int &size) { size = collisionNormalSize; return collisionNormals; };
+	void applyGravity (float vel);
 
 	AnimationState getAnimState_f_c() { return anim_first_current; };
 	AnimationState getAnimState_f_p() { return anim_first_framePeak; };
@@ -118,6 +123,7 @@ public:
 	{ 
 		this->pos = pos;
 	}
+	void setDir(glm::vec3 wantedDir) { dir = wantedDir; };
 	glm::vec3 getDir() { return dir; };
 	int getHP() { return role.getHealth(); };
 	void setHP(int HPfromServer) { role.setHealth(HPfromServer); }; //Used by client
@@ -136,7 +142,7 @@ public:
 	void setGrounded(bool grounded) { this->grounded = grounded; };
 	bool getGrounded() { return grounded; };
 
-	void addCollisionNormal(glm::vec3 cn) {if (collisionNormalSize < 20){
+	void addCollisionNormal(glm::vec4 cn) {if (collisionNormalSize < 20){
 			collisionNormals[collisionNormalSize] = cn; collisionNormalSize++;}
 		};
 

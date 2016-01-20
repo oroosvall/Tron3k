@@ -222,48 +222,52 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 	}
 }
 
+void ContentManager::renderMisc(int renderID)
+{
+	if (renderID == -3) //skybox
+	{
+		glDisable(GL_DEPTH_TEST);
+		//glEnable(GL_BLEND);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, blank_normal);
+
+		glActiveTexture(GL_TEXTURE0 + 1);
+		glBindTexture(GL_TEXTURE_2D, blank_normal);
+
+		glActiveTexture(GL_TEXTURE0 + 2);
+		glBindTexture(GL_TEXTURE_2D, blank_glow);
+
+		glBindVertexArray(skybox.vao);
+		glBindBuffer(GL_ARRAY_BUFFER, skybox.vbo);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, skybox.ibo);
+
+		glDrawElements(GL_TRIANGLES, skybox.faceCount * 3, GL_UNSIGNED_SHORT, 0);
+
+		glEnable(GL_DEPTH_TEST);
+		//glDisable(GL_BLEND);
+	}
+	else if (renderID == -2) //bullet
+	{
+		//glActiveTexture(GL_TEXTURE0);
+		//glBindTexture(GL_TEXTURE_2D, textures[10].textureID);
+		//
+		//glActiveTexture(GL_TEXTURE0 + 1);
+		//glBindTexture(GL_TEXTURE_2D, textures[8].textureID);
+		//
+		//glActiveTexture(GL_TEXTURE0 + 2);
+		//glBindTexture(GL_TEXTURE_2D, textures[11].textureID);
+
+		glBindVertexArray(bullet.vao);
+		glBindBuffer(GL_ARRAY_BUFFER, bullet.vbo);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bullet.ibo);
+
+		glDrawElements(GL_TRIANGLES, bullet.faceCount * 3, GL_UNSIGNED_SHORT, 0);
+	}
+}
+
 void ContentManager::renderPlayer(AnimManager::animState state, glm::mat4 world, GLuint uniformKeyMatrixLocation)
 {
-	//if (renderID == -3) //skybox
-	//{
-	//	glDisable(GL_DEPTH_TEST);
-	//	//glEnable(GL_BLEND);
-	//
-	//	glActiveTexture(GL_TEXTURE0);
-	//	glBindTexture(GL_TEXTURE_2D, blank_normal);
-	//	
-	//	glActiveTexture(GL_TEXTURE0 + 1);
-	//	glBindTexture(GL_TEXTURE_2D, blank_normal);
-	//	
-	//	glActiveTexture(GL_TEXTURE0 + 2);
-	//	glBindTexture(GL_TEXTURE_2D, blank_glow);
-	//
-	//	glBindVertexArray(skybox.vao);
-	//	glBindBuffer(GL_ARRAY_BUFFER, skybox.vbo);
-	//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, skybox.ibo);
-	//
-	//	glDrawElements(GL_TRIANGLES, skybox.faceCount * 3, GL_UNSIGNED_SHORT, 0);
-	//
-	//	glEnable(GL_DEPTH_TEST);
-	//	//glDisable(GL_BLEND);
-	//}
-	//else if (renderID == -2) //bullet
-	//{
-	//	//glActiveTexture(GL_TEXTURE0);
-	//	//glBindTexture(GL_TEXTURE_2D, textures[10].textureID);
-	//	//
-	//	//glActiveTexture(GL_TEXTURE0 + 1);
-	//	//glBindTexture(GL_TEXTURE_2D, textures[8].textureID);
-	//	//
-	//	//glActiveTexture(GL_TEXTURE0 + 2);
-	//	//glBindTexture(GL_TEXTURE_2D, textures[11].textureID);
-	//
-	//	glBindVertexArray(bullet.vao);
-	//	glBindBuffer(GL_ARRAY_BUFFER, bullet.vbo);
-	//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bullet.ibo);
-	//
-	//	glDrawElements(GL_TRIANGLES, bullet.faceCount * 3, GL_UNSIGNED_SHORT, 0);
-	//}
 
 	// ----------- Character Animations ---------- //
 	

@@ -57,8 +57,8 @@ vec4 CalcLightInternal(SpotLight l, vec3 LightDirection, vec3 Normal)
 		vec3 LightReflect = normalize(reflect(LightDirection, Normal));                     
 		float SpecularFactor = dot(VertexToEye, LightReflect);                              
 		SpecularFactor = pow(SpecularFactor, gSpecularPower);                               
-		if (SpecularFactor > 0)                                                           
-			SpecularColor = vec4(l.Color, 1.0f) * ( 1 - Normal0.w) * SpecularFactor; 				
+		if (SpecularFactor > 0)
+			SpecularColor = vec4(l.Color, 1.0f) * ( 1 - Normal0.w) * SpecularFactor;
 	}                                                                                                                                                                         
 	return (DiffuseColor + SpecularColor);                                   
 }               

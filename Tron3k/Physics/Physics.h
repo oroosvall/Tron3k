@@ -76,7 +76,7 @@ private:
 	glm::vec3 getCollisionNormal(AngledCylinder cylinder, OBB obb);
 	glm::vec3 getCollisionNormal(Sphere sphere, OBB obb);
 
-	vec4 Physics::sphereVSobbNorms(glm::vec3 pos, float rad, OBB* obb);
+	glm::vec4 getSpherevOBBNorms(glm::vec3 pos, float rad, OBB* obb);
 	//--------------//--------------//
 
 	void storeChunkBox(int chunkID, std::vector<AABB> cBox);
@@ -96,7 +96,7 @@ public:
 	virtual std::vector<glm::vec4> sphereVWorldCollision(glm::vec3 playerPos, float rad);
 	virtual glm::vec3 checkBulletVWorldCollision(glm::vec3 bulletPos);
 
-	virtual void addGravity(glm::vec3 &velocity, float dt);
+	virtual float addGravity(float dt);
 
 	virtual void receiveChunkBoxes(int chunkID, void* cBoxes);
 	virtual void receiveWorldBoxes(std::vector<std::vector<float>> wBoxes);

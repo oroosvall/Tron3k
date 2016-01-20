@@ -467,7 +467,7 @@ void RenderPipeline::renderMISC(int miscID, void* world, float* dgColor, float s
 	//set temp objects worldmat
 	glProgramUniformMatrix4fv(regularShader, worldMat[0], 1, GL_FALSE, (GLfloat*)world);
 
-	//contMan.renderPlayer(miscID, 0, *(glm::mat4*)world, uniformKeyMatrixLocation);
+	contMan.renderMisc(miscID);
 }
 
 void RenderPipeline::renderAnimation(int playerID, int roleID, void* world, AnimationState animState, float* dgColor, float sgInten)
