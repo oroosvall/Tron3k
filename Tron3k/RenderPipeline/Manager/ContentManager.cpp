@@ -10,11 +10,11 @@ void ContentManager::init()
 	f_render_abb = false;
 	f_render_obb = false;
 
-	playerModels = new PlayerObject[1];
-
 	blank_diffuse = loadTexture("GameFiles/Textures/blank_d.png");
 	blank_normal = loadTexture("GameFiles/Textures/blank_n.png");
 	blank_glow = loadTexture("GameFiles/Textures/blank_g.png");
+
+	skyTexture = loadTexture("GameFiles/TestFiles/skybox.jpg");
 
 	playerCharacters[0].load("GameFiles/CharacterFiles/Trapper/chr_trapper.bin");
 	int* lengths = playerCharacters[0].loadAnimations("");
@@ -39,15 +39,7 @@ void ContentManager::init()
 	}
 	glGenQueries(1, &portalQuery);
 
-	Mesh player;
-	player.init(0, 0, 0);
-	player.load("GhostBoss1.v");
-	
-	playerModels[0].meshID = player.vbo;
-	playerModels[0].vao = player.vao;
-	playerModels[0].index = player.ibo;
-	playerModels[0].facecount = player.faceCount;
-	
+		
 	bullet.init(0, 0, 0);
 	bullet.load("GameFiles/TestFiles/bullet.v");
 
@@ -68,11 +60,8 @@ void ContentManager::release()
 	glDeleteTextures(1, &blank_normal);
 	glDeleteTextures(1, &blank_glow);
 
-	glDeleteBuffers(1, &playerModels[0].meshID);
-	glDeleteBuffers(1, &playerModels[0].index);
-	glDeleteVertexArrays(1, &playerModels[0].vao);
-	
-	delete playerModels;
+	glDeleteTextures(1, &skyTexture);
+
 	testMap.release();
 
 	glDeleteQueries(1, &portalQuery);
@@ -230,7 +219,7 @@ void ContentManager::renderMisc(int renderID)
 		//glEnable(GL_BLEND);
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, blank_normal);
+		glBindTexture(GL_TEXTURE_2D, skyTexture);
 
 		glActiveTexture(GL_TEXTURE0 + 1);
 		glBindTexture(GL_TEXTURE_2D, blank_normal);

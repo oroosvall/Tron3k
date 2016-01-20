@@ -12,15 +12,6 @@
 #include "../../Project/Core/AnimationState.h"
 #include "AnimManager.h"
 
-struct PlayerObject
-{
-	GLuint meshID;
-	GLuint index;
-	GLuint vao;
-	int facecount;
-	GLuint textureID;
-};
-
 struct TextureLookup
 {
 	std::string textureName;
@@ -34,12 +25,13 @@ class ContentManager
 
 private:
 	//std::vector<TextureLookup> textures;
-	PlayerObject* playerModels;
 
 	//skybox
 	Mesh skybox;
 
 	Mesh bullet;
+
+	GLuint skyTexture;
 
 	GLuint portalQuery;
 
