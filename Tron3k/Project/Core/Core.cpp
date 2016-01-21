@@ -913,8 +913,12 @@ void Core::renderWorld(float dt)
 		CameraInput* cam = CameraInput::getCam();
 		vec3 camPos = cam->getPos();
 		vec3 camDir = cam->getDir();
-		//cam->setCam(vec3(25, 5, -7), vec3(-1, 0, 0));
-
+		bool force3rd = false;
+		if (i->getKeyInfo(GLFW_KEY_P))
+		{
+			cam->setCam(vec3(2, 7, 10), vec3(0, 0, -1));
+			force3rd = true;
+		}
 
 		//send chunk glowvalues
 		vec3 color = { 0.1, 0.1, 0.1 };
@@ -1009,7 +1013,7 @@ void Core::renderWorld(float dt)
 
 					
 					//If first person render
-					if (p->isLocal() && !game->freecam || game->spectateID == i)
+					if (!force3rd && p->isLocal() && !game->freecam || game->spectateID == i)
 					{
 						if(p->isLocal())   //use current anim
 							renderPipe->renderAnimation(i, p->getRole()->getRole(), &p->getFPSmat(), p->getAnimState_f_c(), dgColor, hpval, true);
@@ -1018,11 +1022,15 @@ void Core::renderWorld(float dt)
 					}
 					else
 					{
+						glm::mat4* playermat = p->getWorldMat();
+						if (force3rd)
+							playermat[0][1].w -= 1.55f;
+
 						if (p->isLocal()) //use current anim
-							renderPipe->renderAnimation(i, p->getRole()->getRole(), p->getWorldMat(), p->getAnimState_t_c(), dgColor, hpval, false);
+							renderPipe->renderAnimation(i, p->getRole()->getRole(), playermat, p->getAnimState_t_c(), dgColor, hpval, false);
 						else              //use peak anim
 
-							renderPipe->renderAnimation(i, p->getRole()->getRole(), p->getWorldMat(), p->getAnimState_t_p(), dgColor, hpval, false);
+							renderPipe->renderAnimation(i, p->getRole()->getRole(), playermat, p->getAnimState_t_p(), dgColor, hpval, false);
 					}
 				}
 			}
@@ -1058,8 +1066,9 @@ void Core::renderWorld(float dt)
 
 		renderPipe->finalizeRender();
 
-		//remove!
-		//cam->setCam(camPos, camDir);
+		//viewing 3rd person anims in roam
+		if (i->getKeyInfo(GLFW_KEY_P))
+			cam->setCam(camPos, camDir);
 	}
 }
 
