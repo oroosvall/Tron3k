@@ -1050,9 +1050,15 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 		{
 		case BULLET_TYPE::CLUSTER_GRENADE:
 			bounceBullet(hi, b);
+			if (GetSoundActivated())
+				GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+
+			
 			break;
 		case BULLET_TYPE::CLUSTERLING:
 			bounceBullet(hi, b);
+			if (GetSoundActivated())
+				GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
 			break;
 		case BULLET_TYPE::THERMITE_GRENADE:
 			bounceBullet(hi, b);
@@ -1114,6 +1120,9 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 
 			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
 			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(15.0f);
+
+			if (GetSoundActivated())
+				GetSound()->playExternalSound(SOUNDS::soundEffectClusterGrenade, parent->getPos().x, parent->getPos().y, parent->getPos().z);
 			break;
 		}
 		case BULLET_TYPE::CLUSTERLING:

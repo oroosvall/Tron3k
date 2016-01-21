@@ -23,6 +23,7 @@ enum SOUNDS
 	soundEffectVacuumGrenade,
 	soundAids,
 	power,
+	soundEffectGrenadeBounce,
 
 	soundEffectDestroyerStart,
 	soundEffectDestroyerStop,
