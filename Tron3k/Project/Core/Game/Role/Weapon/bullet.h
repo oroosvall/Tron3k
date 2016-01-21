@@ -37,7 +37,7 @@ public:
 	void setVel(glm::vec3 inVel);
 
 	void setPos(glm::vec3 newPos) { pos = newPos; };
-	void setDir(glm::vec3 newdir) { dir = newdir; };
+	void setDir(glm::vec3 newdir);
 	int getDamage() { return damage; };
 	int getType() { return type; };
 

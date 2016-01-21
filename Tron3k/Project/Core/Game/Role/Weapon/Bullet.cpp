@@ -51,3 +51,13 @@ void Bullet::setVel(glm::vec3 inVel)
 	else
 		vel = inVel;
 }
+
+void Bullet::setDir(glm::vec3 newdir)
+{
+	resetRotation();
+	double angleY = atan2(newdir.x, newdir.z) - atan2(0,0);
+	double angleX = acos(newdir.y);
+	rotate(float(angleX), float(-angleY), 0);
+
+	dir = newdir;
+}
