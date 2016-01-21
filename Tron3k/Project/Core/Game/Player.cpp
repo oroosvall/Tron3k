@@ -891,18 +891,15 @@ void Player::healing(int amount)
 	role.setHealth(role.getHealth() + amount);
 }
 
-bool Player::getIfHacked()
+bool Player::searchModifier(MODIFIER_TYPE search)
 {
-	bool hacked = false;
-
 	for (int i = 0; i < myModifiers.size(); i++)
-	{
-		if (myModifiers[i]->getType() == MODIFIER_TYPE::HACKINGDARTMODIFIER)
-			hacked = true;
-	}
+		if (myModifiers[i]->getType() == search)
+			return true;
 
-	return hacked;
+	return false;
 }
+
 
 glm::mat4 Player::getFPSmat()
 {

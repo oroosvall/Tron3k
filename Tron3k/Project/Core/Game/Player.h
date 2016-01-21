@@ -169,7 +169,7 @@ public:
 
 	glm::mat4 getFPSmat();
 
-	bool getIfHacked();
+	bool searchModifier(MODIFIER_TYPE search);
 };
 
 #endif

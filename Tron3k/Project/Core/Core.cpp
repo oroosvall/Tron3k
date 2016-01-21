@@ -990,13 +990,13 @@ void Core::renderWorld(float dt)
 			if (game->spectateID == -1)		//We are not spectating
 			{
 				if (top->is_client()) //server doenst have its own player
-					if(game->getPlayer(top->getConId())->getIfHacked())
+					if(game->getPlayer(top->getConId())->searchModifier(MODIFIER_TYPE::HACKINGDARTMODIFIER))
 						hackedTeam = game->getPlayer(top->getConId())->getTeam(); //if we are hacked
 			}
 			else
 			{
 				if (game->getPlayer(game->spectateID)->isAlive()) // didnt fix the crash issue when spectating a player with a active hacking dart that dies
-					if (game->getPlayer(game->spectateID)->getIfHacked())
+					if (game->getPlayer(game->spectateID)->searchModifier(MODIFIER_TYPE::HACKINGDARTMODIFIER))
 						hackedTeam = game->getPlayer(game->spectateID)->getTeam(); //if we are hacked
 			}
 		}
