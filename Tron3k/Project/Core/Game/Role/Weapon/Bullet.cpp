@@ -29,3 +29,25 @@ void Bullet::initValues(glm::vec3 position, glm::vec3 direction, int pID, int bI
 	double angleX = acos(direction.y);
 	rotate(float(angleX), float(-angleY), 0);
 }
+
+void Bullet::setVel(glm::vec3 inVel)
+{
+	if (vel.x < 0.5)
+	{
+		vel.x = 0.0f;
+		vel.z = 0.0f;
+		vel.y = 0.0f;
+	}
+	else if (vel.y < 0.5)
+	{
+		vel.y = 0.0f;
+	}
+	else if (vel.z < 0.5)
+	{
+		vel.x = 0.0f;
+		vel.z = 0.0f;
+		vel.y = 0.0f;
+	}
+	else
+		vel = inVel;
+}

@@ -4,7 +4,7 @@
 PlasmaShot::PlasmaShot(glm::vec3 position, glm::vec3 direction, int pID, int bID, int tID)
 {
 	initValues(position, direction, pID, bID, tID);
-	vel = 40.0f;
+	vel = glm::vec3(40.0f);
 	damage = 5;
 }
 

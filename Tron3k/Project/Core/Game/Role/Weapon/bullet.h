@@ -14,7 +14,7 @@ protected:
 	void initValues(glm::vec3 pos, glm::vec3 dir, int pID, int bID, int tID);
 	glm::vec3 pos;
 	glm::vec3 dir;
-	float vel;
+	glm::vec3 vel;
 	int damage;
 	float ttl = 8;
 
@@ -32,6 +32,10 @@ public:
 
 	glm::vec3 getPos() { return pos; };
 	glm::vec3 getDir() { return dir; };
+
+	glm::vec3 getVel() { return vel; };
+	void setVel(glm::vec3 inVel);
+
 	void setPos(glm::vec3 newPos) { pos = newPos; };
 	void setDir(glm::vec3 newdir) { dir = newdir; };
 	int getDamage() { return damage; };

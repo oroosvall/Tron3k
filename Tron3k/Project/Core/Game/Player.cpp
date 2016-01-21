@@ -619,7 +619,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			} // end of player input
 		} // end of lock control check
 
-		if (pos.y < -15.0f)	//If we fall through the map we die
+		if (pos.y < -15.0f && isLocalPlayer)	//If we fall through the map we die
 		{
 			role.setHealth(0);
 		}

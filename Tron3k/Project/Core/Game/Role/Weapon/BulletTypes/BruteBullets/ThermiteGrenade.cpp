@@ -5,7 +5,7 @@ ThermiteGrenade::ThermiteGrenade(glm::vec3 position, glm::vec3 direction, int pI
 {
 	initValues(position, direction, pID, bID, tID);
 	ttl = 1;
-	vel = 25.0f;
+	vel = glm::vec3(25.0f);
 	damage = 25;
 }
 

@@ -50,7 +50,7 @@ void BatteryFields::init()
 	firingSpeed = 0.0f;
 	firingSpeedCurrentDelay = 0;
 
-	reloadTime = 3.5f;
+	reloadTime = 1.0f;
 	rldTimer = 0;
 }
 

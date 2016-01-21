@@ -4,7 +4,7 @@
 CleanseBomb::CleanseBomb(glm::vec3 position, glm::vec3 direction, int pID, int bID, int tID)
 {
 	initValues(position, direction, pID, bID, tID);
-	vel = 30.0f;
+	vel = glm::vec3(30.0f);
 	damage = 10;
 }
 

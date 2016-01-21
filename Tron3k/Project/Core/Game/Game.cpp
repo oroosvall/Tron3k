@@ -1018,6 +1018,7 @@ void Game::bounceBullet(BulletHitWorldInfo hwi, Bullet* theBullet)
 	if (combinedNormal2 != glm::vec3(0, 0, 0))
 	{
 		combinedNormal2 = normalize(combinedNormal2);
+		
 		theBullet->setDir(reflect(theBullet->getDir(), combinedNormal2));
 
 		//use pendepth to set a new pos 
@@ -1039,6 +1040,7 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 	Bullet* b = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, arraypos);
 	if (b != nullptr)
 	{
+		vec3 temp;
 		switch (hi.bt)
 		{
 		case BULLET_TYPE::CLUSTER_GRENADE:
@@ -1055,6 +1057,14 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 			break;
 		case BULLET_TYPE::DISC_SHOT:
 			bounceBullet(hi, b);
+			break;
+		case BULLET_TYPE::GRENADE_SHOT:
+			bounceBullet(hi, b);
+			temp = b->getVel();
+			temp.x *= 0.6;
+			temp.y *= 0.6;
+			temp.z *= 0.6;
+			b->setVel(temp);
 			break;
 		default:
 			removeBullet(hi.bt, arraypos);
@@ -1082,47 +1092,56 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 
 	switch (bt)
 	{
-	case BULLET_TYPE::CLUSTER_GRENADE: //FUCKING EVERYTHING	
-	{
-		vec3 lingDir;
-		parent->getId(PID, BID);
-		lingDir = parent->getDir();
-		lingDir.x += 0.35f;
-		lingDir.z += 0.35f;
-		addBulletToList(PID, BID, CLUSTERLING, parent->getPos(), lingDir);
-		lingDir.x = -lingDir.x;
-		addBulletToList(PID, BID + 1, CLUSTERLING, parent->getPos(), lingDir);
-		lingDir.z = -lingDir.z;
-		addBulletToList(PID, BID + 2, CLUSTERLING, parent->getPos(), lingDir);
-		lingDir.x = -lingDir.x;
-		addBulletToList(PID, BID + 3, CLUSTERLING, parent->getPos(), lingDir);
+		case BULLET_TYPE::CLUSTER_GRENADE: //FUCKING EVERYTHING	
+		{
+			vec3 lingDir;
+			parent->getId(PID, BID);
+			lingDir = parent->getDir();
+			lingDir.x += 0.35f;
+			lingDir.z += 0.35f;
+			addBulletToList(PID, BID, CLUSTERLING, parent->getPos(), lingDir);
+			lingDir.x = -lingDir.x;
+			addBulletToList(PID, BID + 1, CLUSTERLING, parent->getPos(), lingDir);
+			lingDir.z = -lingDir.z;
+			addBulletToList(PID, BID + 2, CLUSTERLING, parent->getPos(), lingDir);
+			lingDir.x = -lingDir.x;
+			addBulletToList(PID, BID + 3, CLUSTERLING, parent->getPos(), lingDir);
 
-		addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
-		effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(15.0f);
-		break;
+			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
+			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(15.0f);
+			break;
+		}
+		case BULLET_TYPE::CLUSTERLING:
+		{
+			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
+			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(15.0f);
+			break;
+		}
+		case BULLET_TYPE::CLEANSE_BOMB:
+		{
+			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
+			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(15.0f);
+			break;
+		}
+		case BULLET_TYPE::VACUUM_GRENADE:
+		{
+			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
+			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(15.0f);
+			break;
+		}
+		case BULLET_TYPE::THERMITE_GRENADE:
+		{
+			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
+			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(35.0f);
+			break;
+		}
+		case BULLET_TYPE::GRENADE_SHOT:
+		{
+			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
+			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(35.0f);
+			break;
+		}
 	}
-	case BULLET_TYPE::CLUSTERLING:
-	{
-		addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
-		effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(15.0f);
-		break;
-	}
-	case BULLET_TYPE::CLEANSE_BOMB:
-	{
-		addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
-		effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(15.0f);
-		break;
-	}
-	case BULLET_TYPE::VACUUM_GRENADE:
-		addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
-		effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(15.0f);
-		break;
-	case BULLET_TYPE::THERMITE_GRENADE:
-		addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
-		effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(35.0f);
-		break;
-	}
-
 	delete bullets[bt][posInArray];
 	bullets[bt][posInArray] = bullets[bt][bullets[bt].size() - 1];
 	bullets[bt].pop_back();

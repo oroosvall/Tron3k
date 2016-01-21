@@ -4,7 +4,7 @@
 GrenadeShot::GrenadeShot(glm::vec3 position, glm::vec3 direction, int pID, int bID, int tID)
 {
 	initValues(position, direction, pID, bID, tID);
-	vel = 25.0f;
+	vel = glm::vec3(35.0f);
 	damage = 25.0f;
 }
 
@@ -14,6 +14,7 @@ GrenadeShot::~GrenadeShot()
 int GrenadeShot::update(float dt)
 {
 	pos += dir * vel * dt;
+	dir.y -= 0.5f * dt;
 
 	updateWorldMat();
 
@@ -23,3 +24,4 @@ int GrenadeShot::update(float dt)
 
 	return 0;
 }
+
