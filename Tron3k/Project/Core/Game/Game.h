@@ -118,6 +118,15 @@ private:
 	std::vector<EffectHitPlayerInfo> allEffectHitsOnPlayers;
 	std::vector<BulletHitWorldInfo> allBulletHitsOnWorld;
 
+	void checkPvPCollision();
+	void checkPlayerVBulletCollision();
+	void checkPlayerVWorldCollision(float dt);
+	void checkBulletVWorldCollision();
+	void checkBulletVEffectCollision();
+	void checkPlayerVEffectCollision();
+
+	void sendEffectBox(Effect* ef);
+
 	bool localPlayerWantsRespawn = false;
 	bool localPlayerRespawnWaiting = false;
 public:
@@ -146,11 +155,6 @@ public:
 
 	//Collision checks
 	Physics* getPhysics() { return physics; };
-
-	void checkPvPCollision();
-	void checkPlayerVBulletCollision();
-	void checkPlayerVWorldCollision(float dt);
-	void checkBulletVWorldCollision();
 
 	bool playerWantsToRespawn();
 	void allowPlayerRespawn(int p_conID, int respawnPosition);

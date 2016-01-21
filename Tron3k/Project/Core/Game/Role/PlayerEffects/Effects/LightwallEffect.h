@@ -12,7 +12,7 @@ private:
 	bool expandDong;
 
 public:
-	// orka göra funktion
+	// orka göra funktion - JA, Det orkar du, dine late faen
 	glm::vec3 playerVel;
 	glm::vec3 endPoint;
 
