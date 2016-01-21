@@ -19,7 +19,7 @@ void PlasmaAutorifle::init()
 
 	currentBulletId = 0;
 
-	firingSpeed = 0.05f;
+	firingSpeed = 0.1f;
 	firingSpeedCurrentDelay = 0.0f;
 
 	reloadTime = 2.5f;
