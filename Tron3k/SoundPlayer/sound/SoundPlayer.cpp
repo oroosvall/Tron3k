@@ -86,7 +86,7 @@ int SoundPlayer::playMapSounds()
 				return -1;
 			}
 			theCantinaSong.setPosition(10, 5, 10);
-			theCantinaSong.setAttenuation(3);
+			theCantinaSong.setAttenuation(1);
 			theCantinaSong.setVolume(20);
 			theCantinaSong.play();
 			theCantinaSong.setLoop(true);
@@ -94,12 +94,12 @@ int SoundPlayer::playMapSounds()
 			mapSounds[0].setBuffer(soundList[SOUNDS::soundAids]);
 			mapSounds[0].setPosition(-10, 5, -10);
 			mapSounds[1].setBuffer(soundList[SOUNDS::power]);
-			mapSounds[1].setPosition(-10, 5, 10);
+			mapSounds[1].setPosition(-10, 1.55, -50);
 			
 
 			for (int i = 0; i < MAXSOUNDS; i++)
 			{
-				mapSounds[i].setAttenuation(3);
+				mapSounds[i].setAttenuation(1);
 				mapSounds[i].setVolume(20);
 				mapSounds[i].setLoop(true);
 				mapSounds[i].play();
