@@ -95,20 +95,6 @@ void Core::update(float dt)
 
 	glfwSwapBuffers(win);
 
-
-	//TEMPORARY
-	static bool given = false;
-	if (game != nullptr && !given)
-	{
-		bool allchunksSent = false;
-		for (int i = 0; !allchunksSent; i++)
-		{
-			allchunksSent = sendChunkBoxes(i);
-		}
-		sendPlayerBox();
-		//sendWorldBoxes();
-		given = true;
-	}
 }
 
 void Core::upStart(float dt)
@@ -176,9 +162,12 @@ void Core::upRoam(float dt)
 		game->init(MAX_CONNECT, current);
 		//map loaded, fetch spawnpoints from render
 		renderPipe->getSpawnpoints(*game->getSpawnpoints());
-
+		// fetch all collision boxes
+		bool allchunksSent = false;
+		for (int i = 0; !allchunksSent; i++)
+			allchunksSent = sendChunkBoxes(i);
 		Player* p = new Player();
-		p->init("Roam", glm::vec3(0, 0, 0)/*, game->getPhysics()*/);
+		p->init("Roam", glm::vec3(0, 0, 0));
 		game->createPlayer(p, 0, true);
 		game->freecam = true;
 		delete p;
@@ -197,6 +186,9 @@ void Core::upRoam(float dt)
 
 		//Command and message handle
 		roamHandleCmds();
+		//if /disconnected command was entered
+		if (game == nullptr)
+			return;
 
 		//update game
 		game->update(dt);
@@ -279,6 +271,10 @@ void Core::upClient(float dt)
 				game->init(MAX_CONNECT, current);
 				//map loaded, fetch spawnpoints from render
 				renderPipe->getSpawnpoints(*game->getSpawnpoints());
+				// fetch all collision boxes
+				bool allchunksSent = false;
+				for (int i = 0; !allchunksSent; i++)
+					allchunksSent = sendChunkBoxes(i);
 				top->setGamePtr(game);
 				subState++;
 				return; //On sucsess
@@ -430,7 +426,10 @@ void Core::upServer(float dt)
 		game->init(MAX_CONNECT, current);
 		//map loaded, fetch spawnpoints from render
 		renderPipe->getSpawnpoints(*game->getSpawnpoints());
-
+		// fetch all collision boxes
+		bool allchunksSent = false;
+		for (int i = 0; !allchunksSent; i++)
+			allchunksSent = sendChunkBoxes(i);
 		game->freecam = true;
 		//load map
 
@@ -595,10 +594,10 @@ void Core::roamHandleCmds()
 		{
 			console.printMsg("Console commands", "", ' ');
 			console.printMsg("/name " + _name, "", ' ');
-			console.printMsg("/players", "", ' ');
 			console.printMsg("/free (turns freecam on/off)", "", ' ');
-			console.printMsg("/spec <Number> (spectate player id)", "", ' ');
 			console.printMsg("/rs  show render settings", "", ' ');
+			console.printMsg("/disconnect", "", ' ');
+
 		}
 		else if (token == "/name")
 		{
@@ -680,6 +679,8 @@ void Core::roamHandleCmds()
 			else if (token == "obb")
 				renderPipe->setRenderFlag(RENDER_OBB);
 		}
+		else if (token == "/disconnect")
+			disconnect();
 	}
 }
 
@@ -1261,7 +1262,8 @@ bool Core::windowVisible() const
 void Core::disconnect()
 {
 	saveSettings();
-	delete top;
+	if(top)
+		delete top;
 	top = nullptr;
 	game->release();
 	game = nullptr;
