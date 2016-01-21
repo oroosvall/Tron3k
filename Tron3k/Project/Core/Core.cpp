@@ -1081,9 +1081,9 @@ void Core::renderWorld(float dt)
 			{
 				LightwallEffect* derp = (LightwallEffect*)eff[i];
 
-				renderPipe->renderWallEffect(&derp->pos, &derp->getEndPoint(), herpderpOffset);
+				renderPipe->renderWallEffect(&derp->getPos(), &derp->getEndPoint(), herpderpOffset);
 
-				herpderpOffset += glm::distance(derp->pos, derp->getEndPoint());
+				herpderpOffset += glm::distance(derp->getPos(), derp->getEndPoint());
 			}
 		}
 
