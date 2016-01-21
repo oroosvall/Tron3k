@@ -12,6 +12,8 @@
 #include "../../Project/Core/AnimationState.h"
 #include "AnimManager.h"
 
+#include "../Mesh/MiscMesh.h"
+
 struct TextureLookup
 {
 	std::string textureName;
@@ -35,9 +37,12 @@ private:
 
 	GLuint portalQuery;
 
-	//trapper files
+	//character files
 	AnimatedMeshV2 playerCharacters[5];
 
+	// misc files
+
+	MiscMesh trapperBullet;
 
 	struct TriangleVertex
 	{

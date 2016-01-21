@@ -160,6 +160,7 @@
     <ClCompile Include="Mesh\AnimatedMesh_v2.cpp" />
     <ClCompile Include="mesh\AnimationData.cpp" />
     <ClCompile Include="Mesh\Mesh.cpp" />
+    <ClCompile Include="Mesh\MiscMesh.cpp" />
     <ClCompile Include="Mesh\StaticMesh.cpp" />
     <ClCompile Include="RenderPipeline.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -183,6 +184,7 @@
     <ClInclude Include="Mesh\AnimatedMesh_v2.h" />
     <ClInclude Include="Mesh\AnimationData.h" />
     <ClInclude Include="Mesh\Mesh.h" />
+    <ClInclude Include="Mesh\MiscMesh.h" />
     <ClInclude Include="Mesh\StaticMesh.h" />
     <ClInclude Include="RenderPipeline.h" />
     <ClInclude Include="Shader.h" />

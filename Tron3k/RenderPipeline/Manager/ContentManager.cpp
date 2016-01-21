@@ -34,6 +34,7 @@ void ContentManager::init()
 		keyFrameLengths[2 * AnimationState::none + i] = lengths[i];
 	}
 
+	trapperBullet.load("GameFiles/CharacterFiles/primary_trapper.bin");
 
 	//Skybox
 	skybox.init(0, 0, 0);
@@ -102,6 +103,9 @@ void ContentManager::release()
 	{
 		playerCharacters[i].release();
 	}
+
+	trapperBullet.release();
+
 }
 
 ContentManager::~ContentManager()
@@ -257,12 +261,7 @@ void ContentManager::renderMisc(int renderID)
 		//
 		//glActiveTexture(GL_TEXTURE0 + 2);
 		//glBindTexture(GL_TEXTURE_2D, textures[11].textureID);
-
-		glBindVertexArray(bullet.vao);
-		glBindBuffer(GL_ARRAY_BUFFER, bullet.vbo);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bullet.ibo);
-
-		glDrawElements(GL_TRIANGLES, bullet.faceCount * 3, GL_UNSIGNED_SHORT, 0);
+		trapperBullet.draw();
 	}
 }
 
