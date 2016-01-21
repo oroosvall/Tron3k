@@ -71,6 +71,56 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 		this->footstepsLoopReset(dt);
 	}
 
+	glm::vec3 playerVel = vec3(0);
+	playerVel.x = vel.x*role.getMovementSpeed();
+	playerVel.z = vel.z*role.getMovementSpeed();
+	playerVel.y = vel.y;
+	pos += playerVel * dt; //Here we will also include external forces.. EDIT: External forces moved, for now
+	/*vec3 posadjust = vec3(0);
+
+	if (grounded)
+	{
+		for (int k = 0; k < collisionNormalSize; k++)
+		{
+			if (collisionNormals[k].y > 0.5f)
+			{
+				break;
+			}
+		}
+	}
+
+	if (collisionNormalSize > 0)
+	{
+		bool ceiling = false;
+		for (int k = 0; k < collisionNormalSize; k++)
+		{
+			//push pos away and lower velocity using pendepth
+			vec3 pendepth = vec3(collisionNormals[k]) * collisionNormals[k].w;
+			if (collisionNormals[k].y < 0)
+				ceiling = true;
+
+			//ramp factor and grounded
+			if (collisionNormals[k].y > 0.5f)
+			{
+				grounded = true;
+				posadjust.x += pendepth.x;
+				if (posadjust.y * posadjust.y < pendepth.y * pendepth.y)
+					posadjust.y = pendepth.y;
+				else
+					posadjust.y = -pendepth.y;
+				posadjust.z += pendepth.z;
+			}
+
+			// abslut value, if two collisions from the same angle they should not move us twice the distance
+
+		}
+
+		// this is for air only since grounded will set the vel to 0 later
+		// the dt * 0.5 is supposed to remove almost all velocity in that dir
+		// while + posajust w/o  /dt  will remove it slower
+		vel += posadjust;// / dt * 0.5f;
+	}
+	*/
 	if (vel.x != 0 || vel.z != 0)
 	{
 
@@ -96,107 +146,6 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 			GetSound()->stopDestroyer(pos.x, pos.y, pos.z);
 		}
 	}
-
-
-
-	glm::vec3 playerVel = vec3(0);
-	playerVel.x = vel.x*role.getMovementSpeed();
-	playerVel.z = vel.z*role.getMovementSpeed();
-	playerVel.y = vel.y;
-	pos += playerVel * dt; //Here we will also include external forces.. EDIT: External forces moved, for now
-	vec3 posadjust = vec3(0);
-
-	if (collisionNormalSize > 0)
-	{
-		if (collisionNormalSize > 1)
-
-			int debug = 1;
-
-		bool ceiling = false;
-		for (int k = 0; k < collisionNormalSize; k++)
-		{
-			//push pos away and lower velocity using pendepth
-			vec3 pendepth = vec3(collisionNormals[k]) * collisionNormals[k].w;
-			if (collisionNormals[k].y < 0)
-				ceiling = true;
-
-			//ramp factor and grounded
-			if (collisionNormals[k].y > 0)
-			{
-				grounded = true;
-				posadjust.x += pendepth.x;
-				if (posadjust.y * posadjust.y < pendepth.y * pendepth.y)
-					posadjust.y = pendepth.y;
-				posadjust.z += pendepth.z;
-				break;
-			}
-
-			// abslut value, if two collisions from the same angle they should not move us twice the distance
-			
-		}
-
-		// this is for air only since grounded will set the vel to 0 later
-		// the dt * 0.5 is supposed to remove almost all velocity in that dir
-		// while + posajust w/o  /dt  will remove it slower
-		vel += posadjust;// / dt * 0.5f;
-	}
-
-	//get normals
-	//std::vector<vec4> cNorms = physics->sphereVWorldCollision(pos - (vec3(0, 0.55f, 0)), 1);
-
-	/*//Collision handling here, after movement
-	bool ceiling = false;
-	vec3 posadjust = vec3(0);
-
-	grounded = false;
-
-	//if we collided with something
-	if (cNorms.size() > 0)
-	{
-		if (cNorms.size() > 1)
-
-			int debug = 1;
-
-		bool ceiling = false;
-		for (int k = 0; k < cNorms.size(); k++)
-		{
-			//push pos away and lower velocity using pendepth
-			vec3 pendepth = vec3(cNorms[k]) * cNorms[k].w;
-			if (cNorms[k].y < 0)
-				ceiling = true;
-
-			//ramp factor and grounded
-			if (cNorms[k].y > 0)
-			{
-				grounded = true;
-			}
-
-			// abslut value, if two collisions from the same angle they should not move us twice the distance
-			posadjust.x += pendepth.x;
-			if (posadjust.y * posadjust.y < pendepth.y * pendepth.y)
-				posadjust.y = pendepth.y;
-			posadjust.z += pendepth.z;
-		}
-
-		// this is for air only since grounded will set the vel to 0 later
-		// the dt * 0.5 is supposed to remove almost all velocity in that dir
-		// while + posajust w/o  /dt  will remove it slower
-		vel += posadjust;// / dt * 0.5f;
-
-		if (ceiling)
-			posadjust.y = 0;
-
-		pos += posadjust;
-
-		if (ceiling && vel.y > 0)
-			vel.y = 0;
-	}
-
-	if (freecam == false || specingThis == true)
-	{
-		cam->setCam(pos);
-		rotatePlayer(oldDir, dir);
-	}*/
 }
 
 void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool specingThis)
@@ -209,15 +158,12 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 	vec3 posadjust = vec3(0);
 
 	grounded = false;
-	collided = false;
+	
 
 	//if we collided with something
 	if (collisionNormalSize > 0)
 	{
 		collided = true;
-		if (collisionNormalSize > 1)
-
-			int debug = 1;
 
 		bool ceiling = false;
 		for (int k = 0; k < collisionNormalSize; k++)
@@ -228,7 +174,7 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 				ceiling = true;
 
 			//ramp factor and grounded
-			if (collisionNormals[k].y > 0)
+			if (collisionNormals[k].y > 0.5f)
 			{
 				grounded = true;
 			}
@@ -245,13 +191,18 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 		// while + posajust w/o  /dt  will remove it slower
 		vel += posadjust;// / dt * 0.5f;
 
-		if (ceiling)
-			posadjust.y = 0;
-
+		//if (ceiling)
+		//	posadjust.y = 0;
+		posadjust = posadjust * 0.99f;
 		pos += posadjust;
 
 		if (ceiling && vel.y > 0)
 			vel.y = 0;
+	}
+	else
+	{
+		collided = false;
+		airVelocity = vel;
 	}
 
 	if (freecam == false || specingThis == true)

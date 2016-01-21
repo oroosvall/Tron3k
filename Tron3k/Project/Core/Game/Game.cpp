@@ -176,6 +176,7 @@ void Game::update(float dt)
 			}
 			if(playerList[c] != nullptr)
 				playerList[c]->movementUpdates(dt, freecam, spectatingThis, spectating);
+			
 			//TODO: Send collision results to player
 		}
 	}
