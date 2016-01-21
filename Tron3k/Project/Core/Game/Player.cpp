@@ -157,10 +157,11 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 	bool ceiling = false;
 	vec3 posadjust = vec3(0);
 
-	grounded = false;
+	
 	
 
 	//if we collided with something
+	int * collS = &collisionNormalSize;
 	if (collisionNormalSize > 0)
 	{
 		collided = true;
@@ -174,6 +175,7 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 				ceiling = true;
 
 			//ramp factor and grounded
+			grounded = false;
 			if (collisionNormals[k].y > 0.5f)
 			{
 				grounded = true;
@@ -203,6 +205,7 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 	{
 		collided = false;
 		airVelocity = vel;
+		grounded = false;
 	}
 
 	if (freecam == false || specingThis == true)
@@ -603,6 +606,8 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 		modifiersSetData(dt);	//Dont Remove Again Please!
 		movePlayer(dt, olddir, freecam, spectatingThisPlayer); //This moves the player regardless of what we might end up colliding with
+
+		clearCollisionNormals(); //Doesn't actually clear the array, just manually sets size to 0. This is to speed things up a little.
 	} // end of local player check
 	else
 	{
@@ -627,7 +632,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			vel = glm::vec3(0, 0, 0);
 		}
 	}
-	clearCollisionNormals(); //Doesn't actually clear the array, just manually sets size to 0. This is to speed things up a little.
+	
 	return msg;
 }
 

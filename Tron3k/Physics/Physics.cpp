@@ -1,5 +1,4 @@
 #include "Physics.h"
-
 //#include <vld.h>
 
 Physics::Physics()
@@ -58,9 +57,9 @@ vec3 Physics::checkAABBvAABBCollision(Geometry* obj1, Geometry* obj2)
 
 bool Physics::checkAABBvAABBCollision(AABB* mesh1, AABB* mesh2)
 {
-	if (mesh1->max.x > mesh2->min.x && mesh1->min.x < mesh2->max.x)//x
-		if (mesh1->max.y > mesh2->min.y && mesh1->min.y < mesh2->max.y)//y
-			if (mesh1->max.z > mesh2->min.z && mesh1->min.z < mesh2->max.z)//y
+	if (mesh1->max.x + FLT_EPSILON >= mesh2->min.x - FLT_EPSILON && mesh1->min.x - FLT_EPSILON <= mesh2->max.x + FLT_EPSILON)//x
+		if (mesh1->max.y + FLT_EPSILON >= mesh2->min.y - FLT_EPSILON && mesh1->min.y - FLT_EPSILON <= mesh2->max.y + FLT_EPSILON)//y
+			if (mesh1->max.z + FLT_EPSILON >= mesh2->min.z - FLT_EPSILON && mesh1->min.z - FLT_EPSILON <= mesh2->max.z + FLT_EPSILON)//y
 				return true;
 
 	return false;
@@ -359,7 +358,7 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb)
 {
 	vec4 t;
 	vec4 closest;
-	closest.w = 9999999999.0f;
+	closest.w = FLT_MAX;
 
 	//test vs all planes
 	for (int n = 0; n < 6; n++)
@@ -389,7 +388,7 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb)
 	
 	//if we found a line intersection it will always be closer
 	//than all the corner intersections
-	if (closest.w < 9999999999.0f)
+	if (closest.w < FLT_MAX)
 		return closest;
 
 	vec3 test;
@@ -518,7 +517,7 @@ std::vector<vec4> Physics::sphereVWorldCollision(vec3 playerPos, float rad)
 				{
 					t = getSpherevOBBNorms(playerPos, rad, &worldBoxes[i][j].boundingBox.ObbBoxes[n]);
 					t.w = rad - t.w; //penetration depth instead of collision distance 
-					if (t.w > 0 && t.w < rad)
+					if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 					{
 						t = vec4(normalize(vec3(t)), t.w);
 						cNorms.push_back(t);
