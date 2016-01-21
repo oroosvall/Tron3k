@@ -76,7 +76,7 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 	playerVel.z = vel.z*role.getMovementSpeed();
 	playerVel.y = vel.y;
 	pos += playerVel * dt; //Here we will also include external forces.. EDIT: External forces moved, for now
-	/*vec3 posadjust = vec3(0);
+	vec3 posadjust = vec3(0);
 
 	if (grounded)
 	{
@@ -84,11 +84,18 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 		{
 			if (collisionNormals[k].y > 0.5f)
 			{
+				/*
+				Project old position to the floor.
+				Project new position to the floor.
+				Check difference in Y between the two.
+				Move player up/down that distance.
+				*/
 				break;
 			}
 		}
 	}
-
+	
+	/*
 	if (collisionNormalSize > 0)
 	{
 		bool ceiling = false;
