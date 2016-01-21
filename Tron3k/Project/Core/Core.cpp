@@ -72,6 +72,16 @@ void Core::update(float dt)
 	glfwPollEvents();
 	console.update(_name, 'A'); //Updates to check for new messages and commands
 
+	if (i->justPressed(GLFW_KEY_6))
+		playbackSpeed += 0.1f;
+	if (i->justPressed(GLFW_KEY_5))
+		playbackSpeed -= 0.1f;
+
+	if (playbackSpeed < 0.0f)
+		playbackSpeed = 0;
+
+	dt *= playbackSpeed;
+
 	switch (current)
 	{
 	case START:		upStart(dt);	break;
