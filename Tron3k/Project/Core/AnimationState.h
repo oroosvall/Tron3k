@@ -130,11 +130,6 @@ bool static checkAnimOverwrite(AnimationState current, AnimationState test)
 		return true;
 	}
 		
-
-	//a higher anim index always cancles out current anim
-	if (current < test)
-		return true;
-
 	// if test is smalled than current we have to compare ranks because it may still cancle out current
 	if (getAnimRank(current) <= getAnimRank(test))
 		return true;
@@ -142,6 +137,11 @@ bool static checkAnimOverwrite(AnimationState current, AnimationState test)
 	return false;
 };
 
+void static animOverideIfPriority(AnimationState& current, AnimationState test)
+{
+	if (checkAnimOverwrite(current, test))
+		current = test;
+}
 
 
 #endif
