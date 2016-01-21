@@ -51,7 +51,11 @@ void Game::init(int max_connections, int state)
 
 	loadRoles();
 	initPhysics();
-
+	if(GetSoundActivated())
+	{
+		GetSound()->playMapSounds();
+	}
+	
 	gameState = state;
 
 	playerList = new Player*[max_con];

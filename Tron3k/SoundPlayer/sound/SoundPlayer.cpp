@@ -47,6 +47,9 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->soundList[SOUNDS::soundEffectDestroyerStop].loadFromFile("GameFiles/Sound/soundEffectDestroyerStop.ogg");
 		singleton->soundList[SOUNDS::soundEffectDestroyerStart].loadFromFile("GameFiles/Sound/soundEffectDestroyerStart.ogg");
 		singleton->soundList[SOUNDS::soundEffectVacuumGrenade].loadFromFile("GameFiles/Sound/soundEffectVacuumGrenade.ogg");
+		singleton->soundList[SOUNDS::soundAids].loadFromFile("GameFiles/Sound/soundAids.ogg");
+		singleton->musicList[MUSIC::cantinaSong] = "GameFiles/Sound/cantinaSong.ogg";
+		singleton->soundList[SOUNDS::power].loadFromFile("GameFiles/Sound/Power.ogg");
 
 		initialized = true;
 	}
@@ -65,6 +68,47 @@ SoundPlayer::SoundPlayer()
 SoundPlayer::~SoundPlayer()
 {
 	
+}
+
+int SoundPlayer::playMapSounds()
+{
+	{
+		if (soundEnabler == 1 && initialized == 1)
+		{
+
+			/*if (musicPlayer.getStatus() == sf::Sound::Playing)
+			{
+				theCantinaSong.stop();
+			}*/
+
+			if (!theCantinaSong.openFromFile(musicList[cantinaSong]))
+			{
+				return -1;
+			}
+			theCantinaSong.setPosition(10, 5, 10);
+			theCantinaSong.setAttenuation(3);
+			theCantinaSong.setVolume(20);
+			theCantinaSong.play();
+			theCantinaSong.setLoop(true);
+			
+			mapSounds[0].setBuffer(soundList[SOUNDS::soundAids]);
+			mapSounds[0].setPosition(-10, 5, -10);
+			mapSounds[1].setBuffer(soundList[SOUNDS::power]);
+			mapSounds[1].setPosition(-10, 5, 10);
+			
+
+			for (int i = 0; i < MAXSOUNDS; i++)
+			{
+				mapSounds[i].setAttenuation(3);
+				mapSounds[i].setVolume(20);
+				mapSounds[i].setLoop(true);
+				mapSounds[i].play();
+			}
+		}
+
+		return 0;
+	}
+
 }
 
 void SoundPlayer::enableSounds()
@@ -128,8 +172,6 @@ int SoundPlayer::playDestroyer(float x, float y, float z)
 	if (soundEnabler && initialized == 1)
 	{
 		playDestroyerStart(x, y, z);
-
-		sf::Listener::setDirection(playerDir.x, playerDir.y, playerDir.z);			//Set the direction of the player
 		if (sf::Listener::getPosition().x > x - 0.1 && sf::Listener::getPosition().x < x + 0.1)
 		{
 			if (sf::Listener::getPosition().z > z - 0.1 && sf::Listener::getPosition().z < z + 0.1)
@@ -167,8 +209,6 @@ int SoundPlayer::playDestroyerStop(float x, float y, float z)
 
 	if (soundEnabler && initialized == 1)
 	{
-
-		sf::Listener::setDirection(playerDir.x, playerDir.y, playerDir.z);			//Set the direction of the player
 		if (sf::Listener::getPosition().x > x - 0.1 && sf::Listener::getPosition().x < x + 0.1)
 		{
 			if (sf::Listener::getPosition().z > z - 0.1 && sf::Listener::getPosition().z < z + 0.1)
@@ -206,8 +246,6 @@ int SoundPlayer::playDestroyerStart(float x, float y, float z)
 
 	if (soundEnabler && initialized == 1)
 	{
-
-		sf::Listener::setDirection(playerDir.x, playerDir.y, playerDir.z);			//Set the direction of the player
 		if (sf::Listener::getPosition().x > x - 0.1 && sf::Listener::getPosition().x < x + 0.1)
 		{
 			if (sf::Listener::getPosition().z > z - 0.1 && sf::Listener::getPosition().z < z + 0.1)
@@ -244,8 +282,6 @@ int SoundPlayer::playExternalSound(int sound, float x, float y, float z)
 {
 	if (soundEnabler && initialized == 1)
 	{
-
-		sf::Listener::setDirection(playerDir.x, playerDir.y, playerDir.z);			//Set the direction of the player
 		if (sf::Listener::getPosition().x > x - 0.1 && sf::Listener::getPosition().x < x + 0.1)
 		{
 			if (sf::Listener::getPosition().z > z - 0.1 && sf::Listener::getPosition().z < z + 0.1)
@@ -280,7 +316,7 @@ int SoundPlayer::playExternalSound(int sound, float x, float y, float z)
 
 void SoundPlayer::setLocalPlayerDir(glm::vec3 playerDir)
 {
-	this->playerDir = playerDir;
+	sf::Listener::setDirection(playerDir.x, playerDir.y, playerDir.z);
 }
 
 void SoundPlayer::setLocalPlayerPos(glm::vec3 playerPos)

@@ -33,6 +33,7 @@ private:
 	float footstepsCountdown = 0;
 
 	sf::Sound sounds[MAXSOUNDS];
+	sf::Sound mapSounds[MAXSOUNDS];
 	sf::Sound destroyerSteps;
 	sf::Sound destroyerStop;
 	sf::Sound destroyerStart;
@@ -40,6 +41,7 @@ private:
 	string musicList[MUSIC::nrOfMusic];
 
 	sf::Music musicPlayer;	//Streams big sound files
+	sf::Music theCantinaSong;
 
 	sf::SoundBuffer soundBuffer;
 
@@ -61,6 +63,9 @@ public:
 	virtual void setLocalPlayerDir(glm::vec3 playerDir);
 	virtual void setLocalPlayerPos(glm::vec3 playerPos);
 	virtual int playMusic(int music);
+
+	virtual int playMapSounds();
+
 
 	virtual int playExternalSound(int sound, float posX, float posY, float posZ);
 	virtual int playUserGeneratedSound(int sound);

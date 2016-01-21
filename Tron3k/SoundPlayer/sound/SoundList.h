@@ -21,7 +21,9 @@ enum SOUNDS
 	soundEffectShankerSteps,
 	soundEffectClusterGrenade,
 	soundEffectVacuumGrenade,
-	
+	soundAids,
+	power,
+
 	soundEffectDestroyerStart,
 	soundEffectDestroyerStop,
 	soundEffectDestroyerSteps,
@@ -31,6 +33,7 @@ enum SOUNDS
 enum MUSIC
 {
 	mainMenu,
+	cantinaSong,
 
 	nrOfMusic
 };
