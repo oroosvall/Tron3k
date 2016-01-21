@@ -12,6 +12,7 @@
 
 #include "Collision\Geometry.h"
 #include "Collision\CollideMesh.h"
+#include "Effect\EffectMesh.h"
 #include<vector>
 #include<iterator>
 
@@ -33,7 +34,7 @@ class Physics
 private:
 	//General physics components will go here, and things will be added as we go
 	std::vector<std::vector<CollideMesh>> worldBoxes; //each CollideMesh is an ABB, and the vector is all CollideMeshes in the chunk
-	std::vector<CollideMesh> effectBoxes;
+	std::vector<EffectMesh> effectBoxes;
 	CollideMesh playerBox;
 	CollideMesh bulletBox;
 
@@ -61,6 +62,10 @@ private:
 	glm::vec3 checkCylindervCylinderCollision(CollideMesh mesh1, CollideMesh mesh2);
 	glm::vec3 checkCylindervSphereCollision(CollideMesh mesh1, CollideMesh mesh2);
 	glm::vec3 checkAngledCylindervSphereCollision(CollideMesh mesh1, CollideMesh mesh2);
+	//--------------//--------------//
+
+	//-------Sphere Collision-------//
+	glm::vec3 checkSpherevSphereCollision(CollideMesh mesh1, CollideMesh mesh2);
 	//--------------//--------------//
 
 	//--------Line Collision--------//
@@ -91,19 +96,23 @@ public:
 	virtual bool init();
 	virtual bool release();
 
-	virtual glm::vec3 normalize(glm::vec3 &vec3);
+	virtual glm::vec3 normalize(glm::vec3 vec3);
+
+	virtual bool removeEffect(int effID) { return false; }; //SKRIV EN FUNKTIONSFAN
 	
 	virtual glm::vec3 checkPlayerVPlayerCollision(glm::vec3 playerPos1, glm::vec3 playerPos2);
 	virtual glm::vec3 checkPlayerVBulletCollision(glm::vec3 playerPos, glm::vec3 bulletPos);
 	virtual std::vector<glm::vec4> sphereVWorldCollision(glm::vec3 playerPos, float rad);
 	virtual glm::vec3 checkBulletVWorldCollision(glm::vec3 bulletPos);
+	virtual glm::vec3 checkPlayerVEffectCollision(glm::vec3 playerPos, float rad);
+	virtual glm::vec3 checkBulletVEffectCollision(glm::vec3 bulletPos);
 
 	virtual float addGravity(float dt);
 
 	virtual void receiveChunkBoxes(int chunkID, void* cBoxes);
 	virtual void receiveWorldBoxes(std::vector<std::vector<float>> wBoxes);
 	virtual void receivePlayerBox(std::vector<float> pBox);
-	virtual void receiveEffectBox(std::vector<float> eBox);
+	virtual void receiveEffectBox(std::vector<float> eBox, unsigned int etype, int pID, int eID);
 };
 
 extern "C" PHYSICS_API Physics* CreatePhysics();

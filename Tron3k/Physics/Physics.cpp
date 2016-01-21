@@ -178,6 +178,14 @@ vec3 Physics::checkAngledCylindervSphereCollision(CollideMesh mesh1, CollideMesh
 }
 //--------------//--------------//
 
+//-------Sphere Collision-------//
+glm::vec3 Physics::checkSpherevSphereCollision(CollideMesh mesh1, CollideMesh mesh2)
+{
+	glm::vec3 collided = glm::vec3(0, 0, 0);
+	return collided;
+}
+//--------------//--------------//
+
 float Physics::checkLinevPlaneCollision(vec3 l1, vec3 l2, vec3 p1, vec3 p2, vec3 p3)
 {
 	vec3 p = vec3(0, 0, 0);
@@ -196,7 +204,7 @@ float Physics::checkLinevPlaneCollision(vec3 l1, vec3 l2, vec3 p1, vec3 p2, vec3
 	if (dot(l, p) == 0)
 		return -1;
 
-	x = (dot(p2-l1, p) / (dot(l3, p)));
+	x = (dot(p2 - l1, p) / (dot(l3, p)));
 
 	if (x >= 0 && x <= 1)
 		return x;
@@ -348,7 +356,7 @@ std::vector<vec3> Physics::getCollisionNormal(AABB* aabb1, AABB* aabb2)
 	{
 		//Left plane collision
 		collideX = true;
- 		norms.push_back(vec3(-collides1, 0, 0));
+		norms.push_back(vec3(-collides1, 0, 0));
 	}
 
 	return norms;
@@ -366,10 +374,10 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb)
 		// send inverse plane normal as dir
 		// t.w will be distance to the wall -1 if no wall was close enough
 		t = obb->planes[n].intersects(pos, -obb->planes[n].n, rad);
-		
+
 		// if a valid intersection found
 		//plane intersection will always be closer than all other intersections on the obb
-		if (t.w > 0) 
+		if (t.w > 0)
 		{
 			return t;
 		}
@@ -380,12 +388,12 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb)
 	for (int n = 0; n < 12; n++)
 	{
 		t = obb->lines[n].sphere_intersects(pos, rad);
-	
+
 		if (t.w > 0)
 			if (t.w < closest.w) // a new closest dist was found
 				closest = t;
 	}
-	
+
 	//if we found a line intersection it will always be closer
 	//than all the corner intersections
 	if (closest.w < FLT_MAX)
@@ -483,7 +491,7 @@ vec3 Physics::checkPlayerVBulletCollision(vec3 playerPos, vec3 bulletPos)
 	vec3 collide = vec3(0, 0, 0);// checkAABBCollision(playerBox, bulletBox);
 
 	if (checkAABBvAABBCollision(&playerBox.boundingBox, &bulletBox.boundingBox))
-		return normalize( playerPos - bulletPos);
+		return normalize(playerPos - bulletPos);
 
 	return collide;
 }
@@ -535,7 +543,7 @@ vec3 Physics::checkBulletVWorldCollision(vec3 bulletPos)
 	vec3 collides = vec3(0, 0, 0);
 
 	vec3 size = vec3(0.2f, 0.2f, 0.2f);
-	bulletBox.setAABB(bulletPos, bulletPos + size, bulletPos -size);
+	bulletBox.setAABB(bulletPos, bulletPos + size, bulletPos - size);
 
 	for (unsigned int i = 0; i < worldBoxes.size(); i++)
 	{
@@ -550,12 +558,23 @@ vec3 Physics::checkBulletVWorldCollision(vec3 bulletPos)
 	return collides;
 }
 
+vec3 Physics::checkPlayerVEffectCollision(glm::vec3 playerPos, float rad)
+{
+
+	return vec3(0, 0, 0);
+}
+
+vec3 Physics::checkBulletVEffectCollision(glm::vec3 bulletPos)
+{
+	return vec3(0, 0, 0);
+}
+
 float Physics::addGravity(float dt)
 {
 	return GRAVITY * dt;
 }
 
-vec3 Physics::normalize(vec3 &vec3)
+vec3 Physics::normalize(vec3 vec3)
 {
 	float len = abs(vec3.x) + abs(vec3.y) + abs(vec3.z);
 
@@ -570,7 +589,7 @@ vec3 Physics::normalize(vec3 &vec3)
 
 }
 
-void Physics::receiveEffectBox(std::vector<float> eBox)
+void Physics::receiveEffectBox(std::vector<float> eBox, unsigned int etype, int pID, int eID)
 {
 	//sphere
 	//obb
@@ -586,12 +605,102 @@ void Physics::receiveEffectBox(std::vector<float> eBox)
 	5 = y2
 	6 = z2
 	*/
+	CollideMesh temp;
 
-	glm::vec3 pos;
+	AABB aabb;
 	if (eBox.size() > 4)
 	{
 		//OBB
-		pos.x = eBox[0];
+		glm::vec3 pos1;
+		glm::vec3 pos2;
+		pos1.x = eBox[0];
+		pos1.y = eBox[1];
+		pos1.z = eBox[2];
+
+		pos2.x = eBox[4];
+		pos2.y = eBox[5];
+		pos2.z = eBox[6];
+
+		glm::vec3 pos, max, min;
+
+		pos = (pos1 + pos2) / 2.0f;
+
+		if (pos1.x > pos2.x)
+		{
+			max.x = pos1.x;
+			min.x = pos2.x;
+		}
+		else
+		{
+			max.x = pos2.x;
+			min.x = pos1.x;
+		}
+
+		if (pos1.z > pos2.z)
+		{
+			max.z = pos1.z;
+			min.z = pos2.z;
+		}
+		else
+		{
+			max.z = pos2.z;
+			min.z = pos1.z;
+		}
+
+		max.y = pos.y + eBox[3];
+		min.y = pos.y - eBox[3];
+
+		OBBloaded obbl;
+
+		obbl.corners[0] = vec4(min, 1.0f);
+		obbl.corners[1] = vec4(max.x, min.y, max.z, 1.0f);
+		obbl.corners[2] = vec4(min.x, max.y, max.z, 1.0f);
+		obbl.corners[3] = vec4(max, 1.0f);
+		obbl.corners[4] = vec4(max.x, min.y, min.z, 1.0f);
+		obbl.corners[5] = vec4(max.x, max.y, min.z, 1.0f);
+		obbl.corners[6] = vec4(min.x, min.y, max.z, 1.0f);
+		obbl.corners[7] = vec4(max.x, min.y, min.z, 1.0f);
+
+		float angle;
+
+		vec3 centeredPos1 = pos1 - pos;
+		vec3 centeredPos2 = pos2 - pos;
+
+		vec2 x = vec2(1, 0);
+		vec2 normCentPos2 = glm::normalize(vec2(centeredPos2.x, centeredPos2.z));
+		angle = dot(x, normCentPos2);
+		angle = acos(angle);
+
+		vec2 centPos1Angled = vec2(centeredPos1.x, centeredPos1.z);
+		vec2 centPos2Angled = vec2(centeredPos2.x, centeredPos2.z);
+
+		centPos1Angled.x = centeredPos1.x * cos(-angle) - centeredPos1.z * sin(-angle);
+		centPos1Angled.y = centeredPos1.z * sin(-angle) + centeredPos1.x * cos(-angle);
+
+		centPos2Angled.x = centeredPos2.x * cos(-angle) - centeredPos2.z * sin(-angle);
+		centPos2Angled.y = centeredPos2.z * sin(-angle) + centeredPos2.x * cos(-angle);
+
+		/*
+		Skapa 8 punkter från centpos1Angled & 2
+		splitta punkterna med en tottal ofset på 0.5, dvs 0.25, i y/z-led (y i vec2, z i vec3)
+		rotera tillbaks ALLA 8 punkter
+		gör om de till vec3s igen
+		lägg på originalpos
+		mata in i obbl
+		we done here
+
+		BUT OPVER THERE THO
+		lägg in SpherevSphere
+		lägg in i Game att mata in effekter till physics
+		i Physics::receiveEffectBox så ska du lägga in inmatning av lådorna
+		där du har fler instruktioner för om det är obb eller sphere, dvs i den hör funktionen
+		i checkPlayervEffect & checkBulletvEffect ska du skapa collisioner, spherevObb & spherevSphere
+		skicka tillbaks collisionsträffar till game, med pid och eid och e-type (africa)
+		*/
+
+		OBB obb;
+		obb.init(&obbl);
+		aabb.ObbBoxes.push_back(obb);
 	}
 	else
 	{

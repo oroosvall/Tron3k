@@ -243,7 +243,7 @@ class CollideMesh
 private:
 	
 	Cylinder cylinder;
-
+	Sphere sphere;
 	void getCylinderFromAABB();
 public:
 	AABB boundingBox;
@@ -261,6 +261,9 @@ public:
 	
 	void setCylinder(vec3 pos, float radius, float height);
 	Cylinder getCylinder();
+
+	void setSphere(vec3 pos, float radius);
+	Sphere getSphere();
 
 	void setPos(vec3 pos);
 };

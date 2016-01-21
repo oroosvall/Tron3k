@@ -84,6 +84,17 @@ Cylinder CollideMesh::getCylinder()
 	return cylinder;
 }
 
+void CollideMesh::setSphere(glm::vec3 pos, float radius)
+{
+	sphere.pos = pos;
+	sphere.radius = radius;
+}
+
+Sphere CollideMesh::getSphere()
+{
+	return sphere;
+}
+
 void CollideMesh::getCylinderFromAABB()
 {
 	cylinder.pos = glm::vec3(boundingBox.pos);
