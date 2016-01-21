@@ -896,7 +896,12 @@ void Player::movementAnimationChecks(float dt)
 				animOverideIfPriority(anim_third_current, AnimationState::third_primary_run_rev);
 
 			else //run forward
+			{
 				animOverideIfPriority(anim_third_current, AnimationState::third_primary_run);
+				if (role.getRole() == ROLES::MOBILITY)
+					if (searchModifier(MODIFIER_TYPE::LIGHTSPEEDMODIFIER))
+						animOverideIfPriority(anim_third_current, AnimationState::third_shankbot_charge);
+			}	
 		}
 	}
 	else //if in air
