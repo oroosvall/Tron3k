@@ -379,6 +379,10 @@ void Core::upClient(float dt)
 			}
 
 			//send animstates
+			if (local->getAnimState_t_p() == AnimationState::none)
+			{
+				int k = 0;
+			}
 			top->frame_anim(top->getConId(), local->getAnimState_f_p(), local->getAnimState_t_p());
 			local->setAnimState_f_p(AnimationState::first_primary_idle);
 			local->setAnimState_t_p(AnimationState::third_primary_idle);

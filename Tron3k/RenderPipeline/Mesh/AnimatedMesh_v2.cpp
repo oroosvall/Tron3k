@@ -233,6 +233,10 @@ int* AnimatedMeshV2::loadAnimations(std::string character)
 	animations[AnimationState::third_primary_death].load(file + "_third_death.bin");
 	animations[AnimationState::third_primary_air].load(file + "_third_jumpAir.bin");
 	animations[AnimationState::third_primary_run].load(file + "_third_run.bin");
+	animations[AnimationState::third_primary_run_rev].load(file + "_third_runbackwards.bin");
+	if(strcmp(character.c_str(), "shanker") == 0)
+		animations[AnimationState::third_shankbot_charge].load(file + "_third_specialattack.bin");
+	animations[AnimationState::third_primary_switch].load(file + "_third_switch.bin");
 	animations[AnimationState::third_primary_strafe_left].load(file + "_third_strafeLeft.bin");
 	animations[AnimationState::third_primary_strafe_right].load(file + "_third_strafeRight.bin");
 	animations[AnimationState::third_primary_jump_begin].load(file + "_third_jumpIn.bin");

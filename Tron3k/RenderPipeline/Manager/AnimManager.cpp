@@ -12,6 +12,7 @@ void AnimManager::updateAnimStates(int playerID, int role, AnimationState curren
 	{
 		overide = true;
 		animStates[playerID].role = role;
+		animStates[playerID].state = AnimationState::none;
 	}
 
 	if (getAnimRank(animStates[playerID].state) == 2 && current == AnimationState::none)

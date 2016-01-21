@@ -599,6 +599,8 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				respawnTimer = 0.0f;
 				msg = PLAYERRESPAWN;
 				//role.returnToLife();
+				//anim_third_current = AnimationState::none;
+				//anim_first_current = AnimationState::none;
 			}
 		}
 
@@ -957,10 +959,14 @@ void Player::movementAnimationChecks(float dt)
 
 	animGroundedLast = grounded;
 
-	//frame peak overide
-	if (checkAnimOverwrite(anim_first_framePeak, anim_first_current))
-		anim_first_framePeak = anim_first_current;
 
-	if (checkAnimOverwrite(anim_third_framePeak, anim_third_current))
-		anim_third_framePeak = anim_third_current;
+	animOverideIfPriority(anim_third_framePeak, anim_third_current);
+	animOverideIfPriority(anim_first_framePeak, anim_first_current);
+
+	//frame peak overide
+	//if (checkAnimOverwrite(anim_first_framePeak, anim_first_current))
+	//	anim_first_framePeak = anim_first_current;
+	//
+	//if (checkAnimOverwrite(anim_third_framePeak, anim_third_current))
+	//	anim_third_framePeak = anim_third_current;
 }
