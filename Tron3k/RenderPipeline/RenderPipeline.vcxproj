@@ -170,6 +170,7 @@
     <ClInclude Include="BlitQuad.h" />
     <ClInclude Include="Buffer\GBuffer.h" />
     <ClInclude Include="Buffer\RenderTarget.h" />
+    <ClInclude Include="Buffer\VertexBufferUI.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="defines.h" />
     <ClInclude Include="IRenderPipeline.h" />

@@ -135,6 +135,23 @@ void Core::upStart(float dt)
 
 void Core::upMenu(float dt)
 {
+	switch (subState)
+	{
+	case 0: //init
+	{
+		uiManager = new UIManager();
+		uiManager->init("menuFilesNames.txt");
+
+		//Call render
+
+		subState++;
+		break;
+	}
+	case 1: //Waits for events
+		//Get the mouse click positions.
+		//Use a switch for the different options in the menu.
+		break;
+	}
 	//MENU
 
 	//menu opitons

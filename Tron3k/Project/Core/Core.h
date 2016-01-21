@@ -20,6 +20,8 @@
 
 #include "CameraInput.h"
 
+#include "ui\UIManager.h"
+
 #include <fstream> //load settings
 #include <sstream>
 
@@ -37,6 +39,8 @@ private:
 	Console console;
 
 	CameraInput* serverCam;
+
+	UIManager* uiManager;
 
 	// window
 	GLFWwindow* win;

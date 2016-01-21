@@ -85,6 +85,12 @@
     <Filter Include="Source Files\Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets">
       <UniqueIdentifier>{a98a3185-d679-4bf1-8ba3-ba2350c050c4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Core\Ui\uiManagers">
+      <UniqueIdentifier>{2ce13bdb-3112-4518-9482-07e5f8169590}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\Ui\uiVisionClasses">
+      <UniqueIdentifier>{5fc18abf-b9b9-47af-85e7-b5175798e939}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -258,6 +264,27 @@
     <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\BruteBullets\ThermiteGrenade.cpp">
       <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\BruteBullets</Filter>
     </ClCompile>
+    <ClCompile Include="Core\ui\UI.cpp">
+      <Filter>Source Files\Core\Ui\uiManagers</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\ui\UIManager.cpp">
+      <Filter>Source Files\Core\Ui\uiManagers</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\ui\Button.cpp">
+      <Filter>Source Files\Core\Ui\uiVisionClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\ui\DynamicTextBox.cpp">
+      <Filter>Source Files\Core\Ui\uiVisionClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\ui\InputBox.cpp">
+      <Filter>Source Files\Core\Ui\uiVisionClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\ui\Slider.cpp">
+      <Filter>Source Files\Core\Ui\uiVisionClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\ui\staticBox.cpp">
+      <Filter>Source Files\Core\Ui\uiVisionClasses</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Input.h">
@@ -280,9 +307,6 @@
     </ClInclude>
     <ClInclude Include="Network\Topology.h">
       <Filter>Source Files\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\ui\Ui.h">
-      <Filter>Source Files\Core\Ui</Filter>
     </ClInclude>
     <ClInclude Include="Core\Game\Game.h">
       <Filter>Source Files\Core\Game</Filter>
@@ -463,6 +487,27 @@
     </ClInclude>
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\BruteBullets\ThermiteGrenade.h">
       <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\BruteBullets</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\ui\UI.h">
+      <Filter>Source Files\Core\Ui\uiManagers</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\ui\UIManager.h">
+      <Filter>Source Files\Core\Ui\uiManagers</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\ui\Button.h">
+      <Filter>Source Files\Core\Ui\uiVisionClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\ui\DynamicTextBox.h">
+      <Filter>Source Files\Core\Ui\uiVisionClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\ui\InputBox.h">
+      <Filter>Source Files\Core\Ui\uiVisionClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\ui\Slider.h">
+      <Filter>Source Files\Core\Ui\uiVisionClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\ui\staticBox.h">
+      <Filter>Source Files\Core\Ui\uiVisionClasses</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

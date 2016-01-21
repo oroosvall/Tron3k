@@ -152,5 +152,8 @@
     <ClInclude Include="Mesh\AnimationData.h">
       <Filter>Source Files\Mesh</Filter>
     </ClInclude>
+    <ClInclude Include="Buffer\VertexBufferUI.h">
+      <Filter>Source Files\Buffers</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
