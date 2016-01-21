@@ -14,6 +14,11 @@ void AnimManager::updateAnimStates(int playerID, int role, AnimationState curren
 		animStates[playerID].role = role;
 	}
 
+	if (getAnimRank(animStates[playerID].state) == 2 && current == AnimationState::none)
+	{
+		overide = true;
+	}
+
 	if (overide) // replace animation with the new one
 	{
 		setAnim(animStates[playerID], current);
@@ -55,7 +60,10 @@ void AnimManager::updateAnimStates(int playerID, int role, AnimationState curren
 		{
 			animStates[playerID].frame = animStates[playerID].frameEnd * index;
 			if (animStates[playerID].frame >= animStates[playerID].frameEnd)
-				animStates[playerID].frame = 0;
+				if(rank != 2)
+					animStates[playerID].frame = 0;
+				else
+					animStates[playerID].frame = animStates[playerID].frameEnd-1;
 		}
 		if (animStates[playerID].timeout)
 			animStates[playerID].frame = animStates[playerID].frameEnd-1;
@@ -67,6 +75,7 @@ void AnimManager::setAnim(animState& current, AnimationState overide)
 {
 	if (keyFrameLenghts[current.role*AnimationState::none + overide] == 0)
 	{
+		if(overide != AnimationState::none)
 		return;
 	}
 	int role = current.role;

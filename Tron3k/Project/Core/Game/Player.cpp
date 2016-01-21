@@ -131,7 +131,7 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 			GetSound()->playFootsteps(this->role.getRole(), pos.x, pos.y, pos.z);
 		}
 
-		if (this->role.getRole() == 1 && GetSound()->destroyerPaused == true)
+		if (this->role.getRole() == 1 && GetSoundActivated() && GetSound()->destroyerPaused == true)
 		{
 
 			GetSound()->playFootsteps(this->role.getRole(), pos.x, pos.y, pos.z);
@@ -141,7 +141,7 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 
 	else
 	{
-		if (this->role.getRole() == 1 && GetSound()->destroyerPaused == false)
+		if (this->role.getRole() == 1 && GetSoundActivated() && GetSound()->destroyerPaused == false)
 		{
 			GetSound()->stopDestroyer(pos.x, pos.y, pos.z);
 		}
@@ -332,6 +332,10 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 	vec3 olddir = cam->getDir();
 	if (isLocalPlayer) // even if we are the local player we can be dead and spectating some one
 	{
+		//default movement anims
+		anim_first_current = AnimationState::first_primary_idle;
+		anim_third_current = AnimationState::third_primary_idle;
+
 		if (i->justPressed(GLFW_KEY_ENTER))
 		{
 			if (lockControls)
@@ -850,15 +854,10 @@ void Player::respawn(glm::vec3 respawnPos, glm::vec3 _dir)
 	rotatePlayer(vec3(0, 0, 1), _dir);
 	pos = respawnPos;
 
-	setAnimState_f_c(AnimationState::first_primary_idle);
-	setAnimState_f_p(AnimationState::first_primary_idle);
-	setAnimState_t_c(AnimationState::third_primary_idle);
-	setAnimState_t_p(AnimationState::third_primary_idle);
-
-	/*anim_first_current = AnimationState();
-	anim_first_framePeak= AnimationState();
-	anim_third_current = AnimationState();
-	anim_third_framePeak = AnimationState();*/
+	setAnimState_f_c(AnimationState::none);
+	setAnimState_f_p(AnimationState::none);
+	setAnimState_t_c(AnimationState::none);
+	setAnimState_t_p(AnimationState::none);
 
 	worldMat[0].w = pos.x;
 	worldMat[1].w = pos.y;
@@ -913,10 +912,6 @@ void Player::movementAnimationChecks(float dt)
 	}
 	if (animAirTimer > 0.3f)
 		animGrounded = false;
-	
-	//default movement anims
-	anim_first_current = AnimationState::first_primary_idle;
-	anim_third_current = AnimationState::third_primary_idle;
 
 	if (grounded)
 	{

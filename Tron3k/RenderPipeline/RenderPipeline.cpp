@@ -484,11 +484,11 @@ void RenderPipeline::renderAnimation(int playerID, int roleID, void* world, Anim
 	//set temp objects worldmat
 	glProgramUniformMatrix4fv(animationShader, worldMat[1], 1, GL_FALSE, (GLfloat*)world);
 
+	anims.updateAnimStates(playerID, roleID, animState, delta);
+
 	contMan.renderPlayer(anims.animStates[playerID], *(glm::mat4*)world, uniformKeyMatrixLocation, first);
 	
-	//update the animstate AFTER the player was renderd
-	//it not, an animation can timeout and not know what to render
-	anims.updateAnimStates(playerID, roleID, animState, delta);
+	
 }
 
 bool RenderPipeline::setSetting(PIPELINE_SETTINGS type, PipelineValues value)

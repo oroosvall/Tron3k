@@ -121,6 +121,9 @@ int static getAnimRank(AnimationState test)
 
 bool static checkAnimOverwrite(AnimationState current, AnimationState test)
 {
+	if (getAnimRank(current) == 2 && getAnimRank(test) == -1)
+		return true;
+
 	if (current == test)
 	{
 		//idle, run, air, death dont cancel if compared to themselves
@@ -139,6 +142,8 @@ bool static checkAnimOverwrite(AnimationState current, AnimationState test)
 
 void static animOverideIfPriority(AnimationState& current, AnimationState test)
 {
+	if (current == AnimationState::none)
+		return;
 	if (checkAnimOverwrite(current, test))
 		current = test;
 }
