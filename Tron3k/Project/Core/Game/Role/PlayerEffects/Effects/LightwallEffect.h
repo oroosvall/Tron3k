@@ -10,7 +10,6 @@ private:
 	Player* myPlayer;
 	float lifeTime;
 	bool expandDong;
-
 	glm::vec3 playerVel;
 	glm::vec3 endPoint;
 

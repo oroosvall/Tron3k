@@ -570,6 +570,37 @@ vec3 Physics::normalize(vec3 &vec3)
 
 }
 
+void Physics::receiveEffectBox(std::vector<float> eBox)
+{
+	//sphere
+	//obb
+
+	/*
+	0 = x
+	1 = y
+	2 = z
+
+	3 = radie, eller höjd OM 4 FINNS
+
+	4 = x2
+	5 = y2
+	6 = z2
+	*/
+
+	glm::vec3 pos;
+	if (eBox.size() > 4)
+	{
+		//OBB
+		pos.x = eBox[0];
+	}
+	else
+	{
+		//SPHERE
+	}
+
+
+}
+
 void Physics::receiveChunkBoxes(int chunkID, void* _cBoxes)
 {
 	std::vector<AABBloaded>* cBox = (std::vector<AABBloaded>*)_cBoxes;

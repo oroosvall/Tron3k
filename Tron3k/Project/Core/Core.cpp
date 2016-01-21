@@ -1080,6 +1080,7 @@ void Core::renderWorld(float dt)
 			for (unsigned int i = 0; i < eff.size(); i++)
 			{
 				LightwallEffect* derp = (LightwallEffect*)eff[i];
+
 				renderPipe->renderWallEffect(&derp->pos, &derp->getEndPoint(), herpderpOffset);
 
 				herpderpOffset += glm::distance(derp->pos, derp->getEndPoint());
