@@ -1052,8 +1052,6 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 			bounceBullet(hi, b);
 			if (GetSoundActivated())
 				GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
-
-			
 			break;
 		case BULLET_TYPE::CLUSTERLING:
 			bounceBullet(hi, b);
