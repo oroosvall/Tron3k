@@ -92,26 +92,26 @@ vec4 CalcSpotLight(SpotLight l, vec3 Normal)
 
 void main()
 {
-	//if(Use == 0)
-	//{
-	//	float Depth = texture(Depth, vec2(UV.x, UV.y)).x;
-	//	fragment_color = vec4(1.0 - (1.0 - Depth) * 25.0); 
-	//}
-	//else if(Use == 1)
-	//	fragment_color = texture(Position, vec2(UV.x, UV.y)) * 0.25;
-	//else if(Use == 2)	 
-	//	fragment_color = texture(Diffuse, vec2(UV.x, UV.y));
-	//else if(Use == 3)	 
-	//	fragment_color = texture(Normal, vec2(UV.x, UV.y));
-	//else if(Use == 4)
-	//	{	
-	//		if(UV.x > 0.5f)
-	//			fragment_color = vec4(texture(GlowMap, vec2(UV.x, UV.y)).w);
-	//		else
-	//			fragment_color = texture(GlowMap, vec2(UV.x, UV.y));
-	//	}
-	//else if(Use == 5)
-	//{
+	if(Use == 0)
+	{
+		float Depth = texture(Depth, vec2(UV.x, UV.y)).x;
+		fragment_color = vec4(1.0 - (1.0 - Depth) * 25.0); 
+	}
+	else if(Use == 1)
+		fragment_color = texture(Position, vec2(UV.x, UV.y)) * 0.25;
+	else if(Use == 2)	 
+		fragment_color = texture(Diffuse, vec2(UV.x, UV.y));
+	else if(Use == 3)	 
+		fragment_color = texture(Normal, vec2(UV.x, UV.y));
+	else if(Use == 4)
+		{	
+			if(UV.x > 0.5f)
+				fragment_color = vec4(texture(GlowMap, vec2(UV.x, UV.y)).w);
+			else
+				fragment_color = texture(GlowMap, vec2(UV.x, UV.y));
+		}
+	else if(Use == 5)
+	{
 		fragment_color = vec4(0,0,0,0);
 		Diffuse0 = texture(Diffuse, vec2(UV.x, UV.y));
 		Position0 = texture(Position, vec2(UV.x, UV.y));
@@ -180,5 +180,5 @@ void main()
 		sum += texture(GlowMap, UV) * 0.941;
 		
 		fragment_color += sum * 0.2;
-	//}	
+	}	
 }

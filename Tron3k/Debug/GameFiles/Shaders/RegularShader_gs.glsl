@@ -19,7 +19,7 @@ void main()
 	vec3 v1 = Position[1];
 	vec3 v2 = Position[2];
 
-	// Shortcuts for UVs
+	//// Shortcuts for UVs
 	//vec2 uv0 = UVCord[0];
 	//vec2 uv1 = UVCord[1];
 	//vec2 uv2 = UVCord[2];
@@ -34,31 +34,31 @@ void main()
     //
 	//float r = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV1.y * deltaUV2.x);
 	//TangentOut = (deltaPos1 * deltaUV2.y - deltaPos2 * deltaUV1.y)*r;
-
+    //
 	//vec3 line1 = vec3(Position[1] - Position[0]);
 	//vec3 line2 = vec3(Position[2] - Position[0]);
-	
+	//
 	//NormalOut = normalize(cross(line1, line2));
 
 	//for(int n = 0; n < 3; n++)
 	//{
 		PositionOut = Position[0];
-		NormalOut = normalize(NormalIn[0]);
-		TangentOut = normalize(TangentIn[0]);
+		NormalOut = (NormalIn[0]);
+		TangentOut = (TangentIn[0]);
 		gl_Position = gl_in[0].gl_Position;
 		UVOut = UVCord[0];
 		EmitVertex();
 
 		PositionOut = Position[1];
-		NormalOut = normalize(NormalIn[1]);
-		TangentOut = normalize(TangentIn[1]);
+		NormalOut = (NormalIn[1]);
+		TangentOut = (TangentIn[1]);
 		gl_Position = gl_in[1].gl_Position;
 		UVOut = UVCord[1];
 		EmitVertex();
 		
 		PositionOut = Position[2];
-		NormalOut = normalize(NormalIn[2]);
-		TangentOut = normalize(TangentIn[2]);
+		NormalOut = (NormalIn[2]);
+		TangentOut = (TangentIn[2]);
 		gl_Position = gl_in[2].gl_Position;
 		UVOut = UVCord[2];
 		EmitVertex();		

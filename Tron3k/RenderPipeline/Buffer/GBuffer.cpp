@@ -248,12 +248,12 @@ void Gbuffer::render(/*glm::vec3 playerPos, glm::vec3 playerDir*/)
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
 	//each blit
-	//for (int n = 0; n < 5; n++)
-	//{
-	//	blitQuads[n].BindVertData();
-	//	glProgramUniform1i(*shaderPtr, uniformUse, n);
-	//	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-	//}
+	for (int n = 0; n < 5; n++)
+	{
+		blitQuads[n].BindVertData();
+		glProgramUniform1i(*shaderPtr, uniformUse, n);
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	}
 
 }
 

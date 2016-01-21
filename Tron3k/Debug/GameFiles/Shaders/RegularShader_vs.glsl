@@ -18,6 +18,6 @@ void main()
 	PositionOut = (vec4(VertexPos, 1.0) * WorldMatrix).xyz;
 	gl_Position = ViewProjMatrix * vec4(PositionOut, 1.0);
 	UVOut = VertexUV;
-	NormalOut = VertexNormal;
-	TangentOut = TangentIn;
+	NormalOut = (vec4(VertexNormal, 0.0) * WorldMatrix).xyz;
+	TangentOut = (vec4(TangentIn, 0.0) * WorldMatrix).xyz;
 }

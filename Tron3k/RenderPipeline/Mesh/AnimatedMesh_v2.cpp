@@ -220,7 +220,7 @@ int* AnimatedMeshV2::loadAnimations(std::string character)
 {
 	std::string file = "GameFiles/CharacterFiles/anim_" + character;
 	
-	animations[AnimationState::first_primary_idle].load(file + "_first_fire.bin");
+	animations[AnimationState::first_primary_idle].load(file + "_first_idle.bin");
 	animations[AnimationState::first_primary_run].load(file + "_first_run.bin");
 	animations[AnimationState::first_primary_fire].load(file + "_first_fire.bin");
 	//animations[AnimationState::first_primary_reload].load(file + "_first_B_Shoot_50.bin");
