@@ -51,6 +51,9 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->musicList[MUSIC::cantinaSong] = "GameFiles/Sound/cantinaSong.ogg";
 		singleton->soundList[SOUNDS::power].loadFromFile("GameFiles/Sound/Power.ogg");
 		singleton->soundList[SOUNDS::soundEffectGrenadeBounce].loadFromFile("GameFiles/Sound/soundEffectGrenadeBounce.ogg");
+		singleton->soundList[SOUNDS::soundEffectHackingDart].loadFromFile("GameFiles/Sound/soundEffectHackingDart.ogg");
+		singleton->soundList[SOUNDS::soundEffectLightSpeed].loadFromFile("GameFiles/Sound/soundEffectLightSpeed2.ogg");
+		singleton->soundList[SOUNDS::soundEffectTrapperJump].loadFromFile("GameFiles/Sound/soundEffectTrapperJump.ogg");
 
 		initialized = true;
 	}
@@ -69,6 +72,18 @@ SoundPlayer::SoundPlayer()
 SoundPlayer::~SoundPlayer()
 {
 	
+}
+
+int SoundPlayer::playJump(int role, float x, float y, float z)
+{
+	if (role == 0)
+	{
+			GetSound()->playExternalSound(SOUNDS::soundEffectTrapperJump, x, y, z);
+	}
+	else
+	{
+		return 0;
+	}
 }
 
 int SoundPlayer::playMapSounds()

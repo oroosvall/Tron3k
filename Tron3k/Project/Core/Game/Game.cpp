@@ -840,6 +840,8 @@ void Game::handleConsumableUse(int conID, CONSUMABLE_TYPE ct, glm::vec3 pos, glm
 		break;
 	case CONSUMABLE_TYPE::LIGHTSPEED:
 		playerList[conID]->addModifier(LIGHTSPEEDMODIFIER);
+		if (GetSoundActivated())
+			GetSound()->playExternalSound(SOUNDS::soundEffectLightSpeed, pos.x, pos.y, pos.z);
 		break;
 	case CONSUMABLE_TYPE::THERMITEGRENADE:
 		addBulletToList(conID, 0, BULLET_TYPE::THERMITE_GRENADE, pos, dir);
@@ -910,6 +912,8 @@ void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec
 	case SPECIAL_TYPE::HACKINGDARTSPECIAL:
 	{
 		addBulletToList(conID, 0, BULLET_TYPE::HACKING_DART, pos, dir);
+		if (GetSoundActivated())
+			GetSound()->playExternalSound(SOUNDS::soundEffectHackingDart, pos.x, pos.y, pos.z);
 	}
 	break;
 	case SPECIAL_TYPE::SPRINTD:		// D = Destroyer

@@ -24,6 +24,9 @@ enum SOUNDS
 	soundAids,
 	power,
 	soundEffectGrenadeBounce,
+	soundEffectHackingDart,
+	soundEffectLightSpeed,
+	soundEffectTrapperJump,
 
 	soundEffectDestroyerStart,
 	soundEffectDestroyerStop,

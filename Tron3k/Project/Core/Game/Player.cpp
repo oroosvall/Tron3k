@@ -446,6 +446,8 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					{
 						vel.y = role.getJumpHeight() * 5;
 						airVelocity = vel;
+						if (GetSoundActivated())
+							GetSound()->playJump(role.getRole(), pos.x, pos.y, pos.z);
 					}
 				}
 
@@ -915,6 +917,8 @@ void Player::movementAnimationChecks(float dt)
 
 		else // jump begin
 			animOverideIfPriority(anim_third_current, AnimationState::third_primary_jump_begin);
+		
+		
 	}
 
 	animGroundedLast = grounded;
