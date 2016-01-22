@@ -9,7 +9,7 @@ void Map::init()
 	spB = 0;
 	spFFA = 0;
 
-	loadMap("GameFiles/TestFiles/testexport2.bin");
+	loadMap("GameFiles/TestFiles/levelTesting.bin");
 
 	for (int i = 0; i < meshCount; i++)
 	{
