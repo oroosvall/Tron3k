@@ -23,5 +23,7 @@ public:
 
 	void setIDs(unsigned int eType, int pID, int eID);
 	void getIDs(unsigned int &eType, int &pID, int &eID);
+
+	unsigned int getEType() { return etype; };
 };
 #endif

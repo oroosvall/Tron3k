@@ -560,8 +560,28 @@ vec3 Physics::checkBulletVWorldCollision(vec3 bulletPos)
 
 vec3 Physics::checkPlayerVEffectCollision(glm::vec3 playerPos, float rad)
 {
+	glm::vec3 collided;
 
-	return vec3(0, 0, 0);
+	for (int i = 0; i < effectBoxes.size(); i++)
+	{
+		if (effectBoxes[i].getEType() == 0)//Explosion, aka sphere
+		{
+			collided = checkSpherevSphereCollision(playerBox, effectBoxes[i].getCollisionMesh());
+		}
+		else if (effectBoxes[i].getEType() == 1)//Cleanse Explosion, aka sphere
+		{
+			collided = checkSpherevSphereCollision(playerBox, effectBoxes[i].getCollisionMesh());
+		}
+		else if (effectBoxes[i].getEType() == 2)//Lightwall, aka OBB
+		{
+
+		}
+		else
+		{
+
+		}
+	}
+	return collided;
 }
 
 vec3 Physics::checkBulletVEffectCollision(glm::vec3 bulletPos)
@@ -710,7 +730,7 @@ void Physics::receiveEffectBox(std::vector<float> eBox, unsigned int etype, int 
 			obbl.corners[i] = vec4(corners[i], 1);
 		}
 
-		
+
 
 		OBB obb;
 		obb.init(&obbl);
@@ -727,7 +747,7 @@ void Physics::receiveEffectBox(std::vector<float> eBox, unsigned int etype, int 
 		sphere.radius = eBox[3];
 		temp.setSphere(sphere);
 	}
-	
+
 	effMesh.setIDs(etype, pID, eID);
 
 	/*
