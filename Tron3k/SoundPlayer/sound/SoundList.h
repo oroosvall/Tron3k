@@ -27,6 +27,9 @@ enum SOUNDS
 	soundEffectHackingDart,
 	soundEffectLightSpeed,
 	soundEffectTrapperJump,
+	soundEffectTrapperLand,
+	soundEffectTrapperMultiJump,
+	soundEffectLightWall,
 
 	soundEffectDestroyerStart,
 	soundEffectDestroyerStop,

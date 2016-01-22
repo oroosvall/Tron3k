@@ -21,7 +21,7 @@ void Core::init()
 	fullscreen = false;
 	winX = winY = 800;
 	//winX = winY = 1000;
-	//winX = 1280; winY = 720;
+	winX = 1280; winY = 720;
 	//winX = 1920, winY = 1080;
 
 	createWindow(winX, winY, fullscreen);
@@ -261,7 +261,7 @@ void Core::upRoam(float dt)
 			{
 				game->handleBulletHitWorldEvent(bulletHitsOnWorld[c]);
 			}
-			game->clearBulletOnWorldCollision();
+			game->clearBulletOnWorldCollisions();
 		}
 
 		renderWorld(dt);
@@ -478,7 +478,6 @@ void Core::upServer(float dt)
 		}
 
 		std::vector<BulletHitPlayerInfo> bulletHitsOnPlayer = game->getAllHitPlayerInfo();
-
 		if (bulletHitsOnPlayer.size() != 0)
 		{
 			for (unsigned int c = 0; c < bulletHitsOnPlayer.size(); c++)
@@ -498,7 +497,18 @@ void Core::upServer(float dt)
 				game->handleBulletHitWorldEvent(bulletHitsOnWorld[c]);
 			}
 			top->event_bullet_hit_world(bulletHitsOnWorld);
-			game->clearBulletOnWorldCollision();
+			game->clearBulletOnWorldCollisions();
+		}
+
+		std::vector<EffectHitPlayerInfo> effectHitsOnPlayer = game->getAllEffectOnPlayerCollisions();
+		if (effectHitsOnPlayer.size() != 0)
+		{
+			for (unsigned int c = 0; c < bulletHitsOnWorld.size(); c++)
+			{
+				game->handleEffectHitPlayerEvent(effectHitsOnPlayer[c]);
+			}
+			top->event_effect_hit_player(effectHitsOnPlayer);
+			game->clearEffectOnPlayerCollisions();
 		}
 
 		serverHandleCmds();
@@ -1039,20 +1049,20 @@ void Core::renderWorld(float dt)
 					else
 					{
 						if (p->getTeam() == 1) { //team 1 color
-							dgColor[0] = 0; dgColor[1] = 1; dgColor[2] = 0;
+							dgColor[0] = 1; dgColor[1] = 0.5; dgColor[2] = 0;
 						}
 						else if (p->getTeam() == 2) { // team 2 color
-							dgColor[0] = 0.4f; dgColor[1] = 0.0f; dgColor[2] = 0.4f;
+							dgColor[0] = 0.0f; dgColor[1] = 1; dgColor[2] = 0.5f;
 						}
 						else if (p->getTeam() == 0) { // spectate color
 							dgColor[0] = 0; dgColor[1] = 0; dgColor[2] = 0;
 						}
 						//hacked team colors
-						if (hackedTeam == 1) {
-							dgColor[0] = 0.2f; dgColor[1] = 0.2f; dgColor[2] = 1;
+						if (hackedTeam == 1) { //Show team 2's colour
+							dgColor[0] = 0.4f; dgColor[1] = 0.0f; dgColor[2] = 0.4f;
 						}
-						else if (hackedTeam == 2) {
-							dgColor[0] = 0; dgColor[1] = 1; dgColor[2] = 0;
+						else if (hackedTeam == 2) { //Show team 1's colour
+							dgColor[0] = 0.0f; dgColor[1] = 1.0f; dgColor[2] = 0.0f;
 						}
 					}
 					//static intense based on health

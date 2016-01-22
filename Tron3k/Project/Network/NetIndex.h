@@ -13,13 +13,14 @@ enum NET_INDEX
 
 enum NET_EVENT
 {
-	EMPTY =				int('E'),
-	SERVER_STATUS =		int('S'),
-	PLAYER_JOINED =		int('J'),
-	PLAYER_LEFT =		int('L'),
-	PLAYER_HIT =		int('H'),
-	WORLD_HIT =			int('W'),
-	RESPAWN_DENIED =	int('R') //Used by command_respawn to deny respawn auth to client
+	EMPTY =					int('E'),
+	SERVER_STATUS =			int('S'),
+	PLAYER_JOINED =			int('J'),
+	PLAYER_LEFT =			int('L'),
+	PLAYER_HIT =			int('H'),
+	BULLET_WORLD_HIT =		int('W'),
+	EFFECT_PLAYER_HIT =		int('F'),
+	RESPAWN_DENIED =		int('R') //Used by command_respawn to deny respawn auth to client
 };
 
 enum NET_FRAME

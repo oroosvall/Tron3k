@@ -125,6 +125,7 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 		collided = true;
 
 		bool ceiling = false;
+		grounded = false;
 		for (int k = 0; k < collisionNormalSize; k++)
 		{
 			//push pos away and lower velocity using pendepth
@@ -133,7 +134,7 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 				ceiling = true;
 
 			//ramp factor and grounded
-			grounded = false;
+			
 			if (collisionNormals[k].y > 0.5f)
 			{
 				grounded = true;
@@ -151,8 +152,8 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 		// while + posajust w/o  /dt  will remove it slower
 		vel += posadjust;// / dt * 0.5f;
 
-		//if (ceiling)
-		//	posadjust.y = 0;
+		if (ceiling)
+			posadjust.y = 0;
 		posadjust = posadjust * 0.99f;
 		pos += posadjust;
 
@@ -479,12 +480,17 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				{
 					if (role.getCurrentWeapon()->shoot())
 					{
+
 						msg = SHOOT;
 						shoot();
 					}
 					else if (role.getCurrentWeapon()->getCurrentAmmo() == 0)
 					{
-						reloadCurrentWeapon();
+						if (role.getCurrentWeapon()->getIfReloading())
+						{
+							reloadCurrentWeapon();
+						}
+
 					}
 				}
 
@@ -636,12 +642,6 @@ void Player::movementUpdates(float dt, bool freecam, bool spectatingThisPlayer, 
 		dir = (oldDir * (1.0f - t)) + (goaldir * t);
 
 		rotatePlayer(prev, dir);
-
-		if (role.getHealth() == 0)
-		{
-			isDead = true;
-			vel = glm::vec3(0, 0, 0);
-		}
 	}
 	if (spectatingThisPlayer == true)
 	{
@@ -853,7 +853,7 @@ bool Player::searchModifier(MODIFIER_TYPE search)
 
 glm::mat4 Player::getFPSmat()
 {
-	mat4 ret = glm::lookAt(cam->getPos(), cam->getPos() + cam->getDir() * -1.0f, vec3(0, 1, 0));
+	mat4 ret = glm::lookAt(cam->getPos(), cam->getPos() + cam->getDir() * -2.0f, vec3(0, 1, 0));
 	ret[0].w += cam->getPos().x;
 	ret[1].w += cam->getPos().y;
 	ret[2].w += cam->getPos().z;
@@ -910,7 +910,13 @@ void Player::movementAnimationChecks(float dt)
 	if (grounded != animGroundedLast) //grounded changed this frame
 	{
 		if (grounded) //landed
+		{
 			animOverideIfPriority(anim_third_current, AnimationState::third_primary_jump_end);
+			if (GetSoundActivated())
+			{
+				GetSound()->playExternalSound(SOUNDS::soundEffectTrapperLand, pos.x, pos.y, pos.z);
+			}
+		}
 
 		else // jump begin
 			animOverideIfPriority(anim_third_current, AnimationState::third_primary_jump_begin);

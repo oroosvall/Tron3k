@@ -223,11 +223,10 @@ int* AnimatedMeshV2::loadAnimations(std::string character)
 	animations[AnimationState::first_primary_idle].load(file + "_first_idle.bin");
 	animations[AnimationState::first_primary_run].load(file + "_first_run.bin");
 	animations[AnimationState::first_primary_fire].load(file + "_first_fire.bin");
-	//animations[AnimationState::first_primary_reload].load(file + "_first_B_Shoot_50.bin");
-	//animations[AnimationState::first_primary_run].load("GameFiles/CharacterFiles/Trapper/trapper_anim_run.bin");
-	//animations[AnimationState::first_primary_switch].load("GameFiles/CharacterFiles/Trapper/trapper_anim_run.bin");
-	//animations[AnimationState::first_primary_throw].load("GameFiles/CharacterFiles/Trapper/trapper_anim_run.bin");
-	//animations[AnimationState::first_secondary_fire].load("GameFiles/CharacterFiles/Trapper/trapper_anim_run.bin");
+	animations[AnimationState::first_primary_reload].load(file + "_first_reload.bin");
+	animations[AnimationState::first_primary_switch].load(file + "_first_weaponswitch.bin");
+	animations[AnimationState::first_primary_throw].load(file + "_first_throw.bin");
+	animations[AnimationState::first_secondary_fire].load(file + "_first_heal.bin");
 
 	animations[AnimationState::third_primary_idle].load(file + "_third_idle.bin");
 	animations[AnimationState::third_primary_death].load(file + "_third_death.bin");
