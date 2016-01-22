@@ -58,6 +58,7 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->soundList[SOUNDS::soundEffectTrapperMultiJump ].loadFromFile("GameFiles/Sound/soundEffectTrapperMultiJump.ogg");
 		singleton->soundList[SOUNDS::soundEffectLightWall].loadFromFile("GameFiles/Sound/soundEffectLightWall.ogg");
 		singleton->soundList[SOUNDS::soundEffectYouDied].loadFromFile("GameFiles/Sound/soundEffectYouDied.ogg");
+		singleton->soundList[SOUNDS::soundEffectHunterJump].loadFromFile("GameFiles/Sound/soundEffectHunterJump.ogg");
 
 		initialized = true;
 	}
@@ -83,6 +84,11 @@ int SoundPlayer::playJump(int role, float x, float y, float z)
 	if (role == 0)
 	{
 			GetSound()->playExternalSound(SOUNDS::soundEffectTrapperJump, x, y, z);
+	}
+
+	else if (role == 2)
+	{
+		GetSound()->playExternalSound(SOUNDS::soundEffectHunterJump, x, y, z);
 	}
 	else
 	{
@@ -409,7 +415,6 @@ void SoundPlayer::playFootsteps(int role, float posX, float posY, float posZ)
 		if (role == 0)
 		{
 			playExternalSound(SOUNDS::soundFootSteps, posX, posY, posZ);
-
 		}
 
 		if (role == 1)
