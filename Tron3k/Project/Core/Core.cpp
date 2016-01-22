@@ -687,6 +687,8 @@ void Core::roamHandleCmds()
 			else
 			{
 				game->getPlayer(0)->getRole()->chooseRole(role - 1);
+				if (role == TRAPPER)
+					game->getPlayer(0)->addModifier(MODIFIER_TYPE::TRAPPERSHAREAMMO);
 				console.printMsg("You switched class!", "System", 'S');
 			}
 		}
@@ -1100,7 +1102,7 @@ void Core::renderWorld(float dt)
 			std::vector<Bullet*> bullets = game->getBullets(BULLET_TYPE(c));
 			for (unsigned int i = 0; i < bullets.size(); i++)
 			{
-				renderPipe->renderMISC(-2, bullets[i]->getWorldMat(), dgColor, 1.0f);
+				renderPipe->renderBullet(c, bullets[i]->getWorldMat(), dgColor, 1.0f);
 			}
 		}
 

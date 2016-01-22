@@ -7,6 +7,7 @@ void TrapperShareAmmo::init(Player* myTarget)
 
 	target = myTarget;
 	lifeTime = -1;
+	sticky = true;
 	ammoCount = target->getRole()->getCurrentWeapon()->getCurrentAmmo();
 	weaponType = target->getRole()->getCurrentWeapon()->getType();
 }
