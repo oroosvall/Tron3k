@@ -8,11 +8,11 @@
 class TrueGrit : public Modifier
 {
 private:
+	glm::vec3 vel;
 	float healDelay = 0.1;
 	int oldHealth;
 	int damageTaken;
 	bool dashDone = false;
-	float endTime;
 	float timer = healDelay;
 public:
 	void init(Player* myTarget);

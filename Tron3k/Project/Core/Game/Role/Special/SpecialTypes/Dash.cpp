@@ -5,7 +5,7 @@ void Dash::init()
 {
 	timer = -1;
 	activationCost = 25;
-	specialType = SPECIAL_TYPE::SPRINTD;
+	specialType = SPECIAL_TYPE::DASH;
 	key = GLFW_KEY_LEFT_SHIFT;
 }
 
@@ -22,7 +22,7 @@ bool Dash::allowedToActivate(Player* p)
 	if (this->timer <= 0.0f && specialMeter >= 25)
 	{
 		p->getRole()->setSpecialMeter(specialMeter);
-		timer = 6.0;
+		timer = 5.0;
 		return true;
 	}
 	return false;
