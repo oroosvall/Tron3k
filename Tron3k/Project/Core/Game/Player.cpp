@@ -910,7 +910,13 @@ void Player::movementAnimationChecks(float dt)
 	if (grounded != animGroundedLast) //grounded changed this frame
 	{
 		if (grounded) //landed
+		{
 			animOverideIfPriority(anim_third_current, AnimationState::third_primary_jump_end);
+			if (GetSoundActivated())
+			{
+				GetSound()->playExternalSound(SOUNDS::soundEffectTrapperLand, pos.x, pos.y, pos.z);
+			}
+		}
 
 		else // jump begin
 			animOverideIfPriority(anim_third_current, AnimationState::third_primary_jump_begin);
