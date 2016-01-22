@@ -65,9 +65,9 @@ private:
 	//--------------//--------------//
 
 	//-------Sphere Collision-------//
-	glm::vec3 checkSpherevSphereCollision(CollideMesh mesh1, CollideMesh mesh2);
+	std::vector<glm::vec4> checkSpherevSphereCollision(CollideMesh mesh1, CollideMesh mesh2);
 
-	glm::vec3 checkSpherevOBBCollision(CollideMesh mesh1, CollideMesh mesh2);
+	std::vector<glm::vec4> checkSpherevOBBCollision(CollideMesh mesh1, CollideMesh mesh2);
 	//--------------//--------------//
 
 	//--------Line Collision--------//
@@ -104,16 +104,17 @@ public:
 	
 	virtual glm::vec3 checkPlayerVPlayerCollision(glm::vec3 playerPos1, glm::vec3 playerPos2);
 	virtual glm::vec3 checkPlayerVBulletCollision(glm::vec3 playerPos, glm::vec3 bulletPos);
-	virtual std::vector<glm::vec4> sphereVWorldCollision(glm::vec3 playerPos, float rad);
+	virtual std::vector<glm::vec4> PlayerVWorldCollision(glm::vec3 playerPos);
+	virtual std::vector<glm::vec4> BulletVWorldCollision(glm::vec3 bulletPos);
 	virtual glm::vec3 checkBulletVWorldCollision(glm::vec3 bulletPos);
-	virtual glm::vec3 checkPlayerVEffectCollision(glm::vec3 playerPos, float rad, unsigned int eType);
+	virtual std::vector<glm::vec4> checkPlayerVEffectCollision(glm::vec3 playerPos, unsigned int eType);
 	virtual glm::vec3 checkBulletVEffectCollision(glm::vec3 bulletPos);
 
 	virtual float addGravity(float dt);
 
 	virtual void receiveChunkBoxes(int chunkID, void* cBoxes);
 	virtual void receiveWorldBoxes(std::vector<std::vector<float>> wBoxes);
-	virtual void receivePlayerBox(std::vector<float> pBox);
+	virtual void receivePlayerBox(std::vector<float> pBox, float rad);
 	virtual void receiveEffectBox(std::vector<float> eBox, unsigned int etype, int pID, int eID);
 };
 

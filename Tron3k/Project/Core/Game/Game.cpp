@@ -299,7 +299,7 @@ void Game::sendChunkBoxes(int chunkID, void* cBoxes)
 
 void Game::sendPlayerBox(std::vector<float> pBox)
 {
-	physics->receivePlayerBox(pBox);
+	physics->receivePlayerBox(pBox, 0.9f);
 }
 
 void Game::sendWorldBoxes(std::vector<std::vector<float>> wBoxes)
@@ -412,15 +412,27 @@ void Game::checkPlayerVEffectCollision()
 	{
 		Player* local = playerList[localPlayerId];
 		//Collision for all wall-like effects i.e. only Lightwall and Thunderdome
+
+		std::vector<glm::vec4> collNormalWalls;
+		std::vector<glm::vec4> collNormalDomes;
+		std::vector<glm::vec4> collNormals;
 		for (int c = 0; c < effects[EFFECT_TYPE::LIGHT_WALL].size(); c++)
 		{
-			physics->checkPlayerVEffectCollision(local->getPos(), 1.0f, EFFECT_TYPE::LIGHT_WALL);
+			collNormalWalls = physics->checkPlayerVEffectCollision(local->getPos(), EFFECT_TYPE::LIGHT_WALL);
 		}
 
 		for (int c = 0; c < effects[EFFECT_TYPE::THUNDER_DOME].size(); c++)
 		{
-			physics->checkPlayerVEffectCollision(local->getPos(), 1.0f, EFFECT_TYPE::THUNDER_DOME);
+			collNormalDomes = physics->checkPlayerVEffectCollision(local->getPos(), EFFECT_TYPE::THUNDER_DOME);
 		}
+
+		//merge normals into one vector
+		collNormals.reserve(collNormalWalls.size() + collNormalDomes.size()); // preallocate memory
+		collNormals.insert(collNormals.end(), collNormalWalls.begin(), collNormalWalls.end());
+		collNormals.insert(collNormals.end(), collNormalDomes.begin(), collNormalDomes.end());
+
+		if (collNormals.size() > 0)
+			playerList[localPlayerId]->setCollisionInfo(collNormals);
 	}
 	if (gameState == Gamestate::ROAM || gameState == Gamestate::SERVER)
 	{
@@ -496,7 +508,7 @@ void Game::checkPlayerVWorldCollision(float dt)
 
 		vec3 posadjust = vec3(0);
 		//lower with distance from eyes to center
-		std::vector<vec4> cNorms = physics->sphereVWorldCollision(playerList[localP]->getPos() - (vec3(0, playerList[localP]->getRole()->getBoxModifier(), 0)), 1);
+		std::vector<vec4> cNorms = physics->PlayerVWorldCollision(playerList[localP]->getPos() - (vec3(0, playerList[localP]->getRole()->getBoxModifier(), 0)));
 
 		//if we collided with something
 		if (cNorms.size() > 0)
@@ -520,7 +532,7 @@ void Game::checkBulletVWorldCollision()
 			{
 				int pid = -1, bid = -1;
 				bullets[b][j]->getId(pid, bid);
-				collides = physics->sphereVWorldCollision(bullets[b][j]->getPos(), 0.4f);
+				collides = physics->BulletVWorldCollision(bullets[b][j]->getPos());
 				if (collides.size() > 0)
 				{
 					BulletHitWorldInfo hi;
