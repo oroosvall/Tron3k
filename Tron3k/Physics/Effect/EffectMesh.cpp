@@ -2,10 +2,8 @@
 
 EffectMesh::EffectMesh()
 {
-	mesh = CollideMesh();
-	etype = 0;
-	pID = -1;
-	eID = -1;
+	init();
+
 }
 
 EffectMesh::EffectMesh(CollideMesh mesh, unsigned int etype, int pID, int eID)
@@ -14,6 +12,14 @@ EffectMesh::EffectMesh(CollideMesh mesh, unsigned int etype, int pID, int eID)
 	this->etype = etype;
 	this->pID = pID;
 	this->eID = eID;
+}
+
+void EffectMesh::init()
+{
+	mesh.init();
+	etype = 0;
+	pID = -1;
+	eID = -1;
 }
 
 void EffectMesh::setCollisionMesh(CollideMesh colMesh)

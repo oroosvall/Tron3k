@@ -595,19 +595,24 @@ void Physics::receiveEffectBox(std::vector<float> eBox, unsigned int etype, int 
 	//obb
 
 	/*
+	Center för sfärer, startpositionen för lightwalls
 	0 = x
 	1 = y
 	2 = z
 
 	3 = radie, eller höjd OM 4 FINNS
 
+	slutposition för lightwalls
 	4 = x2
 	5 = y2
 	6 = z2
 	*/
+	EffectMesh effMesh;
+	effMesh.init();
 	CollideMesh temp;
 
 	AABB aabb;
+	Sphere sphere;
 	if (eBox.size() > 4)
 	{
 		//OBB
@@ -650,6 +655,10 @@ void Physics::receiveEffectBox(std::vector<float> eBox, unsigned int etype, int 
 		max.y = pos.y + eBox[3];
 		min.y = pos.y - eBox[3];
 
+		aabb.pos = pos;
+		aabb.max = max;
+		aabb.min = min;
+
 		OBBloaded obbl;
 
 		obbl.corners[0] = vec4(min, 1.0f);
@@ -680,33 +689,65 @@ void Physics::receiveEffectBox(std::vector<float> eBox, unsigned int etype, int 
 		centPos2Angled.x = centeredPos2.x * cos(-angle) - centeredPos2.z * sin(-angle);
 		centPos2Angled.y = centeredPos2.z * sin(-angle) + centeredPos2.x * cos(-angle);
 
-		/*
-		Skapa 8 punkter från centpos1Angled & 2
-		splitta punkterna med en tottal ofset på 0.5, dvs 0.25, i y/z-led (y i vec2, z i vec3)
-		rotera tillbaks ALLA 8 punkter
-		gör om de till vec3s igen
-		lägg på originalpos
-		mata in i obbl
-		we done here
+		glm::vec3 corners[8];
+		corners[0] = glm::vec3(centPos1Angled.x - 0.25f, -eBox[3], centPos1Angled.y + 0.25f);
+		corners[1] = glm::vec3(centPos1Angled.x + 0.25f, -eBox[3], centPos1Angled.y + 0.25f);
+		corners[2] = glm::vec3(centPos1Angled.x - 0.25f, eBox[3], centPos1Angled.y + 0.25f);
+		corners[3] = glm::vec3(centPos1Angled.x + 0.25f, eBox[3], centPos1Angled.y + 0.25f);
+		corners[4] = glm::vec3(centPos2Angled.x - 0.25f, eBox[3], centPos2Angled.y - 0.25f);
+		corners[5] = glm::vec3(centPos2Angled.x + 0.25f, eBox[3], centPos2Angled.y - 0.25f);
+		corners[6] = glm::vec3(centPos2Angled.x - 0.25f, -eBox[3], centPos2Angled.y - 0.25f);
+		corners[7] = glm::vec3(centPos2Angled.x + 0.25f, -eBox[3], centPos2Angled.y - 0.25f);
 
-		BUT OPVER THERE THO
-		lägg in SpherevSphere
-		lägg in i Game att mata in effekter till physics
-		i Physics::receiveEffectBox så ska du lägga in inmatning av lådorna
-		där du har fler instruktioner för om det är obb eller sphere, dvs i den hör funktionen
-		i checkPlayervEffect & checkBulletvEffect ska du skapa collisioner, spherevObb & spherevSphere
-		skicka tillbaks collisionsträffar till game, med pid och eid och e-type (africa)
-		*/
+		for (int i = 0; i < 8; i++)
+		{
+			glm::vec3 temp = corners[i];
+
+			corners[i].x = temp.x * cos(angle) - temp.z * sin(angle);
+			corners[i].z = temp.z * sin(angle) + temp.x * cos(angle);
+			corners[i] += pos;
+
+			obbl.corners[i] = vec4(corners[i], 1);
+		}
+
+		
 
 		OBB obb;
 		obb.init(&obbl);
 		aabb.ObbBoxes.push_back(obb);
+
+		temp.setAABB(aabb);
 	}
 	else
 	{
 		//SPHERE
+		sphere.pos.x = eBox[0];
+		sphere.pos.y = eBox[1];
+		sphere.pos.z = eBox[2];
+		sphere.radius = eBox[3];
+		temp.setSphere(sphere);
 	}
+	
+	effMesh.setIDs(etype, pID, eID);
 
+	/*
+	Skapa 8 punkter från centpos1Angled & 2
+	splitta punkterna med en tottal ofset på 0.5, dvs 0.25, i y/z-led (y i vec2, z i vec3)
+	rotera tillbaks ALLA 8 punkter
+	gör om de till vec3s igen
+	lägg på originalpos
+	mata in i obbl
+	Lägg in sphere
+	we done here
+
+	BUT OPVER THERE THO
+	lägg in SpherevSphere
+	lägg in i Game att mata in effekter till physics
+	i Physics::receiveEffectBox så ska du lägga in inmatning av lådorna
+	där du har fler instruktioner för om det är obb eller sphere, dvs i den hör funktionen
+	i checkPlayervEffect & checkBulletvEffect ska du skapa collisioner, spherevObb & spherevSphere
+	skicka tillbaks collisionsträffar till game, med pid och eid och e-type (africa)
+	*/
 
 }
 

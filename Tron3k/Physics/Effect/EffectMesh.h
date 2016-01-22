@@ -16,6 +16,8 @@ public:
 	EffectMesh(CollideMesh mesh, unsigned int etype, int pID, int eID);
 	~EffectMesh() {};
 
+	void init();
+
 	void setCollisionMesh(CollideMesh colMesh);
 	CollideMesh getCollisionMesh() { return mesh; };
 
