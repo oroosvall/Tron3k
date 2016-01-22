@@ -35,6 +35,11 @@ void ContentManager::init()
 	}
 
 	trapperBullet.load("GameFiles/CharacterFiles/primary_trapper.bin");
+	trapperConsume.load("GameFiles/CharacterFiles/consumable_Trapper.bin");
+	shankerBullet.load("GameFiles/CharacterFiles/primary_shanker.bin");
+	shankerSpecial.load("GameFiles/CharacterFiles/special_shanker.bin");
+
+
 
 	//Skybox
 	skybox.init(0, 0, 0);
@@ -105,7 +110,9 @@ void ContentManager::release()
 	}
 
 	trapperBullet.release();
-
+	trapperConsume.release();
+	shankerBullet.release();
+	shankerSpecial.release();
 }
 
 ContentManager::~ContentManager()
@@ -261,8 +268,30 @@ void ContentManager::renderMisc(int renderID)
 		//
 		//glActiveTexture(GL_TEXTURE0 + 2);
 		//glBindTexture(GL_TEXTURE_2D, textures[11].textureID);
-		trapperBullet.draw();
+		
 	}
+}
+
+void ContentManager::renderBullet(int bid)
+{
+	switch (bid)
+	{
+	case BULLET_TYPE::PULSE_SHOT:
+		trapperBullet.draw();
+		break;
+	case BULLET_TYPE::CLUSTER_GRENADE:
+	case BULLET_TYPE::CLUSTERLING:
+		trapperConsume.draw();
+		break;
+	case BULLET_TYPE::DISC_SHOT:
+		shankerBullet.draw();
+		break;
+	case BULLET_TYPE::HACKING_DART:
+		shankerSpecial.draw();
+	default:
+		break;
+	}
+	
 }
 
 void ContentManager::renderPlayer(AnimManager::animState state, glm::mat4 world, GLuint uniformKeyMatrixLocation, bool first)

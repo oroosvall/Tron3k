@@ -20,7 +20,7 @@ void EnergyBoost::init()
 	firingSpeed = 3.0f;
 	firingSpeedCurrentDelay = 0.0f;
 
-	reloadTime = 1.0f;
+	reloadTime = 4.0f;
 	rldTimer = 0.0f;
 }
 
