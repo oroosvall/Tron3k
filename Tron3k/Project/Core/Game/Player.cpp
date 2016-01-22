@@ -455,7 +455,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 				if (i->justPressed(GLFW_KEY_R))
 				{
-					if (role.getCurrentWeapon()->getIfReloading())
+					if (!role.getIfBusy())
 					{
 						reloadCurrentWeapon();
 					}
@@ -479,17 +479,12 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				{
 					if (role.getCurrentWeapon()->shoot())
 					{
-
 						msg = SHOOT;
 						shoot();
 					}
-					else if (role.getCurrentWeapon()->getCurrentAmmo() == 0)
+					else if (role.getCurrentWeapon()->getCurrentAmmo() == 0 && !role.getIfBusy())
 					{
-						if (role.getCurrentWeapon()->getIfReloading())
-						{
-							reloadCurrentWeapon();
-						}
-
+						reloadCurrentWeapon();
 					}
 				}
 
@@ -810,6 +805,12 @@ void Player::addModifier(MODIFIER_TYPE mt)
 		myModifiers.push_back(m);
 	}
 	break;
+	case MODIFIER_TYPE::TRAPPERSHAREAMMO:
+	{
+		m = new TrapperShareAmmo();
+		myModifiers.push_back(m);
+	}
+	break;
 	}
 	myModifiers[myModifiers.size() - 1]->init(this);
 }
@@ -819,6 +820,7 @@ void Player::setRole(Role role)
 	cleanseModifiers(true);
 	this->role = role;
 	this->role.chooseRole(TRAPPER);
+	addModifier(MODIFIER_TYPE::TRAPPERSHAREAMMO);
 }
 
 void Player::respawn(glm::vec3 respawnPos, glm::vec3 _dir)
