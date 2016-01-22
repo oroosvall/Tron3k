@@ -420,7 +420,7 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb)
 	{
 		t = obb->lines[n].sphere_intersects(pos, rad);
 
-		if (t.w > 0)
+		if (t.w >= 0 - FLT_EPSILON)
 			if (t.w < closest.w) // a new closest dist was found
 				closest = t;
 	}
@@ -438,15 +438,15 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb)
 		test = pos - obb->corners[n];
 		test_len = length(test);
 
-		if (test_len < closest.w)
+		if (test_len <= closest.w)
 		{
 			closest.x = test.x; closest.y = test.y; closest.z = test.z;
 			closest.w = test_len;
 		}
 	}
 
-	// if the closest one if fourther than sphere rad = no intersection
-	if (closest.w > rad)
+	// if the closest one if further than sphere rad = no intersection
+	if (closest.w + FLT_EPSILON > rad - FLT_EPSILON)
 		closest.w = -1;
 
 	return closest;
