@@ -19,10 +19,10 @@ void EnergyShield::init()
 
 	currentBulletId = 0;
 
-	firingSpeed = 1.0f;
+	firingSpeed = 2.0f;
 	firingSpeedCurrentDelay = 0;
 
-	reloadTime = 3.5f;
+	reloadTime = 3.0f;
 	rldTimer = 0;
 }
 

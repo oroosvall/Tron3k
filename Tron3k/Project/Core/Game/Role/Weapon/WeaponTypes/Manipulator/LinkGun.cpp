@@ -14,13 +14,13 @@ void LinkGun::init()
 {
 	weaponType = WEAPON_TYPE::LINK_GUN;
 
-	maxClipSize = 4;
+	maxClipSize = 1;
 	currentClipAmmo = maxClipSize;
 
 	currentBulletId = 0;
 
-	firingSpeed = 2.0f;
-	firingSpeedCurrentDelay = 0;
+	firingSpeed = 0.0f;
+	firingSpeedCurrentDelay = 0.0f;
 
 	reloadTime = 3.0f;
 	rldTimer = 0;
