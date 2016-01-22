@@ -467,7 +467,7 @@ void RenderPipeline::renderMISC(int miscID, void* world, float* dgColor, float s
 	contMan.renderMisc(miscID);
 }
 
-void RenderPipeline::renderBullet(int miscID, void* world, float* dgColor, float sgInten)
+void RenderPipeline::renderBullet(int bid, void* world, float* dgColor, float sgInten)
 {
 	glUseProgram(regularShader);
 
@@ -475,15 +475,19 @@ void RenderPipeline::renderBullet(int miscID, void* world, float* dgColor, float
 	glProgramUniform1f(regularShader, uniformStaticGlowIntensityLocation[0], sgInten);
 	glProgramUniform3fv(regularShader, uniformDynamicGlowColorLocation[0], 1, (GLfloat*)&dgColor[0]);
 
-	if (miscID != -3)
+	if (bid == BULLET_TYPE::PULSE_SHOT)
 		glProgramUniform1f(regularShader, uniformGlowTrail[0], 1.0f);
 	else
 		glProgramUniform1f(regularShader, uniformGlowTrail[0], 0.0f);
 
+	glProgramUniform1i(regularShader, uniformTextureLocation[0], 0);
+	glProgramUniform1i(regularShader, uniformNormalLocation[0], 1);
+	glProgramUniform1i(regularShader, uniformGlowSpecLocation[0], 2);
+
 	//set temp objects worldmat
 	glProgramUniformMatrix4fv(regularShader, worldMat[0], 1, GL_FALSE, (GLfloat*)world);
 
-	contMan.renderBullet(miscID);
+	contMan.renderBullet(bid);
 }
 
 void RenderPipeline::renderAnimation(int playerID, int roleID, void* world, AnimationState animState, float* dgColor, float sgInten, bool first)
@@ -611,7 +615,7 @@ void RenderPipeline::getSpawnpoints(std::vector < std::vector < SpawnpointG > > 
 	vector<SpawnpointG> team1;
 	vector<SpawnpointG> team2;
 
-	float yincrease = 7.0f;
+	float yincrease = 0.0f;
 
 	int size = contMan.testMap.spFFACount;
 	for (int n = 0; n < size; n++)

@@ -1199,6 +1199,8 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 		{
 			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
 			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(15.0f);
+			if (GetSoundActivated())
+				GetSound()->playExternalSound(SOUNDS::soundEffectClusterGrenade, parent->getPos().x, parent->getPos().y, parent->getPos().z);
 			break;
 		}
 		case BULLET_TYPE::CLEANSE_BOMB:

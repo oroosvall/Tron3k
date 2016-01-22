@@ -11,6 +11,8 @@ extern GLuint blank_diffuse;
 extern GLuint blank_normal;
 extern GLuint blank_glow;
 
+#define DDS_MAGIC 0x20534444 // "DDS "
+
 struct DDS_PIXELFORMAT {
 	unsigned long dwSize;
 	unsigned long dwFlags;

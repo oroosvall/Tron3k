@@ -20,6 +20,9 @@ void ContentManager::init()
 
 	playerCharacters[2].load("shanker");
 
+	playerCharacters[4].load("manipulator");
+
+
 	int* lengths = playerCharacters[0].loadAnimations("trapper");
 
 	for (int i = 0; i < AnimationState::none; i++)
@@ -34,12 +37,21 @@ void ContentManager::init()
 		keyFrameLengths[2 * AnimationState::none + i] = lengths[i];
 	}
 
+	lengths = playerCharacters[4].loadAnimations("manipulator");
+
+	for (int i = 0; i < AnimationState::none; i++)
+	{
+		keyFrameLengths[4 * AnimationState::none + i] = lengths[i];
+	}
+
 	trapperBullet.load("GameFiles/CharacterFiles/primary_trapper.bin");
 	trapperConsume.load("GameFiles/CharacterFiles/consumable_Trapper.bin");
 	shankerBullet.load("GameFiles/CharacterFiles/primary_shanker.bin");
 	shankerSpecial.load("GameFiles/CharacterFiles/special_shanker.bin");
 
+	DDSTexture tex;
 
+	tex.load("GameFiles/Textures/Blank_d.dds");
 
 	//Skybox
 	skybox.init(0, 0, 0);

@@ -207,7 +207,7 @@ void AnimatedMeshV2::update()
 
 void AnimatedMeshV2::load(std::string character)
 {
-	std::string file = "GameFiles/CharacterFiles/mesh_" + character;
+	std::string file = "GameFiles/CharacterFiles/" + character + "/mesh_" + character;
 
 	third.load(file + "_third.bin");
 	first.load(file + "_first.bin");
@@ -218,28 +218,55 @@ void AnimatedMeshV2::load(std::string character)
 
 int* AnimatedMeshV2::loadAnimations(std::string character)
 {
-	std::string file = "GameFiles/CharacterFiles/anim_" + character;
-	
-	animations[AnimationState::first_primary_idle].load(file + "_first_idle.bin");
-	animations[AnimationState::first_primary_run].load(file + "_first_run.bin");
-	animations[AnimationState::first_primary_fire].load(file + "_first_fire.bin");
-	animations[AnimationState::first_primary_reload].load(file + "_first_reload.bin");
-	animations[AnimationState::first_primary_switch].load(file + "_first_weaponswitch.bin");
-	animations[AnimationState::first_primary_throw].load(file + "_first_throw.bin");
-	animations[AnimationState::first_secondary_fire].load(file + "_first_heal.bin");
+	std::string file = "GameFiles/CharacterFiles/" + character + "/anim_" + character;
 
-	animations[AnimationState::third_primary_idle].load(file + "_third_idle.bin");
-	animations[AnimationState::third_primary_death].load(file + "_third_death.bin");
-	animations[AnimationState::third_primary_air].load(file + "_third_jumpAir.bin");
-	animations[AnimationState::third_primary_run].load(file + "_third_run.bin");
-	animations[AnimationState::third_primary_run_rev].load(file + "_third_runbackwards.bin");
-	if(strcmp(character.c_str(), "shanker") == 0)
-		animations[AnimationState::third_shankbot_charge].load(file + "_third_specialattack.bin");
-	animations[AnimationState::third_primary_switch].load(file + "_third_switch.bin");
-	animations[AnimationState::third_primary_strafe_left].load(file + "_third_strafeLeft.bin");
-	animations[AnimationState::third_primary_strafe_right].load(file + "_third_strafeRight.bin");
-	animations[AnimationState::third_primary_jump_begin].load(file + "_third_jumpIn.bin");
-	animations[AnimationState::third_primary_jump_end].load(file + "_third_jumpOut.bin");
+	animations[AnimationState::first_primary_idle			].load(file + "_first_primary_idle.bin");
+	animations[AnimationState::first_primary_run			].load(file + "_first_primary_run.bin");
+	animations[AnimationState::first_primary_fire			].load(file + "_first_primary_fire.bin");
+	animations[AnimationState::first_primary_air			].load(file + "_first_primary_air.bin");
+	animations[AnimationState::first_primary_reload			].load(file + "_first_primary_reload.bin");
+	animations[AnimationState::first_primary_throw			].load(file + "_first_primary_throw.bin");
+	animations[AnimationState::first_primary_switch			].load(file + "_first_primary_switch.bin");
+																						
+	animations[AnimationState::first_secondary_idle			].load(file + "_first_secondary_idle.bin");
+	animations[AnimationState::first_secondary_run			].load(file + "_first_secondary_run.bin");
+	animations[AnimationState::first_secondary_fire			].load(file + "_first_secondary_fire.bin");
+	animations[AnimationState::first_secondary_air			].load(file + "_first_secondary_air.bin");
+	animations[AnimationState::first_secondary_reload		].load(file + "_first_secondary_reload.bin");
+	animations[AnimationState::first_secondary_throw		].load(file + "_first_secondary_throw.bin");
+	animations[AnimationState::first_secondary_switch		].load(file + "_first_secondary_switch.bin");
+																				
+	animations[AnimationState::third_primary_idle			].load(file + "_third_primary_idle.bin");
+	animations[AnimationState::third_primary_run			].load(file + "_third_primary_run.bin");
+	animations[AnimationState::third_primary_run_rev		].load(file + "_third_primary_run_rev.bin");
+	animations[AnimationState::third_primary_air			].load(file + "_third_primary_air.bin");
+	animations[AnimationState::third_primary_strafe_left	].load(file + "_third_primary_strafe_left.bin");
+	animations[AnimationState::third_primary_strafe_right	].load(file + "_third_primary_strafe_right.bin");
+	animations[AnimationState::third_primary_jump_begin		].load(file + "_third_primary_jump_begin.bin");
+	animations[AnimationState::third_primary_jump_end		].load(file + "_third_primary_jump_end.bin");
+																						
+	animations[AnimationState::third_secondary_idle			].load(file + "_third_secondary_idle.bin");
+	animations[AnimationState::third_secondary_run			].load(file + "_third_secondary_run.bin");
+	animations[AnimationState::third_secondary_run_rev		].load(file + "_third_secondary_run_rev.bin");
+	animations[AnimationState::third_secondary_air			].load(file + "_third_secondary_air.bin");
+	animations[AnimationState::third_secondary_strafe_left	].load(file + "_third_secondary_strafe_left.bin");
+	animations[AnimationState::third_secondary_strafe_right	].load(file + "_third_secondary_strafe_right.bin");
+	animations[AnimationState::third_secondary_jump_begin	].load(file + "_third_secondary_jump_begin.bin");
+	animations[AnimationState::third_secondary_jump_end		].load(file + "_third_secondary_jump_end.bin");
+																						
+	animations[AnimationState::third_primary_switch			].load(file + "_third_primary_switch.bin");
+	animations[AnimationState::third_secondary_switch		].load(file + "_third_secondary_switch.bin");
+																				
+	animations[AnimationState::third_turn_left				].load(file + "_third_turn_left.bin");
+	animations[AnimationState::third_turn_right				].load(file + "_third_turn_right.bin");
+																					
+	animations[AnimationState::third_melee_standing			].load(file + "_third_melee_standing.bin");
+	animations[AnimationState::third_melee_run				].load(file + "_third_melee_run.bin");
+	animations[AnimationState::third_shankbot_charge		].load(file + "_third_shankbot_charge.bin");
+																				
+	animations[AnimationState::third_primary_death			].load(file + "_third_primary_death.bin");
+	animations[AnimationState::third_secondary_death		].load(file + "_third_secondary_death.bin");
+
 
 	int frames[AnimationState::none];
 
