@@ -21,7 +21,6 @@ bool WallJump::allowedToActivate(Player* p)
 		{
 			if (cNorms[c].y < 0.5f && cNorms[c].y > -0.2f)
 			{
-				printf("Walljump\n");
 				return true;
 			}
 		}
