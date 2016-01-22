@@ -9,7 +9,7 @@ void Map::init()
 	spB = 0;
 	spFFA = 0;
 
-	loadMap("GameFiles/TestFiles/map_with_collisiontest.bin");
+	loadMap("GameFiles/TestFiles/testexport2.bin");
 
 	for (int i = 0; i < meshCount; i++)
 	{
@@ -76,24 +76,37 @@ void Map::release()
 
 void Map::renderChunk(GLuint shader, GLuint shaderLocation, int chunkID)
 {
+	int meshID;
+
+	Material mat = {-1, -1, -1 ,-1};
+
 	for (size_t i = 0; i < chunks[chunkID].props.size(); i++)
 	{
-		int meshID = chunks[chunkID].props[i].id;
+		meshID = chunks[chunkID].props[i].id;
+
+		for (size_t i = 0; i < materialCount; i++)
+		{
+			if (materials[i].materialID == meshes[meshID].material)
+			{
+				mat = materials[i];
+				break;
+			}
+		}
 
 		glActiveTexture(GL_TEXTURE0);
-		//if(materials[meshes[meshID].material].textureMapIndex != -1)
-		//	glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].textureMapIndex].textureID);
-		//else
+		if(mat.textureMapIndex != -1)
+			glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].textureMapIndex].textureID);
+		else
 			glBindTexture(GL_TEXTURE_2D, blank_diffuse);
 		glActiveTexture(GL_TEXTURE0 + 1);
-		//if (materials[meshes[meshID].material].normalMapIndex != -1)
-		//	glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].normalMapIndex].textureID);
-		//else
+		if (mat.normalMapIndex != -1)
+			glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].normalMapIndex].textureID);
+		else
 			glBindTexture(GL_TEXTURE_2D, blank_normal);
 		glActiveTexture(GL_TEXTURE0 + 2);
-		//if (materials[meshes[meshID].material].specularMapIndex != -1)
-		//	glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].specularMapIndex].textureID);
-		//else
+		if (mat.specularMapIndex != -1)
+			glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].specularMapIndex].textureID);
+		else
 			glBindTexture(GL_TEXTURE_2D, blank_glow);
 		
 		glBindVertexArray(meshes[meshID].vertexArray);
@@ -296,24 +309,25 @@ void Map::loadMap(std::string mapName)
 
 int Map::getChunkID(glm::vec3 oldPos, glm::vec3 newPos)
 {
-	vec3 dir = newPos - oldPos;
-	float len = length(dir);
-	dir = normalize(dir);
-
-	for (size_t n = 0; n < chunks[currentChunk].portals.size(); n++)
-		if (chunks[currentChunk].portals[n].intersects(oldPos, dir, len))
-		{
-			if (chunks[currentChunk].portals[n].bridgedRooms[0] == currentChunk)
-				currentChunk = chunks[currentChunk].portals[n].bridgedRooms[1];
-			else
-				currentChunk = chunks[currentChunk].portals[n].bridgedRooms[0];
-
-			printf("Now in room %d \n", currentChunk);
-
-			return currentChunk;
-		}
-
-	return currentChunk;
+	//vec3 dir = newPos - oldPos;
+	//float len = length(dir);
+	//dir = normalize(dir);
+	//
+	//for (size_t n = 0; n < chunks[currentChunk].portals.size(); n++)
+	//	if (chunks[currentChunk].portals[n].intersects(oldPos, dir, len))
+	//	{
+	//		if (chunks[currentChunk].portals[n].bridgedRooms[0] == currentChunk)
+	//			currentChunk = chunks[currentChunk].portals[n].bridgedRooms[1];
+	//		else
+	//			currentChunk = chunks[currentChunk].portals[n].bridgedRooms[0];
+	//
+	//		printf("Now in room %d \n", currentChunk);
+	//
+	//		return currentChunk;
+	//	}
+	//
+	//return currentChunk;
+	return 0;
 }
 
 ChunkCollision* Map::getChunkCollision(int chunkID)

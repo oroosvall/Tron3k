@@ -444,8 +444,8 @@ void* RenderPipeline::getView()
 
 void RenderPipeline::setChunkColorAndInten(int ID, float* color, float inten)
 {
-	contMan.testMap.chunks[ID].color = { color[0], color[1], color[2] };
-	contMan.testMap.chunks[ID].staticIntes = inten;
+	//contMan.testMap.chunks[ID].color = { color[0], color[1], color[2] };
+	//contMan.testMap.chunks[ID].staticIntes = inten;
 }
 
 void RenderPipeline::renderMISC(int miscID, void* world, float* dgColor, float sgInten)
