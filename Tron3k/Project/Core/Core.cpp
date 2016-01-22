@@ -1004,19 +1004,19 @@ void Core::renderWorld(float dt)
 		bool firstLight = true;
 		for (size_t i = 0; i < MAX_CONNECT; i++)
 		{
-			Player* p = game->getPlayer(i);
-			if (p)
-			{
-				SpotLight light;
-				light.Position = p->getPos();
-				light.Direction = p->getDir();
-				if (firstLight)
-				{
-					light.AmbientIntensity = 0.3f;
-					firstLight = false;
-				}
-				renderPipe->addLight(&light);
-			}
+			//Player* p = game->getPlayer(i);
+			//if (p)
+			//{
+			//	SpotLight light;
+			//	light.Position = p->getPos();
+			//	light.Direction = p->getDir();
+			//	if (firstLight)
+			//	{
+			//		light.AmbientIntensity = 0.3f;
+			//		firstLight = false;
+			//	}
+			//	renderPipe->addLight(&light);
+			//}
 		}
 
 		//render players

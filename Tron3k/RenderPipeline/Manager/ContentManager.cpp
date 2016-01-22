@@ -39,7 +39,9 @@ void ContentManager::init()
 	shankerBullet.load("GameFiles/CharacterFiles/primary_shanker.bin");
 	shankerSpecial.load("GameFiles/CharacterFiles/special_shanker.bin");
 
+	DDSTexture tex;
 
+	tex.load("GameFiles/Textures/Blank_d.dds");
 
 	//Skybox
 	skybox.init(0, 0, 0);
