@@ -1027,7 +1027,7 @@ void Core::renderWorld(float dt)
 							dgColor[0] = 0; dgColor[1] = 1; dgColor[2] = 0;
 						}
 						else if (p->getTeam() == 2) { // team 2 color
-							dgColor[0] = 0.2f; dgColor[1] = 0.2f; dgColor[2] = 1;
+							dgColor[0] = 0.4f; dgColor[1] = 0.0f; dgColor[2] = 0.4f;
 						}
 						else if (p->getTeam() == 0) { // spectate color
 							dgColor[0] = 0; dgColor[1] = 0; dgColor[2] = 0;
