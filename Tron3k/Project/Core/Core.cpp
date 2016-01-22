@@ -217,11 +217,11 @@ void Core::upRoam(float dt)
 
 		//update game
 		game->update(dt);
-		if (GetSoundActivated())
+		/*if (GetSoundActivated())
 		{
 				GetSound()->setLocalPlayerDir(game->getPlayer(0)->getDir());
 				GetSound()->setLocalPlayerPos(game->getPlayer(0)->getPos());		
-		}
+		}*/
 
 		if (game->playerWantsToRespawn() && game->getPlayer(0)->getTeam() != 0)
 		{
@@ -261,7 +261,7 @@ void Core::upRoam(float dt)
 			{
 				game->handleBulletHitWorldEvent(bulletHitsOnWorld[c]);
 			}
-			game->clearBulletOnWorldCollision();
+			game->clearBulletOnWorldCollisions();
 		}
 
 		renderWorld(dt);
@@ -337,13 +337,14 @@ void Core::upClient(float dt)
 		}
 
 		//update game
+
 		game->update(dt);
 
-		if (GetSoundActivated())
+	/*	if (GetSoundActivated())
 		{
 			GetSound()->setLocalPlayerDir(game->getPlayer(top->getConId())->getDir());
 			GetSound()->setLocalPlayerPos(game->getPlayer(top->getConId())->getPos());
-		}
+		}*/
 
 		//Command and message handle
 		if (console.messageReady())
@@ -478,7 +479,6 @@ void Core::upServer(float dt)
 		}
 
 		std::vector<BulletHitPlayerInfo> bulletHitsOnPlayer = game->getAllHitPlayerInfo();
-
 		if (bulletHitsOnPlayer.size() != 0)
 		{
 			for (unsigned int c = 0; c < bulletHitsOnPlayer.size(); c++)
@@ -498,7 +498,18 @@ void Core::upServer(float dt)
 				game->handleBulletHitWorldEvent(bulletHitsOnWorld[c]);
 			}
 			top->event_bullet_hit_world(bulletHitsOnWorld);
-			game->clearBulletOnWorldCollision();
+			game->clearBulletOnWorldCollisions();
+		}
+
+		std::vector<EffectHitPlayerInfo> effectHitsOnPlayer = game->getAllEffectOnPlayerCollisions();
+		if (effectHitsOnPlayer.size() != 0)
+		{
+			for (unsigned int c = 0; c < bulletHitsOnWorld.size(); c++)
+			{
+				game->handleEffectHitPlayerEvent(effectHitsOnPlayer[c]);
+			}
+			top->event_effect_hit_player(effectHitsOnPlayer);
+			game->clearEffectOnPlayerCollisions();
 		}
 
 		serverHandleCmds();

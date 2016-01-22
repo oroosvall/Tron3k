@@ -146,6 +146,8 @@ struct PLANE
 	}
 };
 
+//----------------------//
+
 struct OBB
 {
 	vec3 corners[8];
@@ -244,7 +246,10 @@ private:
 	
 	Cylinder cylinder;
 	Sphere sphere;
+	AngledCylinder angledCylinder;
 	void getCylinderFromAABB();
+	void getSphereFromAABB();
+	void getAngCylinderFromAABB();
 public:
 	AABB boundingBox;
 	CollideMesh();
@@ -263,6 +268,7 @@ public:
 	Cylinder getCylinder();
 
 	void setSphere(vec3 pos, float radius);
+	void setSphere(Sphere sphere);
 	Sphere getSphere();
 
 	void setPos(vec3 pos);

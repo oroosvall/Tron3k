@@ -16,10 +16,14 @@ public:
 	EffectMesh(CollideMesh mesh, unsigned int etype, int pID, int eID);
 	~EffectMesh() {};
 
+	void init();
+
 	void setCollisionMesh(CollideMesh colMesh);
 	CollideMesh getCollisionMesh() { return mesh; };
 
 	void setIDs(unsigned int eType, int pID, int eID);
 	void getIDs(unsigned int &eType, int &pID, int &eID);
+
+	unsigned int getEType() { return etype; };
 };
 #endif
