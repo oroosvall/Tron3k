@@ -1004,19 +1004,19 @@ void Core::renderWorld(float dt)
 		bool firstLight = true;
 		for (size_t i = 0; i < MAX_CONNECT; i++)
 		{
-			//Player* p = game->getPlayer(i);
-			//if (p)
-			//{
-			//	SpotLight light;
-			//	light.Position = p->getPos();
-			//	light.Direction = p->getDir();
-			//	if (firstLight)
-			//	{
-			//		light.AmbientIntensity = 0.3f;
-			//		firstLight = false;
-			//	}
-			//	renderPipe->addLight(&light);
-			//}
+			Player* p = game->getPlayer(i);
+			if (p)
+			{
+				SpotLight light;
+				light.Position = p->getPos();
+				light.Direction = p->getDir();
+				if (firstLight)
+				{
+					light.AmbientIntensity = 0.3f;
+					firstLight = false;
+				}
+				//renderPipe->addLight(&light);
+			}
 		}
 
 		//render players
@@ -1099,11 +1099,19 @@ void Core::renderWorld(float dt)
 		for (int c = 0; c < BULLET_TYPE::NROFBULLETS; c++)
 		{
 			dgColor[0] = 0; dgColor[1] = 0; dgColor[2] = 0;
-
+			
 			std::vector<Bullet*> bullets = game->getBullets(BULLET_TYPE(c));
 			for (unsigned int i = 0; i < bullets.size(); i++)
 			{
-				renderPipe->renderBullet(c, bullets[i]->getWorldMat(), dgColor, 1.0f);
+				if (bullets[i]->getTeamId() == 1)
+				{
+					dgColor[0] = 1.0f; dgColor[1] = 0.5f; dgColor[2] = 0;
+				}
+				else if (bullets[i]->getTeamId() == 2)
+				{
+					dgColor[0] = 0.0f; dgColor[1] = 1.0f; dgColor[2] = 0.5f;
+				}
+				renderPipe->renderBullet(c, bullets[i]->getWorldMat(), dgColor, 0.0f);
 			}
 		}
 

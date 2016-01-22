@@ -480,6 +480,10 @@ void RenderPipeline::renderBullet(int bid, void* world, float* dgColor, float sg
 	else
 		glProgramUniform1f(regularShader, uniformGlowTrail[0], 0.0f);
 
+	glProgramUniform1i(regularShader, uniformTextureLocation[0], 0);
+	glProgramUniform1i(regularShader, uniformNormalLocation[0], 1);
+	glProgramUniform1i(regularShader, uniformGlowSpecLocation[0], 2);
+
 	//set temp objects worldmat
 	glProgramUniformMatrix4fv(regularShader, worldMat[0], 1, GL_FALSE, (GLfloat*)world);
 
