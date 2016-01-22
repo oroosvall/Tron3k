@@ -91,8 +91,8 @@ void ContentManager::release()
 
 	glDeleteQueries(1, &portalQuery);
 
-	delete[] renderedChunks;
-	delete[] renderNextChunks;
+	//delete[] renderedChunks;
+	//delete[] renderNextChunks;
 
 	skybox.release();
 
