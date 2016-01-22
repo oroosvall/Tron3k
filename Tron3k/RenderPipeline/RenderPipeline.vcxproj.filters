@@ -87,6 +87,9 @@
     <ClCompile Include="mesh\AnimationData.cpp">
       <Filter>Source Files\Mesh</Filter>
     </ClCompile>
+    <ClCompile Include="Mesh\MiscMesh.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IRenderPipeline.h">
@@ -154,6 +157,9 @@
     </ClInclude>
     <ClInclude Include="Buffer\VertexBufferUI.h">
       <Filter>Source Files\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh\MiscMesh.h">
+      <Filter>Source Files\Mesh</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

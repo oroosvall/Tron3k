@@ -49,6 +49,24 @@ struct BulletHitWorldInfo
 	glm::vec4 collisionNormal;
 };
 
+struct BulletHitEffectInfo
+{
+	int bulletPID;
+	int bulletBID;
+	BULLET_TYPE bt;
+	glm::vec3 hitPos;
+	glm::vec3 hitDir;
+	glm::vec4 collisionNormal;
+};
+
+struct EffectHitEffectInfo
+{
+	int effectPID;
+	int effectSID;
+	EFFECT_TYPE et;
+	int posInArr;
+};
+
 class Game
 {
 private:
@@ -73,6 +91,7 @@ private:
 	int max_con;
 	Player** playerList;
 	Physics* physics;
+	int localPlayerId = -1;
 
 	void checkFootsteps(float dt);
 
@@ -117,6 +136,17 @@ private:
 	std::vector<BulletHitPlayerInfo> allBulletHitsOnPlayers;
 	std::vector<EffectHitPlayerInfo> allEffectHitsOnPlayers;
 	std::vector<BulletHitWorldInfo> allBulletHitsOnWorld;
+	std::vector<BulletHitEffectInfo> allBulletHitsOnEffects;
+	std::vector<EffectHitEffectInfo> allEffectHitsOnEffects;
+
+	void checkPvPCollision();
+	void checkPlayerVBulletCollision();
+	void checkPlayerVWorldCollision(float dt);
+	void checkBulletVWorldCollision();
+	void checkBulletVEffectCollision();
+	void checkPlayerVEffectCollision();
+
+	void sendEffectBox(Effect* ef);
 
 	bool localPlayerWantsRespawn = false;
 	bool localPlayerRespawnWaiting = false;
@@ -146,11 +176,6 @@ public:
 
 	//Collision checks
 	Physics* getPhysics() { return physics; };
-
-	void checkPvPCollision();
-	void checkPlayerVBulletCollision();
-	void checkPlayerVWorldCollision(float dt);
-	void checkBulletVWorldCollision();
 
 	bool playerWantsToRespawn();
 	void allowPlayerRespawn(int p_conID, int respawnPosition);
@@ -183,13 +208,22 @@ public:
 	void clearBulletOnPlayerCollisions() { allBulletHitsOnPlayers.clear();};
 	int handleBulletHitPlayerEvent(BulletHitPlayerInfo hi); //Returns the new HP total of the player, takes the new HP total instead if info is coming from server
 
-	std::vector<EffectHitPlayerInfo> getAllEffectOnPlayerCollisions();
+	std::vector<EffectHitPlayerInfo> getAllEffectOnPlayerCollisions() { return allEffectHitsOnPlayers; };
 	void clearEffectOnPlayerCollisions() { allEffectHitsOnPlayers.clear(); };
 	int handleEffectHitPlayerEvent(EffectHitPlayerInfo hi); //Returns new HP total of player, if we are client then instead simply set HP coming from server
 
 	std::vector<BulletHitWorldInfo> getAllBulletOnWorldCollisions() { return allBulletHitsOnWorld; };
-	void clearBulletOnWorldCollision() { allBulletHitsOnWorld.clear(); };
+	void clearBulletOnWorldCollisions() { allBulletHitsOnWorld.clear(); };
 	void handleBulletHitWorldEvent(BulletHitWorldInfo hi);
+
+	std::vector<BulletHitEffectInfo> getAllBulletOnEffectCollisions() { return allBulletHitsOnEffects; };
+	void clearBulletOnEffectCollision() { allBulletHitsOnEffects.clear(); };	
+	void handleBulletHitEffectEvent(BulletHitEffectInfo hi);
+
+	std::vector<EffectHitEffectInfo> getAllEffectOnEffectCollisions() { return allEffectHitsOnEffects; };
+	void clearEffectOnEffectCollision() { allEffectHitsOnEffects.clear(); };
+	void handleEffectHitEffectEvent(EffectHitEffectInfo hi);
+
 
 	int Game::findPlayerPosInTeam(int conID);
 

@@ -2,7 +2,7 @@
 
 CollideMesh::CollideMesh()
 {
-
+	init();
 }
 
 CollideMesh::~CollideMesh()
@@ -14,6 +14,8 @@ void CollideMesh::init()
 {
 	setAABB(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(0, 0, 0));
 	getCylinderFromAABB();
+	getSphereFromAABB();
+	getAngCylinderFromAABB();
 }
 
 void CollideMesh::setAABB(glm::vec3 pos, glm::vec3 max, glm::vec3 min)
@@ -84,6 +86,22 @@ Cylinder CollideMesh::getCylinder()
 	return cylinder;
 }
 
+void CollideMesh::setSphere(glm::vec3 pos, float radius)
+{
+	sphere.pos = pos;
+	sphere.radius = radius;
+}
+
+void CollideMesh::setSphere(Sphere sphere)
+{
+	this->sphere = sphere;
+}
+
+Sphere CollideMesh::getSphere()
+{
+	return sphere;
+}
+
 void CollideMesh::getCylinderFromAABB()
 {
 	cylinder.pos = glm::vec3(boundingBox.pos);
@@ -118,6 +136,79 @@ void CollideMesh::getCylinderFromAABB()
 		grt = minZ;
 
 	cylinder.radius = grt;
+}
+
+void CollideMesh::getAngCylinderFromAABB()
+{
+	angledCylinder.pos = boundingBox.pos;
+	//rotation is impossible from an AABB, so default is (0,1,0)
+	angledCylinder.normal = vec3(0, 1, 0);
+
+	float maxY = 0;
+
+	//Calculates max height for the cylinder
+	if (abs(boundingBox.max.y - boundingBox.pos.y) > abs(boundingBox.min.y - boundingBox.pos.y))
+		maxY = abs(boundingBox.max.y - boundingBox.pos.y);
+	else
+		maxY = abs(boundingBox.min.y - boundingBox.pos.y);
+
+	cylinder.height = maxY;
+
+	//Calculates the rad for the cylinder, so that it encapsulates the entire boundingBox
+	float maxX = 0;
+	float minX = 0;
+	float maxZ = 0;
+	float minZ = 0;
+	maxX = abs(boundingBox.max.x - boundingBox.pos.x);
+	minX = abs(boundingBox.min.x - boundingBox.pos.x);
+	maxZ = abs(boundingBox.max.z - boundingBox.pos.z);
+	minZ = abs(boundingBox.min.z - boundingBox.pos.z);
+
+	float grt = maxX;
+
+	if (minX > grt)
+		grt = minX;
+	if (maxZ > grt)
+		grt = maxZ;
+	if (minZ > grt)
+		grt = minZ;
+
+	cylinder.radius = grt;
+}
+
+void CollideMesh::getSphereFromAABB()
+{
+	sphere.pos = boundingBox.pos;
+
+	float maxY = 0;
+
+	//Calculates biggest possible radius for sphere
+	if (abs(boundingBox.max.y - boundingBox.pos.y) > abs(boundingBox.min.y - boundingBox.pos.y))
+		maxY = abs(boundingBox.max.y - boundingBox.pos.y);
+	else
+		maxY = abs(boundingBox.min.y - boundingBox.pos.y);
+
+	float maxX = 0;
+	float minX = 0;
+	float maxZ = 0;
+	float minZ = 0;
+	maxX = abs(boundingBox.max.x - boundingBox.pos.x);
+	minX = abs(boundingBox.min.x - boundingBox.pos.x);
+	maxZ = abs(boundingBox.max.z - boundingBox.pos.z);
+	minZ = abs(boundingBox.min.z - boundingBox.pos.z);
+
+	float grt = maxX;
+
+	if (minX > grt)
+		grt = minX;
+	if (maxZ > grt)
+		grt = maxZ;
+	if (minZ > grt)
+		grt = minZ;
+	if (maxY > grt)
+		grt = maxY;
+
+	sphere.radius = grt;
 }
 
 void CollideMesh::setPos(glm::vec3 pos)

@@ -3,17 +3,54 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stbImage\stb_image.h"
 
+#include <fstream>
+
 GLuint blank_diffuse;
 GLuint blank_normal;
 GLuint blank_glow;
+
+void DDSTexture::load(std::string file)
+{
+
+	std::ifstream inFile(file);
+
+	width = 0;
+	height = 0;
+
+	if (inFile.is_open())
+	{
+
+		unsigned int magic;
+
+		inFile.read((char*)&magic, sizeof(unsigned int));
+
+		DDS_HEADER header;
+		inFile.read((char*)&header, sizeof(header));
+
+		if (header.ddspf.dwFourCC != MAKEFOURCC('D', 'X', 'T', '5'))
+		{
+			return;
+		}
+		else
+		{
+
+		}
+	}
+
+}
+
+bool DDSTexture::uploadTexture(GLuint &id)
+{
+
+	return true;
+}
 
 GLuint loadTexture(std::string texturePath)
 {
 	int x;
 	int y;
 	int comp;
-
-
+	
 	stbi_uc* image = stbi_load(texturePath.c_str(), &x, &y, &comp, 4);
 
 	GLuint textureID = 0;

@@ -66,7 +66,7 @@ public:
 
 	virtual int playMapSounds();
 
-
+	virtual int playJump(int, float, float, float);
 	virtual int playExternalSound(int sound, float posX, float posY, float posZ);
 	virtual int playUserGeneratedSound(int sound);
 	virtual int playDestroyer(float x, float y, float z);

@@ -34,6 +34,7 @@
     <ClCompile Include="Core\Game\Role\PlayerEffects\Modifiers\LightWallLockedControls.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Modifiers\Overcharge.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Modifiers\SprintControlLock.cpp" />
+    <ClCompile Include="Core\Game\Role\PlayerEffects\Modifiers\TrapperShareAmmo.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Modifiers\TrueGrit.cpp" />
     <ClCompile Include="Core\Game\Role\Role.cpp" />
     <ClCompile Include="Core\Game\Role\Special\Special.cpp" />
@@ -58,7 +59,7 @@
     <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\MobilityBullets\MeleeAttack.cpp" />
     <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\TrapperBullets\BulletPulseShot.cpp" />
     <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\TrapperBullets\ClusterGrenade.cpp" />
-    <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\TrapperBullets\Clutsterling.cpp" />
+    <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\TrapperBullets\Clusterling.cpp" />
     <ClCompile Include="Core\Game\Role\Weapon\Weapon.cpp" />
     <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\Brute\GrenadeLauncher.cpp" />
     <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\Brute\Shotgun.cpp" />
@@ -105,6 +106,7 @@
     <ClInclude Include="Core\Game\Role\PlayerEffects\Modifiers\LightWallLockedControls.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Modifiers\Overcharge.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Modifiers\SprintControlLock.h" />
+    <ClInclude Include="Core\Game\Role\PlayerEffects\Modifiers\TrapperShareAmmo.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Modifiers\TrueGrit.h" />
     <ClInclude Include="Core\Game\Role\Role.h" />
     <ClInclude Include="Core\Game\Role\Special\Special.h" />

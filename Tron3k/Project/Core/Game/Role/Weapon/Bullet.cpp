@@ -21,9 +21,9 @@ void Bullet::initValues(glm::vec3 position, glm::vec3 direction, int pID, int bI
 	//sets pos
 	updateWorldMat();
 	//set scale
-	worldMat[0].x = 0.2f;
-	worldMat[1].y = 0.2f;
-	worldMat[2].z = 0.2f;
+	//worldMat[0].x = 0.2f;
+	//worldMat[1].y = 0.2f;
+	//worldMat[2].z = 0.2f;
 
 	double angleY = atan2(direction.x, direction.z) - atan2(0, 0);
 	double angleX = acos(direction.y);
@@ -50,4 +50,14 @@ void Bullet::setVel(glm::vec3 inVel)
 	}
 	else
 		vel = inVel;
+}
+
+void Bullet::setDir(glm::vec3 newdir)
+{
+	resetRotation();
+	double angleY = atan2(newdir.x, newdir.z) - atan2(0,0);
+	double angleX = acos(newdir.y);
+	rotate(float(angleX), float(-angleY), 0);
+
+	dir = newdir;
 }

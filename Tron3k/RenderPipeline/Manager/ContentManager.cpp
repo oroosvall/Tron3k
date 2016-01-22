@@ -20,6 +20,9 @@ void ContentManager::init()
 
 	playerCharacters[2].load("shanker");
 
+	playerCharacters[4].load("manipulator");
+
+
 	int* lengths = playerCharacters[0].loadAnimations("trapper");
 
 	for (int i = 0; i < AnimationState::none; i++)
@@ -34,6 +37,21 @@ void ContentManager::init()
 		keyFrameLengths[2 * AnimationState::none + i] = lengths[i];
 	}
 
+	lengths = playerCharacters[4].loadAnimations("manipulator");
+
+	for (int i = 0; i < AnimationState::none; i++)
+	{
+		keyFrameLengths[4 * AnimationState::none + i] = lengths[i];
+	}
+
+	trapperBullet.load("GameFiles/CharacterFiles/primary_trapper.bin");
+	trapperConsume.load("GameFiles/CharacterFiles/consumable_Trapper.bin");
+	shankerBullet.load("GameFiles/CharacterFiles/primary_shanker.bin");
+	shankerSpecial.load("GameFiles/CharacterFiles/special_shanker.bin");
+
+	DDSTexture tex;
+
+	tex.load("GameFiles/Textures/Blank_d.dds");
 
 	//Skybox
 	skybox.init(0, 0, 0);
@@ -49,11 +67,7 @@ void ContentManager::init()
 		renderNextChunks[n] = false;
 	}
 	glGenQueries(1, &portalQuery);
-
-		
-	bullet.init(0, 0, 0);
-	bullet.load("GameFiles/TestFiles/bullet.v");
-
+	
 }
 
 void ContentManager::release()
@@ -81,7 +95,6 @@ void ContentManager::release()
 	delete[] renderNextChunks;
 
 	skybox.release();
-	bullet.release();
 
 	//collision render free
 	for (int c = 0; c < nrChunks; c++)
@@ -102,6 +115,11 @@ void ContentManager::release()
 	{
 		playerCharacters[i].release();
 	}
+
+	trapperBullet.release();
+	trapperConsume.release();
+	shankerBullet.release();
+	shankerSpecial.release();
 }
 
 ContentManager::~ContentManager()
@@ -257,13 +275,31 @@ void ContentManager::renderMisc(int renderID)
 		//
 		//glActiveTexture(GL_TEXTURE0 + 2);
 		//glBindTexture(GL_TEXTURE_2D, textures[11].textureID);
-
-		glBindVertexArray(bullet.vao);
-		glBindBuffer(GL_ARRAY_BUFFER, bullet.vbo);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bullet.ibo);
-
-		glDrawElements(GL_TRIANGLES, bullet.faceCount * 3, GL_UNSIGNED_SHORT, 0);
+		
 	}
+}
+
+void ContentManager::renderBullet(int bid)
+{
+	switch (bid)
+	{
+	case BULLET_TYPE::PULSE_SHOT:
+	case BULLET_TYPE::PLASMA_SHOT:
+		trapperBullet.draw();
+		break;
+	case BULLET_TYPE::CLUSTER_GRENADE:
+	case BULLET_TYPE::CLUSTERLING:
+		trapperConsume.draw();
+		break;
+	case BULLET_TYPE::DISC_SHOT:
+		shankerBullet.draw();
+		break;
+	case BULLET_TYPE::HACKING_DART:
+		shankerSpecial.draw();
+	default:
+		break;
+	}
+	
 }
 
 void ContentManager::renderPlayer(AnimManager::animState state, glm::mat4 world, GLuint uniformKeyMatrixLocation, bool first)

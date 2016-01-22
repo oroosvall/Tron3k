@@ -24,6 +24,8 @@ private:
 	vec3 dir;
 	vec3 start;
 
+	float playbackSpeed = 1.0f;
+
 	int centerX, centerY;
 
 	float angleH;
@@ -54,6 +56,8 @@ public:
 	glm::vec3 getPos() { return pos; };
 	void setCam(vec3 _pos, vec3 _dir);
 	void setCam(vec3 _pos);
+
+	void setPlaybackSpeed(float val) { playbackSpeed = val; };
 
 	glm::mat4* getViewMat() { return viewMat; };
 

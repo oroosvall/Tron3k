@@ -10,7 +10,11 @@
 #include "..\Mesh\AnimatedMesh.h"
 #include "..\Mesh\AnimatedMesh_v2.h"
 #include "../../Project/Core/AnimationState.h"
+#include "../../Project/Core/Game/GameDataIndex.h"
+
 #include "AnimManager.h"
+
+#include "../Mesh/MiscMesh.h"
 
 struct TextureLookup
 {
@@ -29,15 +33,19 @@ private:
 	//skybox
 	Mesh skybox;
 
-	Mesh bullet;
-
 	GLuint skyTexture;
 
 	GLuint portalQuery;
 
-	//trapper files
+	//character files
 	AnimatedMeshV2 playerCharacters[5];
 
+	// misc files
+
+	MiscMesh trapperBullet;
+	MiscMesh trapperConsume;
+	MiscMesh shankerBullet;
+	MiscMesh shankerSpecial;
 
 	struct TriangleVertex
 	{
@@ -67,6 +75,7 @@ public:
 
 	void renderChunks(GLuint shader, GLuint shaderLocation, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation, GLuint DglowColor, GLuint SglowColor, GLuint portal_shader, GLuint portal_world);
 
+	void renderBullet(int bid);
 	void renderMisc(int renderID);
 
 	void renderPlayer(AnimManager::animState, glm::mat4 world, GLuint uniformKeyMatrixLocation, bool first);

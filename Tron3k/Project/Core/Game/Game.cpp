@@ -123,7 +123,7 @@ void Game::update(float dt)
 		if (playerList[c] != nullptr)
 		{
 			playerUpdate(c, dt);
-			if (playerList[c]->isLocal())
+			if (c == localPlayerId)
 				playerApplyForces(c, dt);
 
 			//TODO: Send collision results to player
@@ -146,12 +146,14 @@ void Game::update(float dt)
 	{
 		checkPlayerVWorldCollision(dt);
 		checkBulletVWorldCollision();
+		checkPlayerVEffectCollision();
 	}
 
 	if (gameState == Gamestate::CLIENT)
 	{
 		checkPvPCollision();
 		checkPlayerVWorldCollision(dt);
+		checkPlayerVEffectCollision();
 		checkFootsteps(dt);
 	}
 
@@ -159,6 +161,7 @@ void Game::update(float dt)
 	{
 		checkBulletVWorldCollision();
 		checkPlayerVBulletCollision();
+		checkPlayerVEffectCollision();
 	}
 
 	for (int c = 0; c < max_con; c++)
@@ -178,8 +181,7 @@ void Game::update(float dt)
 				}
 				
 			}
-			if(playerList[c] != nullptr)
-				playerList[c]->movementUpdates(dt, freecam, spectatingThis, spectating);
+			playerList[c]->movementUpdates(dt, freecam, spectatingThis, spectating);
 			
 			//TODO: Send collision results to player
 		}
@@ -276,7 +278,10 @@ void Game::createPlayer(Player* p, int conID, bool isLocal)
 	playerList[conID]->setTeam(p->getTeam());
 	playerList[conID]->setRole(*templateRole);
 	if (isLocal)
+	{
+		localPlayerId = conID;
 		freecam = true;
+	}
 }
 
 void Game::removePlayer(int conID)
@@ -305,7 +310,7 @@ void Game::checkFootsteps(float dt)
 {
 	for (int i = 0; i < max_con; i++)
 	{
-		if (playerList[i] != nullptr && !playerList[i]->isLocal())
+		if (playerList[i] != nullptr && i != localPlayerId)
 		{
 			if (!playerList[i]->getFootsteps())
 			{
@@ -400,6 +405,28 @@ void Game::checkPvPCollision()
 
 }
 
+void Game::checkPlayerVEffectCollision()
+{
+	if (gameState == Gamestate::ROAM || gameState == Gamestate::CLIENT)
+	{
+		Player* local = playerList[localPlayerId];
+		//Collision for all wall-like effects i.e. only Lightwall and Thunderdome
+		for (int c = 0; c < effects[EFFECT_TYPE::LIGHT_WALL].size(); c++)
+		{
+			physics->checkPlayerVEffectCollision(local->getPos(), 1.0f, EFFECT_TYPE::LIGHT_WALL);
+		}
+
+		for (int c = 0; c < effects[EFFECT_TYPE::THUNDER_DOME].size(); c++)
+		{
+			physics->checkPlayerVEffectCollision(local->getPos(), 1.0f, EFFECT_TYPE::THUNDER_DOME);
+		}
+	}
+	if (gameState == Gamestate::ROAM || gameState == Gamestate::SERVER)
+	{
+		//Collision for all non-wall effects
+	}
+}
+
 void Game::checkPlayerVBulletCollision()
 {
 	glm::vec3 collides = glm::vec3(0, 0, 0);
@@ -418,7 +445,7 @@ void Game::checkPlayerVBulletCollision()
 					{
 						int pid = -1, bid = -1;
 						bullets[b][j]->getId(pid, bid);
-						if ((bullets[b][j]->getTeamId() != playerList[i]->getTeam() && playerList[i]->getTeam() != 0) || (playerList[pid]->getIfHacked() && pid != i)) //Don't shoot same team, don't shoot spectators
+						if ((bullets[b][j]->getTeamId() != playerList[i]->getTeam() && playerList[i]->getTeam() != 0) || (playerList[pid]->searchModifier(MODIFIER_TYPE::HACKINGDARTMODIFIER) && pid != i)) //Don't shoot same team, don't shoot spectators
 						{
 							if (playerList[i]->isAlive()) //Don't shoot dead people
 								collides = physics->checkPlayerVBulletCollision(playerList[i]->getPos() - (vec3(0, playerList[i]->getRole()->getBoxModifier(), 0)), bullets[b][j]->getPos());
@@ -455,25 +482,17 @@ void Game::checkPlayerVBulletCollision()
 
 void Game::checkPlayerVWorldCollision(float dt)
 {
-	int localP = -1;
-	for (int i = 0; i < max_con; i++)
-	{
-		if (playerList[i] != nullptr)
-			if (playerList[i]->isLocal())
-				localP = i;
-	}
-
-	if (localP != -1)
+	if (localPlayerId != -1)
 	{
 
 		vec3 posadjust = vec3(0);
 		//lower with distance from eyes to center
-		std::vector<vec4> cNorms = physics->sphereVWorldCollision(playerList[localP]->getPos() - (vec3(0, playerList[localP]->getRole()->getBoxModifier(), 0)), 1);
+		std::vector<vec4> cNorms = physics->sphereVWorldCollision(playerList[localPlayerId]->getPos() - (vec3(0, playerList[localPlayerId]->getRole()->getBoxModifier(), 0)), 1);
 
 		//if we collided with something
 		if (cNorms.size() > 0)
 		{
-			playerList[localP]->setCollisionInfo(cNorms);
+			playerList[localPlayerId]->setCollisionInfo(cNorms);
 
 			//Rest is handled by player
 		}
@@ -504,56 +523,6 @@ void Game::checkBulletVWorldCollision()
 			}
 		}
 	}
-	
-	// reflection test code
-	/*
-	std::vector<glm::vec4> collides;
-
-	for (unsigned int b = 0; b < BULLET_TYPE::NROFBULLETS; b++)
-	{
-		for (unsigned int j = 0; j < bullets[b].size(); j++)
-		{
-			if (bullets[b][j] != nullptr)
-			{
-				int pid = -1, bid = -1;
-				bullets[b][j]->getId(pid, bid);
-				collides = physics->sphereVWorldCollision(bullets[b][j]->getPos(), 0.4);
-
-				if (collides.size() > 0)
-				{
-					vec4 combinedNormal(0); // all normals added together and then normalized
-					vec4 posadjust(0); //pendepths combined
-					for (unsigned int n = 0; n < collides.size(); n++)
-					{
-						posadjust += collides[n] * collides[n].w;
-						combinedNormal += collides[n];
-					}
-
-					// the w component holds the pendepth
-					vec3 combinedNormal2 = vec3(combinedNormal);
-
-					//reflect!!
-					if (combinedNormal2 != glm::vec3(0, 0, 0))
-					{
-						combinedNormal2 = normalize(combinedNormal2);
-						bullets[b][j]->setDir(reflect(bullets[b][j]->getDir(), combinedNormal2));
-
-						//use pendepth to set a new pos 
-						bullets[b][j]->setPos(bullets[b][j]->getPos() + vec3(posadjust));
-
-						// remove bullet code
-						//BulletHitWorldInfo hi;
-						//hi.bt = BULLET_TYPE(b); hi.hitPos = bullets[b][j]->getPos(); hi.hitDir = bullets[b][j]->getDir();
-						//bullets[b][j]->getId(hi.bulletPID, hi.bulletBID);
-						//hi.collisionNormal = collides;
-						//allBulletHitsOnWorld.push_back(hi);
-						//handleBulletHitWorldEvent(hi);
-					}
-				}
-			}
-		}
-	}*/
-
 }
 
 void Game::registerWeapon(Player* p)
@@ -594,7 +563,7 @@ void Game::registerConsumable(Player* p)
 
 void Game::handleWeaponSwitch(int conID, WEAPON_TYPE ws, int swapLoc)
 {
-	if (!playerList[conID]->isLocal())
+	if (conID != localPlayerId)
 		playerList[conID]->switchWpn(ws, swapLoc);
 }
 
@@ -840,6 +809,8 @@ void Game::handleConsumableUse(int conID, CONSUMABLE_TYPE ct, glm::vec3 pos, glm
 		break;
 	case CONSUMABLE_TYPE::LIGHTSPEED:
 		playerList[conID]->addModifier(LIGHTSPEEDMODIFIER);
+		if (GetSoundActivated())
+			GetSound()->playExternalSound(SOUNDS::soundEffectLightSpeed, pos.x, pos.y, pos.z);
 		break;
 	case CONSUMABLE_TYPE::THERMITEGRENADE:
 		addBulletToList(conID, 0, BULLET_TYPE::THERMITE_GRENADE, pos, dir);
@@ -873,6 +844,9 @@ void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec
 	break;
 	case SPECIAL_TYPE::MULTIJUMP:
 	{
+		if (GetSoundActivated())
+			GetSound()->playExternalSound(SOUNDS::soundEffectTrapperMultiJump, pos.x, pos.y, pos.z);
+
 		vec3 vel = p->getVelocity();
 		if (vel.y < 0)
 		{
@@ -892,7 +866,7 @@ void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec
 		bool jumped = false;
 		for (int c = 0; c < size && !jumped; c++)
 		{
-			if (cNorms[c].y < 0.2f && cNorms[c].y > -0.2f)
+			if (cNorms[c].y < 0.5f && cNorms[c].y > -0.2f)
 			{
 				jumped = true;
 				glm::vec3 reflect = normalize(glm::vec3(cNorms[c].x, 0, cNorms[c].z));
@@ -910,6 +884,8 @@ void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec
 	case SPECIAL_TYPE::HACKINGDARTSPECIAL:
 	{
 		addBulletToList(conID, 0, BULLET_TYPE::HACKING_DART, pos, dir);
+		if (GetSoundActivated())
+			GetSound()->playExternalSound(SOUNDS::soundEffectHackingDart, pos.x, pos.y, pos.z);
 	}
 	break;
 	case SPECIAL_TYPE::SPRINTD:		// D = Destroyer
@@ -934,6 +910,8 @@ void Game::addEffectToList(int conID, int effectId, EFFECT_TYPE et, glm::vec3 po
 	{
 	case EFFECT_TYPE::LIGHT_WALL:
 		e = new LightwallEffect(p);
+		if (GetSoundActivated())
+			GetSound()->playExternalSound(SOUNDS::soundEffectLightWall, pos.x, pos.y, pos.z);
 		break;
 	case EFFECT_TYPE::EXPLOSION:
 		e = new Explosion();
@@ -1050,9 +1028,13 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 		{
 		case BULLET_TYPE::CLUSTER_GRENADE:
 			bounceBullet(hi, b);
+			if (GetSoundActivated())
+				GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
 			break;
 		case BULLET_TYPE::CLUSTERLING:
 			bounceBullet(hi, b);
+			if (GetSoundActivated())
+				GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
 			break;
 		case BULLET_TYPE::THERMITE_GRENADE:
 			bounceBullet(hi, b);
@@ -1073,6 +1055,100 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 			break;
 		default:
 			removeBullet(hi.bt, arraypos);
+			break;
+		}
+	}
+}
+
+void Game::handleBulletHitEffectEvent(BulletHitEffectInfo hi)
+{
+	int arraypos = -1;
+	Bullet* b = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, arraypos);
+	//Jag hatar structs ... please do better
+	BulletHitWorldInfo forBounce; forBounce.bulletPID = hi.bulletPID; forBounce.bulletBID = hi.bulletBID; forBounce.bt = hi.bt; forBounce.hitPos = hi.hitPos; forBounce.hitDir = hi.hitDir; forBounce.collisionNormal = hi.collisionNormal;
+	if (b != nullptr)
+	{
+		vec3 temp;
+		switch (hi.bt)
+		{
+		case BULLET_TYPE::PULSE_SHOT:
+			removeBullet(hi.bt, arraypos);			
+			break;
+		case BULLET_TYPE::PLASMA_SHOT:
+			removeBullet(hi.bt, arraypos);
+			break;
+		case BULLET_TYPE::GRENADE_SHOT:
+			bounceBullet(forBounce, b);
+			if (GetSoundActivated())
+				GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+			break;
+		case BULLET_TYPE::SHOTGUN_PELLET:
+			removeBullet(hi.bt, arraypos);
+			break;
+		case BULLET_TYPE::THERMITE_GRENADE:
+			bounceBullet(forBounce, b);
+			if (GetSoundActivated())
+				GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+			break;
+		case BULLET_TYPE::CLEANSE_BOMB:
+			bounceBullet(forBounce, b);
+			if (GetSoundActivated())
+				GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+			break;
+		case BULLET_TYPE::CLUSTER_GRENADE:
+			bounceBullet(forBounce, b);
+			if (GetSoundActivated())
+				GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+			break;
+		case BULLET_TYPE::CLUSTERLING:
+			bounceBullet(forBounce, b);
+			if (GetSoundActivated())
+				GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+			break;
+		case BULLET_TYPE::BATTERY_SLOW_SHOT:
+			removeBullet(hi.bt, arraypos);
+			break;
+		case BULLET_TYPE::BATTERY_SPEED_SHOT:
+			removeBullet(hi.bt, arraypos);
+			break;
+		case BULLET_TYPE::LINK_SHOT:
+			removeBullet(hi.bt, arraypos);
+			break;
+		case BULLET_TYPE::VACUUM_GRENADE:
+			bounceBullet(forBounce, b);
+			if (GetSoundActivated())
+				GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+			break;
+		case BULLET_TYPE::DISC_SHOT:
+			bounceBullet(forBounce, b);
+			break;
+		case BULLET_TYPE::HACKING_DART:
+			removeBullet(hi.bt, arraypos);
+			break;
+		case BULLET_TYPE::MELEE_ATTACK:
+			removeBullet(hi.bt, arraypos);
+			break;
+		}
+	}
+}
+
+void Game::handleEffectHitEffectEvent(EffectHitEffectInfo hi)
+{
+	int arraypos = -1;
+	Effect* e = getSpecificEffect(hi.effectPID, hi.effectSID, hi.et, hi.posInArr);
+
+	if (e != nullptr)
+	{
+		switch (hi.et)
+		{
+		case EFFECT_TYPE::EXPLOSION:
+			removeEffect(hi.et, hi.posInArr);
+			break;
+		case EFFECT_TYPE::LIGHT_WALL:
+			removeEffect(hi.et, hi.posInArr);
+			break;
+		case EFFECT_TYPE::CLEANSEEXPLOSION:
+			removeEffect(hi.et, hi.posInArr);
 			break;
 		}
 	}
@@ -1114,6 +1190,9 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 
 			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
 			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(15.0f);
+
+			if (GetSoundActivated())
+				GetSound()->playExternalSound(SOUNDS::soundEffectClusterGrenade, parent->getPos().x, parent->getPos().y, parent->getPos().z);
 			break;
 		}
 		case BULLET_TYPE::CLUSTERLING:

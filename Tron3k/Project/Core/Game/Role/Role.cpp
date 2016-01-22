@@ -243,6 +243,18 @@ void Role::returnToLife()
 	weapons[1]->reset();
 }
 
+bool Role::getIfBusy()
+{
+	bool tester = false;
+
+	if (weapons[currentWpn]->getIfReloading() || weapons[currentWpn]->getIfShooting())
+	{
+		tester = true;
+	}
+
+	return tester;
+}
+
 int Role::getRole()
 {
 	return role;

@@ -222,9 +222,6 @@
     <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\TrapperBullets\ClusterGrenade.cpp">
       <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\TrapperBullets</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\TrapperBullets\Clutsterling.cpp">
-      <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\TrapperBullets</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\Explosion.cpp">
       <Filter>Source Files\Core\Game\Role\PlayerEffects\Effects</Filter>
     </ClCompile>
@@ -251,9 +248,6 @@
     </ClCompile>
     <ClCompile Include="Network\Netlog.cpp">
       <Filter>Source Files\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Game\Role\Special\SpecialTypes\WallJump.cpp">
-      <Filter>Source Files\Core\Game\Role\PlayerEffects\Modifiers</Filter>
     </ClCompile>
     <ClCompile Include="Core\Game\Role\PlayerEffects\Modifiers\TrueGrit.cpp">
       <Filter>Source Files\Core\Game\Role\PlayerEffects\Modifiers</Filter>
@@ -284,6 +278,15 @@
     </ClCompile>
     <ClCompile Include="Core\ui\staticBox.cpp">
       <Filter>Source Files\Core\Ui\uiVisionClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\TrapperBullets\Clusterling.cpp">
+      <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\TrapperBullets</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Game\Role\PlayerEffects\Modifiers\TrapperShareAmmo.cpp">
+      <Filter>Source Files\Core\Game\Role\PlayerEffects\Modifiers</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Game\Role\Special\SpecialTypes\WallJump.cpp">
+      <Filter>Source Files\Core\Game\Role\Special\SpecialTypes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -476,9 +479,6 @@
     <ClInclude Include="Network\Netlog.h">
       <Filter>Source Files\Network</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Game\Role\Special\SpecialTypes\WallJump.h">
-      <Filter>Source Files\Core\Game\Role\PlayerEffects\Modifiers</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Game\Role\PlayerEffects\Modifiers\TrueGrit.h">
       <Filter>Source Files\Core\Game\Role\PlayerEffects\Modifiers</Filter>
     </ClInclude>
@@ -511,6 +511,11 @@
     </ClInclude>
     <ClInclude Include="Core\ui\uiVertex.h">
       <Filter>Source Files\Core\Ui</Filter>
+    <ClInclude Include="Core\Game\Role\PlayerEffects\Modifiers\TrapperShareAmmo.h">
+      <Filter>Source Files\Core\Game\Role\PlayerEffects\Modifiers</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Special\SpecialTypes\WallJump.h">
+      <Filter>Source Files\Core\Game\Role\Special\SpecialTypes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

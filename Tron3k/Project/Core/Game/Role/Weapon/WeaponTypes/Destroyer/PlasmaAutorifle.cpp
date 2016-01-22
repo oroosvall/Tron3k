@@ -14,7 +14,7 @@ void PlasmaAutorifle::init()
 {
 	weaponType = WEAPON_TYPE::PLASMA_AUTORIFLE;
 
-	maxClipSize = 62;
+	maxClipSize = 60;
 	currentClipAmmo = maxClipSize;
 
 	currentBulletId = 0;

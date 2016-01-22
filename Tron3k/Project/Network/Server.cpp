@@ -40,7 +40,7 @@ void Server::event_bullet_hit_player(std::vector<BulletHitPlayerInfo> allhits)
 void Server::event_bullet_hit_world(std::vector<BulletHitWorldInfo> allhits)
 {
 	Packet* out = new Packet();
-	*out << Uint8(NET_INDEX::EVENT) << Uint8(NET_EVENT::WORLD_HIT);
+	*out << Uint8(NET_INDEX::EVENT) << Uint8(NET_EVENT::BULLET_WORLD_HIT);
 	*out << Uint8(allhits.size());
 	for (unsigned int c = 0; c < allhits.size(); c++)
 	{
@@ -58,7 +58,19 @@ void Server::event_bullet_hit_world(std::vector<BulletHitWorldInfo> allhits)
 
 void Server::event_effect_hit_player(std::vector<EffectHitPlayerInfo> allhits)
 {
+	Packet* out = new Packet();
+	*out << Uint8(NET_INDEX::EVENT) << Uint8(NET_EVENT::EFFECT_PLAYER_HIT);
+	*out << Uint8(allhits.size());
+	for (unsigned int c = 0; c < allhits.size(); c++)
+	{
+		*out << Uint8(allhits[c].playerHit) << Uint8(allhits[c].effectPID) << Uint8(allhits[c].effectID);
+		*out << Uint8(allhits[c].et);
+		*out << allhits[c].hitPos.x << allhits[c].hitPos.y << allhits[c].hitPos.z;
+		*out << Uint8(allhits[c].newHPtotal);
+	}
 
+	branch(out, -1);
+	delete out;
 }
 
 Server::~Server()

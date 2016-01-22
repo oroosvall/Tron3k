@@ -48,6 +48,21 @@ public:
 		worldMat[1].w += pos.y;
 		worldMat[2].w += pos.z;
 	}
+
+	void resetRotation()
+	{
+		glm::vec3 pos = glm::vec3(worldMat[0].w, worldMat[2].w, worldMat[2].w);
+
+		worldMat = glm::mat4(1.0f, 0.0f, 0.0f, 0.0f,
+			0.0f, 1.0f, 0.0f, 0.0f,
+			0.0f, 0.0f, 1.0f, 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0);
+
+		//move back to worldspace pos
+		worldMat[0].w += pos.x;
+		worldMat[1].w += pos.y;
+		worldMat[2].w += pos.z;
+	}
 };
 
 #endif

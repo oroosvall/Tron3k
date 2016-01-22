@@ -83,6 +83,8 @@ public:
 
 	float getBoxModifier() { return boundingBoxModifier; }
 
+	bool getIfBusy();
+
 	int getRole();
 };
 #endif

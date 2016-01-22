@@ -50,6 +50,15 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->soundList[SOUNDS::soundAids].loadFromFile("GameFiles/Sound/soundAids.ogg");
 		singleton->musicList[MUSIC::cantinaSong] = "GameFiles/Sound/cantinaSong.ogg";
 		singleton->soundList[SOUNDS::power].loadFromFile("GameFiles/Sound/Power.ogg");
+		singleton->soundList[SOUNDS::soundEffectGrenadeBounce].loadFromFile("GameFiles/Sound/soundEffectGrenadeBounce.ogg");
+		singleton->soundList[SOUNDS::soundEffectHackingDart].loadFromFile("GameFiles/Sound/soundEffectHackingDart.ogg");
+		singleton->soundList[SOUNDS::soundEffectLightSpeed].loadFromFile("GameFiles/Sound/soundEffectLightSpeed2.ogg");
+		singleton->soundList[SOUNDS::soundEffectTrapperJump].loadFromFile("GameFiles/Sound/soundEffectTrapperJump.ogg");
+		singleton->soundList[SOUNDS::soundEffectTrapperLand].loadFromFile("GameFiles/Sound/soundEffectTrapperLand.ogg");
+		singleton->soundList[SOUNDS::soundEffectTrapperMultiJump ].loadFromFile("GameFiles/Sound/soundEffectTrapperMultiJump.ogg");
+		singleton->soundList[SOUNDS::soundEffectLightWall].loadFromFile("GameFiles/Sound/soundEffectLightWall.ogg");
+		singleton->soundList[SOUNDS::soundEffectYouDied].loadFromFile("GameFiles/Sound/soundEffectYouDied.ogg");
+		singleton->soundList[SOUNDS::soundEffectHunterJump].loadFromFile("GameFiles/Sound/soundEffectHunterJump.ogg");
 
 		initialized = true;
 	}
@@ -68,6 +77,23 @@ SoundPlayer::SoundPlayer()
 SoundPlayer::~SoundPlayer()
 {
 	
+}
+
+int SoundPlayer::playJump(int role, float x, float y, float z)
+{
+	if (role == 0)
+	{
+			GetSound()->playExternalSound(SOUNDS::soundEffectTrapperJump, x, y, z);
+	}
+
+	else if (role == 2)
+	{
+		GetSound()->playExternalSound(SOUNDS::soundEffectHunterJump, x, y, z);
+	}
+	else
+	{
+		return 0;
+	}
 }
 
 int SoundPlayer::playMapSounds()

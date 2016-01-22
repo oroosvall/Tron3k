@@ -16,6 +16,9 @@
     <Filter Include="Source Files\Collision">
       <UniqueIdentifier>{5a0cba8c-d892-43d4-8951-fd07104d80ce}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Effect">
+      <UniqueIdentifier>{83fbf811-151c-4244-aa98-242bcc256376}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Collision\CollideMesh.h">
@@ -30,6 +33,9 @@
     <ClInclude Include="Collision\Chunk.h">
       <Filter>Source Files\Collision</Filter>
     </ClInclude>
+    <ClInclude Include="Effect\EffectMesh.h">
+      <Filter>Source Files\Effect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Collision\Geometry.cpp">
@@ -43,6 +49,9 @@
     </ClCompile>
     <ClCompile Include="Collision\Chunk.cpp">
       <Filter>Source Files\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Effect\EffectMesh.cpp">
+      <Filter>Source Files\Effect</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

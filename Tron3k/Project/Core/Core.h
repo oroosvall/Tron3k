@@ -58,8 +58,11 @@ private:
 
 	//network
 	float tick_timer;
+
+	//netlog
 	bool client_record;
 	bool client_playback;
+	float playbackSpeed = 1.0f;
 
 	//gamestate update functions
 	void upStart(float dt);

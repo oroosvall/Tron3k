@@ -19,7 +19,7 @@ bool WallJump::allowedToActivate(Player* p)
 
 		for (int c = 0; c < size; c++)
 		{
-			if (cNorms[c].y < 0.2f && cNorms[c].y > -0.2f)
+			if (cNorms[c].y < 0.5f && cNorms[c].y > -0.2f)
 			{
 				printf("Walljump\n");
 				return true;

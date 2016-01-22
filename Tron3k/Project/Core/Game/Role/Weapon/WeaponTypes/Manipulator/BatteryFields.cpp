@@ -47,10 +47,10 @@ void BatteryFields::init()
 
 	currentBulletId = 0;
 
-	firingSpeed = 0.0f;
+	firingSpeed = 1.0f;
 	firingSpeedCurrentDelay = 0;
 
-	reloadTime = 1.0f;
+	reloadTime = 1.5f;
 	rldTimer = 0;
 }
 

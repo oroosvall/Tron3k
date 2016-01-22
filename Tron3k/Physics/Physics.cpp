@@ -1,5 +1,4 @@
 #include "Physics.h"
-
 //#include <vld.h>
 
 Physics::Physics()
@@ -58,9 +57,9 @@ vec3 Physics::checkAABBvAABBCollision(Geometry* obj1, Geometry* obj2)
 
 bool Physics::checkAABBvAABBCollision(AABB* mesh1, AABB* mesh2)
 {
-	if (mesh1->max.x > mesh2->min.x && mesh1->min.x < mesh2->max.x)//x
-		if (mesh1->max.y > mesh2->min.y && mesh1->min.y < mesh2->max.y)//y
-			if (mesh1->max.z > mesh2->min.z && mesh1->min.z < mesh2->max.z)//y
+	if (mesh1->max.x + FLT_EPSILON >= mesh2->min.x - FLT_EPSILON && mesh1->min.x - FLT_EPSILON <= mesh2->max.x + FLT_EPSILON)//x
+		if (mesh1->max.y + FLT_EPSILON >= mesh2->min.y - FLT_EPSILON && mesh1->min.y - FLT_EPSILON <= mesh2->max.y + FLT_EPSILON)//y
+			if (mesh1->max.z + FLT_EPSILON >= mesh2->min.z - FLT_EPSILON && mesh1->min.z - FLT_EPSILON <= mesh2->max.z + FLT_EPSILON)//y
 				return true;
 
 	return false;
@@ -126,56 +125,95 @@ vec3 Physics::checkAABBvCylinderCollision(CollideMesh mesh1, CollideMesh mesh2)
 
 vec3 Physics::checkAABBvAngledCylinderCollision(CollideMesh mesh1, CollideMesh mesh2)
 {
-	return vec3(1, 1, 1);
+	glm::vec3 collided = glm::vec3(0, 0, 0);
+	return collided;
 }
 
 vec3 Physics::checkAABBvSphereCollision(CollideMesh mesh1, CollideMesh mesh2)
 {
-	return vec3(1, 1, 1);
+	glm::vec3 collided = glm::vec3(0, 0, 0);
+	return collided;
 }
 //--------------//--------------//
 
 //--------OBB Collisions--------//
 vec3 Physics::checkOBBvOBBCollision(Geometry* obj1, Geometry* obj2)
 {
-	return vec3(1, 1, 1);
+	glm::vec3 collided = glm::vec3(0, 0, 0);
+	return collided;
 }
 
 vec3 Physics::checkOBBvOBBCollision(CollideMesh mesh1, CollideMesh mesh2)
 {
-	return vec3(1, 1, 1);
+	glm::vec3 collided = glm::vec3(0, 0, 0);
+	return collided;
 }
 
 vec3 Physics::checkOBBvCylinderCollision(CollideMesh mesh1, CollideMesh mesh2)
 {
-	return vec3(1, 1, 1);
+	glm::vec3 collided = glm::vec3(0, 0, 0);
+	return collided;
 }
 
 vec3 Physics::checkOBBvAngledCylinderCollision(CollideMesh mesh1, CollideMesh mesh2)
 {
-	return vec3(1, 1, 1);
-}
-
-vec3 Physics::checkOBBvSphereCollision(CollideMesh mesh1, CollideMesh mesh2)
-{
-	return vec3(1, 1, 1);
+	glm::vec3 collided = glm::vec3(0, 0, 0);
+	return collided;
 }
 //--------------//--------------//
 
 //-----Cylinder Collisions------//
 vec3 Physics::checkCylindervCylinderCollision(CollideMesh mesh1, CollideMesh mesh2)
 {
-	return vec3(1, 1, 1);
+	glm::vec3 collided = glm::vec3(0, 0, 0);
+	return collided;
 }
 
 vec3 Physics::checkCylindervSphereCollision(CollideMesh mesh1, CollideMesh mesh2)
 {
-	return vec3(1, 1, 1);
+	glm::vec3 collided = glm::vec3(0, 0, 0);
+	return collided;
 }
 
 vec3 Physics::checkAngledCylindervSphereCollision(CollideMesh mesh1, CollideMesh mesh2)
 {
-	return vec3(1, 1, 1);
+	glm::vec3 collided = glm::vec3(0, 0, 0);
+	return collided;
+}
+//--------------//--------------//
+
+//-------Sphere Collision-------//
+glm::vec3 Physics::checkSpherevSphereCollision(CollideMesh mesh1, CollideMesh mesh2)
+{
+	glm::vec3 collided = glm::vec3(0, 0, 0);
+	return collided;
+}
+
+vec3 Physics::checkSpherevOBBCollision(CollideMesh mesh1, CollideMesh mesh2) //mesh 1 = Sphere, mesh2 = obb
+{
+	std::vector<vec4> cNorms;
+	vec4 t = glm::vec4(0);
+	vec3 collisionNormal = vec3(0, 0, 0);
+
+	return vec3(0, 0, 0);
+
+	if (checkAABBvAABBCollision(mesh1.getAABB(), mesh2.getAABB()))
+	{
+		//printf("%d %d \n", i, j); // test for abbs so they register
+
+		//for each obb contained in that abb
+		//int size = worldBoxes[i][j].boundingBox.ObbBoxes.size();
+		//for (int n = 0; n < size; n++)
+		//{
+			//t = getSpherevOBBNorms(playerPos, rad, &worldBoxes[i][j].boundingBox.ObbBoxes[n]);
+			//t.w = rad - t.w; //penetration depth instead of collision distance 
+			if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= mesh1.getSphere().radius + FLT_EPSILON)
+			{
+				t = vec4(normalize(vec3(t)), t.w);
+				cNorms.push_back(t);
+			}
+		//}
+	}
 }
 //--------------//--------------//
 
@@ -197,7 +235,7 @@ float Physics::checkLinevPlaneCollision(vec3 l1, vec3 l2, vec3 p1, vec3 p2, vec3
 	if (dot(l, p) == 0)
 		return -1;
 
-	x = (dot(p2-l1, p) / (dot(l3, p)));
+	x = (dot(p2 - l1, p) / (dot(l3, p)));
 
 	if (x >= 0 && x <= 1)
 		return x;
@@ -349,7 +387,7 @@ std::vector<vec3> Physics::getCollisionNormal(AABB* aabb1, AABB* aabb2)
 	{
 		//Left plane collision
 		collideX = true;
- 		norms.push_back(vec3(-collides1, 0, 0));
+		norms.push_back(vec3(-collides1, 0, 0));
 	}
 
 	return norms;
@@ -359,7 +397,7 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb)
 {
 	vec4 t;
 	vec4 closest;
-	closest.w = 9999999999.0f;
+	closest.w = FLT_MAX;
 
 	//test vs all planes
 	for (int n = 0; n < 6; n++)
@@ -367,10 +405,10 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb)
 		// send inverse plane normal as dir
 		// t.w will be distance to the wall -1 if no wall was close enough
 		t = obb->planes[n].intersects(pos, -obb->planes[n].n, rad);
-		
+
 		// if a valid intersection found
 		//plane intersection will always be closer than all other intersections on the obb
-		if (t.w > 0) 
+		if (t.w > 0)
 		{
 			return t;
 		}
@@ -381,15 +419,15 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb)
 	for (int n = 0; n < 12; n++)
 	{
 		t = obb->lines[n].sphere_intersects(pos, rad);
-	
-		if (t.w > 0)
+
+		if (t.w >= 0 - FLT_EPSILON)
 			if (t.w < closest.w) // a new closest dist was found
 				closest = t;
 	}
-	
+
 	//if we found a line intersection it will always be closer
 	//than all the corner intersections
-	if (closest.w < 9999999999.0f)
+	if (closest.w < FLT_MAX)
 		return closest;
 
 	vec3 test;
@@ -400,15 +438,15 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb)
 		test = pos - obb->corners[n];
 		test_len = length(test);
 
-		if (test_len < closest.w)
+		if (test_len <= closest.w)
 		{
 			closest.x = test.x; closest.y = test.y; closest.z = test.z;
 			closest.w = test_len;
 		}
 	}
 
-	// if the closest one if fourther than sphere rad = no intersection
-	if (closest.w > rad)
+	// if the closest one if further than sphere rad = no intersection
+	if (closest.w + FLT_EPSILON > rad - FLT_EPSILON)
 		closest.w = -1;
 
 	return closest;
@@ -416,37 +454,44 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb)
 
 vec3 Physics::getCollisionNormal(Cylinder cylinder, AABB aabb)
 {
-	return vec3(1, 1, 1);
+	glm::vec3 normal = glm::vec3(0, 0, 0);
+	return normal;
 }
 
 vec3 Physics::getCollisionNormal(AngledCylinder cylinder, AABB aabb)
 {
-	return vec3(1, 1, 1);
+	glm::vec3 normal = glm::vec3(0, 0, 0);
+	return normal;
 }
 
 vec3 Physics::getCollisionNormal(Sphere sphere, AABB aabb)
 {
-	return vec3(1, 1, 1);
+	glm::vec3 normal = glm::vec3(0, 0, 0);
+	return normal;
 }
 
 vec3 Physics::getCollisionNormal(OBB obb1, OBB obb2)
 {
-	return vec3(1, 1, 1);
+	glm::vec3 normal = glm::vec3(0, 0, 0);
+	return normal;
 }
 
 vec3 Physics::getCollisionNormal(Cylinder cylinder, OBB obb)
 {
-	return vec3(1, 1, 1);
+	glm::vec3 normal = glm::vec3(0, 0, 0);
+	return normal;
 }
 
 vec3 Physics::getCollisionNormal(AngledCylinder cylinder, OBB obb)
 {
-	return vec3(1, 1, 1);
+	glm::vec3 normal = glm::vec3(0, 0, 0);
+	return normal;
 }
 
 vec3 Physics::getCollisionNormal(Sphere sphere, OBB obb)
 {
-	return vec3(1, 1, 1);
+	glm::vec3 normal = glm::vec3(0, 0, 0);
+	return normal;
 }
 //--------------//--------------//
 
@@ -484,7 +529,7 @@ vec3 Physics::checkPlayerVBulletCollision(vec3 playerPos, vec3 bulletPos)
 	vec3 collide = vec3(0, 0, 0);// checkAABBCollision(playerBox, bulletBox);
 
 	if (checkAABBvAABBCollision(&playerBox.boundingBox, &bulletBox.boundingBox))
-		return normalize( playerPos - bulletPos);
+		return normalize(playerPos - bulletPos);
 
 	return collide;
 }
@@ -518,7 +563,7 @@ std::vector<vec4> Physics::sphereVWorldCollision(vec3 playerPos, float rad)
 				{
 					t = getSpherevOBBNorms(playerPos, rad, &worldBoxes[i][j].boundingBox.ObbBoxes[n]);
 					t.w = rad - t.w; //penetration depth instead of collision distance 
-					if (t.w > 0 && t.w < rad)
+					if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 					{
 						t = vec4(normalize(vec3(t)), t.w);
 						cNorms.push_back(t);
@@ -536,7 +581,7 @@ vec3 Physics::checkBulletVWorldCollision(vec3 bulletPos)
 	vec3 collides = vec3(0, 0, 0);
 
 	vec3 size = vec3(0.2f, 0.2f, 0.2f);
-	bulletBox.setAABB(bulletPos, bulletPos + size, bulletPos -size);
+	bulletBox.setAABB(bulletPos, bulletPos + size, bulletPos - size);
 
 	for (unsigned int i = 0; i < worldBoxes.size(); i++)
 	{
@@ -551,12 +596,48 @@ vec3 Physics::checkBulletVWorldCollision(vec3 bulletPos)
 	return collides;
 }
 
+vec3 Physics::checkPlayerVEffectCollision(glm::vec3 playerPos, float rad, unsigned int eType)
+{
+	glm::vec3 collided = vec3(0, 0, 0);
+
+	AABB box;
+	box.max = playerPos + vec3(rad, rad, rad);
+	box.min = playerPos - vec3(rad, rad, rad);
+	playerBox.setAABB(box);
+
+	for (int i = 0; i < effectBoxes.size(); i++)
+	{
+		if (effectBoxes[i].getEType() == eType)
+		{
+			if (effectBoxes[i].getEType() == 0)//Lightwall, aka OBB
+			{
+				collided = checkSpherevOBBCollision(playerBox, effectBoxes[i].getCollisionMesh());
+			}
+			else if (effectBoxes[i].getEType() > 8)//False box, no collision
+			{
+				
+			}
+			else //evrything else is a sphere, if not, not my goddamn problem
+			{
+				collided = checkSpherevSphereCollision(playerBox, effectBoxes[i].getCollisionMesh());
+			}
+		}
+	}
+	return collided;
+}
+
+vec3 Physics::checkBulletVEffectCollision(glm::vec3 bulletPos)
+{
+	glm::vec3 collided = glm::vec3(0, 0, 0);
+	return collided;
+}
+
 float Physics::addGravity(float dt)
 {
 	return GRAVITY * dt;
 }
 
-vec3 Physics::normalize(vec3 &vec3)
+vec3 Physics::normalize(vec3 vec3)
 {
 	float len = abs(vec3.x) + abs(vec3.y) + abs(vec3.z);
 
@@ -568,6 +649,168 @@ vec3 Physics::normalize(vec3 &vec3)
 	}
 
 	return vec3;
+
+}
+
+void Physics::receiveEffectBox(std::vector<float> eBox, unsigned int etype, int pID, int eID)
+{
+	//sphere
+	//obb
+
+	/*
+	Center för sfärer, startpositionen för lightwalls
+	0 = x
+	1 = y
+	2 = z
+
+	3 = radie, eller höjd OM 4 FINNS
+
+	slutposition för lightwalls
+	4 = x2
+	5 = y2
+	6 = z2
+	*/
+	EffectMesh effMesh;
+	effMesh.init();
+	CollideMesh temp;
+
+	AABB aabb;
+	Sphere sphere;
+	if (eBox.size() > 4)
+	{
+		//OBB
+		glm::vec3 pos1;
+		glm::vec3 pos2;
+		pos1.x = eBox[0];
+		pos1.y = eBox[1];
+		pos1.z = eBox[2];
+
+		pos2.x = eBox[4];
+		pos2.y = eBox[5];
+		pos2.z = eBox[6];
+
+		glm::vec3 pos, max, min;
+
+		pos = (pos1 + pos2) / 2.0f;
+
+		if (pos1.x > pos2.x)
+		{
+			max.x = pos1.x;
+			min.x = pos2.x;
+		}
+		else
+		{
+			max.x = pos2.x;
+			min.x = pos1.x;
+		}
+
+		if (pos1.z > pos2.z)
+		{
+			max.z = pos1.z;
+			min.z = pos2.z;
+		}
+		else
+		{
+			max.z = pos2.z;
+			min.z = pos1.z;
+		}
+
+		max.y = pos.y + eBox[3];
+		min.y = pos.y - eBox[3];
+
+		aabb.pos = pos;
+		aabb.max = max;
+		aabb.min = min;
+
+		OBBloaded obbl;
+
+		obbl.corners[0] = vec4(min, 1.0f);
+		obbl.corners[1] = vec4(max.x, min.y, max.z, 1.0f);
+		obbl.corners[2] = vec4(min.x, max.y, max.z, 1.0f);
+		obbl.corners[3] = vec4(max, 1.0f);
+		obbl.corners[4] = vec4(max.x, min.y, min.z, 1.0f);
+		obbl.corners[5] = vec4(max.x, max.y, min.z, 1.0f);
+		obbl.corners[6] = vec4(min.x, min.y, max.z, 1.0f);
+		obbl.corners[7] = vec4(max.x, min.y, min.z, 1.0f);
+
+		float angle;
+
+		vec3 centeredPos1 = pos1 - pos;
+		vec3 centeredPos2 = pos2 - pos;
+
+		vec2 x = vec2(1, 0);
+		vec2 normCentPos2 = glm::normalize(vec2(centeredPos2.x, centeredPos2.z));
+		angle = dot(x, normCentPos2);
+		angle = acos(angle);
+
+		vec2 centPos1Angled = vec2(centeredPos1.x, centeredPos1.z);
+		vec2 centPos2Angled = vec2(centeredPos2.x, centeredPos2.z);
+
+		centPos1Angled.x = centeredPos1.x * cos(-angle) - centeredPos1.z * sin(-angle);
+		centPos1Angled.y = centeredPos1.z * sin(-angle) + centeredPos1.x * cos(-angle);
+
+		centPos2Angled.x = centeredPos2.x * cos(-angle) - centeredPos2.z * sin(-angle);
+		centPos2Angled.y = centeredPos2.z * sin(-angle) + centeredPos2.x * cos(-angle);
+
+		glm::vec3 corners[8];
+		corners[0] = glm::vec3(centPos1Angled.x - 0.25f, -eBox[3], centPos1Angled.y + 0.25f);
+		corners[1] = glm::vec3(centPos1Angled.x + 0.25f, -eBox[3], centPos1Angled.y + 0.25f);
+		corners[2] = glm::vec3(centPos1Angled.x - 0.25f, eBox[3], centPos1Angled.y + 0.25f);
+		corners[3] = glm::vec3(centPos1Angled.x + 0.25f, eBox[3], centPos1Angled.y + 0.25f);
+		corners[4] = glm::vec3(centPos2Angled.x - 0.25f, eBox[3], centPos2Angled.y - 0.25f);
+		corners[5] = glm::vec3(centPos2Angled.x + 0.25f, eBox[3], centPos2Angled.y - 0.25f);
+		corners[6] = glm::vec3(centPos2Angled.x - 0.25f, -eBox[3], centPos2Angled.y - 0.25f);
+		corners[7] = glm::vec3(centPos2Angled.x + 0.25f, -eBox[3], centPos2Angled.y - 0.25f);
+
+		for (int i = 0; i < 8; i++)
+		{
+			glm::vec3 temp = corners[i];
+
+			corners[i].x = temp.x * cos(angle) - temp.z * sin(angle);
+			corners[i].z = temp.z * sin(angle) + temp.x * cos(angle);
+			corners[i] += pos;
+
+			obbl.corners[i] = vec4(corners[i], 1);
+		}
+
+
+
+		OBB obb;
+		obb.init(&obbl);
+		aabb.ObbBoxes.push_back(obb);
+
+		temp.setAABB(aabb);
+	}
+	else
+	{
+		//SPHERE
+		sphere.pos.x = eBox[0];
+		sphere.pos.y = eBox[1];
+		sphere.pos.z = eBox[2];
+		sphere.radius = eBox[3];
+		temp.setSphere(sphere);
+	}
+
+	effMesh.setIDs(etype, pID, eID);
+
+	/*
+	Skapa 8 punkter från centpos1Angled & 2
+	splitta punkterna med en tottal ofset på 0.5, dvs 0.25, i y/z-led (y i vec2, z i vec3)
+	rotera tillbaks ALLA 8 punkter
+	gör om de till vec3s igen
+	lägg på originalpos
+	mata in i obbl
+	Lägg in sphere
+	we done here
+
+	BUT OPVER THERE THO
+	lägg in SpherevSphere
+	lägg in i Game att mata in effekter till physics
+	i Physics::receiveEffectBox så ska du lägga in inmatning av lådorna
+	där du har fler instruktioner för om det är obb eller sphere, dvs i den hör funktionen
+	i checkPlayervEffect & checkBulletvEffect ska du skapa collisioner, spherevObb & spherevSphere
+	skicka tillbaks collisionsträffar till game, med pid och eid och e-type (africa)
+	*/
 
 }
 

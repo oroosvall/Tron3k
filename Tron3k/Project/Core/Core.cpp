@@ -21,7 +21,7 @@ void Core::init()
 	fullscreen = false;
 	winX = winY = 800;
 	//winX = winY = 1000;
-	//winX = 1280; winY = 720;
+	winX = 1280; winY = 720;
 	//winX = 1920, winY = 1080;
 
 	createWindow(winX, winY, fullscreen);
@@ -80,6 +80,31 @@ void Core::update(float dt)
 
 	glfwPollEvents();
 	console.update(_name, 'A'); //Updates to check for new messages and commands
+	
+	if (game)
+	{
+		if (console.getInChatMode() == false)
+		{
+			if (i->justPressed(GLFW_KEY_7))
+			{
+				playbackSpeed *= 2.0f;
+				if (playbackSpeed > 16.0f)
+					playbackSpeed = 16.0f;
+				CameraInput* cam = CameraInput::getCam();
+				cam->setPlaybackSpeed(playbackSpeed);
+			}
+			if (i->justPressed(GLFW_KEY_6))
+			{
+				playbackSpeed *= 0.5f;
+				if (playbackSpeed < 0.03125f)
+					playbackSpeed = 0.03125f;
+				CameraInput* cam = CameraInput::getCam();
+				cam->setPlaybackSpeed(playbackSpeed);
+			}
+		}
+	}
+
+	dt *= playbackSpeed;
 
 	switch (current)
 	{
@@ -104,20 +129,6 @@ void Core::update(float dt)
 
 	glfwSwapBuffers(win);
 
-
-	//TEMPORARY
-	static bool given = false;
-	if (game != nullptr && !given)
-	{
-		bool allchunksSent = false;
-		for (int i = 0; !allchunksSent; i++)
-		{
-			allchunksSent = sendChunkBoxes(i);
-		}
-		sendPlayerBox();
-		//sendWorldBoxes();
-		given = true;
-	}
 }
 
 void Core::upStart(float dt)
@@ -243,9 +254,12 @@ void Core::upRoam(float dt)
 		game->init(MAX_CONNECT, current);
 		//map loaded, fetch spawnpoints from render
 		renderPipe->getSpawnpoints(*game->getSpawnpoints());
-
+		// fetch all collision boxes
+		bool allchunksSent = false;
+		for (int i = 0; !allchunksSent; i++)
+			allchunksSent = sendChunkBoxes(i);
 		Player* p = new Player();
-		p->init("Roam", glm::vec3(0, 0, 0)/*, game->getPhysics()*/);
+		p->init("Roam", glm::vec3(0, 0, 0));
 		game->createPlayer(p, 0, true);
 		game->freecam = true;
 		delete p;
@@ -264,14 +278,17 @@ void Core::upRoam(float dt)
 
 		//Command and message handle
 		roamHandleCmds();
+		//if /disconnected command was entered
+		if (game == nullptr)
+			return;
 
 		//update game
 		game->update(dt);
-		if (GetSoundActivated())
+		/*if (GetSoundActivated())
 		{
 				GetSound()->setLocalPlayerDir(game->getPlayer(0)->getDir());
 				GetSound()->setLocalPlayerPos(game->getPlayer(0)->getPos());		
-		}
+		}*/
 
 		if (game->playerWantsToRespawn() && game->getPlayer(0)->getTeam() != 0)
 		{
@@ -311,7 +328,7 @@ void Core::upRoam(float dt)
 			{
 				game->handleBulletHitWorldEvent(bulletHitsOnWorld[c]);
 			}
-			game->clearBulletOnWorldCollision();
+			game->clearBulletOnWorldCollisions();
 		}
 
 		renderWorld(dt);
@@ -346,6 +363,10 @@ void Core::upClient(float dt)
 				game->init(MAX_CONNECT, current);
 				//map loaded, fetch spawnpoints from render
 				renderPipe->getSpawnpoints(*game->getSpawnpoints());
+				// fetch all collision boxes
+				bool allchunksSent = false;
+				for (int i = 0; !allchunksSent; i++)
+					allchunksSent = sendChunkBoxes(i);
 				top->setGamePtr(game);
 				subState++;
 				return; //On sucsess
@@ -383,13 +404,14 @@ void Core::upClient(float dt)
 		}
 
 		//update game
+
 		game->update(dt);
 
-		if (GetSoundActivated())
+	/*	if (GetSoundActivated())
 		{
 			GetSound()->setLocalPlayerDir(game->getPlayer(top->getConId())->getDir());
 			GetSound()->setLocalPlayerPos(game->getPlayer(top->getConId())->getPos());
-		}
+		}*/
 
 		//Command and message handle
 		if (console.messageReady())
@@ -446,6 +468,10 @@ void Core::upClient(float dt)
 			}
 
 			//send animstates
+			if (local->getAnimState_t_p() == AnimationState::none)
+			{
+				int k = 0;
+			}
 			top->frame_anim(top->getConId(), local->getAnimState_f_p(), local->getAnimState_t_p());
 			local->setAnimState_f_p(AnimationState::first_primary_idle);
 			local->setAnimState_t_p(AnimationState::third_primary_idle);
@@ -493,7 +519,10 @@ void Core::upServer(float dt)
 		game->init(MAX_CONNECT, current);
 		//map loaded, fetch spawnpoints from render
 		renderPipe->getSpawnpoints(*game->getSpawnpoints());
-
+		// fetch all collision boxes
+		bool allchunksSent = false;
+		for (int i = 0; !allchunksSent; i++)
+			allchunksSent = sendChunkBoxes(i);
 		game->freecam = true;
 		//load map
 
@@ -517,7 +546,6 @@ void Core::upServer(float dt)
 		}
 
 		std::vector<BulletHitPlayerInfo> bulletHitsOnPlayer = game->getAllHitPlayerInfo();
-
 		if (bulletHitsOnPlayer.size() != 0)
 		{
 			for (unsigned int c = 0; c < bulletHitsOnPlayer.size(); c++)
@@ -537,7 +565,18 @@ void Core::upServer(float dt)
 				game->handleBulletHitWorldEvent(bulletHitsOnWorld[c]);
 			}
 			top->event_bullet_hit_world(bulletHitsOnWorld);
-			game->clearBulletOnWorldCollision();
+			game->clearBulletOnWorldCollisions();
+		}
+
+		std::vector<EffectHitPlayerInfo> effectHitsOnPlayer = game->getAllEffectOnPlayerCollisions();
+		if (effectHitsOnPlayer.size() != 0)
+		{
+			for (unsigned int c = 0; c < bulletHitsOnWorld.size(); c++)
+			{
+				game->handleEffectHitPlayerEvent(effectHitsOnPlayer[c]);
+			}
+			top->event_effect_hit_player(effectHitsOnPlayer);
+			game->clearEffectOnPlayerCollisions();
 		}
 
 		serverHandleCmds();
@@ -658,10 +697,10 @@ void Core::roamHandleCmds()
 		{
 			console.printMsg("Console commands", "", ' ');
 			console.printMsg("/name " + _name, "", ' ');
-			console.printMsg("/players", "", ' ');
 			console.printMsg("/free (turns freecam on/off)", "", ' ');
-			console.printMsg("/spec <Number> (spectate player id)", "", ' ');
 			console.printMsg("/rs  show render settings", "", ' ');
+			console.printMsg("/disconnect", "", ' ');
+
 		}
 		else if (token == "/name")
 		{
@@ -716,6 +755,8 @@ void Core::roamHandleCmds()
 			else
 			{
 				game->getPlayer(0)->getRole()->chooseRole(role - 1);
+				if (role == TRAPPER)
+					game->getPlayer(0)->addModifier(MODIFIER_TYPE::TRAPPERSHAREAMMO);
 				console.printMsg("You switched class!", "System", 'S');
 			}
 		}
@@ -743,6 +784,8 @@ void Core::roamHandleCmds()
 			else if (token == "obb")
 				renderPipe->setRenderFlag(RENDER_OBB);
 		}
+		else if (token == "/disconnect")
+			disconnect();
 	}
 }
 
@@ -1028,19 +1071,19 @@ void Core::renderWorld(float dt)
 		bool firstLight = true;
 		for (size_t i = 0; i < MAX_CONNECT; i++)
 		{
-			Player* p = game->getPlayer(i);
-			if (p)
-			{
-				SpotLight light;
-				light.Position = p->getPos();
-				light.Direction = p->getDir();
-				if (firstLight)
-				{
-					light.AmbientIntensity = 0.3f;
-					firstLight = false;
-				}
-				renderPipe->addLight(&light);
-			}
+			//Player* p = game->getPlayer(i);
+			//if (p)
+			//{
+			//	SpotLight light;
+			//	light.Position = p->getPos();
+			//	light.Direction = p->getDir();
+			//	if (firstLight)
+			//	{
+			//		light.AmbientIntensity = 0.3f;
+			//		firstLight = false;
+			//	}
+			//	renderPipe->addLight(&light);
+			//}
 		}
 
 		//render players
@@ -1052,13 +1095,13 @@ void Core::renderWorld(float dt)
 			if (game->spectateID == -1)		//We are not spectating
 			{
 				if (top->is_client()) //server doenst have its own player
-					if(game->getPlayer(top->getConId())->getIfHacked())
+					if(game->getPlayer(top->getConId())->searchModifier(MODIFIER_TYPE::HACKINGDARTMODIFIER))
 						hackedTeam = game->getPlayer(top->getConId())->getTeam(); //if we are hacked
 			}
 			else
 			{
 				if (game->getPlayer(game->spectateID)->isAlive()) // didnt fix the crash issue when spectating a player with a active hacking dart that dies
-					if (game->getPlayer(game->spectateID)->getIfHacked())
+					if (game->getPlayer(game->spectateID)->searchModifier(MODIFIER_TYPE::HACKINGDARTMODIFIER))
 						hackedTeam = game->getPlayer(game->spectateID)->getTeam(); //if we are hacked
 			}
 		}
@@ -1076,20 +1119,20 @@ void Core::renderWorld(float dt)
 					else
 					{
 						if (p->getTeam() == 1) { //team 1 color
-							dgColor[0] = 0; dgColor[1] = 1; dgColor[2] = 0;
+							dgColor[0] = 1; dgColor[1] = 0.5; dgColor[2] = 0;
 						}
 						else if (p->getTeam() == 2) { // team 2 color
-							dgColor[0] = 0.2f; dgColor[1] = 0.2f; dgColor[2] = 1;
+							dgColor[0] = 0.0f; dgColor[1] = 1; dgColor[2] = 0.5f;
 						}
 						else if (p->getTeam() == 0) { // spectate color
 							dgColor[0] = 0; dgColor[1] = 0; dgColor[2] = 0;
 						}
 						//hacked team colors
-						if (hackedTeam == 1) {
-							dgColor[0] = 0.2f; dgColor[1] = 0.2f; dgColor[2] = 1;
+						if (hackedTeam == 1) { //Show team 2's colour
+							dgColor[0] = 0.4f; dgColor[1] = 0.0f; dgColor[2] = 0.4f;
 						}
-						else if (hackedTeam == 2) {
-							dgColor[0] = 0; dgColor[1] = 1; dgColor[2] = 0;
+						else if (hackedTeam == 2) { //Show team 1's colour
+							dgColor[0] = 0.0f; dgColor[1] = 1.0f; dgColor[2] = 0.0f;
 						}
 					}
 					//static intense based on health
@@ -1127,7 +1170,7 @@ void Core::renderWorld(float dt)
 			std::vector<Bullet*> bullets = game->getBullets(BULLET_TYPE(c));
 			for (unsigned int i = 0; i < bullets.size(); i++)
 			{
-				renderPipe->renderMISC(-2, bullets[i]->getWorldMat(), dgColor, 1.0f);
+				renderPipe->renderBullet(c, bullets[i]->getWorldMat(), dgColor, 1.0f);
 			}
 		}
 
@@ -1142,9 +1185,10 @@ void Core::renderWorld(float dt)
 			for (unsigned int i = 0; i < eff.size(); i++)
 			{
 				LightwallEffect* derp = (LightwallEffect*)eff[i];
-				renderPipe->renderWallEffect(&derp->pos, &derp->endPoint, herpderpOffset);
 
-				herpderpOffset += glm::distance(derp->pos, derp->endPoint);
+				renderPipe->renderWallEffect(&derp->getPos(), &derp->getEndPoint(), herpderpOffset);
+
+				herpderpOffset += glm::distance(derp->getPos(), derp->getEndPoint());
 			}
 		}
 
@@ -1326,7 +1370,8 @@ bool Core::windowVisible() const
 void Core::disconnect()
 {
 	saveSettings();
-	delete top;
+	if(top)
+		delete top;
 	top = nullptr;
 	game->release();
 	game = nullptr;
