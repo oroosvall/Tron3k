@@ -185,6 +185,7 @@ void Core::upRoam(float dt)
 
 		game = new Game();
 		game->init(MAX_CONNECT, current);
+		game->sendPlayerRadSize(0.9f);
 		//map loaded, fetch spawnpoints from render
 		renderPipe->getSpawnpoints(*game->getSpawnpoints());
 		// fetch all collision boxes
@@ -294,6 +295,7 @@ void Core::upClient(float dt)
 					delete game;
 				game = new Game();
 				game->init(MAX_CONNECT, current);
+				game->sendPlayerRadSize(0.9f);
 				//map loaded, fetch spawnpoints from render
 				renderPipe->getSpawnpoints(*game->getSpawnpoints());
 				// fetch all collision boxes
@@ -449,6 +451,7 @@ void Core::upServer(float dt)
 			delete game;
 		game = new Game();
 		game->init(MAX_CONNECT, current);
+		game->sendPlayerRadSize(0.9f);
 		//map loaded, fetch spawnpoints from render
 		renderPipe->getSpawnpoints(*game->getSpawnpoints());
 		// fetch all collision boxes
@@ -687,6 +690,7 @@ void Core::roamHandleCmds()
 			else
 			{
 				game->getPlayer(0)->getRole()->chooseRole(role - 1);
+				game->sendPlayerRadSize(game->getPlayer(0)->getRole()->getBoxRadius());
 				if (role == TRAPPER)
 					game->getPlayer(0)->addModifier(MODIFIER_TYPE::TRAPPERSHAREAMMO);
 				console.printMsg("You switched class!", "System", 'S');

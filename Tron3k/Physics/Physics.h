@@ -115,6 +115,7 @@ public:
 	virtual void receiveChunkBoxes(int chunkID, void* cBoxes);
 	virtual void receiveWorldBoxes(std::vector<std::vector<float>> wBoxes);
 	virtual void receivePlayerBox(std::vector<float> pBox, float rad);
+	virtual void receivePlayerRad(float rad);
 	virtual void receiveEffectBox(std::vector<float> eBox, unsigned int etype, int pID, int eID);
 };
 

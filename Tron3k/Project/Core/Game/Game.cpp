@@ -301,6 +301,11 @@ void Game::sendPlayerBox(std::vector<float> pBox)
 	physics->receivePlayerBox(pBox, 0.9f);
 }
 
+void Game::sendPlayerRadSize(float rad)
+{
+	physics->receivePlayerRad(rad);
+}
+
 void Game::sendWorldBoxes(std::vector<std::vector<float>> wBoxes)
 {
 	physics->receiveWorldBoxes(wBoxes);
@@ -499,7 +504,7 @@ void Game::checkPlayerVWorldCollision(float dt)
 
 		vec3 posadjust = vec3(0);
 		//lower with distance from eyes to center
-		std::vector<vec4> cNorms = physics->PlayerVWorldCollision(playerList[localPlayerId]->getPos() - (vec3(0, playerList[localP]->getRole()->getBoxModifier(), 0)));
+		std::vector<vec4> cNorms = physics->PlayerVWorldCollision(playerList[localPlayerId]->getPos() - (vec3(0, playerList[localPlayerId]->getRole()->getBoxModifier(), 0)));
 
 		//if we collided with something
 		if (cNorms.size() > 0)

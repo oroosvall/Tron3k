@@ -906,6 +906,11 @@ void Physics::receivePlayerBox(std::vector<float> pBox, float rad)
 	playerBox.setSphere(glm::vec3(xPos, yPos, zPos), rad);
 }
 
+void Physics::receivePlayerRad(float rad)
+{
+	playerBox.setSphere(playerBox.getSphere().pos, rad);
+}
+
 void Physics::receiveWorldBoxes(std::vector<std::vector<float>> wBoxes)
 {
 	float xPos, yPos, zPos;

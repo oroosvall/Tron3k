@@ -184,7 +184,7 @@ void Role::chooseRole(int role)
 		jumpHeight = float(atof(loadedRoles[role][JUMPHEIGHT].c_str()));
 
 		boundingBoxModifier = 0.55f;
-
+		boundingBoxRadius = 0.9f;
 		gainSpecial = true;
 	}
 }
