@@ -141,7 +141,7 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 
 			//ramp factor and grounded
 			
-			if (collisionNormals[k].y > 0.5f)
+			if (collisionNormals[k].y > 0.4f)
 			{
 				grounded = true;
 			}
