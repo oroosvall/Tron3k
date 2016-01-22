@@ -125,56 +125,60 @@ vec3 Physics::checkAABBvCylinderCollision(CollideMesh mesh1, CollideMesh mesh2)
 
 vec3 Physics::checkAABBvAngledCylinderCollision(CollideMesh mesh1, CollideMesh mesh2)
 {
-	return vec3(1, 1, 1);
+	glm::vec3 collided = glm::vec3(0, 0, 0);
+	return collided;
 }
 
 vec3 Physics::checkAABBvSphereCollision(CollideMesh mesh1, CollideMesh mesh2)
 {
-	return vec3(1, 1, 1);
+	glm::vec3 collided = glm::vec3(0, 0, 0);
+	return collided;
 }
 //--------------//--------------//
 
 //--------OBB Collisions--------//
 vec3 Physics::checkOBBvOBBCollision(Geometry* obj1, Geometry* obj2)
 {
-	return vec3(1, 1, 1);
+	glm::vec3 collided = glm::vec3(0, 0, 0);
+	return collided;
 }
 
 vec3 Physics::checkOBBvOBBCollision(CollideMesh mesh1, CollideMesh mesh2)
 {
-	return vec3(1, 1, 1);
+	glm::vec3 collided = glm::vec3(0, 0, 0);
+	return collided;
 }
 
 vec3 Physics::checkOBBvCylinderCollision(CollideMesh mesh1, CollideMesh mesh2)
 {
-	return vec3(1, 1, 1);
+	glm::vec3 collided = glm::vec3(0, 0, 0);
+	return collided;
 }
 
 vec3 Physics::checkOBBvAngledCylinderCollision(CollideMesh mesh1, CollideMesh mesh2)
 {
-	return vec3(1, 1, 1);
-}
-
-vec3 Physics::checkOBBvSphereCollision(CollideMesh mesh1, CollideMesh mesh2)
-{
-	return vec3(1, 1, 1);
+	glm::vec3 collided = glm::vec3(0, 0, 0);
+	return collided;
 }
 //--------------//--------------//
 
 //-----Cylinder Collisions------//
 vec3 Physics::checkCylindervCylinderCollision(CollideMesh mesh1, CollideMesh mesh2)
 {
-	return vec3(1, 1, 1);
+	glm::vec3 collided = glm::vec3(0, 0, 0);
+	return collided;
 }
 
 vec3 Physics::checkCylindervSphereCollision(CollideMesh mesh1, CollideMesh mesh2)
 {
-	return vec3(1, 1, 1);
+	glm::vec3 collided = glm::vec3(0, 0, 0);
+	return collided;
 }
 
 vec3 Physics::checkAngledCylindervSphereCollision(CollideMesh mesh1, CollideMesh mesh2)
 {
-	return vec3(1, 1, 1);
+	glm::vec3 collided = glm::vec3(0, 0, 0);
+	return collided;
 }
 //--------------//--------------//
 
@@ -183,6 +187,33 @@ glm::vec3 Physics::checkSpherevSphereCollision(CollideMesh mesh1, CollideMesh me
 {
 	glm::vec3 collided = glm::vec3(0, 0, 0);
 	return collided;
+}
+
+vec3 Physics::checkSpherevOBBCollision(CollideMesh mesh1, CollideMesh mesh2) //mesh 1 = Sphere, mesh2 = obb
+{
+	std::vector<vec4> cNorms;
+	vec4 t = glm::vec4(0);
+	vec3 collisionNormal = vec3(0, 0, 0);
+
+	return vec3(0, 0, 0);
+
+	if (checkAABBvAABBCollision(mesh1.getAABB(), mesh2.getAABB()))
+	{
+		//printf("%d %d \n", i, j); // test for abbs so they register
+
+		//for each obb contained in that abb
+		//int size = worldBoxes[i][j].boundingBox.ObbBoxes.size();
+		//for (int n = 0; n < size; n++)
+		//{
+			//t = getSpherevOBBNorms(playerPos, rad, &worldBoxes[i][j].boundingBox.ObbBoxes[n]);
+			//t.w = rad - t.w; //penetration depth instead of collision distance 
+			if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= mesh1.getSphere().radius + FLT_EPSILON)
+			{
+				t = vec4(normalize(vec3(t)), t.w);
+				cNorms.push_back(t);
+			}
+		//}
+	}
 }
 //--------------//--------------//
 
@@ -423,37 +454,44 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb)
 
 vec3 Physics::getCollisionNormal(Cylinder cylinder, AABB aabb)
 {
-	return vec3(1, 1, 1);
+	glm::vec3 normal = glm::vec3(0, 0, 0);
+	return normal;
 }
 
 vec3 Physics::getCollisionNormal(AngledCylinder cylinder, AABB aabb)
 {
-	return vec3(1, 1, 1);
+	glm::vec3 normal = glm::vec3(0, 0, 0);
+	return normal;
 }
 
 vec3 Physics::getCollisionNormal(Sphere sphere, AABB aabb)
 {
-	return vec3(1, 1, 1);
+	glm::vec3 normal = glm::vec3(0, 0, 0);
+	return normal;
 }
 
 vec3 Physics::getCollisionNormal(OBB obb1, OBB obb2)
 {
-	return vec3(1, 1, 1);
+	glm::vec3 normal = glm::vec3(0, 0, 0);
+	return normal;
 }
 
 vec3 Physics::getCollisionNormal(Cylinder cylinder, OBB obb)
 {
-	return vec3(1, 1, 1);
+	glm::vec3 normal = glm::vec3(0, 0, 0);
+	return normal;
 }
 
 vec3 Physics::getCollisionNormal(AngledCylinder cylinder, OBB obb)
 {
-	return vec3(1, 1, 1);
+	glm::vec3 normal = glm::vec3(0, 0, 0);
+	return normal;
 }
 
 vec3 Physics::getCollisionNormal(Sphere sphere, OBB obb)
 {
-	return vec3(1, 1, 1);
+	glm::vec3 normal = glm::vec3(0, 0, 0);
+	return normal;
 }
 //--------------//--------------//
 
@@ -558,27 +596,31 @@ vec3 Physics::checkBulletVWorldCollision(vec3 bulletPos)
 	return collides;
 }
 
-vec3 Physics::checkPlayerVEffectCollision(glm::vec3 playerPos, float rad)
+vec3 Physics::checkPlayerVEffectCollision(glm::vec3 playerPos, float rad, unsigned int eType)
 {
-	glm::vec3 collided;
+	glm::vec3 collided = vec3(0, 0, 0);
+
+	AABB box;
+	box.max = playerPos + vec3(rad, rad, rad);
+	box.min = playerPos - vec3(rad, rad, rad);
+	playerBox.setAABB(box);
 
 	for (int i = 0; i < effectBoxes.size(); i++)
 	{
-		if (effectBoxes[i].getEType() == 0)//Explosion, aka sphere
+		if (effectBoxes[i].getEType() == eType)
 		{
-			collided = checkSpherevSphereCollision(playerBox, effectBoxes[i].getCollisionMesh());
-		}
-		else if (effectBoxes[i].getEType() == 1)//Cleanse Explosion, aka sphere
-		{
-			collided = checkSpherevSphereCollision(playerBox, effectBoxes[i].getCollisionMesh());
-		}
-		else if (effectBoxes[i].getEType() == 2)//Lightwall, aka OBB
-		{
-
-		}
-		else
-		{
-
+			if (effectBoxes[i].getEType() == 0)//Lightwall, aka OBB
+			{
+				collided = checkSpherevOBBCollision(playerBox, effectBoxes[i].getCollisionMesh());
+			}
+			else if (effectBoxes[i].getEType() > 2)//False box, no collision
+			{
+				
+			}
+			else //evrything else is a sphere, if not, not my goddamn problem
+			{
+				collided = checkSpherevSphereCollision(playerBox, effectBoxes[i].getCollisionMesh());
+			}
 		}
 	}
 	return collided;
@@ -586,7 +628,8 @@ vec3 Physics::checkPlayerVEffectCollision(glm::vec3 playerPos, float rad)
 
 vec3 Physics::checkBulletVEffectCollision(glm::vec3 bulletPos)
 {
-	return vec3(0, 0, 0);
+	glm::vec3 collided = glm::vec3(0, 0, 0);
+	return collided;
 }
 
 float Physics::addGravity(float dt)

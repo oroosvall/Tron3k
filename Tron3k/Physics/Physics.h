@@ -55,7 +55,7 @@ private:
 	glm::vec3 checkOBBvCylinderCollision(CollideMesh mesh1, CollideMesh mesh2);
 	glm::vec3 checkOBBvAngledCylinderCollision(CollideMesh mesh1, CollideMesh mesh2);
 	
-	glm::vec3 checkOBBvSphereCollision(CollideMesh mesh1, CollideMesh mesh2);
+	
 	//--------------//--------------//
 
 	//-----Cylinder Collisions------//
@@ -66,6 +66,8 @@ private:
 
 	//-------Sphere Collision-------//
 	glm::vec3 checkSpherevSphereCollision(CollideMesh mesh1, CollideMesh mesh2);
+
+	glm::vec3 checkSpherevOBBCollision(CollideMesh mesh1, CollideMesh mesh2);
 	//--------------//--------------//
 
 	//--------Line Collision--------//
@@ -104,7 +106,7 @@ public:
 	virtual glm::vec3 checkPlayerVBulletCollision(glm::vec3 playerPos, glm::vec3 bulletPos);
 	virtual std::vector<glm::vec4> sphereVWorldCollision(glm::vec3 playerPos, float rad);
 	virtual glm::vec3 checkBulletVWorldCollision(glm::vec3 bulletPos);
-	virtual glm::vec3 checkPlayerVEffectCollision(glm::vec3 playerPos, float rad);
+	virtual glm::vec3 checkPlayerVEffectCollision(glm::vec3 playerPos, float rad, unsigned int eType);
 	virtual glm::vec3 checkBulletVEffectCollision(glm::vec3 bulletPos);
 
 	virtual float addGravity(float dt);
