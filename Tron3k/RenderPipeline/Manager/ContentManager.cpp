@@ -55,11 +55,7 @@ void ContentManager::init()
 		renderNextChunks[n] = false;
 	}
 	glGenQueries(1, &portalQuery);
-
-		
-	bullet.init(0, 0, 0);
-	bullet.load("GameFiles/TestFiles/bullet.v");
-
+	
 }
 
 void ContentManager::release()
@@ -87,7 +83,6 @@ void ContentManager::release()
 	delete[] renderNextChunks;
 
 	skybox.release();
-	bullet.release();
 
 	//collision render free
 	for (int c = 0; c < nrChunks; c++)

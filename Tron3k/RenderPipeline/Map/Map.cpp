@@ -76,24 +76,36 @@ void Map::release()
 
 void Map::renderChunk(GLuint shader, GLuint shaderLocation, int chunkID)
 {
+	int meshID;
+
+	Material mat;
+
 	for (size_t i = 0; i < chunks[chunkID].props.size(); i++)
 	{
-		int meshID = chunks[chunkID].props[i].id;
+		meshID = chunks[chunkID].props[i].id;
+		for (size_t i = 0; i < materialCount; i++)
+		{
+			if (meshes[meshID].material == materials[i].materialID)
+			{
+				mat = materials[i];
+				break;
+			}
+		}
 
 		glActiveTexture(GL_TEXTURE0);
-		//if(materials[meshes[meshID].material].textureMapIndex != -1)
-		//	glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].textureMapIndex].textureID);
-		//else
+		if(materials[meshes[meshID].material].textureMapIndex != -1)
+			glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].textureMapIndex].textureID);
+		else
 			glBindTexture(GL_TEXTURE_2D, blank_diffuse);
 		glActiveTexture(GL_TEXTURE0 + 1);
-		//if (materials[meshes[meshID].material].normalMapIndex != -1)
-		//	glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].normalMapIndex].textureID);
-		//else
+		if (materials[meshes[meshID].material].normalMapIndex != -1)
+			glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].normalMapIndex].textureID);
+		else
 			glBindTexture(GL_TEXTURE_2D, blank_normal);
 		glActiveTexture(GL_TEXTURE0 + 2);
-		//if (materials[meshes[meshID].material].specularMapIndex != -1)
-		//	glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].specularMapIndex].textureID);
-		//else
+		if (materials[meshes[meshID].material].specularMapIndex != -1)
+			glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].specularMapIndex].textureID);
+		else
 			glBindTexture(GL_TEXTURE_2D, blank_glow);
 		
 		glBindVertexArray(meshes[meshID].vertexArray);

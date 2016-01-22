@@ -33,8 +33,6 @@ private:
 	//skybox
 	Mesh skybox;
 
-	Mesh bullet;
-
 	GLuint skyTexture;
 
 	GLuint portalQuery;
