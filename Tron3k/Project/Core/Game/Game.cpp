@@ -866,7 +866,7 @@ void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec
 		bool jumped = false;
 		for (int c = 0; c < size && !jumped; c++)
 		{
-			if (cNorms[c].y < 0.2f && cNorms[c].y > -0.2f)
+			if (cNorms[c].y < 0.5f && cNorms[c].y > -0.2f)
 			{
 				jumped = true;
 				glm::vec3 reflect = normalize(glm::vec3(cNorms[c].x, 0, cNorms[c].z));
