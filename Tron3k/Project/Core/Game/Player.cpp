@@ -490,7 +490,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 				if (i->justPressed(GLFW_KEY_Q))
 				{
-					if (role.getCurrentWeapon()->getIfReloading())
+					if (!role.getIfBusy())
 					{
 						Consumable* c = role.getConsumable();
 						if (c->use())
