@@ -7,6 +7,8 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include "../Console.h"
+#include "uiVertex.h"
 
 class UIManager
 {
@@ -19,23 +21,25 @@ private:
 	std::string* fileNamesList;
 	int nrOfFileNames;
 
+	Console* console;
+
 public:
 	UIManager();
 	~UIManager();
 
-	void init(std::string fileName);
+	void init(std::string fileName, Console console);
 
 	//Add and remove menus
 	bool addMenu(int fileId);
 	bool removeMenu(int menuId);
 	void removeAllMenus();
 
-	int collisionCheck(glm::vec2 pos, int whichMenu);
+	int collisionCheck(glm::vec2 pos);
 
 	int returnObjCount();
-	Vertex* returnPosAUv(int id);
+	uiVertex* returnPosAUv(int id);
 	int* returnTextureList();
-	glm::mat4 returnWorldMatrix(int id);
+	glm::mat4* returnWorldMatrix(int id);
 
 	int changeTex(int objId);
 };

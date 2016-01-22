@@ -153,6 +153,7 @@
     <ClInclude Include="Core\ui\staticBox.h" />
     <ClInclude Include="Core\ui\UI.h" />
     <ClInclude Include="Core\ui\UIManager.h" />
+    <ClInclude Include="Core\ui\uiVertex.h" />
     <ClInclude Include="Network\Client.h" />
     <ClInclude Include="Network\Connection.h" />
     <ClInclude Include="Network\NetIndex.h" />

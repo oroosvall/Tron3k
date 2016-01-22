@@ -5,6 +5,12 @@
 #include "Text\TextObject.h"
 #include "Camera.h"
 #include "Buffer\GBuffer.h"
+#include "Texture.h"
+
+#include <vector>
+
+#include "Buffer\VertexBufferUI.h"
+#include "../Project/Core/ui/uiVertex.h"
 
 #include "Manager\ContentManager.h"
 
@@ -45,12 +51,13 @@ private:
 	GLuint regularShader;
 	GLuint animationShader;
 	GLuint glowShaderTweeks;
+	GLuint uiShader;
 
-	GLuint worldMat[2];
+	GLuint worldMat[3];
 	GLuint viewProjMat[2];
 	GLuint viewMat;
 
-	GLuint uniformTextureLocation[2];
+	GLuint uniformTextureLocation[3];
 	GLuint uniformNormalLocation[2];
 	GLuint uniformGlowSpecLocation[2];
 	GLuint uniformDynamicGlowColorLocation[2];
@@ -81,7 +88,18 @@ private:
 	float timepass = 0;
 	float delta = 0;
 
+	//UI
+	VertexBuffers* vertexRenderBuffers;
+	int currentMenu;
+	int nrOfUIOBjects;
+	int nrOfMenus;
+	int nrOfUITextures;
+	std::vector<GLuint> uiTextures;
+	std::vector<string> uiFilePaths;
+	
+
 	bool initialized;
+	bool preInitialized;
 
 public:
 
@@ -89,6 +107,7 @@ public:
 
 	void renderEffects();
 
+	virtual bool preInit(unsigned int WindowWidth, unsigned int WindowHeight);
 	virtual bool init(unsigned int WindowWidth, unsigned int WindowHeight);
 	virtual void release();
 	virtual void update(float x, float y, float z, float dt);
@@ -98,9 +117,16 @@ public:
 
 	virtual void render();
 	virtual void finalizeRender();
+	virtual void renderUI(glm::mat4* worldMatrix, int id);
+	virtual void clearUI();
+	virtual void changeTex(int texListIndex, int whichButto);
 
 	virtual void addLight(SpotLight* newLight);
 	virtual void setChunkColorAndInten(int ID, float* color, float inten);
+
+	virtual bool newMenu(int objCount);
+	virtual void createBuffer(int id, uiVertex* posUv, int textureIdList[]);
+	virtual void removeMenu(int id);
 
 	virtual void* getView();
 

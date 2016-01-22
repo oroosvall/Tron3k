@@ -8,11 +8,11 @@ void StaticBox::setWorldMatrix(float x, float y)
 {
 
 }
-glm::mat4 StaticBox::returnWorldMatrix()
+glm::mat4* StaticBox::returnWorldMatrix()
 {
-	return worldMatrix;
+	return &worldMatrix;
 }
-Vertex* StaticBox::returnPosAUv()
+uiVertex* StaticBox::returnPosAUv()
 {
 	return pos;
 }

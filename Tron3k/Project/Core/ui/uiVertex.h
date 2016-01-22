@@ -1,18 +1,18 @@
-#ifndef VERTEX_H
-#define VERTEX_H
+#ifndef UIVERTEX_H
+#define UIVERTEX_H
 
 
 #include <glm\glm.hpp>
 #include <glm\gtc\matrix_transform.hpp>
 
-struct Vertex
+struct uiVertex
 {
 	float x, y; 
 	float u, v;
 	
-	Vertex(){}
+	uiVertex(){}
 
-	Vertex( float tx, float ty, float tu, float tv )
+	uiVertex( float tx, float ty, float tu, float tv )
 	{
 		x = tx;
 		y = ty;
@@ -20,7 +20,7 @@ struct Vertex
 		v = tv;
 	}
 
-	~Vertex(){}
+	~uiVertex(){}
 
 	glm::vec2 getXY()
 	{

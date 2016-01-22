@@ -16,7 +16,7 @@ Button::Button()
 Button::Button(glm::vec2 positions[], glm::vec2 uv[], int textureId1, int textureId2, int objId, int uniqueKey)
 {
 	for (int i = 0; i < 4; i++)
-		pos[i] = Vertex(positions[i].x, positions[i].y, uv[i].x, uv[i].y);
+		pos[i] = uiVertex(positions[i].x, positions[i].y, uv[i].x, uv[i].y);
 	textureIndexList[0] = textureId1;
 	textureIndexList[1] = textureId2;
 	this->objId = objId;
@@ -31,12 +31,12 @@ void Button::setWorldMatrix(float x, float y)
 	worldMatrix[1].w = y;
 }
 
-glm::mat4 Button::returnWorldMatrix() 
+glm::mat4* Button::returnWorldMatrix() 
 {
-	return worldMatrix;
+	return &worldMatrix;
 }
 
-Vertex* Button::returnPosAUv()
+uiVertex* Button::returnPosAUv()
 {
 	return pos;
 }
@@ -68,7 +68,7 @@ int Button::checkCollision(glm::vec2 mpos)
 	int returnValue = -1;
 	if (mpos.x >= pos[1].x && mpos.x <= pos[2].x)
 	{
-		if (mpos.y >= pos[1].y && mpos.y <= pos[2].y)
+		if (mpos.y >= pos[1].y && mpos.y <= pos[2].y) //Denna kollen verkar vara fel
 		{
 			returnValue = uniqueKey;
 		}

@@ -32,17 +32,18 @@ struct VertexBuffers
 	{
 		if (gVertexBuffer != nullptr)
 		{
-			glDeleteBuffers(1, gVertexBuffer);
+			for (int i = 0; i < count; i++)
+				glDeleteBuffers(1, &gVertexBuffer[i]);
 			delete[] gVertexBuffer;
 		}
 		if (gVertexAttribute != nullptr)
 		{
-			glDeleteBuffers(1, gVertexAttribute);
+			for (int i = 0; i < count; i++)
+				glDeleteVertexArrays(1, &gVertexAttribute[i]);
 			delete[] gVertexAttribute;
 		}
 		if (textureIDs != nullptr)
 			delete[] textureIDs;
-		count = 0;
 	}
 };
 

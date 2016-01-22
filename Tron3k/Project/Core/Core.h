@@ -21,6 +21,7 @@
 #include "CameraInput.h"
 
 #include "ui\UIManager.h"
+#include "ui/uiVertex.h"
 
 #include <fstream> //load settings
 #include <sstream>
@@ -91,6 +92,12 @@ private:
 	bool sendChunkBoxes(int chunkID);
 	void sendPlayerBox();
 	void sendWorldBoxes();
+
+	//Temp UI 
+	bool changeMenu;
+	int changeTexCounter;
+	int currentMenu;
+	int uiObjects;
 
 public:
 	void init();

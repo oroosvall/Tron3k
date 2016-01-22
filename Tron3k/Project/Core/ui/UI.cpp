@@ -19,10 +19,38 @@ UI::UI()
 
 	nrOfObjects = 0;
 	menuId = 0;
+
+	tmpMat = nullptr;
+}
+
+UI::UI(Console* console)
+{
+	buttons = nullptr;
+	sliders = nullptr;
+	staticText = nullptr;
+	//dynamicTextBoxes = nullptr;
+	//inputBoxes = nullptr;
+
+	objIdList = nullptr;
+	textureList = nullptr;
+
+	nrOfbuttons = 0;
+	nrOfsliders = 0;
+	nrOfstaticText = 0;
+	nrOfdynamicTextBoxes = 0;
+	nrOfinputBoxes = 0;
+
+	nrOfObjects = 0;
+	menuId = 0;
+
+	tmpMat = nullptr;
+
+	this->console = console;
 }
 UI::~UI() 
 {
 	clean();
+	console = nullptr;
 }
 
 void UI::clean()
@@ -232,14 +260,14 @@ bool UI::loadUI(std::string fileName)
 			}
 			else //Error message.
 			{
-				//std::cout << "Error: Invalid class key" << endl;
+				console->printMsg("Error: Invalid class key.", "System", 'S');
 			}
 
 			counter++;
 		}
 	}
 	else
-		//std::cout << "Error: File could not be opened." << std::endl;
+		console->printMsg("Error: File could not be opened.", "System", 'S');
 
 	myfile.close();
 
@@ -251,7 +279,7 @@ int UI::mouseCollission(glm::vec2 pos)
 	int hit = -1;
 	int result = -1;
 
-	for (int i = 0; i < nrOfbuttons && hit != -1; i++)
+	for (int i = 0; i < nrOfbuttons && hit == -1; i++)
 	{
 		hit = buttons[i].checkCollision(pos);
 	}
@@ -309,43 +337,38 @@ void UI::setWorldMatrix(float x, float y, int objId)
 {
 	sliders[objIdList[objId]].setWorldMatirx(x, y);
 }
-glm::mat4 UI::returnWorldMatrix(int objId)
+glm::mat4* UI::returnWorldMatrix(int objId)
 {
 	int index = objIdList[objId];
-	glm::mat4 tmp = { 1, 0, 0, 0,
-					  0, 1, 0, 0,
-					  0, 0, 1, 0,
-					  0, 0, 0, 0
-						};
 
 	if (index >= 0 && index < nrOfbuttons)
 	{
-		tmp = buttons[index].returnWorldMatrix();
+		tmpMat = buttons[index].returnWorldMatrix();
 	}
 	else if (index >= nrOfbuttons && index < nrOfsliders)
 	{
-		tmp = sliders[index].returnWorldMatrix(objId);
+		tmpMat = sliders[index].returnWorldMatrix(objId);
 	}
 	else if (index >= nrOfsliders && index < nrOfstaticText)
 	{
-		tmp = staticText[index].returnWorldMatrix();
+		tmpMat = staticText[index].returnWorldMatrix();
 	}
 	else if (index >= nrOfstaticText && index < nrOfdynamicTextBoxes)
 	{
-		//tmp = dynamicTextBoxes[index].returnWorldMatrix();
+		//tmpMat = dynamicTextBoxes[index].returnWorldMatrix();
 	}
 	else if (index >= nrOfdynamicTextBoxes && index < nrOfinputBoxes)
 	{
-		//tmp = inputBoxes[index].returnWorldMatrix();
+		//tmpMat = inputBoxes[index].returnWorldMatrix();
 	}
 
-	return tmp;
+	return tmpMat;
 }
 
-Vertex* UI::returnPosAUv(int id)
+uiVertex* UI::returnPosAUv(int id)
 {
 	int index = objIdList[id];
-	Vertex* tmp = nullptr;
+	uiVertex* tmp = nullptr;
 	
 	if (index >= 0 && index < nrOfbuttons)
 	{

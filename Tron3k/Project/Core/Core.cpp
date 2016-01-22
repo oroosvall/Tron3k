@@ -30,10 +30,13 @@ void Core::init()
 
 	timepass = 0.0f;
 	
-	current = Gamestate::START;
+	current = Gamestate::MENU;
 	tick_timer = 0;
 	client_record = false;
 	client_playback = false;
+
+	changeMenu = false;
+	changeTexCounter = 0;
 }
 
 Core::~Core()
@@ -49,6 +52,12 @@ Core::~Core()
 	}
 	if (renderPipe != nullptr)
 		renderPipe->release();
+	if (uiManager != nullptr)
+	{
+		uiManager->removeAllMenus();
+		delete[] uiManager;
+	}
+
 
 	ReleaseSound();
 
@@ -137,20 +146,78 @@ void Core::upMenu(float dt)
 {
 	switch (subState)
 	{
-	case 0: //init
-	{
-		uiManager = new UIManager();
-		uiManager->init("menuFilesNames.txt");
+		case 0: //init
+		{
+			uiManager = new UIManager();
+			uiManager->init("GameFiles/UIFiles/menuFilesNames.txt", console);
+			uiManager->addMenu(0);
 
-		//Call render
+			if (!renderPipe)
+			{
+				renderPipe = CreatePipeline();
+			}
+			if (!renderPipe->preInit(winX, winY))
+			{
+				console.printMsg("Error: Pipeline could not be created!", "System", 'S');
+				renderPipe->release();
+				renderPipe = nullptr;
+			}
 
-		subState++;
-		break;
-	}
-	case 1: //Waits for events
-		//Get the mouse click positions.
-		//Use a switch for the different options in the menu.
-		break;
+			int count = uiManager->returnObjCount();
+			renderPipe->newMenu(count);
+			for (int i = 0; i < count; i++)
+				renderPipe->createBuffer(i, uiManager->returnPosAUv(i), uiManager->returnTextureList());
+
+			currentMenu = 0;
+			uiObjects = uiManager->returnObjCount();
+
+			subState++;
+			break;
+		}
+		case 1: //Render loop
+		{
+			/************************Optimera denna delen*****************************/
+			renderPipe->clearUI();
+
+			for (size_t i = 0; i < uiObjects; i++)
+				renderPipe->renderUI(uiManager->returnWorldMatrix(i), i);
+			/*************************************************************************/
+
+			if (i->justPressed(GLFW_MOUSE_BUTTON_LEFT))//button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
+			{
+				double x = (0.0);
+				double y = (0.0);
+				//Events
+				i->getCursor(x, y);
+				double tX = (x / (double)winX) * 2 - 1.0; // (x/ResolutionX) * 2 - 1
+				double tY = (-y / (double)winY) * 2 + 1.0; // (y/ResolutionY) * 2 - 1
+				int eventIndex = uiManager->collisionCheck(glm::vec2((float)tX, (float)tY));
+				switch (eventIndex)
+				{
+				case 0: //Roam
+					current = ROAM;
+					uiManager->removeAllMenus();
+					renderPipe->removeMenu(1);
+					subState = 0;
+					break;
+				case 1: //Multiplayer
+					current = CLIENT;
+					uiManager->removeAllMenus();
+					renderPipe->removeMenu(1);
+					subState = 0;
+					break;
+				case 2: //Settings
+					break;
+				case 3: //Exit
+					glfwHideWindow(win);
+					break;
+				default:
+					break;
+				}
+			}
+		
+			break;
+		}
 	}
 	//MENU
 
@@ -1251,7 +1318,9 @@ void Core::sendWorldBoxes()
 
 bool Core::windowVisible() const
 {
-	return !glfwWindowShouldClose(win);
+	if (glfwWindowShouldClose(win))
+		glfwHideWindow(win);
+	return glfwGetWindowAttrib(win, GLFW_VISIBLE);
 }
 
 void Core::disconnect()

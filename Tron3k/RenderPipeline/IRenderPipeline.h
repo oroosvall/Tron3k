@@ -12,6 +12,7 @@
 #include <vector>
 #include "../Project/Core/sharedStructs.h"
 #include "../Project/Core/AnimationState.h"
+#include "../Project/Core/ui/uiVertex.h"
 
 enum PIPELINE_SETTINGS
 {
@@ -50,10 +51,16 @@ struct PipelineValues
 class IRenderPipeline
 {
 public:
+	virtual bool preInit(unsigned int WindowWidth, unsigned int WindowHeight) = 0;
 	virtual bool init(unsigned int WindowWidth, unsigned int WindowHeight) = 0;
 	virtual void release() = 0;
 	virtual void update(float x, float y, float z, float dt) = 0;
 	virtual void renderIni() = 0;
+
+	virtual bool newMenu(int objCount) = 0;
+	virtual void createBuffer(int id, uiVertex* posUv, int textureIdList[]) = 0;
+	virtual void removeMenu(int id) = 0;
+	virtual void changeTex(int texListIndex, int whichButto) = 0;
 
 	virtual void reloadShaders() = 0;
 
@@ -64,6 +71,8 @@ public:
 	virtual void setChunkColorAndInten(int ID, float* color, float inten) = 0;
 
 	virtual void* getView() = 0;
+	virtual void renderUI(glm::mat4* worldMatrix, int id) = 0;
+	virtual void clearUI() = 0;
 	virtual void renderMISC(int miscID, void* world, float* dgColor, float sgInten) = 0;
 	virtual void renderAnimation(int playerID, int roleID, void* world, AnimationState animState, float* dgColor, float sgInten, bool first) = 0;
 

@@ -7,7 +7,9 @@
 #include "staticBox.h"
 #include "InputBox.h"
 #include "DynamicTextBox.h"
-#include "Vertex.h"
+#include "uiVertex.h"
+
+#include "../Console.h"
 
 #include <vector>
 #include <string>
@@ -39,8 +41,13 @@ private:
 	int nrOfObjects;
 	int menuId;
 
+	Console* console;
+
+	glm::mat4* tmpMat;
+
 public:
 	UI();
+	UI(Console* console);
 	~UI();
 
 	void clean();
@@ -52,8 +59,8 @@ public:
 	glm::vec2 fileCoordToScreenSpace(glm::vec2 pos);
 
 	void setWorldMatrix(float x, float y, int objId);
-	glm::mat4 returnWorldMatrix(int objId);
-	Vertex* returnPosAUv(int id);
+	glm::mat4* returnWorldMatrix(int objId);
+	uiVertex* returnPosAUv(int id);
 	int* returnTextureList();
 	int returnObjCount();
 	int changeTex(int objId);

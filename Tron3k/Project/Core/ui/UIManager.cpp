@@ -11,15 +11,13 @@ UIManager::UIManager()
 }
 UIManager::~UIManager() 
 {
-	if ( fileNamesList != nullptr )
-		delete [] fileNamesList;
-	if ( menus != nullptr )
-		delete[] menus;
 }
 
 //Start menu
-void UIManager::init(std::string fileName)
+void UIManager::init(std::string fileName, Console console)
 {
+	this->console = &console;
+
 	std::ifstream myfile;
 	myfile.open(fileName);
 
@@ -44,9 +42,11 @@ void UIManager::init(std::string fileName)
 			counter++;
 		}
 	}
-	//else
-		//std::cout << "Error: UIManager file: " << filename << " could not be opened." << std::endl;
+	else
+		console.printMsg("Error: UIManager filenames file could not be opened.", "System" ,'S' );
 	myfile.close();
+
+	
 
 	menus = new UI[maxMenus];
 }
@@ -112,18 +112,19 @@ void UIManager::removeAllMenus()
 	{
 		menus[i].clean();
 	}
+	delete[] menus;
 	nrOfMenus = 0;
 	currentMenu = -1;
-	delete menus;
+	delete[] fileNamesList;
 	menus = nullptr;
 }
 
-int UIManager::collisionCheck(glm::vec2 pos, int whichMenu)
+int UIManager::collisionCheck(glm::vec2 pos)
 {
-	return menus[whichMenu].mouseCollission(pos);
+	return menus[currentMenu].mouseCollission(pos);
 }
 
-Vertex* UIManager::returnPosAUv(int id)
+uiVertex* UIManager::returnPosAUv(int id)
 {
 	return menus[currentMenu].returnPosAUv(id);
 }
@@ -136,7 +137,7 @@ int UIManager::returnObjCount()
 	return menus[currentMenu].returnObjCount();
 }
 
-glm::mat4 UIManager::returnWorldMatrix(int id)
+glm::mat4* UIManager::returnWorldMatrix(int id)
 {
 	return menus[currentMenu].returnWorldMatrix(id);
 }

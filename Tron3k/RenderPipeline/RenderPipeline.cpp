@@ -66,10 +66,16 @@ extern "C"
 }
 #endif
 
-bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
+bool RenderPipeline::preInit(unsigned int WindowWidth, unsigned int WindowHeight)
 {
-	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	if (initialized)
+	nrOfUITextures = 5;
+	uiFilePaths.push_back("GameFiles/Textures/UITextures/grassTexture.png");
+	uiFilePaths.push_back("GameFiles/Textures/UITextures/secondTexture.png");
+	uiFilePaths.push_back("GameFiles/Textures/UITextures/thirdTexture.png");
+	uiFilePaths.push_back("GameFiles/Textures/UITextures/fourthTexture.png");
+	uiFilePaths.push_back("GameFiles/Textures/UITextures/fifthTexture.png");
+
+	if (preInitialized)
 	{
 		return true;
 	}
@@ -81,6 +87,43 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	}
 
 	cam.init(WindowWidth, WindowHeight);
+
+	//UITextures
+	GLuint tmp;
+	for (int i = 0; i < nrOfUITextures; i++)
+	{
+		tmp = loadTexture(uiFilePaths[i]);
+		uiTextures.push_back(tmp);
+	}
+
+	//UI Shader
+	GLuint temp;
+	std::string shaderNamesUI[] = { "GameFiles/Shaders/UIShader_vs.glsl", "GameFiles/Shaders/UIShader_fs.glsl" };
+	GLenum shaderTypesUI[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
+	CreateProgram(temp, shaderNamesUI, shaderTypesUI, 2);
+	if (temp != 0)
+	{
+		uiShader = temp;
+		temp = 0;
+	}
+
+	//UI
+	worldMat[2] = glGetUniformLocation(uiShader, "WorldMatrix");
+	uniformTextureLocation[2] = glGetUniformLocation(uiShader, "textureSample");
+
+	vertexRenderBuffers = new VertexBuffers[8];
+
+	preInitialized = true;
+	return true;
+}
+
+bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
+{
+	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	if (initialized)
+	{
+		return true;
+	}
 
 	gBuffer = new Gbuffer();
 	
@@ -265,6 +308,7 @@ void RenderPipeline::release()
 	glDeleteShader(lw_Shader);
 	glDeleteShader(regularShader);
 	glDeleteShader(animationShader);
+	glDeleteShader(uiShader);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -272,6 +316,18 @@ void RenderPipeline::release()
 	delete test;
 
 	delete gBuffer;
+
+	for (int i = 0; i < nrOfMenus; i++)
+	{
+		vertexRenderBuffers[i].clean();
+	}
+	delete[] vertexRenderBuffers;
+
+	for (int i = 0; i < nrOfUITextures; i++)
+	{
+		GLuint temp = uiTextures[i];
+		glDeleteTextures(1, &temp);
+	}
 
 	contMan.release();
 
@@ -356,6 +412,38 @@ void RenderPipeline::finalizeRender()
 	gBuffer->render();
 }
 
+void RenderPipeline::renderUI(glm::mat4* worldMatrix, int id)
+{
+	glUseProgram(uiShader);
+	glDisable(GL_DEPTH_TEST);
+
+	//Activate the buttons texture
+	glActiveTexture(GL_TEXTURE0 + id);
+	glBindTexture(GL_TEXTURE_2D, vertexRenderBuffers[currentMenu].textureIDs[id]);
+
+	//Texture Sample sent to the gpu
+	glProgramUniform1i(uiShader, uniformTextureLocation[2], id);
+	glProgramUniformMatrix4fv(uiShader, worldMat[2], 1, GL_FALSE, (GLfloat*)&worldMatrix[0][0]);
+
+	//Bind the vertex buffer that will be used
+	glBindVertexArray(vertexRenderBuffers[currentMenu].gVertexAttribute[id]);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexRenderBuffers[currentMenu].gVertexBuffer[id]);
+
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+	glEnable(GL_DEPTH_TEST);
+
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR)
+		printf("Error");
+}
+
+void RenderPipeline::clearUI()
+{
+	glClearColor(0, 0, 0, 1);
+	glClear(GL_COLOR_BUFFER_BIT);
+}
+
 void RenderPipeline::renderWallEffect(void* pos1, void* pos2, float uvStartOffset)
 {
 
@@ -435,6 +523,86 @@ void RenderPipeline::renderEffects()
 	//glProgramUniform3fv(lw_Shader, lw_pos2, 1, &pos2[0]);
 	//
 	//glDrawArrays(GL_POINTS, 0, 2);
+}
+
+bool RenderPipeline::newMenu(int objCount)
+{
+	bool result = false;
+	//Check so we are not going over the limit of opened menues.
+	if (nrOfMenus + 1 <= 4)
+	{
+		nrOfMenus++;
+
+		currentMenu = nrOfMenus - 1;
+		nrOfUIOBjects = objCount;
+
+		//Set the defualt values.
+		vertexRenderBuffers[currentMenu] = VertexBuffers(objCount);
+
+		result = true;
+	}
+	return result;
+}
+
+void RenderPipeline::createBuffer(int id, uiVertex* posUv, int textureIdList[])
+{
+	GLuint tmp = uiTextures[textureIdList[id]];
+	vertexRenderBuffers[currentMenu].textureIDs[id] = tmp;
+
+	//create buffer and set data
+	glGenBuffers(1, &vertexRenderBuffers[currentMenu].gVertexBuffer[id]);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexRenderBuffers[currentMenu].gVertexBuffer[id]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(uiVertex) * 4, &posUv[0], GL_STATIC_DRAW); // &tester[id].posList[0] bytt ut mot UIs buttons Vertex
+
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR)
+		printf("Error");
+																									 //define vertex data layout
+	glGenVertexArrays(1, &vertexRenderBuffers[currentMenu].gVertexAttribute[id]);
+	glBindVertexArray(vertexRenderBuffers[currentMenu].gVertexAttribute[id]);
+	glEnableVertexAttribArray(0); //the vertex attribute object will remember its enabled attributes
+	glEnableVertexAttribArray(1);
+
+	GLint vertexPos = glGetAttribLocation(uiShader, "vertex_position");
+	glVertexAttribPointer(vertexPos, 2, GL_FLOAT, GL_FALSE, sizeof(uiVertex), BUFFER_OFFSET(0));
+	GLint vertexUV = glGetAttribLocation(uiShader, "vertex_uv");
+	glVertexAttribPointer(vertexUV, 2, GL_FLOAT, GL_FALSE, sizeof(uiVertex), BUFFER_OFFSET(sizeof(float) * 2));
+
+	error = glGetError();
+	if (error != GL_NO_ERROR)
+		printf("Error");
+}
+
+void RenderPipeline::removeMenu(int id)
+{
+	if (id == 1) //Remove all the buffers
+	{
+		for (size_t i = 0; i < nrOfMenus; i++)
+			vertexRenderBuffers[i].clean();
+
+		nrOfMenus = 0;
+		currentMenu = -1;
+		nrOfUIOBjects = 0;
+	}
+	else if (nrOfMenus == 1) //Only one buffer left
+	{
+		vertexRenderBuffers[0].clean();
+		nrOfMenus = 0;
+		currentMenu -= 1;
+		nrOfUIOBjects = 0;
+	}
+	else //Just the currently used buffer
+	{
+		vertexRenderBuffers[currentMenu].clean();
+		nrOfMenus--;
+		currentMenu = nrOfMenus - 1;
+		nrOfUIOBjects = vertexRenderBuffers[currentMenu].count;
+	}
+}
+
+void RenderPipeline::changeTex(int texListIndex, int whichButton)
+{
+	vertexRenderBuffers[currentMenu].textureIDs[whichButton] = uiTextures[texListIndex];
 }
 
 void* RenderPipeline::getView()

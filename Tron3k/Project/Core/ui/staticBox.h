@@ -2,7 +2,7 @@
 #ifndef STATICBOX_H
 #define STATICBOX_H
 
-#include "Vertex.h"
+#include "uiVertex.h"
 
 #include <glm\glm.hpp>
 #include <glm\gtc\matrix_transform.hpp>
@@ -10,7 +10,7 @@
 class StaticBox
 {
 private:
-	Vertex pos[4];
+	uiVertex pos[4];
 	int textureId;
 	int objectId;
 
@@ -21,8 +21,8 @@ public:
 	~StaticBox();
 
 	void setWorldMatrix(float x, float y);
-	glm::mat4 returnWorldMatrix();
-	Vertex* returnPosAUv();
+	glm::mat4* returnWorldMatrix();
+	uiVertex* returnPosAUv();
 
 	void changeTexUsed();
 

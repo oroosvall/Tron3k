@@ -509,5 +509,8 @@
     <ClInclude Include="Core\ui\staticBox.h">
       <Filter>Source Files\Core\Ui\uiVisionClasses</Filter>
     </ClInclude>
+    <ClInclude Include="Core\ui\uiVertex.h">
+      <Filter>Source Files\Core\Ui</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

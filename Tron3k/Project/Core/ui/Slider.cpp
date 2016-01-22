@@ -14,9 +14,9 @@ void Slider::setWorldMatirx(float x, float y)
 	pointer.setWorldMatrix(x, y);
 }
 
-glm::mat4 Slider::returnWorldMatrix(int objId) 
+glm::mat4* Slider::returnWorldMatrix(int objId) 
 { 
-	glm::mat4 result;
+	glm::mat4* result = nullptr;
 	if (objId == backGround.returnObjId())
 		result = backGround.returnWorldMatrix();
 	else
@@ -25,9 +25,9 @@ glm::mat4 Slider::returnWorldMatrix(int objId)
 	return result;
 }
 
-Vertex* Slider::returnPosAUv(int objId)
+uiVertex* Slider::returnPosAUv(int objId)
 {
-	Vertex* tmpVertex;
+	uiVertex* tmpVertex;
 
 	if (objId == backGround.returnObjId())
 		tmpVertex = backGround.returnPosAUv();

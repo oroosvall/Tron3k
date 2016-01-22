@@ -17,8 +17,8 @@ public:
 	~Slider();
 
 	void setWorldMatirx(float x, float y);
-	glm::mat4 returnWorldMatrix(int objId);
-	Vertex* returnPosAUv(int objId); //Kolla vilken av dom två knapparna det är
+	glm::mat4* returnWorldMatrix(int objId);
+	uiVertex* returnPosAUv(int objId); //Kolla vilken av dom två knapparna det är
 
 	int calcSound();
 
