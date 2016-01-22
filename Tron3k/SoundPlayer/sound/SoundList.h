@@ -30,6 +30,7 @@ enum SOUNDS
 	soundEffectTrapperLand,
 	soundEffectTrapperMultiJump,
 	soundEffectLightWall,
+	soundEffectYouDied,
 
 	soundEffectDestroyerStart,
 	soundEffectDestroyerStop,

@@ -55,7 +55,7 @@ private:
 	int collisionNormalSize = 0;
 	void clearCollisionNormals() { collisionNormalSize = 0; };
 
-	bool isDead = false;
+	bool isDead = true;
 	float respawnTimer = 0.0f;
 
 	glm::vec3 oldPos;

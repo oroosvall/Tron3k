@@ -551,6 +551,11 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			respawnTimer = respawnTime;
 			vel = glm::vec3(0, 0, 0);
 			animOverideIfPriority(anim_third_current, AnimationState::third_primary_death);
+
+			if (GetSoundActivated())
+			{
+				GetSound()->playUserGeneratedSound(SOUNDS::soundEffectYouDied);
+			}
 		}
 
 		if (isDead && respawnTimer != 0.0f)
