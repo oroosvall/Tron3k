@@ -853,7 +853,7 @@ bool Player::searchModifier(MODIFIER_TYPE search)
 
 glm::mat4 Player::getFPSmat()
 {
-	mat4 ret = glm::lookAt(cam->getPos(), cam->getPos() + cam->getDir() * -1.0f, vec3(0, 1, 0));
+	mat4 ret = glm::lookAt(cam->getPos(), cam->getPos() + cam->getDir() * -2.0f, vec3(0, 1, 0));
 	ret[0].w += cam->getPos().x;
 	ret[1].w += cam->getPos().y;
 	ret[2].w += cam->getPos().z;
