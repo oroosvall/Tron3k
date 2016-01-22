@@ -613,7 +613,7 @@ vec3 Physics::checkPlayerVEffectCollision(glm::vec3 playerPos, float rad, unsign
 			{
 				collided = checkSpherevOBBCollision(playerBox, effectBoxes[i].getCollisionMesh());
 			}
-			else if (effectBoxes[i].getEType() > 2)//False box, no collision
+			else if (effectBoxes[i].getEType() > 8)//False box, no collision
 			{
 				
 			}
