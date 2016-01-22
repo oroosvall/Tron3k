@@ -58,7 +58,7 @@
     <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\MobilityBullets\MeleeAttack.cpp" />
     <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\TrapperBullets\BulletPulseShot.cpp" />
     <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\TrapperBullets\ClusterGrenade.cpp" />
-    <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\TrapperBullets\Clutsterling.cpp" />
+    <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\TrapperBullets\Clusterling.cpp" />
     <ClCompile Include="Core\Game\Role\Weapon\Weapon.cpp" />
     <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\Brute\GrenadeLauncher.cpp" />
     <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\Brute\Shotgun.cpp" />

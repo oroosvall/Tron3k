@@ -222,9 +222,6 @@
     <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\TrapperBullets\ClusterGrenade.cpp">
       <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\TrapperBullets</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\TrapperBullets\Clutsterling.cpp">
-      <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\TrapperBullets</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\Explosion.cpp">
       <Filter>Source Files\Core\Game\Role\PlayerEffects\Effects</Filter>
     </ClCompile>
@@ -284,6 +281,9 @@
     </ClCompile>
     <ClCompile Include="Core\ui\staticBox.cpp">
       <Filter>Source Files\Core\Ui\uiVisionClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\TrapperBullets\Clusterling.cpp">
+      <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\TrapperBullets</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
