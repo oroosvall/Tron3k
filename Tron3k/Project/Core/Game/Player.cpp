@@ -78,6 +78,12 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 	playerVel.y = vel.y;
 	pos += playerVel * dt; //Here we will also include external forces.. EDIT: External forces moved, for now
 	vec3 posadjust = vec3(0);
+
+	if (GetSoundActivated())
+	{
+		GetSound()->setLocalPlayerPos(this->getPos());
+		GetSound()->setLocalPlayerDir(this->getDir());
+	}
 	
 	if (vel.x != 0 || vel.z != 0)
 	{

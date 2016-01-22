@@ -409,6 +409,7 @@ void SoundPlayer::playFootsteps(int role, float posX, float posY, float posZ)
 		if (role == 0)
 		{
 			playExternalSound(SOUNDS::soundFootSteps, posX, posY, posZ);
+
 		}
 
 		if (role == 1)
