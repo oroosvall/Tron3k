@@ -146,12 +146,14 @@ void Game::update(float dt)
 	{
 		checkPlayerVWorldCollision(dt);
 		checkBulletVWorldCollision();
+		checkPlayerVEffectCollision();
 	}
 
 	if (gameState == Gamestate::CLIENT)
 	{
 		checkPvPCollision();
 		checkPlayerVWorldCollision(dt);
+		checkPlayerVEffectCollision();
 		checkFootsteps(dt);
 	}
 
@@ -159,6 +161,7 @@ void Game::update(float dt)
 	{
 		checkBulletVWorldCollision();
 		checkPlayerVBulletCollision();
+		checkPlayerVEffectCollision();
 	}
 
 	for (int c = 0; c < max_con; c++)
@@ -276,7 +279,10 @@ void Game::createPlayer(Player* p, int conID, bool isLocal)
 	playerList[conID]->setTeam(p->getTeam());
 	playerList[conID]->setRole(*templateRole);
 	if (isLocal)
+	{
+		localPlayerId = conID;
 		freecam = true;
+	}
 }
 
 void Game::removePlayer(int conID)
@@ -398,6 +404,28 @@ void Game::checkPvPCollision()
 
 	}
 
+}
+
+void Game::checkPlayerVEffectCollision()
+{
+	if (gameState == Gamestate::ROAM || gameState == Gamestate::CLIENT)
+	{
+		Player* local = playerList[localPlayerId];
+		//Collision for all wall-like effects i.e. only Lightwall and Thunderdome
+		for (int c = 0; c < effects[EFFECT_TYPE::LIGHT_WALL].size(); c++)
+		{
+			physics->checkPlayerVEffectCollision(local->getPos(), 1.0f);
+		}
+
+		for (int c = 0; c < effects[EFFECT_TYPE::THUNDERDOME].size(); c++)
+		{
+			physics->checkPlayerVEffectCollision(local->getPos(), 1.0f);
+		}
+	}
+	if (gameState == Gamestate::ROAM || gameState == Gamestate::SERVER)
+	{
+		//Collision for all non-wall effects
+	}
 }
 
 void Game::checkPlayerVBulletCollision()

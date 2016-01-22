@@ -261,7 +261,7 @@ void Core::upRoam(float dt)
 			{
 				game->handleBulletHitWorldEvent(bulletHitsOnWorld[c]);
 			}
-			game->clearBulletOnWorldCollision();
+			game->clearBulletOnWorldCollisions();
 		}
 
 		renderWorld(dt);
@@ -478,7 +478,6 @@ void Core::upServer(float dt)
 		}
 
 		std::vector<BulletHitPlayerInfo> bulletHitsOnPlayer = game->getAllHitPlayerInfo();
-
 		if (bulletHitsOnPlayer.size() != 0)
 		{
 			for (unsigned int c = 0; c < bulletHitsOnPlayer.size(); c++)
@@ -498,7 +497,18 @@ void Core::upServer(float dt)
 				game->handleBulletHitWorldEvent(bulletHitsOnWorld[c]);
 			}
 			top->event_bullet_hit_world(bulletHitsOnWorld);
-			game->clearBulletOnWorldCollision();
+			game->clearBulletOnWorldCollisions();
+		}
+
+		std::vector<EffectHitPlayerInfo> effectHitsOnPlayer = game->getAllEffectOnPlayerCollisions();
+		if (effectHitsOnPlayer.size() != 0)
+		{
+			for (unsigned int c = 0; c < bulletHitsOnWorld.size(); c++)
+			{
+				game->handleEffectHitPlayerEvent(effectHitsOnPlayer[c]);
+			}
+			top->event_effect_hit_player(effectHitsOnPlayer);
+			game->clearEffectOnPlayerCollisions();
 		}
 
 		serverHandleCmds();

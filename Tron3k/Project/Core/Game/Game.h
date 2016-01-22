@@ -91,6 +91,7 @@ private:
 	int max_con;
 	Player** playerList;
 	Physics* physics;
+	int localPlayerId = -1;
 
 	void checkFootsteps(float dt);
 
@@ -207,12 +208,12 @@ public:
 	void clearBulletOnPlayerCollisions() { allBulletHitsOnPlayers.clear();};
 	int handleBulletHitPlayerEvent(BulletHitPlayerInfo hi); //Returns the new HP total of the player, takes the new HP total instead if info is coming from server
 
-	std::vector<EffectHitPlayerInfo> getAllEffectOnPlayerCollisions();
+	std::vector<EffectHitPlayerInfo> getAllEffectOnPlayerCollisions() { return allEffectHitsOnPlayers; };
 	void clearEffectOnPlayerCollisions() { allEffectHitsOnPlayers.clear(); };
 	int handleEffectHitPlayerEvent(EffectHitPlayerInfo hi); //Returns new HP total of player, if we are client then instead simply set HP coming from server
 
 	std::vector<BulletHitWorldInfo> getAllBulletOnWorldCollisions() { return allBulletHitsOnWorld; };
-	void clearBulletOnWorldCollision() { allBulletHitsOnWorld.clear(); };
+	void clearBulletOnWorldCollisions() { allBulletHitsOnWorld.clear(); };
 	void handleBulletHitWorldEvent(BulletHitWorldInfo hi);
 
 	std::vector<BulletHitEffectInfo> getAllBulletOnEffectCollisions() { return allBulletHitsOnEffects; };
