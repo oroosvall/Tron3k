@@ -29,7 +29,7 @@ int LightwallEffect::update(float dt)
 			endPoint.y < pos.y - FLT_EPSILON || endPoint.y > pos.y + FLT_EPSILON)
 		{
 			expandDong = false;
-			lifeTime = 10.0f;
+			lifeTime = 100.0f;
 			if (length(endPoint - pos) < 1.5f)
 				return 1;
 		}

@@ -196,10 +196,37 @@ void Game::update(float dt)
 		for (unsigned int c = 0; c < effects[i].size(); c++)
 		{
 			int msg = effects[i][c]->update(dt);
+
+			if (i == EFFECT_TYPE::LIGHT_WALL)
+			{
+				int pid, eid;
+				LightwallEffect* lWall = (LightwallEffect*)effects[i][c];
+				if (lWall->getDong())
+				{
+					lWall->getId(pid, eid);
+					physics->removeEffect(eid);
+					glm::vec3 sPos, gPos;
+					float height = 2.0f;
+
+					gPos = lWall->getEndPoint();
+					sPos = lWall->getPos();
+					std::vector<float> eBox;
+					eBox.push_back(sPos.x);
+					eBox.push_back(sPos.y);
+					eBox.push_back(sPos.z);
+					eBox.push_back(height);
+					eBox.push_back(gPos.x);
+					eBox.push_back(gPos.y);
+					eBox.push_back(gPos.z);
+					physics->receiveEffectBox(eBox, EFFECT_TYPE::LIGHT_WALL, pid, eid);
+				}
+			}
+
 			if (msg == 1)		//Effect is dead
 			{
 				removeEffect(EFFECT_TYPE(i), c);
 			}
+			
 		}
 	}
 }
@@ -422,7 +449,13 @@ void Game::checkPlayerVEffectCollision()
 		std::vector<glm::vec4> collNormals;
 		for (int c = 0; c < effects[EFFECT_TYPE::LIGHT_WALL].size(); c++)
 		{
-			collNormalWalls = physics->checkPlayerVEffectCollision(local->getPos(), EFFECT_TYPE::LIGHT_WALL);
+			int eid = -1, pid = -1;
+			effects[EFFECT_TYPE::LIGHT_WALL][c]->getId(eid, pid);
+			if (!((LightwallEffect*)effects[EFFECT_TYPE::LIGHT_WALL][c])->getDong() && localPlayerId != pid)
+			{
+				collNormalWalls = physics->checkPlayerVEffectCollision(local->getPos(), EFFECT_TYPE::LIGHT_WALL);
+			}
+			
 		}
 
 		for (int c = 0; c < effects[EFFECT_TYPE::THUNDER_DOME].size(); c++)
@@ -929,6 +962,7 @@ void Game::addEffectToList(int conID, int effectId, EFFECT_TYPE et, glm::vec3 po
 		e = new LightwallEffect(p);
 		if (GetSoundActivated())
 			GetSound()->playExternalSound(SOUNDS::soundEffectLightWall, pos.x, pos.y, pos.z);
+		
 		break;
 	case EFFECT_TYPE::EXPLOSION:
 		e = new Explosion();

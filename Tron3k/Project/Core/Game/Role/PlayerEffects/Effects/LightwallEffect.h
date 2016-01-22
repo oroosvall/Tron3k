@@ -19,6 +19,7 @@ public:
 
 	glm::vec3 getEndPoint() { return endPoint; };
 	void setEndPoint(glm::vec3 inEndPoint) { endPoint = inEndPoint; };
+	bool getDong() { return expandDong; }; //( ?° ?? ?°)( ?° ?? ?°) RAISE YOUR DONGERS ( ?° ?? ?°)( ?° ?? ?°)
 
 	LightwallEffect(Player* p);
 	void init(int pid, int eid, glm::vec3 position);

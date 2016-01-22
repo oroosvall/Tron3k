@@ -196,6 +196,9 @@ std::vector<glm::vec4> Physics::checkSpherevOBBCollision(CollideMesh mesh1, Coll
 	std::vector<vec4> cNorms;
 	vec4 t = glm::vec4(0);
 	vec3 collisionNormal = vec3(0, 0, 0);
+	mesh2.boundingBox.ObbBoxes[0].setPlanes();
+
+
 
 	if (checkAABBvAABBCollision(mesh1.getAABB(), mesh2.getAABB()))
 	{
@@ -651,22 +654,23 @@ std::vector<vec4> Physics::checkPlayerVEffectCollision(glm::vec3 playerPos, unsi
 	box.max = playerPos + vec3(rad, rad, rad);
 	box.min = playerPos - vec3(rad, rad, rad);
 	playerBox.setAABB(box);
+	playerBox.setSphere(playerPos, rad);
 
 	for (int i = 0; i < effectBoxes.size(); i++)
 	{
-		if (effectBoxes[i].getEType() == eType)
+		if (effectBoxes[i]->getEType() == eType)
 		{
-			if (effectBoxes[i].getEType() == 0)//Lightwall, aka OBB
+			if (effectBoxes[i]->getEType() == 0)//Lightwall, aka OBB
 			{
-				collided = checkSpherevOBBCollision(playerBox, effectBoxes[i].getCollisionMesh());
+				collided = checkSpherevOBBCollision(playerBox, effectBoxes[i]->getCollisionMesh());
 			}
-			else if (effectBoxes[i].getEType() > 8)//False box, no collision
+			else if (effectBoxes[i]->getEType() > 8)//False box, no collision
 			{
-				
+
 			}
 			else //evrything else is a sphere, if not, not my goddamn problem
 			{
-				collided = checkSpherevSphereCollision(playerBox, effectBoxes[i].getCollisionMesh());
+				collided = checkSpherevSphereCollision(playerBox, effectBoxes[i]->getCollisionMesh());
 			}
 		}
 	}
@@ -699,6 +703,21 @@ vec3 Physics::normalize(vec3 vec3)
 
 }
 
+bool Physics::removeEffect(int effID)
+{
+	for (int i = 0; i < effectBoxes.size(); i++)
+	{
+		if (effectBoxes[i]->getEID() == effID)
+		{
+			delete effectBoxes[i];
+			effectBoxes[i] = effectBoxes[effectBoxes.size() - 1];
+			effectBoxes.pop_back();
+			i--;
+		}
+	}
+	return true;
+}
+
 void Physics::receiveEffectBox(std::vector<float> eBox, unsigned int etype, int pID, int eID)
 {
 	//sphere
@@ -717,8 +736,8 @@ void Physics::receiveEffectBox(std::vector<float> eBox, unsigned int etype, int 
 	5 = y2
 	6 = z2
 	*/
-	EffectMesh effMesh;
-	effMesh.init();
+	EffectMesh* effMesh = new EffectMesh;
+	effMesh->init();
 	CollideMesh temp;
 
 	AABB aabb;
@@ -771,16 +790,22 @@ void Physics::receiveEffectBox(std::vector<float> eBox, unsigned int etype, int 
 
 		OBBloaded obbl;
 
-		obbl.corners[0] = vec4(min, 1.0f);
-		obbl.corners[1] = vec4(max.x, min.y, max.z, 1.0f);
-		obbl.corners[2] = vec4(min.x, max.y, max.z, 1.0f);
-		obbl.corners[3] = vec4(max, 1.0f);
-		obbl.corners[4] = vec4(max.x, min.y, min.z, 1.0f);
-		obbl.corners[5] = vec4(max.x, max.y, min.z, 1.0f);
-		obbl.corners[6] = vec4(min.x, min.y, max.z, 1.0f);
-		obbl.corners[7] = vec4(max.x, min.y, min.z, 1.0f);
+		vec3 up = vec3(0, 1, 0);
 
-		float angle;
+		vec3 fwd = normalize(pos2 - pos1);
+
+		vec3 n = normalize(cross(up, fwd));
+
+		obbl.corners[0] = glm::vec4(pos1.x - 0.25f * n.x, pos.y - eBox[3], pos1.z + 0.25f * n.z, 1.0f);
+		obbl.corners[1] = glm::vec4(pos1.x + 0.25f * n.x, pos.y - eBox[3], pos1.z + 0.25f * n.z, 1.0f);
+		obbl.corners[2] = glm::vec4(pos1.x - 0.25f * n.x, pos.y + eBox[3], pos1.z + 0.25f * n.z, 1.0f);
+		obbl.corners[3] = glm::vec4(pos1.x + 0.25f * n.x, pos.y + eBox[3], pos1.z + 0.25f * n.z, 1.0f);
+		obbl.corners[4] = glm::vec4(pos2.x - 0.25f * n.x, pos.y + eBox[3], pos2.z - 0.25f * n.z, 1.0f);
+		obbl.corners[5] = glm::vec4(pos2.x + 0.25f * n.x, pos.y + eBox[3], pos2.z - 0.25f * n.z, 1.0f);
+		obbl.corners[6] = glm::vec4(pos2.x - 0.25f * n.x, pos.y - eBox[3], pos2.z - 0.25f * n.z, 1.0f);
+		obbl.corners[7] = glm::vec4(pos2.x + 0.25f * n.x, pos.y - eBox[3], pos2.z - 0.25f * n.z, 1.0f);
+
+		/*float angle;
 
 		vec3 centeredPos1 = pos1 - pos;
 		vec3 centeredPos2 = pos2 - pos;
@@ -800,33 +825,35 @@ void Physics::receiveEffectBox(std::vector<float> eBox, unsigned int etype, int 
 		centPos2Angled.y = centeredPos2.z * sin(-angle) + centeredPos2.x * cos(-angle);
 
 		glm::vec3 corners[8];
-		corners[0] = glm::vec3(centPos1Angled.x - 0.25f, -eBox[3], centPos1Angled.y + 0.25f);
-		corners[1] = glm::vec3(centPos1Angled.x + 0.25f, -eBox[3], centPos1Angled.y + 0.25f);
-		corners[2] = glm::vec3(centPos1Angled.x - 0.25f, eBox[3], centPos1Angled.y + 0.25f);
-		corners[3] = glm::vec3(centPos1Angled.x + 0.25f, eBox[3], centPos1Angled.y + 0.25f);
-		corners[4] = glm::vec3(centPos2Angled.x - 0.25f, eBox[3], centPos2Angled.y - 0.25f);
-		corners[5] = glm::vec3(centPos2Angled.x + 0.25f, eBox[3], centPos2Angled.y - 0.25f);
-		corners[6] = glm::vec3(centPos2Angled.x - 0.25f, -eBox[3], centPos2Angled.y - 0.25f);
-		corners[7] = glm::vec3(centPos2Angled.x + 0.25f, -eBox[3], centPos2Angled.y - 0.25f);
+		corners[0] = glm::vec3(centPos1Angled.x + 0.25f, -eBox[3], centPos1Angled.y - 0.25f);
+		corners[1] = glm::vec3(centPos1Angled.x - 0.25f, -eBox[3], centPos1Angled.y - 0.25f);
+		corners[2] = glm::vec3(centPos1Angled.x + 0.25f, eBox[3], centPos1Angled.y - 0.25f);
+		corners[3] = glm::vec3(centPos1Angled.x - 0.25f, eBox[3], centPos1Angled.y - 0.25f);
+		corners[4] = glm::vec3(centPos2Angled.x + 0.25f, eBox[3], centPos2Angled.y + 0.25f);
+		corners[5] = glm::vec3(centPos2Angled.x - 0.25f, eBox[3], centPos2Angled.y + 0.25f);
+		corners[6] = glm::vec3(centPos2Angled.x + 0.25f, -eBox[3], centPos2Angled.y + 0.25f);
+		corners[7] = glm::vec3(centPos2Angled.x - 0.25f, -eBox[3], centPos2Angled.y + 0.25f);
 
 		for (int i = 0; i < 8; i++)
 		{
 			glm::vec3 temp = corners[i];
 
-			corners[i].x = temp.x * cos(angle) - temp.z * sin(angle);
-			corners[i].z = temp.z * sin(angle) + temp.x * cos(angle);
+			corners[i].x = temp.x * cos(PI - angle) + temp.z * sin(PI - angle);
+			corners[i].z = -temp.z * sin(PI - angle) + temp.x * cos(PI - angle);
 			corners[i] += pos;
 
 			obbl.corners[i] = vec4(corners[i], 1);
-		}
+		}*/
 
 
 
 		OBB obb;
 		obb.init(&obbl);
+		obb.setPlanes();
 		aabb.ObbBoxes.push_back(obb);
 
 		temp.setAABB(aabb);
+
 	}
 	else
 	{
@@ -837,8 +864,9 @@ void Physics::receiveEffectBox(std::vector<float> eBox, unsigned int etype, int 
 		sphere.radius = eBox[3];
 		temp.setSphere(sphere);
 	}
-
-	effMesh.setIDs(etype, pID, eID);
+	effMesh->setCollisionMesh(temp);
+	effMesh->setIDs(etype, pID, eID);
+	effectBoxes.push_back(effMesh);
 
 	/*
 	Skapa 8 punkter från centpos1Angled & 2

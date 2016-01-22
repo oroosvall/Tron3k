@@ -8,6 +8,8 @@
 #endif
 
 #define GRAVITY 18.0f
+#define PI 3.14159265359
+#define TAU 6.28318530718
 
 
 #include "Collision\Geometry.h"
@@ -34,7 +36,7 @@ class Physics
 private:
 	//General physics components will go here, and things will be added as we go
 	std::vector<std::vector<CollideMesh>> worldBoxes; //each CollideMesh is an ABB, and the vector is all CollideMeshes in the chunk
-	std::vector<EffectMesh> effectBoxes;
+	std::vector<EffectMesh*> effectBoxes;
 	CollideMesh playerBox;
 	CollideMesh bulletBox;
 
@@ -88,7 +90,7 @@ private:
 	//--------------//--------------//
 
 	void storeChunkBox(int chunkID, std::vector<AABB> cBox);
-	void storeEffectBox(CollideMesh efml);
+	void storeEffectBox(EffectMesh efml);
 
 	void initBulletBox();
 public:
@@ -100,7 +102,7 @@ public:
 
 	virtual glm::vec3 normalize(glm::vec3 vec3);
 
-	virtual bool removeEffect(int effID) { return false; }; //SKRIV EN FUNKTIONSFAN
+	virtual bool removeEffect(int effID); //SKRIV EN FUNKTIONSFAN
 	
 	virtual glm::vec3 checkPlayerVPlayerCollision(glm::vec3 playerPos1, glm::vec3 playerPos2);
 	virtual glm::vec3 checkPlayerVBulletCollision(glm::vec3 playerPos, glm::vec3 bulletPos);
