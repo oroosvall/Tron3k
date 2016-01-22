@@ -7,5 +7,6 @@
 #include "Overcharge.h"
 #include "SprintControlLock.h"
 #include "TrueGrit.h"
+#include "TrapperShareAmmo.h"
 
 #endif
