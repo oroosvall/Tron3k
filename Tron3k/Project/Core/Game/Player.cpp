@@ -473,7 +473,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 				if (i->justPressed(GLFW_KEY_2))
 				{
-					if (!role.getIfBusy)
+					if (!role.getIfBusy())
 					{
 						role.swapWeaponLocal(1);
 						msg = WPNSWITCH;
