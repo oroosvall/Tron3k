@@ -123,7 +123,7 @@ void Game::update(float dt)
 		if (playerList[c] != nullptr)
 		{
 			playerUpdate(c, dt);
-			if (playerList[c]->isLocal())
+			if (c == localPlayerId)
 				playerApplyForces(c, dt);
 
 			//TODO: Send collision results to player
@@ -181,8 +181,7 @@ void Game::update(float dt)
 				}
 				
 			}
-			if(playerList[c] != nullptr)
-				playerList[c]->movementUpdates(dt, freecam, spectatingThis, spectating);
+			playerList[c]->movementUpdates(dt, freecam, spectatingThis, spectating);
 			
 			//TODO: Send collision results to player
 		}
@@ -311,7 +310,7 @@ void Game::checkFootsteps(float dt)
 {
 	for (int i = 0; i < max_con; i++)
 	{
-		if (playerList[i] != nullptr && !playerList[i]->isLocal())
+		if (playerList[i] != nullptr && i != localPlayerId)
 		{
 			if (!playerList[i]->getFootsteps())
 			{
@@ -483,25 +482,17 @@ void Game::checkPlayerVBulletCollision()
 
 void Game::checkPlayerVWorldCollision(float dt)
 {
-	int localP = -1;
-	for (int i = 0; i < max_con; i++)
-	{
-		if (playerList[i] != nullptr)
-			if (playerList[i]->isLocal())
-				localP = i;
-	}
-
-	if (localP != -1)
+	if (localPlayerId != -1)
 	{
 
 		vec3 posadjust = vec3(0);
 		//lower with distance from eyes to center
-		std::vector<vec4> cNorms = physics->sphereVWorldCollision(playerList[localP]->getPos() - (vec3(0, playerList[localP]->getRole()->getBoxModifier(), 0)), 1);
+		std::vector<vec4> cNorms = physics->sphereVWorldCollision(playerList[localPlayerId]->getPos() - (vec3(0, playerList[localPlayerId]->getRole()->getBoxModifier(), 0)), 1);
 
 		//if we collided with something
 		if (cNorms.size() > 0)
 		{
-			playerList[localP]->setCollisionInfo(cNorms);
+			playerList[localPlayerId]->setCollisionInfo(cNorms);
 
 			//Rest is handled by player
 		}
@@ -532,56 +523,6 @@ void Game::checkBulletVWorldCollision()
 			}
 		}
 	}
-	
-	// reflection test code
-	/*
-	std::vector<glm::vec4> collides;
-
-	for (unsigned int b = 0; b < BULLET_TYPE::NROFBULLETS; b++)
-	{
-		for (unsigned int j = 0; j < bullets[b].size(); j++)
-		{
-			if (bullets[b][j] != nullptr)
-			{
-				int pid = -1, bid = -1;
-				bullets[b][j]->getId(pid, bid);
-				collides = physics->sphereVWorldCollision(bullets[b][j]->getPos(), 0.4);
-
-				if (collides.size() > 0)
-				{
-					vec4 combinedNormal(0); // all normals added together and then normalized
-					vec4 posadjust(0); //pendepths combined
-					for (unsigned int n = 0; n < collides.size(); n++)
-					{
-						posadjust += collides[n] * collides[n].w;
-						combinedNormal += collides[n];
-					}
-
-					// the w component holds the pendepth
-					vec3 combinedNormal2 = vec3(combinedNormal);
-
-					//reflect!!
-					if (combinedNormal2 != glm::vec3(0, 0, 0))
-					{
-						combinedNormal2 = normalize(combinedNormal2);
-						bullets[b][j]->setDir(reflect(bullets[b][j]->getDir(), combinedNormal2));
-
-						//use pendepth to set a new pos 
-						bullets[b][j]->setPos(bullets[b][j]->getPos() + vec3(posadjust));
-
-						// remove bullet code
-						//BulletHitWorldInfo hi;
-						//hi.bt = BULLET_TYPE(b); hi.hitPos = bullets[b][j]->getPos(); hi.hitDir = bullets[b][j]->getDir();
-						//bullets[b][j]->getId(hi.bulletPID, hi.bulletBID);
-						//hi.collisionNormal = collides;
-						//allBulletHitsOnWorld.push_back(hi);
-						//handleBulletHitWorldEvent(hi);
-					}
-				}
-			}
-		}
-	}*/
-
 }
 
 void Game::registerWeapon(Player* p)
@@ -622,7 +563,7 @@ void Game::registerConsumable(Player* p)
 
 void Game::handleWeaponSwitch(int conID, WEAPON_TYPE ws, int swapLoc)
 {
-	if (!playerList[conID]->isLocal())
+	if (conID != localPlayerId)
 		playerList[conID]->switchWpn(ws, swapLoc);
 }
 
