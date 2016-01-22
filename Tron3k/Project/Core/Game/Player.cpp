@@ -463,16 +463,23 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 				if (i->justPressed(GLFW_KEY_1))
 				{
-					role.swapWeaponLocal(0);
-					msg = WPNSWITCH;
-					animOverideIfPriority(anim_first_current, AnimationState::first_primary_switch);
+					if (!role.getIfBusy())
+					{
+						role.swapWeaponLocal(0);
+						msg = WPNSWITCH;
+						animOverideIfPriority(anim_first_current, AnimationState::first_primary_switch);
+					}
 				}
 
 				if (i->justPressed(GLFW_KEY_2))
 				{
-					role.swapWeaponLocal(1);
-					msg = WPNSWITCH;
-					animOverideIfPriority(anim_first_current, AnimationState::first_primary_switch);
+					if (!role.getIfBusy())
+					{
+						role.swapWeaponLocal(1);
+						msg = WPNSWITCH;
+						animOverideIfPriority(anim_first_current, AnimationState::first_primary_switch);
+
+					}
 				}
 
 				if (i->getKeyInfo(GLFW_MOUSE_BUTTON_LEFT))		//Temp
@@ -490,7 +497,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 				if (i->justPressed(GLFW_KEY_Q))
 				{
-					if (role.getCurrentWeapon()->getIfReloading())
+					if (!role.getIfBusy())
 					{
 						Consumable* c = role.getConsumable();
 						if (c->use())
