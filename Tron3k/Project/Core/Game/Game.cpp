@@ -414,12 +414,12 @@ void Game::checkPlayerVEffectCollision()
 		//Collision for all wall-like effects i.e. only Lightwall and Thunderdome
 		for (int c = 0; c < effects[EFFECT_TYPE::LIGHT_WALL].size(); c++)
 		{
-			physics->checkPlayerVEffectCollision(local->getPos(), 1.0f);
+			physics->checkPlayerVEffectCollision(local->getPos(), 1.0f, EFFECT_TYPE::LIGHT_WALL);
 		}
 
-		for (int c = 0; c < effects[EFFECT_TYPE::THUNDERDOME].size(); c++)
+		for (int c = 0; c < effects[EFFECT_TYPE::THUNDER_DOME].size(); c++)
 		{
-			physics->checkPlayerVEffectCollision(local->getPos(), 1.0f);
+			physics->checkPlayerVEffectCollision(local->getPos(), 1.0f, EFFECT_TYPE::THUNDER_DOME);
 		}
 	}
 	if (gameState == Gamestate::ROAM || gameState == Gamestate::SERVER)
