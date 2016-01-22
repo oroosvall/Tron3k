@@ -71,14 +71,25 @@ void Core::update(float dt)
 
 	glfwPollEvents();
 	console.update(_name, 'A'); //Updates to check for new messages and commands
-
-	if (i->justPressed(GLFW_KEY_6))
-		playbackSpeed += 0.1f;
-	if (i->justPressed(GLFW_KEY_5))
-		playbackSpeed -= 0.1f;
-
-	if (playbackSpeed < 0.0f)
-		playbackSpeed = 0;
+	
+	if (game)
+	{
+		if (console.getInChatMode() == false)
+		{
+			if (i->justPressed(GLFW_KEY_7))
+			{
+				playbackSpeed *= 2.0f;
+				CameraInput* cam = CameraInput::getCam();
+				cam->setPlaybackSpeed(playbackSpeed);
+			}
+			if (i->justPressed(GLFW_KEY_6))
+			{
+				playbackSpeed *= 0.5f;
+				CameraInput* cam = CameraInput::getCam();
+				cam->setPlaybackSpeed(playbackSpeed);
+			}
+		}
+	}
 
 	dt *= playbackSpeed;
 
