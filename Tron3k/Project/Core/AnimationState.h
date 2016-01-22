@@ -46,7 +46,10 @@ enum AnimationState
 	third_turn_left,				//			| Destroyer |		   |       |             |
 	third_turn_right,				//			| Destroyer |		   |       |             |
 
-									//shank bot 								 						
+									//manipulator only
+	third_manipulator_pounce,		//			|			|		   |	   | Manipulator |
+
+									//shank bot only								 						
 	third_melee_standing,			//			|			| Shankbot |	   |	         |
 	third_melee_run,				//			|			| Shankbot |	   |	         |
 	third_shankbot_charge,			//			|			| Shankbot |	   |	         |
@@ -101,6 +104,9 @@ int static getAnimRank(AnimationState test)
 		//destroyer tracks				
 	case third_turn_left:				return 0;
 	case third_turn_right:				return 0;
+
+		//manipulator
+	case third_manipulator_pounce:		return 1;
 
 		//shank bot 					
 	case third_shankbot_charge:			return 0;

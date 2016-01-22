@@ -20,6 +20,9 @@ void ContentManager::init()
 
 	playerCharacters[2].load("shanker");
 
+	playerCharacters[4].load("manipulator");
+
+
 	int* lengths = playerCharacters[0].loadAnimations("trapper");
 
 	for (int i = 0; i < AnimationState::none; i++)
@@ -32,6 +35,13 @@ void ContentManager::init()
 	for (int i = 0; i < AnimationState::none; i++)
 	{
 		keyFrameLengths[2 * AnimationState::none + i] = lengths[i];
+	}
+
+	lengths = playerCharacters[4].loadAnimations("manipulator");
+
+	for (int i = 0; i < AnimationState::none; i++)
+	{
+		keyFrameLengths[4 * AnimationState::none + i] = lengths[i];
 	}
 
 	trapperBullet.load("GameFiles/CharacterFiles/primary_trapper.bin");
