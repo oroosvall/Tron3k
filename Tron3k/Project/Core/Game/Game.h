@@ -49,6 +49,24 @@ struct BulletHitWorldInfo
 	glm::vec4 collisionNormal;
 };
 
+struct BulletHitEffectInfo
+{
+	int bulletPID;
+	int bulletBID;
+	BULLET_TYPE bt;
+	glm::vec3 hitPos;
+	glm::vec3 hitDir;
+	glm::vec4 collisionNormal;
+};
+
+struct EffectHitEffectInfo
+{
+	int effectPID;
+	int effectSID;
+	EFFECT_TYPE et;
+	int posInArr;
+};
+
 class Game
 {
 private:
@@ -117,6 +135,8 @@ private:
 	std::vector<BulletHitPlayerInfo> allBulletHitsOnPlayers;
 	std::vector<EffectHitPlayerInfo> allEffectHitsOnPlayers;
 	std::vector<BulletHitWorldInfo> allBulletHitsOnWorld;
+	std::vector<BulletHitEffectInfo> allBulletHitsOnEffects;
+	std::vector<EffectHitEffectInfo> allEffectHitsOnEffects;
 
 	void checkPvPCollision();
 	void checkPlayerVBulletCollision();
@@ -194,6 +214,15 @@ public:
 	std::vector<BulletHitWorldInfo> getAllBulletOnWorldCollisions() { return allBulletHitsOnWorld; };
 	void clearBulletOnWorldCollision() { allBulletHitsOnWorld.clear(); };
 	void handleBulletHitWorldEvent(BulletHitWorldInfo hi);
+
+	std::vector<BulletHitEffectInfo> getAllBulletOnEffectCollisions() { return allBulletHitsOnEffects; };
+	void clearBulletOnEffectCollision() { allBulletHitsOnEffects.clear(); };	
+	void handleBulletHitEffectEvent(BulletHitEffectInfo hi);
+
+	std::vector<EffectHitEffectInfo> getAllEffectOnEffectCollisions() { return allEffectHitsOnEffects; };
+	void clearEffectOnEffectCollision() { allEffectHitsOnEffects.clear(); };
+	void handleEffectHitEffectEvent(EffectHitEffectInfo hi);
+
 
 	int Game::findPlayerPosInTeam(int conID);
 

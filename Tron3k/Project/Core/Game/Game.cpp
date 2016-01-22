@@ -1086,6 +1086,100 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 	}
 }
 
+void Game::handleBulletHitEffectEvent(BulletHitEffectInfo hi)
+{
+	int arraypos = -1;
+	Bullet* b = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, arraypos);
+	//Jag hatar structs ... please do better
+	BulletHitWorldInfo forBounce; forBounce.bulletPID = hi.bulletPID; forBounce.bulletBID = hi.bulletBID; forBounce.bt = hi.bt; forBounce.hitPos = hi.hitPos; forBounce.hitDir = hi.hitDir; forBounce.collisionNormal = hi.collisionNormal;
+	if (b != nullptr)
+	{
+		vec3 temp;
+		switch (hi.bt)
+		{
+		case BULLET_TYPE::PULSE_SHOT:
+			removeBullet(hi.bt, arraypos);			
+			break;
+		case BULLET_TYPE::PLASMA_SHOT:
+			removeBullet(hi.bt, arraypos);
+			break;
+		case BULLET_TYPE::GRENADE_SHOT:
+			bounceBullet(forBounce, b);
+			if (GetSoundActivated())
+				GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+			break;
+		case BULLET_TYPE::SHOTGUN_PELLET:
+			removeBullet(hi.bt, arraypos);
+			break;
+		case BULLET_TYPE::THERMITE_GRENADE:
+			bounceBullet(forBounce, b);
+			if (GetSoundActivated())
+				GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+			break;
+		case BULLET_TYPE::CLEANSE_BOMB:
+			bounceBullet(forBounce, b);
+			if (GetSoundActivated())
+				GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+			break;
+		case BULLET_TYPE::CLUSTER_GRENADE:
+			bounceBullet(forBounce, b);
+			if (GetSoundActivated())
+				GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+			break;
+		case BULLET_TYPE::CLUSTERLING:
+			bounceBullet(forBounce, b);
+			if (GetSoundActivated())
+				GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+			break;
+		case BULLET_TYPE::BATTERY_SLOW_SHOT:
+			removeBullet(hi.bt, arraypos);
+			break;
+		case BULLET_TYPE::BATTERY_SPEED_SHOT:
+			removeBullet(hi.bt, arraypos);
+			break;
+		case BULLET_TYPE::LINK_SHOT:
+			removeBullet(hi.bt, arraypos);
+			break;
+		case BULLET_TYPE::VACUUM_GRENADE:
+			bounceBullet(forBounce, b);
+			if (GetSoundActivated())
+				GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+			break;
+		case BULLET_TYPE::DISC_SHOT:
+			bounceBullet(forBounce, b);
+			break;
+		case BULLET_TYPE::HACKING_DART:
+			removeBullet(hi.bt, arraypos);
+			break;
+		case BULLET_TYPE::MELEE_ATTACK:
+			removeBullet(hi.bt, arraypos);
+			break;
+		}
+	}
+}
+
+void Game::handleEffectHitEffectEvent(EffectHitEffectInfo hi)
+{
+	int arraypos = -1;
+	Effect* e = getSpecificEffect(hi.effectPID, hi.effectSID, hi.et, hi.posInArr);
+
+	if (e != nullptr)
+	{
+		switch (hi.et)
+		{
+		case EFFECT_TYPE::EXPLOSION:
+			removeEffect(hi.et, hi.posInArr);
+			break;
+		case EFFECT_TYPE::LIGHT_WALL:
+			removeEffect(hi.et, hi.posInArr);
+			break;
+		case EFFECT_TYPE::CLEANSEEXPLOSION:
+			removeEffect(hi.et, hi.posInArr);
+			break;
+		}
+	}
+}
+
 void Game::removeEffect(EFFECT_TYPE et, int posInArray)
 {
 	switch (et)
