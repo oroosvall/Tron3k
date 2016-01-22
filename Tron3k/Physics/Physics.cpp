@@ -712,7 +712,7 @@ bool Physics::removeEffect(int effID)
 			delete effectBoxes[i];
 			effectBoxes[i] = effectBoxes[effectBoxes.size() - 1];
 			effectBoxes.pop_back();
-			i--;
+			
 		}
 	}
 	return true;

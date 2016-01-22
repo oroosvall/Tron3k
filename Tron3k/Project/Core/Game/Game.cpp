@@ -469,7 +469,7 @@ void Game::checkPlayerVEffectCollision()
 		collNormals.insert(collNormals.end(), collNormalDomes.begin(), collNormalDomes.end());
 
 		if (collNormals.size() > 0)
-			playerList[localPlayerId]->setCollisionInfo(collNormals);
+			playerList[localPlayerId]->setCollisionInfo(collNormalWalls);
 	}
 	if (gameState == Gamestate::ROAM || gameState == Gamestate::SERVER)
 	{
