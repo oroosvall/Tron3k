@@ -639,23 +639,7 @@ void Player::movementUpdates(float dt, bool freecam, bool spectatingThisPlayer, 
 
 		}
 	}
-	else
-	{
-		/*
-		THIS IS NOT THE LOCAL PLAYER
-		*/
-		goalTimer += dt;
-		float t = goalTimer / interpolationTick;
 
-		if (t > 1.0f)
-			t = 1.0f;
-
-		pos = (oldPos * (1.0f - t)) + (goalpos * t);
-		glm::vec3 prev = dir;
-		dir = (oldDir * (1.0f - t)) + (goaldir * t);
-
-		rotatePlayer(prev, dir);
-	}
 	if (spectatingThisPlayer == true)
 	{
 		cam->setCam(pos, dir);
@@ -694,9 +678,7 @@ void Player::reloadCurrentWeapon()
 		}
 
 		role.getCurrentWeapon()->reload();
-		//play anim
-		if (checkAnimOverwrite(anim_first_current, AnimationState::first_primary_reload))
-			anim_first_current = AnimationState::first_primary_reload;
+		animOverideIfPriority(anim_first_current, AnimationState::first_primary_reload);
 		role.getCurrentWeapon()->reload();
 	}
 
@@ -715,15 +697,9 @@ void Player::switchWpn(WEAPON_TYPE ws, int swapLoc)
 void Player::shoot()
 {
 	if (role.getWeaponNRequiped() == 0) //main weapon
-	{
-		if (checkAnimOverwrite(anim_first_current, AnimationState::first_primary_fire))
-			anim_first_current = AnimationState::first_primary_fire;
-	}
+		animOverideIfPriority(anim_first_current, AnimationState::first_primary_fire);
 	else // secondary fire
-	{
-		if (checkAnimOverwrite(anim_first_current, AnimationState::first_secondary_fire))
-			anim_first_current = AnimationState::first_secondary_fire;
-	}
+		animOverideIfPriority(anim_first_current, AnimationState::first_secondary_fire);
 
 	//Add a bullet recoil factor that is multiplied by a random number and smooth it out
 }
