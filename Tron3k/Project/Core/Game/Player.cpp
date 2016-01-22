@@ -479,12 +479,17 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				{
 					if (role.getCurrentWeapon()->shoot())
 					{
+
 						msg = SHOOT;
 						shoot();
 					}
 					else if (role.getCurrentWeapon()->getCurrentAmmo() == 0)
 					{
-						reloadCurrentWeapon();
+						if (role.getCurrentWeapon()->getIfReloading())
+						{
+							reloadCurrentWeapon();
+						}
+
 					}
 				}
 

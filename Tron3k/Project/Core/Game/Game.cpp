@@ -941,6 +941,8 @@ void Game::addEffectToList(int conID, int effectId, EFFECT_TYPE et, glm::vec3 po
 	{
 	case EFFECT_TYPE::LIGHT_WALL:
 		e = new LightwallEffect(p);
+		if (GetSoundActivated())
+			GetSound()->playExternalSound(SOUNDS::soundEffectLightWall, pos.x, pos.y, pos.z);
 		break;
 	case EFFECT_TYPE::EXPLOSION:
 		e = new Explosion();
