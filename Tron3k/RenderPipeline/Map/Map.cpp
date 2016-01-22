@@ -78,7 +78,7 @@ void Map::renderChunk(GLuint shader, GLuint shaderLocation, int chunkID)
 {
 	int meshID;
 
-	Material mat;
+	Material mat = {-1, -1, -1 ,-1};
 
 	for (size_t i = 0; i < chunks[chunkID].props.size(); i++)
 	{
@@ -93,17 +93,17 @@ void Map::renderChunk(GLuint shader, GLuint shaderLocation, int chunkID)
 		}
 
 		glActiveTexture(GL_TEXTURE0);
-		if(materials[meshes[meshID].material].textureMapIndex != -1)
+		if(mat.textureMapIndex != -1)
 			glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].textureMapIndex].textureID);
 		else
 			glBindTexture(GL_TEXTURE_2D, blank_diffuse);
 		glActiveTexture(GL_TEXTURE0 + 1);
-		if (materials[meshes[meshID].material].normalMapIndex != -1)
+		if (mat.normalMapIndex != -1)
 			glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].normalMapIndex].textureID);
 		else
 			glBindTexture(GL_TEXTURE_2D, blank_normal);
 		glActiveTexture(GL_TEXTURE0 + 2);
-		if (materials[meshes[meshID].material].specularMapIndex != -1)
+		if (mat.specularMapIndex != -1)
 			glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].specularMapIndex].textureID);
 		else
 			glBindTexture(GL_TEXTURE_2D, blank_glow);

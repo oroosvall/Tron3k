@@ -272,6 +272,7 @@ void ContentManager::renderBullet(int bid)
 	switch (bid)
 	{
 	case BULLET_TYPE::PULSE_SHOT:
+	case BULLET_TYPE::PLASMA_SHOT:
 		trapperBullet.draw();
 		break;
 	case BULLET_TYPE::CLUSTER_GRENADE:
