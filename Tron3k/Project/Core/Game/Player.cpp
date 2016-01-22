@@ -479,18 +479,17 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				{
 					if (role.getCurrentWeapon()->shoot())
 					{
-						if (role.getCurrentWeapon()->getCurrentAmmo() == 0)
+
+						msg = SHOOT;
+						shoot();
+					}
+					else if (role.getCurrentWeapon()->getCurrentAmmo() == 0)
+					{
+						if (role.getCurrentWeapon()->getIfReloading())
 						{
-							if (role.getCurrentWeapon()->getIfReloading())
-							{
-								reloadCurrentWeapon();
-							}
+							reloadCurrentWeapon();
 						}
-						else
-						{
-							msg = SHOOT;
-							shoot();
-						}
+
 					}
 				}
 
@@ -859,7 +858,7 @@ bool Player::searchModifier(MODIFIER_TYPE search)
 
 glm::mat4 Player::getFPSmat()
 {
-	mat4 ret = glm::lookAt(cam->getPos(), cam->getPos() + cam->getDir() * -1.0f, vec3(0, 1, 0));
+	mat4 ret = glm::lookAt(cam->getPos(), cam->getPos() + cam->getDir() * -2.0f, vec3(0, 1, 0));
 	ret[0].w += cam->getPos().x;
 	ret[1].w += cam->getPos().y;
 	ret[2].w += cam->getPos().z;
@@ -916,7 +915,13 @@ void Player::movementAnimationChecks(float dt)
 	if (grounded != animGroundedLast) //grounded changed this frame
 	{
 		if (grounded) //landed
+		{
 			animOverideIfPriority(anim_third_current, AnimationState::third_primary_jump_end);
+			if (GetSoundActivated())
+			{
+				GetSound()->playExternalSound(SOUNDS::soundEffectTrapperLand, pos.x, pos.y, pos.z);
+			}
+		}
 
 		else // jump begin
 			animOverideIfPriority(anim_third_current, AnimationState::third_primary_jump_begin);

@@ -875,6 +875,9 @@ void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec
 	break;
 	case SPECIAL_TYPE::MULTIJUMP:
 	{
+		if (GetSoundActivated())
+			GetSound()->playExternalSound(SOUNDS::soundEffectTrapperMultiJump, pos.x, pos.y, pos.z);
+
 		vec3 vel = p->getVelocity();
 		if (vel.y < 0)
 		{
