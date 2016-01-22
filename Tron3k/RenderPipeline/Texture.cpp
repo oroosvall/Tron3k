@@ -7,13 +7,23 @@ GLuint blank_diffuse;
 GLuint blank_normal;
 GLuint blank_glow;
 
+void DDSTexture::load(std::string file)
+{
+
+}
+
+bool DDSTexture::uploadTexture(GLuint &id)
+{
+
+	return true;
+}
+
 GLuint loadTexture(std::string texturePath)
 {
 	int x;
 	int y;
 	int comp;
-
-
+	
 	stbi_uc* image = stbi_load(texturePath.c_str(), &x, &y, &comp, 4);
 
 	GLuint textureID = 0;

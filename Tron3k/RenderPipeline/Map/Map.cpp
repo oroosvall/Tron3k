@@ -86,7 +86,7 @@ void Map::renderChunk(GLuint shader, GLuint shaderLocation, int chunkID)
 
 		for (size_t i = 0; i < materialCount; i++)
 		{
-			if (materials[i].materialID == meshes[meshID].material)
+			if (meshes[meshID].material == materials[i].materialID)
 			{
 				mat = materials[i];
 				break;

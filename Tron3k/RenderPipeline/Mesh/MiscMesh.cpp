@@ -70,7 +70,7 @@ void MiscMesh::load(std::string fileName)
 			{
 				char* texName = new char[(unsigned int)textHeader[i].textureSize];
 				file.read(texName, sizeof(char) * (unsigned int)textHeader[i].textureSize);
-				tex[i].textureName = "GameFiles/Testfiles/" + std::string(texName, textHeader[i].textureSize);
+				tex[i].textureName = "GameFiles/Textures/" + std::string(texName, textHeader[i].textureSize);
 				delete[] texName;
 			}
 			delete[] textHeader;

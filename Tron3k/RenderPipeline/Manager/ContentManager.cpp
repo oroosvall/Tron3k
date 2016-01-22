@@ -55,11 +55,7 @@ void ContentManager::init()
 		renderNextChunks[n] = false;
 	}
 	glGenQueries(1, &portalQuery);
-
-		
-	bullet.init(0, 0, 0);
-	bullet.load("GameFiles/TestFiles/bullet.v");
-
+	
 }
 
 void ContentManager::release()
@@ -87,7 +83,6 @@ void ContentManager::release()
 	delete[] renderNextChunks;
 
 	skybox.release();
-	bullet.release();
 
 	//collision render free
 	for (int c = 0; c < nrChunks; c++)
@@ -277,6 +272,7 @@ void ContentManager::renderBullet(int bid)
 	switch (bid)
 	{
 	case BULLET_TYPE::PULSE_SHOT:
+	case BULLET_TYPE::PLASMA_SHOT:
 		trapperBullet.draw();
 		break;
 	case BULLET_TYPE::CLUSTER_GRENADE:
