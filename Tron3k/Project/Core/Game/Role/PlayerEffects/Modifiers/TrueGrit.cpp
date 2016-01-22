@@ -6,11 +6,17 @@ void TrueGrit::init(Player* myTarget)
 	type = MODIFIER_TYPE::TRUEGRITMODIFIER;
 
 	target = myTarget;
-	lifeTime = 3.0f;
-	endTime = lifeTime - 0.4;
+	lifeTime = 0.2f;
+	dashDone = false;
 	damageTaken = 0;
 
 	oldHealth = target->getHP();
+
+	vel = target->getDir();
+	vel *= glm::vec3(3.0f, 0.0f, 3.0f);
+	vel.y = 5.0f; //Jump height at initial dash
+	target->setVelocity(vel);
+	target->setGrounded(false);
 }
 
 
@@ -28,20 +34,25 @@ int TrueGrit::setData(float dt)
 {
 	lifeTime -= dt;
 
-	if (lifeTime <= 0)
+	if (!dashDone)
 	{
-		return 1;
-	}
-
-	if (dashDone != true)
-	{
-		vec3 vel = target->getVelocity();
-		if (lifeTime > endTime)
+		if (lifeTime > FLT_EPSILON)
 		{
-			vel += vec3(1.5, 1.5, 1.5) * vel * dt;
+			vel.y = target->getVelocity().y;
+			target->setVelocity(vel);
 		}
 		else
+		{
 			dashDone = true;
+			lifeTime = 2.8f;
+		}
+	}
+	else
+	{
+		if (lifeTime < FLT_EPSILON)
+		{
+			return 1;
+		}
 	}
 
 	if (damageTaken > 0 && timer <= 0)		//Heal atm since damage reduction was impossibru
