@@ -615,7 +615,7 @@ void RenderPipeline::getSpawnpoints(std::vector < std::vector < SpawnpointG > > 
 	vector<SpawnpointG> team1;
 	vector<SpawnpointG> team2;
 
-	float yincrease = 7.0f;
+	float yincrease = 0.0f;
 
 	int size = contMan.testMap.spFFACount;
 	for (int n = 0; n < size; n++)
