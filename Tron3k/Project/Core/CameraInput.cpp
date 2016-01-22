@@ -51,6 +51,8 @@ void CameraInput::update(float dt, bool freeCam)
 void CameraInput::keypan(float dt)
 {
 	float speedorig = camSpeed;
+	camSpeed /= playbackSpeed;
+
 	if (i->getKeyInfo(GLFW_KEY_LEFT_SHIFT))
 		camSpeed *= 9;
 	camSpeed *= dt;
