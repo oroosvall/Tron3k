@@ -976,7 +976,7 @@ void Core::renderWorld(float dt)
 		bool force3rd = false;
 		if (i->getKeyInfo(GLFW_KEY_P))
 		{
-			cam->setCam(vec3(2, 7, 10), vec3(0, 0, -1));
+			cam->setCam(vec3(-11, 1, 14), vec3(0, 0, 1));
 			force3rd = true;
 		}
 

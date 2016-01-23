@@ -79,12 +79,6 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 	pos += playerVel * dt; //Here we will also include external forces.. EDIT: External forces moved, for now
 	vec3 posadjust = vec3(0);
 
-	if (GetSoundActivated())
-	{
-		GetSound()->setLocalPlayerPos(this->getPos());
-		GetSound()->setLocalPlayerDir(this->getDir());
-	}
-	
 	if (vel.x != 0 || vel.z != 0)
 	{
 
@@ -604,11 +598,24 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 		rotatePlayer(prev, dir);
 
-		if (role.getHealth() == 0)
+		if (spectatingThisPlayer == true)
 		{
-			isDead = true;
-			vel = glm::vec3(0, 0, 0);
+			cam->setCam(pos, dir);
+
+			if (GetSoundActivated())
+			{
+				GetSound()->setLocalPlayerPos(cam->getPos());
+				GetSound()->setLocalPlayerDir(cam->getDir());
+			}
 		}
+
+		// not sure if we want to do this?
+
+		//if (role.getHealth() == 0)
+		//{
+		//	isDead = true;
+		//	vel = glm::vec3(0, 0, 0);
+		//}
 	}
 	
 	return msg;
@@ -635,14 +642,15 @@ void Player::movementUpdates(float dt, bool freecam, bool spectatingThisPlayer, 
 
 			float lastHeight = pos.y;
 
-			//sets player rotations and cam
-
+			if (freecam && spectating == false)
+			{
+				if (GetSoundActivated())
+				{
+					GetSound()->setLocalPlayerPos(cam->getPos());
+					GetSound()->setLocalPlayerDir(cam->getDir());
+				}
+			}
 		}
-	}
-
-	if (spectatingThisPlayer == true)
-	{
-		cam->setCam(pos, dir);
 	}
 
 	worldMat[0].w = pos.x;
