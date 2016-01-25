@@ -1106,6 +1106,8 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 			break;
 		case BULLET_TYPE::DISC_SHOT:
 			bounceBullet(hi, b);
+			if (GetSoundActivated())
+				GetSound()->playExternalSound(SOUNDS::soundEffectDiscBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
 			break;
 		case BULLET_TYPE::GRENADE_SHOT:
 			bounceBullet(hi, b);
