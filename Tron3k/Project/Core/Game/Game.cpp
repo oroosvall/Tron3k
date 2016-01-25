@@ -206,7 +206,7 @@ void Game::update(float dt)
 					lWall->getId(pid, eid);
 					physics->removeEffect(eid);
 					glm::vec3 sPos, gPos;
-					float height = 2.0f;
+					float height = 2.5f;
 
 					gPos = lWall->getEndPoint();
 					sPos = lWall->getPos();

@@ -191,7 +191,7 @@ std::vector<glm::vec4> Physics::checkSpherevSphereCollision(CollideMesh mesh1, C
 	return collided;
 }
 
-std::vector<glm::vec4> Physics::checkSpherevOBBCollision(CollideMesh mesh1, CollideMesh mesh2) //mesh 1 = Sphere, mesh2 = obb
+std::vector<glm::vec4> Physics::checkSpherevOBBlwCollision(CollideMesh mesh1, CollideMesh mesh2) //mesh 1 = Sphere, mesh2 = obb
 {
 	std::vector<vec4> cNorms;
 	vec4 t = glm::vec4(0);
@@ -208,7 +208,7 @@ std::vector<glm::vec4> Physics::checkSpherevOBBCollision(CollideMesh mesh1, Coll
 		int size = mesh2.boundingBox.ObbBoxes.size();
 		for (int n = 0; n < size; n++)
 		{
-			t = getSpherevOBBNorms(mesh1.getSphere().pos, mesh1.getSphere().radius, &mesh2.boundingBox.ObbBoxes[n]);
+			t = getSpherevOBBlwNorms(mesh1.getSphere().pos, mesh1.getSphere().radius, &mesh2.boundingBox.ObbBoxes[n]);
 			t.w = rad - t.w; //penetration depth instead of collision distance 
 			if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= mesh1.getSphere().radius + FLT_EPSILON)
 			{
@@ -457,6 +457,36 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb)
 	return closest;
 }
 
+vec4 Physics::getSpherevOBBlwNorms(vec3 pos, float rad, OBB* obb)
+{
+	vec4 t;
+	vec4 closest;
+	closest.w = FLT_MAX;
+
+	//test vs all planes
+	for (int n = 0; n < 6; n++)
+	{
+		// send inverse plane normal as dir
+		// t.w will be distance to the wall -1 if no wall was close enough
+		t = obb->planes[n].intersects(pos, -obb->planes[n].n, rad);
+
+		// if a valid intersection found
+		//plane intersection will always be closer than all other intersections on the obb
+		if (t.w > 0)
+		{
+			return t;
+		}
+	}
+
+	
+
+	// if the closest one if further than sphere rad = no intersection
+	if (closest.w + FLT_EPSILON > rad - FLT_EPSILON)
+		closest.w = -1;
+
+	return closest;
+}
+
 vec3 Physics::getCollisionNormal(Cylinder cylinder, AABB aabb)
 {
 	glm::vec3 normal = glm::vec3(0, 0, 0);
@@ -664,7 +694,7 @@ std::vector<vec4> Physics::checkPlayerVEffectCollision(glm::vec3 playerPos, unsi
 			{
 				if (effectBoxes[i]->getEType() == 0)//Lightwall, aka OBB
 				{
-					collided = checkSpherevOBBCollision(playerBox, effectBoxes[i]->getCollisionMesh());
+					collided = checkSpherevOBBlwCollision(playerBox, effectBoxes[i]->getCollisionMesh());
 				}
 				else if (effectBoxes[i]->getEType() > 8)//False box, no collision
 				{
@@ -676,6 +706,12 @@ std::vector<vec4> Physics::checkPlayerVEffectCollision(glm::vec3 playerPos, unsi
 				}
 			}
 		}
+	}
+
+	for (int i = 0; i < collided.size(); i++)
+	{
+		if (collided[i].y > 0.01f || collided[i].y < -0.01f)
+			collided[i].y = 0;
 	}
 	return collided;
 }
@@ -799,14 +835,14 @@ void Physics::receiveEffectBox(std::vector<float> eBox, unsigned int etype, int 
 
 		vec3 n = normalize(cross(up, fwd));
 
-		obbl.corners[0] = glm::vec4(pos1.x - 0.25f * n.x, pos.y - eBox[3], pos1.z + 0.25f * n.z, 1.0f);
-		obbl.corners[1] = glm::vec4(pos1.x + 0.25f * n.x, pos.y - eBox[3], pos1.z + 0.25f * n.z, 1.0f);
-		obbl.corners[2] = glm::vec4(pos1.x - 0.25f * n.x, pos.y + eBox[3], pos1.z + 0.25f * n.z, 1.0f);
-		obbl.corners[3] = glm::vec4(pos1.x + 0.25f * n.x, pos.y + eBox[3], pos1.z + 0.25f * n.z, 1.0f);
-		obbl.corners[4] = glm::vec4(pos2.x - 0.25f * n.x, pos.y + eBox[3], pos2.z - 0.25f * n.z, 1.0f);
-		obbl.corners[5] = glm::vec4(pos2.x + 0.25f * n.x, pos.y + eBox[3], pos2.z - 0.25f * n.z, 1.0f);
-		obbl.corners[6] = glm::vec4(pos2.x - 0.25f * n.x, pos.y - eBox[3], pos2.z - 0.25f * n.z, 1.0f);
-		obbl.corners[7] = glm::vec4(pos2.x + 0.25f * n.x, pos.y - eBox[3], pos2.z - 0.25f * n.z, 1.0f);
+		obbl.corners[0] = glm::vec4(pos1.x - 0.2f * n.x, pos.y - eBox[3], pos1.z + 0.2f * n.z, 1.0f);
+		obbl.corners[1] = glm::vec4(pos1.x + 0.2f * n.x, pos.y - eBox[3], pos1.z + 0.2f * n.z, 1.0f);
+		obbl.corners[2] = glm::vec4(pos1.x - 0.2f * n.x, pos.y + eBox[3], pos1.z + 0.2f * n.z, 1.0f);
+		obbl.corners[3] = glm::vec4(pos1.x + 0.2f * n.x, pos.y + eBox[3], pos1.z + 0.2f * n.z, 1.0f);
+		obbl.corners[4] = glm::vec4(pos2.x - 0.2f * n.x, pos.y + eBox[3], pos2.z - 0.2f * n.z, 1.0f);
+		obbl.corners[5] = glm::vec4(pos2.x + 0.2f * n.x, pos.y + eBox[3], pos2.z - 0.2f * n.z, 1.0f);
+		obbl.corners[6] = glm::vec4(pos2.x - 0.2f * n.x, pos.y - eBox[3], pos2.z - 0.2f * n.z, 1.0f);
+		obbl.corners[7] = glm::vec4(pos2.x + 0.2f * n.x, pos.y - eBox[3], pos2.z - 0.2f * n.z, 1.0f);
 
 		/*float angle;
 

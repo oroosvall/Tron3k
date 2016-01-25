@@ -69,7 +69,7 @@ private:
 	//-------Sphere Collision-------//
 	std::vector<glm::vec4> checkSpherevSphereCollision(CollideMesh mesh1, CollideMesh mesh2);
 
-	std::vector<glm::vec4> checkSpherevOBBCollision(CollideMesh mesh1, CollideMesh mesh2);
+	std::vector<glm::vec4> checkSpherevOBBlwCollision(CollideMesh mesh1, CollideMesh mesh2);
 	//--------------//--------------//
 
 	//--------Line Collision--------//
@@ -86,6 +86,7 @@ private:
 	glm::vec3 getCollisionNormal(AngledCylinder cylinder, OBB obb);
 	glm::vec3 getCollisionNormal(Sphere sphere, OBB obb);
 
+	glm::vec4 getSpherevOBBlwNorms(glm::vec3 pos, float rad, OBB* obb);
 	glm::vec4 getSpherevOBBNorms(glm::vec3 pos, float rad, OBB* obb);
 	//--------------//--------------//
 
