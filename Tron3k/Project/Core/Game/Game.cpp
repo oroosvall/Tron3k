@@ -1169,10 +1169,13 @@ void Game::removeEffect(EFFECT_TYPE et, int posInArray)
 void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 {
 	int PID = 0, BID = 0;
-	Bullet* parent = bullets[bt][posInArray];
 
-	switch (bt)
+	if (posInArray <= bullets->size())
 	{
+		Bullet* parent = bullets[bt][posInArray];
+
+		switch (bt)
+		{
 		case BULLET_TYPE::CLUSTER_GRENADE: //FUCKING EVERYTHING	
 		{
 			vec3 lingDir;
@@ -1227,10 +1230,11 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(35.0f);
 			break;
 		}
+		}
+		delete bullets[bt][posInArray];
+		bullets[bt][posInArray] = bullets[bt][bullets[bt].size() - 1];
+		bullets[bt].pop_back();
 	}
-	delete bullets[bt][posInArray];
-	bullets[bt][posInArray] = bullets[bt][bullets[bt].size() - 1];
-	bullets[bt].pop_back();
 }
 
 bool Game::playerWantsToRespawn()
