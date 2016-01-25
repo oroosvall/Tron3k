@@ -71,6 +71,8 @@ private:
 	bool animGrounded = false;
 	bool animGroundedLast = false;
 	float animAirTimer = 0.0f;
+	int animRole = 0;
+	int animPrimary = true;
 	void movementAnimationChecks(float dt);
 
 	bool isLocalPlayer;

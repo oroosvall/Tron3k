@@ -301,9 +301,24 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 	if (isLocalPlayer) // even if we are the local player we can be dead and spectating some one
 	{
 		//default movement anims
-		anim_first_current = AnimationState::first_primary_idle;
-		anim_third_current = AnimationState::third_primary_idle;
+		animRole = role.getRole();
+		animPrimary = false;
+		if (role.getWeaponNRequiped() == 0) // if primary
+			animPrimary = true;
 
+		// *** first person defaults ***
+		anim_first_current = AnimationState::first_primary_idle;
+			if (animRole != ROLES::TRAPPER) // trapper renders regular primary as secondary
+				if (animPrimary == false)
+					anim_first_current = AnimationState::first_secondary_idle;
+
+		// *** third person defaults ***
+		anim_third_current = AnimationState::third_primary_idle;
+		//only brute and manipulator has a secondary 3rd person render
+		if(animRole == ROLES::BRUTE || animRole == ROLES::MANIPULATOR)
+			if(animPrimary == false)
+				anim_third_current = AnimationState::third_secondary_idle;
+		
 		if (i->justPressed(GLFW_KEY_ENTER))
 		{
 			if (lockControls)
@@ -480,6 +495,8 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 						role.swapWeaponLocal(0);
 						msg = WPNSWITCH;
 						animOverideIfPriority(anim_first_current, AnimationState::first_primary_switch);
+						if (animRole == ROLES::MANIPULATOR || animRole == ROLES::BRUTE)
+							animOverideIfPriority(anim_third_current, AnimationState::third_secondary_switch);
 					}
 				}
 
@@ -490,6 +507,8 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 						role.swapWeaponLocal(1);
 						msg = WPNSWITCH;
 						animOverideIfPriority(anim_first_current, AnimationState::first_primary_switch);
+						if (animRole == ROLES::MANIPULATOR || animRole == ROLES::BRUTE)
+							animOverideIfPriority(anim_third_current, AnimationState::third_primary_switch);
 
 					}
 				}
@@ -698,10 +717,11 @@ void Player::reloadCurrentWeapon()
 		}
 
 		role.getCurrentWeapon()->reload();
-		animOverideIfPriority(anim_first_current, AnimationState::first_primary_reload);
-		role.getCurrentWeapon()->reload();
+		if(animPrimary)
+			animOverideIfPriority(anim_first_current, AnimationState::first_primary_reload);
+		else
+			animOverideIfPriority(anim_first_current, AnimationState::first_secondary_fire);
 	}
-
 }
 
 Weapon* Player::getPlayerCurrentWeapon()
@@ -716,7 +736,7 @@ void Player::switchWpn(WEAPON_TYPE ws, int swapLoc)
 
 void Player::shoot()
 {
-	if (role.getWeaponNRequiped() == 0) //main weapon
+	if (animPrimary) //main weapon
 		animOverideIfPriority(anim_first_current, AnimationState::first_primary_fire);
 	else // secondary fire
 		animOverideIfPriority(anim_first_current, AnimationState::first_secondary_fire);
@@ -898,32 +918,66 @@ void Player::movementAnimationChecks(float dt)
 		//Run checks
 		if (vel.x != 0 || vel.z != 0)
 		{
-			//first person run
-			animOverideIfPriority(anim_first_current, AnimationState::first_primary_run);
-
-			// strafe left
-			if (i->getKeyInfo(GLFW_KEY_A) && !i->getKeyInfo(GLFW_KEY_W) && !i->getKeyInfo(GLFW_KEY_S))
-				animOverideIfPriority(anim_third_current, AnimationState::third_primary_strafe_left);
-
-			// strafe right
-			else if (i->getKeyInfo(GLFW_KEY_D) && !i->getKeyInfo(GLFW_KEY_W) && !i->getKeyInfo(GLFW_KEY_S))
-				animOverideIfPriority(anim_third_current, AnimationState::third_primary_strafe_right);
-
-			//check if we are running backwards
-			else if (dot(vel, dir) < 0)
-				animOverideIfPriority(anim_third_current, AnimationState::third_primary_run_rev);
-
-			else //run forward
+			if (animPrimary == true || (animRole != ROLES::MANIPULATOR && animRole != ROLES::BRUTE))
 			{
-				animOverideIfPriority(anim_third_current, AnimationState::third_primary_run);
-				if (role.getRole() == ROLES::MOBILITY)
-					if (searchModifier(MODIFIER_TYPE::LIGHTSPEEDMODIFIER))
-						animOverideIfPriority(anim_third_current, AnimationState::third_shankbot_charge);
-			}	
+				//first person run
+				animOverideIfPriority(anim_first_current, AnimationState::first_primary_run);
+				if(animPrimary == false)
+					if(animRole != ROLES::TRAPPER) // trapper has no secondary weapon anims
+						animOverideIfPriority(anim_first_current, AnimationState::first_secondary_run);
+
+				//Third person
+
+				// strafe left
+				if (i->getKeyInfo(GLFW_KEY_A) && !i->getKeyInfo(GLFW_KEY_W) && !i->getKeyInfo(GLFW_KEY_S))
+					animOverideIfPriority(anim_third_current, AnimationState::third_primary_strafe_left);
+
+				// strafe right
+				else if (i->getKeyInfo(GLFW_KEY_D) && !i->getKeyInfo(GLFW_KEY_W) && !i->getKeyInfo(GLFW_KEY_S))
+					animOverideIfPriority(anim_third_current, AnimationState::third_primary_strafe_right);
+
+				//check if we are running backwards
+				else if (dot(vel, dir) < 0)
+					animOverideIfPriority(anim_third_current, AnimationState::third_primary_run_rev);
+
+				else //run forward
+				{
+					animOverideIfPriority(anim_third_current, AnimationState::third_primary_run);
+					if (role.getRole() == ROLES::MOBILITY)
+						if (searchModifier(MODIFIER_TYPE::LIGHTSPEEDMODIFIER))
+							animOverideIfPriority(anim_third_current, AnimationState::third_shankbot_charge);
+				}
+			}
+			else // brute and manipulator secondary weapon case
+			{
+				animOverideIfPriority(anim_first_current, AnimationState::first_secondary_run);
+
+				//Third person
+
+				// strafe left
+				if (i->getKeyInfo(GLFW_KEY_A) && !i->getKeyInfo(GLFW_KEY_W) && !i->getKeyInfo(GLFW_KEY_S))
+					animOverideIfPriority(anim_third_current, AnimationState::third_secondary_strafe_left);
+
+				// strafe right
+				else if (i->getKeyInfo(GLFW_KEY_D) && !i->getKeyInfo(GLFW_KEY_W) && !i->getKeyInfo(GLFW_KEY_S))
+					animOverideIfPriority(anim_third_current, AnimationState::third_secondary_strafe_right);
+
+				//check if we are running backwards
+				else if (dot(vel, dir) < 0)
+					animOverideIfPriority(anim_third_current, AnimationState::third_secondary_run_rev);
+
+				else //run forward
+					animOverideIfPriority(anim_third_current, AnimationState::third_secondary_run);
+			}
 		}
 	}
 	else //if in air
+	{	
 		animOverideIfPriority(anim_third_current, AnimationState::third_primary_air);
+			if (animPrimary == false)
+				if(animRole != ROLES::MANIPULATOR && animRole != ROLES::BRUTE)
+					animOverideIfPriority(anim_third_current, AnimationState::third_secondary_air);
+	}
 
 	//Jump Checks
 	if (grounded != animGroundedLast) //grounded changed this frame
@@ -932,9 +986,7 @@ void Player::movementAnimationChecks(float dt)
 		{
 			animOverideIfPriority(anim_third_current, AnimationState::third_primary_jump_end);
 			if (GetSoundActivated())
-			{
 				GetSound()->playExternalSound(SOUNDS::soundEffectTrapperLand, pos.x, pos.y, pos.z);
-			}
 		}
 
 		else // jump begin
@@ -948,11 +1000,4 @@ void Player::movementAnimationChecks(float dt)
 
 	animOverideIfPriority(anim_third_framePeak, anim_third_current);
 	animOverideIfPriority(anim_first_framePeak, anim_first_current);
-
-	//frame peak overide
-	//if (checkAnimOverwrite(anim_first_framePeak, anim_first_current))
-	//	anim_first_framePeak = anim_first_current;
-	//
-	//if (checkAnimOverwrite(anim_third_framePeak, anim_third_current))
-	//	anim_third_framePeak = anim_third_current;
 }
