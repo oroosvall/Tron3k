@@ -729,19 +729,22 @@ void Player::hitByBullet(Bullet* b, int newHPtotal)
 	/*
 	This is where we will extract additional modifiers from the Bullet, when applicable.
 	*/
-	if (newHPtotal == -1) //We are actually taking damage on the server now
+	if (b != nullptr)
 	{
-		int dmg = b->getDamage();
-		role.takeDamage(dmg);
-	}
-	else //We are on a client, and thus are only interested on our HP on the server
-	{
-		role.setHealth(newHPtotal);
-	}
+		if (newHPtotal == -1) //We are actually taking damage on the server now
+		{
+			int dmg = b->getDamage();
+			role.takeDamage(dmg);
+		}
+		else //We are on a client, and thus are only interested on our HP on the server
+		{
+			role.setHealth(newHPtotal);
+		}
 
-	if (b->getType() == BULLET_TYPE::HACKING_DART)
-	{
-		addModifier(MODIFIER_TYPE::HACKINGDARTMODIFIER);
+		if (b->getType() == BULLET_TYPE::HACKING_DART)
+		{
+			addModifier(MODIFIER_TYPE::HACKINGDARTMODIFIER);
+		}
 	}
 }
 
