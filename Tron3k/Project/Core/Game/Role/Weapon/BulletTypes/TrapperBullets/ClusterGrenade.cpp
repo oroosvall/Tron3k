@@ -21,7 +21,7 @@ int ClusterGrenade::update(float dt)
 	updateWorldMat();
 
 	ttl -= dt;
-	if (ttl <= 0)	//Bullet is no longer alive and should be removed
+	if (ttl < 0.0f)	//Bullet is no longer alive and should be removed
 		return 1;
 
 	return 0;

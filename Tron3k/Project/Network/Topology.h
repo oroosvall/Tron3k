@@ -248,9 +248,12 @@ public:
 		*rec >> size;
 		for (int c = 0; c < size; c++)
 		{
-			*rec >> bt >> toi.bulletPID >> toi.bulletBID;
+			*rec >> bt >> pid >> bid;
+			*rec >> pos.x >> pos.y >> pos.z;
 			toi.bt = BULLET_TYPE(bt);
-			*rec >> toi.pos.x >> toi.pos.y >> toi.pos.z;
+			toi.bulletPID = pid;
+			toi.bulletBID = bid;
+			toi.pos = pos;
 			gamePtr->handleBulletTimeOuts(toi);
 		}
 	}

@@ -1095,41 +1095,46 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 	Bullet* b = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, arraypos);
 	if (b != nullptr)
 	{
-		vec3 temp;
-		switch (hi.bt)
+		b->setPos(hi.hitPos);
+		b->setDir(hi.hitDir);
+		if (b != nullptr)
 		{
-		case BULLET_TYPE::CLUSTER_GRENADE:
-			bounceBullet(hi, b);
-			if (GetSoundActivated())
-				GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
-			break;
-		case BULLET_TYPE::CLUSTERLING:
-			bounceBullet(hi, b);
-			if (GetSoundActivated())
-				GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
-			break;
-		case BULLET_TYPE::THERMITE_GRENADE:
-			bounceBullet(hi, b);
-			break;
-		case BULLET_TYPE::VACUUM_GRENADE:
-			bounceBullet(hi, b);
-			break;
-		case BULLET_TYPE::DISC_SHOT:
-			bounceBullet(hi, b);
-			if (GetSoundActivated())
-				GetSound()->playExternalSound(SOUNDS::soundEffectDiscBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
-			break;
-		case BULLET_TYPE::GRENADE_SHOT:
-			bounceBullet(hi, b);
-			temp = b->getVel();
-			temp.x *= 0.6;
-			temp.y *= 0.6;
-			temp.z *= 0.6;
-			b->setVel(temp);
-			break;
-		default:
-			removeBullet(hi.bt, arraypos);
-			break;
+			vec3 temp;
+			switch (hi.bt)
+			{
+			case BULLET_TYPE::CLUSTER_GRENADE:
+				bounceBullet(hi, b);
+				if (GetSoundActivated())
+					GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+				break;
+			case BULLET_TYPE::CLUSTERLING:
+				bounceBullet(hi, b);
+				if (GetSoundActivated())
+					GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+				break;
+			case BULLET_TYPE::THERMITE_GRENADE:
+				bounceBullet(hi, b);
+				break;
+			case BULLET_TYPE::VACUUM_GRENADE:
+				bounceBullet(hi, b);
+				break;
+			case BULLET_TYPE::DISC_SHOT:
+				bounceBullet(hi, b);
+				if (GetSoundActivated())
+					GetSound()->playExternalSound(SOUNDS::soundEffectDiscBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+				break;
+			case BULLET_TYPE::GRENADE_SHOT:
+				bounceBullet(hi, b);
+				temp = b->getVel();
+				temp.x *= 0.6;
+				temp.y *= 0.6;
+				temp.z *= 0.6;
+				b->setVel(temp);
+				break;
+			default:
+				removeBullet(hi.bt, arraypos);
+				break;
+			}
 		}
 	}
 }

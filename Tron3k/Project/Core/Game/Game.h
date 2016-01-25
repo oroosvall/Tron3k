@@ -54,6 +54,7 @@ struct BulletHitEffectInfo
 	int bulletPID;
 	int bulletBID;
 	BULLET_TYPE bt;
+	EFFECT_TYPE et;
 	glm::vec3 hitPos;
 	glm::vec3 hitDir;
 	glm::vec4 collisionNormal;
