@@ -19,28 +19,28 @@ void main()
 	
 		//first node
 		gl_Position = vec4(pos1, 1);
-		gl_Position.y += 1;
+		gl_Position.y += 1.3;
 		gl_Position = ViewProjMatrix * gl_Position;
 		UV = uv1 + vec2(0,1);
 		EmitVertex();
 		
 		//second node
 		gl_Position = vec4(pos1, 1);
-		gl_Position.y -= 1;
+		gl_Position.y -= 1.5;
 		gl_Position = ViewProjMatrix * gl_Position;
 		UV = uv1;
 		EmitVertex();
 
 		//third node
 		gl_Position = vec4(pos2, 1);
-		gl_Position.y += 1;
+		gl_Position.y += 1.3;
 		gl_Position = ViewProjMatrix * gl_Position;
 		UV = uv2 + vec2(0,1);
 		EmitVertex();
 		
 		//third node
 		gl_Position = vec4(pos2, 1);
-		gl_Position.y -= 1;
+		gl_Position.y -= 1.5;
 		gl_Position = ViewProjMatrix * gl_Position;
 		UV = uv2;
 		EmitVertex();

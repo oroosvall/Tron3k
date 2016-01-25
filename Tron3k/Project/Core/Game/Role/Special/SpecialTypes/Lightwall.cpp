@@ -30,26 +30,29 @@ int Lightwall::update(float deltaTime)
 
 bool Lightwall::allowedToActivate(Player* p)
 {
-	if (p->getGrounded())
+	if (!p->getRole()->getIfBusy())
 	{
-		if (activated)
+		if (p->getGrounded())
 		{
-			if (p->getRole()->getSpecialMeter() > 15.0f)
+			if (activated)
 			{
-				int currentSpecial = p->getRole()->getSpecialMeter();
-				p->getRole()->setSpecialMeter(currentSpecial-15.0f);
+				if (p->getRole()->getSpecialMeter() > 15.0f)
+				{
+					int currentSpecial = p->getRole()->getSpecialMeter();
+					p->getRole()->setSpecialMeter(currentSpecial - 15.0f);
+				}
 			}
-		}
-		else if (p->getRole()->getSpecialMeter() - 100.0f < FLT_EPSILON && p->getRole()->getSpecialMeter() - 100.0f > -FLT_EPSILON)
-		{
-			activated = true;
-			p->getRole()->setSpecialMeter(92.0f);
-		}
+			else if (p->getRole()->getSpecialMeter() - 100.0f < FLT_EPSILON && p->getRole()->getSpecialMeter() - 100.0f > -FLT_EPSILON)
+			{
+				activated = true;
+				p->getRole()->setSpecialMeter(92.0f);
+			}
 
-		if (activated)
-		{
-			specialId++;
-			return true;
+			if (activated)
+			{
+				specialId++;
+				return true;
+			}
 		}
 	}
 	return false;

@@ -79,6 +79,12 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 	pos += playerVel * dt; //Here we will also include external forces.. EDIT: External forces moved, for now
 	vec3 posadjust = vec3(0);
 
+	if (GetSoundActivated())
+	{
+		GetSound()->setLocalPlayerPos(pos);
+		GetSound()->setLocalPlayerDir(this->getDir());
+	}
+
 	if (vel.x != 0 || vel.z != 0)
 	{
 
@@ -354,20 +360,25 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 				if (!collided)//IN THE AIR YO
 				{
+					/*
+					Att lägga till: Kolla så att hastigheten I DEN GIVNA RIKTNINGEN
+					är mindre än tillåtet innan speed läggs till.
+					Detta på alla knappar, inte bara W och S.
+					*/
 					if (i->getKeyInfo(GLFW_KEY_W))
 					{
-						if (length(glm::vec2(airVelocity.x, airVelocity.z)) < role.getMovementSpeed())
-						{
-							airVelocity += normalize(glm::vec3(dir.x, 0, dir.z))*dt*0.5f;
-						}
+						//if (length(glm::vec2(airVelocity.x, airVelocity.z)) < role.getMovementSpeed()*0.1f)
+						//{
+							airVelocity += normalize(glm::vec3(dir.x, 0, dir.z))*dt*0.3f;
+						//}
 					}
 
 					if (i->getKeyInfo(GLFW_KEY_S))
 					{
-						if (length(glm::vec2(airVelocity.x, airVelocity.z)) > -role.getMovementSpeed())
-						{
-							airVelocity -= normalize(glm::vec3(dir.x, 0, dir.z))*dt*0.5f;
-						}
+						//if (length(glm::vec2(airVelocity.x, airVelocity.z)) < role.getMovementSpeed()*0.1f)
+						//{
+							airVelocity -= normalize(glm::vec3(dir.x, 0, dir.z))*dt*0.3f;
+						//}
 					}
 
 					if (!(i->getKeyInfo(GLFW_KEY_A) && i->getKeyInfo(GLFW_KEY_D)))
@@ -377,7 +388,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 							vec3 left = cross(vec3(0, 1, 0), dir);
 							if (length(left) > 0)
 							{
-								airVelocity += normalize(left)*dt;
+								airVelocity += normalize(left)*dt*0.3f;
 							}
 						}
 						if (i->getKeyInfo(GLFW_KEY_D))
@@ -385,7 +396,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 							vec3 right = cross(dir, vec3(0, 1, 0));
 							if (length(right) > 0)
 							{
-								airVelocity += normalize(right)*dt;
+								airVelocity += normalize(right)*dt*0.3f;
 							}
 						}
 					}
@@ -579,6 +590,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		modifiersSetData(dt);	//Dont Remove Again Please!
 		movePlayer(dt, olddir, freecam, spectatingThisPlayer); //This moves the player regardless of what we might end up colliding with
 
+
 		clearCollisionNormals(); //Doesn't actually clear the array, just manually sets size to 0. This is to speed things up a little.
 	} // end of local player check
 	else
@@ -717,19 +729,22 @@ void Player::hitByBullet(Bullet* b, int newHPtotal)
 	/*
 	This is where we will extract additional modifiers from the Bullet, when applicable.
 	*/
-	if (newHPtotal == -1) //We are actually taking damage on the server now
+	if (b != nullptr)
 	{
-		int dmg = b->getDamage();
-		role.takeDamage(dmg);
-	}
-	else //We are on a client, and thus are only interested on our HP on the server
-	{
-		role.setHealth(newHPtotal);
-	}
+		if (newHPtotal == -1) //We are actually taking damage on the server now
+		{
+			int dmg = b->getDamage();
+			role.takeDamage(dmg);
+		}
+		else //We are on a client, and thus are only interested on our HP on the server
+		{
+			role.setHealth(newHPtotal);
+		}
 
-	if (b->getType() == BULLET_TYPE::HACKING_DART)
-	{
-		addModifier(MODIFIER_TYPE::HACKINGDARTMODIFIER);
+		if (b->getType() == BULLET_TYPE::HACKING_DART)
+		{
+			addModifier(MODIFIER_TYPE::HACKINGDARTMODIFIER);
+		}
 	}
 }
 

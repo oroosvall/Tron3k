@@ -111,6 +111,8 @@ void Client::in_new_connection(Packet* rec, Uint8 _conID)
 	Uint8 pExists;
 	string pName;
 	Uint8 team;
+	Uint8 role;
+	Uint8 hp;
 	Player* temp;
 	for (int c = 0; c < MAX_CONNECT; c++)
 	{
@@ -122,14 +124,16 @@ void Client::in_new_connection(Packet* rec, Uint8 _conID)
 			temp->init(pName, glm::vec3(0, 0, 0), gamePtr->getPhysics());
 			*rec >> team;
 			temp->setTeam(team);
-			gamePtr->createPlayer(temp, c);
+			*rec >> role;
+			*rec >> hp;
+			gamePtr->createPlayer(temp, c, hp, role);
 			delete temp;
 		}
 	}
 
 	temp = new Player();
 	temp->init("ClientName", glm::vec3(0, 0, 0), gamePtr->getPhysics());
-	gamePtr->createPlayer(temp, conID, true);
+	gamePtr->createPlayer(temp, conID, 100, 0, true);
 	delete temp;
 	
 	printf("My connection ID : %d \n", conID);
@@ -151,6 +155,7 @@ void Client::in_event(Packet* rec, Uint8 _conID)
 		case NET_EVENT::PLAYER_HIT: in_event_bullet_hit_player(rec); break;
 		case NET_EVENT::BULLET_WORLD_HIT: in_event_bullet_hit_world(rec); break;
 		case NET_EVENT::EFFECT_PLAYER_HIT: in_event_effect_hit_player(rec); break;
+		case NET_EVENT::BULLET_TIMEOUT: in_event_bullet_time_out(rec); break;
 		case NET_EVENT::RESPAWN_DENIED: in_event_respawn_denied(rec); break;
 		}
 	}

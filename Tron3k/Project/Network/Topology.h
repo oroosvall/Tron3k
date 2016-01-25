@@ -142,7 +142,7 @@ public:
 		*rec >> p_conID;
 		*rec >> pName;
 		temp->init(pName, glm::vec3(0, 0, 0), gamePtr->getPhysics());
-		gamePtr->createPlayer(temp, p_conID);
+		gamePtr->createPlayer(temp, p_conID, 100, 0);
 		consolePtr->printMsg("Player (" + pName + ") joined the server", "System", 'S');
 		delete temp;
 	}
@@ -165,7 +165,7 @@ public:
 		if (p_conID == gamePtr->spectateID)
 			gamePtr->clearSpectateID();
 	}
-
+	virtual void event_bullet_timed_out(std::vector<BulletTimeOutInfo> allbullets) {};
 	virtual void event_bullet_hit_player(std::vector<BulletHitPlayerInfo> allhits) {};
 	virtual void event_bullet_hit_world(std::vector<BulletHitWorldInfo> allhits) {};
 	virtual void event_effect_hit_player(std::vector<EffectHitPlayerInfo> allhits) {};
@@ -236,6 +236,22 @@ public:
 			hi.newHPtotal = hpTotal;
 			hi.hitPos = hitPosition;
 			gamePtr->handleEffectHitPlayerEvent(hi);
+		}
+	}
+
+	virtual void in_event_bullet_time_out(Packet* rec)
+	{
+		BulletTimeOutInfo toi;
+		Uint8 bt; Uint8 pid; Uint8 bid;
+		glm::vec3 pos;
+		Uint8 size;
+		*rec >> size;
+		for (int c = 0; c < size; c++)
+		{
+			*rec >> bt >> toi.bulletPID >> toi.bulletBID;
+			toi.bt = BULLET_TYPE(bt);
+			*rec >> toi.pos.x >> toi.pos.y >> toi.pos.z;
+			gamePtr->handleBulletTimeOuts(toi);
 		}
 	}
 
@@ -483,6 +499,7 @@ public:
 		}
 
 		p->getRole()->chooseRole(role-1);
+		gamePtr->sendPlayerRadSize(0.9f); //TEMP BUT W/E
 		consolePtr->printMsg("Player " + p->getName() + " switched class!", "System", 'S');
 
 		if (isClient == false)

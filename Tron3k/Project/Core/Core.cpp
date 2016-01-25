@@ -252,6 +252,7 @@ void Core::upRoam(float dt)
 
 		game = new Game();
 		game->init(MAX_CONNECT, current);
+		game->sendPlayerRadSize(0.9f);
 		//map loaded, fetch spawnpoints from render
 		renderPipe->getSpawnpoints(*game->getSpawnpoints());
 		// fetch all collision boxes
@@ -260,7 +261,7 @@ void Core::upRoam(float dt)
 			allchunksSent = sendChunkBoxes(i);
 		Player* p = new Player();
 		p->init("Roam", glm::vec3(0, 0, 0));
-		game->createPlayer(p, 0, true);
+		game->createPlayer(p, 0, 100, 0, true);
 		game->freecam = true;
 		delete p;
 		subState++;
@@ -331,6 +332,26 @@ void Core::upRoam(float dt)
 			game->clearBulletOnWorldCollisions();
 		}
 
+		std::vector<EffectHitPlayerInfo> effectHitsOnPlayer = game->getAllEffectOnPlayerCollisions();
+		if (effectHitsOnPlayer.size() != 0)
+		{
+			for (unsigned int c = 0; c < bulletHitsOnWorld.size(); c++)
+			{
+				game->handleEffectHitPlayerEvent(effectHitsOnPlayer[c]);
+			}
+			game->clearEffectOnPlayerCollisions();
+		}
+
+		std::vector<BulletTimeOutInfo> bulletTimeOut = game->getAllTimedOutBullets();
+		if (bulletTimeOut.size() != 0)
+		{
+			for (unsigned int c = 0; c < bulletTimeOut.size(); c++)
+			{
+				game->handleBulletTimeOuts(bulletTimeOut[c]);
+			}
+			game->clearTimedOutBullets();
+		}
+
 		renderWorld(dt);
 		break;
 	}
@@ -361,6 +382,7 @@ void Core::upClient(float dt)
 					delete game;
 				game = new Game();
 				game->init(MAX_CONNECT, current);
+				game->sendPlayerRadSize(0.9f);
 				//map loaded, fetch spawnpoints from render
 				renderPipe->getSpawnpoints(*game->getSpawnpoints());
 				// fetch all collision boxes
@@ -517,6 +539,7 @@ void Core::upServer(float dt)
 			delete game;
 		game = new Game();
 		game->init(MAX_CONNECT, current);
+		game->sendPlayerRadSize(0.9f);
 		//map loaded, fetch spawnpoints from render
 		renderPipe->getSpawnpoints(*game->getSpawnpoints());
 		// fetch all collision boxes
@@ -577,6 +600,17 @@ void Core::upServer(float dt)
 			}
 			top->event_effect_hit_player(effectHitsOnPlayer);
 			game->clearEffectOnPlayerCollisions();
+		}
+
+		std::vector<BulletTimeOutInfo> bulletTimeOut = game->getAllTimedOutBullets();
+		if (bulletTimeOut.size() != 0)
+		{
+			for (unsigned int c = 0; c < bulletTimeOut.size(); c++)
+			{
+				game->handleBulletTimeOuts(bulletTimeOut[c]);
+			}
+			top->event_bullet_timed_out(bulletTimeOut);
+			game->clearTimedOutBullets();
 		}
 
 		serverHandleCmds();
@@ -755,6 +789,7 @@ void Core::roamHandleCmds()
 			else
 			{
 				game->getPlayer(0)->getRole()->chooseRole(role - 1);
+				game->sendPlayerRadSize(game->getPlayer(0)->getRole()->getBoxRadius());
 				if (role == TRAPPER)
 					game->getPlayer(0)->addModifier(MODIFIER_TYPE::TRAPPERSHAREAMMO);
 				console.printMsg("You switched class!", "System", 'S');
@@ -1119,20 +1154,20 @@ void Core::renderWorld(float dt)
 					else
 					{
 						if (p->getTeam() == 1) { //team 1 color
-							dgColor[0] = 1; dgColor[1] = 0.5; dgColor[2] = 0;
+							dgColor[0] = TEAMONECOLOR.r; dgColor[1] = TEAMONECOLOR.g; dgColor[2] = TEAMONECOLOR.b;
 						}
 						else if (p->getTeam() == 2) { // team 2 color
-							dgColor[0] = 0.0f; dgColor[1] = 1; dgColor[2] = 0.5f;
+							dgColor[0] = TEAMTWOCOLOR.r; dgColor[1] = TEAMTWOCOLOR.g; dgColor[2] = TEAMTWOCOLOR.b;
 						}
 						else if (p->getTeam() == 0) { // spectate color
 							dgColor[0] = 0; dgColor[1] = 0; dgColor[2] = 0;
 						}
 						//hacked team colors
 						if (hackedTeam == 1) { //Show team 2's colour
-							dgColor[0] = 0.4f; dgColor[1] = 0.0f; dgColor[2] = 0.4f;
+							dgColor[0] = TEAMTWOCOLOR.r; dgColor[1] = TEAMTWOCOLOR.g; dgColor[2] = TEAMTWOCOLOR.b;
 						}
 						else if (hackedTeam == 2) { //Show team 1's colour
-							dgColor[0] = 0.0f; dgColor[1] = 1.0f; dgColor[2] = 0.0f;
+							dgColor[0] = TEAMONECOLOR.r; dgColor[1] = TEAMONECOLOR.g; dgColor[2] = TEAMONECOLOR.b;
 						}
 					}
 					//static intense based on health
@@ -1156,7 +1191,6 @@ void Core::renderWorld(float dt)
 						if (p->isLocal()) //use current anim
 							renderPipe->renderAnimation(i, p->getRole()->getRole(), playermat, p->getAnimState_t_c(), dgColor, hpval, false);
 						else              //use peak anim
-
 							renderPipe->renderAnimation(i, p->getRole()->getRole(), playermat, p->getAnimState_t_p(), dgColor, hpval, false);
 					}
 				}
@@ -1172,11 +1206,11 @@ void Core::renderWorld(float dt)
 			{
 				if (bullets[i]->getTeamId() == 1)
 				{
-					dgColor[0] = 1.0f; dgColor[1] = 0.5f; dgColor[2] = 0;
+					dgColor[0] = TEAMONECOLOR.r; dgColor[1] = TEAMONECOLOR.g; dgColor[2] = TEAMONECOLOR.b;
 				}
 				else if (bullets[i]->getTeamId() == 2)
 				{
-					dgColor[0] = 0.0f; dgColor[1] = 1.0f; dgColor[2] = 0.5f;
+					dgColor[0] = TEAMTWOCOLOR.r; dgColor[1] = TEAMTWOCOLOR.g; dgColor[2] = TEAMTWOCOLOR.b;
 				}
 				renderPipe->renderBullet(c, bullets[i]->getWorldMat(), dgColor, 0.0f);
 			}

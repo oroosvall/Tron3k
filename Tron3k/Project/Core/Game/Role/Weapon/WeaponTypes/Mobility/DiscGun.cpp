@@ -14,7 +14,7 @@ void DiscGun::init()
 {
 	weaponType = WEAPON_TYPE::DISC_GUN;
 
-	maxClipSize = 10;
+	maxClipSize = 8;
 	currentClipAmmo = maxClipSize;
 
 	currentBulletId = 0;

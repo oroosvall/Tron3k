@@ -59,6 +59,14 @@ struct BulletHitEffectInfo
 	glm::vec4 collisionNormal;
 };
 
+struct BulletTimeOutInfo
+{
+	int bulletPID;
+	int bulletBID;
+	BULLET_TYPE bt;
+	glm::vec3 pos;
+};
+
 struct EffectHitEffectInfo
 {
 	int effectPID;
@@ -138,6 +146,7 @@ private:
 	std::vector<BulletHitWorldInfo> allBulletHitsOnWorld;
 	std::vector<BulletHitEffectInfo> allBulletHitsOnEffects;
 	std::vector<EffectHitEffectInfo> allEffectHitsOnEffects;
+	std::vector<BulletTimeOutInfo> allBulletTimeOuts;
 
 	void checkPvPCollision();
 	void checkPlayerVBulletCollision();
@@ -162,7 +171,7 @@ public:
 	Player* getPlayer(int conID);
 	std::vector<Bullet*> getBullets(BULLET_TYPE type);
 	std::vector<Effect*> getEffects(EFFECT_TYPE type);
-	void createPlayer(Player* p, int conID, bool isLocal = false);
+	void createPlayer(Player* p, int conID, int hp, int role, bool isLocal = false);
 	void removePlayer(int conID);
 
 	void update(float dt);
@@ -173,6 +182,7 @@ public:
 	void sendChunkBoxes(int chunkID, void* cBoxes);
 	void sendWorldBoxes(std::vector<std::vector<float>> wBoxes);
 	void sendPlayerBox(std::vector<float> pBox);
+	void sendPlayerRadSize(float rad);
 
 	//Collision checks
 	Physics* getPhysics() { return physics; };
@@ -223,6 +233,10 @@ public:
 	std::vector<EffectHitEffectInfo> getAllEffectOnEffectCollisions() { return allEffectHitsOnEffects; };
 	void clearEffectOnEffectCollision() { allEffectHitsOnEffects.clear(); };
 	void handleEffectHitEffectEvent(EffectHitEffectInfo hi);
+
+	std::vector<BulletTimeOutInfo> getAllTimedOutBullets() { return allBulletTimeOuts; };
+	void clearTimedOutBullets() { allBulletTimeOuts.clear(); };
+	void handleBulletTimeOuts(BulletTimeOutInfo hi);
 
 
 	int Game::findPlayerPosInTeam(int conID);

@@ -129,7 +129,7 @@ public:
 	void setDir(glm::vec3 wantedDir) { dir = wantedDir; };
 	glm::vec3 getDir() { return dir; };
 	int getHP() { return role.getHealth(); };
-	void setHP(int HPfromServer) { role.setHealth(HPfromServer); }; //Used by client
+	void setHP(int HPfromServer) { role.setHealth(HPfromServer); if (role.getHealth() > 0) isDead = false; }; //Used by client
 
 	bool isLocal() { return isLocalPlayer; };
 	bool isAlive() { return !isDead; };
@@ -152,7 +152,7 @@ public:
 
 	void setVelocity(glm::vec3 velocity) { vel = velocity; };
 	glm::vec3 getVelocity() { return vel; };
-
+	glm::vec3 getAirVelocity() { return airVelocity; };
 
 	void hitByBullet(Bullet* b, int newHPtotal = -1);
 	void hitByEffect(Effect* e, int newHPtotal = -1);

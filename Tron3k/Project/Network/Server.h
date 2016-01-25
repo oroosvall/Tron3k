@@ -38,6 +38,8 @@ public:
 
 	void event_bullet_hit_world(std::vector<BulletHitWorldInfo> allhits);
 	void event_effect_hit_player(std::vector<EffectHitPlayerInfo> allhits);
+
+	void event_bullet_time_out(std::vector<BulletTimeOutInfo> allbullets);
 };
 
 #endif

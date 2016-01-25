@@ -59,6 +59,10 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->soundList[SOUNDS::soundEffectLightWall].loadFromFile("GameFiles/Sound/soundEffectLightWall.ogg");
 		singleton->soundList[SOUNDS::soundEffectYouDied].loadFromFile("GameFiles/Sound/soundEffectYouDied.ogg");
 		singleton->soundList[SOUNDS::soundEffectHunterJump].loadFromFile("GameFiles/Sound/soundEffectHunterJump.ogg");
+		singleton->soundList[SOUNDS::soundEffectAlarm].loadFromFile("GameFiles/Sound/soundEffectAlarm.ogg");
+		singleton->soundList[SOUNDS::soundEffectFlies].loadFromFile("GameFiles/Sound/soundEffectFlies.ogg");
+		singleton->soundList[SOUNDS::soundEffectFrogs].loadFromFile("GameFiles/Sound/soundEffectFrogs.ogg");
+		singleton->soundList[SOUNDS::soundEffectNeonSign].loadFromFile("GameFiles/Sound/soundEffectNeonSign.ogg");
 
 		initialized = true;
 	}
@@ -112,21 +116,29 @@ int SoundPlayer::playMapSounds()
 				return -1;
 			}
 			theCantinaSong.setPosition(10, 5, 10);
-			theCantinaSong.setAttenuation(1);
-			theCantinaSong.setVolume(20);
+			theCantinaSong.setAttenuation(10);
+			theCantinaSong.setVolume(30);
 			theCantinaSong.play();
 			theCantinaSong.setLoop(true);
 			
 			mapSounds[0].setBuffer(soundList[SOUNDS::soundAids]);
 			mapSounds[0].setPosition(-10, 5, -10);
+			mapSounds[0].setVolume(30);
+			mapSounds[0].setAttenuation(10);
+			mapSounds[0].setMinDistance(5.0f);
 			mapSounds[1].setBuffer(soundList[SOUNDS::power]);
 			mapSounds[1].setPosition(-10, 1.55, -50);
-			
+			mapSounds[1].setVolume(30);
+			mapSounds[1].setAttenuation(10);
+			mapSounds[1].setMinDistance(5.0f);
+			mapSounds[2].setBuffer(soundList[SOUNDS::soundEffectAlarm]);
+			mapSounds[2].setPosition(73, 1.55, 4);
+			mapSounds[2].setVolume(20);
+			mapSounds[2].setAttenuation(20);
+			mapSounds[2].setMinDistance(50.0f);
 
 			for (int i = 0; i < MAXSOUNDS; i++)
 			{
-				mapSounds[i].setAttenuation(1);
-				mapSounds[i].setVolume(20);
 				mapSounds[i].setLoop(true);
 				mapSounds[i].play();
 			}

@@ -27,8 +27,6 @@
 #include <sstream>
 
 
-
-
 class Core
 {
 private:
@@ -103,6 +101,10 @@ private:
 	int uiObjects;
 
 public:
+	
+	vec3 TEAMONECOLOR = vec3(1.0f, 0.5f, 0.0f);
+	vec3 TEAMTWOCOLOR = vec3(0.0f, 1.0f, 0.5f);
+
 	void init();
 	void update(float dt);
 
