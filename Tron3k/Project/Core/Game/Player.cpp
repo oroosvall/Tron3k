@@ -599,8 +599,6 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				respawnTimer = 0.0f;
 				msg = PLAYERRESPAWN;
 				//role.returnToLife();
-				//anim_third_current = AnimationState::none;
-				//anim_first_current = AnimationState::none;
 			}
 		}
 
@@ -857,8 +855,8 @@ void Player::respawn(glm::vec3 respawnPos, glm::vec3 _dir)
 	rotatePlayer(vec3(0, 0, 1), _dir);
 	pos = respawnPos;
 
-	setAnimState_f_c(AnimationState::none);
-	setAnimState_f_p(AnimationState::none);
+	//setAnimState_f_c(AnimationState::none);
+	//setAnimState_f_p(AnimationState::none);
 	setAnimState_t_c(AnimationState::none);
 	setAnimState_t_p(AnimationState::none);
 
