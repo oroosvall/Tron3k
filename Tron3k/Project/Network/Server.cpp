@@ -73,7 +73,7 @@ void Server::event_effect_hit_player(std::vector<EffectHitPlayerInfo> allhits)
 	delete out;
 }
 
-void Server::event_bullet_time_out(std::vector<BulletTimeOutInfo> allbullets)
+void Server::event_bullet_timed_out(std::vector<BulletTimeOutInfo> allbullets)
 {
 	Packet* out = new Packet();
 	*out << Uint8(NET_INDEX::EVENT) << Uint8(NET_EVENT::BULLET_TIMEOUT);
