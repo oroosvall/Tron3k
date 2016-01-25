@@ -137,7 +137,17 @@ void Game::update(float dt)
 			int msg = bullets[i][c]->update(dt);
 			if (msg == 1)		//Bullet is dead
 			{
-				removeBullet(BULLET_TYPE(i), c); //Removes bullet, also handles effects such as explosions and additionally spawning effects/bullets
+				if (gameState == Gamestate::SERVER || gameState == Gamestate::ROAM)
+				{
+					BulletTimeOutInfo toi;
+					toi.bt = BULLET_TYPE(i);
+					int pid = -1, bid = -1;
+					bullets[i][c]->getId(pid, bid);
+					toi.bulletBID = bid;
+					toi.bulletPID = pid;
+					toi.pos = bullets[i][c]->getPos();
+					allBulletTimeOuts.push_back(toi);
+				}
 			}
 		}
 	}
@@ -1216,6 +1226,15 @@ void Game::handleEffectHitEffectEvent(EffectHitEffectInfo hi)
 			break;
 		}
 	}
+}
+
+void Game::handleBulletTimeOuts(BulletTimeOutInfo hi)
+{
+	Bullet* b;
+	int posInArray = -1;
+	b = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, posInArray);
+	b->setPos(hi.pos);
+	removeBullet(hi.bt, posInArray);
 }
 
 void Game::removeEffect(EFFECT_TYPE et, int posInArray)

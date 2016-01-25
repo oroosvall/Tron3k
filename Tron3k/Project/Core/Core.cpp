@@ -275,6 +275,16 @@ void Core::upRoam(float dt)
 			game->clearEffectOnPlayerCollisions();
 		}
 
+		std::vector<BulletTimeOutInfo> bulletTimeOut = game->getAllTimedOutBullets();
+		if (bulletTimeOut.size() != 0)
+		{
+			for (unsigned int c = 0; c < bulletTimeOut.size(); c++)
+			{
+				game->handleBulletTimeOuts(bulletTimeOut[c]);
+			}
+			game->clearTimedOutBullets();
+		}
+
 		renderWorld(dt);
 		break;
 	}
@@ -523,6 +533,17 @@ void Core::upServer(float dt)
 			}
 			top->event_effect_hit_player(effectHitsOnPlayer);
 			game->clearEffectOnPlayerCollisions();
+		}
+
+		std::vector<BulletTimeOutInfo> bulletTimeOut = game->getAllTimedOutBullets();
+		if (bulletTimeOut.size() != 0)
+		{
+			for (unsigned int c = 0; c < bulletTimeOut.size(); c++)
+			{
+				game->handleBulletTimeOuts(bulletTimeOut[c]);
+			}
+			top->event_bullet_timed_out(bulletTimeOut);
+			game->clearTimedOutBullets();
 		}
 
 		serverHandleCmds();

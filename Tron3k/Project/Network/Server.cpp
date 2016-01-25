@@ -73,6 +73,23 @@ void Server::event_effect_hit_player(std::vector<EffectHitPlayerInfo> allhits)
 	delete out;
 }
 
+void Server::event_bullet_time_out(std::vector<BulletTimeOutInfo> allbullets)
+{
+	Packet* out = new Packet();
+	*out << Uint8(NET_INDEX::EVENT) << Uint8(NET_EVENT::BULLET_TIMEOUT);
+	*out << Uint8(allbullets.size());
+	for (unsigned int c = 0; c < allbullets.size(); c++)
+	{
+		*out << Uint8(allbullets[c].bt);
+		*out << Uint8(allbullets[c].bulletPID) << Uint8(allbullets[c].bulletBID);
+		*out << allbullets[c].pos.x << allbullets[c].pos.y << allbullets[c].pos.z;
+	}
+
+	branch(out, -1);
+	delete out;
+}
+
+
 Server::~Server()
 {
 	if (con)
