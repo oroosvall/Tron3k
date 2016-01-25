@@ -218,11 +218,11 @@ void Core::upRoam(float dt)
 
 		//update game
 		game->update(dt);
-		if (GetSoundActivated())
+		/*if (GetSoundActivated())
 		{
 				GetSound()->setLocalPlayerDir(game->getPlayer(0)->getDir());
 				GetSound()->setLocalPlayerPos(game->getPlayer(0)->getPos());		
-		}
+		}*/
 
 		if (game->playerWantsToRespawn() && game->getPlayer(0)->getTeam() != 0)
 		{
@@ -339,13 +339,14 @@ void Core::upClient(float dt)
 		}
 
 		//update game
+
 		game->update(dt);
 
-		if (GetSoundActivated())
+	/*	if (GetSoundActivated())
 		{
 			GetSound()->setLocalPlayerDir(game->getPlayer(top->getConId())->getDir());
 			GetSound()->setLocalPlayerPos(game->getPlayer(top->getConId())->getPos());
-		}
+		}*/
 
 		//Command and message handle
 		if (console.messageReady())
@@ -979,7 +980,7 @@ void Core::renderWorld(float dt)
 		bool force3rd = false;
 		if (i->getKeyInfo(GLFW_KEY_P))
 		{
-			cam->setCam(vec3(2, 7, 10), vec3(0, 0, -1));
+			cam->setCam(vec3(-11, 1, 14), vec3(0, 0, 1));
 			force3rd = true;
 		}
 
@@ -1012,7 +1013,7 @@ void Core::renderWorld(float dt)
 			{
 				SpotLight light;
 				light.Position = p->getPos();
-				light.Direction = p->getDir();
+				light.Direction = vec3(0.0f);//p->getDir();
 				if (firstLight)
 				{
 					light.AmbientIntensity = 0.3f;
@@ -1055,20 +1056,20 @@ void Core::renderWorld(float dt)
 					else
 					{
 						if (p->getTeam() == 1) { //team 1 color
-							dgColor[0] = 1; dgColor[1] = 0.5; dgColor[2] = 0;
+							dgColor[0] = TEAMONECOLOR.r; dgColor[1] = TEAMONECOLOR.g; dgColor[2] = TEAMONECOLOR.b;
 						}
 						else if (p->getTeam() == 2) { // team 2 color
-							dgColor[0] = 0.0f; dgColor[1] = 1; dgColor[2] = 0.5f;
+							dgColor[0] = TEAMTWOCOLOR.r; dgColor[1] = TEAMTWOCOLOR.g; dgColor[2] = TEAMTWOCOLOR.b;
 						}
 						else if (p->getTeam() == 0) { // spectate color
 							dgColor[0] = 0; dgColor[1] = 0; dgColor[2] = 0;
 						}
 						//hacked team colors
 						if (hackedTeam == 1) { //Show team 2's colour
-							dgColor[0] = 0.4f; dgColor[1] = 0.0f; dgColor[2] = 0.4f;
+							dgColor[0] = TEAMTWOCOLOR.r; dgColor[1] = TEAMTWOCOLOR.g; dgColor[2] = TEAMTWOCOLOR.b;
 						}
 						else if (hackedTeam == 2) { //Show team 1's colour
-							dgColor[0] = 0.0f; dgColor[1] = 1.0f; dgColor[2] = 0.0f;
+							dgColor[0] = TEAMONECOLOR.r; dgColor[1] = TEAMONECOLOR.g; dgColor[2] = TEAMONECOLOR.b;
 						}
 					}
 					//static intense based on health
@@ -1102,11 +1103,19 @@ void Core::renderWorld(float dt)
 		for (int c = 0; c < BULLET_TYPE::NROFBULLETS; c++)
 		{
 			dgColor[0] = 0; dgColor[1] = 0; dgColor[2] = 0;
-
+			
 			std::vector<Bullet*> bullets = game->getBullets(BULLET_TYPE(c));
 			for (unsigned int i = 0; i < bullets.size(); i++)
 			{
-				renderPipe->renderBullet(c, bullets[i]->getWorldMat(), dgColor, 1.0f);
+				if (bullets[i]->getTeamId() == 1)
+				{
+					dgColor[0] = TEAMONECOLOR.r; dgColor[1] = TEAMONECOLOR.g; dgColor[2] = TEAMONECOLOR.b;
+				}
+				else if (bullets[i]->getTeamId() == 2)
+				{
+					dgColor[0] = TEAMTWOCOLOR.r; dgColor[1] = TEAMTWOCOLOR.g; dgColor[2] = TEAMTWOCOLOR.b;
+				}
+				renderPipe->renderBullet(c, bullets[i]->getWorldMat(), dgColor, 0.0f);
 			}
 		}
 

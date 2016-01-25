@@ -78,7 +78,7 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 	playerVel.y = vel.y;
 	pos += playerVel * dt; //Here we will also include external forces.. EDIT: External forces moved, for now
 	vec3 posadjust = vec3(0);
-	
+
 	if (vel.x != 0 || vel.z != 0)
 	{
 
@@ -134,8 +134,8 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 				ceiling = true;
 
 			//ramp factor and grounded
-			
-			if (collisionNormals[k].y > 0.5f)
+
+			if (collisionNormals[k].y > 0.4f)
 			{
 				grounded = true;
 			}
@@ -464,16 +464,23 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 				if (i->justPressed(GLFW_KEY_1))
 				{
-					role.swapWeaponLocal(0);
-					msg = WPNSWITCH;
-					animOverideIfPriority(anim_first_current, AnimationState::first_primary_switch);
+					if (!role.getIfBusy())
+					{
+						role.swapWeaponLocal(0);
+						msg = WPNSWITCH;
+						animOverideIfPriority(anim_first_current, AnimationState::first_primary_switch);
+					}
 				}
 
 				if (i->justPressed(GLFW_KEY_2))
 				{
-					role.swapWeaponLocal(1);
-					msg = WPNSWITCH;
-					animOverideIfPriority(anim_first_current, AnimationState::first_primary_switch);
+					if (!role.getIfBusy())
+					{
+						role.swapWeaponLocal(1);
+						msg = WPNSWITCH;
+						animOverideIfPriority(anim_first_current, AnimationState::first_primary_switch);
+
+					}
 				}
 
 				if (i->getKeyInfo(GLFW_MOUSE_BUTTON_LEFT))		//Temp
@@ -591,11 +598,24 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 		rotatePlayer(prev, dir);
 
-		if (role.getHealth() == 0)
+		if (spectatingThisPlayer == true)
 		{
-			isDead = true;
-			vel = glm::vec3(0, 0, 0);
+			cam->setCam(pos, dir);
+
+			if (GetSoundActivated())
+			{
+				GetSound()->setLocalPlayerPos(cam->getPos());
+				GetSound()->setLocalPlayerDir(cam->getDir());
+			}
 		}
+
+		// not sure if we want to do this?
+
+		//if (role.getHealth() == 0)
+		//{
+		//	isDead = true;
+		//	vel = glm::vec3(0, 0, 0);
+		//}
 	}
 	
 	return msg;
@@ -622,30 +642,15 @@ void Player::movementUpdates(float dt, bool freecam, bool spectatingThisPlayer, 
 
 			float lastHeight = pos.y;
 
-			//sets player rotations and cam
-
+			if (freecam && spectating == false)
+			{
+				if (GetSoundActivated())
+				{
+					GetSound()->setLocalPlayerPos(cam->getPos());
+					GetSound()->setLocalPlayerDir(cam->getDir());
+				}
+			}
 		}
-	}
-	else
-	{
-		/*
-		THIS IS NOT THE LOCAL PLAYER
-		*/
-		goalTimer += dt;
-		float t = goalTimer / interpolationTick;
-
-		if (t > 1.0f)
-			t = 1.0f;
-
-		pos = (oldPos * (1.0f - t)) + (goalpos * t);
-		glm::vec3 prev = dir;
-		dir = (oldDir * (1.0f - t)) + (goaldir * t);
-
-		rotatePlayer(prev, dir);
-	}
-	if (spectatingThisPlayer == true)
-	{
-		cam->setCam(pos, dir);
 	}
 
 	worldMat[0].w = pos.x;
@@ -681,9 +686,7 @@ void Player::reloadCurrentWeapon()
 		}
 
 		role.getCurrentWeapon()->reload();
-		//play anim
-		if (checkAnimOverwrite(anim_first_current, AnimationState::first_primary_reload))
-			anim_first_current = AnimationState::first_primary_reload;
+		animOverideIfPriority(anim_first_current, AnimationState::first_primary_reload);
 		role.getCurrentWeapon()->reload();
 	}
 
@@ -702,15 +705,9 @@ void Player::switchWpn(WEAPON_TYPE ws, int swapLoc)
 void Player::shoot()
 {
 	if (role.getWeaponNRequiped() == 0) //main weapon
-	{
-		if (checkAnimOverwrite(anim_first_current, AnimationState::first_primary_fire))
-			anim_first_current = AnimationState::first_primary_fire;
-	}
+		animOverideIfPriority(anim_first_current, AnimationState::first_primary_fire);
 	else // secondary fire
-	{
-		if (checkAnimOverwrite(anim_first_current, AnimationState::first_secondary_fire))
-			anim_first_current = AnimationState::first_secondary_fire;
-	}
+		animOverideIfPriority(anim_first_current, AnimationState::first_secondary_fire);
 
 	//Add a bullet recoil factor that is multiplied by a random number and smooth it out
 }

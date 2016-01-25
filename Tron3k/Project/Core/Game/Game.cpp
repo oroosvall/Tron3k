@@ -304,6 +304,7 @@ void Game::createPlayer(Player* p, int conID, bool isLocal)
 	playerList[conID]->init(p->getName(), p->getPos(), isLocal);
 	playerList[conID]->setTeam(p->getTeam());
 	playerList[conID]->setRole(*templateRole);
+
 	if (isLocal)
 	{
 		localPlayerId = conID;
@@ -924,7 +925,7 @@ void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec
 		bool jumped = false;
 		for (int c = 0; c < size && !jumped; c++)
 		{
-			if (cNorms[c].y < 0.2f && cNorms[c].y > -0.2f)
+			if (cNorms[c].y < 0.5f && cNorms[c].y > -0.2f)
 			{
 				jumped = true;
 				glm::vec3 reflect = normalize(glm::vec3(cNorms[c].x, 0, cNorms[c].z));
@@ -1228,10 +1229,13 @@ void Game::removeEffect(EFFECT_TYPE et, int posInArray)
 void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 {
 	int PID = 0, BID = 0;
-	Bullet* parent = bullets[bt][posInArray];
 
-	switch (bt)
+	if (posInArray <= bullets->size())
 	{
+		Bullet* parent = bullets[bt][posInArray];
+
+		switch (bt)
+		{
 		case BULLET_TYPE::CLUSTER_GRENADE: //FUCKING EVERYTHING	
 		{
 			vec3 lingDir;
@@ -1258,6 +1262,8 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 		{
 			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
 			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(15.0f);
+			if (GetSoundActivated())
+				GetSound()->playExternalSound(SOUNDS::soundEffectClusterGrenade, parent->getPos().x, parent->getPos().y, parent->getPos().z);
 			break;
 		}
 		case BULLET_TYPE::CLEANSE_BOMB:
@@ -1284,10 +1290,11 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(35.0f);
 			break;
 		}
+		}
+		delete bullets[bt][posInArray];
+		bullets[bt][posInArray] = bullets[bt][bullets[bt].size() - 1];
+		bullets[bt].pop_back();
 	}
-	delete bullets[bt][posInArray];
-	bullets[bt][posInArray] = bullets[bt][bullets[bt].size() - 1];
-	bullets[bt].pop_back();
 }
 
 bool Game::playerWantsToRespawn()

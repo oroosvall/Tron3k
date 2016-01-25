@@ -20,6 +20,9 @@ void ContentManager::init()
 
 	playerCharacters[2].load("shanker");
 
+	playerCharacters[4].load("manipulator");
+
+
 	int* lengths = playerCharacters[0].loadAnimations("trapper");
 
 	for (int i = 0; i < AnimationState::none; i++)
@@ -34,12 +37,21 @@ void ContentManager::init()
 		keyFrameLengths[2 * AnimationState::none + i] = lengths[i];
 	}
 
+	lengths = playerCharacters[4].loadAnimations("manipulator");
+
+	for (int i = 0; i < AnimationState::none; i++)
+	{
+		keyFrameLengths[4 * AnimationState::none + i] = lengths[i];
+	}
+
 	trapperBullet.load("GameFiles/CharacterFiles/primary_trapper.bin");
 	trapperConsume.load("GameFiles/CharacterFiles/consumable_Trapper.bin");
 	shankerBullet.load("GameFiles/CharacterFiles/primary_shanker.bin");
 	shankerSpecial.load("GameFiles/CharacterFiles/special_shanker.bin");
 
+	DDSTexture tex;
 
+	tex.load("GameFiles/Textures/Blank_d.dds");
 
 	//Skybox
 	skybox.init(0, 0, 0);
@@ -55,11 +67,7 @@ void ContentManager::init()
 		renderNextChunks[n] = false;
 	}
 	glGenQueries(1, &portalQuery);
-
-		
-	bullet.init(0, 0, 0);
-	bullet.load("GameFiles/TestFiles/bullet.v");
-
+	
 }
 
 void ContentManager::release()
@@ -83,11 +91,10 @@ void ContentManager::release()
 
 	glDeleteQueries(1, &portalQuery);
 
-	delete[] renderedChunks;
-	delete[] renderNextChunks;
+	//delete[] renderedChunks;
+	//delete[] renderNextChunks;
 
 	skybox.release();
-	bullet.release();
 
 	//collision render free
 	for (int c = 0; c < nrChunks; c++)
@@ -277,6 +284,7 @@ void ContentManager::renderBullet(int bid)
 	switch (bid)
 	{
 	case BULLET_TYPE::PULSE_SHOT:
+	case BULLET_TYPE::PLASMA_SHOT:
 		trapperBullet.draw();
 		break;
 	case BULLET_TYPE::CLUSTER_GRENADE:
