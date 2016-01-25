@@ -645,7 +645,7 @@ vec3 Physics::checkBulletVWorldCollision(vec3 bulletPos)
 	return collides;
 }
 
-std::vector<vec4> Physics::checkPlayerVEffectCollision(glm::vec3 playerPos, unsigned int eType)
+std::vector<vec4> Physics::checkPlayerVEffectCollision(glm::vec3 playerPos, unsigned int eType, int eid)
 {
 	std::vector<glm::vec4> collided;
 
@@ -658,19 +658,22 @@ std::vector<vec4> Physics::checkPlayerVEffectCollision(glm::vec3 playerPos, unsi
 
 	for (int i = 0; i < effectBoxes.size(); i++)
 	{
-		if (effectBoxes[i]->getEType() == eType)
+		if (effectBoxes[i]->getEID() == eid)
 		{
-			if (effectBoxes[i]->getEType() == 0)//Lightwall, aka OBB
+			if (effectBoxes[i]->getEType() == eType)
 			{
-				collided = checkSpherevOBBCollision(playerBox, effectBoxes[i]->getCollisionMesh());
-			}
-			else if (effectBoxes[i]->getEType() > 8)//False box, no collision
-			{
+				if (effectBoxes[i]->getEType() == 0)//Lightwall, aka OBB
+				{
+					collided = checkSpherevOBBCollision(playerBox, effectBoxes[i]->getCollisionMesh());
+				}
+				else if (effectBoxes[i]->getEType() > 8)//False box, no collision
+				{
 
-			}
-			else //evrything else is a sphere, if not, not my goddamn problem
-			{
-				collided = checkSpherevSphereCollision(playerBox, effectBoxes[i]->getCollisionMesh());
+				}
+				else //evrything else is a sphere, if not, not my goddamn problem
+				{
+					collided = checkSpherevSphereCollision(playerBox, effectBoxes[i]->getCollisionMesh());
+				}
 			}
 		}
 	}

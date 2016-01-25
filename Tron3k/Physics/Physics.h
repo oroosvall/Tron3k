@@ -109,7 +109,7 @@ public:
 	virtual std::vector<glm::vec4> PlayerVWorldCollision(glm::vec3 playerPos);
 	virtual std::vector<glm::vec4> BulletVWorldCollision(glm::vec3 bulletPos);
 	virtual glm::vec3 checkBulletVWorldCollision(glm::vec3 bulletPos);
-	virtual std::vector<glm::vec4> checkPlayerVEffectCollision(glm::vec3 playerPos, unsigned int eType);
+	virtual std::vector<glm::vec4> checkPlayerVEffectCollision(glm::vec3 playerPos, unsigned int eType, int eid);
 	virtual glm::vec3 checkBulletVEffectCollision(glm::vec3 bulletPos);
 
 	virtual float addGravity(float dt);

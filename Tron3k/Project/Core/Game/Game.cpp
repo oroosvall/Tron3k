@@ -450,26 +450,34 @@ void Game::checkPlayerVEffectCollision()
 		for (int c = 0; c < effects[EFFECT_TYPE::LIGHT_WALL].size(); c++)
 		{
 			int eid = -1, pid = -1;
-			effects[EFFECT_TYPE::LIGHT_WALL][c]->getId(eid, pid);
-			if (!((LightwallEffect*)effects[EFFECT_TYPE::LIGHT_WALL][c])->getDong() && localPlayerId != pid)
+			effects[EFFECT_TYPE::LIGHT_WALL][c]->getId(pid, eid);
+			if (((LightwallEffect*)effects[EFFECT_TYPE::LIGHT_WALL][c])->getCollidable() || localPlayerId != pid)
 			{
-				collNormalWalls = physics->checkPlayerVEffectCollision(local->getPos(), EFFECT_TYPE::LIGHT_WALL);
+				collNormalWalls = physics->checkPlayerVEffectCollision(local->getPos(), EFFECT_TYPE::LIGHT_WALL, eid);
+				collNormals.reserve(collNormalWalls.size()); // preallocate memory
+				collNormals.insert(collNormals.end(), collNormalWalls.begin(), collNormalWalls.end());
+				collNormals.insert(collNormals.end(), collNormalDomes.begin(), collNormalDomes.end());
 			}
 			
 		}
 
 		for (int c = 0; c < effects[EFFECT_TYPE::THUNDER_DOME].size(); c++)
 		{
-			collNormalDomes = physics->checkPlayerVEffectCollision(local->getPos(), EFFECT_TYPE::THUNDER_DOME);
+			int eid = -1, pid = -1;
+			effects[EFFECT_TYPE::LIGHT_WALL][c]->getId(pid, eid);
+			collNormalDomes = physics->checkPlayerVEffectCollision(local->getPos(), EFFECT_TYPE::THUNDER_DOME, eid);
+			collNormals.reserve(collNormalWalls.size() + collNormalDomes.size()); // preallocate memory
+			collNormals.insert(collNormals.end(), collNormalWalls.begin(), collNormalWalls.end());
+			collNormals.insert(collNormals.end(), collNormalDomes.begin(), collNormalDomes.end());
 		}
 
-		//merge normals into one vector
+		/*//merge normals into one vector
 		collNormals.reserve(collNormalWalls.size() + collNormalDomes.size()); // preallocate memory
 		collNormals.insert(collNormals.end(), collNormalWalls.begin(), collNormalWalls.end());
-		collNormals.insert(collNormals.end(), collNormalDomes.begin(), collNormalDomes.end());
+		collNormals.insert(collNormals.end(), collNormalDomes.begin(), collNormalDomes.end());*/
 
 		if (collNormals.size() > 0)
-			playerList[localPlayerId]->setCollisionInfo(collNormalWalls);
+			playerList[localPlayerId]->setCollisionInfo(collNormals);
 	}
 	if (gameState == Gamestate::ROAM || gameState == Gamestate::SERVER)
 	{

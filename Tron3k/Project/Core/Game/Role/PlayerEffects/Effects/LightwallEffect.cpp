@@ -12,6 +12,7 @@ void LightwallEffect::init(int pid, int eid, glm::vec3 position)
 	playerId = pid; effectId = eid;
 	endPoint = pos = position;
 	expandDong = true;
+	collidable = false;
 }
 
 int LightwallEffect::update(float dt)
@@ -21,6 +22,11 @@ int LightwallEffect::update(float dt)
 		lifeTime -= dt;
 		if (lifeTime < FLT_EPSILON)
 			return 1;
+
+		if (lifeTime < 99.5f && !collidable)
+		{
+			collidable = true;
+		}
 	}
 	else
 	{
@@ -28,6 +34,7 @@ int LightwallEffect::update(float dt)
 		if (curVel.x != playerVel.x || curVel.z != playerVel.z ||
 			endPoint.y < pos.y - FLT_EPSILON || endPoint.y > pos.y + FLT_EPSILON)
 		{
+
 			expandDong = false;
 			lifeTime = 100.0f;
 			if (length(endPoint - pos) < 1.5f)
