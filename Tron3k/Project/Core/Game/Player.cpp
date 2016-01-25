@@ -79,6 +79,12 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 	pos += playerVel * dt; //Here we will also include external forces.. EDIT: External forces moved, for now
 	vec3 posadjust = vec3(0);
 
+	if (GetSoundActivated())
+	{
+		GetSound()->setLocalPlayerPos(pos);
+		GetSound()->setLocalPlayerDir(this->getDir());
+	}
+
 	if (vel.x != 0 || vel.z != 0)
 	{
 
@@ -578,6 +584,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 		modifiersSetData(dt);	//Dont Remove Again Please!
 		movePlayer(dt, olddir, freecam, spectatingThisPlayer); //This moves the player regardless of what we might end up colliding with
+
 
 		clearCollisionNormals(); //Doesn't actually clear the array, just manually sets size to 0. This is to speed things up a little.
 	} // end of local player check
