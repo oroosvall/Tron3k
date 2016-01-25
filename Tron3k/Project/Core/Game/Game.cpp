@@ -298,12 +298,14 @@ std::vector<Effect*> Game::getEffects(EFFECT_TYPE type)
 	return effects[type];
 }
 
-void Game::createPlayer(Player* p, int conID, bool isLocal)
+void Game::createPlayer(Player* p, int conID, int hp, int role, bool isLocal)
 {
 	playerList[conID] = new Player();
 	playerList[conID]->init(p->getName(), p->getPos(), isLocal);
 	playerList[conID]->setTeam(p->getTeam());
+	playerList[conID]->setHP(hp);
 	playerList[conID]->setRole(*templateRole);
+	playerList[conID]->getRole()->chooseRole(role);
 
 	if (isLocal)
 	{

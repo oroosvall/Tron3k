@@ -125,17 +125,15 @@ void Client::in_new_connection(Packet* rec, Uint8 _conID)
 			*rec >> team;
 			temp->setTeam(team);
 			*rec >> role;
-			temp->getRole()->chooseRole(role);
 			*rec >> hp;
-			temp->setHP(hp);
-			gamePtr->createPlayer(temp, c);
+			gamePtr->createPlayer(temp, c, hp, role);
 			delete temp;
 		}
 	}
 
 	temp = new Player();
 	temp->init("ClientName", glm::vec3(0, 0, 0), gamePtr->getPhysics());
-	gamePtr->createPlayer(temp, conID, true);
+	gamePtr->createPlayer(temp, conID, 100, 0, true);
 	delete temp;
 	
 	printf("My connection ID : %d \n", conID);

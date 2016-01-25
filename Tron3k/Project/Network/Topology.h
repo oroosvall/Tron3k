@@ -142,7 +142,7 @@ public:
 		*rec >> p_conID;
 		*rec >> pName;
 		temp->init(pName, glm::vec3(0, 0, 0), gamePtr->getPhysics());
-		gamePtr->createPlayer(temp, p_conID);
+		gamePtr->createPlayer(temp, p_conID, 100, 0);
 		consolePtr->printMsg("Player (" + pName + ") joined the server", "System", 'S');
 		delete temp;
 	}
