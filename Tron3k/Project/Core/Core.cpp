@@ -1103,7 +1103,6 @@ void Core::renderWorld(float dt)
 						if (p->isLocal()) //use current anim
 							renderPipe->renderAnimation(i, p->getRole()->getRole(), playermat, p->getAnimState_t_c(), dgColor, hpval, false);
 						else              //use peak anim
-
 							renderPipe->renderAnimation(i, p->getRole()->getRole(), playermat, p->getAnimState_t_p(), dgColor, hpval, false);
 					}
 				}
