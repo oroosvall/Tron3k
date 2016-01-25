@@ -929,7 +929,7 @@ void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec
 			{
 				jumped = true;
 				glm::vec3 reflect = normalize(glm::vec3(cNorms[c].x, 0, cNorms[c].z));
-				glm::vec3 vel = p->getVelocity();
+				glm::vec3 vel = p->getAirVelocity();
 				vel.y = 0;
 				vel = glm::reflect(vel, reflect);
 				vel.y = 10.0f;

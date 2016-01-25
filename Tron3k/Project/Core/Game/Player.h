@@ -152,7 +152,7 @@ public:
 
 	void setVelocity(glm::vec3 velocity) { vel = velocity; };
 	glm::vec3 getVelocity() { return vel; };
-
+	glm::vec3 getAirVelocity() { return airVelocity; };
 
 	void hitByBullet(Bullet* b, int newHPtotal = -1);
 	void hitByEffect(Effect* e, int newHPtotal = -1);
