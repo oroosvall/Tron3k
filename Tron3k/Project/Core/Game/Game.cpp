@@ -477,8 +477,10 @@ void Game::checkPlayerVEffectCollision()
 		for (int c = 0; c < effects[EFFECT_TYPE::THUNDER_DOME].size(); c++)
 		{
 			int eid = -1, pid = -1;
-			effects[EFFECT_TYPE::LIGHT_WALL][c]->getId(pid, eid);
+			effects[EFFECT_TYPE::THUNDER_DOME][c]->getId(pid, eid);
 			collNormalDomes = physics->checkPlayerVEffectCollision(local->getPos(), EFFECT_TYPE::THUNDER_DOME, eid);
+
+			glm::vec3 vel = local->getVelocity();
 			collNormals.reserve(collNormalWalls.size() + collNormalDomes.size()); // preallocate memory
 			collNormals.insert(collNormals.end(), collNormalWalls.begin(), collNormalWalls.end());
 			collNormals.insert(collNormals.end(), collNormalDomes.begin(), collNormalDomes.end());

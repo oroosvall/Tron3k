@@ -188,6 +188,16 @@ vec3 Physics::checkAngledCylindervSphereCollision(CollideMesh mesh1, CollideMesh
 std::vector<glm::vec4> Physics::checkSpherevSphereCollision(CollideMesh mesh1, CollideMesh mesh2)
 {
 	std::vector<glm::vec4> collided;
+
+	glm::vec3 dist = mesh1.getSphere().pos - mesh2.getSphere().pos;
+	float radius = mesh1.getSphere().radius + mesh2.getSphere().radius;
+	
+	if (length(dist) <= radius)
+	{
+		//collision
+		collided.push_back(vec4(dist, radius - length(dist)));
+
+	}
 	return collided;
 }
 
@@ -659,7 +669,7 @@ vec3 Physics::checkBulletVWorldCollision(vec3 bulletPos)
 {
 	vec3 collides = vec3(0, 0, 0);
 
-	vec3 size = vec3(0.2f, 0.2f, 0.2f);
+	vec3 size = vec3(0.3f, 0.3f, 0.3f);
 	bulletBox.setAABB(bulletPos, bulletPos + size, bulletPos - size);
 
 	for (unsigned int i = 0; i < worldBoxes.size(); i++)
