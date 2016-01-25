@@ -6,6 +6,8 @@
 #include <fstream>
 #include <iostream>
 
+using std::ios;
+
 GLuint blank_diffuse;
 GLuint blank_normal;
 GLuint blank_glow;
@@ -30,7 +32,7 @@ DDSTexture::~DDSTexture()
 void DDSTexture::load(std::string file)
 {
 
-	std::ifstream inFile(file);
+	std::ifstream inFile(file , ios::binary);
 
 	width = 0;
 	height = 0;
@@ -64,7 +66,7 @@ void DDSTexture::load(std::string file)
 		textureData = new char[dataSize];
 
 		inFile.read((char*)textureData, dataSize);
-
+		
 	}
 	else
 	{
@@ -79,14 +81,21 @@ bool DDSTexture::uploadTexture(GLuint &id)
 	if (!textureData)
 		return false;
 
+	printf("Uploading\n");
+	std::cout << glGetError() << std::endl;
+
 	glBindTexture(GL_TEXTURE_2D, id);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 1);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
 	glCompressedTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, dataSize, textureData);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+
+	printf("Done uploading\n");
+	std::cout << glGetError() << std::endl;
+
 
 	return true;
 }
