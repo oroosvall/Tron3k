@@ -1240,8 +1240,11 @@ void Game::handleBulletTimeOuts(BulletTimeOutInfo hi)
 	Bullet* b;
 	int posInArray = -1;
 	b = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, posInArray);
-	b->setPos(hi.pos);
-	removeBullet(hi.bt, posInArray);
+	if (b != nullptr)
+	{
+		b->setPos(hi.pos);
+		removeBullet(hi.bt, posInArray);
+	}
 }
 
 void Game::removeEffect(EFFECT_TYPE et, int posInArray)
