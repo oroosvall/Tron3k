@@ -679,6 +679,7 @@ vec3 Physics::checkBulletVWorldCollision(vec3 bulletPos)
 			if (checkAABBvAABBCollision(&bulletBox.boundingBox, &worldBoxes[i][j].boundingBox))
 			{
 				collides = vec3(1, 1, 1);
+				//spawnLactatingNipplesOfDoom();
 			}
 		}
 	}
