@@ -264,6 +264,16 @@ void Core::upRoam(float dt)
 			game->clearBulletOnWorldCollisions();
 		}
 
+		std::vector<EffectHitPlayerInfo> effectHitsOnPlayer = game->getAllEffectOnPlayerCollisions();
+		if (effectHitsOnPlayer.size() != 0)
+		{
+			for (unsigned int c = 0; c < bulletHitsOnWorld.size(); c++)
+			{
+				game->handleEffectHitPlayerEvent(effectHitsOnPlayer[c]);
+			}
+			game->clearEffectOnPlayerCollisions();
+		}
+
 		renderWorld(dt);
 		break;
 	}
