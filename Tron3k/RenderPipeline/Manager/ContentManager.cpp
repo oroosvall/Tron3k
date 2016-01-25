@@ -10,11 +10,11 @@ void ContentManager::init()
 	f_render_abb = false;
 	f_render_obb = false;
 
-	blank_diffuse = loadTexture("GameFiles/Textures/blank_d.png");
+	blank_diffuse = loadTexture("GameFiles/Textures/blank_d.dds");
 	blank_normal = loadTexture("GameFiles/Textures/blank_n.png");
 	blank_glow = loadTexture("GameFiles/Textures/blank_g.png");
 
-	skyTexture = loadTexture("GameFiles/TestFiles/skybox.jpg");
+	skyTexture = loadTexture("GameFiles/Textures/skybox.dds");
 
 	playerCharacters[0].load("trapper");
 
@@ -45,10 +45,6 @@ void ContentManager::init()
 	trapperConsume.load("GameFiles/CharacterFiles/consumable_Trapper.bin");
 	shankerBullet.load("GameFiles/CharacterFiles/primary_shanker.bin");
 	shankerSpecial.load("GameFiles/CharacterFiles/special_shanker.bin");
-
-	DDSTexture tex;
-
-	tex.load("GameFiles/Textures/Blank_d.dds");
 
 	//Skybox
 	skybox.init(0, 0, 0);

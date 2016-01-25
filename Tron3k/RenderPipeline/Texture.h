@@ -51,11 +51,11 @@ enum TEXTURE_RESOURCE_DIMENSION
 };
 
 typedef struct {
-	DXGI_FORMAT					 dxgiFormat;
-	TEXTURE_RESOURCE_DIMENSION	 resourceDimension;
-	unsigned long                     miscFlag;
-	unsigned long                     arraySize;
-	unsigned long                     miscFlags2;
+	DXGI_FORMAT						dxgiFormat;
+	TEXTURE_RESOURCE_DIMENSION		resourceDimension;
+	unsigned long                   miscFlag;
+	unsigned long                   arraySize;
+	unsigned long                   miscFlags2;
 } DDS_HEADER_DXT10;
 
 class DDSTexture
@@ -64,11 +64,16 @@ private:
 
 public:
 
+	~DDSTexture();
+
 	int width;
 	int height;
 
 	int blocksize;
 
+	int format;
+
+	unsigned int dataSize;
 	void* textureData;
 	
 	void load(std::string fileName);
