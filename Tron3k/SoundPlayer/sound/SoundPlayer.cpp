@@ -136,6 +136,21 @@ int SoundPlayer::playMapSounds()
 			mapSounds[2].setVolume(20);
 			mapSounds[2].setAttenuation(20);
 			mapSounds[2].setMinDistance(50.0f);
+			mapSounds[3].setBuffer(soundList[SOUNDS::soundEffectFlies]);
+			mapSounds[3].setPosition(51, 1.55, 108);
+			mapSounds[3].setVolume(20);
+			mapSounds[3].setAttenuation(3);
+			mapSounds[3].setMinDistance(7.0f);
+			mapSounds[4].setBuffer(soundList[SOUNDS::soundEffectFlies]);
+			mapSounds[4].setPosition(-74, 1.55, 30);
+			mapSounds[4].setVolume(20);
+			mapSounds[4].setAttenuation(3);
+			mapSounds[4].setMinDistance(7.0f);
+			mapSounds[5].setBuffer(soundList[SOUNDS::soundEffectFrogs]);
+			mapSounds[5].setPosition(-48, 1.55, 72);
+			mapSounds[5].setVolume(3);
+			mapSounds[5].setAttenuation(10);
+			mapSounds[5].setMinDistance(4.0f);
 
 			for (int i = 0; i < MAXSOUNDS; i++)
 			{
@@ -354,7 +369,7 @@ int SoundPlayer::playExternalSound(int sound, float x, float y, float z)
 
 void SoundPlayer::setLocalPlayerDir(glm::vec3 playerDir)
 {
-	sf::Listener::setDirection(playerDir.x, playerDir.y, playerDir.z);
+	sf::Listener::setDirection(playerDir.x, 0.0, playerDir.z);
 }
 
 void SoundPlayer::setLocalPlayerPos(glm::vec3 playerPos)
