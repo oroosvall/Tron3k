@@ -22,7 +22,7 @@ void PulseRifle::init()
 	firingSpeed = 0.5f;
 	firingSpeedCurrentDelay = 0.0f;
 
-	reloadTime = 4.0f;
+	reloadTime = 2.4f;
 	rldTimer = 0.0f;
 }
 
