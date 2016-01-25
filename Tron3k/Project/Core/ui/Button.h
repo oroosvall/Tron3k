@@ -2,7 +2,7 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
-#include "Vertex.h"
+#include "uiVertex.h"
 
 #include <glm\glm.hpp>
 #include <glm\gtc\matrix_transform.hpp>
@@ -10,7 +10,7 @@
 class Button
 {
 private:
-	Vertex pos[4];
+	uiVertex pos[2];
 	int textureIndexList[2];
 	int textureIndexInUse;
 	int objId;
@@ -24,7 +24,7 @@ public:
 
 	void setWorldMatrix(float x, float y);
 	glm::mat4 returnWorldMatrix();
-	Vertex* returnPosAUv();
+	uiVertex* returnPosAUv();
 	int returnObjId();
 
 	int changeTexUsed();

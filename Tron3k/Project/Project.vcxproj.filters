@@ -91,6 +91,9 @@
     <Filter Include="Source Files\Core\Ui\uiVisionClasses">
       <UniqueIdentifier>{5fc18abf-b9b9-47af-85e7-b5175798e939}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Core\Ui\Structs">
+      <UniqueIdentifier>{60d805ac-eb33-4f7e-97a7-5accb1dda855}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -265,18 +268,6 @@
       <Filter>Source Files\Core\Ui\uiManagers</Filter>
     </ClCompile>
     <ClCompile Include="Core\ui\Button.cpp">
-      <Filter>Source Files\Core\Ui\uiVisionClasses</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\ui\DynamicTextBox.cpp">
-      <Filter>Source Files\Core\Ui\uiVisionClasses</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\ui\InputBox.cpp">
-      <Filter>Source Files\Core\Ui\uiVisionClasses</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\ui\Slider.cpp">
-      <Filter>Source Files\Core\Ui\uiVisionClasses</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\ui\staticBox.cpp">
       <Filter>Source Files\Core\Ui\uiVisionClasses</Filter>
     </ClCompile>
     <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\TrapperBullets\Clusterling.cpp">
@@ -497,23 +488,20 @@
     <ClInclude Include="Core\ui\Button.h">
       <Filter>Source Files\Core\Ui\uiVisionClasses</Filter>
     </ClInclude>
-    <ClInclude Include="Core\ui\DynamicTextBox.h">
-      <Filter>Source Files\Core\Ui\uiVisionClasses</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\ui\InputBox.h">
-      <Filter>Source Files\Core\Ui\uiVisionClasses</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\ui\Slider.h">
-      <Filter>Source Files\Core\Ui\uiVisionClasses</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\ui\staticBox.h">
-      <Filter>Source Files\Core\Ui\uiVisionClasses</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Game\Role\PlayerEffects\Modifiers\TrapperShareAmmo.h">
       <Filter>Source Files\Core\Game\Role\PlayerEffects\Modifiers</Filter>
     </ClInclude>
     <ClInclude Include="Core\Game\Role\Special\SpecialTypes\WallJump.h">
       <Filter>Source Files\Core\Game\Role\Special\SpecialTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\ui\VertexBufferUI.h">
+      <Filter>Source Files\Core\Ui\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\ui\uiVertex.h">
+      <Filter>Source Files\Core\Ui\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\ui\Vertex_ui.h">
+      <Filter>Source Files\Core\Ui\Structs</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -151,28 +151,54 @@ void Core::upMenu(float dt)
 	case 0: //init
 	{
 		uiManager = new UIManager();
-		uiManager->init("menuFilesNames.txt");
+		//uiManager->init("GameFiles/UIFiles/menuFilesNames.txt", console);
 
-		//Call render
+		//uiManager->setMenu(0);
 
 		subState++;
 		break;
 	}
-	case 1: //Waits for events
-		//Get the mouse click positions.
-		//Use a switch for the different options in the menu.
+	case 1: //Render loop
+	{
+		//uiManager->render();
+			//renderPipe->renderUI(uiManager->returnWorldMatrix(i), i);
+
+		if (i->justPressed(GLFW_MOUSE_BUTTON_LEFT))//button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
+		{
+			double x = (0.0);
+			double y = (0.0);
+			//Events
+			i->getCursor(x, y);
+			double tX = (x / (double)winX) * 2 - 1.0; // (x/ResolutionX) * 2 - 1
+			double tY = (-y / (double)winY) * 2 + 1.0; // (y/ResolutionY) * 2 - 1
+			int eventIndex = 0;// = uiManager->collisionCheck(glm::vec2((float)tX, (float)tY));
+			switch (eventIndex)
+			{
+			case 0: //Roam
+				current = ROAM;
+				uiManager->removeAllMenus();
+				//Load gui and the rest of in game ui.
+				subState = 0;
+				break;
+			case 1: //Multiplayer
+				current = CLIENT;
+				uiManager->removeAllMenus();
+				//Load gui and the rest of in game ui.
+				subState = 0;
+				break;
+			case 2: //Settings
+				break;
+			case 3: //Exit
+				glfwHideWindow(win);
+				break;
+			default:
+				break;
+			}
+		}
+
 		break;
 	}
-	//MENU
-
-	//menu opitons
-
-	//roam, choose map -> ROAM
-	//multiplayer, enter server IP -> CLIENT
-	//settings
-	//exit
-
-	//return exit
+	}
 }
 
 void Core::upRoam(float dt)
