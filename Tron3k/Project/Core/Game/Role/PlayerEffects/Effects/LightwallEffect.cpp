@@ -36,7 +36,7 @@ int LightwallEffect::update(float dt)
 		{
 
 			expandDong = false;
-			lifeTime = 100.0f;
+			lifeTime = 10.0f;
 			if (length(endPoint - pos) < 1.5f)
 				return 1;
 		}
