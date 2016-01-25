@@ -14,12 +14,12 @@ void DiscGun::init()
 {
 	weaponType = WEAPON_TYPE::DISC_GUN;
 
-	maxClipSize = 10;
+	maxClipSize = 9;
 	currentClipAmmo = maxClipSize;
 
 	currentBulletId = 0;
 
-	firingSpeed = 0.8f;
+	firingSpeed = 1.2f;
 	firingSpeedCurrentDelay = 0;
 
 	reloadTime = 2.0f;

@@ -21,9 +21,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Collision\CollideMesh.h">
-      <Filter>Source Files\Collision</Filter>
-    </ClInclude>
     <ClInclude Include="Collision\Geometry.h">
       <Filter>Source Files\Collision</Filter>
     </ClInclude>
@@ -35,6 +32,9 @@
     </ClInclude>
     <ClInclude Include="Effect\EffectMesh.h">
       <Filter>Source Files\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision\CollideMesh.h">
+      <Filter>Source Files\Collision</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

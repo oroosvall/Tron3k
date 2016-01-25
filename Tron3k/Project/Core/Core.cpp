@@ -185,6 +185,7 @@ void Core::upRoam(float dt)
 
 		game = new Game();
 		game->init(MAX_CONNECT, current);
+		game->sendPlayerRadSize(0.9f);
 		//map loaded, fetch spawnpoints from render
 		renderPipe->getSpawnpoints(*game->getSpawnpoints());
 		// fetch all collision boxes
@@ -294,6 +295,7 @@ void Core::upClient(float dt)
 					delete game;
 				game = new Game();
 				game->init(MAX_CONNECT, current);
+				game->sendPlayerRadSize(0.9f);
 				//map loaded, fetch spawnpoints from render
 				renderPipe->getSpawnpoints(*game->getSpawnpoints());
 				// fetch all collision boxes
@@ -450,6 +452,7 @@ void Core::upServer(float dt)
 			delete game;
 		game = new Game();
 		game->init(MAX_CONNECT, current);
+		game->sendPlayerRadSize(0.9f);
 		//map loaded, fetch spawnpoints from render
 		renderPipe->getSpawnpoints(*game->getSpawnpoints());
 		// fetch all collision boxes
@@ -688,6 +691,7 @@ void Core::roamHandleCmds()
 			else
 			{
 				game->getPlayer(0)->getRole()->chooseRole(role - 1);
+				game->sendPlayerRadSize(game->getPlayer(0)->getRole()->getBoxRadius());
 				if (role == TRAPPER)
 					game->getPlayer(0)->addModifier(MODIFIER_TYPE::TRAPPERSHAREAMMO);
 				console.printMsg("You switched class!", "System", 'S');
@@ -1052,20 +1056,20 @@ void Core::renderWorld(float dt)
 					else
 					{
 						if (p->getTeam() == 1) { //team 1 color
-							dgColor[0] = 1; dgColor[1] = 0.5; dgColor[2] = 0;
+							dgColor[0] = TEAMONECOLOR.r; dgColor[1] = TEAMONECOLOR.g; dgColor[2] = TEAMONECOLOR.b;
 						}
 						else if (p->getTeam() == 2) { // team 2 color
-							dgColor[0] = 0.0f; dgColor[1] = 1; dgColor[2] = 0.5f;
+							dgColor[0] = TEAMTWOCOLOR.r; dgColor[1] = TEAMTWOCOLOR.g; dgColor[2] = TEAMTWOCOLOR.b;
 						}
 						else if (p->getTeam() == 0) { // spectate color
 							dgColor[0] = 0; dgColor[1] = 0; dgColor[2] = 0;
 						}
 						//hacked team colors
 						if (hackedTeam == 1) { //Show team 2's colour
-							dgColor[0] = 0.4f; dgColor[1] = 0.0f; dgColor[2] = 0.4f;
+							dgColor[0] = TEAMTWOCOLOR.r; dgColor[1] = TEAMTWOCOLOR.g; dgColor[2] = TEAMTWOCOLOR.b;
 						}
 						else if (hackedTeam == 2) { //Show team 1's colour
-							dgColor[0] = 0.0f; dgColor[1] = 1.0f; dgColor[2] = 0.0f;
+							dgColor[0] = TEAMONECOLOR.r; dgColor[1] = TEAMONECOLOR.g; dgColor[2] = TEAMONECOLOR.b;
 						}
 					}
 					//static intense based on health
@@ -1105,11 +1109,11 @@ void Core::renderWorld(float dt)
 			{
 				if (bullets[i]->getTeamId() == 1)
 				{
-					dgColor[0] = 1.0f; dgColor[1] = 0.5f; dgColor[2] = 0;
+					dgColor[0] = TEAMONECOLOR.r; dgColor[1] = TEAMONECOLOR.g; dgColor[2] = TEAMONECOLOR.b;
 				}
 				else if (bullets[i]->getTeamId() == 2)
 				{
-					dgColor[0] = 0.0f; dgColor[1] = 1.0f; dgColor[2] = 0.5f;
+					dgColor[0] = TEAMTWOCOLOR.r; dgColor[1] = TEAMTWOCOLOR.g; dgColor[2] = TEAMTWOCOLOR.b;
 				}
 				renderPipe->renderBullet(c, bullets[i]->getWorldMat(), dgColor, 0.0f);
 			}

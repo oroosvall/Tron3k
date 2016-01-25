@@ -173,6 +173,7 @@ public:
 	void sendChunkBoxes(int chunkID, void* cBoxes);
 	void sendWorldBoxes(std::vector<std::vector<float>> wBoxes);
 	void sendPlayerBox(std::vector<float> pBox);
+	void sendPlayerRadSize(float rad);
 
 	//Collision checks
 	Physics* getPhysics() { return physics; };

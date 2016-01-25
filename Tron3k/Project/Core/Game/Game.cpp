@@ -196,10 +196,37 @@ void Game::update(float dt)
 		for (unsigned int c = 0; c < effects[i].size(); c++)
 		{
 			int msg = effects[i][c]->update(dt);
+
+			if (i == EFFECT_TYPE::LIGHT_WALL)
+			{
+				int pid, eid;
+				LightwallEffect* lWall = (LightwallEffect*)effects[i][c];
+				if (lWall->getDong())
+				{
+					lWall->getId(pid, eid);
+					physics->removeEffect(eid);
+					glm::vec3 sPos, gPos;
+					float height = 2.0f;
+
+					gPos = lWall->getEndPoint();
+					sPos = lWall->getPos();
+					std::vector<float> eBox;
+					eBox.push_back(sPos.x);
+					eBox.push_back(sPos.y);
+					eBox.push_back(sPos.z);
+					eBox.push_back(height);
+					eBox.push_back(gPos.x);
+					eBox.push_back(gPos.y);
+					eBox.push_back(gPos.z);
+					physics->receiveEffectBox(eBox, EFFECT_TYPE::LIGHT_WALL, pid, eid);
+				}
+			}
+
 			if (msg == 1)		//Effect is dead
 			{
 				removeEffect(EFFECT_TYPE(i), c);
 			}
+			
 		}
 	}
 }
@@ -277,6 +304,7 @@ void Game::createPlayer(Player* p, int conID, bool isLocal)
 	playerList[conID]->init(p->getName(), p->getPos(), isLocal);
 	playerList[conID]->setTeam(p->getTeam());
 	playerList[conID]->setRole(*templateRole);
+
 	if (isLocal)
 	{
 		localPlayerId = conID;
@@ -298,7 +326,12 @@ void Game::sendChunkBoxes(int chunkID, void* cBoxes)
 
 void Game::sendPlayerBox(std::vector<float> pBox)
 {
-	physics->receivePlayerBox(pBox);
+	physics->receivePlayerBox(pBox, 0.9f);
+}
+
+void Game::sendPlayerRadSize(float rad)
+{
+	physics->receivePlayerRad(rad);
 }
 
 void Game::sendWorldBoxes(std::vector<std::vector<float>> wBoxes)
@@ -411,15 +444,41 @@ void Game::checkPlayerVEffectCollision()
 	{
 		Player* local = playerList[localPlayerId];
 		//Collision for all wall-like effects i.e. only Lightwall and Thunderdome
+
+		std::vector<glm::vec4> collNormalWalls;
+		std::vector<glm::vec4> collNormalDomes;
+		std::vector<glm::vec4> collNormals;
 		for (int c = 0; c < effects[EFFECT_TYPE::LIGHT_WALL].size(); c++)
 		{
-			physics->checkPlayerVEffectCollision(local->getPos(), 1.0f, EFFECT_TYPE::LIGHT_WALL);
+			int eid = -1, pid = -1;
+			effects[EFFECT_TYPE::LIGHT_WALL][c]->getId(pid, eid);
+			if (((LightwallEffect*)effects[EFFECT_TYPE::LIGHT_WALL][c])->getCollidable() || localPlayerId != pid)
+			{
+				collNormalWalls = physics->checkPlayerVEffectCollision(local->getPos(), EFFECT_TYPE::LIGHT_WALL, eid);
+				collNormals.reserve(collNormalWalls.size()); // preallocate memory
+				collNormals.insert(collNormals.end(), collNormalWalls.begin(), collNormalWalls.end());
+				collNormals.insert(collNormals.end(), collNormalDomes.begin(), collNormalDomes.end());
+			}
+			
 		}
 
 		for (int c = 0; c < effects[EFFECT_TYPE::THUNDER_DOME].size(); c++)
 		{
-			physics->checkPlayerVEffectCollision(local->getPos(), 1.0f, EFFECT_TYPE::THUNDER_DOME);
+			int eid = -1, pid = -1;
+			effects[EFFECT_TYPE::LIGHT_WALL][c]->getId(pid, eid);
+			collNormalDomes = physics->checkPlayerVEffectCollision(local->getPos(), EFFECT_TYPE::THUNDER_DOME, eid);
+			collNormals.reserve(collNormalWalls.size() + collNormalDomes.size()); // preallocate memory
+			collNormals.insert(collNormals.end(), collNormalWalls.begin(), collNormalWalls.end());
+			collNormals.insert(collNormals.end(), collNormalDomes.begin(), collNormalDomes.end());
 		}
+
+		/*//merge normals into one vector
+		collNormals.reserve(collNormalWalls.size() + collNormalDomes.size()); // preallocate memory
+		collNormals.insert(collNormals.end(), collNormalWalls.begin(), collNormalWalls.end());
+		collNormals.insert(collNormals.end(), collNormalDomes.begin(), collNormalDomes.end());*/
+
+		if (collNormals.size() > 0)
+			playerList[localPlayerId]->setCollisionInfo(collNormals);
 	}
 	if (gameState == Gamestate::ROAM || gameState == Gamestate::SERVER)
 	{
@@ -487,7 +546,7 @@ void Game::checkPlayerVWorldCollision(float dt)
 
 		vec3 posadjust = vec3(0);
 		//lower with distance from eyes to center
-		std::vector<vec4> cNorms = physics->sphereVWorldCollision(playerList[localPlayerId]->getPos() - (vec3(0, playerList[localPlayerId]->getRole()->getBoxModifier(), 0)), 1);
+		std::vector<vec4> cNorms = physics->PlayerVWorldCollision(playerList[localPlayerId]->getPos() - (vec3(0, playerList[localPlayerId]->getRole()->getBoxModifier(), 0)));
 
 		//if we collided with something
 		if (cNorms.size() > 0)
@@ -511,7 +570,7 @@ void Game::checkBulletVWorldCollision()
 			{
 				int pid = -1, bid = -1;
 				bullets[b][j]->getId(pid, bid);
-				collides = physics->sphereVWorldCollision(bullets[b][j]->getPos(), 0.4f);
+				collides = physics->BulletVWorldCollision(bullets[b][j]->getPos());
 				if (collides.size() > 0)
 				{
 					BulletHitWorldInfo hi;
@@ -912,6 +971,7 @@ void Game::addEffectToList(int conID, int effectId, EFFECT_TYPE et, glm::vec3 po
 		e = new LightwallEffect(p);
 		if (GetSoundActivated())
 			GetSound()->playExternalSound(SOUNDS::soundEffectLightWall, pos.x, pos.y, pos.z);
+		
 		break;
 	case EFFECT_TYPE::EXPLOSION:
 		e = new Explosion();
@@ -1169,10 +1229,13 @@ void Game::removeEffect(EFFECT_TYPE et, int posInArray)
 void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 {
 	int PID = 0, BID = 0;
-	Bullet* parent = bullets[bt][posInArray];
 
-	switch (bt)
+	if (posInArray <= bullets->size())
 	{
+		Bullet* parent = bullets[bt][posInArray];
+
+		switch (bt)
+		{
 		case BULLET_TYPE::CLUSTER_GRENADE: //FUCKING EVERYTHING	
 		{
 			vec3 lingDir;
@@ -1227,10 +1290,11 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(35.0f);
 			break;
 		}
+		}
+		delete bullets[bt][posInArray];
+		bullets[bt][posInArray] = bullets[bt][bullets[bt].size() - 1];
+		bullets[bt].pop_back();
 	}
-	delete bullets[bt][posInArray];
-	bullets[bt][posInArray] = bullets[bt][bullets[bt].size() - 1];
-	bullets[bt].pop_back();
 }
 
 bool Game::playerWantsToRespawn()

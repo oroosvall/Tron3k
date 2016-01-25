@@ -483,6 +483,7 @@ public:
 		}
 
 		p->getRole()->chooseRole(role-1);
+		gamePtr->sendPlayerRadSize(0.9f); //TEMP BUT W/E
 		consolePtr->printMsg("Player " + p->getName() + " switched class!", "System", 'S');
 
 		if (isClient == false)

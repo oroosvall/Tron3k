@@ -25,5 +25,6 @@ public:
 	void getIDs(unsigned int &eType, int &pID, int &eID);
 
 	unsigned int getEType() { return etype; };
+	int getEID() { return eID; };
 };
 #endif

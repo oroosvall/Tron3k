@@ -14,7 +14,7 @@
 using namespace std;
 
 enum ROLES { TRAPPER, DESTROYER, MOBILITY, BRUTE, MANIPULATOR, NROFROLES };
-enum PROPERTIES{HEALTH, MAINWEP, SECWEP, JUMPHEIGHT, MOVEMENTSPEED, NROFREADPROPERTIES};
+enum PROPERTIES { HEALTH, MAINWEP, SECWEP, JUMPHEIGHT, MOVEMENTSPEED, NROFREADPROPERTIES };
 
 class Role
 {
@@ -25,6 +25,7 @@ private:
 	int maxHealth;
 	float movementSpeed;
 	float boundingBoxModifier;
+	float boundingBoxRadius;
 	float jumpHeight;
 	string roles[NROFROLES];
 	string loadedRoles[NROFROLES][NROFREADPROPERTIES];
@@ -81,7 +82,8 @@ public:
 	void setMovementSpeed(float speed) { movementSpeed = speed; };
 	string getLoadedRoleSpecific(int i, int y) { return loadedRoles[i][y]; };
 
-	float getBoxModifier() { return boundingBoxModifier; }
+	float getBoxModifier() { return boundingBoxModifier; };
+	float getBoxRadius() { return boundingBoxRadius; };
 
 	bool getIfBusy();
 

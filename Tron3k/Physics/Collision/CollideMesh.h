@@ -1,3 +1,4 @@
+#pragma once
 #ifndef COLLIDEMESH_H
 #define COLLIDEMESH_H
 
@@ -52,16 +53,16 @@ struct OBB_LINES
 	{
 		//line from corner to the sphere center
 		vec3 p = pos - point2;
-		
+
 		// if sphere is behind the line, that means a corner will be closer than the closest line 
-		if(dot(p, line_inv) < 0)
+		if (dot(p, line_inv) < 0)
 			return vec4(0, 0, 0, -1);
 
 		p = pos - point1;
 
 		if (dot(p, line) < 0)
 			return vec4(0, 0, 0, -1);
-			
+
 		//project p on the line and multiply by the line
 		float projlen = (dot(p, line) / dot(line, line));
 		vec3 intersection = projlen* line;
@@ -135,14 +136,14 @@ struct PLANE
 						if (test1 > FLT_EPSILON && test2 > FLT_EPSILON)
 						{
 							//printf("%f \n", t);
-							
+
 							return vec4(n, t);
 						}
 					}
 				}
 			}
 		}
-		return vec4(0,0,0, -1);
+		return vec4(0, 0, 0, -1);
 	}
 };
 
@@ -189,6 +190,33 @@ struct OBB
 		lines[11].init(corners[6], corners[4]);
 
 	}
+
+	void setPlanes()
+	{
+		//init planes
+		planes[0].init(corners[2], corners[3], corners[1], corners[0]);
+		planes[1].init(corners[4], corners[2], corners[0], corners[6]);
+		planes[2].init(corners[5], corners[4], corners[6], corners[7]);
+		planes[3].init(corners[3], corners[5], corners[7], corners[1]);
+		planes[4].init(corners[4], corners[5], corners[3], corners[2]);
+		planes[5].init(corners[7], corners[6], corners[0], corners[1]);
+
+		//init all lines
+		lines[0].init(corners[2], corners[3]);
+		lines[1].init(corners[3], corners[1]);
+		lines[2].init(corners[1], corners[0]);
+		lines[3].init(corners[0], corners[2]);
+
+		lines[4].init(corners[2], corners[4]);
+		lines[5].init(corners[3], corners[5]);
+		lines[6].init(corners[1], corners[7]);
+		lines[7].init(corners[0], corners[6]);
+
+		lines[8].init(corners[4], corners[5]);
+		lines[9].init(corners[5], corners[7]);
+		lines[10].init(corners[7], corners[6]);
+		lines[11].init(corners[6], corners[4]);
+	}
 };
 
 struct AABB
@@ -218,7 +246,7 @@ struct AABB
 struct Cylinder
 {
 	vec3 pos;
-	
+
 	float radius;
 	float height;
 };
@@ -243,7 +271,7 @@ struct Sphere
 class CollideMesh
 {
 private:
-	
+
 	Cylinder cylinder;
 	Sphere sphere;
 	AngledCylinder angledCylinder;
@@ -263,7 +291,7 @@ public:
 	AABB* getAABB();
 
 
-	
+
 	void setCylinder(vec3 pos, float radius, float height);
 	Cylinder getCylinder();
 
