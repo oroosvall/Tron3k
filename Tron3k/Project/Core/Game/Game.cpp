@@ -933,8 +933,8 @@ void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec
 				vel.y = 0;
 				vel = glm::reflect(vel, reflect);
 				vel.y = 10.0f;
-			//	vel.x *= 0.7f;
-			//	vel.z *= 0.7f;
+				vel.x *= 0.9f;
+				vel.z *= 0.9f;
 				p->setVelocity(vel);
 			}
 		}

@@ -226,6 +226,8 @@ void Server::in_new_connection(Packet* rec, Uint8 conID)
 			*out << Uint8(1);
 			*out << p->getName();
 			*out << Uint8(p->getTeam());
+			*out << Uint8(p->getRole()->getRole());
+			*out << Uint8(p->getHP());
 		}
 		else
 		{

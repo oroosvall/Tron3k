@@ -360,20 +360,25 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 				if (!collided)//IN THE AIR YO
 				{
+					/*
+					Att lägga till: Kolla så att hastigheten I DEN GIVNA RIKTNINGEN
+					är mindre än tillåtet innan speed läggs till.
+					Detta på alla knappar, inte bara W och S.
+					*/
 					if (i->getKeyInfo(GLFW_KEY_W))
 					{
-						if (length(glm::vec2(airVelocity.x, airVelocity.z)) < role.getMovementSpeed())
-						{
-							airVelocity += normalize(glm::vec3(dir.x, 0, dir.z))*dt*0.5f;
-						}
+						//if (length(glm::vec2(airVelocity.x, airVelocity.z)) < role.getMovementSpeed()*0.1f)
+						//{
+							airVelocity += normalize(glm::vec3(dir.x, 0, dir.z))*dt*0.3f;
+						//}
 					}
 
 					if (i->getKeyInfo(GLFW_KEY_S))
 					{
-						if (length(glm::vec2(airVelocity.x, airVelocity.z)) > -role.getMovementSpeed())
-						{
-							airVelocity -= normalize(glm::vec3(dir.x, 0, dir.z))*dt*0.5f;
-						}
+						//if (length(glm::vec2(airVelocity.x, airVelocity.z)) < role.getMovementSpeed()*0.1f)
+						//{
+							airVelocity -= normalize(glm::vec3(dir.x, 0, dir.z))*dt*0.3f;
+						//}
 					}
 
 					if (!(i->getKeyInfo(GLFW_KEY_A) && i->getKeyInfo(GLFW_KEY_D)))
@@ -383,7 +388,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 							vec3 left = cross(vec3(0, 1, 0), dir);
 							if (length(left) > 0)
 							{
-								airVelocity += normalize(left)*dt;
+								airVelocity += normalize(left)*dt*0.3f;
 							}
 						}
 						if (i->getKeyInfo(GLFW_KEY_D))
@@ -391,7 +396,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 							vec3 right = cross(dir, vec3(0, 1, 0));
 							if (length(right) > 0)
 							{
-								airVelocity += normalize(right)*dt;
+								airVelocity += normalize(right)*dt*0.3f;
 							}
 						}
 					}
