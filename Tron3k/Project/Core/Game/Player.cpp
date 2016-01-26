@@ -95,7 +95,7 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 		GetSound()->setLocalPlayerDir(this->getDir());
 	}
 
-	if (vel.x != 0 || vel.z != 0)
+	if ((vel.x != 0 || vel.z != 0) && this->grounded)
 	{
 
 		if (this->getFootsteps() && this->getGrounded() && GetSoundActivated() && this->role.getRole() != 1)
@@ -111,6 +111,12 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 			GetSound()->playFootsteps(this->role.getRole(), pos.x, pos.y, pos.z);
 			GetSound()->destroyerPaused = false;
 		}
+		
+		/*else if (this->role.getRole() == 3 && GetSoundActivated() && GetSound()->brutePaused == true)
+		{
+			GetSound()->playFootsteps(this->role.getRole(), pos.x, pos.y, pos.z);
+			GetSound()->brutePaused = false;
+		}*/
 	}
 
 	else
@@ -119,6 +125,11 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 		{
 			GetSound()->stopDestroyer(pos.x, pos.y, pos.z);
 		}
+
+		/*else if (this->role.getRole() == 3 && GetSoundActivated() && GetSound()->brutePaused == false)
+		{
+			GetSound()->stopBrute();
+		}*/
 	}
 }
 
@@ -243,6 +254,11 @@ void Player::setFootstepsCountdown()
 	else if (this->role.getRole() == 1)
 	{
 		this->footstepsCountdown = 0.7;
+	}
+
+	else if (this->role.getRole() == 3)
+	{
+		this->footstepsCountdown = 0.55;
 	}
 	else
 	{
@@ -996,7 +1012,7 @@ void Player::movementAnimationChecks(float dt)
 		{
 			animOverideIfPriority(anim_third_current, AnimationState::third_primary_jump_end);
 			if (GetSoundActivated())
-				GetSound()->playExternalSound(SOUNDS::soundEffectTrapperLand, pos.x, pos.y, pos.z);
+				GetSound()->playLand(getRole()->getRole(), pos.x, pos.y, pos.z);
 		}
 
 		else // jump begin

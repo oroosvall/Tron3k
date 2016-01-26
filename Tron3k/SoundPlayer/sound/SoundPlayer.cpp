@@ -66,6 +66,8 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->soundList[SOUNDS::soundEffectClusterlingExplosion].loadFromFile("GameFiles/Sound/soundEffectClusterlingExplosion.ogg");
 		singleton->soundList[SOUNDS::soundEffectCrows].loadFromFile("GameFiles/Sound/soundEffectCrows.ogg");
 		singleton->soundList[SOUNDS::BreakingOutBass].loadFromFile("GameFiles/Sound/BreakingOutBass.ogg");
+		singleton->soundList[SOUNDS::soundEffectBruteLand].loadFromFile("GameFiles/Sound/soundEffectBruteLand.ogg");
+		singleton->soundList[SOUNDS::soundEffectBruteJump].loadFromFile("GameFiles/Sound/soundEffectBruteJump.ogg");
 
 		initialized = true;
 	}
@@ -97,11 +99,40 @@ int SoundPlayer::playJump(int role, float x, float y, float z)
 	{
 		GetSound()->playExternalSound(SOUNDS::soundEffectHunterJump, x, y, z);
 	}
+
+	else if (role == 3)
+	{
+		GetSound()->playExternalSound(SOUNDS::soundEffectBruteJump, x, y, z);
+		stopBrute();
+	}
 	else
 	{
 		return 0;
 	}
 }
+
+int SoundPlayer::playLand(int role, float x, float y, float z)
+{
+	if (role == 0)
+	{
+		GetSound()->playExternalSound(SOUNDS::soundEffectTrapperLand, x, y, z);
+	}
+
+	else if (role == 2)
+	{
+		GetSound()->playExternalSound(SOUNDS::soundEffectTrapperLand, x, y, z);
+	}
+
+	else if (role == 3)
+	{
+		GetSound()->playExternalSound(SOUNDS::soundEffectBruteLand, x, y, z);
+	}
+	else
+	{
+		return 0;
+	}
+}
+
 
 int SoundPlayer::playMapSounds()
 {
@@ -232,6 +263,39 @@ int SoundPlayer::playUserGeneratedSound(int sound)
 
 	return 0;
 }
+
+int SoundPlayer::playBrute(float x, float y, float z)
+{
+	if (sf::Listener::getPosition().x > x - 0.1 && sf::Listener::getPosition().x < x + 0.1)
+	{
+		if (sf::Listener::getPosition().z > z - 0.1 && sf::Listener::getPosition().z < z + 0.1)
+		{
+			bruteSteps.setRelativeToListener(true);
+			bruteSteps.setPosition(0, 0, 0);
+
+		}
+	}
+
+	else
+	{
+		bruteSteps.setRelativeToListener(false);
+		bruteSteps.setPosition(x, y, z);			//Set the sound's position in the world. Could be passed in through a parameter.
+	}
+
+	//std::cout << "x: " << sf::Listener::getPosition().x << " y: " << sf::Listener::getPosition().y << " z: " << sf::Listener::getPosition().z << endl;
+	//std::cout << "x: " << x << " y: " << y << " z: " << z << endl;
+	//sounds[nrOfSoundsPlaying].isRelativeToListener();
+	bruteSteps.setMinDistance(10.0f);		//Set the sound's distance it travels before it starts to attenuate. Could be passed in through a parameter.
+
+	bruteSteps.setBuffer(soundList[SOUNDS::soundEffectBruteSteps]);
+	bruteSteps.setVolume(50);
+	bruteSteps.setLoop(false);
+	bruteSteps.play();
+
+
+return 0;
+}
+
 
 int SoundPlayer::playDestroyer(float x, float y, float z)
 {
@@ -463,7 +527,7 @@ void SoundPlayer::playFootsteps(int role, float posX, float posY, float posZ)
 
 		if (role == 3)
 		{
-			playExternalSound(SOUNDS::soundEffectBruteSteps, posX, posY, posZ);
+			playBrute(posX, posY, posZ);
 		}
 
 		if (role == 4)

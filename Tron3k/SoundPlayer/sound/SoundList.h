@@ -39,6 +39,8 @@ enum SOUNDS
 	soundEffectClusterlingExplosion,
 	soundEffectCrows,
 	BreakingOutBass,
+	soundEffectBruteLand,
+	soundEffectBruteJump,
 
 	soundEffectDestroyerStart,
 	soundEffectDestroyerStop,
