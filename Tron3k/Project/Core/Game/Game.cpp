@@ -1100,7 +1100,8 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 				GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHit, pos.x, pos.y, pos.z);
 		int bulletPosInArray;
 		Bullet* theBullet = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, bulletPosInArray);
-		p->hitByBullet(theBullet, hi.newHPtotal);
+		if (theBullet != nullptr)
+			p->hitByBullet(theBullet, hi.newHPtotal);
 
 		removeBullet(hi.bt, bulletPosInArray);
 
@@ -1331,87 +1332,86 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 	if (posInArray <= bullets->size())
 	{
 		Bullet* parent = bullets[bt][posInArray];
-
+		parent->getId(PID, BID);
 		switch (bt)
 		{
-		case BULLET_TYPE::CLUSTER_GRENADE: //FUCKING EVERYTHING	
-		{
-			vec3 lingDir;
-			parent->getId(PID, BID);
-			lingDir = parent->getDir();
-			lingDir.x += 0.35f;
-			lingDir.z += 0.35f;
-			addBulletToList(PID, BID, CLUSTERLING, parent->getPos(), lingDir);
-			lingDir.x = -lingDir.x;
-			addBulletToList(PID, BID + 1, CLUSTERLING, parent->getPos(), lingDir);
-			lingDir.z = -lingDir.z;
-			addBulletToList(PID, BID + 2, CLUSTERLING, parent->getPos(), lingDir);
-			lingDir.x = -lingDir.x;
-			addBulletToList(PID, BID + 3, CLUSTERLING, parent->getPos(), lingDir);
+			case BULLET_TYPE::CLUSTER_GRENADE: //FUCKING EVERYTHING	
+			{
+				vec3 lingDir;
+				lingDir = parent->getDir();
+				lingDir.x += 0.35f;
+				lingDir.z += 0.35f;
+				addBulletToList(PID, BID, CLUSTERLING, parent->getPos(), lingDir);
+				lingDir.x = -lingDir.x;
+				addBulletToList(PID, BID + 1, CLUSTERLING, parent->getPos(), lingDir);
+				lingDir.z = -lingDir.z;
+				addBulletToList(PID, BID + 2, CLUSTERLING, parent->getPos(), lingDir);
+				lingDir.x = -lingDir.x;
+				addBulletToList(PID, BID + 3, CLUSTERLING, parent->getPos(), lingDir);
 
-			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
-			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(20);
+				addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
+				effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(20);
 
-			//This is where you send it to physics
-			std::vector<float> eBox;
-			eBox.push_back(parent->getPos().x);
-			eBox.push_back(parent->getPos().y);
-			eBox.push_back(parent->getPos().z);
-			eBox.push_back(20);
+				//This is where you send it to physics
+				std::vector<float> eBox;
+				eBox.push_back(parent->getPos().x);
+				eBox.push_back(parent->getPos().y);
+				eBox.push_back(parent->getPos().z);
+				eBox.push_back(20);
 
-			int pid, eid;
-			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->getId(pid, eid);
+				int pid, eid;
+				effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->getId(pid, eid);
 
-			physics->receiveEffectBox(eBox, EFFECT_TYPE::EXPLOSION, pid, eid);
+				physics->receiveEffectBox(eBox, EFFECT_TYPE::EXPLOSION, pid, eid);
 
-			if (GetSoundActivated())
-				GetSound()->playExternalSound(SOUNDS::soundEffectClusterGrenade, parent->getPos().x, parent->getPos().y, parent->getPos().z);
-			break;
-		}
-		case BULLET_TYPE::CLUSTERLING:
-		{
-			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
-			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(10.0f);
-			if (GetSoundActivated())
-				GetSound()->playExternalSound(SOUNDS::soundEffectClusterlingExplosion, parent->getPos().x, parent->getPos().y, parent->getPos().z);
+				if (GetSoundActivated())
+					GetSound()->playExternalSound(SOUNDS::soundEffectClusterGrenade, parent->getPos().x, parent->getPos().y, parent->getPos().z);
+				break;
+			}
+			case BULLET_TYPE::CLUSTERLING:
+			{
+				addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
+				effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(10.0f);
+				if (GetSoundActivated())
+					GetSound()->playExternalSound(SOUNDS::soundEffectClusterlingExplosion, parent->getPos().x, parent->getPos().y, parent->getPos().z);
 
-			//This is where you send it to physics
-			std::vector<float> eBox;
-			eBox.push_back(parent->getPos().x);
-			eBox.push_back(parent->getPos().y);
-			eBox.push_back(parent->getPos().z);
-			eBox.push_back(20);
+				//This is where you send it to physics
+				std::vector<float> eBox;
+				eBox.push_back(parent->getPos().x);
+				eBox.push_back(parent->getPos().y);
+				eBox.push_back(parent->getPos().z);
+				eBox.push_back(20);
 
-			int pid, eid;
-			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->getId(pid, eid);
+				int pid, eid;
+				effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->getId(pid, eid);
 
-			physics->receiveEffectBox(eBox, EFFECT_TYPE::EXPLOSION, pid, eid);
-			break;
-		}
-		case BULLET_TYPE::CLEANSE_BOMB:
-		{
-			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
-			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(15.0f);
-			break;
-		}
-		case BULLET_TYPE::VACUUM_GRENADE:
-		{
-			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
-			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(15.0f);
-			break;
-		}
-		case BULLET_TYPE::THERMITE_GRENADE:
-		{
-			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
-			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(35.0f);
-			break;
-		}
-		case BULLET_TYPE::GRENADE_SHOT:
-		{
-			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
-			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(35.0f);
-			break;
-		}
+				physics->receiveEffectBox(eBox, EFFECT_TYPE::EXPLOSION, pid, eid);
+				break;
+			}
+			case BULLET_TYPE::CLEANSE_BOMB:
+			{
+				addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
+				effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(15.0f);
+				break;
+			}
+			case BULLET_TYPE::VACUUM_GRENADE:
+			{
+				addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
+				effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(15.0f);
+				break;
+			}
+			case BULLET_TYPE::THERMITE_GRENADE:
+			{
+				addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
+				effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(35.0f);
+				break;
+			}
+			case BULLET_TYPE::GRENADE_SHOT:
+			{
+				addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
+				effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(35.0f);
+				break;
+			}
 		}
 		delete bullets[bt][posInArray];
 		bullets[bt][posInArray] = bullets[bt][bullets[bt].size() - 1];
