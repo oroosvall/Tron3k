@@ -158,6 +158,11 @@ int SoundPlayer::playMapSounds()
 			mapSounds[6].setVolume(20);
 			mapSounds[6].setAttenuation(20);
 			mapSounds[6].setMinDistance(30.0f);
+			mapSounds[7].setBuffer(soundList[SOUNDS::soundEffectFlies]);
+			mapSounds[7].setPosition(-32, 1.55, 47);
+			mapSounds[7].setVolume(30);
+			mapSounds[7].setAttenuation(3);
+			mapSounds[7].setMinDistance(7.0f);
 
 			for (int i = 0; i < MAXSOUNDS; i++)
 			{
