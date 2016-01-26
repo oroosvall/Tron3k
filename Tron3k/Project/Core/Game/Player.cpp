@@ -580,7 +580,6 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			msg = DEATH;
 			respawnTimer = respawnTime;
 			vel = glm::vec3(0, 0, 0);
-			animOverideIfPriority(anim_third_current, AnimationState::third_primary_death);
 
 			if (GetSoundActivated())
 			{
@@ -595,7 +594,6 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			{
 				respawnTimer = 0.0f;
 				msg = PLAYERRESPAWN;
-				//role.returnToLife();
 			}
 		}
 
@@ -715,7 +713,7 @@ void Player::reloadCurrentWeapon()
 		if(animPrimary)
 			animOverideIfPriority(anim_first_current, AnimationState::first_primary_reload);
 		else
-			animOverideIfPriority(anim_first_current, AnimationState::first_secondary_fire);
+			animOverideIfPriority(anim_first_current, AnimationState::first_secondary_reload);
 	}
 }
 
@@ -852,11 +850,6 @@ void Player::respawn(glm::vec3 respawnPos, glm::vec3 _dir)
 	rotatePlayer(vec3(0, 0, 1), _dir);
 	pos = respawnPos;
 
-	//setAnimState_f_c(AnimationState::none);
-	//setAnimState_f_p(AnimationState::none);
-	setAnimState_t_c(AnimationState::none);
-	setAnimState_t_p(AnimationState::none);
-
 	worldMat[0].w = pos.x;
 	worldMat[1].w = pos.y;
 	worldMat[2].w = pos.z;
@@ -896,18 +889,6 @@ glm::mat4 Player::getFPSmat()
 
 void Player::movementAnimationChecks(float dt)
 {
-	// --- Animation checks ---
-	bool animGroundedLast = animGrounded;
-	if (grounded == false)
-		animAirTimer += dt;
-	else
-	{
-		animAirTimer = 0;
-		animGrounded = true;
-	}
-	if (animAirTimer > 0.3f)
-		animGrounded = false;
-
 	if (grounded)
 	{
 		//Run checks
@@ -989,9 +970,22 @@ void Player::movementAnimationChecks(float dt)
 		
 		
 	}
-
 	animGroundedLast = grounded;
 
+	//death checks
+	if (isDead != animLastDead)
+	{
+		if(isDead)
+			animOverideIfPriority(anim_third_current, AnimationState::third_primary_death);
+		else
+		{
+			anim_third_current = AnimationState::none;
+			anim_first_current = AnimationState::none;
+			anim_third_framePeak = AnimationState::none;
+			anim_first_framePeak = AnimationState::none;
+		}
+	}
+	animLastDead = isDead;
 
 	animOverideIfPriority(anim_third_framePeak, anim_third_current);
 	animOverideIfPriority(anim_first_framePeak, anim_first_current);

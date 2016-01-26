@@ -20,6 +20,7 @@ public:
 		float timepass;
 		float timeLength;
 		bool timeout;
+		bool firstPerson;
 
 		animState()
 		{
@@ -31,16 +32,17 @@ public:
 			timepass = 0;
 			timeLength = 0;
 			timeout = false;
+			firstPerson = false;
 		}
 	};
 
 	//save states for all players
 	animState animStates[20];
 
-	void updateAnimStates(int playerID, int role, AnimationState current, float dt);
+	void updateAnimStates(int playerID, int role, AnimationState current, float dt, bool firstPerson);
 	
 private:
-	void setAnim(animState& current, AnimationState overide);
+	void setAnim(animState& current, AnimationState overide, bool firstPerson);
 };
 
 #endif

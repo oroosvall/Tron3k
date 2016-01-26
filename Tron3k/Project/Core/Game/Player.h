@@ -74,6 +74,8 @@ private:
 	int animRole = 0;
 	int animPrimary = true;
 	void movementAnimationChecks(float dt);
+	void peakAnimsUpdate();
+	bool animLastDead = false;
 
 	bool isLocalPlayer;
 

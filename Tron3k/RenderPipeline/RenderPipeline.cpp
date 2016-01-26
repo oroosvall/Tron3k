@@ -494,6 +494,12 @@ void RenderPipeline::renderAnimation(int playerID, int roleID, void* world, Anim
 {
 	glUseProgram(animationShader);
 
+	if (animState == AnimationState::third_primary_jump_begin)
+		int debug = 3;
+
+	if (animState == AnimationState::third_primary_air)
+   		int debug = 3;
+
 	//Glow values for player
 	glProgramUniform1f(animationShader, uniformStaticGlowIntensityLocation[1], sgInten);
 	glProgramUniform3fv(animationShader, uniformDynamicGlowColorLocation[1], 1, (GLfloat*)&dgColor[0]);
@@ -507,11 +513,10 @@ void RenderPipeline::renderAnimation(int playerID, int roleID, void* world, Anim
 	//set temp objects worldmat
 	glProgramUniformMatrix4fv(animationShader, worldMat[1], 1, GL_FALSE, (GLfloat*)world);
 
-	anims.updateAnimStates(playerID, roleID, animState, delta);
+	anims.updateAnimStates(playerID, roleID, animState, delta, first);
 
-	contMan.renderPlayer(anims.animStates[playerID], *(glm::mat4*)world, uniformKeyMatrixLocation, first);
-	
-	
+	if (anims.animStates[playerID].state != AnimationState::none && anims.animStates[playerID].frameEnd > 0)
+		contMan.renderPlayer(anims.animStates[playerID], *(glm::mat4*)world, uniformKeyMatrixLocation, first);
 }
 
 bool RenderPipeline::setSetting(PIPELINE_SETTINGS type, PipelineValues value)
