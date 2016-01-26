@@ -307,26 +307,27 @@ void Map::loadMap(std::string mapName)
 
 }
 
-int Map::getChunkID(glm::vec3 oldPos, glm::vec3 newPos)
+int Map::portalintersection(glm::vec3* oldPos, glm::vec3* newPos, int in_currentChunk)
 {
-	vec3 dir = newPos - oldPos;
+	vec3 dir = *newPos - *oldPos;
 	float len = length(dir);
 	dir = normalize(dir);
 
-	for (size_t n = 0; n < chunks[currentChunk].portals.size(); n++)
-		if (chunks[currentChunk].portals[n].intersects(oldPos, dir, len))
+	for (size_t n = 0; n < chunks[in_currentChunk].portals.size(); n++)
+		if (chunks[in_currentChunk].portals[n].intersects(*oldPos, dir, len))
 		{
-			if (chunks[currentChunk].portals[n].bridgedRooms[0] == currentChunk)
-				currentChunk = chunks[currentChunk].portals[n].bridgedRooms[1];
+			if (chunks[in_currentChunk].portals[n].bridgedRooms[0] == in_currentChunk)
+				in_currentChunk = chunks[in_currentChunk].portals[n].bridgedRooms[1];
 			else
-				currentChunk = chunks[currentChunk].portals[n].bridgedRooms[0];
+				in_currentChunk = chunks[in_currentChunk].portals[n].bridgedRooms[0];
 	
-			printf("Now in room %d \n", currentChunk);
+			printf("Now in room %d \n", in_currentChunk);
 	
-			return currentChunk;
+			return in_currentChunk;
 		}
 	
-	return currentChunk;
+	//no intersection
+	return -1;
 }
 
 ChunkCollision* Map::getChunkCollision(int chunkID)

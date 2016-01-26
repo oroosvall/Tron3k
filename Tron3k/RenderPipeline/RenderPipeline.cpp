@@ -301,15 +301,22 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	gBuffer->eyePos.y = y;
 	gBuffer->eyePos.z = z;
 
-	if (contMan.f_portal_culling)
-	{
-		//returns room id, new value if we went though a portal
-		contMan.getPortalID(gBuffer->eyePosLast, gBuffer->eyePos);
-	}
-
 	gBuffer->clearLights();
-
 }
+
+int RenderPipeline::portalIntersection(float* pos1, float* pos2, int in_chunk)
+{
+	if (contMan.f_portal_culling)
+		return contMan.getPortalID((vec3*)pos1, (vec3*)pos2, in_chunk);
+	else
+		return -1;
+}
+
+void RenderPipeline::setCullingCurrentChunkID(int roomID)
+{
+	contMan.setRoomID(roomID);
+}
+
 void RenderPipeline::addLight(SpotLight* newLight)
 {
 	gBuffer->pushLights(newLight, 1);

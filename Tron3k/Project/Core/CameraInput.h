@@ -66,6 +66,8 @@ public:
 	void getAngles(float &vertical, float &horizontal) { vertical = angleV; horizontal = angleH; };
 
 	static void release();
+
+	int roomID = 0;
 };
 
 #endif

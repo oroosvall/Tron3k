@@ -35,6 +35,8 @@ private:
 	bool lockControls = false;
 	bool noclip = false;
 
+	bool justRespawned = false; // used for culling
+
 	bool footstepsLoop = false;
 	float footstepsCountdown = 0;
 	std::string name;
@@ -166,7 +168,8 @@ public:
 
 	void setRole(Role role);
 
-	void respawn(glm::vec3 respawnPos, glm::vec3 dir);
+	void respawn(glm::vec3 respawnPos, glm::vec3 dir, int roomID);
+	bool getJustRespawned() { return justRespawned; };
 
 	void healing(int amount);
 
@@ -176,6 +179,8 @@ public:
 
 	bool searchModifier(MODIFIER_TYPE search);
 	Modifier* searchModifierGet(MODIFIER_TYPE search);
+
+	int roomID;
 };
 
 #endif

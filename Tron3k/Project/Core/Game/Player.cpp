@@ -388,6 +388,8 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			//If freecam or spectating dont take player move input
 			if (freecam == false)
 			{
+				roomID = cam->roomID;
+
 				dir = cam->getDir();
 				vec2 tempvec = vec2(0, 0);
 
@@ -637,6 +639,8 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		{
 			cam->setCam(pos, dir);
 
+			cam->roomID = roomID;
+
 			if (GetSoundActivated())
 			{
 				GetSound()->setLocalPlayerPos(cam->getPos());
@@ -854,8 +858,10 @@ void Player::setRole(Role role)
 	addModifier(MODIFIER_TYPE::TRAPPERSHAREAMMO);
 }
 
-void Player::respawn(glm::vec3 respawnPos, glm::vec3 _dir)
+void Player::respawn(glm::vec3 respawnPos, glm::vec3 _dir, int _roomID)
 {
+	_roomID = 10;
+
 	//reset matrix
 	worldMat = mat4();
 	rotatePlayer(vec3(0, 0, 1), _dir);
@@ -872,6 +878,14 @@ void Player::respawn(glm::vec3 respawnPos, glm::vec3 _dir)
 	isDead = false;
 	cleanseModifiers();
 	role.returnToLife();
+
+	roomID = _roomID;
+	printf("Now in room %d", _roomID);
+
+	if (isLocalPlayer)
+		cam->roomID = _roomID;
+
+	justRespawned = true;
 }
 
 void Player::healing(int amount)

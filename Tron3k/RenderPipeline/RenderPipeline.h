@@ -138,6 +138,9 @@ public:
 	virtual int getNrOfWorldBoxes();
 	virtual void setRenderFlag(RENDER_FLAGS flag);
 
+	virtual int portalIntersection(float* pos1, float* pos2, int in_chunk);
+	virtual void setCullingCurrentChunkID(int roomID);
+
 };
 
 

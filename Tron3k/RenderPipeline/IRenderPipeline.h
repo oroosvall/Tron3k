@@ -97,6 +97,9 @@ public:
 	virtual int getNrOfWorldBoxes() = 0;
 	virtual void setRenderFlag(RENDER_FLAGS flag) = 0;
 	virtual void getSpawnpoints(std::vector < std::vector < SpawnpointG > > &spoints) = 0;
+
+	virtual int portalIntersection(float* pos1, float* pos2, int in_chunk) = 0;
+	virtual void setCullingCurrentChunkID(int roomID) = 0;
 };
 
 extern "C" ENGINE_API IRenderPipeline* CreatePipeline();

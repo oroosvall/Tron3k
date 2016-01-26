@@ -65,6 +65,8 @@ void ContentManager::init()
 			renderNextChunks[n] = false;
 		}
 	}
+	else
+		f_portal_culling = false;
 
 	glGenQueries(1, &portalQuery);
 	
@@ -320,4 +322,9 @@ void ContentManager::bindLightwalTexture()
 {
 	glActiveTexture(GL_TEXTURE0);
 	//glBindTexture(GL_TEXTURE_2D, textures[12].textureID);
+}
+
+void ContentManager::setRoomID(int room)
+{
+	testMap.currentChunk = room;
 }
