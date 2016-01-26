@@ -92,8 +92,6 @@ private:
 
 	void rotatePlayer(vec3 olddir, vec3 newdir);
 	void reloadCurrentWeapon();
-
-	void sortCollisionNormals();
 public:
 	Player();
 	~Player();
@@ -157,7 +155,7 @@ public:
 			collisionNormals[collisionNormalSize] = cn; collisionNormalSize++;}
 		};
 
-	void setVelocity(glm::vec3 velocity) { vel = velocity; };
+	void setVelocity(glm::vec3 velocity) { vel = velocity; if (!grounded) airVelocity = velocity; };
 	glm::vec3 getVelocity() { return vel; };
 	glm::vec3 getAirVelocity() { return airVelocity; };
 

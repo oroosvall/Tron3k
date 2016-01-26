@@ -50,22 +50,6 @@ void Player::setGoalDir(glm::vec3 newDir)
 	oldDir = dir;
 }
 
-void Player::sortCollisionNormals()
-{
-	for (int i = 0; i < collisionNormalSize; i++)
-	{
-		for (int j = i+1; j < collisionNormalSize; j++)
-		{
-			if (collisionNormals[j] == collisionNormals[i])
-			{
-				collisionNormals[j] = collisionNormals[collisionNormalSize - 1];
-				collisionNormalSize--;
-				j--;
-			}
-		}
-	}
-}
-
 void Player::setCollisionInfo(std::vector<glm::vec4> collNormals)
 {
 	if (collNormals.size() < 20 - collisionNormalSize)
@@ -77,8 +61,6 @@ void Player::setCollisionInfo(std::vector<glm::vec4> collNormals)
 
 		collisionNormalSize += collNormals.size();
 	}
-
-	sortCollisionNormals();
 }
 
 void Player::setExplodingInfo(std::vector<glm::vec4> expDirs)
@@ -93,7 +75,6 @@ void Player::setExplodingInfo(std::vector<glm::vec4> expDirs)
 
 void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingThis)
 {
-
 	if (!this->getFootsteps())
 	{
 		this->footstepsLoopReset(dt);
@@ -156,8 +137,8 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 	int * collS = &collisionNormalSize;
 	if (collisionNormalSize > 0)
 	{
-		if (collisionNormalSize > 1)
-			int cp = 1;
+		if (!grounded)
+			int fuck = 4;
 		collided = true;
 
 		bool ceiling = false;
@@ -177,16 +158,18 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 			}
 
 			// abslut value, if two collisions from the same angle they should not move us twice the distance
-			posadjust.x += pendepth.x;
+			if (abs(posadjust.x) < abs(pendepth.x))
+				posadjust.x = pendepth.x;
 			if (posadjust.y * posadjust.y < pendepth.y * pendepth.y)
 				posadjust.y = pendepth.y;
-			posadjust.z += pendepth.z;
+			if (abs(posadjust.z) < abs(pendepth.z))
+				posadjust.z = pendepth.z;
 		}
 
 		// this is for air only since grounded will set the vel to 0 later
 		// the dt * 0.5 is supposed to remove almost all velocity in that dir
 		// while + posajust w/o  /dt  will remove it slower
-		posadjust = posadjust * 0.99f;
+		posadjust = posadjust;// *0.99f;
 		vel += posadjust;// / dt * 0.5f;
 
 		if (ceiling)
@@ -371,12 +354,6 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		if (noclip)
 			vel *= 0;
 
-		//grounded printf
-		//if (grounded)
-		//	printf("ground \n");
-		//else
-		//	printf("air \n");
-
 		//friction
 		//if (grounded)
 		//{
@@ -414,7 +391,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				dir = cam->getDir();
 				vec2 tempvec = vec2(0, 0);
 
-				if (!collided)//IN THE AIR YO
+				if (!grounded)//IN THE AIR YO
 				{
 					/*
 					Att lägga till: Kolla så att hastigheten I DEN GIVNA RIKTNINGEN
@@ -443,17 +420,13 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 						{
 							vec3 left = cross(vec3(0, 1, 0), dir);
 							if (length(left) > 0)
-							{
-								airVelocity += normalize(left)*dt*0.3f;
-							}
+								airVelocity += normalize(left)*dt*0.4f;
 						}
 						if (i->getKeyInfo(GLFW_KEY_D))
 						{
 							vec3 right = cross(dir, vec3(0, 1, 0));
 							if (length(right) > 0)
-							{
-								airVelocity += normalize(right)*dt*0.3f;
-							}
+								airVelocity += normalize(right)*dt*0.4f;
 						}
 					}
 
