@@ -51,11 +51,11 @@ void Game::init(int max_connections, int state)
 
 	loadRoles();
 	initPhysics();
-	if(GetSoundActivated())
+	if (GetSoundActivated())
 	{
 		GetSound()->playMapSounds();
 	}
-	
+
 	gameState = state;
 
 	playerList = new Player*[max_con];
@@ -182,24 +182,24 @@ void Game::update(float dt)
 			bool spectating = false;
 			if (playerList[c]->isLocal())
 			{
-				
+
 				if (spectateID > -1)
 				{
 					spectating = true;
 					if (c == spectateID)
 						spectatingThis = true;
 				}
-				
+
 			}
 			playerList[c]->movementUpdates(dt, freecam, spectatingThis, spectating);
-			
+
 			//TODO: Send collision results to player
 		}
 	}
 
 
 
-	
+
 
 	for (unsigned int i = 0; i < EFFECT_TYPE::NROFEFFECTS; i++)
 	{
@@ -236,7 +236,7 @@ void Game::update(float dt)
 			{
 				removeEffect(EFFECT_TYPE(i), c);
 			}
-			
+
 		}
 	}
 }
@@ -460,7 +460,7 @@ void Game::checkPlayerVEffectCollision()
 
 		std::vector<glm::vec4> collNormalWalls;
 		std::vector<glm::vec4> collNormalDomes;
-		
+
 		for (int c = 0; c < effects[EFFECT_TYPE::LIGHT_WALL].size(); c++)
 		{
 			int eid = -1, pid = -1;
@@ -472,7 +472,7 @@ void Game::checkPlayerVEffectCollision()
 				collNormals.insert(collNormals.end(), collNormalWalls.begin(), collNormalWalls.end());
 				collNormalWalls.clear();
 			}
-			
+
 		}
 
 		for (int c = 0; c < effects[EFFECT_TYPE::THUNDER_DOME].size(); c++)
@@ -499,20 +499,27 @@ void Game::checkPlayerVEffectCollision()
 	{
 		//Collision for all non-wall effects
 		std::vector<vec4> explosColls;
-		for (int i = 0; i < effects[EFFECT_TYPE::EXPLOSION].size(); i++)
+		collNormals.clear();
+		for (int j = 0; j < max_con; j++)
 		{
-			int eid = -1, pid = -1;
-			effects[EFFECT_TYPE::THUNDER_DOME][i]->getId(pid, eid);
-			for (int j = 0; j < max_con; j++)
+			if (playerList[j] != nullptr)
 			{
-				if (playerList[j] != nullptr)
+				for (int i = 0; i < effects[EFFECT_TYPE::EXPLOSION].size(); i++)
 				{
+					int eid = -1, pid = -1;
+					effects[EFFECT_TYPE::EXPLOSION][i]->getId(pid, eid);
+
+
 					explosColls = physics->checkPlayerVEffectCollision(playerList[j]->getPos(), EFFECT_TYPE::EXPLOSION, eid);
 					collNormals.reserve(explosColls.size()); // preallocate memory
 					collNormals.insert(collNormals.end(), explosColls.begin(), explosColls.end());
 					explosColls.clear();
 				}
+
+				playerList[j]->setCollisionInfo(collNormals);
+				collNormals.clear();
 			}
+
 		}
 	}
 }
@@ -1003,7 +1010,7 @@ void Game::addEffectToList(int conID, int effectId, EFFECT_TYPE et, glm::vec3 po
 		e = new LightwallEffect(p);
 		if (GetSoundActivated())
 			GetSound()->playExternalSound(SOUNDS::soundEffectLightWall, pos.x, pos.y, pos.z);
-		
+
 		break;
 	case EFFECT_TYPE::EXPLOSION:
 		e = new Explosion();
@@ -1093,7 +1100,7 @@ void Game::bounceBullet(BulletHitWorldInfo hwi, Bullet* theBullet)
 	if (combinedNormal2 != glm::vec3(0, 0, 0))
 	{
 		combinedNormal2 = normalize(combinedNormal2);
-		
+
 		theBullet->setDir(reflect(theBullet->getDir(), combinedNormal2));
 
 		//use pendepth to set a new pos 
@@ -1171,7 +1178,7 @@ void Game::handleBulletHitEffectEvent(BulletHitEffectInfo hi)
 		switch (hi.bt)
 		{
 		case BULLET_TYPE::PULSE_SHOT:
-			removeBullet(hi.bt, arraypos);			
+			removeBullet(hi.bt, arraypos);
 			break;
 		case BULLET_TYPE::PLASMA_SHOT:
 			removeBullet(hi.bt, arraypos);
