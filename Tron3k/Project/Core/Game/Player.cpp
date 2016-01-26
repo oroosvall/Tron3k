@@ -402,7 +402,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					{
 						//if (length(glm::vec2(airVelocity.x, airVelocity.z)) < role.getMovementSpeed()*0.1f)
 						//{
-							airVelocity += normalize(glm::vec3(dir.x, 0, dir.z))*dt*0.3f;
+							vel += normalize(glm::vec3(dir.x, 0, dir.z))*dt*0.3f;
 						//}
 					}
 
@@ -410,7 +410,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					{
 						//if (length(glm::vec2(airVelocity.x, airVelocity.z)) < role.getMovementSpeed()*0.1f)
 						//{
-							airVelocity -= normalize(glm::vec3(dir.x, 0, dir.z))*dt*0.3f;
+							vel -= normalize(glm::vec3(dir.x, 0, dir.z))*dt*0.3f;
 						//}
 					}
 
@@ -420,18 +420,15 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 						{
 							vec3 left = cross(vec3(0, 1, 0), dir);
 							if (length(left) > 0)
-								airVelocity += normalize(left)*dt*0.4f;
+								vel += normalize(left)*dt*0.4f;
 						}
 						if (i->getKeyInfo(GLFW_KEY_D))
 						{
 							vec3 right = cross(dir, vec3(0, 1, 0));
 							if (length(right) > 0)
-								airVelocity += normalize(right)*dt*0.4f;
+								vel += normalize(right)*dt*0.4f;
 						}
 					}
-
-					vel.x = airVelocity.x;
-					vel.z = airVelocity.z;
 				}
 				else if (grounded)
 				{
