@@ -509,14 +509,15 @@ void Game::checkPlayerVEffectCollision()
 					int eid = -1, pid = -1;
 					effects[EFFECT_TYPE::EXPLOSION][i]->getId(pid, eid);
 
-
-					explosColls = physics->checkPlayerVEffectCollision(playerList[j]->getPos(), EFFECT_TYPE::EXPLOSION, eid);
-					collNormals.reserve(explosColls.size()); // preallocate memory
-					collNormals.insert(collNormals.end(), explosColls.begin(), explosColls.end());
-					explosColls.clear();
+					//if (pid != j)
+					{
+						explosColls = physics->checkPlayerVEffectCollision(playerList[j]->getPos(), EFFECT_TYPE::EXPLOSION, eid);
+						collNormals.reserve(explosColls.size()); // preallocate memory
+						collNormals.insert(collNormals.end(), explosColls.begin(), explosColls.end());
+						explosColls.clear();
+					}
 				}
-
-				playerList[j]->setCollisionInfo(collNormals);
+				playerList[j]->setExplodingInfo(collNormals);
 				collNormals.clear();
 			}
 
@@ -1334,6 +1335,18 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(10.0f);
 			if (GetSoundActivated())
 				GetSound()->playExternalSound(SOUNDS::soundEffectClusterlingExplosion, parent->getPos().x, parent->getPos().y, parent->getPos().z);
+
+			//This is where you send it to physics
+			std::vector<float> eBox;
+			eBox.push_back(parent->getPos().x);
+			eBox.push_back(parent->getPos().y);
+			eBox.push_back(parent->getPos().z);
+			eBox.push_back(20);
+
+			int pid, eid;
+			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->getId(pid, eid);
+
+			physics->receiveEffectBox(eBox, EFFECT_TYPE::EXPLOSION, pid, eid);
 			break;
 		}
 		case BULLET_TYPE::CLEANSE_BOMB:

@@ -81,6 +81,16 @@ void Player::setCollisionInfo(std::vector<glm::vec4> collNormals)
 	sortCollisionNormals();
 }
 
+void Player::setExplodingInfo(std::vector<glm::vec4> expDirs)
+{
+	if (expDirs.size() > 0)
+	{
+		//pos += normalize(vec3(expDirs[0])) / expDirs[0].w;
+		vel *= glm::vec3(expDirs[0].x, 0.0f, expDirs[0].z) * expDirs[0].w;
+		vel.y = 5.0f; //Jump height at initial dash
+	}
+}
+
 void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingThis)
 {
 
