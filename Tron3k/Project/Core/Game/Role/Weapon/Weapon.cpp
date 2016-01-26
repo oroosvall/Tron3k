@@ -34,20 +34,19 @@ int Weapon::getBulletId()
 
 void Weapon::countDownFiringSpeed(float dt)
 {
-	if (firingSpeedCurrentDelay > FLT_EPSILON)
+	if (firingSpeedCurrentDelay >= 0)
 	{
 		firingSpeedCurrentDelay -= dt;
 	}
 }
 void Weapon::countDownReloadTimer(float dt)
 {
-	if (rldTimer > FLT_EPSILON) //Tick dat reloadtimer down boi
+	if (rldTimer >= 0) //Tick dat reloadtimer down boi
 	{
 		rldTimer -= dt;
-		if (rldTimer < FLT_EPSILON) //Reload complete
+		if (rldTimer <= 0) //Reload complete
 		{
 			currentClipAmmo = maxClipSize;
-			firingSpeedCurrentDelay = 0.0f;
 		}
 	}
 }
