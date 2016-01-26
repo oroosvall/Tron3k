@@ -106,13 +106,19 @@ struct PLANE
 	{
 		float denom = dot(n, dir);
 
-		if (length(denom) > FLT_EPSILON)
+		float d2 = length(denom);
+		if (d2 > FLT_EPSILON)
 		{
-			float t = dot((p[0] - origin), n) / denom;
+			vec3 d = p[0]-origin;
+			vec3 dn = normalize(d);
+			float t = dot(dn, n);
+			t /= denom;
 
-			if (t >= 0) //if we traveled away from the portal
+			if (t > 0) //if we traveled away from the portal
 			{
-				if (len >= t) //if we traveled far enough to cross the plane
+				t = dot(d, n);
+				t /= denom;
+				if (len+FLT_EPSILON >= t-FLT_EPSILON) //if we traveled far enough to cross the plane
 				{
 					//check if the intersection is within the portal
 					vec3 inter = origin + t * dir;

@@ -156,11 +156,12 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 		// this is for air only since grounded will set the vel to 0 later
 		// the dt * 0.5 is supposed to remove almost all velocity in that dir
 		// while + posajust w/o  /dt  will remove it slower
+		posadjust = posadjust * 0.99f;
 		vel += posadjust;// / dt * 0.5f;
 
 		if (ceiling)
 			posadjust.y = 0;
-		posadjust = posadjust * 0.99f;
+		
 		pos += posadjust;
 
 		if (ceiling && vel.y > 0)
@@ -294,6 +295,16 @@ bool Player::removeSpecificModifier(MODIFIER_TYPE mt)
 PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool spectating)
 {
 	PLAYERMSG msg = NONE;
+
+	if (grounded)
+		int x = 0;
+	else
+		int x = 1;
+
+	if (collided)
+		int x = 0;
+	else
+		int x = 1;
 
 	modifiersGetData(dt); //Dont Remove Please!
 
