@@ -1058,7 +1058,7 @@ void Core::renderWorld(float dt)
 		renderPipe->renderIni();
 
 		//Culling
-		//handleCulling();
+		handleCulling();
 
 		float dgColor[3];
 		//render skybox
@@ -1226,7 +1226,7 @@ void Core::handleCulling()
 		int newRoom = renderPipe->portalIntersection((float*)&lastCampos, (float*)&cam->getPos(), cam->roomID);
 		if (newRoom != -1)
 			cam->roomID = newRoom;
-
+	
 		if (game->freecam == false)
 		{
 			//will set local players roomID to same as cam in player update
@@ -1238,12 +1238,12 @@ void Core::handleCulling()
 				p = game->getPlayer(0);
 			else
 				p = game->getPlayer(top->getConId());
-
+	
 			if (p)
 			{
 				if (p->getJustRespawned())
 					lastPlayerPos = p->getPos();
-
+	
 				newRoom = renderPipe->portalIntersection((float*)&lastPlayerPos, (float*)&p->getPos(), p->roomID);
 				if (newRoom != -1)
 					p->roomID = newRoom;
@@ -1251,9 +1251,9 @@ void Core::handleCulling()
 			}
 		}
 	}
-
+	
 	lastCampos = cam->getPos();
-
+	
 	renderPipe->setCullingCurrentChunkID(cam->roomID);
 }
 
