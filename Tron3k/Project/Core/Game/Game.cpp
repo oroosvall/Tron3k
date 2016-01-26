@@ -1067,7 +1067,7 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 				GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHit, pos.x, pos.y, pos.z);
 		int bulletPosInArray;
 		Bullet* theBullet = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, bulletPosInArray);
-		p->hitByBullet(theBullet, hi.newHPtotal);	//Add support for hacking dart
+		p->hitByBullet(theBullet, hi.newHPtotal);
 
 		removeBullet(hi.bt, bulletPosInArray);
 
