@@ -68,8 +68,9 @@ void Player::setExplodingInfo(std::vector<glm::vec4> expDirs)
 	if (expDirs.size() > 0)
 	{
 		//pos += normalize(vec3(expDirs[0])) / expDirs[0].w;
-		vel *= glm::vec3(expDirs[0].x, 0.0f, expDirs[0].z) * expDirs[0].w;
-		vel.y = 5.0f; //Jump height at initial dash
+		vel *= normalize(glm::vec3(expDirs[0].x, expDirs[0].y, expDirs[0].z));// *expDirs[0].w;
+		vel.y = +5.0f; //Jump height at initial dash
+		grounded = false;
 	}
 }
 
