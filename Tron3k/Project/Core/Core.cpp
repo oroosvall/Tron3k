@@ -717,7 +717,7 @@ void Core::roamHandleCmds()
 			{
 				int team = stoi(token);
 				game->addPlayerToTeam(0, team, 0);
-				game->allowPlayerRespawn(0, 0); //Add new spawn point probably
+				game->allowPlayerRespawn(0, 0);
 				if (team != 0)
 					game->freecam = false;
 				else
@@ -741,18 +741,20 @@ void Core::roamHandleCmds()
 		}
 		else if (token == "/role")
 		{
-			ss >> token;
-			int role = stoi(token);
-			if (role < 1 || role > 5)
-				console.printMsg("Invalid role. Use /role <1-5>", "System", 'S');
-			else
+			if (token != "/role" || token == "1" || token == "2" || token == "3" || token == "4"|| token == "5")
 			{
+				ss >> token;
+				int role = stoi(token);
 				game->getPlayer(0)->getRole()->chooseRole(role - 1);
 				game->sendPlayerRadSize(game->getPlayer(0)->getRole()->getBoxRadius());
 				if (role == TRAPPER)
 					game->getPlayer(0)->addModifier(MODIFIER_TYPE::TRAPPERSHAREAMMO);
 				console.printMsg("You switched class!", "System", 'S');
+			
 			}
+			else 
+				console.printMsg("Invalid role. Use /role <1-5>", "System", 'S');
+
 		}
 		//render commands
 		else if (token == "/rs")

@@ -479,43 +479,39 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				}
 
 				role.update(dt);		//Temp?
-
-				if (i->justPressed(GLFW_KEY_R))
+				if (!role.getIfBusy())
 				{
-					if (!role.getIfBusy())
+					if (i->justPressed(GLFW_KEY_R))
 					{
 						reloadCurrentWeapon();
 					}
-				}
 
-				if (i->justPressed(GLFW_KEY_1))
-				{
-					if (!role.getIfBusy() && role.getWeaponNRequiped() != 0)
+					if (i->justPressed(GLFW_KEY_1))
 					{
-						role.swapWeaponLocal(0);
-						msg = WPNSWITCH;
-						animOverideIfPriority(anim_first_current, AnimationState::first_primary_switch);
-						if (animRole == ROLES::MANIPULATOR || animRole == ROLES::BRUTE)
-							animOverideIfPriority(anim_third_current, AnimationState::third_secondary_switch);
+						if (role.getWeaponNRequiped() != 0)
+						{
+							role.swapWeaponLocal(0);
+							msg = WPNSWITCH;
+							animOverideIfPriority(anim_first_current, AnimationState::first_primary_switch);
+							if (animRole == ROLES::MANIPULATOR || animRole == ROLES::BRUTE)
+								animOverideIfPriority(anim_third_current, AnimationState::third_secondary_switch);
+						}
 					}
-				}
 
-				if (i->justPressed(GLFW_KEY_2))
-				{
-					if (!role.getIfBusy() && role.getWeaponNRequiped() != 1)
+					if (i->justPressed(GLFW_KEY_2))
 					{
-						role.swapWeaponLocal(1);
-						msg = WPNSWITCH;
-						animOverideIfPriority(anim_first_current, AnimationState::first_primary_switch);
-						if (animRole == ROLES::MANIPULATOR || animRole == ROLES::BRUTE)
-							animOverideIfPriority(anim_third_current, AnimationState::third_primary_switch);
+						if (role.getWeaponNRequiped() != 1)
+						{
+							role.swapWeaponLocal(1);
+							msg = WPNSWITCH;
+							animOverideIfPriority(anim_first_current, AnimationState::first_primary_switch);
+							if (animRole == ROLES::MANIPULATOR || animRole == ROLES::BRUTE)
+								animOverideIfPriority(anim_third_current, AnimationState::third_primary_switch);
 
+						}
 					}
-				}
 
-				if (i->getKeyInfo(GLFW_MOUSE_BUTTON_LEFT))		//Temp
-				{
-					if (!role.getIfBusy())
+					if (i->getKeyInfo(GLFW_MOUSE_BUTTON_LEFT))		//Temp
 					{
 						if (role.getCurrentWeapon()->shoot())
 						{
@@ -527,21 +523,19 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 							reloadCurrentWeapon();
 						}
 					}
-				}
 
-				if (i->justPressed(GLFW_KEY_Q))
-				{
-					if (!role.getIfBusy())
+					if (i->justPressed(GLFW_KEY_Q))
 					{
+
 						Consumable* c = role.getConsumable();
 						if (c->use())
 						{
 							msg = USEITEM;
 							animOverideIfPriority(anim_first_current, AnimationState::first_primary_throw);
 						}
+
 					}
 				}
-
 				if (i->justPressed(GLFW_KEY_E))
 				{
 					/*
