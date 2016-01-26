@@ -132,7 +132,7 @@ int SoundPlayer::playMapSounds()
 			mapSounds[0].setMinDistance(5.0f);
 			mapSounds[1].setBuffer(soundList[SOUNDS::BreakingOutBass]);
 			mapSounds[1].setPosition(44, 1.55, 100);
-			mapSounds[1].setVolume(45);
+			mapSounds[1].setVolume(55);
 			mapSounds[1].setAttenuation(80);
 			mapSounds[1].setMinDistance(25.0f);
 			mapSounds[2].setBuffer(soundList[SOUNDS::soundEffectAlarm]);
