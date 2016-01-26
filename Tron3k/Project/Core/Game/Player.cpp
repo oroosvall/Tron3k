@@ -715,7 +715,7 @@ void Player::reloadCurrentWeapon()
 		if(animPrimary)
 			animOverideIfPriority(anim_first_current, AnimationState::first_primary_reload);
 		else
-			animOverideIfPriority(anim_first_current, AnimationState::first_secondary_fire);
+			animOverideIfPriority(anim_first_current, AnimationState::first_primary_reload);
 	}
 }
 
