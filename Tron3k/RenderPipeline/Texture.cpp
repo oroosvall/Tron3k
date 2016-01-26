@@ -104,7 +104,7 @@ bool DDSTexture::uploadTexture(GLuint &id)
 	return true;
 }
 
-GLuint loadTexture(std::string texturePath)
+GLuint loadTexture(std::string texturePath, bool PNGuploadComrpess)
 {
 	int x;
 	int y;
@@ -134,7 +134,7 @@ GLuint loadTexture(std::string texturePath)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 1);
 
 		if(x > 0 && y > 0)
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA_S3TC_DXT5_EXT, x, y, 0, GL_RGBA, GL_UNSIGNED_BYTE, (void*)image);
+			glTexImage2D(GL_TEXTURE_2D, 0, PNGuploadComrpess ? GL_COMPRESSED_RGBA_S3TC_DXT5_EXT : GL_RGBA, x, y, 0, GL_RGBA, GL_UNSIGNED_BYTE, (void*)image);
 		else
 		{
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);

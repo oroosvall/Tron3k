@@ -38,6 +38,7 @@ enum SOUNDS
 	soundEffectNeonSign,
 	soundEffectClusterlingExplosion,
 	soundEffectCrows,
+	BreakingOutBass,
 
 	soundEffectDestroyerStart,
 	soundEffectDestroyerStop,

@@ -10,5 +10,5 @@ uniform mat4 view;
 void main () 
 {
 	UVCord = UV;
-	gl_Position =  view * (vec4(vertex_position, 1.0f) * worldMat);
+	gl_Position =  vec4(vertex_position, 1.0f);
 }

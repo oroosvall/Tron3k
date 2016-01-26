@@ -118,6 +118,22 @@ void Game::initPhysics()
 
 void Game::update(float dt)
 {
+	//some things need to be done before movement, some after
+	if (gameState == Gamestate::ROAM)
+	{
+		checkPlayerVEffectCollision();
+	}
+
+	if (gameState == Gamestate::CLIENT)
+	{
+		checkPlayerVEffectCollision();
+	}
+
+	if (gameState == Gamestate::SERVER)
+	{
+		checkPlayerVEffectCollision();
+	}
+
 	for (int c = 0; c < max_con; c++)
 	{
 		if (playerList[c] != nullptr)
@@ -509,7 +525,7 @@ void Game::checkPlayerVEffectCollision()
 					int eid = -1, pid = -1;
 					effects[EFFECT_TYPE::EXPLOSION][i]->getId(pid, eid);
 
-					//if (pid != j)
+					if (pid != j && playerList[pid]->getTeam() != playerList[j]->getTeam())
 					{
 						explosColls = physics->checkPlayerVEffectCollision(playerList[j]->getPos(), EFFECT_TYPE::EXPLOSION, eid);
 						collNormals.reserve(explosColls.size()); // preallocate memory
@@ -862,10 +878,27 @@ void Game::handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm
 		break;
 
 	case WEAPON_TYPE::SHOTGUN:
+	{
 		if (gameState != Gamestate::SERVER)
 			if (GetSound())
 				GetSound()->playExternalSound(SOUNDS::soundEffectShotGun, pos.x, pos.y, pos.z);
-		addBulletToList(conID, bulletId, BULLET_TYPE::SHOTGUN_PELLET, pos, dir);
+		glm::vec3 rightV = cross(dir, vec3(0, 1, 0));
+		glm::vec3 upV = cross(dir, rightV);
+		for (int k = 0; k < 16; k++)
+		{
+			//float xrand = (rand() % 50) / 100.0f - 0.25f;
+			//float yrand = (rand() % 50) / 100.0f - 0.25f;
+			float xoff = glm::sin(k);
+			float yoff = glm::cos(k);
+			float r = (rand() % 100)/1000.0f;
+			rightV *= xoff*r;
+			upV *= yoff*r;
+			glm::vec3 ndir = dir + upV + rightV;
+			addBulletToList(conID, bulletId, BULLET_TYPE::SHOTGUN_PELLET, pos, ndir);
+			rightV = cross(dir, vec3(0, 1, 0));
+			upV = cross(dir, rightV);
+		}
+	}
 		break;
 
 	case WEAPON_TYPE::LINK_GUN:
@@ -967,6 +1000,9 @@ void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec
 		{
 			if (cNorms[c].y < 0.5f && cNorms[c].y > -0.2f)
 			{
+				if (GetSoundActivated())
+					GetSound()->playExternalSound(SOUNDS::soundEffectHunterJump, pos.x, pos.y, pos.z);
+
 				jumped = true;
 				glm::vec3 reflect = normalize(glm::vec3(cNorms[c].x, 0, cNorms[c].z));
 				glm::vec3 vel = p->getAirVelocity();
@@ -1056,16 +1092,19 @@ Bullet* Game::getSpecificBullet(int PID, int BID, BULLET_TYPE bt, int &posInBull
 int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 {
 	glm::vec3 pos = playerList[hi.playerHit]->getPos();
-	if (gameState != Gamestate::SERVER)
-		if (GetSoundActivated())
-			GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHit, pos.x, pos.y, pos.z);
 	Player* p = playerList[hi.playerHit];
-	int bulletPosInArray;
-	Bullet* theBullet = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, bulletPosInArray);
-	p->hitByBullet(theBullet, hi.newHPtotal);	//Add support for hacking dart
+	if (hi.bt != BULLET_TYPE::CLUSTERLING)	//Any bullets that should not detonate on contact
+	{
+		if (gameState != Gamestate::SERVER)
+			if (GetSoundActivated())
+				GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHit, pos.x, pos.y, pos.z);
+		int bulletPosInArray;
+		Bullet* theBullet = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, bulletPosInArray);
+		p->hitByBullet(theBullet, hi.newHPtotal);
 
-	removeBullet(hi.bt, bulletPosInArray);
+		removeBullet(hi.bt, bulletPosInArray);
 
+	}
 	int newHP = p->getHP();
 	return newHP;
 }

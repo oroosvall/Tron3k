@@ -2,7 +2,7 @@
 #define ENGINE_H
 
 #include "IRenderPipeline.h"
-#include "Text\TextObject.h"
+#include "Text\Text.h"
 #include "Camera.h"
 #include "Buffer\GBuffer.h"
 
@@ -36,7 +36,12 @@ private:
 
 	//LightWall lw;
 
-	TextObject* test;
+	Text* debugText;
+
+	GLuint fontTexture;
+
+	GLuint textShader;
+	GLuint textShaderLocation;
 
 	Camera cam;
 
