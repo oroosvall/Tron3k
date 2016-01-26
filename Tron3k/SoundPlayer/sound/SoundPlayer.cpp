@@ -117,11 +117,12 @@ int SoundPlayer::playMapSounds()
 			{
 				return -1;
 			}
-			theCantinaSong.setPosition(10, 5, 10);
-			theCantinaSong.setAttenuation(10);
-			theCantinaSong.setVolume(30);
+			theCantinaSong.setPosition(44, 1.55, 100);
+			theCantinaSong.setAttenuation(50);
+			theCantinaSong.setVolume(20);
 			theCantinaSong.play();
 			theCantinaSong.setLoop(true);
+			theCantinaSong.setMinDistance(10);
 			
 			mapSounds[0].setBuffer(soundList[SOUNDS::soundAids]);
 			mapSounds[0].setPosition(-10, 5, -10);
@@ -142,27 +143,27 @@ int SoundPlayer::playMapSounds()
 			mapSounds[3].setPosition(51, 1.55, 108);
 			mapSounds[3].setVolume(30);
 			mapSounds[3].setAttenuation(3);
-			mapSounds[3].setMinDistance(7.0f);
+			mapSounds[3].setMinDistance(9.0f);
 			mapSounds[4].setBuffer(soundList[SOUNDS::soundEffectFlies]);
 			mapSounds[4].setPosition(-74, 1.55, 30);
 			mapSounds[4].setVolume(30);
 			mapSounds[4].setAttenuation(3);
-			mapSounds[4].setMinDistance(7.0f);
+			mapSounds[4].setMinDistance(9.0f);
 			mapSounds[5].setBuffer(soundList[SOUNDS::soundEffectFrogs]);
 			mapSounds[5].setPosition(-48, 1.55, 72);
-			mapSounds[5].setVolume(6);
+			mapSounds[5].setVolume(10);
 			mapSounds[5].setAttenuation(10);
 			mapSounds[5].setMinDistance(4.0f);
 			mapSounds[6].setBuffer(soundList[SOUNDS::soundEffectCrows]);
 			mapSounds[6].setPosition(35, 1.55, 15);
 			mapSounds[6].setVolume(20);
 			mapSounds[6].setAttenuation(20);
-			mapSounds[6].setMinDistance(30.0f);
+			mapSounds[6].setMinDistance(35.0f);
 			mapSounds[7].setBuffer(soundList[SOUNDS::soundEffectFlies]);
 			mapSounds[7].setPosition(-32, 1.55, 47);
 			mapSounds[7].setVolume(30);
 			mapSounds[7].setAttenuation(3);
-			mapSounds[7].setMinDistance(7.0f);
+			mapSounds[7].setMinDistance(9.0f);
 
 			for (int i = 0; i < MAXSOUNDS; i++)
 			{
@@ -262,8 +263,6 @@ int SoundPlayer::playDestroyer(float x, float y, float z)
 		destroyerSteps.setVolume(50);
 		destroyerSteps.setLoop(true);
 		destroyerSteps.play();
-		nrOfSoundsPlaying++;
-		nrOfSoundsPlaying %= MAXSOUNDS;
 	}
 
 	return 0;
@@ -299,8 +298,6 @@ int SoundPlayer::playDestroyerStop(float x, float y, float z)
 		destroyerStop.setVolume(50);
 		destroyerStop.setLoop(false);
 		destroyerStop.play();
-		nrOfSoundsPlaying++;
-		nrOfSoundsPlaying %= MAXSOUNDS;
 	}
 
 	return 0;
@@ -336,8 +333,6 @@ int SoundPlayer::playDestroyerStart(float x, float y, float z)
 		destroyerStart.setVolume(50);
 		destroyerStart.setLoop(false);
 		destroyerStart.play();
-		nrOfSoundsPlaying++;
-		nrOfSoundsPlaying %= MAXSOUNDS;
 	}
 
 	return 0;
@@ -386,7 +381,6 @@ void SoundPlayer::setLocalPlayerDir(glm::vec3 playerDir)
 
 void SoundPlayer::setLocalPlayerPos(glm::vec3 playerPos)
 {
-	//cout << playerPos.x << "    " << playerPos.z << endl;
 	sf::Listener::setPosition(playerPos.x, playerPos.y, playerPos.z);
 }
 

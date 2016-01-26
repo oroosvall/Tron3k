@@ -967,6 +967,9 @@ void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec
 		{
 			if (cNorms[c].y < 0.5f && cNorms[c].y > -0.2f)
 			{
+				if (GetSoundActivated())
+					GetSound()->playExternalSound(SOUNDS::soundEffectHunterJump, pos.x, pos.y, pos.z);
+
 				jumped = true;
 				glm::vec3 reflect = normalize(glm::vec3(cNorms[c].x, 0, cNorms[c].z));
 				glm::vec3 vel = p->getAirVelocity();
