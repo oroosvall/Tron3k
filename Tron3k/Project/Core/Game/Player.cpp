@@ -888,6 +888,14 @@ bool Player::searchModifier(MODIFIER_TYPE search)
 	return false;
 }
 
+Modifier* Player::searchModifierGet(MODIFIER_TYPE search)
+{
+	for (int i = 0; i < myModifiers.size(); i++)
+		if (myModifiers[i]->getType() == search)
+			return myModifiers[i];
+
+	return nullptr;
+}
 
 glm::mat4 Player::getFPSmat()
 {
@@ -982,6 +990,21 @@ void Player::movementAnimationChecks(float dt)
 		
 	}
 	animGroundedLast = grounded;
+
+	//specal case movement
+	//if (animRole == ROLES::BRUTE)
+	//{
+	//	Modifier* searchmod = searchModifierGet(MODIFIER_TYPE::TRUEGRITMODIFIER);
+	//	if (searchmod != nullptr)
+	//	{
+	//		if ((TrueGrit*)searchmod)
+	//			int k = 3;
+	//	}
+	//}
+
+
+
+
 
 	//death checks
 	if (isDead != animLastDead)

@@ -42,9 +42,13 @@ enum AnimationState
 	third_primary_switch,			//			|			|		   | Brute | Manipulator |
 	third_secondary_switch,			//			|			|		   | Brute | Manipulator |
 
-									//destroyer tracks							 					   	
+									//destroyer only							 					   	
 	third_turn_left,				//			| Destroyer |		   |       |             |
 	third_turn_right,				//			| Destroyer |		   |       |             |
+
+									//brute only
+	third_brute_primary_dash,		//			|			|		   | Brute |			 |
+	third_brute_secondary_dash,		//			|			|		   | Brute |			 |
 
 									//manipulator only
 	third_manipulator_pounce,		//			|			|		   |	   | Manipulator |
@@ -104,6 +108,10 @@ int static getAnimRank(AnimationState test)
 		//destroyer tracks				
 	case third_turn_left:				return 0;
 	case third_turn_right:				return 0;
+
+		//brute 
+	case third_brute_primary_dash:		return 1;
+	case third_brute_secondary_dash:	return 1;
 
 		//manipulator
 	case third_manipulator_pounce:		return 1;

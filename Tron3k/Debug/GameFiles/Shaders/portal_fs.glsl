@@ -9,7 +9,7 @@ layout (location = 4) out vec4 GlowMap;
 
 void main () 
 {
-	float maxlen = 20;
+	float maxlen = 40;
 	float transp = length(dist);
 	
 	if(transp > maxlen)
@@ -20,7 +20,7 @@ void main ()
 	WorldPosOut	= vec4(0);
 	DiffuseOut = vec4(0);
 	NormalOut = vec4(0);
-	GlowMap = vec4(1.25 - transp , 0 , transp, transp / 4);
+	GlowMap = vec4(transp , 0 , transp, transp / 4);
     GlowMap.w = 0.2;
 }
 

@@ -52,28 +52,26 @@ void ContentManager::init()
 
 	testMap.init();
 	nrChunks = testMap.chunks.size();
-	renderedChunks = new bool[nrChunks];
-	renderNextChunks = new bool[nrChunks];
-	for (int n = 0; n < nrChunks; n++)
+	if (nrChunks > 0)
 	{
-		renderedChunks[n] = false;
-		renderNextChunks[n] = false;
+		if(nrChunks == 1)
+			f_portal_culling = false;
+
+		renderedChunks = new bool[nrChunks];
+		renderNextChunks = new bool[nrChunks];
+		for (int n = 0; n < nrChunks; n++)
+		{
+			renderedChunks[n] = false;
+			renderNextChunks[n] = false;
+		}
 	}
+
 	glGenQueries(1, &portalQuery);
 	
 }
 
 void ContentManager::release()
 {
-	
-	//for (size_t i = 0; i < textures.size(); i++)
-	//{
-	//	if (textures[i].textureID != 0)
-	//	{
-	//		glDeleteTextures(1, &textures[i].textureID);
-	//	}
-	//}
-
 	glDeleteTextures(1, &blank_diffuse);
 	glDeleteTextures(1, &blank_normal);
 	glDeleteTextures(1, &blank_glow);
@@ -84,8 +82,11 @@ void ContentManager::release()
 
 	glDeleteQueries(1, &portalQuery);
 
-	//delete[] renderedChunks;
-	//delete[] renderNextChunks;
+	if (nrChunks > 0)
+	{
+		delete[] renderedChunks;
+		delete[] renderNextChunks;
+	}
 
 	skybox.release();
 
@@ -179,9 +180,9 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 				for (int p = 0; p < size; p++) // render the portals
 				{
 					// dont render if it bridges between chunks that are already in the rendernextqueue
-					if (renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[0]] == false ||
-						renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[1]] == false)
-					{
+					//if (renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[0]] == false ||
+					//	renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[1]] == false)
+					//{
 						glBeginQuery(GL_SAMPLES_PASSED, portalQuery);
 						testMap.chunks[n].portals[p].render();
 						GLint passed = 2222;
@@ -193,10 +194,11 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 							renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[0]] = true;
 							renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[1]] = true;
 						}
-					}
+					//}
 				}
 			}
 		}
+		//set enviroment chunk to true
 		renderNextChunks[0] = true;
 		renderNextChunks[testMap.currentChunk] = true;
 	}
@@ -206,7 +208,6 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 		//render collision boxes
 		for (int c = 0; c < nrChunks; c++)
 		{
-
 			ChunkCollision* col = testMap.chunks[c].getChunkCollision();
 
 			float nrABB = col->abbStuff.size();

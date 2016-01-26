@@ -301,8 +301,11 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	gBuffer->eyePos.y = y;
 	gBuffer->eyePos.z = z;
 
-	//returns room id, new value if we went though a portal
-	contMan.getPortalID(gBuffer->eyePosLast, gBuffer->eyePos);
+	if (contMan.f_portal_culling)
+	{
+		//returns room id, new value if we went though a portal
+		contMan.getPortalID(gBuffer->eyePosLast, gBuffer->eyePos);
+	}
 
 	gBuffer->clearLights();
 

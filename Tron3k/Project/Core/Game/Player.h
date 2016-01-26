@@ -175,6 +175,7 @@ public:
 	glm::mat4 getFPSmat();
 
 	bool searchModifier(MODIFIER_TYPE search);
+	Modifier* searchModifierGet(MODIFIER_TYPE search);
 };
 
 #endif

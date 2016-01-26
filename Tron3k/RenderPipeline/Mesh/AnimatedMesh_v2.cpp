@@ -257,6 +257,9 @@ int* AnimatedMeshV2::loadAnimations(std::string character)
 	animations[AnimationState::third_primary_switch			].load(file + "_third_primary_switch.bin");
 	animations[AnimationState::third_secondary_switch		].load(file + "_third_secondary_switch.bin");
 																				
+	animations[AnimationState::third_brute_primary_dash		].load(file + "_Third_Primary_Dash.bin");
+	animations[AnimationState::third_brute_secondary_dash	].load(file + "_Third_Secondary_Dash.bin");
+
 	animations[AnimationState::third_turn_left				].load(file + "_third_turn_left.bin");
 	animations[AnimationState::third_turn_right				].load(file + "_third_turn_right.bin");
 																					
