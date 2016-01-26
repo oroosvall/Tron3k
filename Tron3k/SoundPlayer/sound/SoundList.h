@@ -36,6 +36,8 @@ enum SOUNDS
 	soundEffectFlies,
 	soundEffectFrogs,
 	soundEffectNeonSign,
+	soundEffectClusterlingExplosion,
+	soundEffectCrows,
 
 	soundEffectDestroyerStart,
 	soundEffectDestroyerStop,

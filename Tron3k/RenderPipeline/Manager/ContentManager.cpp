@@ -297,13 +297,7 @@ void ContentManager::renderBullet(int bid)
 
 void ContentManager::renderPlayer(AnimManager::animState state, glm::mat4 world, GLuint uniformKeyMatrixLocation, bool first)
 {
-
-	// ----------- Character Animations ---------- //
-	
-	//if (state.state < AnimationState::none)
-	//{
-		playerCharacters[state.role].draw(uniformKeyMatrixLocation, state.state, state.frame, first);
-	//}
+	playerCharacters[state.role].draw(uniformKeyMatrixLocation, state.state, state.frame, first);
 }
 
 void* ContentManager::getChunkCollisionVectorAsPointer(int chunkID)
