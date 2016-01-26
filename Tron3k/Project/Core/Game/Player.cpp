@@ -225,7 +225,7 @@ void Player::setFootstepsCountdown()
 	}
 	else if (this->role.getRole() == 1)
 	{
-		this->footstepsCountdown = 2000000000000;
+		this->footstepsCountdown = 0.7;
 	}
 	else
 	{

@@ -63,6 +63,8 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->soundList[SOUNDS::soundEffectFlies].loadFromFile("GameFiles/Sound/soundEffectFlies.ogg");
 		singleton->soundList[SOUNDS::soundEffectFrogs].loadFromFile("GameFiles/Sound/soundEffectFrogs.ogg");
 		singleton->soundList[SOUNDS::soundEffectNeonSign].loadFromFile("GameFiles/Sound/soundEffectNeonSign.ogg");
+		singleton->soundList[SOUNDS::soundEffectClusterlingExplosion].loadFromFile("GameFiles/Sound/soundEffectClusterlingExplosion.ogg");
+		singleton->soundList[SOUNDS::soundEffectCrows].loadFromFile("GameFiles/Sound/soundEffectCrows.ogg");
 
 		initialized = true;
 	}
@@ -138,19 +140,24 @@ int SoundPlayer::playMapSounds()
 			mapSounds[2].setMinDistance(50.0f);
 			mapSounds[3].setBuffer(soundList[SOUNDS::soundEffectFlies]);
 			mapSounds[3].setPosition(51, 1.55, 108);
-			mapSounds[3].setVolume(20);
+			mapSounds[3].setVolume(30);
 			mapSounds[3].setAttenuation(3);
 			mapSounds[3].setMinDistance(7.0f);
 			mapSounds[4].setBuffer(soundList[SOUNDS::soundEffectFlies]);
 			mapSounds[4].setPosition(-74, 1.55, 30);
-			mapSounds[4].setVolume(20);
+			mapSounds[4].setVolume(30);
 			mapSounds[4].setAttenuation(3);
 			mapSounds[4].setMinDistance(7.0f);
 			mapSounds[5].setBuffer(soundList[SOUNDS::soundEffectFrogs]);
 			mapSounds[5].setPosition(-48, 1.55, 72);
-			mapSounds[5].setVolume(3);
+			mapSounds[5].setVolume(6);
 			mapSounds[5].setAttenuation(10);
 			mapSounds[5].setMinDistance(4.0f);
+			mapSounds[6].setBuffer(soundList[SOUNDS::soundEffectCrows]);
+			mapSounds[6].setPosition(35, 1.55, 15);
+			mapSounds[6].setVolume(20);
+			mapSounds[6].setAttenuation(20);
+			mapSounds[6].setMinDistance(30.0f);
 
 			for (int i = 0; i < MAXSOUNDS; i++)
 			{
