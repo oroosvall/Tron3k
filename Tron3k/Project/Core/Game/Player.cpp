@@ -149,10 +149,6 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 		for (int k = 0; k < collisionNormalSize; k++)
 		{
 			//push pos away and lower velocity using pendepth
-			if (grounded && collisionNormals[k].y < 0.0f)
-			{
-				//collisionNormals[k] *= 0;
-			}
 			vec3 pendepth = vec3(collisionNormals[k]) * collisionNormals[k].w;
 			if (collisionNormals[k].y < 0)
 				ceiling = true;
