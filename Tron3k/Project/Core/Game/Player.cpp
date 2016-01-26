@@ -490,7 +490,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 				if (i->justPressed(GLFW_KEY_1))
 				{
-					if (!role.getIfBusy())
+					if (!role.getIfBusy() && role.getWeaponNRequiped() != 0)
 					{
 						role.swapWeaponLocal(0);
 						msg = WPNSWITCH;
@@ -502,7 +502,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 				if (i->justPressed(GLFW_KEY_2))
 				{
-					if (!role.getIfBusy())
+					if (!role.getIfBusy() && role.getWeaponNRequiped() != 1)
 					{
 						role.swapWeaponLocal(1);
 						msg = WPNSWITCH;
@@ -515,14 +515,17 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 				if (i->getKeyInfo(GLFW_MOUSE_BUTTON_LEFT))		//Temp
 				{
-					if (role.getCurrentWeapon()->shoot())
+					if (!role.getIfBusy())
 					{
-						msg = SHOOT;
-						shoot();
-					}
-					else if (role.getCurrentWeapon()->getCurrentAmmo() == 0 && !role.getIfBusy())
-					{
-						reloadCurrentWeapon();
+						if (role.getCurrentWeapon()->shoot())
+						{
+							msg = SHOOT;
+							shoot();
+						}
+						else if (role.getCurrentWeapon()->getCurrentAmmo() == 0)
+						{
+							reloadCurrentWeapon();
+						}
 					}
 				}
 
