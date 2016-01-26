@@ -1,8 +1,6 @@
 #include "Physics.h"
 //#include <vld.h>
 
-static bool hat = false;
-
 Physics::Physics()
 {
 
@@ -419,8 +417,6 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb)
 	//test vs all planes
 	for (int n = 0; n < 6; n++)
 	{
-		if (hat && n == 4)
-			int satan = 51774;
 		// send inverse plane normal as dir
 		// t.w will be distance to the wall -1 if no wall was close enough
 		t = obb->planes[n].intersects(pos, -obb->planes[n].n, rad);
@@ -612,9 +608,6 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos)
 				
 				for (int n = 0; n < size; n++)
 				{
-					hat = false;
-					if (n == 4 && j == 27)
-						hat = true;
 					t = getSpherevOBBNorms(playerPos, rad, &worldBoxes[i][j].boundingBox.ObbBoxes[n]);
 					t.w = rad - t.w; //penetration depth instead of collision distance 
 					if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
