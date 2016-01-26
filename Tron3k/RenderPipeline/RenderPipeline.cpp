@@ -84,8 +84,10 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 	gBuffer = new Gbuffer();
 	
+	TextObject::ScreenResHeight = WindowHeight;
+	TextObject::ScreenResWidth = WindowWidth;
 
-	//test = new TextObject("Swag", 11, glm::vec2(10, 10));
+	test = new TextObject("Swag", 11, glm::vec2(WindowWidth/2, WindowHeight/2));
 
 #ifdef _DEBUG
 	if (glDebugMessageCallback) {
@@ -251,6 +253,9 @@ void RenderPipeline::reloadShaders()
 	lw_vp = glGetUniformLocation(lw_Shader, "ViewProjMatrix");
 	lw_tex = glGetUniformLocation(lw_Shader, "texsample");
 
+
+	uniformDynamicGlowColorLocation_wall = glGetUniformLocation(lw_Shader, "dynamicGlowColor");
+
 	std::cout << "Done loading shaders\n";
 
 }
@@ -354,9 +359,10 @@ void RenderPipeline::finalizeRender()
 	glClear(GL_DEPTH_BUFFER_BIT);
 
 	gBuffer->render();
+	
 }
 
-void RenderPipeline::renderWallEffect(void* pos1, void* pos2, float uvStartOffset)
+void RenderPipeline::renderWallEffect(void* pos1, void* pos2, float uvStartOffset, float* dgColor)
 {
 
 	glUseProgram(lw_Shader);
@@ -364,6 +370,7 @@ void RenderPipeline::renderWallEffect(void* pos1, void* pos2, float uvStartOffse
 	//call contentman and bind the lightwal texture to 0
 	contMan.bindLightwalTexture();
 	cam.setViewProjMat(lw_Shader, lw_vp);
+	glProgramUniform3fv(lw_Shader, uniformDynamicGlowColorLocation_wall, 1, (GLfloat*)&dgColor[0]);
 
 	glBindBuffer(GL_ARRAY_BUFFER, lwVertexDataId);
 	glBindVertexArray(lwVertexAttribute);

@@ -1189,7 +1189,20 @@ void Core::renderWorld(float dt)
 			{
 				LightwallEffect* derp = (LightwallEffect*)eff[i];
 
-				renderPipe->renderWallEffect(&derp->getPos(), &derp->getEndPoint(), herpderpOffset);
+				int pid, eid;
+				derp->getId(pid, eid);
+				int team = game->getPlayer(pid)->getTeam();
+
+				if (team == 1)
+				{
+					dgColor[0] = TEAMONECOLOR.r; dgColor[1] = TEAMONECOLOR.g; dgColor[2] = TEAMONECOLOR.b;
+				}
+				else if (team == 2)
+				{
+					dgColor[0] = TEAMTWOCOLOR.r; dgColor[1] = TEAMTWOCOLOR.g; dgColor[2] = TEAMTWOCOLOR.b;
+				}
+
+				renderPipe->renderWallEffect(&derp->getPos(), &derp->getEndPoint(), herpderpOffset, dgColor);
 
 				herpderpOffset += glm::distance(derp->getPos(), derp->getEndPoint());
 			}

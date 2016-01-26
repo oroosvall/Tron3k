@@ -57,6 +57,8 @@ private:
 	GLuint uniformStaticGlowIntensityLocation[2];
 	GLuint uniformGlowTrail[2];
 
+	GLuint uniformDynamicGlowColorLocation_wall;
+	
 	GLuint uniformGlowTimeDelta;
 	GLuint uniformGlowFalloff;
 	GLuint uniformGlowTexture;
@@ -111,7 +113,7 @@ public:
 	virtual std::string getStatus() { return ""; };
 
 	virtual bool setSetting(PIPELINE_SETTINGS type, PipelineValues value);
-	virtual void renderWallEffect(void* pos1, void* pos2, float uvStartOffset);
+	virtual void renderWallEffect(void* pos1, void* pos2, float uvStartOffset, float* dgColor);
 
 	virtual void forceReset() {};
 	virtual unsigned int createText(float x, float y, float z, std::string text) { return 0; };
