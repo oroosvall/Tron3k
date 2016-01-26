@@ -741,9 +741,9 @@ void Core::roamHandleCmds()
 		}
 		else if (token == "/role")
 		{
+			ss >> token;
 			if (token != "/role" || token == "1" || token == "2" || token == "3" || token == "4"|| token == "5")
 			{
-				ss >> token;
 				int role = stoi(token);
 				game->getPlayer(0)->getRole()->chooseRole(role - 1);
 				game->sendPlayerRadSize(game->getPlayer(0)->getRole()->getBoxRadius());
