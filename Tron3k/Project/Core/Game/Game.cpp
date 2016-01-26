@@ -1055,17 +1055,20 @@ Bullet* Game::getSpecificBullet(int PID, int BID, BULLET_TYPE bt, int &posInBull
 
 int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 {
-	glm::vec3 pos = playerList[hi.playerHit]->getPos();
-	if (gameState != Gamestate::SERVER)
-		if (GetSoundActivated())
-			GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHit, pos.x, pos.y, pos.z);
-	Player* p = playerList[hi.playerHit];
-	int bulletPosInArray;
-	Bullet* theBullet = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, bulletPosInArray);
-	p->hitByBullet(theBullet, hi.newHPtotal);	//Add support for hacking dart
+	if (hi.bt != BULLET_TYPE::CLUSTERLING)	//Any bullets that should not detonate on contact
+	{
+		glm::vec3 pos = playerList[hi.playerHit]->getPos();
+		if (gameState != Gamestate::SERVER)
+			if (GetSoundActivated())
+				GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHit, pos.x, pos.y, pos.z);
+		Player* p = playerList[hi.playerHit];
+		int bulletPosInArray;
+		Bullet* theBullet = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, bulletPosInArray);
+		p->hitByBullet(theBullet, hi.newHPtotal);	//Add support for hacking dart
 
-	removeBullet(hi.bt, bulletPosInArray);
+		removeBullet(hi.bt, bulletPosInArray);
 
+	}
 	int newHP = p->getHP();
 	return newHP;
 }
