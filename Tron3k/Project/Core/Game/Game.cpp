@@ -579,6 +579,7 @@ void Game::checkPlayerVWorldCollision(float dt)
 		//lower with distance from eyes to center
 		std::vector<vec4> cNorms = physics->PlayerVWorldCollision(playerList[localPlayerId]->getPos() - (vec3(0, playerList[localPlayerId]->getRole()->getBoxModifier(), 0)));
 
+
 		//if we collided with something
 		if (cNorms.size() > 0)
 		{

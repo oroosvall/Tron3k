@@ -92,6 +92,8 @@ private:
 
 	void rotatePlayer(vec3 olddir, vec3 newdir);
 	void reloadCurrentWeapon();
+
+	void sortCollisionNormals();
 public:
 	Player();
 	~Player();

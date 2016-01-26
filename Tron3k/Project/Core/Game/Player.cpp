@@ -50,6 +50,22 @@ void Player::setGoalDir(glm::vec3 newDir)
 	oldDir = dir;
 }
 
+void Player::sortCollisionNormals()
+{
+	for (int i = 0; i < collisionNormalSize; i++)
+	{
+		for (int j = i+1; j < collisionNormalSize; j++)
+		{
+			if (collisionNormals[j] == collisionNormals[i])
+			{
+				collisionNormals[j] = collisionNormals[collisionNormalSize - 1];
+				collisionNormalSize--;
+				j--;
+			}
+		}
+	}
+}
+
 void Player::setCollisionInfo(std::vector<glm::vec4> collNormals)
 {
 	if (collNormals.size() < 20 - collisionNormalSize)
@@ -61,6 +77,8 @@ void Player::setCollisionInfo(std::vector<glm::vec4> collNormals)
 
 		collisionNormalSize += collNormals.size();
 	}
+
+	sortCollisionNormals();
 }
 
 void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingThis)
@@ -128,6 +146,8 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 	int * collS = &collisionNormalSize;
 	if (collisionNormalSize > 0)
 	{
+		if (collisionNormalSize > 1)
+			int cp = 1;
 		collided = true;
 
 		bool ceiling = false;
