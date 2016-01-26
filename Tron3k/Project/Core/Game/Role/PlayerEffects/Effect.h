@@ -24,6 +24,7 @@ public:
 
 	virtual int getDamage() { return 0; };
 	virtual void setInterestingVariable(float f) {};
+	virtual float getInterestingVariable() { return -1; };
 
 	EFFECT_TYPE getType() { return type; };
 };

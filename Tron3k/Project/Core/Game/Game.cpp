@@ -211,7 +211,7 @@ void Game::update(float dt)
 			{
 				int pid, eid;
 				LightwallEffect* lWall = (LightwallEffect*)effects[i][c];
-				if (lWall->getDong())
+				if (lWall->getDong()) //since the effect updates, we need to resend the box to physics
 				{
 					lWall->getId(pid, eid);
 					physics->removeEffect(eid);
@@ -452,6 +452,7 @@ void Game::checkPvPCollision()
 
 void Game::checkPlayerVEffectCollision()
 {
+	std::vector<glm::vec4> collNormals;
 	if (gameState == Gamestate::ROAM || gameState == Gamestate::CLIENT)
 	{
 		Player* local = playerList[localPlayerId];
@@ -459,7 +460,7 @@ void Game::checkPlayerVEffectCollision()
 
 		std::vector<glm::vec4> collNormalWalls;
 		std::vector<glm::vec4> collNormalDomes;
-		std::vector<glm::vec4> collNormals;
+		
 		for (int c = 0; c < effects[EFFECT_TYPE::LIGHT_WALL].size(); c++)
 		{
 			int eid = -1, pid = -1;
@@ -469,7 +470,7 @@ void Game::checkPlayerVEffectCollision()
 				collNormalWalls = physics->checkPlayerVEffectCollision(local->getPos(), EFFECT_TYPE::LIGHT_WALL, eid);
 				collNormals.reserve(collNormalWalls.size()); // preallocate memory
 				collNormals.insert(collNormals.end(), collNormalWalls.begin(), collNormalWalls.end());
-				collNormals.insert(collNormals.end(), collNormalDomes.begin(), collNormalDomes.end());
+				collNormalWalls.clear();
 			}
 			
 		}
@@ -481,9 +482,9 @@ void Game::checkPlayerVEffectCollision()
 			collNormalDomes = physics->checkPlayerVEffectCollision(local->getPos(), EFFECT_TYPE::THUNDER_DOME, eid);
 
 			glm::vec3 vel = local->getVelocity();
-			collNormals.reserve(collNormalWalls.size() + collNormalDomes.size()); // preallocate memory
-			collNormals.insert(collNormals.end(), collNormalWalls.begin(), collNormalWalls.end());
+			collNormals.reserve(collNormalDomes.size()); // preallocate memory
 			collNormals.insert(collNormals.end(), collNormalDomes.begin(), collNormalDomes.end());
+			collNormalDomes.clear();
 		}
 
 		/*//merge normals into one vector
@@ -497,6 +498,22 @@ void Game::checkPlayerVEffectCollision()
 	if (gameState == Gamestate::ROAM || gameState == Gamestate::SERVER)
 	{
 		//Collision for all non-wall effects
+		std::vector<vec4> explosColls;
+		for (int i = 0; i < effects[EFFECT_TYPE::EXPLOSION].size(); i++)
+		{
+			int eid = -1, pid = -1;
+			effects[EFFECT_TYPE::THUNDER_DOME][i]->getId(pid, eid);
+			for (int j = 0; j < max_con; j++)
+			{
+				if (playerList[j] != nullptr)
+				{
+					explosColls = physics->checkPlayerVEffectCollision(playerList[j]->getPos(), EFFECT_TYPE::EXPLOSION, eid);
+					collNormals.reserve(explosColls.size()); // preallocate memory
+					collNormals.insert(collNormals.end(), explosColls.begin(), explosColls.end());
+					explosColls.clear();
+				}
+			}
+		}
 	}
 }
 
@@ -1285,7 +1302,19 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 			addBulletToList(PID, BID + 3, CLUSTERLING, parent->getPos(), lingDir);
 
 			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
-			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(15.0f);
+			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(20);
+
+			//This is where you send it to physics
+			std::vector<float> eBox;
+			eBox.push_back(parent->getPos().x);
+			eBox.push_back(parent->getPos().y);
+			eBox.push_back(parent->getPos().z);
+			eBox.push_back(20);
+
+			int pid, eid;
+			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->getId(pid, eid);
+
+			physics->receiveEffectBox(eBox, EFFECT_TYPE::EXPLOSION, pid, eid);
 
 			if (GetSoundActivated())
 				GetSound()->playExternalSound(SOUNDS::soundEffectClusterGrenade, parent->getPos().x, parent->getPos().y, parent->getPos().z);
@@ -1294,7 +1323,7 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 		case BULLET_TYPE::CLUSTERLING:
 		{
 			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
-			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(15.0f);
+			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(10.0f);
 			if (GetSoundActivated())
 				GetSound()->playExternalSound(SOUNDS::soundEffectClusterlingExplosion, parent->getPos().x, parent->getPos().y, parent->getPos().z);
 			break;
