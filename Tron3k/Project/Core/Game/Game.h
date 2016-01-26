@@ -228,7 +228,7 @@ public:
 	void handleBulletHitWorldEvent(BulletHitWorldInfo hi);
 
 	std::vector<BulletHitEffectInfo> getAllBulletOnEffectCollisions() { return allBulletHitsOnEffects; };
-	void clearBulletOnEffectCollision() { allBulletHitsOnEffects.clear(); };	
+	void clearBulletOnEffectCollisions() { allBulletHitsOnEffects.clear(); };	
 	void handleBulletHitEffectEvent(BulletHitEffectInfo hi);
 
 	std::vector<EffectHitEffectInfo> getAllEffectOnEffectCollisions() { return allEffectHitsOnEffects; };

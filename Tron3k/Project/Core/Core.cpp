@@ -291,6 +291,16 @@ void Core::upRoam(float dt)
 			game->clearBulletOnWorldCollisions();
 		}
 
+		std::vector<BulletHitEffectInfo> bulletHitsOnEffect = game->getAllBulletOnEffectCollisions();
+		if (bulletHitsOnEffect.size() != 0)
+		{
+			for (unsigned int c = 0; c < bulletHitsOnEffect.size(); c++)
+			{
+				game->handleBulletHitEffectEvent(bulletHitsOnEffect[c]);
+			}
+			game->clearBulletOnEffectCollisions();
+		}
+
 		std::vector<EffectHitPlayerInfo> effectHitsOnPlayer = game->getAllEffectOnPlayerCollisions();
 		if (effectHitsOnPlayer.size() != 0)
 		{
@@ -548,6 +558,17 @@ void Core::upServer(float dt)
 			}
 			top->event_bullet_hit_world(bulletHitsOnWorld);
 			game->clearBulletOnWorldCollisions();
+		}
+
+		std::vector<BulletHitEffectInfo> bulletHitsOnEffect = game->getAllBulletOnEffectCollisions();
+		if (bulletHitsOnEffect.size() != 0)
+		{
+			for (unsigned int c = 0; c < bulletHitsOnEffect.size(); c++)
+			{
+				game->handleBulletHitEffectEvent(bulletHitsOnEffect[c]);
+			}
+			top->event_bullet_hit_effect(bulletHitsOnEffect);
+			game->clearBulletOnEffectCollisions();
 		}
 
 		std::vector<EffectHitPlayerInfo> effectHitsOnPlayer = game->getAllEffectOnPlayerCollisions();
