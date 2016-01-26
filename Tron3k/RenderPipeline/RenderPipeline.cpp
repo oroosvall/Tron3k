@@ -7,6 +7,8 @@
 
 #include <vld.h>
 
+#include <sstream>
+
 #ifdef _DEBUG
 extern "C"
 {
@@ -84,10 +86,12 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 	gBuffer = new Gbuffer();
 	
-	TextObject::ScreenResHeight = WindowHeight;
-	TextObject::ScreenResWidth = WindowWidth;
+	Text::ScreenResHeight = WindowHeight;
+	Text::ScreenResWidth = WindowWidth;
 
-	test = new TextObject("Swag", 11, glm::vec2(WindowWidth/2, WindowHeight/2));
+	fontTexture = loadTexture("GameFiles/Font/font16.png", false);
+
+	debugText = new Text("Debug Test\nNew line :)", 18, fontTexture, vec2(0, 18));
 
 #ifdef _DEBUG
 	if (glDebugMessageCallback) {
@@ -256,6 +260,17 @@ void RenderPipeline::reloadShaders()
 
 	uniformDynamicGlowColorLocation_wall = glGetUniformLocation(lw_Shader, "dynamicGlowColor");
 
+	std::string textShaderNames[] = { "GameFiles/Shaders/simple_vs.glsl",  "GameFiles/Shaders/simple_fs.glsl" };
+	GLenum textshaderTypes[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
+	CreateProgram(temp, textShaderNames, textshaderTypes, 2);
+	if (temp != 0)
+	{
+		textShader = temp;
+		temp = 0;
+	}
+
+	textShaderLocation = glGetUniformLocation(textShader, "texture");
+
 	std::cout << "Done loading shaders\n";
 
 }
@@ -274,7 +289,7 @@ void RenderPipeline::release()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	delete test;
+	delete debugText;
 
 	delete gBuffer;
 
@@ -308,6 +323,16 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	}
 
 	gBuffer->clearLights();
+
+	std::stringstream ss;
+
+	ss << "Draw count: " << drawCount << "\n";
+	ss << "Primitive count: " << primitiveCount << "\n";
+
+	debugText->setText(ss.str());
+
+	drawCount = 0;
+	primitiveCount = 0;
 
 }
 void RenderPipeline::addLight(SpotLight* newLight)
@@ -363,6 +388,15 @@ void RenderPipeline::finalizeRender()
 
 	gBuffer->render();
 	
+	glUseProgram(textShader);
+	glProgramUniform1i(textShader, textShaderLocation, 0);
+	
+	glEnable(GL_BLEND);
+
+	debugText->draw();
+	
+	glDisable(GL_BLEND);
+
 }
 
 void RenderPipeline::renderWallEffect(void* pos1, void* pos2, float uvStartOffset, float* dgColor)

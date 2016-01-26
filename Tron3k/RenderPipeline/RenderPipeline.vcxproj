@@ -164,6 +164,7 @@
     <ClCompile Include="Mesh\StaticMesh.cpp" />
     <ClCompile Include="RenderPipeline.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="Text\Text.cpp" />
     <ClCompile Include="Text\TextObject.cpp" />
     <ClCompile Include="Utils\GPUMemoryLeakChecker.cpp" />
   </ItemGroup>
@@ -188,6 +189,7 @@
     <ClInclude Include="RenderPipeline.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="Text\Text.h" />
     <ClInclude Include="Text\TextObject.h" />
     <ClInclude Include="Utils\GPUMemoryLeakChecker.h" />
   </ItemGroup>
