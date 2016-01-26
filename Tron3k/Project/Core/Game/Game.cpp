@@ -525,7 +525,7 @@ void Game::checkPlayerVEffectCollision()
 					int eid = -1, pid = -1;
 					effects[EFFECT_TYPE::EXPLOSION][i]->getId(pid, eid);
 
-					//if (pid != j)
+					if (pid != j && playerList[pid]->getTeam() != playerList[j]->getTeam())
 					{
 						explosColls = physics->checkPlayerVEffectCollision(playerList[j]->getPos(), EFFECT_TYPE::EXPLOSION, eid);
 						collNormals.reserve(explosColls.size()); // preallocate memory
