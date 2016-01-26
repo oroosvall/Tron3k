@@ -118,12 +118,12 @@ int SoundPlayer::playMapSounds()
 			{
 				return -1;
 			}
-			theCantinaSong.setPosition(44, 1.55, 100);
+			theCantinaSong.setPosition(45, 1.55, 95);
 			theCantinaSong.setAttenuation(80);
 			theCantinaSong.setVolume(20);
 			theCantinaSong.play();
 			theCantinaSong.setLoop(true);
-			theCantinaSong.setMinDistance(10);
+			theCantinaSong.setMinDistance(9.5);
 			
 			mapSounds[0].setBuffer(soundList[SOUNDS::soundAids]);
 			mapSounds[0].setPosition(-10, 5, -10);
