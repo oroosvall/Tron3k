@@ -9,7 +9,7 @@ void TrapperShareAmmo::init(Player* myTarget)
 	lifeTime = -1;
 	sticky = true;
 	ammoCount = target->getRole()->getCurrentWeapon()->getCurrentAmmo();
-	weaponType = target->getRole()->getCurrentWeapon()->getType();
+	weaponType = target->getRole()->getWeaponNRequiped();
 }
 
 
@@ -22,16 +22,14 @@ int TrapperShareAmmo::setData(float dt)
 {
 	int newAmmo = target->getRole()->getCurrentWeapon()->getCurrentAmmo();
 
-	if (ammoCount != newAmmo)
+	int newWeaponType = target->getRole()->getWeaponNRequiped();
+	if (weaponType != newWeaponType)
 	{
-		int newWeaponType = target->getRole()->getCurrentWeapon()->getType();
-		if (weaponType != newWeaponType)
-		{
-			weaponType = newWeaponType;
-			target->getRole()->getCurrentWeapon()->setCurrentAmmo(ammoCount);
-		}
-		else
-			ammoCount = newAmmo;
+		weaponType = newWeaponType;
+		target->getRole()->getCurrentWeapon()->setCurrentAmmo(ammoCount);
 	}
+	if(ammoCount != newAmmo)
+		ammoCount = newAmmo;
+
 	return 0;
 }
