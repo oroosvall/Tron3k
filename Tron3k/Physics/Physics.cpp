@@ -431,10 +431,11 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb)
 
 	//if no plane intersections found
 	//test all lines  
+	
 	for (int n = 0; n < 12; n++)
 	{
 		t = obb->lines[n].sphere_intersects(pos, rad);
-
+		if(obb->lines[n].line.y < -FLT_EPSILON || obb->lines[n].line.y > FLT_EPSILON)
 		if (t.w >= 0 - FLT_EPSILON)
 			if (t.w < closest.w) // a new closest dist was found
 				closest = t;
