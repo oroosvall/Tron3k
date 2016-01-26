@@ -65,6 +65,7 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->soundList[SOUNDS::soundEffectNeonSign].loadFromFile("GameFiles/Sound/soundEffectNeonSign.ogg");
 		singleton->soundList[SOUNDS::soundEffectClusterlingExplosion].loadFromFile("GameFiles/Sound/soundEffectClusterlingExplosion.ogg");
 		singleton->soundList[SOUNDS::soundEffectCrows].loadFromFile("GameFiles/Sound/soundEffectCrows.ogg");
+		singleton->soundList[SOUNDS::BreakingOutBass].loadFromFile("GameFiles/Sound/BreakingOutBass.ogg");
 
 		initialized = true;
 	}
@@ -118,7 +119,7 @@ int SoundPlayer::playMapSounds()
 				return -1;
 			}
 			theCantinaSong.setPosition(44, 1.55, 100);
-			theCantinaSong.setAttenuation(50);
+			theCantinaSong.setAttenuation(80);
 			theCantinaSong.setVolume(20);
 			theCantinaSong.play();
 			theCantinaSong.setLoop(true);
@@ -129,11 +130,11 @@ int SoundPlayer::playMapSounds()
 			mapSounds[0].setVolume(30);
 			mapSounds[0].setAttenuation(10);
 			mapSounds[0].setMinDistance(5.0f);
-			mapSounds[1].setBuffer(soundList[SOUNDS::power]);
-			mapSounds[1].setPosition(-10, 1.55, -50);
-			mapSounds[1].setVolume(30);
-			mapSounds[1].setAttenuation(10);
-			mapSounds[1].setMinDistance(5.0f);
+			mapSounds[1].setBuffer(soundList[SOUNDS::BreakingOutBass]);
+			mapSounds[1].setPosition(44, 1.55, 100);
+			mapSounds[1].setVolume(45);
+			mapSounds[1].setAttenuation(80);
+			mapSounds[1].setMinDistance(25.0f);
 			mapSounds[2].setBuffer(soundList[SOUNDS::soundEffectAlarm]);
 			mapSounds[2].setPosition(73, 1.55, 4);
 			mapSounds[2].setVolume(20);
