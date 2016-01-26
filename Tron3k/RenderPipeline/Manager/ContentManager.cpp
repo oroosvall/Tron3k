@@ -279,10 +279,12 @@ void ContentManager::renderBullet(int bid)
 	{
 	case BULLET_TYPE::PULSE_SHOT:
 	case BULLET_TYPE::PLASMA_SHOT:
+	case BULLET_TYPE::SHOTGUN_PELLET:
 		trapperBullet.draw();
 		break;
 	case BULLET_TYPE::CLUSTER_GRENADE:
 	case BULLET_TYPE::CLUSTERLING:
+	case BULLET_TYPE::GRENADE_SHOT:
 		trapperConsume.draw();
 		break;
 	case BULLET_TYPE::DISC_SHOT:

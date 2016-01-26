@@ -878,10 +878,27 @@ void Game::handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm
 		break;
 
 	case WEAPON_TYPE::SHOTGUN:
+	{
 		if (gameState != Gamestate::SERVER)
 			if (GetSound())
 				GetSound()->playExternalSound(SOUNDS::soundEffectShotGun, pos.x, pos.y, pos.z);
-		addBulletToList(conID, bulletId, BULLET_TYPE::SHOTGUN_PELLET, pos, dir);
+		glm::vec3 rightV = cross(dir, vec3(0, 1, 0));
+		glm::vec3 upV = cross(dir, rightV);
+		for (int k = 0; k < 16; k++)
+		{
+			//float xrand = (rand() % 50) / 100.0f - 0.25f;
+			//float yrand = (rand() % 50) / 100.0f - 0.25f;
+			float xoff = glm::sin(k);
+			float yoff = glm::cos(k);
+			float r = (rand() % 100)/1000.0f;
+			rightV *= xoff*r;
+			upV *= yoff*r;
+			glm::vec3 ndir = dir + upV + rightV;
+			addBulletToList(conID, bulletId, BULLET_TYPE::SHOTGUN_PELLET, pos, ndir);
+			rightV = cross(dir, vec3(0, 1, 0));
+			upV = cross(dir, rightV);
+		}
+	}
 		break;
 
 	case WEAPON_TYPE::LINK_GUN:

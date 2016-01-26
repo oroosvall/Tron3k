@@ -19,7 +19,7 @@ void Shotgun::init()
 
 	currentBulletId = 0;
 
-	firingSpeed = 1.5f;
+	firingSpeed = 0.7f;
 	firingSpeedCurrentDelay = 0;
 
 	reloadTime = 2.5f;
