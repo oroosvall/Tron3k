@@ -882,8 +882,8 @@ void Game::handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm
 		if (gameState != Gamestate::SERVER)
 			if (GetSound())
 				GetSound()->playExternalSound(SOUNDS::soundEffectShotGun, pos.x, pos.y, pos.z);
-		glm::vec3 rightV = cross(dir, vec3(0, 1, 0));
-		glm::vec3 upV = cross(dir, rightV);
+		glm::vec3 rightV = normalize(cross(dir, vec3(0, 1, 0)));
+		glm::vec3 upV = normalize(cross(dir, rightV));
 		for (int k = 0; k < 16; k++)
 		{
 			//float xrand = (rand() % 50) / 100.0f - 0.25f;
@@ -895,8 +895,8 @@ void Game::handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm
 			upV *= yoff*r;
 			glm::vec3 ndir = dir + upV + rightV;
 			addBulletToList(conID, bulletId, BULLET_TYPE::SHOTGUN_PELLET, pos, ndir);
-			rightV = cross(dir, vec3(0, 1, 0));
-			upV = cross(dir, rightV);
+			rightV = normalize(cross(dir, vec3(0, 1, 0)));
+			upV = normalize(cross(dir, rightV));
 		}
 	}
 		break;
