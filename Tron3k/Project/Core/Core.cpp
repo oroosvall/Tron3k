@@ -1058,7 +1058,7 @@ void Core::renderWorld(float dt)
 		renderPipe->renderIni();
 
 		//Culling
-		handleCulling();
+		//handleCulling();
 
 		float dgColor[3];
 		//render skybox
