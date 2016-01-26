@@ -992,18 +992,18 @@ void Player::movementAnimationChecks(float dt)
 	animGroundedLast = grounded;
 
 	//specal case movement
-	//if (animRole == ROLES::BRUTE)
-	//{
-	//	Modifier* searchmod = searchModifierGet(MODIFIER_TYPE::TRUEGRITMODIFIER);
-	//	if (searchmod != nullptr)
-	//	{
-	//		if ((TrueGrit*)searchmod)
-	//			int k = 3;
-	//	}
-	//}
-
-
-
+	if (animRole == ROLES::BRUTE)
+	{
+		Modifier* searchmod = searchModifierGet(MODIFIER_TYPE::TRUEGRITMODIFIER);
+		if (searchmod != nullptr)
+			if (!((TrueGrit*)searchmod)->isDashDone())
+			{
+				if (animPrimary)
+					animOverideIfPriority(anim_third_current, AnimationState::third_brute_primary_dash);
+				else
+					animOverideIfPriority(anim_third_current, AnimationState::third_brute_secondary_dash);
+			}
+	}
 
 
 	//death checks
