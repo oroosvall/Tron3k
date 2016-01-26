@@ -47,22 +47,33 @@ void DDSTexture::load(std::string file)
 		DDS_HEADER header;
 		inFile.read((char*)&header, sizeof(header));
 
-		if (header.ddspf.dwFourCC != MAKEFOURCC('D', 'X', 'T', '5'))
+		if (header.ddspf.dwFourCC == MAKEFOURCC('D', 'X', 'T', '5'))
+			format = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
+		else if (header.ddspf.dwFourCC == MAKEFOURCC('D', 'X', 'T', '4'))
+			format = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
+		else if (header.ddspf.dwFourCC == MAKEFOURCC('D', 'X', 'T', '3'))
+			format = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
+		else if (header.ddspf.dwFourCC == MAKEFOURCC('D', 'X', 'T', '2'))
+			format = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
+		else if (header.ddspf.dwFourCC == MAKEFOURCC('D', 'X', 'T', '1'))
+			format = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
+		else
 		{
-			printf("Not DXT5\n");
+			printf("Rip\n");
 			return;
 		}
-
-		format = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
 
 
 		width = header.dwWidth;
 		height = header.dwHeight;
 
-		blocksize = 0;
+		blocksize = (format == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT) ? 8 : 16;
+		int factor = (format == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT) ? 2 : 4;
 
-		dataSize = width * height;
+		dataSize = ((width + 3) / 4) * ((height + 3) / 4) * (format == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT ? 8 : 16);
 
+		if (dataSize == 0)
+			return ;
 		textureData = new char[dataSize];
 
 		inFile.read((char*)textureData, dataSize);
@@ -81,9 +92,6 @@ bool DDSTexture::uploadTexture(GLuint &id)
 	if (!textureData)
 		return false;
 
-	printf("Uploading\n");
-	std::cout << glGetError() << std::endl;
-
 	glBindTexture(GL_TEXTURE_2D, id);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
@@ -92,10 +100,6 @@ bool DDSTexture::uploadTexture(GLuint &id)
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-
-	printf("Done uploading\n");
-	std::cout << glGetError() << std::endl;
-
 
 	return true;
 }

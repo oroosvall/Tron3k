@@ -11,8 +11,8 @@ void ContentManager::init()
 	f_render_obb = false;
 
 	blank_diffuse = loadTexture("GameFiles/Textures/blank_d.dds");
-	blank_normal = loadTexture("GameFiles/Textures/blank_n.png");
-	blank_glow = loadTexture("GameFiles/Textures/blank_g.png");
+	blank_normal = loadTexture("GameFiles/Textures/blank_n.dds");
+	blank_glow = loadTexture("GameFiles/Textures/blank_g.dds");
 
 	skyTexture = loadTexture("GameFiles/Textures/skybox.dds");
 
