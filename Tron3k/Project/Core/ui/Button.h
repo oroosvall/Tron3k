@@ -2,36 +2,39 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
-#include "uiVertex.h"
+#include "UIElements.h"
 
-#include <glm\glm.hpp>
-#include <glm\gtc\matrix_transform.hpp>
-
-class Button
+class Button : public UIElements
 {
 private:
 	uiVertex pos[2];
 	int textureIndexList[2];
 	int textureIndexInUse;
-	int objId;
 	int uniqueKey;
-	glm::mat4 worldMatrix;
+	glm::mat4 worldMatrix[2];
+	int nrOfButtons;
+
+	GLuint uniformTextureLocation;
+	GLuint uniformWorldMatrix;
+	GLuint shader;
 
 public:
 	Button();
-	Button( glm::vec2 positions[], glm::vec2 uv[], int textureId1, int textureId2, int objId, int uniqueKey);
+	Button( glm::vec2 positions[], glm::vec2 uv[], int textureId1, int textureId2, int uniqueKey, GLuint shader, GLuint worldMat, GLuint textureLocation);
+	//Button(...) //Constructor for sliders
 	~Button();
 
-	void setWorldMatrix(float x, float y);
-	glm::mat4 returnWorldMatrix();
-	uiVertex* returnPosAUv();
-	int returnObjId();
+	void render(std::vector<GLuint> textureIds, int i, GLuint gVertexAttribute, GLuint gVertexBuffer);
 
-	int changeTexUsed();
+	void setWorldMatrix(float x, float y, int id);
 
-	void scalePositions(int scale);
+	void changeTexUsed();
+
+	void scalePositions(int scale, int id);
 
 	int checkCollision(glm::vec2 pos);
+
+	uiVertex returnPosAUv();
 };
 
 #endif

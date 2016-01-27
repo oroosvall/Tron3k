@@ -73,6 +73,7 @@
     <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\Trapper\PulseRifle.cpp" />
     <ClCompile Include="Core\Input.cpp" />
     <ClCompile Include="Core\ui\Button.cpp" />
+    <ClCompile Include="Core\ui\Slider.cpp" />
     <ClCompile Include="Core\ui\UI.cpp" />
     <ClCompile Include="Core\ui\UIManager.cpp" />
     <ClCompile Include="main.cpp" />
@@ -145,7 +146,9 @@
     <ClInclude Include="Core\Input.h" />
     <ClInclude Include="Core\sharedStructs.h" />
     <ClInclude Include="Core\ui\Button.h" />
+    <ClInclude Include="Core\ui\Slider.h" />
     <ClInclude Include="Core\ui\UI.h" />
+    <ClInclude Include="Core\ui\UIElements.h" />
     <ClInclude Include="Core\ui\UIManager.h" />
     <ClInclude Include="Core\ui\uiVertex.h" />
     <ClInclude Include="Core\ui\VertexBufferUI.h" />
@@ -210,8 +213,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)\Dependencies\SFML;$(SolutionDir)\Dependencies\GLFW\include;$(SolutionDir)\Dependencies\glm;$(SolutionDir)\Dependencies\vld;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\Dependencies\SFML\lib;$(SolutionDir)\Debug;$(SolutionDir)\Dependencies\GLFW\lib-vc2015;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\Dependencies\SFML;$(SolutionDir)\Dependencies\GLFW\include;$(SolutionDir)\Dependencies\glm;$(SolutionDir)\Dependencies\vld;$(SolutionDir)\Dependencies\glew-1.11.0\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\Dependencies\SFML\lib;$(SolutionDir)\Debug;$(SolutionDir)\Dependencies\GLFW\lib-vc2015;$(SolutionDir)\Dependencies\glew-1.11.0\lib\Release\Win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>

@@ -1,13 +1,12 @@
 #ifndef CORE_H
 #define CORE_H
 
+
+#include "ui\UIManager.h"
 #include "Input.h"
 #include "../../SoundPlayer/sound/SoundPlayer.h"
-#include "ui\Ui.h"
 
 #undef APIENTRY
-
-#include <GLFW\glfw3.h>
 
 #include "../Network/Client.h"
 #include "../Network/Server.h"
@@ -19,8 +18,6 @@
 #include "Console.h"
 
 #include "CameraInput.h"
-
-#include "ui\UIManager.h"
 
 #include <fstream> //load settings
 #include <sstream>

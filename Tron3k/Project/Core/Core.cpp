@@ -151,7 +151,7 @@ void Core::upMenu(float dt)
 	case 0: //init
 	{
 		uiManager = new UIManager();
-		//uiManager->init("GameFiles/UIFiles/menuFilesNames.txt", console);
+		uiManager->init("GameFiles/UIFiles/menuFilesNames.txt", "GameFiles/UIFiles/menuFileNames2.txt", &console);
 
 		//uiManager->setMenu(0);
 
