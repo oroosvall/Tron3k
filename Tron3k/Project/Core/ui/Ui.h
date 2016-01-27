@@ -8,7 +8,6 @@
 #include "../Console.h"
 #include "Button.h"
 #include "VertexBufferUI.h"
-#include "../Console.h"
 
 #include <vector>
 #include <string>

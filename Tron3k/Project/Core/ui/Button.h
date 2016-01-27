@@ -34,7 +34,7 @@ public:
 
 	int checkCollision(glm::vec2 pos);
 
-	uiVertex returnPosAUv();
+	uiVertex* returnPosAUv();
 };
 
 #endif

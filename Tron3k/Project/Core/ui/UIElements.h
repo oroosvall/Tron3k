@@ -25,7 +25,7 @@ public:
 
 	virtual int checkCollision(glm::vec2 pos) = 0;
 
-	virtual uiVertex returnPosAUv() = 0;
+	virtual uiVertex* returnPosAUv() = 0;
 };
 
 #endif
