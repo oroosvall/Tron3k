@@ -100,13 +100,18 @@ bool DDSTexture::uploadTexture(GLuint &id)
 	return true;
 }
 
-GLuint loadTexture(std::string texturePath)
+GLuint loadTexture(std::string texturePath, int* xres, int* yres)
 {
 	int x;
 	int y;
 	int comp;
 	
 	stbi_uc* image = stbi_load(texturePath.c_str(), &x, &y, &comp, 4);
+
+	if(xres)
+		*xres = x;
+	if(yres)
+		*yres = y;
 
 	GLuint textureID = 0;
 

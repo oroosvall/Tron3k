@@ -694,9 +694,9 @@ void RenderPipeline::ui_initRender()
 	uiQuad.BindVertData();
 }
 
-void RenderPipeline::ui_loadTexture(unsigned int* texid, char* filepath)
+void RenderPipeline::ui_loadTexture(unsigned int* texid, char* filepath, int* xres, int* yres)
 {
-	*texid = loadTexture(std::string(filepath));
+	*texid = loadTexture(std::string(filepath), xres, yres);
 }
 
 void RenderPipeline::ui_renderQuad(float* mat, GLuint textureID, float transp)

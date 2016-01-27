@@ -99,7 +99,7 @@ public:
 	virtual void getSpawnpoints(std::vector < std::vector < SpawnpointG > > &spoints) = 0;
 
 	virtual void ui_initRender() = 0;
-	virtual void ui_loadTexture(unsigned int* texid, char* filepath) = 0;
+	virtual void ui_loadTexture(unsigned int* texid, char* filepath, int* xres, int* yres) = 0;
 	virtual void ui_renderQuad(float* mat, unsigned int textureID, float transp) = 0;
 };
 

@@ -107,8 +107,11 @@ void UIManager::loadInTexture()
 	GLuint temp;
 	for (int i = 0; i < texturePaths.size(); i++)
 	{
-		temp = 0;
-		textureRes[i] = renderPipe->ui_loadTexture(&temp, (char*)(texturePaths[i].c_str()));
+		temp = 0; 
+		int xres, yres;
+		renderPipe->ui_loadTexture(&temp, (char*)(texturePaths[i].c_str()), &xres, &yres);
+		textureRes[0][i].x = xres;
+		textureRes[0][i].y = yres;
 		uiTextureIds.push_back(temp);
 	}
 	texturePaths.clear();

@@ -143,7 +143,7 @@ public:
 	virtual void setRenderFlag(RENDER_FLAGS flag);
 
 	virtual void ui_initRender();
-	virtual void ui_loadTexture(unsigned int* texid, char* filepath);
+	virtual void ui_loadTexture(unsigned int* texid, char* filepath, int* xres, int* yres);
 	virtual void ui_renderQuad(float* mat, unsigned int textureID, float transp);
 };
 
