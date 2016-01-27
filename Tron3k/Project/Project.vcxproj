@@ -74,6 +74,7 @@
     <ClCompile Include="Core\Input.cpp" />
     <ClCompile Include="Core\ui\Button.cpp" />
     <ClCompile Include="Core\ui\Slider.cpp" />
+    <ClCompile Include="Core\ui\StaticTextureBoxes.cpp" />
     <ClCompile Include="Core\ui\UI.cpp" />
     <ClCompile Include="Core\ui\UIManager.cpp" />
     <ClCompile Include="main.cpp" />
@@ -147,6 +148,7 @@
     <ClInclude Include="Core\sharedStructs.h" />
     <ClInclude Include="Core\ui\Button.h" />
     <ClInclude Include="Core\ui\Slider.h" />
+    <ClInclude Include="Core\ui\StaticTextureBoxes.h" />
     <ClInclude Include="Core\ui\UI.h" />
     <ClInclude Include="Core\ui\UIElements.h" />
     <ClInclude Include="Core\ui\UIManager.h" />

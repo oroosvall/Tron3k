@@ -703,19 +703,8 @@ void RenderPipeline::ui_renderQuad(float* mat, GLuint textureID, float transp)
 {
 	//glm::mat4* world = (glm::mat4*)mat;
 
-	//test render
-	glm::mat4 worldtest;
-	// position
-	worldtest[0].w;
-	worldtest[1].w;
-	worldtest[2].w;
-	//sacle
-	worldtest[0].x = 0.25f;
-	worldtest[1].y = 0.25f;
-	worldtest[2].z;
-
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, textureID);
-	glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, (GLfloat*)&worldtest[0][0]);
+	glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, mat);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }

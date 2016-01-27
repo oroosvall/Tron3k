@@ -10,8 +10,9 @@ StaticTextureBoxes::StaticTextureBoxes()
 				    0, 0, 0, 1 };
 	uniqueKey = -1;
 }
-StaticTextureBoxes::StaticTextureBoxes(glm::vec2 positions[], glm::vec2 uv[], int textureId1)
+StaticTextureBoxes::StaticTextureBoxes(glm::vec2 positions[], glm::vec2 uv[], int textureId1, IRenderPipeline* uiRender)
 {
+	this->uiRender = uiRender;
 	glm::vec2 posXY[4];
 	glm::vec2 uv2[4];
 	for (int i = 0; i < 4; i++)
@@ -30,7 +31,7 @@ StaticTextureBoxes::~StaticTextureBoxes() {}
 
 void StaticTextureBoxes::render(int id)
 {
-
+	//renderPipe->ui_renderQuad(&worldtest[0][0], uiTextureIds[0], 1.0f)
 }
 
 void StaticTextureBoxes::setWorldMatrix(float x, float y, int id)
@@ -50,7 +51,7 @@ void StaticTextureBoxes::scalePositions(int scale, int id)
 	worldMatrix[2].z = scale;
 }
 
-void StaticTextureBoxes::fromPosToQuadScreen()
+void StaticTextureBoxes::fromPosToQuadScreen(glm::vec2 positions, int id)
 {
 
 }

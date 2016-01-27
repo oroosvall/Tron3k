@@ -6,6 +6,7 @@
 class StaticTextureBoxes : public UIElements
 {
 private:
+	IRenderPipeline* uiRender;
 	uiVertex pos;
 	int textureIndexList;
 	int textureIndexInUse;
@@ -14,7 +15,7 @@ private:
 
 public:
 	StaticTextureBoxes();
-	StaticTextureBoxes(glm::vec2 positions[], glm::vec2 uv[], int textureId1);
+	StaticTextureBoxes(glm::vec2 positions[], glm::vec2 uv[], int textureId1, IRenderPipeline* uiRender);
 	~StaticTextureBoxes();
 
 	virtual void render(int id);
@@ -25,7 +26,7 @@ public:
 
 	virtual void scalePositions(int scale, int id);
 
-	virtual void fromPosToQuadScreen();
+	virtual void fromPosToQuadScreen(glm::vec2 positions, int id);
 
 	virtual int checkCollision(glm::vec2 pos);
 };

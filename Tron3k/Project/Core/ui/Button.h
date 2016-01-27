@@ -7,7 +7,10 @@
 class Button : public UIElements
 {
 private:
-	uiVertex pos;
+	IRenderPipeline* uiRender;
+	glm::vec2 pos[2];
+	glm::vec2 textureRes;
+	glm::vec2 center;
 	int textureIndexList[2];
 	int textureIndexInUse;
 	int uniqueKey;
@@ -15,7 +18,7 @@ private:
 
 public:
 	Button();
-	Button( glm::vec2 positions[], glm::vec2 uv[], int textureId1, int textureId2, int uniqueKey);
+	Button( glm::vec2 center, int textureId1, int textureId2, int uniqueKey, IRenderPipeline* uiRender, glm::vec2 textRes);
 	~Button();
 
 	virtual void render(int id);
@@ -26,7 +29,7 @@ public:
 
 	virtual void scalePositions(int scale, int id);
 
-	virtual void fromPosToQuadScreen();
+	virtual void fromPosToQuadScreen(glm::vec2 positions, int id);
 
 	virtual int checkCollision(glm::vec2 pos);
 };

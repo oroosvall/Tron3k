@@ -18,8 +18,9 @@ Slider::Slider()
 	objId[0] = -1;
 	objId[1] = -1;
 }
-Slider::Slider(glm::vec2 positions[], glm::vec2 uv[], int textureId1, int textureId2, int uniqueKey, int objId1, int objId2)
+Slider::Slider(glm::vec2 positions[], glm::vec2 uv[], int textureId1, int textureId2, int uniqueKey, int objId1, int objId2, IRenderPipeline* uiRender)
 {
+	this->uiRender = uiRender;
 	glm::vec2 posXY[4];
 	glm::vec2 uv2[4];
 	for (int i = 0; i < 4; i++)
@@ -50,7 +51,7 @@ void Slider::createAdditionalPoint()
 
 void Slider::render(int id)
 {
-
+	//renderPipe->ui_renderQuad(&worldtest[0][0], uiTextureIds[0], 1.0f)
 }
 
 void Slider::setWorldMatrix(float x, float y, int id)
@@ -71,7 +72,7 @@ void Slider::scalePositions(int scale, int id)
 	worldMatrix[id][2].z = scale;
 }
 
-void Slider::fromPosToQuadScreen()
+void Slider::fromPosToQuadScreen(glm::vec2 positions, int id)
 {
 
 }

@@ -23,7 +23,7 @@ public:
 
 	virtual void scalePositions(int scale, int id) = 0;
 
-	virtual void fromPosToQuadScreen() = 0;
+	virtual void fromPosToQuadScreen(glm::vec2 positions, int id) = 0;
 
 	virtual int checkCollision(glm::vec2 pos) = 0;
 

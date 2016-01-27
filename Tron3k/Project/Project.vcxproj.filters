@@ -285,6 +285,9 @@
     <ClCompile Include="Core\ui\Slider.cpp">
       <Filter>Source Files\Core\Ui\uiClasses</Filter>
     </ClCompile>
+    <ClCompile Include="Core\ui\StaticTextureBoxes.cpp">
+      <Filter>Source Files\Core\Ui\uiClasses</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Input.h">
@@ -513,6 +516,9 @@
       <Filter>Source Files\Core\Ui\uiClasses\SuperClass</Filter>
     </ClInclude>
     <ClInclude Include="Core\ui\Slider.h">
+      <Filter>Source Files\Core\Ui\uiClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\ui\StaticTextureBoxes.h">
       <Filter>Source Files\Core\Ui\uiClasses</Filter>
     </ClInclude>
   </ItemGroup>

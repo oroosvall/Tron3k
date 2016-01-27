@@ -95,7 +95,7 @@ void UIManager::init(Console* console)
 		console->printMsg("Error: UIManager.init could not open the second groups file.", "System", 'S');
 	myfile.close();
 
-	currentGroup = 0;
+	currentGroup = 1;
 
 	LoadNextSet(0); //Load the first set of menus.
 	setMenu(0); //Set start menu as the current menu
@@ -108,7 +108,7 @@ void UIManager::loadInTexture()
 	for (int i = 0; i < texturePaths.size(); i++)
 	{
 		temp = 0;
-		renderPipe->ui_loadTexture(&temp, (char*)(texturePaths[i].c_str()));
+		textureRes[i] = renderPipe->ui_loadTexture(&temp, (char*)(texturePaths[i].c_str()));
 		uiTextureIds.push_back(temp);
 	}
 	texturePaths.clear();
@@ -116,22 +116,22 @@ void UIManager::loadInTexture()
 
 void UIManager::render()
 {
-	renderPipe->ui_initRender();
+	//renderPipe->ui_initRender();
+	//
+	////test render
+	//glm::mat4 worldtest;
+	//// position
+	//worldtest[0].w;
+	//worldtest[1].w;
+	//worldtest[2].w;
+	////sacle
+	//worldtest[0].x = 0.25f;
+	//worldtest[1].y = 0.25f;
+	//worldtest[2].z;
+	//
+	//renderPipe->ui_renderQuad(&worldtest[0][0], uiTextureIds[0], 1.0f);
 
-	//test render
-	glm::mat4 worldtest;
-	// position
-	worldtest[0].w;
-	worldtest[1].w;
-	worldtest[2].w;
-	//sacle
-	worldtest[0].x = 0.25f;
-	worldtest[1].y = 0.25f;
-	worldtest[2].z;
-
-	renderPipe->ui_renderQuad(&worldtest[0][0], uiTextureIds[0], 1.0f);
-
-	//menus[currentMenu].render(uiTextureIds);
+	menus[currentMenu].render(uiTextureIds);
 }
 
 
@@ -180,14 +180,20 @@ bool UIManager::LoadNextSet(int whichMenuGroup)
 	{
 		menus = new UI[nrOfFileNamesFirstGroup];
 		for (int i = 0; i < nrOfFileNamesFirstGroup; i++)
-			menus[i].init(fileNamesListFirstGroup[i], console);
+		{
+			menus[i].init(fileNamesListFirstGroup[i], console, renderPipe, textureRes);
+			nrOfMenus++;
+		}
 		break;
 	}
 	case 1: //Second Group
 	{
 		menus = new UI[nrOfFileNamesSecondGroup];
 		for (int i = 0; i < nrOfFileNamesSecondGroup; i++)
-			menus[i].init(fileNamesListSecondGroup[i], console);
+		{
+			menus[i].init(fileNamesListSecondGroup[i], console, renderPipe, textureRes);
+			nrOfMenus++;
+		}
 		break;
 	}
 	default:

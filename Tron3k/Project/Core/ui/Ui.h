@@ -23,8 +23,11 @@
 class UI
 {
 private:
+	IRenderPipeline *uiRender;
+
 	//Lists
-	Button* UiObjects;
+	std::vector<glm::vec2>* textureRes;
+	std::vector<UIElements*> UiObjects;
 	int* textureIdList;
 
 	//Counters
@@ -50,7 +53,7 @@ public:
 	~UI();
 
 	//Start
-	void init(std::string fileName, Console* console);
+	void init(std::string fileName, Console* console, IRenderPipeline* uiRender, std::vector<glm::vec2>* textureRes);
 	
 	void render(std::vector<GLuint> uiTextureIds);
 

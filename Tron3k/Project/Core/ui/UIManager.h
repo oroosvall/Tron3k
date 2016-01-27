@@ -31,6 +31,7 @@ private:
 	int currentGroup;
 
 	//Render stuff
+	std::vector<glm::vec2>* textureRes;
 	std::vector<GLuint> uiTextureIds;
 	std::vector<std::string> texturePaths;
 

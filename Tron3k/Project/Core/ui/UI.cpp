@@ -3,7 +3,6 @@
 UI::UI() 
 {
 	//Pointers
-	UiObjects = nullptr;
 	textureIdList = nullptr;
 
 	//Counters
@@ -20,12 +19,14 @@ UI::~UI()
 
 void UI::render(std::vector<GLuint> uiTextureIds)
 {
-	for (int i = 0; i < nrOfObjects; i++) 
-		UiObjects->render(i);
+	for (int i = 0; i < UiObjects.size(); i++)
+		UiObjects[i]->render(i);
 }
 
-void UI::init(std::string fileName, Console* console)
+void UI::init(std::string fileName, Console* console, IRenderPipeline* uiRender, std::vector<glm::vec2>* textureRes)
 {
+	this->textureRes = textureRes;
+	this->uiRender = uiRender;
 	this->console = console;
 
 	bool result = loadUI(fileName);
@@ -63,30 +64,17 @@ bool UI::loadUI(std::string fileName)
 		while (!myfile.eof()) //Looping through the file until there is nothing left to read.
 		{
 			std::string temp;
-			glm::vec2 xy[4];
-			glm::vec2 uv[4];
+			glm::vec2 xy;
 			std::stringstream ss("");
 	
-			for (int i = 0; i < 4; i++) //stoi doesn't work with decimals
-			{
-				getline(myfile, inputString); //X, Y
-				ss = std::stringstream(inputString);
-				ss >> temp;
-				x = std::stof(temp);
-				ss >> temp;
-				y = std::stof(temp);
-	
-				getline(myfile, inputString); //U, Vs
-				ss = std::stringstream(inputString);
-				ss >> temp;
-				u = std::stoi(temp);
-				ss >> temp;
-				v = std::stoi(temp);
-	
-				xy[i] = glm::vec2(x, y);
-				uv[i] = glm::vec2(u, v);
-				xy[i] = fileCoordToScreenSpace(xy[i]);
-			}
+			//Positions and UVs
+			//stoi doesn't work with decimals
+			getline(myfile, inputString); //X, Y
+			ss = std::stringstream(inputString);
+			ss >> temp;
+			xy.x = std::stof(temp);
+			ss >> temp;
+			xy.y = std::stof(temp);
 	
 			getline(myfile, inputString); //tex1
 			textureId1 = std::stoi(inputString);
@@ -97,20 +85,21 @@ bool UI::loadUI(std::string fileName)
 			getline(myfile, inputString); //scale
 			scale = std::stoi(inputString);
 	
+			//Which class
 			getline(myfile, inputString);
 			classId = std::stoi(inputString);
 
 			if (classId == 0) //Button
 			{
-				UiObjects[counter] = Button(xy, uv, textureId1, textureId2, uniqueKey);
-				UiObjects[counter].scalePositions(scale, 0);
+				UiObjects.push_back(new Button(xy, textureId1, textureId2, uniqueKey, uiRender, textureRes[0][counter]));
+				UiObjects[counter]->scalePositions(scale, 0);
 				textureIdList[counter] = textureId1;
 				result = true;
 				counter++;
 			}
 			else if (classId == 1) //StaticTextBox
 			{
-				//UiObjects[counter] = StaticTextBox(xy, uv, textureId1, uniqueKey);
+				//UiObjects.push_back(StaticTextBox(xy, textureId1, uniqueKey, uiRender, *textureRes[counter]));
 				//UiObjects[counter].scalePositions(scale, 0);
 				//textureIdList[counter] = textureId1;
 				//result = true;
@@ -118,7 +107,7 @@ bool UI::loadUI(std::string fileName)
 			}
 			else if (classId == 3) //Slider
 			{
-				//UiObjects[counter] = Slider(xy, uv, textureId1, textureId2, uniqueKey, counter, counter+1);
+				//UiObjects.push_back(Slider(xy, textureId1, textureId2, uniqueKey, counter, counter+1, uiRender, *textureRes[counter]));
 				//UiObjects[counter].scalePositions(scale, 0);
 				//textureIdList[counter] = textureId1;
 
@@ -141,12 +130,14 @@ bool UI::loadUI(std::string fileName)
 
 void UI::clean()
 {
-	if (UiObjects != nullptr)
-		delete[] UiObjects;
+	UiObjects.clear();
+	for (int i = 0; i < UiObjects.size(); i++)
+	{
+		delete UiObjects[0];
+	}
 	if (textureIdList != nullptr)
 		delete[] textureIdList;
 
-	UiObjects = nullptr;
 	textureIdList = nullptr;
 	console = nullptr;
 
@@ -173,7 +164,7 @@ int UI::mouseCollission(glm::vec2 pos)
 	
 	for (int i = 0; i < nrOfObjects && hit != -1; i++)
 	{
-		hit = UiObjects[i].checkCollision(pos);
+		hit = UiObjects[i]->checkCollision(pos);
 	}
 	
 	if (hit != -1)
@@ -209,7 +200,7 @@ int UI::collisionEvent(int UniqueKey) //Every button in every menu have a unique
 
 void UI::changeTex(int objId)
 {
-	UiObjects[objId].changeTexUsed();
+	UiObjects[objId]->changeTexUsed();
 }
 
 //Empty
