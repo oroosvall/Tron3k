@@ -524,7 +524,8 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 						{
 							role.swapWeaponLocal(0);
 							msg = WPNSWITCH;
-							animOverideIfPriority(anim_first_current, AnimationState::first_primary_switch);
+
+							animOverideIfPriority(anim_first_current, AnimationState::first_secondary_switch);
 							if (animRole == ROLES::MANIPULATOR || animRole == ROLES::BRUTE)
 								animOverideIfPriority(anim_third_current, AnimationState::third_secondary_switch);
 						}
@@ -536,7 +537,12 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 						{
 							role.swapWeaponLocal(1);
 							msg = WPNSWITCH;
-							animOverideIfPriority(anim_first_current, AnimationState::first_primary_switch);
+
+							if(animRole == ROLES::TRAPPER)
+								animOverideIfPriority(anim_first_current, AnimationState::first_secondary_switch);
+							else
+								animOverideIfPriority(anim_first_current, AnimationState::first_primary_switch);
+
 							if (animRole == ROLES::MANIPULATOR || animRole == ROLES::BRUTE)
 								animOverideIfPriority(anim_third_current, AnimationState::third_primary_switch);
 

@@ -1086,27 +1086,8 @@ void Core::renderWorld(float dt)
 		dgColor[0] = 0; dgColor[1] = 0; dgColor[2] = 0;
 		renderPipe->renderMISC(-3, (void*)&(CameraInput::getCam()->getSkyboxMat()), dgColor, 0.0f);
 
-		//send all lights
-		bool firstLight = true;
-		for (size_t i = 0; i < MAX_CONNECT; i++)
-		{
-			Player* p = game->getPlayer(i);
-			if (p)
-			{
-				SpotLight light;
-				light.Position = p->getPos();
-				light.Direction = vec3(0.0f);//p->getDir();
-				light.DiffuseIntensity = 0.0f;
-				if (firstLight)
-				{
-					light.AmbientIntensity = 0.3f;
-					firstLight = false;
-				}
-				renderPipe->addLight(&light);
-			}
-		}
-
 		//render players
+		SpotLight light;
 
 		//find out if we are hacked, or the player we are spectating is hacked
 		int hackedTeam = -1;
@@ -1155,10 +1136,18 @@ void Core::renderWorld(float dt)
 							dgColor[0] = TEAMONECOLOR.r; dgColor[1] = TEAMONECOLOR.g; dgColor[2] = TEAMONECOLOR.b;
 						}
 					}
+
 					//static intense based on health
 					float hpval = float(p->getHP()) / 130.0f;
 
-					
+					//send player light
+					light.Position = p->getPos();
+					light.Position.y -= 0.5f;
+					light.Direction = vec3(0.0f);//p->getDir();
+					light.Color = vec3(dgColor[0], dgColor[1], dgColor[2]);
+					light.DiffuseIntensity = 0.2f;
+					renderPipe->addLight(&light);
+		
 					//If first person render
 					if (!force3rd && p->isLocal() && !game->freecam || game->spectateID == i)
 					{
