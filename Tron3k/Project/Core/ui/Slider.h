@@ -15,6 +15,7 @@ private:
 	int nrOfButtons;
 	int objId[2];
 
+	void createAdditionalPoint();
 public:
 	Slider();
 	Slider(glm::vec2 positions[], glm::vec2 uv[], int textureId1, int textureId2, int uniqueKey, int objId1, int objId2);
@@ -31,8 +32,6 @@ public:
 	virtual void fromPosToQuadScreen();
 
 	virtual int checkCollision(glm::vec2 pos);
-
-	virtual uiVertex* returnPosAUv(int id);
 };
 
 #endif

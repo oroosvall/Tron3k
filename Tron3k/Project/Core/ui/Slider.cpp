@@ -18,7 +18,7 @@ Slider::Slider()
 	objId[0] = -1;
 	objId[1] = -1;
 }
-Slider::Slider(glm::vec2 positions[], glm::vec2 uv[], int textureId1, int textureId2, int uniqueKey, int objId1, int objId2) //Kolla mer på denna
+Slider::Slider(glm::vec2 positions[], glm::vec2 uv[], int textureId1, int textureId2, int uniqueKey, int objId1, int objId2)
 {
 	glm::vec2 posXY[4];
 	glm::vec2 uv2[4];
@@ -37,8 +37,16 @@ Slider::Slider(glm::vec2 positions[], glm::vec2 uv[], int textureId1, int textur
 
 	objId[0] = objId1;
 	objId[1] = objId2;
+
+	createAdditionalPoint();
 }
 Slider::~Slider() {}
+
+
+void Slider::createAdditionalPoint()
+{
+
+}
 
 void Slider::render(int id)
 {
@@ -51,6 +59,7 @@ void Slider::setWorldMatrix(float x, float y, int id)
 	worldMatrix[id][1].w = y;
 }
 
+//Empty
 void Slider::changeTexUsed()
 {
 }
@@ -80,12 +89,6 @@ int Slider::checkCollision(glm::vec2 mpos)
 
 	return returnValue;
 }
-
-uiVertex* Slider::returnPosAUv(int id)
-{
-	return pos;
-}
-
 
 
 

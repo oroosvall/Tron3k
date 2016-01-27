@@ -1,22 +1,21 @@
-#pragma once
-#ifndef BUTTON_H
-#define BUTTON_H
+#ifndef STATICTEXTUREBOXES_H
+#define STATICTEXTUREBOXES_H
 
 #include "UIElements.h"
 
-class Button : public UIElements
+class StaticTextureBoxes : public UIElements
 {
 private:
 	uiVertex pos;
-	int textureIndexList[2];
+	int textureIndexList;
 	int textureIndexInUse;
 	int uniqueKey;
 	glm::mat4 worldMatrix;
 
 public:
-	Button();
-	Button( glm::vec2 positions[], glm::vec2 uv[], int textureId1, int textureId2, int uniqueKey);
-	~Button();
+	StaticTextureBoxes();
+	StaticTextureBoxes(glm::vec2 positions[], glm::vec2 uv[], int textureId1);
+	~StaticTextureBoxes();
 
 	virtual void render(int id);
 
