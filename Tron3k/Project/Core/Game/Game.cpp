@@ -233,6 +233,10 @@ void Game::update(float dt)
 
 			if (msg == 1)		//Effect is dead
 			{
+				//TODO: add effect removal in physics
+				int pid = -1, eid = -1;
+				effects[i][c]->getId(pid, eid);
+				physics->removeEffect(eid);
 				removeEffect(EFFECT_TYPE(i), c);
 			}
 
@@ -355,18 +359,18 @@ void Game::updateEffectBox(Effect* effect)
 	std::vector<float> eBox;
 	switch (effect->getType())
 	{
-	case EFFECT_TYPE::LIGHT_WALL:
 		int pid, eid;
-		LightwallEffect* lWall = (LightwallEffect*)effect;
-		if (lWall->getDong()) //since the effect updates, we need to resend the box to physics
+	case EFFECT_TYPE::LIGHT_WALL:
+
+		if (((LightwallEffect*)(effect))->getDong()) //since the effect updates, we need to resend the box to physics
 		{
-			lWall->getId(pid, eid);
+			((LightwallEffect*)(effect))->getId(pid, eid);
 			physics->removeEffect(eid);
 			glm::vec3 sPos, gPos;
 			float height = 2.5f;
 
-			gPos = lWall->getEndPoint();
-			sPos = lWall->getPos();
+			gPos = ((LightwallEffect*)(effect))->getEndPoint();
+			sPos = ((LightwallEffect*)(effect))->getPos();
 			std::vector<float> eBox;
 			eBox.push_back(sPos.x);
 			eBox.push_back(sPos.y);
@@ -377,6 +381,30 @@ void Game::updateEffectBox(Effect* effect)
 			eBox.push_back(gPos.z);
 			physics->receiveEffectBox(eBox, EFFECT_TYPE::LIGHT_WALL, pid, eid);
 		}
+		break;
+	case EFFECT_TYPE::THUNDER_DOME:
+
+		break;
+	case EFFECT_TYPE::BATTERY_SLOW:
+
+		break;
+	case EFFECT_TYPE::BATTERY_SPEED:
+
+		break;
+	case EFFECT_TYPE::CLEANSEEXPLOSION:
+
+		break;
+	case EFFECT_TYPE::THERMITE_CLOUD:
+
+		break;
+	case EFFECT_TYPE::VACUUM:
+
+		break;
+	case EFFECT_TYPE::ZEROFRICTION:
+
+		break;
+	case EFFECT_TYPE::EXPLOSION:
+
 		break;
 	}
 }
