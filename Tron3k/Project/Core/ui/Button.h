@@ -11,7 +11,7 @@ private:
 	int textureIndexList[2];
 	int textureIndexInUse;
 	int uniqueKey;
-	glm::mat4 worldMatrix[2];
+	glm::mat4 worldMatrix;
 	int nrOfButtons;
 
 	GLuint uniformTextureLocation;
@@ -21,20 +21,19 @@ private:
 public:
 	Button();
 	Button( glm::vec2 positions[], glm::vec2 uv[], int textureId1, int textureId2, int uniqueKey, GLuint shader, GLuint worldMat, GLuint textureLocation);
-	//Button(...) //Constructor for sliders
 	~Button();
 
-	void render(std::vector<GLuint> textureIds, int i, GLuint gVertexAttribute, GLuint gVertexBuffer);
+	//virtual void render(/*std::vector<GLuint> textureIds,*/ int i, GLuint gVertexAttribute, GLuint gVertexBuffer);
 
-	void setWorldMatrix(float x, float y, int id);
+	virtual void setWorldMatrix(float x, float y, int id);
 
-	void changeTexUsed();
+	virtual void changeTexUsed();
 
-	void scalePositions(int scale, int id);
+	virtual void scalePositions(int scale, int id);
 
-	int checkCollision(glm::vec2 pos);
+	virtual int checkCollision(glm::vec2 pos);
 
-	uiVertex* returnPosAUv();
+	virtual uiVertex* returnPosAUv(int id);
 };
 
 #endif

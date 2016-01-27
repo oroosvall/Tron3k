@@ -15,7 +15,7 @@
 class UIElements
 {
 public:
-	virtual void render(std::vector<GLuint> textureIds, int i, GLuint gVertexAttribute, GLuint gVertexBuffer) = 0;
+	//virtual void render(std::vector<GLuint> textureIds, int i, GLuint gVertexAttribute, GLuint gVertexBuffer) = 0;
 
 	virtual void setWorldMatrix(float x, float y, int id) = 0;
 
@@ -25,7 +25,7 @@ public:
 
 	virtual int checkCollision(glm::vec2 pos) = 0;
 
-	virtual uiVertex* returnPosAUv() = 0;
+	virtual uiVertex* returnPosAUv(int id) = 0;
 };
 
 #endif

@@ -42,15 +42,15 @@ void UIManager::init(std::string fileNameFirstGroup, std::string fileNameSecondG
 	uniformtextureLocation = glGetUniformLocation(shader, "textureSample");
 	uniformWorldMat = glGetUniformLocation(shader, "WorldMatrix");
 	
-	GLuint temp;
-	std::string shaderNamesDeffered[] = { "GameFiles/Shaders/uiShader_vs.glsl", "GameFiles/Shaders/uiShader_fs.glsl" };
-	GLenum shaderTypesDeffered[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
-	CreateProgram(temp, shaderNamesDeffered, shaderTypesDeffered, 2);
-	if (temp != 0)
-	{
-		shader = temp;
-		temp = 0;
-	}
+	//GLuint temp;
+	//std::string shaderNamesDeffered[] = { "GameFiles/Shaders/uiShader_vs.glsl", "GameFiles/Shaders/uiShader_fs.glsl" };
+	//GLenum shaderTypesDeffered[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
+	////CreateProgram(temp, shaderNamesDeffered, shaderTypesDeffered, 2);
+	//if (temp != 0)
+	//{
+	//	shader = temp;
+	//	temp = 0;
+	//}
 
 	loadInTexture();
 
@@ -84,7 +84,6 @@ void UIManager::init(std::string fileNameFirstGroup, std::string fileNameSecondG
 	myfile.close();
 
 	//Open the second groups file
-	std::ifstream myfile;
 	myfile.open(fileNameSecondGroup);
 
 	if (myfile.is_open())
@@ -124,23 +123,20 @@ void UIManager::loadInTexture()
 	texturePaths.clear();
 	GLuint temp;
 
-	for (int i = 0; i < texturePaths.size(); i++)
-	{
-		temp = loadTexture(texturePaths[i]);
-		uiTextureIds.push_back(temp);
-	}
+	//for (int i = 0; i < texturePaths.size(); i++)
+	//{
+	//	temp = loadTexture(texturePaths[i]);
+	//	uiTextureIds.push_back(temp);
+	//}
 }
 
 void UIManager::render()
 {
-	glClearColor(0, 0, 0, 1);
-	glClear(GL_COLOR_BUFFER_BIT);
-
-	glDisable(GL_DEPTH_TEST);
+	//glDisable(GL_DEPTH_TEST);
 
 	menus[currentMenu].render(uiTextureIds);
 
-	glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_DEPTH_TEST);
 }
 
 
@@ -202,4 +198,6 @@ bool UIManager::LoadNextSet(int whichMenuGroup)
 	default:
 		break;
 	}
+
+	return true;
 }

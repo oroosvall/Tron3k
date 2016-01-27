@@ -26,14 +26,8 @@ UI::~UI()
 
 void UI::render(std::vector<GLuint> uiTextureIds)
 {
-	glUseProgram(shader);
-
-//	for (int i = 0; i < nrOfObjects; i++) 
-//		UiObjects->render(uiTextureIds, i);
-
-	GLenum error = glGetError();
-	if (error != GL_NO_ERROR)
-		printf("Error");
+	//for (int i = 0; i < nrOfObjects; i++) 
+	//	UiObjects->render(uiTextureIds, i, buffers.gVertexAttribute[i], buffers.gVertexBuffer[i]);
 }
 
 void UI::init(std::string fileName, GLuint shader, GLuint worldMat, GLuint textureLocation, Console* console)
@@ -50,6 +44,7 @@ void UI::init(std::string fileName, GLuint shader, GLuint worldMat, GLuint textu
 	newBuffers();
 }
 
+//Needs to be modified
 bool UI::loadUI(std::string fileName) 
 {
 	bool result = false;
@@ -63,7 +58,7 @@ bool UI::loadUI(std::string fileName)
 		std::string inputString;
 		int convertedResult = -1;
 		float x = -1.0f, y = -1.0f, u = -1.0f, v = -1.0f;
-		int textureId1 = -1, textureId2 = -1, scale = -1, counter = 0, uniqueKey = 0;
+		int textureId1 = -1, textureId2 = -1, scale = -1, counter = 0, uniqueKey = 0, classId = -1;
 	
 		//Number of objects
 		getline(myfile, inputString);
@@ -113,11 +108,38 @@ bool UI::loadUI(std::string fileName)
 			getline(myfile, inputString); //scale
 			scale = std::stoi(inputString);
 	
-			UiObjects[counter] = Button(xy, uv, textureId1, textureId2, uniqueKey, shader, uniformWorldMatrix, uniformTextureLocation);
-//			UiObjects[counter].scalePositions(scale);
-			textureIdList[counter] = textureId1;
-			result = true;
-			counter++;
+			getline(myfile, inputString);
+			classId = std::stoi(inputString);
+
+			if (classId == 0) //Button
+			{
+				UiObjects[counter] = Button(xy, uv, textureId1, textureId2, uniqueKey, shader, uniformWorldMatrix, uniformTextureLocation);
+				UiObjects[counter].scalePositions(scale, 0);
+				textureIdList[counter] = textureId1;
+				result = true;
+				counter++;
+			}
+			else if (classId == 1) //StaticTextBox
+			{
+				//UiObjects[counter] = StaticTextBox(xy, uv, textureId1, uniqueKey, shader, uniformWorldMatrix, uniformTextureLocation);
+				//UiObjects[counter].scalePositions(scale, 0);
+				//textureIdList[counter] = textureId1;
+				//result = true;
+				//counter++;
+			}
+			else if (classId == 3) //Slider
+			{
+				//UiObjects[counter] = Slider(xy, uv, textureId1, textureId2, uniqueKey, counter, counter+1, shader, uniformWorldMatrix, uniformTextureLocation);
+				//UiObjects[counter].scalePositions(scale, 0);
+				//textureIdList[counter] = textureId1;
+
+				//counter++;
+				//textureIdList[counter] = textureId2;
+				//result = true;
+				//counter++;
+			}
+			//else if(classId == 2) {} //DynamicText
+			//else if(classId == 4) {} //Input window
 		}
 	}
 	else
@@ -234,7 +256,7 @@ void UI::createBuffer(int id)
 	//create buffer and set data
 	glGenBuffers(1, &buffers.gVertexBuffer[id]);
 	glBindBuffer(GL_ARRAY_BUFFER, buffers.gVertexBuffer[id]);
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_ui) * 4, &UiObjects[id].returnPosAUv()[0], GL_STATIC_DRAW); // &tester[id].posList[0] bytt ut mot UIs buttons Vertex
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_ui) * 4, &UiObjects[id].returnPosAUv(id)[0], GL_STATIC_DRAW); 
 
 	//define vertex data layout
 	glGenVertexArrays(1, &buffers.gVertexAttribute[id]);
@@ -247,9 +269,6 @@ void UI::createBuffer(int id)
 	GLint vertexUV = glGetAttribLocation(shader, "vertex_uv");
 	glVertexAttribPointer(vertexUV, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex_ui), BUFFER_OFFSET(sizeof(float) * 2));
 
-	GLenum error = glGetError();
-	if (error != GL_NO_ERROR)
-		printf("Error");
 }
 //Empty
 void UI::removeMenu() 

@@ -5,16 +5,11 @@ Button::Button()
 	textureIndexList[0] = -1;
 	textureIndexList[1] = -1;
 	textureIndexInUse = -1;
-	worldMatrix[0] = { 1, 0, 0, 0,
+	worldMatrix = { 1, 0, 0, 0,
 					0, 1, 0, 0,
 					0, 0, 1, 0,
 					0, 0, 0, 1
 					};
-	worldMatrix[1] = { 1, 0, 0, 0,
-		0, 1, 0, 0,
-		0, 0, 1, 0,
-		0, 0, 0, 1
-	};
 	uniqueKey = -1;
 	nrOfButtons = 0;
 }
@@ -42,28 +37,29 @@ Button::Button(glm::vec2 positions[], glm::vec2 uv[], int textureId1, int textur
 }
 Button::~Button() {}
 
-void Button::render(std::vector<GLuint> textureIds, int i, GLuint gVertexAttribute, GLuint gVertexBuffer)
-{
-	//Kolla i den andra koden ifall textur aktiveringen och bindningen ska se ut så där.;
-	//Activate the buttons texture
-
-	glActiveTexture(GL_TEXTURE0 + textureIds[textureIndexInUse]);
-	glBindTexture(GL_TEXTURE_2D, textureIds[textureIndexInUse]);
-
-	glProgramUniform1i(shader, uniformTextureLocation, i);
-	glProgramUniformMatrix4fv(shader, uniformWorldMatrix, 1, GL_FALSE, &worldMatrix[0][0][0]);
-
-	//Bind the vertex buffer that will be used
-	glBindVertexArray(gVertexAttribute);
-	glBindBuffer(GL_ARRAY_BUFFER, gVertexBuffer);
-
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-}
+//void Button::render(std::vector<GLuint> textureIds, int i, GLuint gVertexAttribute, GLuint gVertexBuffer)
+//{
+//	//glBindTexture(GL_TEXTURE_2D, vertexRenderBuffers[currentMenu].textureIDs[id]);
+//
+//	//Kolla i den andra koden ifall textur aktiveringen och bindningen ska se ut så där.;
+//	//Activate the buttons texture
+//	glActiveTexture(GL_TEXTURE0 + i);
+//	glBindTexture(GL_TEXTURE_2D, textureIds[textureIndexInUse]);
+//
+//	glProgramUniform1i(shader, uniformTextureLocation, i);
+//	glProgramUniformMatrix4fv(shader, uniformWorldMatrix, 1, GL_FALSE, (GLfloat*)&worldMatrix[0][0]);
+//
+//	//Bind the vertex buffer that will be used
+//	glBindVertexArray(gVertexAttribute);
+//	glBindBuffer(GL_ARRAY_BUFFER, gVertexBuffer);
+//
+//	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+//}
 
 void Button::setWorldMatrix(float x, float y, int id)
 {
-	worldMatrix[id][0].w = x;
-	worldMatrix[id][1].w = y;
+	worldMatrix[0].w = x;
+	worldMatrix[1].w = y;
 }
 
 void Button::changeTexUsed() 
@@ -77,9 +73,9 @@ void Button::changeTexUsed()
 
 void Button::scalePositions(int scale, int id) 
 {
-	worldMatrix[id][0].x = scale;
-	worldMatrix[id][1].y = scale;
-	worldMatrix[id][2].z = scale;
+	worldMatrix[0].x = scale;
+	worldMatrix[1].y = scale;
+	worldMatrix[2].z = scale;
 }
 
 int Button::checkCollision(glm::vec2 mpos)
@@ -97,4 +93,9 @@ int Button::checkCollision(glm::vec2 mpos)
 	}
 	
 	return returnValue;
+}
+
+uiVertex* Button::returnPosAUv(int id)
+{
+	return pos;
 }

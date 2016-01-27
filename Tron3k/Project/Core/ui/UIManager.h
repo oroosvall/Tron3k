@@ -3,8 +3,7 @@
 #define UIMANAGER_H
 
 #include "UI.h"
-#include "../../../RenderPipeline/Texture.h"
-#include "../../../RenderPipeline/Shader.h"
+#include "../../../RenderPipeline/IRenderPipeline.h"
 #include <string>
 #include <iostream>
 #include <sstream>
