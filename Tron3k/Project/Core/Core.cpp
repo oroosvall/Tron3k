@@ -1211,7 +1211,8 @@ void Core::renderWorld(float dt)
 			for (unsigned int i = 0; i < eff.size(); i++)
 			{
 				LightwallEffect* derp = (LightwallEffect*)eff[i];
-
+				if (EFFECT_TYPE::THUNDER_DOME)
+					int td = 0;
 				int pid, eid;
 				derp->getId(pid, eid);
 				int team = game->getPlayer(pid)->getTeam();
