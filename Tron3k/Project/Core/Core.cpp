@@ -1278,14 +1278,14 @@ void Core::createWindow(int x, int y, bool fullscreen)
 		win = glfwCreateWindow(
 			x, y, "ASUM PROJECT", glfwGetPrimaryMonitor(), NULL);
 
-	//set vsync off
-	glfwSwapInterval(0);
-
 	i->setupCallbacks(win);
 
 	glfwShowWindow(win);
 
 	glfwMakeContextCurrent(win);
+
+	//set vsync off
+	glfwSwapInterval(0);
 
 	if (renderPipe)
 	{
