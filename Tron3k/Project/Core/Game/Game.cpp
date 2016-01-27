@@ -1068,6 +1068,11 @@ void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec
 		addEffectToList(conID, sID, EFFECT_TYPE::LIGHT_WALL, pos);
 	}
 	break;
+	case SPECIAL_TYPE::THUNDERDOME:
+		if (!p->isLocal())
+			p->setDir(dir);
+		addEffectToList(conID, sID, EFFECT_TYPE::THUNDER_DOME, pos);
+		break;
 	case SPECIAL_TYPE::MULTIJUMP:
 	{
 		if (GetSoundActivated())
@@ -1142,6 +1147,9 @@ void Game::addEffectToList(int conID, int effectId, EFFECT_TYPE et, glm::vec3 po
 		if (GetSoundActivated())
 			GetSound()->playExternalSound(SOUNDS::soundEffectLightWall, pos.x, pos.y, pos.z);
 
+		break;
+	case EFFECT_TYPE::THUNDER_DOME:
+		e = new ThunderDomeEffect(p);
 		break;
 	case EFFECT_TYPE::EXPLOSION:
 		e = new Explosion();

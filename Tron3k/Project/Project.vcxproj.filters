@@ -279,6 +279,12 @@
     <ClCompile Include="Core\Game\Role\Special\SpecialTypes\WallJump.cpp">
       <Filter>Source Files\Core\Game\Role\Special\SpecialTypes</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\ThunderDomeEffect.cpp">
+      <Filter>Source Files\Core\Game\Role\PlayerEffects\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Game\Role\Special\SpecialTypes\ThunderDome.cpp">
+      <Filter>Source Files\Core\Game\Role\Special\SpecialTypes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Input.h">
@@ -502,6 +508,12 @@
     </ClInclude>
     <ClInclude Include="Core\ui\Vertex_ui.h">
       <Filter>Source Files\Core\Ui\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\ThunderDomeEffect.h">
+      <Filter>Source Files\Core\Game\Role\PlayerEffects\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Special\SpecialTypes\ThunderDome.h">
+      <Filter>Source Files\Core\Game\Role\Special\SpecialTypes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

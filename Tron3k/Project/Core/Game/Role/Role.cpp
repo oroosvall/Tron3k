@@ -128,7 +128,7 @@ void Role::loadRoleSpecifics(int _role)
 			break;
 		case BRUTE:
 			role = 3;
-			specialAbility = new Lightwall(this);
+			specialAbility = new ThunderDome(this);
 			specialAbility->init();
 			mobility = new Dash();
 			mobility->init();
