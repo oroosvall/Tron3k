@@ -26,31 +26,23 @@ UIManager::~UIManager()
 }
 
 //Start menu
-void UIManager::init(std::string fileNameFirstGroup, std::string fileNameSecondGroup, Console* console)
+void UIManager::init(Console* console)
 {
+	std::string fileNameFirstGroup = "GameFiles/UIFiles/menuFilesNames.txt";
+	std::string fileNameSecondGroup = "GameFiles/UIFiles/menuFileNames2.txt";
 	this->console = console;
 
 	//Texture Paths
-	texturePaths.push_back("../../../Debug/GameFiles/Textures/UITextures/grassTexture.png");
-	texturePaths.push_back("../../../Debug/GameFiles/Textures/UITextures/secondTexture.png");
-	texturePaths.push_back("../../../Debug/GameFiles/Textures/UITextures/thirdTexture.png");
-	texturePaths.push_back("../../../Debug/GameFiles/Textures/UITextures/fourthTexture.png");
-	texturePaths.push_back("../../../Debug/GameFiles/Textures/UITextures/fifthTexture.png");
+	texturePaths.push_back("GameFiles/Textures/UITextures/testmap.png");
+	texturePaths.push_back("GameFiles/Textures/UITextures/multiplayer.png");
+	texturePaths.push_back("GameFiles/Textures/UITextures/settings.png");
+	texturePaths.push_back("GameFiles/Textures/UITextures/exit.png");
+	texturePaths.push_back("GameFiles/Textures/UITextures/fifthTexture.png");
 
 	//Render stuff
 	shader;
 	uniformtextureLocation = glGetUniformLocation(shader, "textureSample");
 	uniformWorldMat = glGetUniformLocation(shader, "WorldMatrix");
-	
-	//GLuint temp;
-	//std::string shaderNamesDeffered[] = { "GameFiles/Shaders/uiShader_vs.glsl", "GameFiles/Shaders/uiShader_fs.glsl" };
-	//GLenum shaderTypesDeffered[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
-	////CreateProgram(temp, shaderNamesDeffered, shaderTypesDeffered, 2);
-	//if (temp != 0)
-	//{
-	//	shader = temp;
-	//	temp = 0;
-	//}
 
 	loadInTexture();
 
@@ -120,23 +112,35 @@ void UIManager::init(std::string fileNameFirstGroup, std::string fileNameSecondG
 void UIManager::loadInTexture()
 {
 	uiTextureIds.clear();
-	texturePaths.clear();
 	GLuint temp;
-
-	//for (int i = 0; i < texturePaths.size(); i++)
-	//{
-	//	temp = loadTexture(texturePaths[i]);
-	//	uiTextureIds.push_back(temp);
-	//}
+	for (int i = 0; i < texturePaths.size(); i++)
+	{
+		temp = 0;
+		renderPipe->ui_loadTexture(&temp, (char*)(texturePaths[i].c_str()));
+		uiTextureIds.push_back(temp);
+	}
+	texturePaths.clear();
 }
 
 void UIManager::render()
 {
-	//glDisable(GL_DEPTH_TEST);
+	renderPipe->ui_initRender();
 
-	menus[currentMenu].render(uiTextureIds);
+	//test render
+	glm::mat4 worldtest;
+	// position
+	worldtest[0].w;
+	worldtest[1].w;
+	worldtest[2].w;
+	//sacle
+	worldtest[0].x = 0.25f;
+	worldtest[1].y = 0.25f;
+	worldtest[2].z;
 
-	//glEnable(GL_DEPTH_TEST);
+	renderPipe->ui_renderQuad(&worldtest[0][0], uiTextureIds[0], 1.0f);
+
+	//menus[currentMenu].render(uiTextureIds);
+
 }
 
 

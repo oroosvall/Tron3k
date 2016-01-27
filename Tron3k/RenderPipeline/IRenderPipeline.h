@@ -97,6 +97,10 @@ public:
 	virtual int getNrOfWorldBoxes() = 0;
 	virtual void setRenderFlag(RENDER_FLAGS flag) = 0;
 	virtual void getSpawnpoints(std::vector < std::vector < SpawnpointG > > &spoints) = 0;
+
+	virtual void ui_initRender() = 0;
+	virtual void ui_loadTexture(unsigned int* texid, char* filepath) = 0;
+	virtual void ui_renderQuad(float* mat, unsigned int textureID, float transp) = 0;
 };
 
 extern "C" ENGINE_API IRenderPipeline* CreatePipeline();

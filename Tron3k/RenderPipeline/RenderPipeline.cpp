@@ -133,6 +133,8 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, BUFFER_OFFSET(0));
 
+	uiQuad.Init(vec3(-1, -1, 0), vec3(1, 1, 0));
+
 	initialized = true;
 	return true;
 }
@@ -194,6 +196,21 @@ void RenderPipeline::reloadShaders()
 		glowShaderTweeks = temp;
 		temp = 0;
 	}
+
+	//UI shader
+	std::string shaderNamesUI[] = { "GameFiles/Shaders/uiShader_vs.glsl", "GameFiles/Shaders/uiShader_fs.glsl" };
+	GLenum shaderTypesUI[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
+	CreateProgram(temp, shaderNamesUI, shaderTypesUI, 2);
+	if (temp != 0)
+	{
+		uiShader = temp;
+		temp = 0;
+	}
+
+	//UI shaderLocations
+	ui_Texture = glGetUniformLocation(uiShader, "textureSample");
+	ui_World = glGetUniformLocation(uiShader, "WorldMatrix");
+
 
 	worldMat[0] = glGetUniformLocation(regularShader, "WorldMatrix"); //worldMat regular shader
 	viewMat = glGetUniformLocation(regularShader, "ViewMatrix"); //view
@@ -302,6 +319,7 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	gBuffer->clearLights();
 
 }
+
 void RenderPipeline::addLight(SpotLight* newLight)
 {
 	gBuffer->pushLights(newLight, 1);
@@ -663,4 +681,41 @@ void RenderPipeline::getSpawnpoints(std::vector < std::vector < SpawnpointG > > 
 	spoints.push_back(team2);
 
 	contMan.testMap.deleteSpawnposData();
+}
+
+void RenderPipeline::ui_initRender()
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glUseProgram(uiShader);
+	//uniformlocation set texture 0  it defaults to 0 so not needed
+	
+	uiQuad.BindVertData();
+}
+
+void RenderPipeline::ui_loadTexture(unsigned int* texid, char* filepath)
+{
+	*texid = loadTexture(std::string(filepath));
+}
+
+void RenderPipeline::ui_renderQuad(float* mat, GLuint textureID, float transp)
+{
+	//glm::mat4* world = (glm::mat4*)mat;
+
+	//test render
+	glm::mat4 worldtest;
+	// position
+	worldtest[0].w;
+	worldtest[1].w;
+	worldtest[2].w;
+	//sacle
+	worldtest[0].x = 0.25f;
+	worldtest[1].y = 0.25f;
+	worldtest[2].z;
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, (GLfloat*)&worldtest[0][0]);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }

@@ -2,7 +2,7 @@
 #define CORE_H
 
 
-//#include "ui\UIManager.h"
+#include "ui\UIManager.h"
 #include "Input.h"
 #include "../../SoundPlayer/sound/SoundPlayer.h"
 
@@ -35,7 +35,7 @@ private:
 
 	CameraInput* serverCam;
 
-	//UIManager* uiManager;
+	UIManager* uiManager;
 
 	// window
 	GLFWwindow* win;

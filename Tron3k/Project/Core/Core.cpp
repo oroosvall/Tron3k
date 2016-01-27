@@ -34,6 +34,10 @@ void Core::init()
 	tick_timer = 0;
 	client_record = false;
 	client_playback = false;
+
+	uiManager = new UIManager();
+	initPipeline();
+	uiManager->init(&console);
 }
 
 Core::~Core()
@@ -119,7 +123,6 @@ void Core::update(float dt)
 	console.discardCommandAndLastMsg();
 
 	glfwSwapBuffers(win);
-
 }
 
 void Core::upStart(float dt)
@@ -140,6 +143,7 @@ void Core::upStart(float dt)
 	case 1:
 		//start console commands
 		startHandleCmds();
+		uiManager->render();
 		break;
 	}
 }
@@ -205,8 +209,6 @@ void Core::upRoam(float dt)
 	{
 	case 0: //init
 	{
-		initPipeline();
-
 		game = new Game();
 		game->init(MAX_CONNECT, current);
 		game->sendPlayerRadSize(0.9f);
@@ -319,7 +321,6 @@ void Core::upClient(float dt)
 	switch (subState)
 	{
 	case 0: //init
-		initPipeline();
 		if (top)
 			delete top;
 		top = new Client();
@@ -471,7 +472,6 @@ void Core::upServer(float dt)
 	{
 	case 0:  //init server
 	{
-		initPipeline();
 		//createWindow(200, 200, false);
 		serverCam = CameraInput::getCam();
 		if (top)
@@ -1268,6 +1268,8 @@ void Core::initPipeline()
 			console.printMsg("Error: Failed to set pipeline setting: VIEWPORT", "System", 'S');
 		}
 	}
+
+	uiManager->setRenderPtr(renderPipe);
 }
 
 void Core::setfps(int fps)

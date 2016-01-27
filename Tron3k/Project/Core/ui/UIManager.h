@@ -13,6 +13,9 @@
 class UIManager
 {
 private:
+
+	IRenderPipeline* renderPipe;
+
 	UI* menus;
 	int nrOfMenus;
 	int maxMenus;
@@ -41,7 +44,12 @@ public:
 	UIManager();
 	~UIManager();
 
-	void init(std::string fileNameFirstGroup, std::string fileNameSecondGroup, Console* console);
+	void setRenderPtr(IRenderPipeline* ptr) 
+	{ 
+		renderPipe = ptr; 
+	}
+
+	void init(Console* console);
 	
 	void render();
 
