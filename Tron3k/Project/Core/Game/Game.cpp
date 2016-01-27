@@ -1431,7 +1431,7 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 {
 	int PID = 0, BID = 0;
 
-	if (posInArray <= bullets->size())
+	if (posInArray <= bullets[bt].size())
 	{
 		Bullet* parent = bullets[bt][posInArray];
 		parent->getId(PID, BID);
