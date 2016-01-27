@@ -4,22 +4,21 @@
 
 #include <GL\glew.h>
 
-#include "uiVertex.h"
-#include "../Console.h"
+#include "UIElements.h"
 #include "Button.h"
 #include "VertexBufferUI.h"
+#include "uiVertex.h"
+
+#include "../Console.h"
 
 #include <vector>
 #include <string>
-
 #include <iostream>
 #include <fstream>
 #include <sstream>
 
 #include <glm\glm.hpp>
 #include <glm\gtc\matrix_transform.hpp>
-
-#define BUFFER_OFFSET(i) ((char *)nullptr + (i))
 
 class UI
 {
@@ -36,19 +35,10 @@ private:
 
 	Console* console;
 
-	//Render
-	VertexBuffers buffers;
-	GLuint uniformTextureLocation;
-	GLuint uniformWorldMatrix;
-	GLuint shader;
-
-
 	//	Functions
 	//Load from file
 	bool loadUI(std::string fileName);
-	//Buffers
-	void newBuffers();
-	void createBuffer(int id);
+
 	void removeMenu();
 	//Clean up
 	//Convert
@@ -60,7 +50,7 @@ public:
 	~UI();
 
 	//Start
-	void init(std::string fileName, GLuint shader, GLuint worldMat, GLuint textureLocation, Console* console);
+	void init(std::string fileName, Console* console);
 	
 	void render(std::vector<GLuint> uiTextureIds);
 

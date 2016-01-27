@@ -21,8 +21,6 @@ UIManager::~UIManager()
 	if ( menus != nullptr )
 		delete[] menus;
 	console = nullptr;
-
-	glDeleteShader(shader);
 }
 
 //Start menu
@@ -37,12 +35,6 @@ void UIManager::init(Console* console)
 	texturePaths.push_back("GameFiles/Textures/UITextures/multiplayer.png");
 	texturePaths.push_back("GameFiles/Textures/UITextures/settings.png");
 	texturePaths.push_back("GameFiles/Textures/UITextures/exit.png");
-	texturePaths.push_back("GameFiles/Textures/UITextures/fifthTexture.png");
-
-	//Render stuff
-	shader;
-	uniformtextureLocation = glGetUniformLocation(shader, "textureSample");
-	uniformWorldMat = glGetUniformLocation(shader, "WorldMatrix");
 
 	loadInTexture();
 
@@ -140,7 +132,6 @@ void UIManager::render()
 	renderPipe->ui_renderQuad(&worldtest[0][0], uiTextureIds[0], 1.0f);
 
 	//menus[currentMenu].render(uiTextureIds);
-
 }
 
 
@@ -189,14 +180,14 @@ bool UIManager::LoadNextSet(int whichMenuGroup)
 	{
 		menus = new UI[nrOfFileNamesFirstGroup];
 		for (int i = 0; i < nrOfFileNamesFirstGroup; i++)
-			menus[i].init(fileNamesListFirstGroup[i], uniformtextureLocation, uniformWorldMat, shader, console);
+			menus[i].init(fileNamesListFirstGroup[i], console);
 		break;
 	}
 	case 1: //Second Group
 	{
 		menus = new UI[nrOfFileNamesSecondGroup];
 		for (int i = 0; i < nrOfFileNamesSecondGroup; i++)
-			menus[i].init(fileNamesListSecondGroup[i], uniformtextureLocation, uniformWorldMat, shader, console);
+			menus[i].init(fileNamesListSecondGroup[i], console);
 		break;
 	}
 	default:
