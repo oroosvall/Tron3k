@@ -11,9 +11,8 @@ Button::Button()
 					0, 0, 0, 1
 					};
 	uniqueKey = -1;
-	nrOfButtons = 0;
 }
-Button::Button(glm::vec2 positions[], glm::vec2 uv[], int textureId1, int textureId2, int uniqueKey, GLuint shader, GLuint worldMat, GLuint textureLocation) //Kolla mer på denna
+Button::Button(glm::vec2 positions[], glm::vec2 uv[], int textureId1, int textureId2, int uniqueKey) //Kolla mer på denna
 {
 	glm::vec2 posXY[4];
 	glm::vec2 uv2[4];
@@ -23,38 +22,19 @@ Button::Button(glm::vec2 positions[], glm::vec2 uv[], int textureId1, int textur
 		uv2[i] = uv[i];
 	}
 
-	pos[0] = uiVertex(posXY, uv2);
+	pos = uiVertex(posXY, uv2);
 
 	textureIndexList[0] = textureId1;
 	textureIndexList[1] = textureId2;
 	this->uniqueKey = uniqueKey;
 	textureIndexInUse = textureId1;
-	nrOfButtons = 1;
-
-	this->uniformTextureLocation = uniformTextureLocation;
-	this->uniformWorldMatrix = uniformWorldMatrix;
-	this->shader = shader;
 }
 Button::~Button() {}
 
-//void Button::render(std::vector<GLuint> textureIds, int i, GLuint gVertexAttribute, GLuint gVertexBuffer)
-//{
-//	//glBindTexture(GL_TEXTURE_2D, vertexRenderBuffers[currentMenu].textureIDs[id]);
-//
-//	//Kolla i den andra koden ifall textur aktiveringen och bindningen ska se ut så där.;
-//	//Activate the buttons texture
-//	glActiveTexture(GL_TEXTURE0 + i);
-//	glBindTexture(GL_TEXTURE_2D, textureIds[textureIndexInUse]);
-//
-//	glProgramUniform1i(shader, uniformTextureLocation, i);
-//	glProgramUniformMatrix4fv(shader, uniformWorldMatrix, 1, GL_FALSE, (GLfloat*)&worldMatrix[0][0]);
-//
-//	//Bind the vertex buffer that will be used
-//	glBindVertexArray(gVertexAttribute);
-//	glBindBuffer(GL_ARRAY_BUFFER, gVertexBuffer);
-//
-//	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-//}
+void Button::render(int id)
+{
+	
+}
 
 void Button::setWorldMatrix(float x, float y, int id)
 {
@@ -78,17 +58,19 @@ void Button::scalePositions(int scale, int id)
 	worldMatrix[2].z = scale;
 }
 
+void Button::fromPosToQuadScreen()
+{
+
+}
+
 int Button::checkCollision(glm::vec2 mpos)
 {
 	int returnValue = -1;
-	for (int i = 0; i < nrOfButtons; i++)
+	if (mpos.x >= pos.vertexList[1].x && mpos.x <= pos.vertexList[2].x)
 	{
-		if (mpos.x >= pos[i].vertexList[1].x && mpos.x <= pos[i].vertexList[2].x)
+		if (mpos.y >= pos.vertexList[1].y && mpos.y <= pos.vertexList[2].y)
 		{
-			if (mpos.y >= pos[i].vertexList[1].y && mpos.y <= pos[i].vertexList[2].y)
-			{
-				returnValue = uniqueKey;
-			}
+			returnValue = uniqueKey;
 		}
 	}
 	
@@ -97,5 +79,5 @@ int Button::checkCollision(glm::vec2 mpos)
 
 uiVertex* Button::returnPosAUv(int id)
 {
-	return pos;
+	return &pos;
 }

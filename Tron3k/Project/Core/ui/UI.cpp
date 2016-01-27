@@ -12,12 +12,6 @@ UI::UI()
 
 	//id
 	menuId = -1;
-
-	//Render
-	buffers = VertexBuffers();
-	uniformTextureLocation = -1;
-	uniformWorldMatrix = -1;
-	shader = -1;
 }
 UI::~UI() 
 {
@@ -26,22 +20,17 @@ UI::~UI()
 
 void UI::render(std::vector<GLuint> uiTextureIds)
 {
-	//for (int i = 0; i < nrOfObjects; i++) 
-	//	UiObjects->render(uiTextureIds, i, buffers.gVertexAttribute[i], buffers.gVertexBuffer[i]);
+	for (int i = 0; i < nrOfObjects; i++) 
+		UiObjects->render(i);
 }
 
-void UI::init(std::string fileName, GLuint shader, GLuint worldMat, GLuint textureLocation, Console* console)
+void UI::init(std::string fileName, Console* console)
 {
-	this->shader = shader;
-	this->uniformWorldMatrix = worldMat;
-	this->uniformTextureLocation = textureLocation;
 	this->console = console;
 
 	bool result = loadUI(fileName);
 	if (!result)
 		console->printMsg("Error: LoadUI in UI was unsucessfull","System",'S');
-
-	newBuffers();
 }
 
 //Needs to be modified
@@ -113,7 +102,7 @@ bool UI::loadUI(std::string fileName)
 
 			if (classId == 0) //Button
 			{
-				UiObjects[counter] = Button(xy, uv, textureId1, textureId2, uniqueKey, shader, uniformWorldMatrix, uniformTextureLocation);
+				UiObjects[counter] = Button(xy, uv, textureId1, textureId2, uniqueKey);
 				UiObjects[counter].scalePositions(scale, 0);
 				textureIdList[counter] = textureId1;
 				result = true;
@@ -121,7 +110,7 @@ bool UI::loadUI(std::string fileName)
 			}
 			else if (classId == 1) //StaticTextBox
 			{
-				//UiObjects[counter] = StaticTextBox(xy, uv, textureId1, uniqueKey, shader, uniformWorldMatrix, uniformTextureLocation);
+				//UiObjects[counter] = StaticTextBox(xy, uv, textureId1, uniqueKey);
 				//UiObjects[counter].scalePositions(scale, 0);
 				//textureIdList[counter] = textureId1;
 				//result = true;
@@ -129,7 +118,7 @@ bool UI::loadUI(std::string fileName)
 			}
 			else if (classId == 3) //Slider
 			{
-				//UiObjects[counter] = Slider(xy, uv, textureId1, textureId2, uniqueKey, counter, counter+1, shader, uniformWorldMatrix, uniformTextureLocation);
+				//UiObjects[counter] = Slider(xy, uv, textureId1, textureId2, uniqueKey, counter, counter+1);
 				//UiObjects[counter].scalePositions(scale, 0);
 				//textureIdList[counter] = textureId1;
 
@@ -164,8 +153,6 @@ void UI::clean()
 	nrOfObjects = 0;
 	nrOfObjectsToRender = 0;
 	menuId = 0;
-
-	buffers.clean();
 }
 
 glm::vec2 UI::fileCoordToScreenSpace(glm::vec2 pos)
@@ -236,40 +223,6 @@ void UI::setWorldMatrix(float x, float y, int objId)
 //	UiObjects[objId].setWorldMatrix(x, y);
 }
 
-
-void UI::newBuffers()
-{
-	//Set the defualt values.
-	buffers = VertexBuffers(nrOfObjects);
-	for (int i = 0; i < nrOfObjects; i++)
-	{
-		//Sets the newly created buffers values
-		createBuffer(i);
-
-		//Set the list of texture ids
-		int tmp = textureIdList[i];
-		buffers.textureIDs[i] = tmp;
-	}
-}
-void UI::createBuffer(int id)
-{
-	//create buffer and set data
-	glGenBuffers(1, &buffers.gVertexBuffer[id]);
-	glBindBuffer(GL_ARRAY_BUFFER, buffers.gVertexBuffer[id]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex_ui) * 4, &UiObjects[id].returnPosAUv(id)[0], GL_STATIC_DRAW); 
-
-	//define vertex data layout
-	glGenVertexArrays(1, &buffers.gVertexAttribute[id]);
-	glBindVertexArray(buffers.gVertexAttribute[id]);
-	glEnableVertexAttribArray(0); //the vertex attribute object will remember its enabled attributes
-	glEnableVertexAttribArray(1);
-
-	GLint vertexPos = glGetAttribLocation(shader, "vertex_position");
-	glVertexAttribPointer(vertexPos, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex_ui), BUFFER_OFFSET(0));
-	GLint vertexUV = glGetAttribLocation(shader, "vertex_uv");
-	glVertexAttribPointer(vertexUV, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex_ui), BUFFER_OFFSET(sizeof(float) * 2));
-
-}
 //Empty
 void UI::removeMenu() 
 {

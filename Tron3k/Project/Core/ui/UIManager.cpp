@@ -21,8 +21,6 @@ UIManager::~UIManager()
 	if ( menus != nullptr )
 		delete[] menus;
 	console = nullptr;
-
-	glDeleteShader(shader);
 }
 
 //Start menu
@@ -31,26 +29,10 @@ void UIManager::init(std::string fileNameFirstGroup, std::string fileNameSecondG
 	this->console = console;
 
 	//Texture Paths
-	texturePaths.push_back("../../../Debug/GameFiles/Textures/UITextures/grassTexture.png");
-	texturePaths.push_back("../../../Debug/GameFiles/Textures/UITextures/secondTexture.png");
-	texturePaths.push_back("../../../Debug/GameFiles/Textures/UITextures/thirdTexture.png");
-	texturePaths.push_back("../../../Debug/GameFiles/Textures/UITextures/fourthTexture.png");
-	texturePaths.push_back("../../../Debug/GameFiles/Textures/UITextures/fifthTexture.png");
-
-	//Render stuff
-	shader;
-	uniformtextureLocation = glGetUniformLocation(shader, "textureSample");
-	uniformWorldMat = glGetUniformLocation(shader, "WorldMatrix");
-	
-	//GLuint temp;
-	//std::string shaderNamesDeffered[] = { "GameFiles/Shaders/uiShader_vs.glsl", "GameFiles/Shaders/uiShader_fs.glsl" };
-	//GLenum shaderTypesDeffered[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
-	////CreateProgram(temp, shaderNamesDeffered, shaderTypesDeffered, 2);
-	//if (temp != 0)
-	//{
-	//	shader = temp;
-	//	temp = 0;
-	//}
+	texturePaths.push_back("../../../Debug/GameFiles/Textures/UITextures/testmap.png");
+	texturePaths.push_back("../../../Debug/GameFiles/Textures/UITextures/multiplayer.png");
+	texturePaths.push_back("../../../Debug/GameFiles/Textures/UITextures/settings.png");
+	texturePaths.push_back("../../../Debug/GameFiles/Textures/UITextures/exit.png");
 
 	loadInTexture();
 
@@ -119,24 +101,20 @@ void UIManager::init(std::string fileNameFirstGroup, std::string fileNameSecondG
 
 void UIManager::loadInTexture()
 {
-	uiTextureIds.clear();
-	texturePaths.clear();
-	GLuint temp;
-
+	//uiTextureIds.clear();
+	//texturePaths.clear();
+	//GLuint temp;
+	//
 	//for (int i = 0; i < texturePaths.size(); i++)
 	//{
-	//	temp = loadTexture(texturePaths[i]);
+	//	temp = uiLoadTexture(texturePaths[i]);
 	//	uiTextureIds.push_back(temp);
 	//}
 }
 
 void UIManager::render()
 {
-	//glDisable(GL_DEPTH_TEST);
-
 	menus[currentMenu].render(uiTextureIds);
-
-	//glEnable(GL_DEPTH_TEST);
 }
 
 
@@ -185,14 +163,14 @@ bool UIManager::LoadNextSet(int whichMenuGroup)
 	{
 		menus = new UI[nrOfFileNamesFirstGroup];
 		for (int i = 0; i < nrOfFileNamesFirstGroup; i++)
-			menus[i].init(fileNamesListFirstGroup[i], uniformtextureLocation, uniformWorldMat, shader, console);
+			menus[i].init(fileNamesListFirstGroup[i], console);
 		break;
 	}
 	case 1: //Second Group
 	{
 		menus = new UI[nrOfFileNamesSecondGroup];
 		for (int i = 0; i < nrOfFileNamesSecondGroup; i++)
-			menus[i].init(fileNamesListSecondGroup[i], uniformtextureLocation, uniformWorldMat, shader, console);
+			menus[i].init(fileNamesListSecondGroup[i], console);
 		break;
 	}
 	default:

@@ -3,7 +3,7 @@
 #define UIMANAGER_H
 
 #include "UI.h"
-#include "../../../RenderPipeline/IRenderPipeline.h"
+//#include "../../../RenderPipeline/IRenderPipeline.h"
 #include <string>
 #include <iostream>
 #include <sstream>
@@ -28,9 +28,6 @@ private:
 	int currentGroup;
 
 	//Render stuff
-	GLuint uniformtextureLocation;
-	GLuint uniformWorldMat;
-	GLuint shader;
 	std::vector<GLuint> uiTextureIds;
 	std::vector<std::string> texturePaths;
 
