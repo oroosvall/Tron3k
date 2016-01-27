@@ -8,5 +8,5 @@ out vec2 UV;
 
 void main () {
 	UV = vertex_uv;
-	gl_Position = vec4 (vertex_position, 1.0) * WorldMatrix;
+	gl_Position = vec4(vertex_position, 1.0) * WorldMatrix;
 }

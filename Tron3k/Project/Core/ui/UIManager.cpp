@@ -9,7 +9,7 @@ UIManager::UIManager()
 	nrOfFileNamesSecondGroup = 0;
 	nrOfMenus = 0;
 	maxMenus = 5;
-
+	textureRes = new std::vector<glm::vec2>;
 	currentMenu = -1;
 }
 UIManager::~UIManager() 
@@ -21,6 +21,8 @@ UIManager::~UIManager()
 	if ( menus != nullptr )
 		delete[] menus;
 	console = nullptr;
+	if (textureRes)
+		delete textureRes;
 }
 
 //Start menu
@@ -104,12 +106,14 @@ void UIManager::init(Console* console)
 void UIManager::loadInTexture()
 {
 	uiTextureIds.clear();
+	textureRes->clear();
 	GLuint temp;
 	for (int i = 0; i < texturePaths.size(); i++)
 	{
 		temp = 0; 
 		int xres, yres;
 		renderPipe->ui_loadTexture(&temp, (char*)(texturePaths[i].c_str()), &xres, &yres);
+		textureRes[0].push_back(glm::vec2());
 		textureRes[0][i].x = xres;
 		textureRes[0][i].y = yres;
 		uiTextureIds.push_back(temp);
@@ -119,7 +123,7 @@ void UIManager::loadInTexture()
 
 void UIManager::render()
 {
-	//renderPipe->ui_initRender();
+	renderPipe->ui_initRender();
 	//
 	////test render
 	//glm::mat4 worldtest;
@@ -176,6 +180,8 @@ bool UIManager::LoadNextSet(int whichMenuGroup)
 		currentGroup = 1;
 	else
 		currentGroup = 0;
+
+	//Menu init has to take the GLuint texture id!
 
 	switch (currentGroup)
 	{
