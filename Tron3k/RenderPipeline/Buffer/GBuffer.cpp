@@ -282,7 +282,10 @@ void Gbuffer::generate(int x, int y)
 		}
 		else
 		{
-			rTexture[i].init(x, y, 0, false);
+			if(i == 1)
+				rTexture[i].init(x, y, 0, false, true);
+			else
+				rTexture[i].init(x, y, 0, false);
 		}
 		
 	}

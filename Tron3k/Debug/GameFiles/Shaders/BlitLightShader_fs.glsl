@@ -121,7 +121,10 @@ void main()
 			
 		for(int n = 0; n < NumSpotLights; n++)
 		{
-			fragment_color += CalcSpotLight(lights[n], Normal0.xyz);
+			if(lights[n].Direction.x == 0.0f && lights[n].Direction.y == 0.0f && lights[n].Direction.y == 0.0f)
+				fragment_color += CalcPointLight(lights[n], Normal0.xyz) * 0.2f;
+			else
+				fragment_color += CalcSpotLight(lights[n], Normal0.xyz) * 0.6f;
 			fragment_color += Diffuse0 * vec4(lights[n].Color, 1) * lights[n].AmbientIntensity;
 		}
 		

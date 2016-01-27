@@ -426,10 +426,10 @@ struct Chunk
 		l.Position = vec3(light.x, light.y, light.z);
 		l.AmbientIntensity = light.ambientIntensity;
 		l.Direction = vec3(light.dx, light.dy, light.dz);
-		if (length(l.Direction) <= 0.001f)
-			l.Direction.y = -1;
+		if (length(l.Direction) > 0.001f)
+			l.Direction = normalize(l.Direction);
 		l.Cutoff = light.coneAngle;
-		l.Cutoff = -1.0f;
+		//l.Cutoff = -1.0f;
 
 		lights.push_back(l);
 	}

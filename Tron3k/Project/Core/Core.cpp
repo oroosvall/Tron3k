@@ -1096,6 +1096,7 @@ void Core::renderWorld(float dt)
 				SpotLight light;
 				light.Position = p->getPos();
 				light.Direction = vec3(0.0f);//p->getDir();
+				light.DiffuseIntensity = 0.0f;
 				if (firstLight)
 				{
 					light.AmbientIntensity = 0.3f;
