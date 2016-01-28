@@ -1270,6 +1270,11 @@ void Core::renderWorld(float dt)
 				}
 					break;
 				case THUNDER_DOME:
+				{
+					ThunderDomeEffect* asd = (ThunderDomeEffect*)eff[i];
+					vec3 pos = asd->getPos();
+					renderPipe->renderExploEffect(&pos.x, asd->explotionRenderRad(), 0, &dgColor.x);
+				}
 					break;
 				case EXPLOSION:
 				{
