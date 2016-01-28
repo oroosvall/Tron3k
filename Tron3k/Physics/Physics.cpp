@@ -822,11 +822,15 @@ vec3 Physics::normalize(vec3 vec3)
 
 }
 
-bool Physics::removeEffect(int effID)
+bool Physics::removeEffect(int eid, int pid, unsigned int eType)
 {
+	int cpid = -1, ceid = -1;
+	unsigned int ceType = 0;
 	for (int i = 0; i < effectBoxes.size(); i++)
 	{
-		if (effectBoxes[i]->getEID() == effID)
+		effectBoxes[i]->getIDs(ceType, cpid, ceid);
+
+		if (ceid == eid && cpid == pid && ceType == eType)
 		{
 			delete effectBoxes[i];
 			effectBoxes[i] = effectBoxes[effectBoxes.size() - 1];

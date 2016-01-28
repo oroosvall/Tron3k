@@ -105,7 +105,7 @@ public:
 
 	virtual glm::vec3 normalize(glm::vec3 vec3);
 
-	virtual bool removeEffect(int effID); //SKRIV EN FUNKTIONSFAN
+	virtual bool removeEffect(int eid, int pid, unsigned int eType); //SKRIV EN FUNKTIONSFAN
 	
 	virtual glm::vec3 checkPlayerVPlayerCollision(glm::vec3 playerPos1, glm::vec3 playerPos2);
 	virtual glm::vec3 checkPlayerVBulletCollision(glm::vec3 playerPos, glm::vec3 bulletPos);

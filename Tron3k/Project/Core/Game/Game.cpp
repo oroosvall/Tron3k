@@ -379,7 +379,7 @@ void Game::updateEffectBox(Effect* effect)
 		if (((LightwallEffect*)(effect))->getDong()) //since the effect updates, we need to resend the box to physics
 		{
 			((LightwallEffect*)(effect))->getId(pid, eid);
-			physics->removeEffect(eid);
+			physics->removeEffect(eid, pid, EFFECT_TYPE::LIGHT_WALL);
 			glm::vec3 sPos, gPos;
 			float height = 2.5f;
 
@@ -1575,14 +1575,9 @@ void Game::handleEffectTimeOuts(EffectTimeOutInfo hi)
 
 void Game::removeEffect(EFFECT_TYPE et, int posInArray)
 {
-	switch (et)
-	{
-	case EFFECT_TYPE::LIGHT_WALL:
-		break;
-	}
 	int pid = -1, eid = -1;
 	effects[et][posInArray]->getId(pid, eid);
-	physics->removeEffect(eid);
+	physics->removeEffect(eid, pid, et);
 	delete effects[et][posInArray];
 	effects[et][posInArray] = effects[et][effects[et].size() - 1];
 	effects[et].pop_back();
