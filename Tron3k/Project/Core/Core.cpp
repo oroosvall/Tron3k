@@ -30,7 +30,7 @@ void Core::init()
 
 	timepass = 0.0f;
 	
-	current = Gamestate::MENU;
+	current = Gamestate::START;
 	tick_timer = 0;
 	client_record = false;
 	client_playback = false;
