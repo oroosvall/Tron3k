@@ -139,6 +139,8 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, BUFFER_OFFSET(0));
 
+	uiQuad.Init(vec3(-1, -1, 0), vec3(1, 1, 0));
+
 	initialized = true;
 	return true;
 }
@@ -200,6 +202,21 @@ void RenderPipeline::reloadShaders()
 		glowShaderTweeks = temp;
 		temp = 0;
 	}
+
+	//UI shader
+	std::string shaderNamesUI[] = { "GameFiles/Shaders/uiShader_vs.glsl", "GameFiles/Shaders/uiShader_fs.glsl" };
+	GLenum shaderTypesUI[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
+	CreateProgram(temp, shaderNamesUI, shaderTypesUI, 2);
+	if (temp != 0)
+	{
+		uiShader = temp;
+		temp = 0;
+	}
+
+	//UI shaderLocations
+	ui_Texture = glGetUniformLocation(uiShader, "textureSample");
+	ui_World = glGetUniformLocation(uiShader, "WorldMatrix");
+
 
 	worldMat[0] = glGetUniformLocation(regularShader, "WorldMatrix"); //worldMat regular shader
 	viewMat = glGetUniformLocation(regularShader, "ViewMatrix"); //view
@@ -285,6 +302,8 @@ void RenderPipeline::release()
 	glDeleteShader(lw_Shader);
 	glDeleteShader(regularShader);
 	glDeleteShader(animationShader);
+	glDeleteShader(uiShader);
+	uiQuad.release();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -719,4 +738,36 @@ void RenderPipeline::getSpawnpoints(std::vector < std::vector < SpawnpointG > > 
 	spoints.push_back(team2);
 
 	contMan.testMap.deleteSpawnposData();
+}
+
+void RenderPipeline::ui_initRender()
+{
+	//glBindFramebuffer(GL_FRAMEBUFFER, NULL);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glUseProgram(uiShader);
+	//uniformlocation set texture 0  it defaults to 0 so not needed
+	
+	uiQuad.BindVertData();
+}
+
+void RenderPipeline::ui_loadTexture(unsigned int* texid, char* filepath, int* xres, int* yres)
+{
+	*texid = loadTexture(std::string(filepath), true, xres, yres);
+}
+
+void RenderPipeline::ui_renderQuad(float* mat, GLuint textureID, float transp, int i)
+{
+	glm::mat4* world = (glm::mat4*)mat;
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, mat);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+}
+
+void RenderPipeline::ui_textureRelease(vector<unsigned int> texids)
+{
+	for (unsigned int n = 0; n < texids.size(); n++)
+		glDeleteTextures(1, &texids[n]);
 }

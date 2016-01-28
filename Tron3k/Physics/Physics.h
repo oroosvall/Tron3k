@@ -70,6 +70,7 @@ private:
 	//-------Sphere Collision-------//
 	std::vector<glm::vec4> checkSpherevSphereCollision(CollideMesh mesh1, CollideMesh mesh2);
 
+	std::vector<glm::vec4> checkSpherevSpheretdCollision(CollideMesh mesh1, CollideMesh mesh2);
 	std::vector<glm::vec4> checkSpherevOBBlwCollision(CollideMesh mesh1, CollideMesh mesh2);
 	//--------------//--------------//
 

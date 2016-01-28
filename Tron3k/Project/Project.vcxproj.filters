@@ -88,12 +88,15 @@
     <Filter Include="Source Files\Core\Ui\uiManagers">
       <UniqueIdentifier>{2ce13bdb-3112-4518-9482-07e5f8169590}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Core\Ui\uiVisionClasses">
-      <UniqueIdentifier>{5fc18abf-b9b9-47af-85e7-b5175798e939}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Core\Ui\Structs">
       <UniqueIdentifier>{60d805ac-eb33-4f7e-97a7-5accb1dda855}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Core\Ui\uiClasses">
+      <UniqueIdentifier>{5fc18abf-b9b9-47af-85e7-b5175798e939}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\Ui\uiClasses\SuperClass">
+      <UniqueIdentifier>{2cb0017d-5d22-42e4-86bd-e2f93ff5c201}</UniqueIdentifier>
+	</Filter>
     <Filter Include="Source Files\Core\Game\Gamemodes">
       <UniqueIdentifier>{38580f1e-01aa-4511-9fd3-970da0b217fd}</UniqueIdentifier>
     </Filter>
@@ -271,7 +274,7 @@
       <Filter>Source Files\Core\Ui\uiManagers</Filter>
     </ClCompile>
     <ClCompile Include="Core\ui\Button.cpp">
-      <Filter>Source Files\Core\Ui\uiVisionClasses</Filter>
+      <Filter>Source Files\Core\Ui\uiClasses</Filter>
     </ClCompile>
     <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\TrapperBullets\Clusterling.cpp">
       <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\TrapperBullets</Filter>
@@ -282,6 +285,12 @@
     <ClCompile Include="Core\Game\Role\Special\SpecialTypes\WallJump.cpp">
       <Filter>Source Files\Core\Game\Role\Special\SpecialTypes</Filter>
     </ClCompile>
+    <ClCompile Include="Core\ui\Slider.cpp">
+      <Filter>Source Files\Core\Ui\uiClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\ui\StaticTextureBoxes.cpp">
+      <Filter>Source Files\Core\Ui\uiClasses</Filter>
+	</ClCompile>
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\ThunderDomeEffect.cpp">
       <Filter>Source Files\Core\Game\Role\PlayerEffects\Effects</Filter>
     </ClCompile>
@@ -501,7 +510,7 @@
       <Filter>Source Files\Core\Ui\uiManagers</Filter>
     </ClInclude>
     <ClInclude Include="Core\ui\Button.h">
-      <Filter>Source Files\Core\Ui\uiVisionClasses</Filter>
+      <Filter>Source Files\Core\Ui\uiClasses</Filter>
     </ClInclude>
     <ClInclude Include="Core\Game\Role\PlayerEffects\Modifiers\TrapperShareAmmo.h">
       <Filter>Source Files\Core\Game\Role\PlayerEffects\Modifiers</Filter>
@@ -518,6 +527,15 @@
     <ClInclude Include="Core\ui\Vertex_ui.h">
       <Filter>Source Files\Core\Ui\Structs</Filter>
     </ClInclude>
+    <ClInclude Include="Core\ui\UIElements.h">
+      <Filter>Source Files\Core\Ui\uiClasses\SuperClass</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\ui\Slider.h">
+      <Filter>Source Files\Core\Ui\uiClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\ui\StaticTextureBoxes.h">
+      <Filter>Source Files\Core\Ui\uiClasses</Filter>
+	</ClInclude>
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\ThunderDomeEffect.h">
       <Filter>Source Files\Core\Game\Role\PlayerEffects\Effects</Filter>
     </ClInclude>

@@ -2,11 +2,17 @@
 #ifndef UI_H
 #define UI_H
 
+#include <GL\glew.h>
+
+#include "UIElements.h"
+#include "Button.h"
+#include "VertexBufferUI.h"
 #include "uiVertex.h"
+
+#include "../Console.h"
 
 #include <vector>
 #include <string>
-
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -14,43 +20,54 @@
 #include <glm\glm.hpp>
 #include <glm\gtc\matrix_transform.hpp>
 
-#define BUFFER_OFFSET(i) ((char *)nullptr + (i))
-
 class UI
 {
 private:
+	IRenderPipeline *uiRender;
 
-	int* objIdList; //Used to change from the renders list to UI's list of objects.
-	int* textureList;
+	//Lists
+	std::vector<glm::vec2>* textureRes;
+	std::vector<UIElements*> UiObjects;
+	int* textureIdList;
 
-	int nrOfbuttons;
-	int nrOfsliders;
-	int nrOfstaticText;
-	int nrOfdynamicTextBoxes;
-	int nrOfinputBoxes;
+	//Counters
 	int nrOfObjects;
+	int nrOfObjectsToRender;
+
 	int menuId;
 
+	Console* console;
+
+	//	Functions
+	//Load from file
+	bool loadUI(std::string fileName);
+
+	void removeMenu();
+	//Clean up
+	//Convert
+	glm::vec2 fileCoordToScreenSpace(glm::vec2 pos);
+	//Events
+	int collisionEvent(int UniqueKey);
 public:
 	UI();
 	~UI();
 
-	void clean();
-	void changeMenuId();
+	//Start
+	void init(std::string fileName, Console* console, IRenderPipeline* uiRender, std::vector<glm::vec2>* textureRes);
+	
+	void render(std::vector<GLuint> uiTextureIds);
 
-	bool loadUI(std::string fileName);
+	void clean();
+
 	int mouseCollission(glm::vec2 pos);
-	int collisionEvent(int UniqueKey);
-	glm::vec2 fileCoordToScreenSpace(glm::vec2 pos);
+	
+	void changeTex(int objId);
+
+	void hideWindow();
 
 	void setWorldMatrix(float x, float y, int objId);
-	glm::mat4 returnWorldMatrix(int objId);
-	uiVertex* returnPosAUv(int id);
-	int* returnTextureList();
-	int returnObjCount();
-	int changeTex(int objId);
 
-	//Hover function, den ska ändra på textureList eftersom en buttons texture ändras
+	void setTextureId(std::vector<GLuint> uiTextureIds);
 };
 
 #endif

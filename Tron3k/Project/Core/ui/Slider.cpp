@@ -1,50 +1,126 @@
 #include "Slider.h"
 
-Slider::Slider() {}
-Slider::Slider(glm::vec2 positions[], glm::vec2 uv[], int tex1, int tex2, int objId, int uniqueKey) //Not done
+Slider::Slider()
 {
-	backGround = Button(positions, uv, tex1, tex2, objId, uniqueKey);
+	textureIndexList[0] = -1;
+	textureIndexList[1] = -1;
+	worldMatrix[0] = { 1, 0, 0, 0,
+					   0, 1, 0, 0,
+					   0, 0, 1, 0,
+					   0, 0, 0, 1 };
+	worldMatrix[1] = { 1, 0, 0, 0,
+					   0, 1, 0, 0,
+					   0, 0, 1, 0,
+					   0, 0, 0, 1 };
+	uniqueKey = -1;
+	nrOfButtons = 2;
+	objId[0] = -1;
+	objId[1] = -1;
+}
+Slider::Slider(glm::vec2 positions[], glm::vec2 uv[], int textureId1, int textureId2, int uniqueKey, int objId1, int objId2, IRenderPipeline* uiRender)
+{
+	this->uiRender = uiRender;
+	glm::vec2 posXY[4];
+	glm::vec2 uv2[4];
+	for (int i = 0; i < 4; i++)
+	{
+		posXY[i] = positions[i];
+		uv2[i] = uv[i];
+	}
 
-	//create pointer, objId+1, uniqueKey+1
+	pos[0] = uiVertex(posXY, uv2);
+
+	textureIndexList[0] = textureId1;
+	textureIndexList[1] = textureId2;
+	this->uniqueKey = uniqueKey;
+
+	objId[0] = objId1;
+	objId[1] = objId2;
+
+	createAdditionalPoint();
 }
 Slider::~Slider() {}
 
-void Slider::setWorldMatirx(float x, float y) 
+
+void Slider::createAdditionalPoint()
 {
-	pointer.setWorldMatrix(x, y);
+
 }
 
-glm::mat4 Slider::returnWorldMatrix(int objId) 
-{ 
-	glm::mat4 result;
-	if (objId == backGround.returnObjId())
-		result = backGround.returnWorldMatrix();
-	else
-		result = pointer.returnWorldMatrix();
-
-	return result;
-}
-
-Vertex* Slider::returnPosAUv(int objId)
+void Slider::render(int id)
 {
-	Vertex* tmpVertex;
-
-	if (objId == backGround.returnObjId())
-		tmpVertex = backGround.returnPosAUv();
-	else
-		tmpVertex = pointer.returnPosAUv();
-
-	return tmpVertex;
+	//for(int i = 0; i < 2; i++)
+		//uiRender->ui_renderQuad((float*)&worldMatrix[0][0], textureIndexList[i], 1.0f, id);
 }
 
-int Slider::calcSound() { return 0;  } //Not done
-
-bool Slider::checkCollision(glm::vec2 pos) { return false; } //Not done
-
-void Slider::scalePositions(int scale, int objId)
+void Slider::setWorldMatrix(float x, float y, int id)
 {
-	if (objId == backGround.returnObjId())
-		backGround.scalePositions(scale);
-	else
-		pointer.scalePositions(scale);
+	worldMatrix[id][0].w = x;
+	worldMatrix[id][1].w = y;
 }
+
+//Empty
+void Slider::changeTexUsed()
+{
+}
+
+void Slider::scalePositions(int scale, int id)
+{
+	worldMatrix[id][0].x = scale;
+	worldMatrix[id][1].y = scale;
+	worldMatrix[id][2].z = scale;
+}
+
+void Slider::fromPosToQuadScreen(glm::vec2 positions, int id)
+{
+
+}
+
+int Slider::checkCollision(glm::vec2 mpos)
+{
+	int returnValue = -1;
+	if (mpos.x >= pos[0].vertexList[1].x && mpos.x <= pos[0].vertexList[2].x)
+	{
+		if (mpos.y >= pos[0].vertexList[1].y && mpos.y <= pos[0].vertexList[2].y)
+		{
+			returnValue = uniqueKey;
+		}
+	}
+
+	return returnValue;
+}
+
+void Slider::setTexture(std::vector<GLuint> uiTextureIds)
+{
+	for (int i = 0; i < 2; i++)
+	{
+		textureIndexList[i] = uiTextureIds[textureIndexList[i]];
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

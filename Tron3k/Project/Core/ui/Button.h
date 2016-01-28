@@ -2,36 +2,40 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
-#include "uiVertex.h"
+#include <GL\glew.h>
+#include "UIElements.h"
 
-#include <glm\glm.hpp>
-#include <glm\gtc\matrix_transform.hpp>
 
-class Button
+class Button : public UIElements
 {
 private:
-	uiVertex pos[2];
+	IRenderPipeline* uiRender;
+	glm::vec2 pos[2];
+	glm::vec2 textureRes;
+	glm::vec2 center;
 	int textureIndexList[2];
 	int textureIndexInUse;
-	int objId;
 	int uniqueKey;
 	glm::mat4 worldMatrix;
 
 public:
 	Button();
-	Button( glm::vec2 positions[], glm::vec2 uv[], int textureId1, int textureId2, int objId, int uniqueKey);
+	Button( glm::vec2 center, int textureId1, int textureId2, int uniqueKey, IRenderPipeline* uiRender, glm::vec2 textRes);
 	~Button();
 
-	void setWorldMatrix(float x, float y);
-	glm::mat4 returnWorldMatrix();
-	uiVertex* returnPosAUv();
-	int returnObjId();
+	virtual void render(int id);
 
-	int changeTexUsed();
+	virtual void setWorldMatrix(float x, float y, int id);
 
-	void scalePositions(int scale);
+	virtual void changeTexUsed();
 
-	int checkCollision(glm::vec2 pos);
+	virtual void scalePositions(int scale, int id);
+
+	virtual void fromPosToQuadScreen(glm::vec2 positions, int id);
+
+	virtual int checkCollision(glm::vec2 pos);
+
+	virtual void setTexture(std::vector<GLuint> uiTextureIds);
 };
 
 #endif

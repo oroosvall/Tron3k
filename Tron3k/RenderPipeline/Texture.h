@@ -76,12 +76,12 @@ public:
 	unsigned int dataSize;
 	void* textureData;
 	
-	void load(std::string fileName);
+	void load(std::string texturePath);
 
 	bool uploadTexture(GLuint &id);
 
 };
 
-GLuint loadTexture(std::string texturePath, bool PNGUploadCompress = true);
+GLuint loadTexture(std::string texturePath, bool PNGUploadCompress = true, int* xres = 0, int* yres = 0);
 
 #endif

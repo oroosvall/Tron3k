@@ -1,26 +1,22 @@
-#pragma once
-#ifndef SLIDER_H
-#define SLIDER_H
+#ifndef STATICTEXTUREBOXES_H
+#define STATICTEXTUREBOXES_H
 
 #include <GL\glew.h>
 #include "UIElements.h"
 
-class Slider : public UIElements
+class StaticTextureBoxes : public UIElements
 {
 private:
 	IRenderPipeline* uiRender;
-	uiVertex pos[2];
-	int textureIndexList[2];
+	uiVertex pos;
+	int textureIndexList;
 	int uniqueKey;
-	glm::mat4 worldMatrix[2];
-	int nrOfButtons;
-	int objId[2];
+	glm::mat4 worldMatrix;
 
-	void createAdditionalPoint();
 public:
-	Slider();
-	Slider(glm::vec2 positions[], glm::vec2 uv[], int textureId1, int textureId2, int uniqueKey, int objId1, int objId2, IRenderPipeline* uiRender);
-	~Slider();
+	StaticTextureBoxes();
+	StaticTextureBoxes(glm::vec2 positions[], glm::vec2 uv[], int textureId1, IRenderPipeline* uiRender);
+	~StaticTextureBoxes();
 
 	virtual void render(int id);
 
@@ -38,5 +34,3 @@ public:
 };
 
 #endif
-
-//Sätt button direkt dit spelaren klickade.

@@ -2,7 +2,7 @@
 #ifndef VERTEXBUFFERUI_H
 #define VERTEXBUFFERUI_H
 
-#include <gl/glew.h>
+#include <../glew-1.11.0/include/GL/glew.h>
 #include <vector>
 
 struct VertexBuffers
@@ -37,7 +37,7 @@ struct VertexBuffers
 		}
 		if (gVertexAttribute != nullptr)
 		{
-			glDeleteBuffers(1, gVertexAttribute);
+			glDeleteVertexArrays(1, gVertexAttribute);
 			delete[] gVertexAttribute;
 		}
 		if (textureIDs != nullptr)

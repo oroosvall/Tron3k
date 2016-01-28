@@ -51,6 +51,12 @@ private:
 	GLuint animationShader;
 	GLuint glowShaderTweeks;
 
+	GLuint uiShader;
+	GLuint ui_Texture;
+	GLuint ui_World;
+
+	BlitQuad uiQuad;
+
 	GLuint worldMat[2];
 	GLuint viewProjMat[2];
 	GLuint viewMat;
@@ -143,6 +149,10 @@ public:
 	virtual int getNrOfWorldBoxes();
 	virtual void setRenderFlag(RENDER_FLAGS flag);
 
+	virtual void ui_initRender();
+	virtual void ui_loadTexture(unsigned int* texid, char* filepath, int* xres, int* yres);
+	virtual void ui_renderQuad(float* mat, unsigned int textureID, float transp, int i);
+	virtual void ui_textureRelease(vector<unsigned int> texids);
 	virtual int portalIntersection(float* pos1, float* pos2, int in_chunk);
 	virtual void setCullingCurrentChunkID(int roomID);
 

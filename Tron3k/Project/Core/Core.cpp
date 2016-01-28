@@ -35,6 +35,10 @@ void Core::init()
 	tick_timer = 0;
 	client_record = false;
 	client_playback = false;
+
+	uiManager = new UIManager();
+	initPipeline();
+	uiManager->init(&console);
 }
 
 Core::~Core()
@@ -48,8 +52,11 @@ Core::~Core()
 		glfwDestroyWindow(win);
 		win = nullptr;
 	}
+	if (uiManager != nullptr)
+		delete uiManager;
 	if (renderPipe != nullptr)
 		renderPipe->release();
+	
 
 	ReleaseSound();
 
@@ -131,7 +138,6 @@ void Core::update(float dt)
 	console.discardCommandAndLastMsg();
 
 	glfwSwapBuffers(win);
-
 }
 
 void Core::upStart(float dt)
@@ -152,64 +158,47 @@ void Core::upStart(float dt)
 	case 1:
 		//start console commands
 		startHandleCmds();
+		uiManager->render();
 		break;
 	}
 }
 
 void Core::upMenu(float dt)
 {
-	switch (subState)
+	uiManager->render();
+	
+	if (i->justPressed(GLFW_MOUSE_BUTTON_LEFT))//button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
 	{
-	case 0: //init
-	{
-		uiManager = new UIManager();
-		//uiManager->init("GameFiles/UIFiles/menuFilesNames.txt", console);
-
-		//uiManager->setMenu(0);
-
-		subState++;
-		break;
-	}
-	case 1: //Render loop
-	{
-		//uiManager->render();
-			//renderPipe->renderUI(uiManager->returnWorldMatrix(i), i);
-
-		if (i->justPressed(GLFW_MOUSE_BUTTON_LEFT))//button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
+		double x = (0.0);
+		double y = (0.0);
+		//Events
+		i->getCursor(x, y);
+		double tX = (x / (double)winX) * 2 - 1.0; // (x/ResolutionX) * 2 - 1
+		double tY = (-y / (double)winY) * 2 + 1.0; // (y/ResolutionY) * 2 - 1
+		int eventIndex = uiManager->collisionCheck(glm::vec2((float)tX, (float)tY));
+		switch (eventIndex)
 		{
-			double x = (0.0);
-			double y = (0.0);
-			//Events
-			i->getCursor(x, y);
-			double tX = (x / (double)winX) * 2 - 1.0; // (x/ResolutionX) * 2 - 1
-			double tY = (-y / (double)winY) * 2 + 1.0; // (y/ResolutionY) * 2 - 1
-			int eventIndex = 0;// = uiManager->collisionCheck(glm::vec2((float)tX, (float)tY));
-			switch (eventIndex)
-			{
-			case 0: //Roam
-				current = ROAM;
-				uiManager->removeAllMenus();
-				//Load gui and the rest of in game ui.
-				subState = 0;
-				break;
-			case 1: //Multiplayer
-				current = CLIENT;
-				uiManager->removeAllMenus();
-				//Load gui and the rest of in game ui.
-				subState = 0;
-				break;
-			case 2: //Settings
-				break;
-			case 3: //Exit
-				glfwHideWindow(win);
-				break;
-			default:
-				break;
-			}
+		case 0: //Roam
+			uiManager->setMenu(1);
+			//current = ROAM;
+			//uiManager->removeAllMenus();
+			//Load gui and the rest of in game ui.
+			subState = 0;
+			break;
+		case 1: //Multiplayer
+			//current = CLIENT;
+			//uiManager->removeAllMenus();
+			//Load gui and the rest of in game ui.
+			subState = 0;
+			break;
+		case 2: //Settings
+			break;
+		case 3: //Exit
+			glfwHideWindow(win);
+			break;
+		default:
+			break;
 		}
-
-		break;
-	}
 	}
 }
 
@@ -219,8 +208,6 @@ void Core::upRoam(float dt)
 	{
 	case 0: //init
 	{
-		initPipeline();
-
 		game = new Game();
 		game->init(MAX_CONNECT, current, &console);
 		game->sendPlayerRadSize(0.9f);
@@ -343,7 +330,6 @@ void Core::upClient(float dt)
 	switch (subState)
 	{
 	case 0: //init
-		initPipeline();
 		if (top)
 			delete top;
 		top = new Client();
@@ -495,7 +481,6 @@ void Core::upServer(float dt)
 	{
 	case 0:  //init server
 	{
-		initPipeline();
 		//createWindow(200, 200, false);
 		serverCam = CameraInput::getCam();
 		if (top)
@@ -1348,6 +1333,8 @@ void Core::initPipeline()
 			console.printMsg("Error: Failed to set pipeline setting: VIEWPORT", "System", 'S');
 		}
 	}
+
+	uiManager->setRenderPtr(renderPipe);
 }
 
 void Core::setfps(int fps)

@@ -3,6 +3,7 @@
 #define UIMANAGER_H
 
 #include "UI.h"
+//#include "../../../RenderPipeline/IRenderPipeline.h"
 #include <string>
 #include <iostream>
 #include <sstream>
@@ -12,36 +13,52 @@
 class UIManager
 {
 private:
+
+	IRenderPipeline* renderPipe;
+
 	UI* menus;
 	int nrOfMenus;
 	int maxMenus;
 	int currentMenu;
 
-	std::string* fileNamesList;
-	int nrOfFileNames;
+	Console* console;
+
+	//Lists of file names
+	std::string* fileNamesListFirstGroup; //First set of menus(Those you can use before going ingame)
+	std::string* fileNamesListSecondGroup; //Second set of menus(Those you can use while ingame)
+	int nrOfFileNamesFirstGroup;
+	int nrOfFileNamesSecondGroup;
+	int currentGroup;
+
 	//Render stuff
-	//GLuint uniformtextureLocation;
-	//GLuint uniformWorldMat;
-	//GLuint shader;
-	//std::vector<GLuint> uiTextureIds;
+	std::vector<glm::vec2>* textureRes;
+	std::vector<GLuint> uiTextureIds;
 	std::vector<std::string> texturePaths;
+
+	//	Functions
+	void loadInTexture();
+
 public:
 	UIManager();
 	~UIManager();
 
-	void init(std::string fileName);
+	void setRenderPtr(IRenderPipeline* ptr) 
+	{ 
+		renderPipe = ptr; 
+	}
 
-	void update();
+	void init(Console* console);
+	
 	void render();
 
 	void setMenu(int menuId);
 	void removeAllMenus();
 
-	int collisionCheck(glm::vec2 pos, int whichMenu);
+	int collisionCheck(glm::vec2 pos);
 
-	int changeTex(int objId);
+	void changeTex(int objId);
 
-	bool Load(int whichMenuGroup);
+	bool LoadNextSet(int whichMenuGroup);
 };
 
 #endif
