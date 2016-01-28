@@ -1009,7 +1009,7 @@ void Player::movementAnimationChecks(float dt)
 	{	
 		animOverideIfPriority(anim_third_current, AnimationState::third_primary_air);
 			if (animPrimary == false)
-				if(animRole != ROLES::MANIPULATOR && animRole != ROLES::BRUTE)
+				if(animRole == ROLES::MANIPULATOR || animRole == ROLES::BRUTE)
 					animOverideIfPriority(anim_third_current, AnimationState::third_secondary_air);
 	}
 
