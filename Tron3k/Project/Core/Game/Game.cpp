@@ -609,6 +609,14 @@ void Game::checkPlayerVEffectCollision()
 						collNormals.reserve(explosColls.size()); // preallocate memory
 						collNormals.insert(collNormals.end(), explosColls.begin(), explosColls.end());
 						explosColls.clear();
+						EffectHitPlayerInfo hi;
+						hi.playerHit = j;
+						hi.effectPID = pid;
+						hi.effectID = eid;
+						hi.et = EFFECT_TYPE::EXPLOSION;
+						hi.hitPos = effects[EFFECT_TYPE::EXPLOSION][i]->getPos();
+						hi.newHPtotal = handleEffectHitPlayerEvent(hi);
+						allEffectHitsOnPlayers.push_back(hi);
 					}
 				}
 				playerList[j]->setExplodingInfo(collNormals);
