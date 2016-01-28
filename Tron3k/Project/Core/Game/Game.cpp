@@ -1528,7 +1528,7 @@ void Game::handleBulletHitEffectEvent(BulletHitEffectInfo hi)
 
 void Game::handleEffectHitEffectEvent(EffectHitEffectInfo hi)
 {
-	int arraypos = -1;
+	/*int arraypos = -1;
 	Effect* e = getSpecificEffect(hi.effectPID, hi.effectSID, hi.et, hi.posInArr);
 
 	if (e != nullptr)
@@ -1545,7 +1545,7 @@ void Game::handleEffectHitEffectEvent(EffectHitEffectInfo hi)
 			removeEffect(hi.et, hi.posInArr);
 			break;
 		}
-	}
+	}*/
 }
 
 void Game::handleBulletTimeOuts(BulletTimeOutInfo hi)
