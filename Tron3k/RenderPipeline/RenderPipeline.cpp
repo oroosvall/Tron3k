@@ -7,6 +7,8 @@
 
 #include <vld.h>
 
+#include <sstream>
+
 #ifdef _DEBUG
 extern "C"
 {
@@ -84,8 +86,12 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 	gBuffer = new Gbuffer();
 	
+	Text::ScreenResHeight = WindowHeight;
+	Text::ScreenResWidth = WindowWidth;
 
-	//test = new TextObject("Swag", 11, glm::vec2(10, 10));
+	fontTexture = loadTexture("GameFiles/Font/font16.png", false);
+
+	debugText = new Text("Debug Test\nNew line :)", 18, fontTexture, vec2(0, 18));
 
 #ifdef _DEBUG
 	if (glDebugMessageCallback) {
@@ -268,6 +274,20 @@ void RenderPipeline::reloadShaders()
 	lw_vp = glGetUniformLocation(lw_Shader, "ViewProjMatrix");
 	lw_tex = glGetUniformLocation(lw_Shader, "texsample");
 
+
+	uniformDynamicGlowColorLocation_wall = glGetUniformLocation(lw_Shader, "dynamicGlowColor");
+
+	std::string textShaderNames[] = { "GameFiles/Shaders/simple_vs.glsl",  "GameFiles/Shaders/simple_fs.glsl" };
+	GLenum textshaderTypes[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
+	CreateProgram(temp, textShaderNames, textshaderTypes, 2);
+	if (temp != 0)
+	{
+		textShader = temp;
+		temp = 0;
+	}
+
+	textShaderLocation = glGetUniformLocation(textShader, "textureIN");
+
 	std::cout << "Done loading shaders\n";
 
 }
@@ -288,7 +308,7 @@ void RenderPipeline::release()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	delete test;
+	delete debugText;
 
 	delete gBuffer;
 
@@ -315,11 +335,30 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	gBuffer->eyePos.y = y;
 	gBuffer->eyePos.z = z;
 
-	//returns room id, new value if we went though a portal
-	contMan.getPortalID(gBuffer->eyePosLast, gBuffer->eyePos);
-
 	gBuffer->clearLights();
+	
+	std::stringstream ss;
 
+	ss << "Draw count: " << drawCount << "\n";
+	ss << "Primitive count: " << primitiveCount << "\n";
+
+	debugText->setText(ss.str());
+
+	drawCount = 0;
+	primitiveCount = 0;
+}
+
+int RenderPipeline::portalIntersection(float* pos1, float* pos2, int in_chunk)
+{
+	if (contMan.f_portal_culling)
+		return contMan.getPortalID((vec3*)pos1, (vec3*)pos2, in_chunk);
+	else
+		return -1;
+}
+
+void RenderPipeline::setCullingCurrentChunkID(int roomID)
+{
+	contMan.setRoomID(roomID);
 }
 
 void RenderPipeline::addLight(SpotLight* newLight)
@@ -374,9 +413,19 @@ void RenderPipeline::finalizeRender()
 	glClear(GL_DEPTH_BUFFER_BIT);
 
 	gBuffer->render();
+	
+	glUseProgram(textShader);
+	glProgramUniform1i(textShader, textShaderLocation, 0);
+	
+	glEnable(GL_BLEND);
+
+	debugText->draw();
+	
+	glDisable(GL_BLEND);
+
 }
 
-void RenderPipeline::renderWallEffect(void* pos1, void* pos2, float uvStartOffset)
+void RenderPipeline::renderWallEffect(void* pos1, void* pos2, float uvStartOffset, float* dgColor)
 {
 
 	glUseProgram(lw_Shader);
@@ -384,6 +433,7 @@ void RenderPipeline::renderWallEffect(void* pos1, void* pos2, float uvStartOffse
 	//call contentman and bind the lightwal texture to 0
 	contMan.bindLightwalTexture();
 	cam.setViewProjMat(lw_Shader, lw_vp);
+	glProgramUniform3fv(lw_Shader, uniformDynamicGlowColorLocation_wall, 1, (GLfloat*)&dgColor[0]);
 
 	glBindBuffer(GL_ARRAY_BUFFER, lwVertexDataId);
 	glBindVertexArray(lwVertexAttribute);
@@ -514,6 +564,12 @@ void RenderPipeline::renderAnimation(int playerID, int roleID, void* world, Anim
 {
 	glUseProgram(animationShader);
 
+	if (animState == AnimationState::third_primary_jump_begin)
+		int debug = 3;
+
+	if (animState == AnimationState::third_primary_air)
+   		int debug = 3;
+
 	//Glow values for player
 	glProgramUniform1f(animationShader, uniformStaticGlowIntensityLocation[1], sgInten);
 	glProgramUniform3fv(animationShader, uniformDynamicGlowColorLocation[1], 1, (GLfloat*)&dgColor[0]);
@@ -527,11 +583,10 @@ void RenderPipeline::renderAnimation(int playerID, int roleID, void* world, Anim
 	//set temp objects worldmat
 	glProgramUniformMatrix4fv(animationShader, worldMat[1], 1, GL_FALSE, (GLfloat*)world);
 
-	anims.updateAnimStates(playerID, roleID, animState, delta);
+	anims.updateAnimStates(playerID, roleID, animState, delta, first);
 
-	contMan.renderPlayer(anims.animStates[playerID], *(glm::mat4*)world, uniformKeyMatrixLocation, first);
-	
-	
+	if (anims.animStates[playerID].state != AnimationState::none && anims.animStates[playerID].frameEnd > 0)
+		contMan.renderPlayer(anims.animStates[playerID], *(glm::mat4*)world, uniformKeyMatrixLocation, first);
 }
 
 bool RenderPipeline::setSetting(PIPELINE_SETTINGS type, PipelineValues value)
@@ -698,7 +753,7 @@ void RenderPipeline::ui_initRender()
 
 void RenderPipeline::ui_loadTexture(unsigned int* texid, char* filepath, int* xres, int* yres)
 {
-	*texid = loadTexture(std::string(filepath), xres, yres);
+	*texid = loadTexture(std::string(filepath), true, xres, yres);
 }
 
 void RenderPipeline::ui_renderQuad(float* mat, GLuint textureID, float transp, int i)

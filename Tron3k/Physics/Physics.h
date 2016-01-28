@@ -36,6 +36,7 @@ class Physics
 private:
 	//General physics components will go here, and things will be added as we go
 	std::vector<std::vector<CollideMesh>> worldBoxes; //each CollideMesh is an ABB, and the vector is all CollideMeshes in the chunk
+	std::vector<CollideMesh> captureBoxes;
 	std::vector<EffectMesh*> effectBoxes;
 	CollideMesh playerBox;
 	CollideMesh bulletBox;
@@ -111,7 +112,7 @@ public:
 	virtual std::vector<glm::vec4> BulletVWorldCollision(glm::vec3 bulletPos);
 	virtual glm::vec3 checkBulletVWorldCollision(glm::vec3 bulletPos);
 	virtual std::vector<glm::vec4> checkPlayerVEffectCollision(glm::vec3 playerPos, unsigned int eType, int eid);
-	virtual glm::vec3 checkBulletVEffectCollision(glm::vec3 bulletPos);
+	virtual std::vector<glm::vec4> checkBulletVEffectCollision(glm::vec3 bulletPos, unsigned int eType, int eid);
 
 	virtual float addGravity(float dt);
 

@@ -82,6 +82,6 @@ public:
 
 };
 
-GLuint loadTexture(std::string texturePath, int* xres = 0, int* yres = 0);
+GLuint loadTexture(std::string texturePath, bool PNGUploadCompress = true, int* xres = 0, int* yres = 0);
 
 #endif

@@ -35,6 +35,8 @@ private:
 	bool lockControls = false;
 	bool noclip = false;
 
+	bool justRespawned = false; // used for culling
+
 	bool footstepsLoop = false;
 	float footstepsCountdown = 0;
 	std::string name;
@@ -74,6 +76,8 @@ private:
 	int animRole = 0;
 	int animPrimary = true;
 	void movementAnimationChecks(float dt);
+	void peakAnimsUpdate();
+	bool animLastDead = false;
 
 	bool isLocalPlayer;
 
@@ -95,6 +99,11 @@ public:
 	~Player();
 	void init(std::string name, glm::vec3 pos, bool isLocal = false);
 
+	bool getLockedControls()
+	{
+		return lockControls;
+	};
+
 	void footstepsLoopReset(float dt);
 
 	bool getFootsteps();
@@ -111,6 +120,7 @@ public:
 
 	void setCollisionInfo(std::vector<glm::vec4> collNormals);
 	glm::vec4* getCollisionNormalsForFrame(int &size) { size = collisionNormalSize; return collisionNormals; };
+	void setExplodingInfo(std::vector<glm::vec4> expDirs);
 	void applyGravity (float vel);
 
 	AnimationState getAnimState_f_c() { return anim_first_current; };
@@ -152,7 +162,7 @@ public:
 			collisionNormals[collisionNormalSize] = cn; collisionNormalSize++;}
 		};
 
-	void setVelocity(glm::vec3 velocity) { vel = velocity; };
+	void setVelocity(glm::vec3 velocity) { vel = velocity; if (!grounded) airVelocity = velocity; };
 	glm::vec3 getVelocity() { return vel; };
 	glm::vec3 getAirVelocity() { return airVelocity; };
 
@@ -163,7 +173,8 @@ public:
 
 	void setRole(Role role);
 
-	void respawn(glm::vec3 respawnPos, glm::vec3 dir);
+	void respawn(glm::vec3 respawnPos, glm::vec3 dir, int roomID);
+	bool getJustRespawned() { return justRespawned; };
 
 	void healing(int amount);
 
@@ -172,6 +183,9 @@ public:
 	glm::mat4 getFPSmat();
 
 	bool searchModifier(MODIFIER_TYPE search);
+	Modifier* searchModifierGet(MODIFIER_TYPE search);
+
+	int roomID;
 };
 
 #endif

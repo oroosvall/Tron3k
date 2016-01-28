@@ -214,5 +214,5 @@ void AnimatedMesh::draw(GLuint uniformKeyMatrixLocation)
 	glBindBufferBase(GL_UNIFORM_BUFFER, uniformKeyMatrixLocation, matricesBuffer);
 
 	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
-
+	
 }

@@ -1,12 +1,11 @@
 #include "AnimManager.h"
 
-void AnimManager::updateAnimStates(int playerID, int role, AnimationState current, float dt)
+void AnimManager::updateAnimStates(int playerID, int role, AnimationState current, float dt, bool firstPerson)
 {
 	bool overide = checkAnimOverwrite(animStates[playerID].state, current);
+
 	if (animStates[playerID].timeout)
-	{
 		overide = true;
-	}
 
 	if (animStates[playerID].role != role)
 	{
@@ -16,13 +15,14 @@ void AnimManager::updateAnimStates(int playerID, int role, AnimationState curren
 	}
 
 	if (getAnimRank(animStates[playerID].state) == 2 && current == AnimationState::none)
-	{
 		overide = true;
-	}
+
+	if (animStates[playerID].firstPerson != firstPerson)
+		overide == true;
 
 	if (overide) // replace animation with the new one
 	{
-		setAnim(animStates[playerID], current);
+		setAnim(animStates[playerID], current, firstPerson);
 		animStates[playerID].timeout = false;
 	}
 	else
@@ -72,18 +72,23 @@ void AnimManager::updateAnimStates(int playerID, int role, AnimationState curren
 
 }
 
-void AnimManager::setAnim(animState& current, AnimationState overide)
+void AnimManager::setAnim(animState& current, AnimationState overide, bool firstPerson)
 {
 	if (keyFrameLenghts[current.role*AnimationState::none + overide] == 0)
 	{
-		if(overide != AnimationState::none)
-		return;
+		if (overide != AnimationState::none)
+		{
+			current.state = AnimationState::none;
+			current.timeLength = 0;
+			return;
+		}
 	}
 	int role = current.role;
 	current = animState();
 	current.state = overide;
 	current.role = role;
 
+	current.firstPerson = firstPerson;
 
 	current.frameEnd = keyFrameLenghts[current.role*AnimationState::none + current.state];
 

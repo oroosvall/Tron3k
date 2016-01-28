@@ -80,12 +80,14 @@ public:
 
 	void renderPlayer(AnimManager::animState, glm::mat4 world, GLuint uniformKeyMatrixLocation, bool first);
 
-	int getPortalID(glm::vec3 oldpos, glm::vec3 newpos) { return testMap.getChunkID(oldpos, newpos); }
+	int getPortalID(glm::vec3* oldpos, glm::vec3* newpos, int in_chunk) { return testMap.portalintersection(oldpos, newpos, in_chunk); }
 
 	void* getChunkCollisionVectorAsPointer(int chunkID);
 	void bindLightwalTexture();
 
 	std::vector<std::vector<float>> getMeshBoxes(); //Will send out all meshboxes, for now it'll just send a static one
+
+	void setRoomID(int roomID);
 };
 
 #endif

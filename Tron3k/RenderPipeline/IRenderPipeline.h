@@ -73,7 +73,7 @@ public:
 	PipelineValues getSettings(PIPELINE_SETTINGS type);
 	virtual bool setSetting(PIPELINE_SETTINGS type, PipelineValues value) = 0;
 
-	virtual void renderWallEffect(void* pos1, void* pos2, float uvStartOffset) = 0;
+	virtual void renderWallEffect(void* pos1, void* pos2, float uvStartOffset, float* dgColor) = 0;
 
 	virtual void forceReset() = 0;
 	virtual unsigned int createText(float x, float y, float z, std::string text) = 0;
@@ -102,6 +102,8 @@ public:
 	virtual void ui_loadTexture(unsigned int* texid, char* filepath, int* xres, int* yres) = 0;
 	virtual void ui_renderQuad(float* mat, unsigned int textureID, float transp, int i) = 0;
 	virtual void ui_textureRelease(std::vector<unsigned int> texids) = 0;
+	virtual int portalIntersection(float* pos1, float* pos2, int in_chunk) = 0;
+	virtual void setCullingCurrentChunkID(int roomID) = 0;
 };
 
 extern "C" ENGINE_API IRenderPipeline* CreatePipeline();

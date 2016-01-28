@@ -4,20 +4,20 @@
 
 void Map::init()
 {
-	currentChunk = 1;
+	currentChunk = 0;
 	spA = 0;
 	spB = 0;
 	spFFA = 0;
 
+	//loadMap("GameFiles/TestFiles/PortalTest.bin");
 	loadMap("GameFiles/TestFiles/levelTesting.bin");
-
 	for (int i = 0; i < meshCount; i++)
 	{
 		meshes[i].stream();
 	}
 	for (int i = 0; i < textureCount; i++)
 	{
-		tex[i].textureID = loadTexture("GameFiles/testfiles/" + std::string(tex[i].textureName));
+		tex[i].textureID = loadTexture("GameFiles/Textures/map/" + std::string(tex[i].textureName));
 	}
 
 }
@@ -307,27 +307,27 @@ void Map::loadMap(std::string mapName)
 
 }
 
-int Map::getChunkID(glm::vec3 oldPos, glm::vec3 newPos)
+int Map::portalintersection(glm::vec3* oldPos, glm::vec3* newPos, int in_currentChunk)
 {
-	//vec3 dir = newPos - oldPos;
-	//float len = length(dir);
-	//dir = normalize(dir);
-	//
-	//for (size_t n = 0; n < chunks[currentChunk].portals.size(); n++)
-	//	if (chunks[currentChunk].portals[n].intersects(oldPos, dir, len))
-	//	{
-	//		if (chunks[currentChunk].portals[n].bridgedRooms[0] == currentChunk)
-	//			currentChunk = chunks[currentChunk].portals[n].bridgedRooms[1];
-	//		else
-	//			currentChunk = chunks[currentChunk].portals[n].bridgedRooms[0];
-	//
-	//		printf("Now in room %d \n", currentChunk);
-	//
-	//		return currentChunk;
-	//	}
-	//
-	//return currentChunk;
-	return 0;
+	vec3 dir = *newPos - *oldPos;
+	float len = length(dir);
+	dir = normalize(dir);
+
+	for (size_t n = 0; n < chunks[in_currentChunk].portals.size(); n++)
+		if (chunks[in_currentChunk].portals[n].intersects(*oldPos, dir, len))
+		{
+			if (chunks[in_currentChunk].portals[n].bridgedRooms[0] == in_currentChunk)
+				in_currentChunk = chunks[in_currentChunk].portals[n].bridgedRooms[1];
+			else
+				in_currentChunk = chunks[in_currentChunk].portals[n].bridgedRooms[0];
+	
+			printf("Now in room %d \n", in_currentChunk);
+	
+			return in_currentChunk;
+		}
+	
+	//no intersection
+	return -1;
 }
 
 ChunkCollision* Map::getChunkCollision(int chunkID)

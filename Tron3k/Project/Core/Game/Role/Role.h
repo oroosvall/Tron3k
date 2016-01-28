@@ -27,6 +27,7 @@ private:
 	float boundingBoxModifier;
 	float boundingBoxRadius;
 	float jumpHeight;
+	float swapWeaponTimer;
 	string roles[NROFROLES];
 	string loadedRoles[NROFROLES][NROFREADPROPERTIES];
 

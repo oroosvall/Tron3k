@@ -63,6 +63,11 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->soundList[SOUNDS::soundEffectFlies].loadFromFile("GameFiles/Sound/soundEffectFlies.ogg");
 		singleton->soundList[SOUNDS::soundEffectFrogs].loadFromFile("GameFiles/Sound/soundEffectFrogs.ogg");
 		singleton->soundList[SOUNDS::soundEffectNeonSign].loadFromFile("GameFiles/Sound/soundEffectNeonSign.ogg");
+		singleton->soundList[SOUNDS::soundEffectClusterlingExplosion].loadFromFile("GameFiles/Sound/soundEffectClusterlingExplosion.ogg");
+		singleton->soundList[SOUNDS::soundEffectCrows].loadFromFile("GameFiles/Sound/soundEffectCrows.ogg");
+		singleton->soundList[SOUNDS::BreakingOutBass].loadFromFile("GameFiles/Sound/BreakingOutBass.ogg");
+		singleton->soundList[SOUNDS::soundEffectBruteLand].loadFromFile("GameFiles/Sound/soundEffectBruteLand.ogg");
+		singleton->soundList[SOUNDS::soundEffectBruteJump].loadFromFile("GameFiles/Sound/soundEffectBruteJump.ogg");
 
 		initialized = true;
 	}
@@ -94,11 +99,40 @@ int SoundPlayer::playJump(int role, float x, float y, float z)
 	{
 		GetSound()->playExternalSound(SOUNDS::soundEffectHunterJump, x, y, z);
 	}
+
+	else if (role == 3)
+	{
+		GetSound()->playExternalSound(SOUNDS::soundEffectBruteJump, x, y, z);
+		stopBrute();
+	}
 	else
 	{
 		return 0;
 	}
 }
+
+int SoundPlayer::playLand(int role, float x, float y, float z)
+{
+	if (role == 0)
+	{
+		GetSound()->playExternalSound(SOUNDS::soundEffectTrapperLand, x, y, z);
+	}
+
+	else if (role == 2)
+	{
+		GetSound()->playExternalSound(SOUNDS::soundEffectTrapperLand, x, y, z);
+	}
+
+	else if (role == 3)
+	{
+		GetSound()->playExternalSound(SOUNDS::soundEffectBruteLand, x, y, z);
+	}
+	else
+	{
+		return 0;
+	}
+}
+
 
 int SoundPlayer::playMapSounds()
 {
@@ -115,22 +149,23 @@ int SoundPlayer::playMapSounds()
 			{
 				return -1;
 			}
-			theCantinaSong.setPosition(10, 5, 10);
-			theCantinaSong.setAttenuation(10);
-			theCantinaSong.setVolume(30);
+			theCantinaSong.setPosition(45, 1.55, 95);
+			theCantinaSong.setAttenuation(80);
+			theCantinaSong.setVolume(20);
 			theCantinaSong.play();
 			theCantinaSong.setLoop(true);
+			theCantinaSong.setMinDistance(9.5);
 			
 			mapSounds[0].setBuffer(soundList[SOUNDS::soundAids]);
 			mapSounds[0].setPosition(-10, 5, -10);
 			mapSounds[0].setVolume(30);
 			mapSounds[0].setAttenuation(10);
 			mapSounds[0].setMinDistance(5.0f);
-			mapSounds[1].setBuffer(soundList[SOUNDS::power]);
-			mapSounds[1].setPosition(-10, 1.55, -50);
-			mapSounds[1].setVolume(30);
-			mapSounds[1].setAttenuation(10);
-			mapSounds[1].setMinDistance(5.0f);
+			mapSounds[1].setBuffer(soundList[SOUNDS::BreakingOutBass]);
+			mapSounds[1].setPosition(44, 1.55, 100);
+			mapSounds[1].setVolume(50);
+			mapSounds[1].setAttenuation(80);
+			mapSounds[1].setMinDistance(25.0f);
 			mapSounds[2].setBuffer(soundList[SOUNDS::soundEffectAlarm]);
 			mapSounds[2].setPosition(73, 1.55, 4);
 			mapSounds[2].setVolume(20);
@@ -138,19 +173,29 @@ int SoundPlayer::playMapSounds()
 			mapSounds[2].setMinDistance(50.0f);
 			mapSounds[3].setBuffer(soundList[SOUNDS::soundEffectFlies]);
 			mapSounds[3].setPosition(51, 1.55, 108);
-			mapSounds[3].setVolume(20);
+			mapSounds[3].setVolume(30);
 			mapSounds[3].setAttenuation(3);
-			mapSounds[3].setMinDistance(7.0f);
+			mapSounds[3].setMinDistance(9.0f);
 			mapSounds[4].setBuffer(soundList[SOUNDS::soundEffectFlies]);
 			mapSounds[4].setPosition(-74, 1.55, 30);
-			mapSounds[4].setVolume(20);
+			mapSounds[4].setVolume(30);
 			mapSounds[4].setAttenuation(3);
-			mapSounds[4].setMinDistance(7.0f);
+			mapSounds[4].setMinDistance(9.0f);
 			mapSounds[5].setBuffer(soundList[SOUNDS::soundEffectFrogs]);
 			mapSounds[5].setPosition(-48, 1.55, 72);
-			mapSounds[5].setVolume(3);
+			mapSounds[5].setVolume(10);
 			mapSounds[5].setAttenuation(10);
 			mapSounds[5].setMinDistance(4.0f);
+			mapSounds[6].setBuffer(soundList[SOUNDS::soundEffectCrows]);
+			mapSounds[6].setPosition(35, 1.55, 15);
+			mapSounds[6].setVolume(20);
+			mapSounds[6].setAttenuation(20);
+			mapSounds[6].setMinDistance(40.0f);
+			mapSounds[7].setBuffer(soundList[SOUNDS::soundEffectFlies]);
+			mapSounds[7].setPosition(-32, 1.55, 47);
+			mapSounds[7].setVolume(30);
+			mapSounds[7].setAttenuation(3);
+			mapSounds[7].setMinDistance(9.0f);
 
 			for (int i = 0; i < MAXSOUNDS; i++)
 			{
@@ -219,6 +264,39 @@ int SoundPlayer::playUserGeneratedSound(int sound)
 	return 0;
 }
 
+int SoundPlayer::playBrute(float x, float y, float z)
+{
+	if (sf::Listener::getPosition().x > x - 0.1 && sf::Listener::getPosition().x < x + 0.1)
+	{
+		if (sf::Listener::getPosition().z > z - 0.1 && sf::Listener::getPosition().z < z + 0.1)
+		{
+			bruteSteps.setRelativeToListener(true);
+			bruteSteps.setPosition(0, 0, 0);
+
+		}
+	}
+
+	else
+	{
+		bruteSteps.setRelativeToListener(false);
+		bruteSteps.setPosition(x, y, z);			//Set the sound's position in the world. Could be passed in through a parameter.
+	}
+
+	//std::cout << "x: " << sf::Listener::getPosition().x << " y: " << sf::Listener::getPosition().y << " z: " << sf::Listener::getPosition().z << endl;
+	//std::cout << "x: " << x << " y: " << y << " z: " << z << endl;
+	//sounds[nrOfSoundsPlaying].isRelativeToListener();
+	bruteSteps.setMinDistance(10.0f);		//Set the sound's distance it travels before it starts to attenuate. Could be passed in through a parameter.
+
+	bruteSteps.setBuffer(soundList[SOUNDS::soundEffectBruteSteps]);
+	bruteSteps.setVolume(50);
+	bruteSteps.setLoop(false);
+	bruteSteps.play();
+
+
+return 0;
+}
+
+
 int SoundPlayer::playDestroyer(float x, float y, float z)
 {
 	
@@ -250,8 +328,6 @@ int SoundPlayer::playDestroyer(float x, float y, float z)
 		destroyerSteps.setVolume(50);
 		destroyerSteps.setLoop(true);
 		destroyerSteps.play();
-		nrOfSoundsPlaying++;
-		nrOfSoundsPlaying %= MAXSOUNDS;
 	}
 
 	return 0;
@@ -287,8 +363,6 @@ int SoundPlayer::playDestroyerStop(float x, float y, float z)
 		destroyerStop.setVolume(50);
 		destroyerStop.setLoop(false);
 		destroyerStop.play();
-		nrOfSoundsPlaying++;
-		nrOfSoundsPlaying %= MAXSOUNDS;
 	}
 
 	return 0;
@@ -324,8 +398,6 @@ int SoundPlayer::playDestroyerStart(float x, float y, float z)
 		destroyerStart.setVolume(50);
 		destroyerStart.setLoop(false);
 		destroyerStart.play();
-		nrOfSoundsPlaying++;
-		nrOfSoundsPlaying %= MAXSOUNDS;
 	}
 
 	return 0;
@@ -374,7 +446,6 @@ void SoundPlayer::setLocalPlayerDir(glm::vec3 playerDir)
 
 void SoundPlayer::setLocalPlayerPos(glm::vec3 playerPos)
 {
-	//cout << playerPos.x << "    " << playerPos.z << endl;
 	sf::Listener::setPosition(playerPos.x, playerPos.y, playerPos.z);
 }
 
@@ -456,7 +527,7 @@ void SoundPlayer::playFootsteps(int role, float posX, float posY, float posZ)
 
 		if (role == 3)
 		{
-			playExternalSound(SOUNDS::soundEffectBruteSteps, posX, posY, posZ);
+			playBrute(posX, posY, posZ);
 		}
 
 		if (role == 4)

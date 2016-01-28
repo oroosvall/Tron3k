@@ -17,6 +17,7 @@ void Core::init()
 	win = nullptr;
 	renderPipe = nullptr;
 
+	cursorVisible = true;
 	recreate = false;
 	fullscreen = false;
 	winX = winY = 800;
@@ -75,6 +76,17 @@ void Core::update(float dt)
 {
 	if (recreate)
 		createWindow(winX, winY, fullscreen);
+
+	bool chatMode = console.getInChatMode();
+
+	if (cursorVisible != chatMode)
+	{
+		cursorVisible = chatMode;
+		if (chatMode)
+			glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		else
+			glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+	}
 
 	glfwPollEvents();
 	console.update(_name, 'A'); //Updates to check for new messages and commands
@@ -197,7 +209,7 @@ void Core::upRoam(float dt)
 	case 0: //init
 	{
 		game = new Game();
-		game->init(MAX_CONNECT, current);
+		game->init(MAX_CONNECT, current, &console);
 		game->sendPlayerRadSize(0.9f);
 		//map loaded, fetch spawnpoints from render
 		renderPipe->getSpawnpoints(*game->getSpawnpoints());
@@ -278,6 +290,16 @@ void Core::upRoam(float dt)
 			game->clearBulletOnWorldCollisions();
 		}
 
+		std::vector<BulletHitEffectInfo> bulletHitsOnEffect = game->getAllBulletOnEffectCollisions();
+		if (bulletHitsOnEffect.size() != 0)
+		{
+			for (unsigned int c = 0; c < bulletHitsOnEffect.size(); c++)
+			{
+				game->handleBulletHitEffectEvent(bulletHitsOnEffect[c]);
+			}
+			game->clearBulletOnEffectCollisions();
+		}
+
 		std::vector<EffectHitPlayerInfo> effectHitsOnPlayer = game->getAllEffectOnPlayerCollisions();
 		if (effectHitsOnPlayer.size() != 0)
 		{
@@ -326,7 +348,7 @@ void Core::upClient(float dt)
 				if (game != nullptr)
 					delete game;
 				game = new Game();
-				game->init(MAX_CONNECT, current);
+				game->init(MAX_CONNECT, current, &console);
 				game->sendPlayerRadSize(0.9f);
 				//map loaded, fetch spawnpoints from render
 				renderPipe->getSpawnpoints(*game->getSpawnpoints());
@@ -482,7 +504,7 @@ void Core::upServer(float dt)
 		if (game != nullptr)
 			delete game;
 		game = new Game();
-		game->init(MAX_CONNECT, current);
+		game->init(MAX_CONNECT, current, &console);
 		game->sendPlayerRadSize(0.9f);
 		//map loaded, fetch spawnpoints from render
 		renderPipe->getSpawnpoints(*game->getSpawnpoints());
@@ -533,6 +555,17 @@ void Core::upServer(float dt)
 			}
 			top->event_bullet_hit_world(bulletHitsOnWorld);
 			game->clearBulletOnWorldCollisions();
+		}
+
+		std::vector<BulletHitEffectInfo> bulletHitsOnEffect = game->getAllBulletOnEffectCollisions();
+		if (bulletHitsOnEffect.size() != 0)
+		{
+			for (unsigned int c = 0; c < bulletHitsOnEffect.size(); c++)
+			{
+				game->handleBulletHitEffectEvent(bulletHitsOnEffect[c]);
+			}
+			top->event_bullet_hit_effect(bulletHitsOnEffect);
+			game->clearBulletOnEffectCollisions();
 		}
 
 		std::vector<EffectHitPlayerInfo> effectHitsOnPlayer = game->getAllEffectOnPlayerCollisions();
@@ -702,7 +735,7 @@ void Core::roamHandleCmds()
 			{
 				int team = stoi(token);
 				game->addPlayerToTeam(0, team, 0);
-				game->allowPlayerRespawn(0, 0); //Add new spawn point probably
+				game->allowPlayerRespawn(0, 0);
 				if (team != 0)
 					game->freecam = false;
 				else
@@ -727,17 +760,19 @@ void Core::roamHandleCmds()
 		else if (token == "/role")
 		{
 			ss >> token;
-			int role = stoi(token);
-			if (role < 1 || role > 5)
-				console.printMsg("Invalid role. Use /role <1-5>", "System", 'S');
-			else
+			if (token != "/role" || token == "1" || token == "2" || token == "3" || token == "4"|| token == "5")
 			{
+				int role = stoi(token);
 				game->getPlayer(0)->getRole()->chooseRole(role - 1);
 				game->sendPlayerRadSize(game->getPlayer(0)->getRole()->getBoxRadius());
 				if (role == TRAPPER)
 					game->getPlayer(0)->addModifier(MODIFIER_TYPE::TRAPPERSHAREAMMO);
 				console.printMsg("You switched class!", "System", 'S');
+			
 			}
+			else 
+				console.printMsg("Invalid role. Use /role <1-5>", "System", 'S');
+
 		}
 		//render commands
 		else if (token == "/rs")
@@ -1040,32 +1075,16 @@ void Core::renderWorld(float dt)
 		renderPipe->update(tmpEyePos.x, tmpEyePos.y, tmpEyePos.z, dt); // sets the view/proj matrix
 		renderPipe->renderIni();
 
+		//Culling
+		handleCulling();
 
 		float dgColor[3];
 		//render skybox
 		dgColor[0] = 0; dgColor[1] = 0; dgColor[2] = 0;
 		renderPipe->renderMISC(-3, (void*)&(CameraInput::getCam()->getSkyboxMat()), dgColor, 0.0f);
 
-		//send all lights
-		bool firstLight = true;
-		for (size_t i = 0; i < MAX_CONNECT; i++)
-		{
-			Player* p = game->getPlayer(i);
-			if (p)
-			{
-				SpotLight light;
-				light.Position = p->getPos();
-				light.Direction = vec3(0.0f);//p->getDir();
-				if (firstLight)
-				{
-					light.AmbientIntensity = 0.3f;
-					firstLight = false;
-				}
-				renderPipe->addLight(&light);
-			}
-		}
-
 		//render players
+		SpotLight light;
 
 		//find out if we are hacked, or the player we are spectating is hacked
 		int hackedTeam = -1;
@@ -1114,10 +1133,18 @@ void Core::renderWorld(float dt)
 							dgColor[0] = TEAMONECOLOR.r; dgColor[1] = TEAMONECOLOR.g; dgColor[2] = TEAMONECOLOR.b;
 						}
 					}
+
 					//static intense based on health
 					float hpval = float(p->getHP()) / 130.0f;
 
-					
+					//send player light
+					light.Position = p->getPos();
+					light.Position.y -= 0.5f;
+					light.Direction = vec3(0.0f);//p->getDir();
+					light.Color = vec3(dgColor[0], dgColor[1], dgColor[2]);
+					light.DiffuseIntensity = 0.2f;
+					renderPipe->addLight(&light);
+		
 					//If first person render
 					if (!force3rd && p->isLocal() && !game->freecam || game->spectateID == i)
 					{
@@ -1171,8 +1198,20 @@ void Core::renderWorld(float dt)
 			for (unsigned int i = 0; i < eff.size(); i++)
 			{
 				LightwallEffect* derp = (LightwallEffect*)eff[i];
+				int pid, eid;
+				derp->getId(pid, eid);
+				int team = game->getPlayer(pid)->getTeam();
 
-				renderPipe->renderWallEffect(&derp->getPos(), &derp->getEndPoint(), herpderpOffset);
+				if (team == 1)
+				{
+					dgColor[0] = TEAMONECOLOR.r; dgColor[1] = TEAMONECOLOR.g; dgColor[2] = TEAMONECOLOR.b;
+				}
+				else if (team == 2)
+				{
+					dgColor[0] = TEAMTWOCOLOR.r; dgColor[1] = TEAMTWOCOLOR.g; dgColor[2] = TEAMTWOCOLOR.b;
+				}
+
+				renderPipe->renderWallEffect(&derp->getPos(), &derp->getEndPoint(), herpderpOffset, dgColor);
 
 				herpderpOffset += glm::distance(derp->getPos(), derp->getEndPoint());
 			}
@@ -1186,6 +1225,45 @@ void Core::renderWorld(float dt)
 	}
 }
 
+void Core::handleCulling()
+{
+	CameraInput* cam = CameraInput::getCam();
+	if (game->spectateID == -1) // if we are not spectating some one
+	{
+		int newRoom = renderPipe->portalIntersection((float*)&lastCampos, (float*)&cam->getPos(), cam->roomID);
+		if (newRoom != -1)
+			cam->roomID = newRoom;
+	
+		if (game->freecam == false)
+		{
+			//will set local players roomID to same as cam in player update
+		}
+		else if (current != Gamestate::SERVER) // if we are in freecam, spectatiing some one eles or what not. need to update our player's roomid
+		{
+			Player* p = nullptr;
+			if (current == Gamestate::ROAM)
+				p = game->getPlayer(0);
+			else
+				p = game->getPlayer(top->getConId());
+	
+			if (p)
+			{
+				if (p->getJustRespawned())
+					lastPlayerPos = p->getPos();
+	
+				newRoom = renderPipe->portalIntersection((float*)&lastPlayerPos, (float*)&p->getPos(), p->roomID);
+				if (newRoom != -1)
+					p->roomID = newRoom;
+				lastPlayerPos = p->getPos();
+			}
+		}
+	}
+	
+	lastCampos = cam->getPos();
+	
+	renderPipe->setCullingCurrentChunkID(cam->roomID);
+}
+
 void Core::createWindow(int x, int y, bool fullscreen)
 {
 	if (win != 0)
@@ -1197,14 +1275,14 @@ void Core::createWindow(int x, int y, bool fullscreen)
 		win = glfwCreateWindow(
 			x, y, "ASUM PROJECT", glfwGetPrimaryMonitor(), NULL);
 
-	//set vsync off
-	glfwSwapInterval(0);
-
 	i->setupCallbacks(win);
 
 	glfwShowWindow(win);
 
 	glfwMakeContextCurrent(win);
+
+	//set vsync off
+	glfwSwapInterval(0);
 
 	if (renderPipe)
 	{

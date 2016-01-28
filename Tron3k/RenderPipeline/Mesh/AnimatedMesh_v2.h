@@ -12,7 +12,7 @@
 struct PlayerMesh
 {
 
-	void load(string fileName);
+	void load(string fileName, std::string character);
 	void release();
 	void render();
 

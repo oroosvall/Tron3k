@@ -37,6 +37,7 @@ private:
 	sf::Sound destroyerSteps;
 	sf::Sound destroyerStop;
 	sf::Sound destroyerStart;
+	sf::Sound bruteSteps;
 	sf::SoundBuffer soundList[SOUNDS::nrOfSounds];
 	string musicList[MUSIC::nrOfMusic];
 
@@ -52,6 +53,7 @@ public:
 	static void init(SoundPlayer* sound, int activateSound);
 	static SoundPlayer* getSound();
 	bool destroyerPaused = true;
+	bool brutePaused = true;
 
 	virtual void enableSounds();
 	static bool getSoundEnabler();
@@ -67,11 +69,18 @@ public:
 	virtual int playMapSounds();
 
 	virtual int playJump(int, float, float, float);
+	virtual int playLand(int, float, float, float);
 	virtual int playExternalSound(int sound, float posX, float posY, float posZ);
 	virtual int playUserGeneratedSound(int sound);
 	virtual int playDestroyer(float x, float y, float z);
 	virtual int playDestroyerStop(float x, float y, float z);
 	virtual int playDestroyerStart(float x, float y, float z);
+	virtual int playBrute(float, float, float);
+	virtual void stopBrute()
+	{
+		bruteSteps.pause();
+		brutePaused = true;
+	}
 	void stopDestroyer(float x, float y, float z)
 	{
 		destroyerSteps.pause();

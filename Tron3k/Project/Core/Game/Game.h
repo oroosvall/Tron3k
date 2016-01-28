@@ -9,6 +9,7 @@
 #include <vector>
 #include <fstream>
 #include "../sharedStructs.h"
+#include "../Console.h"
 #include <iostream>
 
 enum Gamestate
@@ -79,6 +80,9 @@ struct EffectHitEffectInfo
 class Game
 {
 private:
+
+	Console* console;
+
 	std::vector <vector < SpawnpointG >> spawnpoints;
 
 	std::vector<Bullet*> bullets[BULLET_TYPE::NROFBULLETS];
@@ -115,6 +119,7 @@ private:
 	void addEffectToList(int conID, int effectId, EFFECT_TYPE et, glm::vec3 pos);
 	Effect* getSpecificEffect(int PID, int SID, EFFECT_TYPE et, int &posInEffectArray);
 	void removeEffect(EFFECT_TYPE et, int posInArray);
+	void addEffectToPhysics(Effect* effect);
 
 	void playerUpdate(int conid, float dt);
 	void playerApplyForces(int conid, float dt);
@@ -165,7 +170,7 @@ public:
 
 	Game();
 	void release();
-	void init(int max_connections, int state);
+	void init(int max_connections, int state, Console* con);
 
 	int getMaxCon();
 	Player** getPlayerList();
@@ -184,6 +189,7 @@ public:
 	void sendWorldBoxes(std::vector<std::vector<float>> wBoxes);
 	void sendPlayerBox(std::vector<float> pBox);
 	void sendPlayerRadSize(float rad);
+	void updateEffectBox(Effect* effect);
 
 	//Collision checks
 	Physics* getPhysics() { return physics; };
@@ -228,7 +234,7 @@ public:
 	void handleBulletHitWorldEvent(BulletHitWorldInfo hi);
 
 	std::vector<BulletHitEffectInfo> getAllBulletOnEffectCollisions() { return allBulletHitsOnEffects; };
-	void clearBulletOnEffectCollision() { allBulletHitsOnEffects.clear(); };	
+	void clearBulletOnEffectCollisions() { allBulletHitsOnEffects.clear(); };	
 	void handleBulletHitEffectEvent(BulletHitEffectInfo hi);
 
 	std::vector<EffectHitEffectInfo> getAllEffectOnEffectCollisions() { return allEffectHitsOnEffects; };

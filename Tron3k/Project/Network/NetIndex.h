@@ -19,6 +19,7 @@ enum NET_EVENT
 	PLAYER_LEFT =			int('L'),
 	PLAYER_HIT =			int('H'),
 	BULLET_WORLD_HIT =		int('W'),
+	BULLET_EFFECT_HIT =		int('B'),
 	EFFECT_PLAYER_HIT =		int('F'),
 	BULLET_TIMEOUT =		int('T'),
 	RESPAWN_DENIED =		int('R') //Used by command_respawn to deny respawn auth to client

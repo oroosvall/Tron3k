@@ -2,7 +2,7 @@
 #define ENGINE_H
 
 #include "IRenderPipeline.h"
-#include "Text\TextObject.h"
+#include "Text\Text.h"
 #include "Camera.h"
 #include "Buffer\GBuffer.h"
 
@@ -36,7 +36,12 @@ private:
 
 	//LightWall lw;
 
-	TextObject* test;
+	Text* debugText;
+
+	GLuint fontTexture;
+
+	GLuint textShader;
+	GLuint textShaderLocation;
 
 	Camera cam;
 
@@ -63,6 +68,8 @@ private:
 	GLuint uniformStaticGlowIntensityLocation[2];
 	GLuint uniformGlowTrail[2];
 
+	GLuint uniformDynamicGlowColorLocation_wall;
+	
 	GLuint uniformGlowTimeDelta;
 	GLuint uniformGlowFalloff;
 	GLuint uniformGlowTexture;
@@ -117,7 +124,7 @@ public:
 	virtual std::string getStatus() { return ""; };
 
 	virtual bool setSetting(PIPELINE_SETTINGS type, PipelineValues value);
-	virtual void renderWallEffect(void* pos1, void* pos2, float uvStartOffset);
+	virtual void renderWallEffect(void* pos1, void* pos2, float uvStartOffset, float* dgColor);
 
 	virtual void forceReset() {};
 	virtual unsigned int createText(float x, float y, float z, std::string text) { return 0; };
@@ -146,6 +153,9 @@ public:
 	virtual void ui_loadTexture(unsigned int* texid, char* filepath, int* xres, int* yres);
 	virtual void ui_renderQuad(float* mat, unsigned int textureID, float transp, int i);
 	virtual void ui_textureRelease(vector<unsigned int> texids);
+	virtual int portalIntersection(float* pos1, float* pos2, int in_chunk);
+	virtual void setCullingCurrentChunkID(int roomID);
+
 };
 
 

@@ -18,5 +18,6 @@ public:
 	void init(Player* myTarget);
 	int getData(float dt);
 	int setData(float dt);
+	bool isDashDone() { return dashDone; };
 };
 #endif

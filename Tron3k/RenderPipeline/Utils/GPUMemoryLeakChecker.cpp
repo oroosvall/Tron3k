@@ -11,6 +11,9 @@ vector<GLBuffer> genBufferChecks;
 vector<GLBuffer> genVertexArrayChecks;
 vector<GLBuffer> genTextureCheck;
 
+unsigned int drawCount;
+unsigned int primitiveCount;
+
 void glGenBuffers_D(GLsizei n, GLuint* id, char* file, int line)
 {
 	GLBuffer buf;
@@ -92,6 +95,26 @@ void glDeleteTexture_D(GLsizei n, GLuint* id)
 	}
 }
 
+void glDrawElements_D(GLenum mode, GLsizei count, GLenum type, const void* indices)
+{
+	drawCount++;
+	glDrawElements(mode, count, type, indices);
+
+	if(mode == GL_TRIANGLES)
+		primitiveCount += (count / 3);
+}
+
+void glDrawArrays_D(GLenum mode, GLint first, GLsizei count)
+{
+	drawCount++;
+	glDrawArrays(mode, first, count);
+	if (mode == GL_TRIANGLES)
+		primitiveCount += (count / 3);
+	else if(mode == GL_TRIANGLE_STRIP)
+		primitiveCount += count;
+
+}
+
 void reportGPULeaks()
 {
 	bool found = false;
@@ -138,6 +161,10 @@ void reportGPULeaks()
 #undef glDeleteVertexArrays
 #undef glDeleteTextures
 
+#undef glDrawElements
+#undef glDrawArrays_D
+
+
 #define glGenBuffers(n,i)			glGenBuffers_D(n,i, __FILE__, __LINE__)
 #define glGenVertexArrays(n,i)		glGenVertexArray_D(n,i, __FILE__, __LINE__)
 #define glGenTextures(n,i)			glGenTexture_D(n,i, __FILE__, __LINE__)
@@ -145,3 +172,8 @@ void reportGPULeaks()
 #define glDeleteBuffers(n,i)		glDeleteBuffers_D(n,i)
 #define glDeleteVertexArrays(n,i)	glDeleteVertexArray_D(n,i)
 #define glDeleteTextures(n,i)		glDeleteTexture_D(n,i)
+
+#define glDrawElements(m, c, t ,i)		glDrawElements_D(m, c, t ,i)
+
+#define glDrawArrays(m, f, c)		glDrawArrays_D(m, f, c)
+

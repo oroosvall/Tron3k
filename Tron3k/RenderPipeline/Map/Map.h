@@ -49,7 +49,7 @@ public:
 
 	void loadMap(std::string mapName);
 
-	int getChunkID(glm::vec3 oldPos, glm::vec3 newPos);
+	int portalintersection(glm::vec3* oldPos, glm::vec3* newPos, int in_currentchunk);
 
 	ChunkCollision* getChunkCollision(int chunkID);
 

@@ -423,7 +423,7 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb)
 
 		// if a valid intersection found
 		//plane intersection will always be closer than all other intersections on the obb
-		if (t.w > 0)
+		if (t.w+FLT_EPSILON >= 0-FLT_EPSILON)
 		{
 			return t;
 		}
@@ -431,10 +431,11 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb)
 
 	//if no plane intersections found
 	//test all lines  
+	
 	for (int n = 0; n < 12; n++)
 	{
 		t = obb->lines[n].sphere_intersects(pos, rad);
-
+		if(obb->lines[n].line.y < -FLT_EPSILON || obb->lines[n].line.y > FLT_EPSILON)
 		if (t.w >= 0 - FLT_EPSILON)
 			if (t.w < closest.w) // a new closest dist was found
 				closest = t;
@@ -605,6 +606,7 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos)
 
 				//for each obb contained in that abb
 				int size = worldBoxes[i][j].boundingBox.ObbBoxes.size();
+				
 				for (int n = 0; n < size; n++)
 				{
 					t = getSpherevOBBNorms(playerPos, rad, &worldBoxes[i][j].boundingBox.ObbBoxes[n]);
@@ -727,10 +729,46 @@ std::vector<vec4> Physics::checkPlayerVEffectCollision(glm::vec3 playerPos, unsi
 	return collided;
 }
 
-vec3 Physics::checkBulletVEffectCollision(glm::vec3 bulletPos)
+std::vector<glm::vec4> Physics::checkBulletVEffectCollision(glm::vec3 bulletPos, unsigned int eType, int eid)
 {
-	glm::vec3 collided = glm::vec3(0, 0, 0);
-	return collided;
+	std::vector<glm::vec4> cNorms;
+
+	AABB box;
+	float rad = bulletBox.getSphere().radius;
+	box.max = bulletPos + vec3(rad, rad, rad);
+	box.min = bulletPos - vec3(rad, rad, rad);
+	bulletBox.setAABB(box);
+	bulletBox.setSphere(bulletPos, rad);
+
+	for (int i = 0; i < effectBoxes.size(); i++)
+	{
+		if (effectBoxes[i]->getEID() == eid)
+		{
+			if (effectBoxes[i]->getEType() == eType)
+			{
+				if (effectBoxes[i]->getEType() == 0)//Lightwall, aka OBB
+				{
+					cNorms = checkSpherevOBBlwCollision(bulletBox, effectBoxes[i]->getCollisionMesh());
+				}
+				else if (effectBoxes[i]->getEType() > 8)//False box, no collision
+				{
+
+				}
+				else //evrything else is a sphere, if not, not my goddamn problem
+				{
+					cNorms = checkSpherevSphereCollision(bulletBox, effectBoxes[i]->getCollisionMesh());
+				}
+			}
+		}
+	}
+
+	for (int i = 0; i < cNorms.size(); i++)
+	{
+		if (cNorms[i].y > 0.01f || cNorms[i].y < -0.01f)//we only care bout them walls yo
+			cNorms[i].y = 0;
+	}
+
+	return cNorms;
 }
 
 float Physics::addGravity(float dt)

@@ -4,11 +4,16 @@
 Clusterling::Clusterling(glm::vec3 position, glm::vec3 direction, int pID, int bID, int tID)
 {
 	initValues(position, direction, pID, bID, tID);
-	ttl = 1.5;
+	float trand = float((rand() % 100)*0.01) - 0.5f;
+	ttl = 0.9f + trand;
 	vel = glm::vec3(15.0f);
 	damage = 10;
 
-	direction.y = -direction.y;
+	dir.y = -dir.y;
+	float xrand = float((rand() % 200)*0.01) - 1.0f;
+	float zrand = float((rand() % 200)*0.01) - 1.0f;
+	dir.x += xrand;
+	dir.z += zrand;
 }
 
 Clusterling::~Clusterling()

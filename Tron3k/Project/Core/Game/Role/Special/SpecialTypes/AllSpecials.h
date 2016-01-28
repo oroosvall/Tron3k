@@ -6,5 +6,6 @@
 #include "HackingDartSpecial.h"
 #include "SprintD.h"
 #include "Dash.h"
+#include "ThunderDome.h"
 
 #endif

@@ -21,6 +21,7 @@ Role::Role(string inLoadedRoles[NROFROLES][NROFREADPROPERTIES])
 	}
 	currentWpn = 0;
 	health = 1;
+	swapWeaponTimer = 0.0f;
 }
 
 Role::~Role()
@@ -127,7 +128,7 @@ void Role::loadRoleSpecifics(int _role)
 			break;
 		case BRUTE:
 			role = 3;
-			specialAbility = new Lightwall(this);
+			specialAbility = new ThunderDome(this);
 			specialAbility->init();
 			mobility = new Dash();
 			mobility->init();
@@ -158,6 +159,9 @@ void Role::update(float dt)
 	weapons[1]->update(dt);
 	specialAbility->update(dt);
 	mobility->update(dt);
+
+	if (swapWeaponTimer > 0)
+		swapWeaponTimer -= dt;
 
 	if (gainSpecial && specialMeter < 100.0f)
 	{
@@ -210,8 +214,8 @@ void Role::swapWeapon(WEAPON_TYPE wt, int swapTo)
 
 void Role::swapWeaponLocal(int swapTo)
 {
-	if (currentWpn != swapTo)
-		currentWpn = swapTo;
+	currentWpn = swapTo;
+	swapWeaponTimer = 1.0f;
 }
 
 Weapon* Role::getCurrentWeapon()
@@ -247,7 +251,7 @@ bool Role::getIfBusy()
 {
 	bool tester = false;
 
-	if (weapons[currentWpn]->getIfReloading() || weapons[currentWpn]->getIfShooting())
+	if (weapons[currentWpn]->getIfReloading() || weapons[currentWpn]->getIfShooting() || swapWeaponTimer > 0)
 	{
 		tester = true;
 	}

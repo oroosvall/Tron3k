@@ -20,6 +20,8 @@ int main()
 	int fps = 0;
 	unsigned int start = clock();
 
+	srand(unsigned int(time(0)));
+
 	Core core;
 	core.init();
 

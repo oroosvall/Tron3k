@@ -39,6 +39,7 @@ private:
 
 	// window
 	GLFWwindow* win;
+	bool cursorVisible;
 	bool recreate;
 	bool fullscreen;
 	bool serverRender;
@@ -58,6 +59,10 @@ private:
 	bool client_playback;
 	float playbackSpeed = 1.0f;
 
+	//for culling
+	vec3 lastCampos;
+	vec3 lastPlayerPos;
+
 	//gamestate update functions
 	void upStart(float dt);
 	void upMenu(float dt);
@@ -71,6 +76,7 @@ private:
 	void serverHandleCmds();
 
 	void renderWorld(float dt);
+	void handleCulling();
 	void createWindow(int x, int y, bool fullscreen);
 	void removeWindow();
 
@@ -93,7 +99,7 @@ private:
 public:
 	
 	vec3 TEAMONECOLOR = vec3(1.0f, 0.5f, 0.0f);
-	vec3 TEAMTWOCOLOR = vec3(0.0f, 1.0f, 0.5f);
+	vec3 TEAMTWOCOLOR = vec3(0.0f, 0.5f, 0.0f);
 
 	void init();
 	void update(float dt);

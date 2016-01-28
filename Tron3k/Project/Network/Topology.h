@@ -168,6 +168,7 @@ public:
 	virtual void event_bullet_timed_out(std::vector<BulletTimeOutInfo> allbullets) {};
 	virtual void event_bullet_hit_player(std::vector<BulletHitPlayerInfo> allhits) {};
 	virtual void event_bullet_hit_world(std::vector<BulletHitWorldInfo> allhits) {};
+	virtual void event_bullet_hit_effect(std::vector<BulletHitEffectInfo> allhits) {};
 	virtual void event_effect_hit_player(std::vector<EffectHitPlayerInfo> allhits) {};
 
 	virtual void in_event_respawn_denied(Packet* rec)
@@ -215,6 +216,29 @@ public:
 			hi.hitDir = hitdir;
 			hi.collisionNormal = cNorm;
 			gamePtr->handleBulletHitWorldEvent(hi);
+		}
+	}
+
+	virtual void in_event_bullet_hit_effect(Packet* rec)
+	{
+		BulletHitEffectInfo hi;
+		Uint8 PID, BID, bt;
+		glm::vec3 hitpos; glm::vec3 hitdir; glm::vec4 cNorm;
+		Uint8 size;
+		*rec >> size;
+		for (int c = 0; c < size; c++)
+		{
+			*rec >> PID >> BID >> bt;
+			*rec >> hitpos.x >> hitpos.y >> hitpos.z;
+			*rec >> hitdir.x >> hitdir.y >> hitdir.z;
+			*rec >> cNorm.x >> cNorm.y >> cNorm.z >> cNorm.w;
+			hi.bt = BULLET_TYPE(bt);
+			hi.bulletBID = BID;
+			hi.bulletPID = PID;
+			hi.hitPos = hitpos;
+			hi.hitDir = hitdir;
+			hi.collisionNormal = cNorm;
+			gamePtr->handleBulletHitEffectEvent(hi);
 		}
 	}
 

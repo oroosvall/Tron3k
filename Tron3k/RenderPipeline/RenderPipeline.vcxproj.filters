@@ -90,6 +90,9 @@
     <ClCompile Include="Mesh\MiscMesh.cpp">
       <Filter>Source Files\Mesh</Filter>
     </ClCompile>
+    <ClCompile Include="Text\Text.cpp">
+      <Filter>Source Files\Text</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IRenderPipeline.h">
@@ -157,6 +160,9 @@
     </ClInclude>
     <ClInclude Include="Mesh\MiscMesh.h">
       <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Text\Text.h">
+      <Filter>Source Files\Text</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

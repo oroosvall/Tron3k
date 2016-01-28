@@ -47,22 +47,33 @@ void DDSTexture::load(std::string file)
 		DDS_HEADER header;
 		inFile.read((char*)&header, sizeof(header));
 
-		if (header.ddspf.dwFourCC != MAKEFOURCC('D', 'X', 'T', '5'))
+		if (header.ddspf.dwFourCC == MAKEFOURCC('D', 'X', 'T', '5'))
+			format = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
+		else if (header.ddspf.dwFourCC == MAKEFOURCC('D', 'X', 'T', '4'))
+			format = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
+		else if (header.ddspf.dwFourCC == MAKEFOURCC('D', 'X', 'T', '3'))
+			format = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
+		else if (header.ddspf.dwFourCC == MAKEFOURCC('D', 'X', 'T', '2'))
+			format = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
+		else if (header.ddspf.dwFourCC == MAKEFOURCC('D', 'X', 'T', '1'))
+			format = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
+		else
 		{
-			printf("Not DXT5\n");
+			printf("Rip\n");
 			return;
 		}
-
-		format = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
 
 
 		width = header.dwWidth;
 		height = header.dwHeight;
 
-		blocksize = 0;
+		blocksize = (format == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT) ? 8 : 16;
+		int factor = (format == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT) ? 2 : 4;
 
-		dataSize = width * height;
+		dataSize = ((width + 3) / 4) * ((height + 3) / 4) * (format == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT ? 8 : 16);
 
+		if (dataSize == 0)
+			return ;
 		textureData = new char[dataSize];
 
 		inFile.read((char*)textureData, dataSize);
@@ -81,9 +92,6 @@ bool DDSTexture::uploadTexture(GLuint &id)
 	if (!textureData)
 		return false;
 
-	printf("Uploading\n");
-	std::cout << glGetError() << std::endl;
-
 	glBindTexture(GL_TEXTURE_2D, id);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
@@ -93,14 +101,10 @@ bool DDSTexture::uploadTexture(GLuint &id)
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 
-	printf("Done uploading\n");
-	std::cout << glGetError() << std::endl;
-
-
 	return true;
 }
 
-GLuint loadTexture(std::string texturePath, int* xres, int* yres)
+GLuint loadTexture(std::string texturePath, bool PNGuploadComrpessint, int* xres, int* yres)
 {
 	int x;
 	int y;
@@ -114,7 +118,6 @@ GLuint loadTexture(std::string texturePath, int* xres, int* yres)
 		*yres = y;
 
 	GLuint textureID = 0;
-
 
 	if (hasEnding(texturePath, ".dds"))
 	{
@@ -135,7 +138,7 @@ GLuint loadTexture(std::string texturePath, int* xres, int* yres)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 1);
 
 		if(x > 0 && y > 0)
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA_S3TC_DXT5_EXT, x, y, 0, GL_RGBA, GL_UNSIGNED_BYTE, (void*)image);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA, x, y, 0, GL_RGBA, GL_UNSIGNED_BYTE, (void*)image);
 		else
 		{
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
