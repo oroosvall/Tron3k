@@ -673,10 +673,6 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			}
 		}
 
-		// not sure if we want to do this?
-		//YES WE DO YOU FUCKING RETARDED PIECE OF SHIT ASSWIPE MORON
-		//FUCKING KILL YOURSELF YOU GOD DAMN WHORE
-
 		if (role.getHealth() == 0)
 		{
 			isDead = true;
