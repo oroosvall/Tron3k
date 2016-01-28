@@ -476,7 +476,7 @@ void RenderPipeline::renderWallEffect(void* pos1, void* pos2, float uvStartOffse
 	glProgramUniform1f(regularShader, uniformStaticGlowIntensityLocation[0], transp);
 	glProgramUniform3fv(regularShader, uniformDynamicGlowColorLocation[0], 1, (GLfloat*)&dgColor[0]);
 
-	glProgramUniform1f(regularShader, uniformGlowTrail[0], 0.0f);
+	glProgramUniform1f(regularShader, uniformGlowTrail[0], 1.0f);
 
 	glProgramUniform1i(regularShader, uniformTextureLocation[0], 0);
 	glProgramUniform1i(regularShader, uniformNormalLocation[0], 1);

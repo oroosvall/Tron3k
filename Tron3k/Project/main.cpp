@@ -27,7 +27,7 @@ int main()
 
 	while (core.windowVisible())
 	{
-		//sleep(milliseconds(24));
+		sleep(milliseconds(24));
 		//dt = 0.100;
 
 		if (dt > 0.1)

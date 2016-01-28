@@ -1275,7 +1275,7 @@ void Core::renderWorld(float dt)
 				{
 					Explosion* asd = (Explosion*)eff[i];
 					vec3 pos = asd->getPos();
-					renderPipe->renderExploEffect(&pos.x, asd->explotionRenderRad(), 1, &dgColor.x);
+					renderPipe->renderExploEffect(&pos.x, asd->explotionRenderRad(), 0, &dgColor.x);
 				}
 					break;
 				case CLEANSEEXPLOSION:
