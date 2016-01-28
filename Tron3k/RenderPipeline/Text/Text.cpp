@@ -80,31 +80,58 @@ void Text::fillBuffer()
 	int nrOfLineBreaks = 0;
 	int lineBreakPos = 0;
 
+	int size = fontSize;
 	
+	float offsetX = 0;
+	float offsetY = 0;
+
 	for (unsigned int c = 0; c < text.length(); c++)
 	{
 		char character = text[c];
+
 		if (character != '\n')
 		{
-
+			switch (character)
+			{
+			case '.':
+			case ',':
+			case 'i':
+			case '!':
+			case ':':
+			case ';':
+			case 'l':
+				size = fontSize / 2;
+				break;
+			case 'I':
+			case ' ':
+				size = fontSize / 1.2;
+				break;
+			default:
+				size = fontSize;
+				break;
+			}
+			
 			vec2 halfScreen = vec2(Text::ScreenResWidth / 2, Text::ScreenResHeight / 2);
-			vertex_up_right = vec2(screenPos.x + (c - lineBreakPos)*fontSize + fontSize, screenPos.y + fontSize - (fontSize)*nrOfLineBreaks);
+
+			vertex_up_right = vec2(screenPos.x + offsetX + size, screenPos.y + fontSize - (fontSize)*nrOfLineBreaks - offsetY);
 			vertex_up_right -= halfScreen;
 			vertex_up_right /= halfScreen;
-			vertex_down_right = vec2(screenPos.x + (c - lineBreakPos)*fontSize + fontSize, screenPos.y - (fontSize)*nrOfLineBreaks);
+			vertex_down_right = vec2(screenPos.x + offsetX + size, screenPos.y - (fontSize)*nrOfLineBreaks - offsetY);
 			//if (vertex_down_right.x > rightLimit)
 			//	rightLimit = (int)vertex_down_right.x;
 			//if (vertex_down_right.y < bottomLimit)
 			//	bottomLimit = (int)vertex_down_right.y;
 			vertex_down_right -= halfScreen;
 			vertex_down_right /= halfScreen;
-			vertex_up_left = vec2(screenPos.x + (c - lineBreakPos)*fontSize, screenPos.y + fontSize - (fontSize)*nrOfLineBreaks);
+			vertex_up_left = vec2(screenPos.x + offsetX, screenPos.y + fontSize - (fontSize)*nrOfLineBreaks - offsetY);
 			vertex_up_left -= halfScreen;
 			vertex_up_left /= halfScreen;
-			vertex_down_left = vec2(screenPos.x + (c - lineBreakPos)*fontSize, screenPos.y - (fontSize)*nrOfLineBreaks);
+			vertex_down_left = vec2(screenPos.x + offsetX, screenPos.y - (fontSize)*nrOfLineBreaks - offsetY);
 			vertex_down_left -= halfScreen;
 			vertex_down_left /= halfScreen;
 
+			offsetX += size;
+			
 			float uv_x = (character % 16) / 16.0f;
 			float uv_y = (character / 16) / 16.0f;
 
@@ -152,12 +179,16 @@ void Text::fillBuffer()
 		{
 			lineBreakPos = c + 1;
 			nrOfLineBreaks++;
+			offsetX = 0;
+			offsetY += 4;
 		}
 	}
 
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Float5)* verts.size(), &verts[0], GL_STATIC_DRAW);
-	
+	if (verts.size() != 0)
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(Float5)* verts.size(), &verts[0], GL_STATIC_DRAW);
+	}
 	quadCount = verts.size();
 
 }

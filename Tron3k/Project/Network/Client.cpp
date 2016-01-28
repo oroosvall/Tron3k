@@ -157,6 +157,7 @@ void Client::in_event(Packet* rec, Uint8 _conID)
 		case NET_EVENT::BULLET_EFFECT_HIT: in_event_bullet_hit_effect(rec); break;
 		case NET_EVENT::EFFECT_PLAYER_HIT: in_event_effect_hit_player(rec); break;
 		case NET_EVENT::BULLET_TIMEOUT: in_event_bullet_time_out(rec); break;
+		case NET_EVENT::EFFECT_TIMEOUT: in_event_effect_time_out(rec); break;
 		case NET_EVENT::RESPAWN_DENIED: in_event_respawn_denied(rec); break;
 		}
 	}

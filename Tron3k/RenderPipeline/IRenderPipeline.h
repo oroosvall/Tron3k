@@ -74,16 +74,12 @@ public:
 	virtual bool setSetting(PIPELINE_SETTINGS type, PipelineValues value) = 0;
 
 	virtual void renderWallEffect(void* pos1, void* pos2, float uvStartOffset, float* dgColor) = 0;
+	virtual void renderExploEffect(float* pos, float rad, float transp, float* dgColor) = 0;
 
 	virtual void forceReset() = 0;
-	virtual unsigned int createText(float x, float y, float z, std::string text) = 0;
-	virtual void removeText(unsigned int textID) = 0;
-	virtual void setText(unsigned int id, std::string text) = 0;
-	virtual void setTextPos(unsigned int, float x, float y, float z) = 0;
 
-	virtual unsigned int createTexture(std::string fileName) = 0;
-	virtual unsigned int createTextureFromMemory(unsigned int size, void* data) = 0;
-	virtual void removeTexture(unsigned int) = 0;
+	virtual void setChatHistoryText(std::string text) = 0;
+	virtual void setChatTypeMessage(std::string text) = 0;
 
 	virtual unsigned int createMesh(...) = 0;
 	virtual void removeMesh(unsigned int id) = 0;

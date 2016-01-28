@@ -673,13 +673,11 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			}
 		}
 
-		// not sure if we want to do this?
-
-		//if (role.getHealth() == 0)
-		//{
-		//	isDead = true;
-		//	vel = glm::vec3(0, 0, 0);
-		//}
+		if (role.getHealth() == 0)
+		{
+			isDead = true;
+			vel = glm::vec3(0, 0, 0);
+		}
 	}
 	
 	return msg;
@@ -723,7 +721,7 @@ void Player::movementUpdates(float dt, bool freecam, bool spectatingThisPlayer, 
 
 	if (freecam == true && spectatingThisPlayer == false)
 	{
-		worldMat[1].w -= 1.55f;  // move down if 3rd person render
+		worldMat[1].w -= 1.45f;  // move down if 3rd person render
 	}
 
 	if (freecam == false && isLocalPlayer == false && spectatingThisPlayer == false)
@@ -747,6 +745,8 @@ void Player::reloadCurrentWeapon()
 		{
 			if (this->role.getRole() == 0)
 				GetSound()->playUserGeneratedSound(SOUNDS::soundEffectTrapperReload);
+			else if (this->role.getRole() == 2)
+				GetSound()->playUserGeneratedSound(SOUNDS::soundEffectStalkerReload);
 		}
 
 		role.getCurrentWeapon()->reload();
@@ -806,6 +806,7 @@ void Player::hitByEffect(Effect* e, int newHPtotal)
 	/*
 	Big ol' switch case to identify which effect is hitting us and what we should do about it
 	*/
+
 	if (newHPtotal == -1) //This is the server, dealing damage to the player
 	{
 		int dmg = e->getDamage();
@@ -1007,7 +1008,7 @@ void Player::movementAnimationChecks(float dt)
 	{	
 		animOverideIfPriority(anim_third_current, AnimationState::third_primary_air);
 			if (animPrimary == false)
-				if(animRole != ROLES::MANIPULATOR && animRole != ROLES::BRUTE)
+				if(animRole == ROLES::MANIPULATOR || animRole == ROLES::BRUTE)
 					animOverideIfPriority(anim_third_current, AnimationState::third_secondary_air);
 	}
 

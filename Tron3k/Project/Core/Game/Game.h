@@ -72,6 +72,14 @@ struct BulletTimeOutInfo
 	glm::vec3 pos;
 };
 
+struct EffectTimeOutInfo
+{
+	int effectPID;
+	int effectID;
+	EFFECT_TYPE et;
+	glm::vec3 pos;
+};
+
 struct EffectHitEffectInfo
 {
 	int effectPID;
@@ -157,6 +165,7 @@ private:
 	std::vector<BulletHitEffectInfo> allBulletHitsOnEffects;
 	std::vector<EffectHitEffectInfo> allEffectHitsOnEffects;
 	std::vector<BulletTimeOutInfo> allBulletTimeOuts;
+	std::vector<EffectTimeOutInfo> allEffectTimeOuts;
 
 	void checkPvPCollision();
 	void checkPlayerVBulletCollision();
@@ -205,6 +214,7 @@ public:
 	void addPlayerToTeam(int p_conID, int team, int spawnPosition);
 	int getPlayersOnTeam(int team);
 	int getMaxTeamSize(bool spec = false) { if (spec) return maxSpec; return maxTeamSize; };
+	vector<int>* getTeamConIds(int team);
 
 	bool fireEventReady() { return shotsFired; };
 	void getLatestWeaponFired(int localPlayer, WEAPON_TYPE &wt, int &bulletId);
@@ -249,8 +259,13 @@ public:
 	void clearTimedOutBullets() { allBulletTimeOuts.clear(); };
 	void handleBulletTimeOuts(BulletTimeOutInfo hi);
 
+	std::vector<EffectTimeOutInfo> getAllTimedOutEffects() { return allEffectTimeOuts; };
+	void clearTimedOutEffects() { allEffectTimeOuts.clear(); };
+	void handleEffectTimeOuts(EffectTimeOutInfo hi);
 
 	int Game::findPlayerPosInTeam(int conID);
+
+	bool checkIfPlayerCanRespawn(int conid, char &tryAgain);
 
 	bool freecam; // freecam is active also when in spectate but specctate overides
 	int spectateID; // -1 = none, else use conID

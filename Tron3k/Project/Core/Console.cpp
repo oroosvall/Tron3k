@@ -157,6 +157,24 @@ string Console::getCommand()
 	return cmd;
 }
 
+string Console::getHistory()
+{
+	string result = "";
+
+	int iter = latestMsg-4;
+	if (iter < 0)
+		iter = MAXHISTORY + iter;
+	for (size_t i = 0; i < 5; i++)
+	{
+		result += history[iter] + "\n";
+
+		iter++;
+		iter = iter%MAXHISTORY;
+	}
+
+	return result;
+}
+
 void Console::discardCommandAndLastMsg()
 {
 	cmd = "";

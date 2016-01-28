@@ -165,6 +165,8 @@ public:
 		if (p_conID == gamePtr->spectateID)
 			gamePtr->clearSpectateID();
 	}
+
+	virtual void event_effect_timed_out(std::vector<EffectTimeOutInfo> alleffects) {};
 	virtual void event_bullet_timed_out(std::vector<BulletTimeOutInfo> allbullets) {};
 	virtual void event_bullet_hit_player(std::vector<BulletHitPlayerInfo> allhits) {};
 	virtual void event_bullet_hit_world(std::vector<BulletHitWorldInfo> allhits) {};
@@ -279,6 +281,25 @@ public:
 			toi.bulletBID = bid;
 			toi.pos = pos;
 			gamePtr->handleBulletTimeOuts(toi);
+		}
+	}
+
+	virtual void in_event_effect_time_out(Packet* rec)
+	{
+		EffectTimeOutInfo toi;
+		Uint8 bt; Uint8 pid; Uint8 bid;
+		glm::vec3 pos;
+		Uint8 size;
+		*rec >> size;
+		for (int c = 0; c < size; c++)
+		{
+			*rec >> bt >> pid >> bid;
+			*rec >> pos.x >> pos.y >> pos.z;
+			toi.et = EFFECT_TYPE(bt);
+			toi.effectPID = pid;
+			toi.effectID = bid;
+			toi.pos = pos;
+			gamePtr->handleEffectTimeOuts(toi);
 		}
 	}
 
@@ -557,10 +578,14 @@ public:
 			/*
 			Authentication to make sure we actually can respawn - for now always Yes
 			*/
-			if (false)
+
+			char tryAgain = 'N'; //Y/N
+			bool playerCanRespawn = gamePtr->checkIfPlayerCanRespawn(conid, tryAgain);
+
+			if (!playerCanRespawn)
 			{
 				Packet* out = new Packet();
-				char tryAgain = 'Y'; //Y/N
+			
 				*out << Uint8(NET_INDEX::EVENT) << Uint8(NET_EVENT::RESPAWN_DENIED) << Uint8(tryAgain);
 				con[p_conID].send(out);
 				delete out;

@@ -91,7 +91,13 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 	fontTexture = loadTexture("GameFiles/Font/font16.png", false);
 
-	debugText = new Text("Debug Test\nNew line :)", 18, fontTexture, vec2(0, 18));
+	debugText = new Text("Debug Test\nNew line :)", 18, fontTexture, vec2(10, 24));
+	chatHistoryText = ".\n.\n.\n.\n.\n";
+	chatTypeText = "..";
+	chatText = new Text(chatHistoryText + chatTypeText, 11, fontTexture, vec2(10, 420));
+
+	uglyCrosshairSolution = new Text("+", 32, fontTexture, vec2(WindowWidth / 2 - 10, WindowHeight / 2 + 18));
+
 
 #ifdef _DEBUG
 	if (glDebugMessageCallback) {
@@ -309,6 +315,10 @@ void RenderPipeline::release()
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	delete debugText;
+	delete chatText;
+
+	delete uglyCrosshairSolution;
+
 
 	delete gBuffer;
 
@@ -420,14 +430,16 @@ void RenderPipeline::finalizeRender()
 	glEnable(GL_BLEND);
 
 	debugText->draw();
+	chatText->draw();
 	
+	uglyCrosshairSolution->draw();
+
 	glDisable(GL_BLEND);
 
 }
 
 void RenderPipeline::renderWallEffect(void* pos1, void* pos2, float uvStartOffset, float* dgColor)
 {
-
 	glUseProgram(lw_Shader);
 	glProgramUniform1i(lw_Shader, lw_tex, 0);
 	//call contentman and bind the lightwal texture to 0
@@ -454,6 +466,36 @@ void RenderPipeline::renderWallEffect(void* pos1, void* pos2, float uvStartOffse
 
 	glDrawArrays(GL_POINTS, 0, 2);
 
+}
+
+ void RenderPipeline::renderExploEffect(float* pos, float rad, float transp, float* dgColor)
+{
+	glUseProgram(regularShader);
+
+	//Glow values for player
+	glProgramUniform1f(regularShader, uniformStaticGlowIntensityLocation[0], transp);
+	glProgramUniform3fv(regularShader, uniformDynamicGlowColorLocation[0], 1, (GLfloat*)&dgColor[0]);
+
+	glProgramUniform1f(regularShader, uniformGlowTrail[0], 1.0f);
+
+	glProgramUniform1i(regularShader, uniformTextureLocation[0], 0);
+	glProgramUniform1i(regularShader, uniformNormalLocation[0], 1);
+	glProgramUniform1i(regularShader, uniformGlowSpecLocation[0], 2);
+
+	//set temp objects worldmat
+	glm::mat4 mat;
+
+	mat[0].w = pos[0];
+	mat[1].w = pos[1];
+	mat[2].w = pos[2];
+
+	mat[0].x = rad;
+	mat[1].y = rad;
+	mat[2].z = rad;
+
+	glProgramUniformMatrix4fv(regularShader, worldMat[0], 1, GL_FALSE, (GLfloat*)&mat[0][0]);
+
+	contMan.renderBullet(GRENADE_SHOT);
 }
 
 void RenderPipeline::renderEffects()
@@ -738,6 +780,18 @@ void RenderPipeline::getSpawnpoints(std::vector < std::vector < SpawnpointG > > 
 	spoints.push_back(team2);
 
 	contMan.testMap.deleteSpawnposData();
+}
+
+void RenderPipeline::setChatHistoryText(std::string text)
+{
+	chatHistoryText = text;
+	chatText->setText(chatHistoryText + chatTypeText);
+}
+
+void RenderPipeline::setChatTypeMessage(std::string text)
+{
+	chatTypeText = text;
+	chatText->setText(chatHistoryText + chatTypeText);
 }
 
 void RenderPipeline::ui_initRender()

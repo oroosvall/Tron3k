@@ -41,6 +41,12 @@ enum SOUNDS
 	BreakingOutBass,
 	soundEffectBruteLand,
 	soundEffectBruteJump,
+	soundEffectGrenadeLauncherBounce,
+	soundEffectStalkerReload,
+	YouWin,
+	YouLose,
+	SoundForOvertime,
+	hackedSound,
 
 	soundEffectDestroyerStart,
 	soundEffectDestroyerStop,

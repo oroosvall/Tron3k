@@ -37,8 +37,14 @@ private:
 	//LightWall lw;
 
 	Text* debugText;
+	Text* chatText;
+
+	Text* uglyCrosshairSolution;
 
 	GLuint fontTexture;
+
+	string chatHistoryText;
+	string chatTypeText;
 
 	GLuint textShader;
 	GLuint textShaderLocation;
@@ -125,16 +131,12 @@ public:
 
 	virtual bool setSetting(PIPELINE_SETTINGS type, PipelineValues value);
 	virtual void renderWallEffect(void* pos1, void* pos2, float uvStartOffset, float* dgColor);
+	virtual void renderExploEffect(float* pos, float rad, float transp, float* dgColor);
 
 	virtual void forceReset() {};
-	virtual unsigned int createText(float x, float y, float z, std::string text) { return 0; };
-	virtual void removeText(unsigned int textID) {};
-	virtual void setText(unsigned int id, std::string text) {};
-	virtual void setTextPos(unsigned int, float x, float y, float z) {};
 
-	virtual unsigned int createTexture(std::string fileName) { return 0; };
-	virtual unsigned int createTextureFromMemory(unsigned int size, void* data) { return 0; };
-	virtual void removeTexture(unsigned int) {};
+	virtual void setChatHistoryText(std::string text);
+	virtual void setChatTypeMessage(std::string text);
 
 	virtual unsigned int createMesh(...) { return 0; }; // fix parameters
 	virtual void removeMesh(unsigned int id) {};

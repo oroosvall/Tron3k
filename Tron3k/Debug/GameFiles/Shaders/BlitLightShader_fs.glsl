@@ -118,20 +118,27 @@ void main()
 		Normal0 = texture(Normal, vec2(UV.x, UV.y));
 		Depth0 = texture(Depth, vec2(UV.x, UV.y));
 		glowValue = texture(GlowMap, vec2(UV.x, UV.y));
-			
-		for(int n = 0; n < NumSpotLights; n++)
+		
+		float len = length(Position0.xyz - eyepos);
+		if(len < 500)
 		{
-			if(lights[n].Direction.x == 0.0f && lights[n].Direction.y == 0.0f && lights[n].Direction.y == 0.0f)
-				fragment_color += CalcPointLight(lights[n], Normal0.xyz) * 0.2f;
-			else
-				fragment_color += CalcSpotLight(lights[n], Normal0.xyz) * 0.6f;
-			fragment_color += Diffuse0 * vec4(lights[n].Color, 1) * lights[n].AmbientIntensity;
+			vec4 ambientForce = vec4(0);
+			
+			for(int n = 0; n < NumSpotLights; n++)
+			{
+				if(lights[n].Direction.x == 0.0f && lights[n].Direction.y == 0.0f && lights[n].Direction.y == 0.0f)
+					fragment_color += CalcPointLight(lights[n], Normal0.xyz) * 0.2f;
+				else
+					fragment_color += CalcSpotLight(lights[n], Normal0.xyz) * 0.6f;
+					
+				ambientForce += vec4(lights[n].Color, 1) * lights[n].AmbientIntensity;
+			}
+			fragment_color = fragment_color * Diffuse0 +  Diffuse0 * ambientForce;
 		}
-		
-		//fragment_color = fragment_color * Diffuse0 + glowValue;
-		fragment_color = fragment_color * Diffuse0;
-		
-		
+		else
+		{
+			fragment_color = Diffuse0;
+		}
 		vec4 sum = vec4(0);
 		
 		//top left quadrant

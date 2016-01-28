@@ -18,5 +18,6 @@ public:
 
 	void setInterestingVariable(float f) { domeRadius = f; }
 	float getInterestingVariable() { return domeRadius; }
+	float explotionRenderRad();
 };
 #endif

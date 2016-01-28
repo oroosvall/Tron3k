@@ -50,9 +50,15 @@ public:
 	bool commandReady();
 	string getCommand();
 
+	string getHistory();
+
 	void discardCommandAndLastMsg();
 
 	void setInChatMode(bool chatMode) { inChatMode = chatMode; };
+	std::string pollLatest()
+	{
+		return msg;
+	}
 
 	bool getInChatMode() { return inChatMode; };
 };
