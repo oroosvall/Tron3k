@@ -922,20 +922,29 @@ void Game::addBulletToList(int conID, int bulletId, BULLET_TYPE bt, glm::vec3 po
 	switch (bt)
 	{
 	case BULLET_TYPE::PULSE_SHOT:
-		rightV *= 0.65f;
+		rightV *= 0.3;
 		upV *= -0.17f;
-		dirMod *= 2.4f;
+		dirMod *= 0.4f;
 		pos += upV + rightV + dirMod;
-	
 		b = new PulseShot(pos, dir, conID, bulletId, p->getTeam());
 		break;
 	case BULLET_TYPE::PLASMA_SHOT:
+		upV *= -0.17;
+		pos += upV;
 		b = new PlasmaShot(pos, dir, conID, bulletId, p->getTeam());
 		break;
 	case BULLET_TYPE::GRENADE_SHOT:
+		rightV *= -0.3;
+		upV *= -0.17f;
+		dirMod *= 0.4f;
+		pos += upV + rightV + dirMod;
 		b = new GrenadeShot(pos, dir, conID, bulletId, p->getTeam());
 		break;
 	case BULLET_TYPE::SHOTGUN_PELLET:
+		rightV *= 0.3;
+		upV *= -0.17f;
+		dirMod *= 0.1f;
+		pos += upV + rightV + dirMod;
 		b = new ShotgunPellet(pos, dir, conID, bulletId, p->getTeam());
 		break;
 	case BULLET_TYPE::THERMITE_GRENADE:
@@ -963,6 +972,10 @@ void Game::addBulletToList(int conID, int bulletId, BULLET_TYPE bt, glm::vec3 po
 		b = new VacuumGrenade(pos, dir, conID, bulletId, p->getTeam());
 		break;
 	case BULLET_TYPE::DISC_SHOT:
+		rightV *= 0.2f;
+		upV *= 0.5f;
+		dirMod *= 0.1f;
+		pos += upV + rightV + dirMod;
 		b = new DiscShot(pos, dir, conID, bulletId, p->getTeam());
 		break;
 	case BULLET_TYPE::HACKING_DART:
