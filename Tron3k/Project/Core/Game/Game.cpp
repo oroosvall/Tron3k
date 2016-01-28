@@ -180,6 +180,31 @@ void Game::update(float dt)
 		}
 	}
 
+	for (unsigned int i = 0; i < EFFECT_TYPE::NROFEFFECTS; i++)
+	{
+		for (unsigned int c = 0; c < effects[i].size(); c++)
+		{
+			int msg = effects[i][c]->update(dt);
+
+			if (i == EFFECT_TYPE::LIGHT_WALL)
+			{
+				updateEffectBox(effects[i][c]);
+
+			}
+
+			if (msg == 1)		//Effect is dead
+			{
+				//effect removal in physics
+				int pid = -1, eid = -1;
+				effects[i][c]->getId(pid, eid);
+				physics->removeEffect(eid);
+
+				removeEffect(EFFECT_TYPE(i), c);
+			}
+
+		}
+	}
+
 	if (gameState == Gamestate::ROAM)
 	{
 		checkPlayerVWorldCollision(dt);
@@ -224,35 +249,6 @@ void Game::update(float dt)
 			playerList[c]->movementUpdates(dt, freecam, spectatingThis, spectating);
 
 			//TODO: Send collision results to player
-		}
-	}
-
-
-
-
-
-	for (unsigned int i = 0; i < EFFECT_TYPE::NROFEFFECTS; i++)
-	{
-		for (unsigned int c = 0; c < effects[i].size(); c++)
-		{
-			int msg = effects[i][c]->update(dt);
-
-			if (i == EFFECT_TYPE::LIGHT_WALL)
-			{
-				updateEffectBox(effects[i][c]);
-
-			}
-
-			if (msg == 1)		//Effect is dead
-			{
-				//effect removal in physics
-				int pid = -1, eid = -1;
-				effects[i][c]->getId(pid, eid);
-				physics->removeEffect(eid);
-
-				removeEffect(EFFECT_TYPE(i), c);
-			}
-
 		}
 	}
 }
@@ -417,7 +413,11 @@ void Game::updateEffectBox(Effect* effect)
 
 		break;
 	case EFFECT_TYPE::EXPLOSION:
-
+		eBox.push_back(effect->getPos().x);
+		eBox.push_back(effect->getPos().y);
+		eBox.push_back(effect->getPos().z);
+		eBox.push_back(effect->getInterestingVariable());
+		physics->receiveEffectBox(eBox, EFFECT_TYPE::EXPLOSION, pid, eid);
 		break;
 	}
 }
@@ -1347,6 +1347,7 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 	int effectPosInArray = -1;
 	Effect* theEffect = getSpecificEffect(hi.effectPID, hi.effectID, hi.et, effectPosInArray);
 	theEffect->setPos(hi.hitPos);
+	updateEffectBox(theEffect);
 	if (theEffect->getType() == EFFECT_TYPE::EXPLOSION && gameState != Gamestate::SERVER)
 	{
 		std::vector<vec4> explosColls = physics->checkPlayerVEffectCollision(playerList[hi.playerHit]->getPos(), EFFECT_TYPE::EXPLOSION, hi.effectID);
