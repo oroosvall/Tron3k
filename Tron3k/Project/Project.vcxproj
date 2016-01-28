@@ -23,6 +23,8 @@
     <ClCompile Include="Core\Console.cpp" />
     <ClCompile Include="Core\Core.cpp" />
     <ClCompile Include="Core\Game\Game.cpp" />
+    <ClCompile Include="Core\Game\Gamemode.cpp" />
+    <ClCompile Include="Core\Game\Gamemodes\KingOfTheHill.cpp" />
     <ClCompile Include="Core\Game\Player.cpp" />
     <ClCompile Include="Core\Game\Role\Consumable\Consumable.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effect.cpp" />
@@ -90,6 +92,8 @@
     <ClInclude Include="Core\Core.h" />
     <ClInclude Include="Core\Game\Game.h" />
     <ClInclude Include="Core\Game\GameDataIndex.h" />
+    <ClInclude Include="Core\Game\Gamemode.h" />
+    <ClInclude Include="Core\Game\Gamemodes\KingOfTheHill.h" />
     <ClInclude Include="Core\Game\GameObject.h" />
     <ClInclude Include="Core\Game\Player.h" />
     <ClInclude Include="Core\Game\Role\Consumable\Consumable.h" />

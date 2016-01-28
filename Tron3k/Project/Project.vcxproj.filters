@@ -94,6 +94,9 @@
     <Filter Include="Source Files\Core\Ui\Structs">
       <UniqueIdentifier>{60d805ac-eb33-4f7e-97a7-5accb1dda855}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Core\Game\Gamemodes">
+      <UniqueIdentifier>{38580f1e-01aa-4511-9fd3-970da0b217fd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -284,6 +287,12 @@
     </ClCompile>
     <ClCompile Include="Core\Game\Role\Special\SpecialTypes\ThunderDome.cpp">
       <Filter>Source Files\Core\Game\Role\Special\SpecialTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Game\Gamemode.cpp">
+      <Filter>Source Files\Core\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Game\Gamemodes\KingOfTheHill.cpp">
+      <Filter>Source Files\Core\Game\Gamemodes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -514,6 +523,12 @@
     </ClInclude>
     <ClInclude Include="Core\Game\Role\Special\SpecialTypes\ThunderDome.h">
       <Filter>Source Files\Core\Game\Role\Special\SpecialTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Gamemode.h">
+      <Filter>Source Files\Core\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Gamemodes\KingOfTheHill.h">
+      <Filter>Source Files\Core\Game\Gamemodes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

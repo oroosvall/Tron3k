@@ -30,7 +30,7 @@ protected:
 	GAMEMODE_TYPE gameMode;
 	float timer;
 public:
-	virtual ~Gamemode();
+	virtual ~Gamemode() {};
 	virtual void init(Console* cptr, Game* gptr) = 0;
 	virtual int update(float dt) = 0;
 	GAMEMODE_TYPE getType() { return gameMode; };
