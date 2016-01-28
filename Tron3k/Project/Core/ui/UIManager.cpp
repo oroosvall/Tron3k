@@ -14,6 +14,10 @@ UIManager::UIManager()
 }
 UIManager::~UIManager() 
 {
+	if (renderPipe != nullptr)
+	{
+		renderPipe->ui_textureRelease(uiTextureIds);
+	}
 	if (fileNamesListFirstGroup != nullptr )
 		delete [] fileNamesListFirstGroup;
 	if (fileNamesListSecondGroup != nullptr)

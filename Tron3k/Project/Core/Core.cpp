@@ -51,8 +51,11 @@ Core::~Core()
 		glfwDestroyWindow(win);
 		win = nullptr;
 	}
+	if (uiManager != nullptr)
+		delete uiManager;
 	if (renderPipe != nullptr)
 		renderPipe->release();
+	
 
 	ReleaseSound();
 

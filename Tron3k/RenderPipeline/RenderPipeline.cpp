@@ -282,6 +282,8 @@ void RenderPipeline::release()
 	glDeleteShader(lw_Shader);
 	glDeleteShader(regularShader);
 	glDeleteShader(animationShader);
+	glDeleteShader(uiShader);
+	uiQuad.release();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -685,7 +687,7 @@ void RenderPipeline::getSpawnpoints(std::vector < std::vector < SpawnpointG > > 
 
 void RenderPipeline::ui_initRender()
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
+	//glBindFramebuffer(GL_FRAMEBUFFER, NULL);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glUseProgram(uiShader);
@@ -701,10 +703,16 @@ void RenderPipeline::ui_loadTexture(unsigned int* texid, char* filepath, int* xr
 
 void RenderPipeline::ui_renderQuad(float* mat, GLuint textureID, float transp, int i)
 {
-	//glm::mat4* world = (glm::mat4*)mat;
+	glm::mat4* world = (glm::mat4*)mat;
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, mat);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+}
+
+void RenderPipeline::ui_textureRelease(vector<unsigned int> texids)
+{
+	for (unsigned int n = 0; n < texids.size(); n++)
+		glDeleteTextures(1, &texids[n]);
 }

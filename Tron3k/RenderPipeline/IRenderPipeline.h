@@ -101,6 +101,7 @@ public:
 	virtual void ui_initRender() = 0;
 	virtual void ui_loadTexture(unsigned int* texid, char* filepath, int* xres, int* yres) = 0;
 	virtual void ui_renderQuad(float* mat, unsigned int textureID, float transp, int i) = 0;
+	virtual void ui_textureRelease(std::vector<unsigned int> texids) = 0;
 };
 
 extern "C" ENGINE_API IRenderPipeline* CreatePipeline();

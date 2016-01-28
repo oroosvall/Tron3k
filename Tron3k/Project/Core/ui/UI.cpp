@@ -92,7 +92,6 @@ bool UI::loadUI(std::string fileName)
 			if (classId == 0) //Button
 			{
 				UiObjects.push_back(new Button(xy, textureId1, textureId2, uniqueKey, uiRender, textureRes[0][counter]));
-				UiObjects[counter]->scalePositions(scale, 0);
 				textureIdList[counter] = textureId1;
 				result = true;
 				counter++;
@@ -100,7 +99,6 @@ bool UI::loadUI(std::string fileName)
 			else if (classId == 1) //StaticTextBox
 			{
 				//UiObjects.push_back(StaticTextBox(xy, textureId1, uniqueKey, uiRender, *textureRes[counter]));
-				//UiObjects[counter].scalePositions(scale, 0);
 				//textureIdList[counter] = textureId1;
 				//result = true;
 				//counter++;
@@ -108,7 +106,6 @@ bool UI::loadUI(std::string fileName)
 			else if (classId == 3) //Slider
 			{
 				//UiObjects.push_back(Slider(xy, textureId1, textureId2, uniqueKey, counter, counter+1, uiRender, *textureRes[counter]));
-				//UiObjects[counter].scalePositions(scale, 0);
 				//textureIdList[counter] = textureId1;
 
 				//counter++;
@@ -130,11 +127,8 @@ bool UI::loadUI(std::string fileName)
 
 void UI::clean()
 {
-	UiObjects.clear();
 	for (int i = 0; i < UiObjects.size(); i++)
-	{
-		delete UiObjects[0];
-	}
+		delete UiObjects[i];
 	if (textureIdList != nullptr)
 		delete[] textureIdList;
 
