@@ -189,22 +189,18 @@ void Game::update(float dt)
 			if (i == EFFECT_TYPE::LIGHT_WALL)
 			{
 				updateEffectBox(effects[i][c]);
-
 			}
 
 			if (msg == 1)		//Effect is dead
 			{
 				//effect removal in physics
-				int pid = -1, eid = -1;
-				effects[i][c]->getId(pid, eid);
-				
 				if (gameState == Gamestate::SERVER || gameState == Gamestate::ROAM)
 				{
+					int pid = -1, eid = -1;
+					effects[i][c]->getId(pid, eid);
 					EffectTimeOutInfo toi;
 					toi.et = EFFECT_TYPE(i);
-					int pid = -1, bid = -1;
-					effects[i][c]->getId(pid, bid);
-					toi.effectID = bid;
+					toi.effectID = eid;
 					toi.effectPID = pid;
 					toi.pos = effects[i][c]->getPos();
 					allEffectTimeOuts.push_back(toi);

@@ -325,6 +325,16 @@ void Core::upRoam(float dt)
 			game->clearTimedOutBullets();
 		}
 
+		std::vector<EffectTimeOutInfo> effectTimeOut = game->getAllTimedOutEffects();
+		if (effectTimeOut.size() != 0)
+		{
+			for (unsigned int c = 0; c < effectTimeOut.size(); c++)
+			{
+				game->handleEffectTimeOuts(effectTimeOut[c]);
+			}
+			game->clearTimedOutEffects();
+		}
+
 		renderWorld(dt);
 		break;
 	}
