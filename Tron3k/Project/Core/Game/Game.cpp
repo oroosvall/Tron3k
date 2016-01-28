@@ -913,10 +913,15 @@ void Game::addBulletToList(int conID, int bulletId, BULLET_TYPE bt, glm::vec3 po
 {
 	Bullet* b = nullptr;
 	Player* p = playerList[conID];
-
+	glm::vec3 rightV = normalize(cross(dir, vec3(0, 1, 0)));
+	glm::vec3 upV = normalize(cross(rightV, dir));
 	switch (bt)
 	{
 	case BULLET_TYPE::PULSE_SHOT:
+		rightV *= vec3(0.5, 1.0, 0.5);
+		upV *= vec3(0.0, 0.0, 0.0);
+		pos += upV + rightV;
+	
 		b = new PulseShot(pos, dir, conID, bulletId, p->getTeam());
 		break;
 	case BULLET_TYPE::PLASMA_SHOT:
