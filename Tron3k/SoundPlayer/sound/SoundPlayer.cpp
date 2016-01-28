@@ -72,6 +72,8 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->soundList[SOUNDS::soundEffectStalkerReload].loadFromFile("GameFiles/Sound/soundEffectStalkerReload.ogg");
 		singleton->soundList[SOUNDS::YouWin].loadFromFile("GameFiles/Sound/YouWin.ogg");
 		singleton->soundList[SOUNDS::YouLose].loadFromFile("GameFiles/Sound/YouLose.ogg");
+		singleton->soundList[SOUNDS::SoundForOvertime].loadFromFile("GameFiles/Sound/SoundForOvertime.ogg");
+		singleton->soundList[SOUNDS::hackedSound].loadFromFile("GameFiles/Sound/hackedSound.ogg");
 
 		initialized = true;
 	}

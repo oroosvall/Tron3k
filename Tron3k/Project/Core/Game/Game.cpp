@@ -1326,7 +1326,19 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 	{
 		if (gameState != Gamestate::SERVER)
 			if (GetSoundActivated())
-				GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHit, pos.x, pos.y, pos.z);
+			{
+				if (hi.bt == BULLET_TYPE::HACKING_DART & p->isLocal())
+				{
+					GetSound()->playExternalSound(SOUNDS::hackedSound, pos.x, pos.y, pos.z);
+				}
+				else
+				{
+					GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHit, pos.x, pos.y, pos.z);
+				}
+
+			}
+				
+
 		int bulletPosInArray;
 		Bullet* theBullet = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, bulletPosInArray);
 		if (theBullet != nullptr)

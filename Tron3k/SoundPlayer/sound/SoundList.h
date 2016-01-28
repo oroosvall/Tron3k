@@ -45,6 +45,8 @@ enum SOUNDS
 	soundEffectStalkerReload,
 	YouWin,
 	YouLose,
+	SoundForOvertime,
+	hackedSound,
 
 	soundEffectDestroyerStart,
 	soundEffectDestroyerStop,
