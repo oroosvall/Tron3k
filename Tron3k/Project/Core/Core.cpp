@@ -1061,6 +1061,25 @@ void Core::renderWorld(float dt)
 			force3rd = true;
 		}
 
+		glm::vec3 tmpEyePos = CameraInput::getCam()->getPos();
+		renderPipe->update(tmpEyePos.x, tmpEyePos.y, tmpEyePos.z, dt); // sets the view/proj matrix
+		renderPipe->renderIni();
+
+		SpotLight light;
+		//world ambient temp
+		light.Position = vec3(0, 400, 0);
+		light.Direction = vec3(0.0f);//p->getDir();
+		light.Color = vec3(1,1,1);
+		light.DiffuseIntensity = 0.0f;
+		light.AmbientIntensity = 0.3f;
+		renderPipe->addLight(&light);
+		light.AmbientIntensity = 0.0f;
+
+		float dgColor[3];
+		//render skybox
+		dgColor[0] = 0; dgColor[1] = 0; dgColor[2] = 0;
+		renderPipe->renderMISC(-3, (void*)&(CameraInput::getCam()->getSkyboxMat()), dgColor, 0.0f);
+
 		//send chunk glowvalues
 		vec3 color = { 0.1, 0.1, 0.1 };
 		renderPipe->setChunkColorAndInten(0, &color[0], 0);
@@ -1071,21 +1090,10 @@ void Core::renderWorld(float dt)
 		//color = { 0, 0.7, 0 };
 		renderPipe->setChunkColorAndInten(3, &color[0], 0);
 
-		glm::vec3 tmpEyePos = CameraInput::getCam()->getPos();
-		renderPipe->update(tmpEyePos.x, tmpEyePos.y, tmpEyePos.z, dt); // sets the view/proj matrix
-		renderPipe->renderIni();
-
 		//Culling
 		handleCulling();
 
-		float dgColor[3];
-		//render skybox
-		dgColor[0] = 0; dgColor[1] = 0; dgColor[2] = 0;
-		renderPipe->renderMISC(-3, (void*)&(CameraInput::getCam()->getSkyboxMat()), dgColor, 0.0f);
-
 		//render players
-		SpotLight light;
-
 		//find out if we are hacked, or the player we are spectating is hacked
 		int hackedTeam = -1;
 		if (current != ROAM)	//hacking disabled in roam
