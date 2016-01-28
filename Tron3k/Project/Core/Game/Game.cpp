@@ -199,7 +199,6 @@ void Game::update(float dt)
 	{
 		checkPlayerVWorldCollision(dt);
 		checkBulletVWorldCollision();
-		checkPlayerVEffectCollision();
 		checkBulletVEffectCollision();
 	}
 
@@ -207,7 +206,6 @@ void Game::update(float dt)
 	{
 		checkPvPCollision();
 		checkPlayerVWorldCollision(dt);
-		checkPlayerVEffectCollision();
 		checkFootsteps(dt);
 	}
 
@@ -215,7 +213,6 @@ void Game::update(float dt)
 	{
 		checkBulletVWorldCollision();
 		checkPlayerVBulletCollision();
-		checkPlayerVEffectCollision();
 		checkBulletVEffectCollision();
 	}
 
