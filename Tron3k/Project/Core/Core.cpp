@@ -17,6 +17,7 @@ void Core::init()
 	win = nullptr;
 	renderPipe = nullptr;
 
+	cursorVisible = true;
 	recreate = false;
 	fullscreen = false;
 	winX = winY = 800;
@@ -68,6 +69,17 @@ void Core::update(float dt)
 {
 	if (recreate)
 		createWindow(winX, winY, fullscreen);
+
+	bool chatMode = console.getInChatMode();
+
+	if (cursorVisible != chatMode)
+	{
+		cursorVisible = chatMode;
+		if (chatMode)
+			glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		else
+			glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+	}
 
 	glfwPollEvents();
 	console.update(_name, 'A'); //Updates to check for new messages and commands

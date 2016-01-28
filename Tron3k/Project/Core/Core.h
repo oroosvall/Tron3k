@@ -42,6 +42,7 @@ private:
 
 	// window
 	GLFWwindow* win;
+	bool cursorVisible;
 	bool recreate;
 	bool fullscreen;
 	bool serverRender;
