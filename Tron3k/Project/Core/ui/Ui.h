@@ -60,8 +60,9 @@ public:
 	void clean();
 
 	int mouseCollission(glm::vec2 pos);
+	void mouseHover(glm::vec2 pos);
 	
-	void changeTex(int objId);
+	void changeTex(int objId, int whichTex);
 
 	void hideWindow();
 

@@ -4,7 +4,6 @@ UI::UI()
 {
 	//Pointers
 	textureIdList = nullptr;
-
 	//Counters
 	nrOfObjects = 0;
 	nrOfObjectsToRender = 0;
@@ -48,8 +47,9 @@ bool UI::loadUI(std::string fileName)
 		std::string inputString;
 		int convertedResult = -1;
 		float x = -1.0f, y = -1.0f, u = -1.0f, v = -1.0f;
-		int textureId1 = -1, textureId2 = -1, scale = -1, counter = 0, uniqueKey = 0, classId = -1;
-	
+		int textureId1 = -1, textureId2 = -1, scale = -1, counter = 0, uniqueKey = 0, classId = -1, hoverKey = 0, tmpCounter = 0;;
+		int* textureArray;
+
 		//Number of objects
 		getline(myfile, inputString);
 		nrOfObjects = std::stoi(inputString); //Converting
@@ -76,36 +76,54 @@ bool UI::loadUI(std::string fileName)
 			ss >> temp;
 			xy.y = std::stof(temp);
 	
-			getline(myfile, inputString); //tex1
-			textureId1 = std::stoi(inputString);
-			getline(myfile, inputString); //tex2
-			textureId2 = std::stoi(inputString);
-			getline(myfile, inputString); //uniqueKey
-			uniqueKey = std::stoi(inputString);
-			getline(myfile, inputString); //scale
-			scale = std::stoi(inputString);
-	
 			//Which class
 			getline(myfile, inputString);
 			classId = std::stoi(inputString);
+			if (classId == 1)
+			{
+				getline(myfile, inputString);
+				tmpCounter = std::stoi(inputString);
+
+				textureArray = new int[tmpCounter];
+				for (int i = 0; i < tmpCounter; i++)
+				{
+					getline(myfile, inputString);
+					textureArray[i] = std::stoi(inputString);
+				}
+			}
+			else
+			{
+				getline(myfile, inputString); //tex1
+				textureId1 = std::stoi(inputString);
+				getline(myfile, inputString); //tex2
+				textureId2 = std::stoi(inputString);
+			}
+
+			getline(myfile, inputString); //uniqueKey
+			uniqueKey = std::stoi(inputString);
+
+			getline(myfile, inputString); //hoverKey
+			hoverKey = std::stoi(inputString);
 
 			if (classId == 0) //Button
 			{
-				UiObjects.push_back(new Button(xy, textureId1, textureId2, uniqueKey, uiRender, textureRes[0][counter]));
+				UiObjects.push_back(new Button(xy, textureId1, textureId2, uniqueKey, hoverKey, uiRender, textureRes[0][textureId1], textureRes[0][textureId2]));
 				textureIdList[counter] = textureId1;
 				result = true;
 				counter++;
 			}
 			else if (classId == 1) //StaticTextBox
 			{
-				//UiObjects.push_back(StaticTextBox(xy, textureId1, uniqueKey, uiRender, *textureRes[counter]));
+				//UiObjects.push_back(StaticTextBox(xy, textureArray, tmpCounter, uiRender, textureRes[0][counter]));
 				//textureIdList[counter] = textureId1;
 				//result = true;
 				//counter++;
+				//delete[] textureArray;
+				//textureArray = nullptr;
 			}
 			else if (classId == 3) //Slider
 			{
-				//UiObjects.push_back(Slider(xy, textureId1, textureId2, uniqueKey, counter, counter+1, uiRender, *textureRes[counter]));
+				//UiObjects.push_back(Slider(xy, textureId1, textureId2, uniqueKey, counter, counter+1, uiRender, textureRes[0][textureId1], textureRes[0][textureId2]));
 				//textureIdList[counter] = textureId1;
 
 				//counter++;
@@ -128,7 +146,11 @@ bool UI::loadUI(std::string fileName)
 void UI::clean()
 {
 	for (int i = 0; i < UiObjects.size(); i++)
-		delete UiObjects[i];
+		if (UiObjects[i] != nullptr)
+		{
+			delete UiObjects[i];
+			UiObjects[i] = nullptr;
+		}
 	if (textureIdList != nullptr)
 		delete[] textureIdList;
 
@@ -156,7 +178,7 @@ int UI::mouseCollission(glm::vec2 pos)
 	int hit = -1;
 	int result = -1;
 	
-	for (int i = 0; i < nrOfObjects && hit != -1; i++)
+	for (int i = 0; i < nrOfObjects && hit == -1; i++)
 	{
 		hit = UiObjects[i]->checkCollision(pos);
 	}
@@ -165,6 +187,12 @@ int UI::mouseCollission(glm::vec2 pos)
 		result = collisionEvent(hit);
 	
 	return result;
+}
+
+void UI::mouseHover(glm::vec2 pos)
+{
+	for (int i = 0; i < nrOfObjects; i++)
+		UiObjects[i]->hoverCheck(pos);
 }
 
 int UI::collisionEvent(int UniqueKey) //Every button in every menu have a unique key
@@ -192,9 +220,9 @@ int UI::collisionEvent(int UniqueKey) //Every button in every menu have a unique
 }
 
 
-void UI::changeTex(int objId)
+void UI::changeTex(int objId, int whichTex)
 {
-	UiObjects[objId]->changeTexUsed();
+	UiObjects[objId]->changeTexUsed(whichTex);
 }
 
 //Empty

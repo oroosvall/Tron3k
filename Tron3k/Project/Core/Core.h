@@ -26,6 +26,9 @@
 class Core
 {
 private:
+	int uitmpcounter;
+
+
 	float timepass;	//temp
 	Topology* top;
 	Game* game;

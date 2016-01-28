@@ -1,0 +1,17 @@
+Number of menus   //This value exists only once.
+Menu id		  //Says which menu it is for example main menu eller settings. After this row the button information begins.
+x y		  //x and y for the center of the button
+class id	  //Says which class the button needs to be.
+nmber of textures //Only needed if the class id is 1
+texture1	  //First texture and also the texture it shall begin with.
+texture2	  //The second texture
+UniqueKey	  //A value that says what will happen when its clicked on. If the button doesn't have any event then just leave it at -1
+hoverKey	  //1 if it should change texture when hovered over and 0 if not. Only works for Button objects so put it at 0 for everything else.
+
+
+
+
+Note:
+If it has the class id 1 it can have more then two textures,
+so put the amount of textures right under class id.
+Jump over it if the class id isn't 1.

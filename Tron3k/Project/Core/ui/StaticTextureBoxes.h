@@ -8,27 +8,31 @@ class StaticTextureBoxes : public UIElements
 {
 private:
 	IRenderPipeline* uiRender;
-	uiVertex pos;
-	int textureIndexList;
+	glm::vec2 pos[2];
+	glm::vec2 center;
+	glm::vec2* textureRes;
+	int* textureIndexList;
+	int textureInUse;
 	int uniqueKey;
 	glm::mat4 worldMatrix;
+	int nrOfTextures;
 
 public:
 	StaticTextureBoxes();
-	StaticTextureBoxes(glm::vec2 positions[], glm::vec2 uv[], int textureId1, IRenderPipeline* uiRender);
+	StaticTextureBoxes(glm::vec2 center, int textureId1[], int nrOfTextures, IRenderPipeline* uiRender, glm::vec2 textRes[]);
 	~StaticTextureBoxes();
 
 	virtual void render(int id);
 
 	virtual void setWorldMatrix(float x, float y, int id);
 
-	virtual void changeTexUsed();
-
-	virtual void scalePositions(int scale, int id);
+	virtual void changeTexUsed(int id);
 
 	virtual void fromPosToQuadScreen(glm::vec2 positions, int id);
 
 	virtual int checkCollision(glm::vec2 pos);
+
+	virtual void hoverCheck(glm::vec2 pos);
 
 	virtual void setTexture(std::vector<GLuint> uiTextureIds);
 };

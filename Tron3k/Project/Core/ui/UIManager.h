@@ -55,8 +55,9 @@ public:
 	void removeAllMenus();
 
 	int collisionCheck(glm::vec2 pos);
+	void hoverCheck(glm::vec2 pos);
 
-	void changeTex(int objId);
+	void changeTex(int objId, int whichTex);
 
 	bool LoadNextSet(int whichMenuGroup);
 };

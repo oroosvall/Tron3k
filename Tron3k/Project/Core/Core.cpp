@@ -2,6 +2,8 @@
 
 void Core::init()
 {
+	uitmpcounter = 0;
+
 	glfwInit();
 	i = Input::getInput();
 
@@ -165,23 +167,23 @@ void Core::upStart(float dt)
 
 void Core::upMenu(float dt)
 {
+	double x = (0.0);
+	double y = (0.0);
+	//Get mouse position
+	i->getCursor(x, y);
+	double tX = (x / (double)winX) * 2 - 1.0; // (x/ResolutionX) * 2 - 1
+	double tY = (-y / (double)winY) * 2 + 1.0; // (y/ResolutionY) * 2 - 1
+
 	uiManager->render();
 	
 	if (i->justPressed(GLFW_MOUSE_BUTTON_LEFT))//button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
 	{
-		double x = (0.0);
-		double y = (0.0);
-		//Events
-		i->getCursor(x, y);
-		double tX = (x / (double)winX) * 2 - 1.0; // (x/ResolutionX) * 2 - 1
-		double tY = (-y / (double)winY) * 2 + 1.0; // (y/ResolutionY) * 2 - 1
 		int eventIndex = uiManager->collisionCheck(glm::vec2((float)tX, (float)tY));
 		switch (eventIndex)
 		{
 		case 0: //Roam
-			uiManager->setMenu(1);
-			//current = ROAM;
-			//uiManager->removeAllMenus();
+			current = ROAM;
+			uiManager->removeAllMenus();
 			//Load gui and the rest of in game ui.
 			subState = 0;
 			break;
@@ -200,6 +202,8 @@ void Core::upMenu(float dt)
 			break;
 		}
 	}
+	else
+		uiManager->hoverCheck(glm::vec2((float)tX, (float)tY));
 }
 
 void Core::upRoam(float dt)

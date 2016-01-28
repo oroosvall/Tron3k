@@ -32,7 +32,7 @@ UIManager::~UIManager()
 //Start menu
 void UIManager::init(Console* console)
 {
-	std::string fileNameFirstGroup = "GameFiles/UIFiles/menuFilesNames.txt";
+	std::string fileNameFirstGroup = "GameFiles/UIFiles/menuFileNames.txt";
 	std::string fileNameSecondGroup = "GameFiles/UIFiles/menuFileNames2.txt";
 	this->console = console;
 
@@ -156,13 +156,10 @@ void UIManager::setMenu(int menuId)
 }
 void UIManager::removeAllMenus() 
 {
-	for (int i = 0; i < nrOfMenus; i++)
-	{
-		menus[i].clean();
-	}
 	nrOfMenus = 0;
 	currentMenu = -1;
-	delete menus;
+	if(menus != nullptr)
+		delete[] menus;
 	menus = nullptr;
 }
 
@@ -170,10 +167,15 @@ int UIManager::collisionCheck(glm::vec2 pos)
 {
 	return menus[currentMenu].mouseCollission(pos);
 }
-
-void UIManager::changeTex(int objId)
+void UIManager::hoverCheck(glm::vec2 pos)
 {
-	menus[currentMenu].changeTex(objId);
+	menus[currentMenu].mouseHover(pos);
+}
+
+
+void UIManager::changeTex(int objId, int whichTex)
+{
+	menus[currentMenu].changeTex(objId, whichTex);
 }
 
 bool UIManager::LoadNextSet(int whichMenuGroup)
