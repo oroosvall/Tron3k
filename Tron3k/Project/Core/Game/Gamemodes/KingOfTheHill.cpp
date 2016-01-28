@@ -18,8 +18,8 @@ void KingOfTheHill::init(Console* cptr, Game* gptr)
 	gamePtr = gptr;
 	overtime = false;
 	started = false;
-	teamOneSpawnTokens = 5;
-	teamTwoSpawnTokens = 5;
+	teamOneSpawnTokens = 20;
+	teamTwoSpawnTokens = 20;
 
 	tickForCaptureScoring = 15.0f;
 	timerModifierForCaptureScoring = tickForCaptureScoring;
@@ -56,7 +56,11 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 	else
 	{
 		if (consolePtr->getCommand() == "/start")
+		{
 			started = true;
+			teamOneSpawnTokens = 20;
+			teamTwoSpawnTokens = 20;
+		}
 	}
 	return GAMEMODE_MSG::NIL;
 }
