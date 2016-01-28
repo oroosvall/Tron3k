@@ -578,7 +578,8 @@ void Core::upServer(float dt)
 		{
 			for (unsigned int c = 0; c < effectHitsOnPlayer.size(); c++)
 			{
-				game->handleEffectHitPlayerEvent(effectHitsOnPlayer[c]);
+				int newHP = game->handleEffectHitPlayerEvent(effectHitsOnPlayer[c]);
+				effectHitsOnPlayer[c].newHPtotal = newHP;
 			}
 			top->event_effect_hit_player(effectHitsOnPlayer);
 			game->clearEffectOnPlayerCollisions();

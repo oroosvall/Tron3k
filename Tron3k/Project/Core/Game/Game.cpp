@@ -615,7 +615,6 @@ void Game::checkPlayerVEffectCollision()
 						hi.effectID = eid;
 						hi.et = EFFECT_TYPE::EXPLOSION;
 						hi.hitPos = effects[EFFECT_TYPE::EXPLOSION][i]->getPos();
-						hi.newHPtotal = handleEffectHitPlayerEvent(hi);
 						allEffectHitsOnPlayers.push_back(hi);
 					}
 				}
@@ -1347,7 +1346,7 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 			}
 				
 
-		int bulletPosInArray;
+		int bulletPosInArray = -1;
 		Bullet* theBullet = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, bulletPosInArray);
 		if (theBullet != nullptr)
 			p->hitByBullet(theBullet, hi.newHPtotal);
@@ -1366,7 +1365,7 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 		if (GetSoundActivated())
 			GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHit, pos.x, pos.y, pos.z);
 	Player* p = playerList[hi.playerHit];
-	int effectPosInArray;
+	int effectPosInArray = -1;
 	Effect* theEffect = getSpecificEffect(hi.effectPID, hi.effectID, hi.et, effectPosInArray);
 	p->hitByEffect(theEffect, hi.newHPtotal);
 
