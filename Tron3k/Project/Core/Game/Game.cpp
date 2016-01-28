@@ -986,7 +986,7 @@ void Game::addBulletToList(int conID, int bulletId, BULLET_TYPE bt, glm::vec3 po
 		b = new VacuumGrenade(pos, dir, conID, bulletId, p->getTeam());
 		break;
 	case BULLET_TYPE::DISC_SHOT:
-		rightV *= 0.2f;
+		rightV *= 0.25f;
 		upV *= 0.5f;
 		dirMod *= 0.1f;
 		pos += upV + rightV + dirMod;

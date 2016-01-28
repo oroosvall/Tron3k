@@ -17,7 +17,7 @@ void EnergyBoost::init()
 	maxClipSize = 12;
 	currentClipAmmo = 12;
 
-	firingSpeed = 3.0f;
+	firingSpeed = 2.6f;
 	firingSpeedCurrentDelay = 0.0f;
 
 	reloadTime = 2.4f;
