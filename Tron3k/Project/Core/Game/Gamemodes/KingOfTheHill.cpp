@@ -25,6 +25,7 @@ int KingOfTheHill::update(float dt)
 	if (!overtime) //Game mode proceeds as normal
 	{
 		timer += dt;
+		
 	}
 	else //Time down until round ends
 	{
@@ -40,4 +41,30 @@ int KingOfTheHill::getRespawnTokens(int team)
 	else if (team == 2)
 		return teamTwoSpawnTokens;
 	return -1;
+}
+
+bool KingOfTheHill::playerRespawn(int conId)
+{
+	Player* p = gamePtr->getPlayer(conId);
+	if (p->getTeam() == 1)
+	{
+		if (teamOneSpawnTokens > 0)
+		{
+			teamOneSpawnTokens--;
+			return true;
+		}
+		else
+			return false;
+	}
+	else if (p->getTeam() == 2)
+	{
+		if (teamTwoSpawnTokens > 0)
+		{
+			teamTwoSpawnTokens--;
+			return true;
+		}
+		else
+			return false;
+	}
+	return false;
 }

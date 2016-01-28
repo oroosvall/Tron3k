@@ -20,6 +20,8 @@ public:
 
 	int getRespawnTokens(int team);
 	bool getOvertime() { return overtime; };
+
+	bool playerRespawn(int conId);
 };
 
 #endif
