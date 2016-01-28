@@ -2,6 +2,7 @@
 #ifndef SLIDER_H
 #define SLIDER_H
 
+#include <GL\glew.h>
 #include "UIElements.h"
 
 class Slider : public UIElements
@@ -10,7 +11,6 @@ private:
 	IRenderPipeline* uiRender;
 	uiVertex pos[2];
 	int textureIndexList[2];
-	int textureIndexInUse;
 	int uniqueKey;
 	glm::mat4 worldMatrix[2];
 	int nrOfButtons;
@@ -34,7 +34,7 @@ public:
 
 	virtual int checkCollision(glm::vec2 pos);
 
-	virtual void setTexture(int* textureId);
+	virtual void setTexture(std::vector<GLuint> uiTextureIds);
 };
 
 #endif

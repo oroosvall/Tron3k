@@ -220,10 +220,10 @@ void UI::removeMenu()
 
 }
 
-void UI::setTextureId(int* textureId)
+void UI::setTextureId(std::vector<GLuint> uiTextureIds)
 {
 	for (int i = 0; i < UiObjects.size(); i++)
 	{
-		UiObjects[i]->setTexture(textureId);
+		UiObjects[i]->setTexture(uiTextureIds);
 	}
 }

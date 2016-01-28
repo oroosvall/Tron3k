@@ -3,7 +3,6 @@
 StaticTextureBoxes::StaticTextureBoxes()
 {
 	textureIndexList = -1;
-	textureIndexInUse = -1;
 	worldMatrix = { 1, 0, 0, 0,
 				    0, 1, 0, 0,
 				    0, 0, 1, 0,
@@ -25,13 +24,12 @@ StaticTextureBoxes::StaticTextureBoxes(glm::vec2 positions[], glm::vec2 uv[], in
 
 	textureIndexList = textureId1;
 	this->uniqueKey = uniqueKey;
-	textureIndexInUse = textureId1;
 }
 StaticTextureBoxes::~StaticTextureBoxes() {}
 
 void StaticTextureBoxes::render(int id)
 {
-	//renderPipe->ui_renderQuad(&worldtest[0][0], uiTextureIds[0], 1.0f)
+	//uiRender->ui_renderQuad((float*)&worldMatrix[0][0], textureIndexList, 1.0f, id);
 }
 
 void StaticTextureBoxes::setWorldMatrix(float x, float y, int id)
@@ -53,7 +51,13 @@ void StaticTextureBoxes::scalePositions(int scale, int id)
 
 void StaticTextureBoxes::fromPosToQuadScreen(glm::vec2 positions, int id)
 {
-
+	//glm::vec2 size(0.0f, 0.0f);
+	//// setpos
+	//worldMatrix[0].w = positions.x;
+	//worldMatrix[1].w = positions.y;
+	//worldMatrix[2].w = 0.0f;
+	//pos[0] = glm::vec2(worldMatrix[0].w - worldMatrix[0].x, worldMatrix[1].w - worldMatrix[1].y);
+	//pos[1] = glm::vec2(worldMatrix[0].w + worldMatrix[0].x, worldMatrix[1].w + worldMatrix[1].y);
 }
 
 int StaticTextureBoxes::checkCollision(glm::vec2 mpos)
@@ -70,8 +74,8 @@ int StaticTextureBoxes::checkCollision(glm::vec2 mpos)
 	return returnValue;
 }
 
-void StaticTextureBoxes::setTexture(int* textureId)
+void StaticTextureBoxes::setTexture(std::vector<GLuint> uiTextureIds)
 {
-	textureIndexList = textureId[textureIndexList];
+	textureIndexList = uiTextureIds[textureIndexList];
 }
 

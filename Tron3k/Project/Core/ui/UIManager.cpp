@@ -191,7 +191,7 @@ bool UIManager::LoadNextSet(int whichMenuGroup)
 		for (int i = 0; i < nrOfFileNamesFirstGroup; i++)
 		{
 			menus[i].init(fileNamesListFirstGroup[i], console, renderPipe, textureRes);
-
+			menus[i].setTextureId(uiTextureIds);
 			nrOfMenus++;
 		}
 		break;
@@ -202,6 +202,7 @@ bool UIManager::LoadNextSet(int whichMenuGroup)
 		for (int i = 0; i < nrOfFileNamesSecondGroup; i++)
 		{
 			menus[i].init(fileNamesListSecondGroup[i], console, renderPipe, textureRes);
+			menus[i].setTextureId(uiTextureIds);
 			nrOfMenus++;
 		}
 		break;

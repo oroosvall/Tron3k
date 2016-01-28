@@ -4,7 +4,6 @@ Slider::Slider()
 {
 	textureIndexList[0] = -1;
 	textureIndexList[1] = -1;
-	textureIndexInUse = -1;
 	worldMatrix[0] = { 1, 0, 0, 0,
 					   0, 1, 0, 0,
 					   0, 0, 1, 0,
@@ -34,7 +33,6 @@ Slider::Slider(glm::vec2 positions[], glm::vec2 uv[], int textureId1, int textur
 	textureIndexList[0] = textureId1;
 	textureIndexList[1] = textureId2;
 	this->uniqueKey = uniqueKey;
-	textureIndexInUse = textureId1;
 
 	objId[0] = objId1;
 	objId[1] = objId2;
@@ -51,7 +49,8 @@ void Slider::createAdditionalPoint()
 
 void Slider::render(int id)
 {
-	//renderPipe->ui_renderQuad(&worldtest[0][0], uiTextureIds[0], 1.0f)
+	//for(int i = 0; i < 2; i++)
+		//uiRender->ui_renderQuad((float*)&worldMatrix[0][0], textureIndexList[i], 1.0f, id);
 }
 
 void Slider::setWorldMatrix(float x, float y, int id)
@@ -91,11 +90,11 @@ int Slider::checkCollision(glm::vec2 mpos)
 	return returnValue;
 }
 
-void Slider::setTexture(int* textureId)
+void Slider::setTexture(std::vector<GLuint> uiTextureIds)
 {
 	for (int i = 0; i < 2; i++)
 	{
-		textureIndexList[i] = textureId[textureIndexList[i]];
+		textureIndexList[i] = uiTextureIds[textureIndexList[i]];
 	}
 }
 

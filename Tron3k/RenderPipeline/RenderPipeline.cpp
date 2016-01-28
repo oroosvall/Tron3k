@@ -699,7 +699,7 @@ void RenderPipeline::ui_loadTexture(unsigned int* texid, char* filepath, int* xr
 	*texid = loadTexture(std::string(filepath), xres, yres);
 }
 
-void RenderPipeline::ui_renderQuad(float* mat, GLuint textureID, float transp)
+void RenderPipeline::ui_renderQuad(float* mat, GLuint textureID, float transp, int i)
 {
 	//glm::mat4* world = (glm::mat4*)mat;
 

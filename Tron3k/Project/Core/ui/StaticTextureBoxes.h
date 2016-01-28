@@ -1,6 +1,7 @@
 #ifndef STATICTEXTUREBOXES_H
 #define STATICTEXTUREBOXES_H
 
+#include <GL\glew.h>
 #include "UIElements.h"
 
 class StaticTextureBoxes : public UIElements
@@ -9,7 +10,6 @@ private:
 	IRenderPipeline* uiRender;
 	uiVertex pos;
 	int textureIndexList;
-	int textureIndexInUse;
 	int uniqueKey;
 	glm::mat4 worldMatrix;
 
@@ -30,7 +30,7 @@ public:
 
 	virtual int checkCollision(glm::vec2 pos);
 
-	virtual void setTexture(int* textureId);
+	virtual void setTexture(std::vector<GLuint> uiTextureIds);
 };
 
 #endif

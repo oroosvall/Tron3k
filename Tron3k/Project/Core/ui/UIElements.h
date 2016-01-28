@@ -27,7 +27,7 @@ public:
 
 	virtual int checkCollision(glm::vec2 pos) = 0;
 
-	virtual void setTexture(int* textureId) = 0;
+	virtual void setTexture(std::vector<GLuint> uiTextureIds) = 0;
 
 	//virtual uiVertex* returnPosAUv(int id) = 0;
 };

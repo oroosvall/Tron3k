@@ -45,7 +45,7 @@ Button::~Button() {}
 
 void Button::render(int id)
 {
-	uiRender->ui_renderQuad((float*)&worldMatrix[0][0], textureIndexInUse, 1.0f);//&worldtest[0][0], uiTextureIds[0], 1.0f)
+	uiRender->ui_renderQuad((float*)&worldMatrix[0][0], textureIndexInUse, 1.0f, id);//&worldtest[0][0], uiTextureIds[0], 1.0f)
 }
 
 void Button::setWorldMatrix(float x, float y, int id)
@@ -96,10 +96,11 @@ int Button::checkCollision(glm::vec2 mpos)
 	return returnValue;
 }
 
-void Button::setTexture(int* textureId)
+void Button::setTexture(std::vector<GLuint> uiTextureIds)
 {
 	for (int i = 0; i < 2; i++)
 	{
-		textureIndexList[i] = textureId[textureIndexList[i]];
+		textureIndexList[i] = uiTextureIds[textureIndexList[i]];
 	}
+	textureIndexInUse = textureIndexList[0];
 }

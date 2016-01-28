@@ -2,7 +2,9 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
+#include <GL\glew.h>
 #include "UIElements.h"
+
 
 class Button : public UIElements
 {
@@ -33,7 +35,7 @@ public:
 
 	virtual int checkCollision(glm::vec2 pos);
 
-	virtual void setTexture(int* textureId);
+	virtual void setTexture(std::vector<GLuint> uiTextureIds);
 };
 
 #endif
