@@ -1359,7 +1359,6 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 
 	p->hitByEffect(theEffect, hi.newHPtotal);
 
-	removeEffect(hi.et, effectPosInArray);
 	int newHP = p->getHP();
 	return newHP;
 }
