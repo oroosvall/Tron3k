@@ -36,6 +36,7 @@ class Physics
 private:
 	//General physics components will go here, and things will be added as we go
 	std::vector<std::vector<CollideMesh>> worldBoxes; //each CollideMesh is an ABB, and the vector is all CollideMeshes in the chunk
+	std::vector<CollideMesh> captureBoxes;
 	std::vector<EffectMesh*> effectBoxes;
 	CollideMesh playerBox;
 	CollideMesh bulletBox;

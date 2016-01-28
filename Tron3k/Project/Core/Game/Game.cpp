@@ -238,10 +238,11 @@ void Game::update(float dt)
 
 			if (msg == 1)		//Effect is dead
 			{
-				//TODO: add effect removal in physics
+				//effect removal in physics
 				int pid = -1, eid = -1;
 				effects[i][c]->getId(pid, eid);
 				physics->removeEffect(eid);
+
 				removeEffect(EFFECT_TYPE(i), c);
 			}
 

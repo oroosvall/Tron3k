@@ -34,6 +34,24 @@ struct AABBloaded
 	std::vector<OBBloaded> ObbBoxes;
 };
 
+struct AABBCapPointDivide
+{
+	vec4 pos;
+	vec4 max;
+	vec4 min;
+};
+
+struct AABBCapPoint
+{
+	vec4 pos;
+	vec4 max;
+	vec4 min;
+
+	int capID;
+
+	std::vector<AABBCapPointDivide> aabbs;
+};
+
 struct OBB_LINES
 {
 	vec3 point1;
@@ -286,6 +304,7 @@ private:
 	void getAngCylinderFromAABB();
 public:
 	AABB boundingBox;
+	AABBCapPoint capBox; //only used for capture boxes;
 	CollideMesh();
 	~CollideMesh();
 
