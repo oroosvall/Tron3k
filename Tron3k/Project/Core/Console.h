@@ -52,6 +52,8 @@ public:
 
 	void discardCommandAndLastMsg();
 
+	void setInChatMode(bool chatMode) { inChatMode = chatMode; };
+
 	bool getInChatMode() { return inChatMode; };
 };
 

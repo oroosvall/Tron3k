@@ -99,6 +99,11 @@ public:
 	~Player();
 	void init(std::string name, glm::vec3 pos, bool isLocal = false);
 
+	bool getLockedControls()
+	{
+		return lockControls;
+	};
+
 	void footstepsLoopReset(float dt);
 
 	bool getFootsteps();

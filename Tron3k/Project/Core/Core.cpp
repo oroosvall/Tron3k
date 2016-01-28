@@ -210,7 +210,7 @@ void Core::upRoam(float dt)
 		initPipeline();
 
 		game = new Game();
-		game->init(MAX_CONNECT, current);
+		game->init(MAX_CONNECT, current, &console);
 		game->sendPlayerRadSize(0.9f);
 		//map loaded, fetch spawnpoints from render
 		renderPipe->getSpawnpoints(*game->getSpawnpoints());
@@ -350,7 +350,7 @@ void Core::upClient(float dt)
 				if (game != nullptr)
 					delete game;
 				game = new Game();
-				game->init(MAX_CONNECT, current);
+				game->init(MAX_CONNECT, current, &console);
 				game->sendPlayerRadSize(0.9f);
 				//map loaded, fetch spawnpoints from render
 				renderPipe->getSpawnpoints(*game->getSpawnpoints());
@@ -507,7 +507,7 @@ void Core::upServer(float dt)
 		if (game != nullptr)
 			delete game;
 		game = new Game();
-		game->init(MAX_CONNECT, current);
+		game->init(MAX_CONNECT, current, &console);
 		game->sendPlayerRadSize(0.9f);
 		//map loaded, fetch spawnpoints from render
 		renderPipe->getSpawnpoints(*game->getSpawnpoints());

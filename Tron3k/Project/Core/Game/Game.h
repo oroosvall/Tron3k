@@ -9,6 +9,7 @@
 #include <vector>
 #include <fstream>
 #include "../sharedStructs.h"
+#include "../Console.h"
 #include <iostream>
 
 enum Gamestate
@@ -79,6 +80,9 @@ struct EffectHitEffectInfo
 class Game
 {
 private:
+
+	Console* console;
+
 	std::vector <vector < SpawnpointG >> spawnpoints;
 
 	std::vector<Bullet*> bullets[BULLET_TYPE::NROFBULLETS];
@@ -165,7 +169,7 @@ public:
 
 	Game();
 	void release();
-	void init(int max_connections, int state);
+	void init(int max_connections, int state, Console* con);
 
 	int getMaxCon();
 	Player** getPlayerList();

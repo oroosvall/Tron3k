@@ -45,8 +45,10 @@ Game::Game()
 
 }
 
-void Game::init(int max_connections, int state)
+void Game::init(int max_connections, int state, Console* con)
 {
+
+	console = con;
 	max_con = max_connections;
 
 	loadRoles();
@@ -119,6 +121,9 @@ void Game::initPhysics()
 void Game::update(float dt)
 {
 	//some things need to be done before movement, some after
+
+	console->setInChatMode(playerList[localPlayerId]->getLockedControls());
+
 	if (gameState == Gamestate::ROAM)
 	{
 		checkPlayerVEffectCollision();
