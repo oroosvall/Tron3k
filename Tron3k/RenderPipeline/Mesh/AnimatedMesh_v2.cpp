@@ -8,7 +8,7 @@
 using std::ios;
 
 
-void PlayerMesh::load(string fileName)
+void PlayerMesh::load(string fileName, std::string _character)
 {
 	std::ifstream file;
 	file.open(fileName, ios::in | ios::binary);
@@ -46,7 +46,7 @@ void PlayerMesh::load(string fileName)
 			{
 				char* texName = new char[(unsigned int)textHeader[i].textureSize];
 				file.read(texName, sizeof(char) * (unsigned int)textHeader[i].textureSize);
-				tex[i].textureName = "GameFiles/Textures/" + std::string(texName, textHeader[i].textureSize);
+				tex[i].textureName = std::string("GameFiles/Textures/" + _character + "/" + std::string(texName, textHeader[i].textureSize));
 				delete[] texName;
 			}
 			delete[] textHeader;
@@ -209,8 +209,8 @@ void AnimatedMeshV2::load(std::string character)
 {
 	std::string file = "GameFiles/CharacterFiles/" + character + "/mesh_" + character;
 
-	third.load(file + "_third.bin");
-	first.load(file + "_first.bin");
+	third.load(file + "_third.bin", character);
+	first.load(file + "_first.bin", character);
 	glGenBuffers(1, &matricesBuffer);
 	glBindBuffer(GL_UNIFORM_BUFFER, matricesBuffer);
 	//glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4)* animIdle->header.jointCount, animIdle->keyFrames[0].jointTransform, GL_STATIC_DRAW);
