@@ -440,7 +440,6 @@ void RenderPipeline::finalizeRender()
 
 void RenderPipeline::renderWallEffect(void* pos1, void* pos2, float uvStartOffset, float* dgColor)
 {
-
 	glUseProgram(lw_Shader);
 	glProgramUniform1i(lw_Shader, lw_tex, 0);
 	//call contentman and bind the lightwal texture to 0
@@ -467,6 +466,36 @@ void RenderPipeline::renderWallEffect(void* pos1, void* pos2, float uvStartOffse
 
 	glDrawArrays(GL_POINTS, 0, 2);
 
+}
+
+ void RenderPipeline::renderExploEffect(float* pos, float rad, float transp, float* dgColor)
+{
+	glUseProgram(regularShader);
+
+	//Glow values for player
+	glProgramUniform1f(regularShader, uniformStaticGlowIntensityLocation[0], transp);
+	glProgramUniform3fv(regularShader, uniformDynamicGlowColorLocation[0], 1, (GLfloat*)&dgColor[0]);
+
+	glProgramUniform1f(regularShader, uniformGlowTrail[0], 0.0f);
+
+	glProgramUniform1i(regularShader, uniformTextureLocation[0], 0);
+	glProgramUniform1i(regularShader, uniformNormalLocation[0], 1);
+	glProgramUniform1i(regularShader, uniformGlowSpecLocation[0], 2);
+
+	//set temp objects worldmat
+	glm::mat4 mat;
+
+	mat[0].w = pos[0];
+	mat[1].w = pos[1];
+	mat[2].w = pos[2];
+
+	mat[0].x = rad;
+	mat[1].y = rad;
+	mat[2].z = rad;
+
+	glProgramUniformMatrix4fv(regularShader, worldMat[0], 1, GL_FALSE, (GLfloat*)&mat[0][0]);
+
+	contMan.renderBullet(GRENADE_SHOT);
 }
 
 void RenderPipeline::renderEffects()
@@ -764,6 +793,7 @@ void RenderPipeline::setChatTypeMessage(std::string text)
 	chatTypeText = text;
 	chatText->setText(chatHistoryText + chatTypeText);
 }
+
 void RenderPipeline::ui_initRender()
 {
 	//glBindFramebuffer(GL_FRAMEBUFFER, NULL);

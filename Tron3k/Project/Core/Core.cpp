@@ -1264,14 +1264,19 @@ void Core::renderWorld(float dt)
 				{
 				case LIGHT_WALL:
 				{
-					LightwallEffect* derp = (LightwallEffect*)eff[i];
-					renderPipe->renderWallEffect(&derp->getPos(), &derp->getEndPoint(), herpderpOffset, &dgColor.x);
-					herpderpOffset += glm::distance(derp->getPos(), derp->getEndPoint());
+					LightwallEffect* asd = (LightwallEffect*)eff[i];
+					renderPipe->renderWallEffect(&asd->getPos(), &asd->getEndPoint(), herpderpOffset, &dgColor.x);
+					herpderpOffset += glm::distance(asd->getPos(), asd->getEndPoint());
 				}
 					break;
 				case THUNDER_DOME:
 					break;
 				case EXPLOSION:
+				{
+					Explosion* asd = (Explosion*)eff[i];
+					vec3 pos = asd->getPos();
+					renderPipe->renderExploEffect(&pos.x, asd->explotionRenderRad(), 1, &dgColor.x);
+				}
 					break;
 				case CLEANSEEXPLOSION:
 					break;

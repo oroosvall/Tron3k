@@ -8,6 +8,7 @@ class Explosion : public Effect
 {
 private:
 	float lifeTime;
+	float startingLifetime;
 	float exploRadius;
 	float damage;
 public:
@@ -19,5 +20,6 @@ public:
 
 	int getDamage() { return damage; }; //WOOO DAMAGE YO
 	void setDamage(int dmg) { damage = dmg; };
+	float explotionRenderRad();
 };
 #endif

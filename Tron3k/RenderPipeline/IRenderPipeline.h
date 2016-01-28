@@ -74,6 +74,7 @@ public:
 	virtual bool setSetting(PIPELINE_SETTINGS type, PipelineValues value) = 0;
 
 	virtual void renderWallEffect(void* pos1, void* pos2, float uvStartOffset, float* dgColor) = 0;
+	virtual void renderExploEffect(float* pos, float rad, float transp, float* dgColor) = 0;
 
 	virtual void forceReset() = 0;
 
