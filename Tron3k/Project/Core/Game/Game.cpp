@@ -3,6 +3,8 @@
 void Game::release()
 {
 	// delete code goes here
+	if (gamemode != nullptr)
+		delete gamemode;
 	for (int i = 0; i < max_con; i++)
 	{
 		if (playerList[i])
@@ -1406,6 +1408,9 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 					GetSound()->playExternalSound(SOUNDS::soundEffectDiscBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
 				break;
 			case BULLET_TYPE::GRENADE_SHOT:
+				if (GetSoundActivated())
+					GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeLauncherBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+
 				bounceBullet(hi, b);
 				temp = b->getVel();
 				temp.x *= 0.6;
@@ -1622,6 +1627,9 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 		}
 		case BULLET_TYPE::GRENADE_SHOT:
 		{
+			if (GetSoundActivated())
+				GetSound()->playExternalSound(SOUNDS::soundEffectClusterGrenade, parent->getPos().x, parent->getPos().y, parent->getPos().z);
+
 			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
 			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(35.0f);
 			break;
@@ -1677,4 +1685,24 @@ int Game::findPlayerPosInTeam(int conID)
 	}
 
 	return 0;
+}
+
+bool Game::checkIfPlayerCanRespawn(int conid, char &tryAgain)
+{
+	if (gamemode->getType() == GAMEMODE_TYPE::KOTH)
+	{
+		KingOfTheHill* koth = (KingOfTheHill*)gamemode;
+		bool canRespawn = koth->playerRespawn(conid);
+		if (canRespawn)
+			return true;
+		else
+		{
+			if (koth->getRespawnTokens(playerList[conid]->getTeam()) > 0)
+			{
+				tryAgain = 'Y';
+			}
+			return false;
+		}
+	}
+	return false;
 }

@@ -56,7 +56,11 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 	else
 	{
 		if (consolePtr->getCommand() == "/start")
+		{
 			started = true;
+			teamOneSpawnTokens = 20;
+			teamTwoSpawnTokens = 20;
+		}
 	}
 	return GAMEMODE_MSG::NIL;
 }

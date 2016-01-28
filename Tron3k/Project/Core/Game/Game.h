@@ -252,6 +252,8 @@ public:
 
 	int Game::findPlayerPosInTeam(int conID);
 
+	bool checkIfPlayerCanRespawn(int conid, char &tryAgain);
+
 	bool freecam; // freecam is active also when in spectate but specctate overides
 	int spectateID; // -1 = none, else use conID
 
