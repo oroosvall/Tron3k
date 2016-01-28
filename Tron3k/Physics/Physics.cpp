@@ -201,6 +201,22 @@ std::vector<glm::vec4> Physics::checkSpherevSphereCollision(CollideMesh mesh1, C
 	return collided;
 }
 
+std::vector<glm::vec4> Physics::checkSpherevSpheretdCollision(CollideMesh mesh1, CollideMesh mesh2)
+{
+	std::vector<glm::vec4> collided;
+
+	glm::vec3 dist = mesh1.getSphere().pos - mesh2.getSphere().pos;
+	float radius = mesh1.getSphere().radius + mesh2.getSphere().radius;
+	float minRad = mesh1.getSphere().radius - 1 + mesh2.getSphere().radius;
+	if (length(dist) <= radius && length(dist) >= minRad)
+	{
+		//collision
+		collided.push_back(vec4(dist, radius - length(dist)));
+
+	}
+	return collided;
+}
+
 std::vector<glm::vec4> Physics::checkSpherevOBBlwCollision(CollideMesh mesh1, CollideMesh mesh2) //mesh 1 = Sphere, mesh2 = obb
 {
 	std::vector<vec4> cNorms;
@@ -708,6 +724,10 @@ std::vector<vec4> Physics::checkPlayerVEffectCollision(glm::vec3 playerPos, unsi
 				if (effectBoxes[i]->getEType() == 0)//Lightwall, aka OBB
 				{
 					collided = checkSpherevOBBlwCollision(playerBox, effectBoxes[i]->getCollisionMesh());
+				}
+				else if (effectBoxes[i]->getEType() == 1)//Lightwall, aka OBB
+				{
+					collided = checkSpherevSpheretdCollision(playerBox, effectBoxes[i]->getCollisionMesh());
 				}
 				else if (effectBoxes[i]->getEType() > 8)//False box, no collision
 				{

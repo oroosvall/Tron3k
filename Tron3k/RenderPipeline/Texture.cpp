@@ -117,8 +117,11 @@ GLuint loadTexture(std::string texturePath, bool PNGuploadComrpessint, int* xres
 	if(yres)
 		*yres = y;
 
+<<<<<<< HEAD
 	GLuint textureID = 0;
 
+=======
+>>>>>>> refs/remotes/origin/master
 	if (hasEnding(texturePath, ".dds"))
 	{
 		printf("Loading dds texture %s\n", texturePath.c_str());
