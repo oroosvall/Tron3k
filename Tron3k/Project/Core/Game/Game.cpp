@@ -146,21 +146,6 @@ void Game::update(float dt)
 		*/
 	}
 
-	if (gameState == Gamestate::ROAM)
-	{
-		checkPlayerVEffectCollision();
-	}
-
-	if (gameState == Gamestate::CLIENT)
-	{
-		checkPlayerVEffectCollision();
-	}
-
-	if (gameState == Gamestate::SERVER)
-	{
-		checkPlayerVEffectCollision();
-	}
-
 	for (int c = 0; c < max_con; c++)
 	{
 		if (playerList[c] != nullptr)
@@ -199,6 +184,7 @@ void Game::update(float dt)
 	{
 		checkPlayerVWorldCollision(dt);
 		checkBulletVWorldCollision();
+		checkPlayerVEffectCollision();
 		checkBulletVEffectCollision();
 	}
 
@@ -206,6 +192,7 @@ void Game::update(float dt)
 	{
 		checkPvPCollision();
 		checkPlayerVWorldCollision(dt);
+		checkPlayerVEffectCollision();
 		checkFootsteps(dt);
 	}
 
@@ -213,6 +200,7 @@ void Game::update(float dt)
 	{
 		checkBulletVWorldCollision();
 		checkPlayerVBulletCollision();
+		checkPlayerVEffectCollision();
 		checkBulletVEffectCollision();
 	}
 
