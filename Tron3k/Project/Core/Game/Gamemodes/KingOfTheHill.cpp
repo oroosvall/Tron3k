@@ -130,6 +130,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			}
 			if (teamOneSpawnTokens == 0 || teamTwoSpawnTokens == 0)
 			{
+				consolePtr->printMsg("OVERTIME BEGINS", "System", '[S]');
 				overtime = true;
 				timer = 30.0f;
 			}
@@ -142,10 +143,17 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			{
 				vector<int>* team1ids = gamePtr->getTeamConIds(1);
 				bool allDead = true;
+				int pID = -1;
+				bool pIsAlive = true;
 				for (int c = 0; c < team1ids->size() && allDead; c++)
 				{
-					if (gamePtr->getPlayer(team1ids->at(c))->isAlive())
+					pID = team1ids->at(c);
+					pIsAlive = gamePtr->getPlayer(pID)->isAlive();
+					if (pIsAlive)
+					{
+						ended = true;
 						allDead = false;
+					}
 				}
 				if (allDead)
 				{
@@ -156,10 +164,17 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			{
 				vector<int>* team2ids = gamePtr->getTeamConIds(2);
 				bool allDead = true;
+				int pID = -1;
+				bool pIsAlive = true;
 				for (int c = 0; c < team2ids->size() && allDead; c++)
 				{
-					if (gamePtr->getPlayer(team2ids->at(c))->isAlive())
+					pID = team2ids->at(c);
+					pIsAlive = gamePtr->getPlayer(pID)->isAlive();
+					if (pIsAlive)
+					{
+						ended = true;
 						allDead = false;
+					}
 				}
 				if (allDead)
 				{
