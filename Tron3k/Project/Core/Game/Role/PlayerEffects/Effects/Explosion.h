@@ -9,6 +9,7 @@ class Explosion : public Effect
 private:
 	float lifeTime;
 	float exploRadius;
+	float damage;
 public:
 	Explosion();
 	void init(int pid, int eid, glm::vec3 position);
@@ -16,6 +17,7 @@ public:
 	float getInterestingVariable() { return exploRadius; }
 	int update(float dt);
 
-	int getDamage() { return 15; }; //WOOO DAMAGE YO
+	int getDamage() { return damage; }; //WOOO DAMAGE YO
+	void setDamage(int dmg) { damage = dmg; };
 };
 #endif

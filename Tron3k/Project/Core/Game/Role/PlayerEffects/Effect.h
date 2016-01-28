@@ -23,6 +23,7 @@ public:
 	virtual int update(float dt) = 0;
 
 	virtual int getDamage() { return 0; };
+	virtual void setDamage(int dmg) {};
 	virtual void setInterestingVariable(float f) {};
 	virtual float getInterestingVariable() { return -1; };
 
