@@ -121,8 +121,8 @@ void Game::initPhysics()
 void Game::update(float dt)
 {
 	//some things need to be done before movement, some after
-
-	console->setInChatMode(playerList[localPlayerId]->getLockedControls());
+	if(gameState != SERVER)
+		console->setInChatMode(playerList[localPlayerId]->getLockedControls());
 
 	if (gameState == Gamestate::ROAM)
 	{
