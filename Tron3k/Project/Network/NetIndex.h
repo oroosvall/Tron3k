@@ -22,6 +22,7 @@ enum NET_EVENT
 	BULLET_EFFECT_HIT =		int('B'),
 	EFFECT_PLAYER_HIT =		int('F'),
 	BULLET_TIMEOUT =		int('T'),
+	EFFECT_TIMEOUT =		int('I'),
 	RESPAWN_DENIED =		int('R') //Used by command_respawn to deny respawn auth to client
 };
 

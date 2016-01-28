@@ -72,6 +72,14 @@ struct BulletTimeOutInfo
 	glm::vec3 pos;
 };
 
+struct EffectTimeOutInfo
+{
+	int effectPID;
+	int effectID;
+	EFFECT_TYPE et;
+	glm::vec3 pos;
+};
+
 struct EffectHitEffectInfo
 {
 	int effectPID;
@@ -157,6 +165,7 @@ private:
 	std::vector<BulletHitEffectInfo> allBulletHitsOnEffects;
 	std::vector<EffectHitEffectInfo> allEffectHitsOnEffects;
 	std::vector<BulletTimeOutInfo> allBulletTimeOuts;
+	std::vector<EffectTimeOutInfo> allEffectTimeOuts;
 
 	void checkPvPCollision();
 	void checkPlayerVBulletCollision();
@@ -250,6 +259,9 @@ public:
 	void clearTimedOutBullets() { allBulletTimeOuts.clear(); };
 	void handleBulletTimeOuts(BulletTimeOutInfo hi);
 
+	std::vector<EffectTimeOutInfo> getAllTimedOutEffects() { return allEffectTimeOuts; };
+	void clearTimedOutEffects() { allEffectTimeOuts.clear(); };
+	void handleEffectTimeOuts(EffectTimeOutInfo hi);
 
 	int Game::findPlayerPosInTeam(int conID);
 

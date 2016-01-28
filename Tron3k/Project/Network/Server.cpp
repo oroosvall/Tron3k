@@ -89,6 +89,21 @@ void Server::event_bullet_timed_out(std::vector<BulletTimeOutInfo> allbullets)
 	delete out;
 }
 
+void Server::event_effect_timed_out(std::vector<EffectTimeOutInfo> alleffects)
+{
+	Packet* out = new Packet();
+	*out << Uint8(NET_INDEX::EVENT) << Uint8(NET_EVENT::EFFECT_TIMEOUT);
+	*out << Uint8(alleffects.size());
+	for (unsigned int c = 0; c < alleffects.size(); c++)
+	{
+		*out << Uint8(alleffects[c].et);
+		*out << Uint8(alleffects[c].effectPID) << Uint8(alleffects[c].effectID);
+		*out << alleffects[c].pos.x << alleffects[c].pos.y << alleffects[c].pos.z;
+	}
+
+	branch(out, -1);
+	delete out;
+}
 
 Server::~Server()
 {

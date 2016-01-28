@@ -197,9 +197,18 @@ void Game::update(float dt)
 				//effect removal in physics
 				int pid = -1, eid = -1;
 				effects[i][c]->getId(pid, eid);
-				physics->removeEffect(eid);
-
-				removeEffect(EFFECT_TYPE(i), c);
+				
+				if (gameState == Gamestate::SERVER || gameState == Gamestate::ROAM)
+				{
+					EffectTimeOutInfo toi;
+					toi.et = EFFECT_TYPE(i);
+					int pid = -1, bid = -1;
+					effects[i][c]->getId(pid, bid);
+					toi.effectID = bid;
+					toi.effectPID = pid;
+					toi.pos = effects[i][c]->getPos();
+					allEffectTimeOuts.push_back(toi);
+				}
 			}
 
 		}
@@ -1555,6 +1564,19 @@ void Game::handleBulletTimeOuts(BulletTimeOutInfo hi)
 	}
 }
 
+void Game::handleEffectTimeOuts(EffectTimeOutInfo hi)
+{
+	Effect* e;
+	int posInArray = -1;
+	e = getSpecificEffect(hi.effectPID, hi.effectID, hi.et, posInArray);
+	if (e != nullptr)
+	{
+		e->setPos(hi.pos);
+		removeEffect(hi.et, posInArray);
+	}
+
+}
+
 void Game::removeEffect(EFFECT_TYPE et, int posInArray)
 {
 	switch (et)
@@ -1562,6 +1584,9 @@ void Game::removeEffect(EFFECT_TYPE et, int posInArray)
 	case EFFECT_TYPE::LIGHT_WALL:
 		break;
 	}
+	int pid = -1, eid = -1;
+	effects[et][posInArray]->getId(pid, eid);
+	physics->removeEffect(eid);
 	delete effects[et][posInArray];
 	effects[et][posInArray] = effects[et][effects[et].size() - 1];
 	effects[et].pop_back();
