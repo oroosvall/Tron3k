@@ -124,7 +124,18 @@ void main()
 		{
 			vec4 ambientForce = vec4(0);
 			
-		for(int n = 0; n < NumSpotLights; n++)
+			for(int n = 0; n < NumSpotLights; n++)
+			{
+				if(lights[n].Direction.x == 0.0f && lights[n].Direction.y == 0.0f && lights[n].Direction.y == 0.0f)
+					fragment_color += CalcPointLight(lights[n], Normal0.xyz) * 0.2f;
+				else
+					fragment_color += CalcSpotLight(lights[n], Normal0.xyz) * 0.6f;
+					
+				ambientForce += vec4(lights[n].Color, 1) * lights[n].AmbientIntensity;
+			}
+			fragment_color = fragment_color * Diffuse0 +  Diffuse0 * ambientForce;
+		}
+		else
 		{
 			fragment_color = Diffuse0;
 		}
