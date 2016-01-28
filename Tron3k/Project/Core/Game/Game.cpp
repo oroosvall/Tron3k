@@ -589,7 +589,6 @@ void Game::checkPlayerVEffectCollision()
 	if (gameState == Gamestate::ROAM || gameState == Gamestate::SERVER)
 	{
 		//Collision for all non-wall effects
-		std::vector<vec4> explosColls;
 		collNormals.clear();
 		for (int j = 0; j < max_con; j++)
 		{
@@ -602,10 +601,6 @@ void Game::checkPlayerVEffectCollision()
 
 					if (pid != j && playerList[pid]->getTeam() != playerList[j]->getTeam())
 					{
-						explosColls = physics->checkPlayerVEffectCollision(playerList[j]->getPos(), EFFECT_TYPE::EXPLOSION, eid);
-						collNormals.reserve(explosColls.size()); // preallocate memory
-						collNormals.insert(collNormals.end(), explosColls.begin(), explosColls.end());
-						explosColls.clear();
 						EffectHitPlayerInfo hi;
 						hi.playerHit = j;
 						hi.effectPID = pid;
@@ -615,8 +610,6 @@ void Game::checkPlayerVEffectCollision()
 						allEffectHitsOnPlayers.push_back(hi);
 					}
 				}
-				playerList[j]->setExplodingInfo(collNormals);
-				collNormals.clear();
 			}
 
 		}
@@ -1364,6 +1357,18 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 	Player* p = playerList[hi.playerHit];
 	int effectPosInArray = -1;
 	Effect* theEffect = getSpecificEffect(hi.effectPID, hi.effectID, hi.et, effectPosInArray);
+	theEffect->setPos(hi.hitPos);
+	if (theEffect->getType() == EFFECT_TYPE::EXPLOSION)
+	{
+		std::vector<vec4> explosColls = physics->checkPlayerVEffectCollision(playerList[hi.playerHit]->getPos(), EFFECT_TYPE::EXPLOSION, hi.effectID);
+		std::vector<vec4> collNormals;
+		collNormals.reserve(explosColls.size()); // preallocate memory
+		collNormals.insert(collNormals.end(), explosColls.begin(), explosColls.end());
+		explosColls.clear();
+		playerList[hi.playerHit]->setExplodingInfo(collNormals);
+		collNormals.clear();
+	}
+
 	p->hitByEffect(theEffect, hi.newHPtotal);
 
 	removeEffect(hi.et, effectPosInArray);

@@ -806,6 +806,7 @@ void Player::hitByEffect(Effect* e, int newHPtotal)
 	/*
 	Big ol' switch case to identify which effect is hitting us and what we should do about it
 	*/
+
 	if (newHPtotal == -1) //This is the server, dealing damage to the player
 	{
 		int dmg = e->getDamage();
