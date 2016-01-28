@@ -158,7 +158,7 @@ void Core::upStart(float dt)
 	case 1:
 		//start console commands
 		startHandleCmds();
-		uiManager->render();
+		//uiManager->render();
 		break;
 	}
 }
