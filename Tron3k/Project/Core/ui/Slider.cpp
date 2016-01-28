@@ -91,7 +91,13 @@ int Slider::checkCollision(glm::vec2 mpos)
 	return returnValue;
 }
 
-
+void Slider::setTexture(int* textureId)
+{
+	for (int i = 0; i < 2; i++)
+	{
+		textureIndexList[i] = textureId[textureIndexList[i]];
+	}
+}
 
 
 

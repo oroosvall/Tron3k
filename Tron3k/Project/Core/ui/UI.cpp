@@ -219,3 +219,11 @@ void UI::removeMenu()
 {
 
 }
+
+void UI::setTextureId(int* textureId)
+{
+	for (int i = 0; i < UiObjects.size(); i++)
+	{
+		UiObjects[i]->setTexture(textureId);
+	}
+}

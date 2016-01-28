@@ -191,6 +191,7 @@ bool UIManager::LoadNextSet(int whichMenuGroup)
 		for (int i = 0; i < nrOfFileNamesFirstGroup; i++)
 		{
 			menus[i].init(fileNamesListFirstGroup[i], console, renderPipe, textureRes);
+
 			nrOfMenus++;
 		}
 		break;

@@ -95,3 +95,11 @@ int Button::checkCollision(glm::vec2 mpos)
 	
 	return returnValue;
 }
+
+void Button::setTexture(int* textureId)
+{
+	for (int i = 0; i < 2; i++)
+	{
+		textureIndexList[i] = textureId[textureIndexList[i]];
+	}
+}

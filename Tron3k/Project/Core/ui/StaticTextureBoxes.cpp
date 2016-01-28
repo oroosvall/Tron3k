@@ -69,3 +69,9 @@ int StaticTextureBoxes::checkCollision(glm::vec2 mpos)
 
 	return returnValue;
 }
+
+void StaticTextureBoxes::setTexture(int* textureId)
+{
+	textureIndexList = textureId[textureIndexList];
+}
+

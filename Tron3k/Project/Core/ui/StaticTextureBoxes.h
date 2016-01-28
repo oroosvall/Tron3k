@@ -29,6 +29,8 @@ public:
 	virtual void fromPosToQuadScreen(glm::vec2 positions, int id);
 
 	virtual int checkCollision(glm::vec2 pos);
+
+	virtual void setTexture(int* textureId);
 };
 
 #endif

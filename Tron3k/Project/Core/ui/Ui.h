@@ -66,6 +66,8 @@ public:
 	void hideWindow();
 
 	void setWorldMatrix(float x, float y, int objId);
+
+	void setTextureId(int* textureId);
 };
 
 #endif
