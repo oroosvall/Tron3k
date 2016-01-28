@@ -191,7 +191,7 @@ std::vector<glm::vec4> Physics::checkSpherevSphereCollision(CollideMesh mesh1, C
 
 	glm::vec3 dist = mesh1.getSphere().pos - mesh2.getSphere().pos;
 	float radius = mesh1.getSphere().radius + mesh2.getSphere().radius;
-	
+
 	if (length(dist) <= radius)
 	{
 		//collision
@@ -207,12 +207,23 @@ std::vector<glm::vec4> Physics::checkSpherevSpheretdCollision(CollideMesh mesh1,
 
 	glm::vec3 dist = mesh1.getSphere().pos - mesh2.getSphere().pos;
 	float radius = mesh1.getSphere().radius + mesh2.getSphere().radius;
-	float minRad = mesh1.getSphere().radius - 1 + mesh2.getSphere().radius;
+	float minRad = mesh1.getSphere().radius - 1.0f + mesh2.getSphere().radius;
 	if (length(dist) <= radius && length(dist) >= minRad)
 	{
 		//collision
-		collided.push_back(vec4(normalize(dist), /*mesh1.getSphere().radius -*/ (mesh2.getSphere().radius - length(dist))));
+		vec3 d = normalize(dist);
 
+		//if(inside)
+		if(abs(length(dist) - minRad) < abs(length(dist) - radius))
+		{
+			collided.push_back(vec4(normalize(dist), (mesh2.getSphere().radius - length(dist)))); //works for when we're inside sphere
+		}
+		else
+		{
+			/*works if we outside sphere*/
+			dist = dist - d * mesh1.getSphere().radius;
+			collided.push_back(vec4(normalize(dist), abs(mesh2.getSphere().radius - length(dist))));
+		}
 	}
 	return collided;
 }
@@ -439,7 +450,7 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb)
 
 		// if a valid intersection found
 		//plane intersection will always be closer than all other intersections on the obb
-		if (t.w+FLT_EPSILON >= 0-FLT_EPSILON)
+		if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON)
 		{
 			return t;
 		}
@@ -447,14 +458,14 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb)
 
 	//if no plane intersections found
 	//test all lines  
-	
+
 	for (int n = 0; n < 12; n++)
 	{
 		t = obb->lines[n].sphere_intersects(pos, rad);
-		if(obb->lines[n].line.y < -FLT_EPSILON || obb->lines[n].line.y > FLT_EPSILON)
-		if (t.w >= 0 - FLT_EPSILON)
-			if (t.w < closest.w) // a new closest dist was found
-				closest = t;
+		if (obb->lines[n].line.y < -FLT_EPSILON || obb->lines[n].line.y > FLT_EPSILON)
+			if (t.w >= 0 - FLT_EPSILON)
+				if (t.w < closest.w) // a new closest dist was found
+					closest = t;
 	}
 
 	//if we found a line intersection it will always be closer
@@ -505,7 +516,7 @@ vec4 Physics::getSpherevOBBlwNorms(vec3 pos, float rad, OBB* obb)
 		}
 	}
 
-	
+
 
 	// if the closest one if further than sphere rad = no intersection
 	if (closest.w + FLT_EPSILON > rad - FLT_EPSILON)
@@ -622,7 +633,7 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos)
 
 				//for each obb contained in that abb
 				int size = worldBoxes[i][j].boundingBox.ObbBoxes.size();
-				
+
 				for (int n = 0; n < size; n++)
 				{
 					t = getSpherevOBBNorms(playerPos, rad, &worldBoxes[i][j].boundingBox.ObbBoxes[n]);
@@ -820,7 +831,7 @@ bool Physics::removeEffect(int effID)
 			delete effectBoxes[i];
 			effectBoxes[i] = effectBoxes[effectBoxes.size() - 1];
 			effectBoxes.pop_back();
-			
+
 		}
 	}
 	return true;
