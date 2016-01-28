@@ -119,6 +119,7 @@ private:
 	void addEffectToList(int conID, int effectId, EFFECT_TYPE et, glm::vec3 pos);
 	Effect* getSpecificEffect(int PID, int SID, EFFECT_TYPE et, int &posInEffectArray);
 	void removeEffect(EFFECT_TYPE et, int posInArray);
+	void addEffectToPhysics(Effect* effect);
 
 	void playerUpdate(int conid, float dt);
 	void playerApplyForces(int conid, float dt);

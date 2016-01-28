@@ -546,6 +546,8 @@ void Game::checkPlayerVEffectCollision()
 			collNormalDomes = physics->checkPlayerVEffectCollision(local->getPos(), EFFECT_TYPE::THUNDER_DOME, eid);
 
 			glm::vec3 vel = local->getVelocity();
+			if (collNormalDomes.size() > 0)
+				int x = 0;
 			collNormals.reserve(collNormalDomes.size()); // preallocate memory
 			collNormals.insert(collNormals.end(), collNormalDomes.begin(), collNormalDomes.end());
 			collNormalDomes.clear();
@@ -733,7 +735,8 @@ void Game::checkBulletVEffectCollision()
 					int eid = -1, pid = -1;
 					effects[EFFECT_TYPE::THUNDER_DOME][c]->getId(pid, eid);
 					collNormalDomes = physics->checkPlayerVEffectCollision(bullets[b][j]->getPos(), EFFECT_TYPE::THUNDER_DOME, eid);
-
+					if (collNormalDomes.size() > 0)
+						int x = 0;
 					//glm::vec3 vel = bullets[b][j]->getPos()->getVelocity();
 					collNormals.reserve(collNormalDomes.size()); // preallocate memory
 					collNormals.insert(collNormals.end(), collNormalDomes.begin(), collNormalDomes.end());
@@ -1194,6 +1197,8 @@ void Game::addEffectToList(int conID, int effectId, EFFECT_TYPE et, glm::vec3 po
 	Effect* e = nullptr;
 	Player* p = playerList[conID];
 
+	std::vector<float> eBox;
+	int eid = -1, pid = -1;
 	switch (et)
 	{
 	case EFFECT_TYPE::LIGHT_WALL:
@@ -1211,6 +1216,34 @@ void Game::addEffectToList(int conID, int effectId, EFFECT_TYPE et, glm::vec3 po
 	}
 	e->init(conID, effectId, pos);
 	effects[et].push_back(e);
+	addEffectToPhysics(e);
+}
+
+void Game::addEffectToPhysics(Effect* effect)
+{
+	std::vector<float> eBox;
+	int eid = -1, pid = -1;
+	effect->getId(pid, eid);
+	switch (effect->getType())
+	{
+	case EFFECT_TYPE::LIGHT_WALL:
+		//Maybe add stuff here? not necessary imo
+		break;
+	case EFFECT_TYPE::THUNDER_DOME:
+		eBox.push_back(effect->getPos().x);
+		eBox.push_back(effect->getPos().y);
+		eBox.push_back(effect->getPos().z);
+		eBox.push_back(effect->getInterestingVariable());
+		physics->receiveEffectBox(eBox, EFFECT_TYPE::THUNDER_DOME, pid, eid);
+		break;
+	case EFFECT_TYPE::EXPLOSION:
+		eBox.push_back(effect->getPos().x);
+		eBox.push_back(effect->getPos().y);
+		eBox.push_back(effect->getPos().z);
+		eBox.push_back(effect->getInterestingVariable());
+		physics->receiveEffectBox(eBox, EFFECT_TYPE::EXPLOSION, pid, eid);
+		break;
+	}
 }
 
 Effect* Game::getSpecificEffect(int PID, int SID, EFFECT_TYPE et, int &posInEffectArray)
