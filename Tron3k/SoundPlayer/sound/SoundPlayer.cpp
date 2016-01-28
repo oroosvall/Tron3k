@@ -68,6 +68,10 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->soundList[SOUNDS::BreakingOutBass].loadFromFile("GameFiles/Sound/BreakingOutBass.ogg");
 		singleton->soundList[SOUNDS::soundEffectBruteLand].loadFromFile("GameFiles/Sound/soundEffectBruteLand.ogg");
 		singleton->soundList[SOUNDS::soundEffectBruteJump].loadFromFile("GameFiles/Sound/soundEffectBruteJump.ogg");
+		singleton->soundList[SOUNDS::soundEffectGrenadeLauncherBounce].loadFromFile("GameFiles/Sound/soundEffectGrenadeLauncherBounce.ogg");
+		singleton->soundList[SOUNDS::soundEffectStalkerReload].loadFromFile("GameFiles/Sound/soundEffectStalkerReload.ogg");
+		singleton->soundList[SOUNDS::YouWin].loadFromFile("GameFiles/Sound/YouWin.ogg");
+		singleton->soundList[SOUNDS::YouLose].loadFromFile("GameFiles/Sound/YouLose.ogg");
 
 		initialized = true;
 	}

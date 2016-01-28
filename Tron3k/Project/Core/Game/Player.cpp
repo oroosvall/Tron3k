@@ -747,6 +747,8 @@ void Player::reloadCurrentWeapon()
 		{
 			if (this->role.getRole() == 0)
 				GetSound()->playUserGeneratedSound(SOUNDS::soundEffectTrapperReload);
+			else if (this->role.getRole() == 2)
+				GetSound()->playUserGeneratedSound(SOUNDS::soundEffectStalkerReload);
 		}
 
 		role.getCurrentWeapon()->reload();
