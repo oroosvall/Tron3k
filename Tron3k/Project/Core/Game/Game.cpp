@@ -571,6 +571,11 @@ void Game::checkPlayerVEffectCollision()
 			if (collNormalDomes.size() > 0)
 				int x = 0;
 			//this is to be changed, we need to calculate a proper normal for the dome
+
+			//vec3 n = vec3(collNormalDomes[0]);
+
+			//n = normalize(n);
+
 			collNormals.reserve(collNormalDomes.size()); // preallocate memory
 			collNormals.insert(collNormals.end(), collNormalDomes.begin(), collNormalDomes.end());
 			collNormalDomes.clear();
@@ -739,7 +744,6 @@ void Game::checkBulletVEffectCollision()
 						collNormalWalls.clear();
 						if (collNormals.size() > 0)
 						{
-							int tuttar = 2;
 							BulletHitEffectInfo bi;
 							bullets[b][j]->getId(bi.bulletPID, bi.bulletBID);
 							bi.bt = BULLET_TYPE(b);
@@ -773,8 +777,6 @@ void Game::checkBulletVEffectCollision()
 		collNormals.insert(collNormals.end(), collNormalWalls.begin(), collNormalWalls.end());
 		collNormals.insert(collNormals.end(), collNormalDomes.begin(), collNormalDomes.end());*/
 
-		if (collNormals.size() > 0)
-			playerList[localPlayerId]->setCollisionInfo(collNormals);
 	}
 	/*if (gameState == Gamestate::ROAM || gameState == Gamestate::SERVER)
 	{

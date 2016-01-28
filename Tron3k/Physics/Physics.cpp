@@ -211,7 +211,7 @@ std::vector<glm::vec4> Physics::checkSpherevSpheretdCollision(CollideMesh mesh1,
 	if (length(dist) <= radius && length(dist) >= minRad)
 	{
 		//collision
-		collided.push_back(vec4(dist, radius - length(dist)));
+		collided.push_back(vec4(normalize(dist), /*mesh1.getSphere().radius -*/ (mesh2.getSphere().radius - length(dist))));
 
 	}
 	return collided;
