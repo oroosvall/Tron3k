@@ -595,6 +595,7 @@ void Game::checkPlayerVEffectCollision()
 						hi.effectID = eid;
 						hi.et = EFFECT_TYPE::EXPLOSION;
 						hi.hitPos = effects[EFFECT_TYPE::EXPLOSION][i]->getPos();
+						hi.newHPtotal = -1;
 						allEffectHitsOnPlayers.push_back(hi);
 					}
 				}
@@ -1346,7 +1347,7 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 	int effectPosInArray = -1;
 	Effect* theEffect = getSpecificEffect(hi.effectPID, hi.effectID, hi.et, effectPosInArray);
 	theEffect->setPos(hi.hitPos);
-	if (theEffect->getType() == EFFECT_TYPE::EXPLOSION)
+	if (theEffect->getType() == EFFECT_TYPE::EXPLOSION && gameState != Gamestate::SERVER)
 	{
 		std::vector<vec4> explosColls = physics->checkPlayerVEffectCollision(playerList[hi.playerHit]->getPos(), EFFECT_TYPE::EXPLOSION, hi.effectID);
 		std::vector<vec4> collNormals;
