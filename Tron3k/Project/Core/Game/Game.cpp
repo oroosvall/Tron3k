@@ -3,6 +3,8 @@
 void Game::release()
 {
 	// delete code goes here
+	if (gamemode != nullptr)
+		delete gamemode;
 	for (int i = 0; i < max_con; i++)
 	{
 		if (playerList[i])
@@ -1677,4 +1679,24 @@ int Game::findPlayerPosInTeam(int conID)
 	}
 
 	return 0;
+}
+
+bool Game::checkIfPlayerCanRespawn(int conid, char &tryAgain)
+{
+	if (gamemode->getType() == GAMEMODE_TYPE::KOTH)
+	{
+		KingOfTheHill* koth = (KingOfTheHill*)gamemode;
+		bool canRespawn = koth->playerRespawn(conid);
+		if (canRespawn)
+			return true;
+		else
+		{
+			if (koth->getRespawnTokens(playerList[conid]->getTeam()) > 0)
+			{
+				tryAgain = 'Y';
+			}
+			return false;
+		}
+	}
+	return false;
 }

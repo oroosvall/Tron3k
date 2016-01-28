@@ -557,10 +557,14 @@ public:
 			/*
 			Authentication to make sure we actually can respawn - for now always Yes
 			*/
-			if (false)
+
+			char tryAgain = 'N'; //Y/N
+			bool playerCanRespawn = gamePtr->checkIfPlayerCanRespawn(conid, tryAgain);
+
+			if (!playerCanRespawn)
 			{
 				Packet* out = new Packet();
-				char tryAgain = 'Y'; //Y/N
+			
 				*out << Uint8(NET_INDEX::EVENT) << Uint8(NET_EVENT::RESPAWN_DENIED) << Uint8(tryAgain);
 				con[p_conID].send(out);
 				delete out;
