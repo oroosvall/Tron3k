@@ -22,5 +22,5 @@ int Explosion::update(float dt)
 
 float Explosion::explotionRenderRad()
 {
-	return  exploRadius * (1 - (lifeTime / 0.1f));
+	return  exploRadius * (1 - (lifeTime / 0.1f)) * 1.8;	//Can add factor to increase size of explosion
 }
