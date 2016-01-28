@@ -9,6 +9,7 @@ class ThunderDomeEffect : public Effect
 private:
 	Player* myPlayer;
 	float lifeTime;
+	float startLifeTime;
 	float domeRadius;
 
 public:
