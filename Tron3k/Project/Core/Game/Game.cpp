@@ -123,6 +123,15 @@ void Game::initPhysics()
 	}
 }
 
+vector<int>* Game::getTeamConIds(int team)
+{
+	if (team == 1)
+		return &teamOne;
+	else if (team == 2)
+		return &teamTwo;
+	return &teamSpectators;
+}
+
 void Game::update(float dt)
 {
 	//some things need to be done before movement, some after

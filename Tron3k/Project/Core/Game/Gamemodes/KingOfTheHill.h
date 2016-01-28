@@ -17,6 +17,8 @@ private:
 	float tickForCaptureScoring;
 	float timerModifierForCaptureScoring;
 	void capturePointScoring();
+
+	GAMEMODE_MSG roundScoring();
 public:
 	KingOfTheHill();
 	~KingOfTheHill();

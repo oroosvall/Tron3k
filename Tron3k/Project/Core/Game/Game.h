@@ -205,6 +205,7 @@ public:
 	void addPlayerToTeam(int p_conID, int team, int spawnPosition);
 	int getPlayersOnTeam(int team);
 	int getMaxTeamSize(bool spec = false) { if (spec) return maxSpec; return maxTeamSize; };
+	vector<int>* getTeamConIds(int team);
 
 	bool fireEventReady() { return shotsFired; };
 	void getLatestWeaponFired(int localPlayer, WEAPON_TYPE &wt, int &bulletId);
