@@ -723,7 +723,7 @@ void Player::movementUpdates(float dt, bool freecam, bool spectatingThisPlayer, 
 
 	if (freecam == true && spectatingThisPlayer == false)
 	{
-		worldMat[1].w -= 1.55f;  // move down if 3rd person render
+		worldMat[1].w -= 1.45f;  // move down if 3rd person render
 	}
 
 	if (freecam == false && isLocalPlayer == false && spectatingThisPlayer == false)

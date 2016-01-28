@@ -979,6 +979,8 @@ void Game::addBulletToList(int conID, int bulletId, BULLET_TYPE bt, glm::vec3 po
 		b = new CleanseBomb(pos, dir, conID, bulletId, p->getTeam());
 		break;
 	case BULLET_TYPE::CLUSTER_GRENADE:
+		rightV *= -0.25f;
+		pos += rightV;
 		b = new ClusterGrenade(pos, dir, conID, bulletId, p->getTeam());
 		break;
 	case BULLET_TYPE::CLUSTERLING:

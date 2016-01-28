@@ -1173,8 +1173,8 @@ void Core::renderWorld(float dt)
 					else
 					{
 						glm::mat4* playermat = p->getWorldMat();
-						//if (force3rd)
-						//	playermat[0][1].w -= 1.55f;
+						if (force3rd)
+							playermat[0][1].w -= 1.55f;
 
 						if (p->isLocal()) //use current anim
 							renderPipe->renderAnimation(i, p->getRole()->getRole(), playermat, p->getAnimState_t_c(), dgColor, hpval, false);
