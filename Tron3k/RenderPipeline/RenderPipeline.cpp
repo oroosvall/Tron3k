@@ -91,7 +91,13 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 	fontTexture = loadTexture("GameFiles/Font/font16.png", false);
 
-	debugText = new Text("Debug Test\nNew line :)", 18, fontTexture, vec2(0, 18));
+	debugText = new Text("Debug Test\nNew line :)", 18, fontTexture, vec2(10, 24));
+	chatHistoryText = ".\n.\n.\n.\n.\n";
+	chatTypeText = "..";
+	chatText = new Text(chatHistoryText + chatTypeText, 11, fontTexture, vec2(10, 420));
+
+	uglyCrosshairSolution = new Text("+", 32, fontTexture, vec2(WindowWidth / 2 - 10, WindowHeight / 2 + 18));
+
 
 #ifdef _DEBUG
 	if (glDebugMessageCallback) {
@@ -309,6 +315,10 @@ void RenderPipeline::release()
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	delete debugText;
+	delete chatText;
+
+	delete uglyCrosshairSolution;
+
 
 	delete gBuffer;
 
@@ -420,7 +430,10 @@ void RenderPipeline::finalizeRender()
 	glEnable(GL_BLEND);
 
 	debugText->draw();
+	chatText->draw();
 	
+	uglyCrosshairSolution->draw();
+
 	glDisable(GL_BLEND);
 
 }
@@ -740,6 +753,17 @@ void RenderPipeline::getSpawnpoints(std::vector < std::vector < SpawnpointG > > 
 	contMan.testMap.deleteSpawnposData();
 }
 
+void RenderPipeline::setChatHistoryText(std::string text)
+{
+	chatHistoryText = text;
+	chatText->setText(chatHistoryText + chatTypeText);
+}
+
+void RenderPipeline::setChatTypeMessage(std::string text)
+{
+	chatTypeText = text;
+	chatText->setText(chatHistoryText + chatTypeText);
+}
 void RenderPipeline::ui_initRender()
 {
 	//glBindFramebuffer(GL_FRAMEBUFFER, NULL);

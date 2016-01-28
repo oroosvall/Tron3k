@@ -91,6 +91,15 @@ void Core::update(float dt)
 	glfwPollEvents();
 	console.update(_name, 'A'); //Updates to check for new messages and commands
 	
+	if (cursorVisible && renderPipe)
+	{
+		renderPipe->setChatTypeMessage(console.pollLatest());
+	}
+	if (console.messageReady() && renderPipe)
+	{
+		renderPipe->setChatHistoryText(console.getHistory());
+	}
+
 	if (game)
 	{
 		if (console.getInChatMode() == false)
