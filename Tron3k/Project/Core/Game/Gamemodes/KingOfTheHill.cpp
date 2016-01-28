@@ -47,6 +47,7 @@ GAMEMODE_MSG KingOfTheHill::roundScoring()
 		Lika!Båda lagen vinner rundan.
 
 		Detta kan innebära att en match(bäst av sju rundor) KAN avslutas i lika i extrema situationer.*/
+	return GAMEMODE_MSG::NIL;
 
 }
 
