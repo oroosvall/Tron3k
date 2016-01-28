@@ -9,10 +9,15 @@ private:
 	Console* consolePtr;
 	Game* gamePtr;
 
+	int teamOneScore;
+	int teamTwoScore;
+	int winScore;
+
 	int teamOneSpawnTokens;
 	int teamTwoSpawnTokens;
 	bool overtime;
 	bool started;
+	bool ended;
 
 	float tickForCaptureScoring;
 	float timerModifierForCaptureScoring;

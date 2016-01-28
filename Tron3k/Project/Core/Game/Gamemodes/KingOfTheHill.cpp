@@ -14,12 +14,18 @@ KingOfTheHill::~KingOfTheHill()
 void KingOfTheHill::init(Console* cptr, Game* gptr)
 {
 	gameMode = GAMEMODE_TYPE::KOTH;
+
+	teamOneScore = 0;
+	teamTwoScore = 0;
+	winScore = 2;
+
 	consolePtr = cptr;
 	gamePtr = gptr;
 	overtime = false;
 	started = false;
-	teamOneSpawnTokens = 20;
-	teamTwoSpawnTokens = 20;
+	ended = false;
+	teamOneSpawnTokens = 1;
+	teamTwoSpawnTokens = 1;
 
 	tickForCaptureScoring = 15.0f;
 	timerModifierForCaptureScoring = tickForCaptureScoring;
@@ -42,19 +48,78 @@ GAMEMODE_MSG KingOfTheHill::roundScoring()
 		Vinnande laget definieras av.
 		Ett lag dör.Dör ena laget utan spawn tokens vinner andra laget.
 		Spawn tokens kvar.Har ett lag spawn tokens kvar vinner detta laget.
-		Antal spelare på kontrollpunkten.Har ena laget fler spelare på punkten vinner detta laget.
-		Spelare vid liv.Har ena laget fler spelare vid liv vinner detta laget.
-		Lika!Båda lagen vinner rundan.
+	*/
+	ended = true;
 
-		Detta kan innebära att en match(bäst av sju rundor) KAN avslutas i lika i extrema situationer.*/
-	return GAMEMODE_MSG::NIL;
+	if (teamOneSpawnTokens > 0)
+	{
+		teamOneScore++;
+		if (teamOneScore == winScore)
+			return GAMEMODE_MSG::MATCH_WIN_TEAM1;
+		return GAMEMODE_MSG::ROUND_WIN_TEAM1;
+	}
+	else if (teamTwoSpawnTokens > 0)
+	{
+		teamTwoScore++;
+		if (teamTwoScore == winScore)
+			return GAMEMODE_MSG::MATCH_WIN_TEAM2;
+		return GAMEMODE_MSG::ROUND_WIN_TEAM2;
+	}
+
+	/*
+		Antal spelare på kontrollpunkten.Har ena laget fler spelare på punkten vinner detta laget.
+	*/
+
+	/*
+		Spelare vid liv.Har ena laget fler spelare vid liv vinner detta laget.
+	*/
+
+	vector<int>* team1ids = gamePtr->getTeamConIds(1);
+	int T1alive = 0;
+	for (int c = 0; c < team1ids->size(); c++)
+	{
+		if (gamePtr->getPlayer(team1ids->at(c))->isAlive())
+			T1alive++;
+	}
+
+	vector<int>* team2ids = gamePtr->getTeamConIds(2);
+	int T2alive = 0;
+	for (int c = 0; c < team2ids->size(); c++)
+	{
+		if (gamePtr->getPlayer(team2ids->at(c))->isAlive())
+			T2alive++;
+	}
+
+	if (T1alive < T2alive)
+	{
+		teamTwoScore++;
+		if (teamTwoScore == winScore)
+			return GAMEMODE_MSG::MATCH_WIN_TEAM2;
+		return GAMEMODE_MSG::ROUND_WIN_TEAM2;
+	}
+	else if (T1alive > T2alive)
+	{
+		teamOneScore++;
+		if (teamOneScore == winScore)
+			return GAMEMODE_MSG::MATCH_WIN_TEAM1;
+		return GAMEMODE_MSG::ROUND_WIN_TEAM1;
+	}
+
+	/*
+		Lika! Båda lagen vinner rundan.
+	*/
+	teamOneScore++;
+	teamTwoScore++;
+	if (teamOneScore == winScore && teamTwoScore == winScore)
+		return GAMEMODE_MSG::MATCH_DRAW;
+	return GAMEMODE_MSG::ROUND_DRAW;
 
 }
 
 GAMEMODE_MSG KingOfTheHill::update(float dt)
 {
 	GAMEMODE_MSG msg = GAMEMODE_MSG::NIL;
-	if (started)
+	if (started && !ended)
 	{
 		if (!overtime) //Game mode proceeds as normal
 		{
@@ -84,7 +149,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 				}
 				if (allDead)
 				{
-					msg = roundScoring();
+					msg = GAMEMODE_MSG::ROUND_WIN_TEAM2;
 				}
 			}
 			else if (teamTwoSpawnTokens == 0)
@@ -98,23 +163,39 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 				}
 				if (allDead)
 				{
-					msg = roundScoring();
+					msg = GAMEMODE_MSG::ROUND_WIN_TEAM1;
 				}
 			}
-			else if (timer < FLT_EPSILON)
+			if (timer < FLT_EPSILON)
 			{
 				msg = roundScoring();
 			}
 		}
 	}
-	else
+	else if (!ended) //Round has yet to begin!
 	{
 		if (consolePtr->getCommand() == "/start")
 		{
 			started = true;
-			teamOneSpawnTokens = 20;
-			teamTwoSpawnTokens = 20;
+			msg = GAMEMODE_MSG::ROUND_START;
 		}
+	}
+	
+	if (started && ended) //Round has ended, check if match ends, else reset round
+	{
+
+		if (msg == GAMEMODE_MSG::ROUND_WIN_TEAM1)
+			consolePtr->printMsg("TEAM ONE WINS THE ROUND", "System", '[S]');
+		else if (msg == GAMEMODE_MSG::ROUND_WIN_TEAM2)
+			consolePtr->printMsg("TEAM TWO WINS THE ROUND", "System", '[S]');
+		else if (msg == GAMEMODE_MSG::ROUND_DRAW)
+			consolePtr->printMsg("THE ROUND IS DRAW", "System", '[S]');
+		if (msg == GAMEMODE_MSG::MATCH_WIN_TEAM1)
+			consolePtr->printMsg("TEAM ONE WINS THE MATCH", "System", '[S]');
+		else if (msg == GAMEMODE_MSG::MATCH_WIN_TEAM2)
+			consolePtr->printMsg("TEAM TWO WINS THE MATCH", "System", '[S]');
+		else if (msg == GAMEMODE_MSG::MATCH_DRAW)
+			consolePtr->printMsg("THE MATCH IS DRAW", "System", '[S]');
 	}
 	return msg;
 }
