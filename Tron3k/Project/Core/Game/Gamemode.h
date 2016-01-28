@@ -1,8 +1,9 @@
 #ifndef GAMEMODE_H
 #define GAMEMODE_H
 
-#include "Game.h"
 #include "../Console.h"
+
+class Game;
 
 enum GAMEMODE_MSG
 {
@@ -32,7 +33,7 @@ protected:
 public:
 	virtual ~Gamemode() {};
 	virtual void init(Console* cptr, Game* gptr) = 0;
-	virtual int update(float dt) = 0;
+	virtual GAMEMODE_MSG update(float dt) = 0;
 	GAMEMODE_TYPE getType() { return gameMode; };
 	float getTimer() { return timer; };
 };

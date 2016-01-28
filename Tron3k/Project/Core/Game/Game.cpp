@@ -51,6 +51,9 @@ void Game::init(int max_connections, int state, Console* con)
 	console = con;
 	max_con = max_connections;
 
+	gamemode = new KingOfTheHill();
+	gamemode->init(con, this);
+
 	loadRoles();
 	initPhysics();
 	if (GetSoundActivated())
@@ -123,6 +126,14 @@ void Game::update(float dt)
 	//some things need to be done before movement, some after
 	if(gameState != SERVER)
 		console->setInChatMode(playerList[localPlayerId]->getLockedControls());
+
+	GAMEMODE_MSG gameMsg = gamemode->update(dt);
+	if (gameState == Gamestate::SERVER)
+	{
+		/*
+		Handling most messages
+		*/
+	}
 
 	if (gameState == Gamestate::ROAM)
 	{

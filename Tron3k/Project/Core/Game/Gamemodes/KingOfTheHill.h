@@ -12,11 +12,16 @@ private:
 	int teamOneSpawnTokens;
 	int teamTwoSpawnTokens;
 	bool overtime;
+	bool started;
+
+	float tickForCaptureScoring;
+	float timerModifierForCaptureScoring;
+	void capturePointScoring();
 public:
 	KingOfTheHill();
 	~KingOfTheHill();
 	void init(Console* cptr, Game* gptr);
-	int update(float dt);
+	GAMEMODE_MSG update(float dt);
 
 	int getRespawnTokens(int team);
 	bool getOvertime() { return overtime; };

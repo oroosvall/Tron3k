@@ -1,4 +1,5 @@
 #include "KingOfTheHill.h"
+#include "../Game.h"
 
 KingOfTheHill::KingOfTheHill()
 {
@@ -16,20 +17,46 @@ void KingOfTheHill::init(Console* cptr, Game* gptr)
 	consolePtr = cptr;
 	gamePtr = gptr;
 	overtime = false;
+	started = false;
 	teamOneSpawnTokens = 20;
 	teamTwoSpawnTokens = 20;
+
+	tickForCaptureScoring = 15.0f;
+	timerModifierForCaptureScoring = tickForCaptureScoring;
 }
 
-int KingOfTheHill::update(float dt)
+void KingOfTheHill::capturePointScoring()
 {
-	if (!overtime) //Game mode proceeds as normal
+	/*
+	Check nr of people on each team that are within active zone
+	Compare
+	Follow rules to determine removed respawns
+	*/
+	timerModifierForCaptureScoring += tickForCaptureScoring;
+}
+
+GAMEMODE_MSG KingOfTheHill::update(float dt)
+{
+	if (started)
 	{
-		timer += dt;
-		
+		if (!overtime) //Game mode proceeds as normal
+		{
+			timer += dt;
+			if (timer - timerModifierForCaptureScoring > 0.0f) //15 seconds have passed and we should now proceed with scoring for capture point control
+			{
+				capturePointScoring();
+			}
+
+		}
+		else //Time down until round ends
+		{
+			timer -= dt;
+		}
 	}
-	else //Time down until round ends
+	else
 	{
-		timer -= dt;
+		if (consolePtr->getCommand() == "/start")
+			started = true;
 	}
 	return GAMEMODE_MSG::NIL;
 }

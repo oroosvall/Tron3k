@@ -10,7 +10,10 @@
 #include <fstream>
 #include "../sharedStructs.h"
 #include "../Console.h"
+#include "Gamemode.h"
 #include <iostream>
+
+#include "Gamemodes/KingOfTheHill.h"
 
 enum Gamestate
 {
@@ -80,6 +83,7 @@ struct EffectHitEffectInfo
 class Game
 {
 private:
+	Gamemode* gamemode;
 
 	Console* console;
 
