@@ -596,6 +596,17 @@ void Core::upServer(float dt)
 			game->clearTimedOutBullets();
 		}
 
+		std::vector<EffectTimeOutInfo> effectTimeOut = game->getAllTimedOutEffects();
+		if (effectTimeOut.size() != 0)
+		{
+			for (unsigned int c = 0; c < effectTimeOut.size(); c++)
+			{
+				game->handleEffectTimeOuts(effectTimeOut[c]);
+			}
+			top->event_effect_timed_out(effectTimeOut);
+			game->clearTimedOutEffects();
+		}
+
 		serverHandleCmds();
 		if (top == nullptr)
 			return;
