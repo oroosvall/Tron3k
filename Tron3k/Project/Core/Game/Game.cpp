@@ -548,6 +548,7 @@ void Game::checkPlayerVEffectCollision()
 			glm::vec3 vel = local->getVelocity();
 			if (collNormalDomes.size() > 0)
 				int x = 0;
+			//this is to be changed, we need to calculate a proper normal for the dome
 			collNormals.reserve(collNormalDomes.size()); // preallocate memory
 			collNormals.insert(collNormals.end(), collNormalDomes.begin(), collNormalDomes.end());
 			collNormalDomes.clear();
