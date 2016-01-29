@@ -17,7 +17,6 @@ protected:
 
 	std::vector<int> playersHitByMe;
 public:
-	// orka göra funktion
 	glm::vec3 getPos() { return pos; };
 	void setPos(glm::vec3 p) { pos = p; };
 
