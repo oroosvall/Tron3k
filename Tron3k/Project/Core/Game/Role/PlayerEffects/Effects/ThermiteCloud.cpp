@@ -8,15 +8,22 @@ void ThermiteCloud::init(int pid, int eid, glm::vec3 position)
 	exploRadius = 10.0f;
 	playerId = pid; effectId = eid; pos = position;
 	lifeTime = 5.0f;
+	damageTimer = 1.0f;
 }
 
 int ThermiteCloud::update(float dt)
 {
 	lifeTime -= dt;
-	if (lifeTime < FLT_EPSILON)
+	damageTimer -= dt;
+	if (lifeTime <= 0)
 	{
 		return 1;
 	}
+	if (damageTimer <= 0)
+	{
+		playersHitByMe.clear();
+	}
+
 	return 0;
 }
 
