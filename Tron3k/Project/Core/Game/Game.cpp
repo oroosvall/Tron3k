@@ -1760,3 +1760,8 @@ int Game::GetGameState()
 {
 	return this->gameState;
 }
+
+int Game::GetLocalPlayerId()
+{
+	return this->localPlayerId;
+}

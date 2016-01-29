@@ -194,6 +194,7 @@ public:
 	std::vector<Effect*> getEffects(EFFECT_TYPE type);
 	void createPlayer(Player* p, int conID, int hp, int role, bool isLocal = false);
 	void removePlayer(int conID);
+	int GetLocalPlayerId();
 
 	void update(float dt);
 

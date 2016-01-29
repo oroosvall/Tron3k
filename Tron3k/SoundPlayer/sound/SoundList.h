@@ -57,6 +57,7 @@ enum SOUNDS
 	announcerRound1,
 	announcerRound2,
 	announcerRound3,
+	soundEffectCaptureScored,
 
 	soundEffectDestroyerStart,
 	soundEffectDestroyerStop,

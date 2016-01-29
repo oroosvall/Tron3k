@@ -127,6 +127,10 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			if (timer - timerModifierForCaptureScoring > 0.0f) //15 seconds have passed and we should now proceed with scoring for capture point control
 			{
 				capturePointScoring();
+				if (GetSoundActivated() && this->gamePtr->GetGameState() != Gamestate::SERVER)
+				{
+					GetSound()->playUserGeneratedSound(SOUNDS::soundEffectCaptureScored);
+				}
 			}
 			if (teamOneSpawnTokens == 0 || teamTwoSpawnTokens == 0)
 			{
@@ -219,11 +223,34 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 	
 	if (started && ended) //Round has ended, check if match ends, else reset round
 	{
-
 		if (msg == GAMEMODE_MSG::ROUND_WIN_TEAM1)
+		{
 			consolePtr->printMsg("TEAM ONE WINS THE ROUND", "System", '[S]');
+			if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 0)
+			{
+				GetSound()->playUserGeneratedSound(SOUNDS::YouWin);
+			}
+			else if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
+			{
+				GetSound()->playUserGeneratedSound(SOUNDS::YouLose);
+			}
+		}
+			
 		else if (msg == GAMEMODE_MSG::ROUND_WIN_TEAM2)
+		{
 			consolePtr->printMsg("TEAM TWO WINS THE ROUND", "System", '[S]');
+
+			if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 0)
+			{
+				GetSound()->playUserGeneratedSound(SOUNDS::YouLose);
+			}
+			else if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
+			{
+				GetSound()->playUserGeneratedSound(SOUNDS::YouWin);
+			}
+		}
+			
+
 		else if (msg == GAMEMODE_MSG::ROUND_DRAW)
 			consolePtr->printMsg("THE ROUND IS DRAW", "System", '[S]');
 		if (msg == GAMEMODE_MSG::MATCH_WIN_TEAM1)
