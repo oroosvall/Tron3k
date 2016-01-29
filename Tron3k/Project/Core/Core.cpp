@@ -205,9 +205,6 @@ void Core::upMenu(float dt)
 			break;
 		case 1: //Multiplayer
 			uiManager->setMenu(1); //Connect window
-
-			//Load gui and the rest of in game ui.
-			subState = 0;
 			break;
 		case 2: //Settings
 			break;
@@ -223,6 +220,7 @@ void Core::upMenu(float dt)
 				current = CLIENT;
 				uiManager->LoadNextSet(1);
 				uiManager->setMenu(0);
+				subState = 0;
 			}
 			else
 			{
@@ -1391,37 +1389,39 @@ void Core::inGameUIUpdate() //Ingame ui update
 		switch (eventIndex)
 		{
 		case 20: //Team 1
-			//player->setTeam(1);
-			//uiManager->setMenu(2);
+			//Get p_conID and spawnPosition
+			//game->addPlayerToTeam(, 1, );
+			uiManager->setMenu(2);
 			break;
 		case 21: //Team 2
-			//player->setTeam(2);
-			//uiManager->setMenu(2);
+			//Get p_conID and spawnPosition
+			//game->addPlayerToTeam(, 2, );
+			uiManager->setMenu(2);
 			break;
 		case 30: //Class 1
 			uiManager->setOpenedGuiBool(true);
 			//player->setRole(1);
-			//uiManager->setMenu(0);
+			uiManager->setMenu(0);
 			break;
 		case 31: //Class 2
 			uiManager->setOpenedGuiBool(true);
 			//player->setRole(2);
-			//uiManager->setMenu(0);
+			uiManager->setMenu(0);
 			break;
 		case 32: //Class 3
 			uiManager->setOpenedGuiBool(true);
 			//player->setRole(3);
-			//uiManager->setMenu(0);
+			uiManager->setMenu(0);
 			break;
 		case 33: //Class 4
 			uiManager->setOpenedGuiBool(true);
 			//player->setRole(4);
-			//uiManager->setMenu(0);
+			uiManager->setMenu(0);
 			break;
 		case 34: //Class 5
 			uiManager->setOpenedGuiBool(true);
 			//player->setRole(5);
-			//uiManager->setMenu(0);
+			uiManager->setMenu(0);
 			break;
 		case 40: //Continue
 			uiManager->backToGui();
