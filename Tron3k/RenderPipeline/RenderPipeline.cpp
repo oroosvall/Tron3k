@@ -364,7 +364,7 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	ss << "Buffer binds: " << bufferBinds << "\n";
 	ss << "Shader binds: " << shaderBinds << "\n";
 	ss << result << "\n";
-	if (counter/timepass > 10.0f)
+	if (counter > 3.0f)
 	{
 		result = getQueryResult();
 		counter = 0;
@@ -383,7 +383,7 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	startTimer("Frame : Total");
 	renderFrameTimeID = startTimer("Frame : Render only");
 
-	counter++;
+	counter += dt;
 
 }
 
@@ -416,12 +416,13 @@ void RenderPipeline::renderIni()
 
 void RenderPipeline::render()
 {
-	int chunkRender = startTimer("Chunks");
+	int chunkRender = startTimer("Chunks (render)");
 	glProgramUniform1f(regularShader, uniformGlowTrail[0], 0.0f);
 
 	contMan.renderChunks(regularShader, worldMat[0], uniformTextureLocation[0], uniformNormalLocation[0], uniformGlowSpecLocation[0], uniformDynamicGlowColorLocation[0], uniformStaticGlowIntensityLocation[0],  *gBuffer->portal_shaderPtr, gBuffer->portal_model);
 	
 	stopTimer(chunkRender);
+	renderOther = startTimer("Render Other");
 	//glDepthMask(GL_TRUE);glEnable(GL_CULL_FACE);glDisable(GL_BLEND);)
 	//renderEffects();
 
@@ -429,7 +430,7 @@ void RenderPipeline::render()
 
 void RenderPipeline::finalizeRender()
 {
-
+	stopTimer(renderOther);
 	glDepthMask(GL_TRUE);
 	glEnable(GL_CULL_FACE);
 	glDisable(GL_BLEND);

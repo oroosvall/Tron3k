@@ -102,8 +102,9 @@ private:
 
 	string result;
 
-	int counter;
+	float counter;
 	int renderFrameTimeID;
+	int renderOther;
 
 	bool initialized;
 
