@@ -166,6 +166,12 @@ void Map::renderChunk(GLuint shader, GLuint shaderLocation, int chunkID)
 			glDrawElements(GL_TRIANGLES, meshes[meshID].indexCount, GL_UNSIGNED_INT, 0);
 		}
 	}
+
+	if (capturePoints[0].roomID == chunkID)
+	{
+		renderCapturePoint(shader, shaderLocation, 0);
+	}
+
 }
 
 void Map::renderCapturePoint(GLuint shader, GLuint shaderLocation, int capturePointID)

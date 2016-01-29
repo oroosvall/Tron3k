@@ -123,6 +123,9 @@ void ContentManager::release()
 	trapperConsume.release();
 	shankerBullet.release();
 	shankerSpecial.release();
+
+	bruteThunderDome.release();
+
 }
 
 ContentManager::~ContentManager()
