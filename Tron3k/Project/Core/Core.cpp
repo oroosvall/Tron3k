@@ -33,7 +33,7 @@ void Core::init()
 
 	timepass = 0.0f;
 	
-	current = Gamestate::MENU;
+	current = Gamestate::START;
 
 	tick_timer = 0;
 	client_record = false;
@@ -1370,7 +1370,8 @@ void Core::renderWorld(float dt)
 		if (i->getKeyInfo(GLFW_KEY_P))
 			cam->setCam(camPos, camDir);
 
-		inGameUIUpdate();
+		if (renderUI) //Temp
+			inGameUIUpdate();
 	}
 }
 
@@ -1383,8 +1384,8 @@ void Core::inGameUIUpdate() //Ingame ui update
 	double tX = (x / (double)winX) * 2 - 1.0; // (x/ResolutionX) * 2 - 1
 	double tY = (-y / (double)winY) * 2 + 1.0; // (y/ResolutionY) * 2 - 1
 
-	if (renderUI) //Temp
-		uiManager->inGameRender();
+	
+	uiManager->inGameRender();
 
 	if (i->justPressed(GLFW_MOUSE_BUTTON_LEFT))//button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
 	{
