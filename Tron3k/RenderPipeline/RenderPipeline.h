@@ -152,6 +152,7 @@ public:
 	virtual void setRenderFlag(RENDER_FLAGS flag);
 
 	virtual void ui_initRender();
+	virtual void ui_InGameRenderInit();
 	virtual void ui_loadTexture(unsigned int* texid, char* filepath, int* xres, int* yres);
 	virtual void ui_renderQuad(float* mat, unsigned int textureID, float transp, int i);
 	virtual void ui_textureRelease(vector<unsigned int> texids);

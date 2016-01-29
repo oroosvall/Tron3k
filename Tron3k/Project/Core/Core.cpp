@@ -193,8 +193,9 @@ void Core::upMenu(float dt)
 		{
 		case 0: //Roam
 			current = ROAM;
-			uiManager->LoadNextSet(1);
-			uiManager->setMenu(0);
+			//uiManager->LoadNextSet(1);
+			//uiManager->setMenu(0);
+
 			//Load gui and the rest of in game ui.
 			subState = 0;
 			break;
@@ -1329,11 +1330,11 @@ void Core::renderWorld(float dt)
 
 		renderPipe->finalizeRender();
 
-		//uiManager->inGameRender();
-
 		//viewing 3rd person anims in roam
 		if (i->getKeyInfo(GLFW_KEY_P))
 			cam->setCam(camPos, camDir);
+
+		uiManager->inGameRender();
 	}
 }
 

@@ -147,6 +147,8 @@ void UIManager::menuRender()
 
 void UIManager::inGameRender()
 {
+	renderPipe->ui_InGameRenderInit();
+
 	menus[currentMenu].render(uiTextureIds);
 }
 

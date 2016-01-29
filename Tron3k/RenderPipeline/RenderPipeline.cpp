@@ -805,6 +805,14 @@ void RenderPipeline::ui_initRender()
 	uiQuad.BindVertData();
 }
 
+void RenderPipeline::ui_InGameRenderInit()
+{
+	glUseProgram(uiShader);
+	//uniformlocation set texture 0  it defaults to 0 so not needed
+
+	uiQuad.BindVertData();
+}
+
 void RenderPipeline::ui_loadTexture(unsigned int* texid, char* filepath, int* xres, int* yres)
 {
 	*texid = loadTexture(std::string(filepath), true, xres, yres);
