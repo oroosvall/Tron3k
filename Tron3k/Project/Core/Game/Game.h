@@ -185,6 +185,7 @@ public:
 	void release();
 	void init(int max_connections, int state, Console* con);
 
+	int GetGameState();
 	int getMaxCon();
 	Player** getPlayerList();
 	Player* getPlayer(int conID);

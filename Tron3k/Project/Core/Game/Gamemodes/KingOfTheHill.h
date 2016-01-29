@@ -18,6 +18,7 @@ private:
 	bool overtime;
 	bool started;
 	bool ended;
+	bool fiveTokensPlayed = false;
 
 	float tickForCaptureScoring;
 	float timerModifierForCaptureScoring;

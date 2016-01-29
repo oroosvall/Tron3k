@@ -133,6 +133,18 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 				consolePtr->printMsg("OVERTIME BEGINS", "System", '[S]');
 				overtime = true;
 				timer = 30.0f;
+
+				if (GetSoundActivated() && this->gamePtr->GetGameState() != Gamestate::SERVER)
+				{
+					GetSound()->playUserGeneratedSound(SOUNDS::announcerCommence);
+					GetSound()->playUserGeneratedSound(SOUNDS::SoundForOvertime);
+				}
+			}
+
+			if (!this->fiveTokensPlayed && (teamOneSpawnTokens == 5 || teamTwoSpawnTokens == 5) && this->gamePtr->GetGameState() != Gamestate::SERVER)
+			{
+				GetSound()->playUserGeneratedSound(SOUNDS::announcer5Tokens);
+				this->fiveTokensPlayed = true;
 			}
 
 		}
@@ -185,6 +197,15 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			{
 				msg = roundScoring();
 			}
+			if (timer = 15.0f && this->gamePtr->GetGameState() != Gamestate::SERVER)
+			{
+				GetSound()->playUserGeneratedSound(SOUNDS::announcer15Seconds);
+			}
+			else if (timer = 5.0f && this->gamePtr->GetGameState() != Gamestate::SERVER)
+			{
+				GetSound()->playUserGeneratedSound(SOUNDS::announcer5Seconds);
+			}
+
 		}
 	}
 	else if (!ended) //Round has yet to begin!

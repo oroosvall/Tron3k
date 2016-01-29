@@ -1749,3 +1749,8 @@ bool Game::checkIfPlayerCanRespawn(int conid, char &tryAgain)
 	}
 	return false;
 }
+
+int Game::GetGameState()
+{
+	return this->gameState;
+}

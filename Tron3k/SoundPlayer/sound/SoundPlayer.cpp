@@ -73,7 +73,16 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->soundList[SOUNDS::YouWin].loadFromFile("GameFiles/Sound/YouWin.ogg");
 		singleton->soundList[SOUNDS::YouLose].loadFromFile("GameFiles/Sound/YouLose.ogg");
 		singleton->soundList[SOUNDS::SoundForOvertime].loadFromFile("GameFiles/Sound/SoundForOvertime.ogg");
-		singleton->soundList[SOUNDS::hackedSound].loadFromFile("GameFiles/Sound/hackedSound.ogg");
+		singleton->soundList[SOUNDS::announcer15Seconds].loadFromFile("GameFiles/Sound/announcer15Seconds.ogg");
+		singleton->soundList[SOUNDS::announcer5Seconds].loadFromFile("GameFiles/Sound/announcer5Seconds.ogg");
+		singleton->soundList[SOUNDS::announcer5Tokens].loadFromFile("GameFiles/Sound/announcer5Tokens.ogg");
+		singleton->soundList[SOUNDS::announcerCaptureZoneBreached].loadFromFile("GameFiles/Sound/announcerCaptureZone.ogg");
+		singleton->soundList[SOUNDS::announcerCommence].loadFromFile("GameFiles/Sound/announcerCommenceOvertime.ogg");
+		singleton->soundList[SOUNDS::announcerImpressive].loadFromFile("GameFiles/Sound/announcerImpressive.ogg");
+		singleton->soundList[SOUNDS::announcerKillingSpree].loadFromFile("GameFiles/Sound/announcerKillingSpree.ogg");
+		singleton->soundList[SOUNDS::announcerRound1].loadFromFile("GameFiles/Sound/announcerRound1.ogg");
+		singleton->soundList[SOUNDS::announcerRound2].loadFromFile("GameFiles/Sound/announcerRound2.ogg");
+		singleton->soundList[SOUNDS::announcerRound3].loadFromFile("GameFiles/Sound/announcerRound3.ogg");
 
 		initialized = true;
 	}
