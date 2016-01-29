@@ -39,6 +39,7 @@ private:
 	CameraInput* serverCam;
 
 	UIManager* uiManager;
+	bool renderUI;
 
 	// window
 	GLFWwindow* win;

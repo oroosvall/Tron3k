@@ -42,6 +42,8 @@ void Core::init()
 	uiManager = new UIManager();
 	initPipeline();
 	uiManager->init(&console);
+
+	renderUI = false;
 }
 
 Core::~Core()
@@ -177,6 +179,8 @@ void Core::upStart(float dt)
 
 void Core::upMenu(float dt)
 {
+	renderUI = true;
+
 	double x = (0.0);
 	double y = (0.0);
 	//Get mouse position
@@ -1334,7 +1338,8 @@ void Core::renderWorld(float dt)
 		if (i->getKeyInfo(GLFW_KEY_P))
 			cam->setCam(camPos, camDir);
 
-		uiManager->inGameRender();
+		if(renderUI)
+			uiManager->inGameRender();
 	}
 }
 
