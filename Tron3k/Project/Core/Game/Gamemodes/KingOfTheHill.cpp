@@ -201,11 +201,11 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			{
 				msg = roundScoring();
 			}
-			if (timer = 15.0f && this->gamePtr->GetGameState() != Gamestate::SERVER)
+			if (timer == 15.0f && this->gamePtr->GetGameState() != Gamestate::SERVER)
 			{
 				GetSound()->playUserGeneratedSound(SOUNDS::announcer15Seconds);
 			}
-			else if (timer = 5.0f && this->gamePtr->GetGameState() != Gamestate::SERVER)
+			else if (timer == 5.0f && this->gamePtr->GetGameState() != Gamestate::SERVER)
 			{
 				GetSound()->playUserGeneratedSound(SOUNDS::announcer5Seconds);
 			}
