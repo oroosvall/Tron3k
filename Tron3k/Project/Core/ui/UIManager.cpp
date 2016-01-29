@@ -189,6 +189,8 @@ void UIManager::backToGui()
 void UIManager::removeAllMenus() 
 {
 	nrOfMenus = 0;
+	if (openedMenus != nullptr)
+		delete[] openedMenus;
 	if (currentMenu != nullptr)
 		delete[] currentMenu;
 	if(menus != nullptr)
@@ -232,6 +234,7 @@ bool UIManager::LoadNextSet(int whichMenuGroup)
 	{
 		menus = new UI[nrOfFileNamesFirstGroup];
 		openedMenus = new int[nrOfFileNamesFirstGroup];
+		currentMenu = new int[nrOfFileNamesFirstGroup];
 		for (int i = 0; i < nrOfFileNamesFirstGroup; i++)
 		{
 			menus[i].init(fileNamesListFirstGroup[i], console, renderPipe, textureRes);
@@ -244,6 +247,7 @@ bool UIManager::LoadNextSet(int whichMenuGroup)
 	{
 		menus = new UI[nrOfFileNamesSecondGroup];
 		openedMenus = new int[nrOfFileNamesFirstGroup];
+		currentMenu = new int[nrOfFileNamesFirstGroup];
 		for (int i = 0; i < nrOfFileNamesSecondGroup; i++)
 		{
 			menus[i].init(fileNamesListSecondGroup[i], console, renderPipe, textureRes);
@@ -255,6 +259,7 @@ bool UIManager::LoadNextSet(int whichMenuGroup)
 	default:
 		break;
 	}
+	nrOfCurretMenus = 1;
 
 	return true;
 }
