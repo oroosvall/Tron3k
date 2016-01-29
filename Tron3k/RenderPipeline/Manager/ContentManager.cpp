@@ -45,6 +45,7 @@ void ContentManager::init()
 	trapperConsume.load("GameFiles/CharacterFiles/consumable_Trapper.bin");
 	shankerBullet.load("GameFiles/CharacterFiles/primary_shanker.bin");
 	shankerSpecial.load("GameFiles/CharacterFiles/special_shanker.bin");
+	bruteThunderDome.load("GameFiles/CharacterFiles/special_Punisher.bin");
 
 	//Skybox
 	skybox.init(0, 0, 0);

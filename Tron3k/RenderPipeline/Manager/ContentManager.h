@@ -46,6 +46,7 @@ private:
 	MiscMesh trapperConsume;
 	MiscMesh shankerBullet;
 	MiscMesh shankerSpecial;
+	MiscMesh bruteThunderDome;
 
 	struct TriangleVertex
 	{
