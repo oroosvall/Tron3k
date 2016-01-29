@@ -199,6 +199,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			}
 			if (timer < FLT_EPSILON)
 			{
+				ended = true;
 				msg = roundScoring();
 			}
 			if (timer == 15.0f && this->gamePtr->GetGameState() != Gamestate::SERVER)
