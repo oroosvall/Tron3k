@@ -138,10 +138,11 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 				overtime = true;
 				timer = 30.0f;
 
-				if (GetSoundActivated() && this->gamePtr->GetGameState() != Gamestate::SERVER)
+				if (GetSoundActivated() && !overtimePlayed && this->gamePtr->GetGameState() != Gamestate::SERVER)
 				{
 					GetSound()->playUserGeneratedSound(SOUNDS::announcerCommence);
 					GetSound()->playUserGeneratedSound(SOUNDS::SoundForOvertime);
+					overtimePlayed = true;
 				}
 			}
 
@@ -202,13 +203,15 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 				ended = true;
 				msg = roundScoring();
 			}
-			if (timer == 15.0f && this->gamePtr->GetGameState() != Gamestate::SERVER)
+			if (timer < 15.0f && !fifteenPlayed && this->gamePtr->GetGameState() != Gamestate::SERVER)
 			{
 				GetSound()->playUserGeneratedSound(SOUNDS::announcer15Seconds);
+				fifteenPlayed = true;
 			}
-			else if (timer == 5.0f && this->gamePtr->GetGameState() != Gamestate::SERVER)
+			else if (timer < 5.0f && !fivePlayed && this->gamePtr->GetGameState() != Gamestate::SERVER)
 			{
 				GetSound()->playUserGeneratedSound(SOUNDS::announcer5Seconds);
+				fivePlayed = true;
 			}
 
 		}

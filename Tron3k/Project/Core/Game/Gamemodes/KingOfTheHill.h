@@ -19,6 +19,10 @@ private:
 	bool started;
 	bool ended;
 	bool fiveTokensPlayed = false;
+	bool fifteenPlayed = false;
+	bool fivePlayed = false;
+	bool commencePlayed = false;
+	bool overtimePlayed = false;
 
 	float tickForCaptureScoring;
 	float timerModifierForCaptureScoring;
