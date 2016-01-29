@@ -5,12 +5,17 @@ UIManager::UIManager()
 	fileNamesListFirstGroup = nullptr;
 	fileNamesListSecondGroup = nullptr;
 	menus = nullptr;
+	openedMenus = nullptr;
+	currentMenu = nullptr;
 	nrOfFileNamesFirstGroup = 0;
 	nrOfFileNamesSecondGroup = 0;
 	nrOfMenus = 0;
 	maxMenus = 5;
 	textureRes = new std::vector<glm::vec2>;
-	currentMenu = -1;
+	nrOfCurretMenus = 0;
+	nrOfOpenedMenus = 0;
+
+	guiOpened = false;
 }
 UIManager::~UIManager() 
 {
@@ -142,14 +147,15 @@ void UIManager::menuRender()
 	//
 	//renderPipe->ui_renderQuad(&worldtest[0][0], uiTextureIds[0], 1.0f);
 
-	menus[currentMenu].render(uiTextureIds);
+	menus[currentMenu[0]].render(uiTextureIds);
 }
 
 void UIManager::inGameRender()
 {
 	renderPipe->ui_InGameRenderInit();
 
-	menus[currentMenu].render(uiTextureIds);
+	for (int i = 0; i < nrOfCurretMenus; i++)
+		menus[currentMenu[i]].render(uiTextureIds);
 }
 
 
@@ -157,32 +163,56 @@ void UIManager::inGameRender()
 void UIManager::setMenu(int menuId)
 {
 	if (menuId > -1 && menuId < nrOfMenus)
-		currentMenu = menuId;
+	{
+		if (guiOpened)
+		{
+			currentMenu[nrOfCurretMenus] = menuId;
+			nrOfCurretMenus++;
+		}
+		else
+			currentMenu[0] = menuId;
+		nrOfOpenedMenus++;
+	}
+	else if (menuId == -1)
+	{
+		nrOfOpenedMenus--;
+		currentMenu[0] = openedMenus[nrOfOpenedMenus];
+	}
 	else
 		console->printMsg("Error: invalid menuId in function setMenu.", "System", 'S');
+}
+void UIManager::backToGui()
+{
+	nrOfCurretMenus = 1;
+	nrOfOpenedMenus = 1;
 }
 void UIManager::removeAllMenus() 
 {
 	nrOfMenus = 0;
-	currentMenu = -1;
+	if (currentMenu != nullptr)
+		delete[] currentMenu;
 	if(menus != nullptr)
 		delete[] menus;
 	menus = nullptr;
+	if (openedMenus != nullptr)
+		delete[] openedMenus;
+	nrOfOpenedMenus = 0;
+	nrOfCurretMenus = 0;
 }
 
 int UIManager::collisionCheck(glm::vec2 pos)
 {
-	return menus[currentMenu].mouseCollission(pos);
+	return menus[currentMenu[nrOfCurretMenus - 1]].mouseCollission(pos);
 }
 void UIManager::hoverCheck(glm::vec2 pos)
 {
-	menus[currentMenu].mouseHover(pos);
+	menus[currentMenu[nrOfCurretMenus - 1]].mouseHover(pos);
 }
 
 
 void UIManager::changeTex(int objId, int whichTex)
 {
-	menus[currentMenu].changeTex(objId, whichTex);
+	menus[currentMenu[nrOfCurretMenus - 1]].changeTex(objId, whichTex);
 }
 
 bool UIManager::LoadNextSet(int whichMenuGroup)
@@ -201,6 +231,7 @@ bool UIManager::LoadNextSet(int whichMenuGroup)
 	case 0: //First Group
 	{
 		menus = new UI[nrOfFileNamesFirstGroup];
+		openedMenus = new int[nrOfFileNamesFirstGroup];
 		for (int i = 0; i < nrOfFileNamesFirstGroup; i++)
 		{
 			menus[i].init(fileNamesListFirstGroup[i], console, renderPipe, textureRes);
@@ -212,6 +243,7 @@ bool UIManager::LoadNextSet(int whichMenuGroup)
 	case 1: //Second Group
 	{
 		menus = new UI[nrOfFileNamesSecondGroup];
+		openedMenus = new int[nrOfFileNamesFirstGroup];
 		for (int i = 0; i < nrOfFileNamesSecondGroup; i++)
 		{
 			menus[i].init(fileNamesListSecondGroup[i], console, renderPipe, textureRes);
@@ -225,4 +257,9 @@ bool UIManager::LoadNextSet(int whichMenuGroup)
 	}
 
 	return true;
+}
+
+void UIManager::setOpenedGuiBool(bool guiBool)
+{
+	guiOpened = guiBool;
 }
