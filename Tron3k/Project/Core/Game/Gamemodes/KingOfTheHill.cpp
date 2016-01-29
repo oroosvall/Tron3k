@@ -234,11 +234,11 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 
 			if (this->gamePtr->GetGameState() != Gamestate::SERVER)
 			{
-				if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 0)
+				if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
 				{
 					GetSound()->playUserGeneratedSound(SOUNDS::YouWin);
 				}
-				else if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
+				else if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 2)
 				{
 					GetSound()->playUserGeneratedSound(SOUNDS::YouLose);
 				}
@@ -251,11 +251,11 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			consolePtr->printMsg("TEAM TWO WINS THE ROUND", "System", '[S]');
 			if (this->gamePtr->GetGameState() != Gamestate::SERVER)
 			{
-				if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 0)
+				if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
 				{
 					GetSound()->playUserGeneratedSound(SOUNDS::YouLose);
 				}
-				else if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
+				else if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 2)
 				{
 					GetSound()->playUserGeneratedSound(SOUNDS::YouWin);
 				}
