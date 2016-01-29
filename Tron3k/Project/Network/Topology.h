@@ -255,6 +255,7 @@ public:
 		{
 			*rec >> playerHit >> PID >> EID >> bt >> hpTotal;
 			*rec >> hitPosition.x >> hitPosition.y >> hitPosition.z;
+			*rec >> hpTotal;
 			hi.playerHit = playerHit;
 			hi.et = EFFECT_TYPE(bt);
 			hi.effectID = EID;

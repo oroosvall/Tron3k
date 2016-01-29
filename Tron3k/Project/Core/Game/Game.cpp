@@ -1462,7 +1462,10 @@ void Game::handleBulletHitEffectEvent(BulletHitEffectInfo hi)
 	BulletHitWorldInfo forBounce; forBounce.bulletPID = hi.bulletPID; forBounce.bulletBID = hi.bulletBID; forBounce.bt = hi.bt; forBounce.hitPos = hi.hitPos; forBounce.hitDir = hi.hitDir; forBounce.collisionNormal = hi.collisionNormal;
 	if (b != nullptr)
 	{
-		vec3 temp;
+		//Add exceptions 4 battery fields
+
+		handleBulletHitWorldEvent(forBounce); //Pretty sure this is all we need
+		/*vec3 temp;
 		switch (hi.bt)
 		{
 		case BULLET_TYPE::PULSE_SHOT:
@@ -1522,7 +1525,7 @@ void Game::handleBulletHitEffectEvent(BulletHitEffectInfo hi)
 		case BULLET_TYPE::MELEE_ATTACK:
 			removeBullet(hi.bt, arraypos);
 			break;
-		}
+		}*/
 	}
 }
 
