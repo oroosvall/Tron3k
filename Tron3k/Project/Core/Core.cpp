@@ -628,6 +628,17 @@ void Core::upServer(float dt)
 			top->event_effect_timed_out(effectTimeOut);
 			game->clearTimedOutEffects();
 		}
+	
+		/*
+		MIGHT WANT TO CHANGE THIS LOL
+		*/
+		static float gameModeTimer = 0.0f;
+		gameModeTimer += dt;
+		if (gameModeTimer > 0.25f)
+		{
+			top->event_gamemode_data();
+			gameModeTimer = 0.0f;
+		}
 
 		serverHandleCmds();
 		if (top == nullptr)

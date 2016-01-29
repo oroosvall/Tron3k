@@ -184,7 +184,19 @@ public:
 
 	virtual void in_event_gamemode_data(Packet* rec)
 	{
-
+		Uint8 type;
+		*rec >> type;
+		if (type == Uint8(GAMEMODE_TYPE::KOTH))
+		{
+			KingOfTheHill* koth = (KingOfTheHill*)gamePtr->getGameMode();
+			Uint8 teamOneTokens;
+			Uint8 teamTwoTokens;
+			Uint8 overtime;
+			Uint8 started;
+			Uint8 ended;
+			*rec >> teamOneTokens >> teamTwoTokens >> overtime >> started >> ended;
+			koth->setGamemodeData(teamOneTokens, teamTwoTokens, overtime, started, ended);
+		}
 	}
 
 	virtual void in_event_bullet_hit_player(Packet* rec)
