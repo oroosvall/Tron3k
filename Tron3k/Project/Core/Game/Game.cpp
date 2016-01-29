@@ -1360,7 +1360,7 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 	updateEffectBox(theEffect);
 	if (theEffect->getType() == EFFECT_TYPE::EXPLOSION && gameState != Gamestate::SERVER)
 	{
-		vec3 distanceFromExplosion = hi.playerPos - hi.hitPos;
+		/*vec3 distanceFromExplosion = hi.playerPos - hi.hitPos;
 		vec3 playerPos = p->getVelocity();
 		float speed = length(playerPos);
 		vec3 reflectedVel = reflect(normalize(playerPos), normalize(distanceFromExplosion)) * speed;
@@ -1368,7 +1368,21 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 		vec3 dirMod = normalize(distanceFromExplosion)*distanceFromRadius;
 		vec3 newVel = normalize(reflectedVel + dirMod) * speed;
 		if (p->getGrounded())
-			newVel.y = length(newVel);
+		{
+			p->setGrounded(false);
+			if (newVel.y < 0.0f)
+			{
+				newVel.y = -newVel.y;
+			}
+		}*/
+		vec3 normalFromExplosion = normalize(hi.playerPos - hi.hitPos);
+		vec3 newVel = normalFromExplosion*2.5f;
+		if (p->getGrounded())
+		{
+			p->setGrounded(false);
+			newVel.y = 16.0f;
+		}
+		
 		p->setVelocity(newVel);
 	}
 
@@ -1606,7 +1620,7 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 		{
 		case BULLET_TYPE::CLUSTER_GRENADE: //FUCKING EVERYTHING	
 		{
-			vec3 lingDir;
+			/*vec3 lingDir;
 			lingDir = parent->getDir();
 			lingDir.x += 0.35f;
 			lingDir.z += 0.35f;
@@ -1617,7 +1631,7 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 			addBulletToList(PID, BID + 2, CLUSTERLING, parent->getPos(), lingDir);
 			lingDir.x = -lingDir.x;
 			addBulletToList(PID, BID + 3, CLUSTERLING, parent->getPos(), lingDir);
-
+			*/
 			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
 			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(6.0f);
 			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setDamage(0);
