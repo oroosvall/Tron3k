@@ -167,13 +167,13 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 					pIsAlive = gamePtr->getPlayer(pID)->isAlive();
 					if (pIsAlive)
 					{
-						ended = true;
 						allDead = false;
 					}
 				}
 				if (allDead)
 				{
 					msg = GAMEMODE_MSG::ROUND_WIN_TEAM2;
+					ended = true;
 				}
 			}
 			else if (teamTwoSpawnTokens == 0)
@@ -188,12 +188,12 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 					pIsAlive = gamePtr->getPlayer(pID)->isAlive();
 					if (pIsAlive)
 					{
-						ended = true;
 						allDead = false;
 					}
 				}
 				if (allDead)
 				{
+					ended = true;
 					msg = GAMEMODE_MSG::ROUND_WIN_TEAM1;
 				}
 			}
