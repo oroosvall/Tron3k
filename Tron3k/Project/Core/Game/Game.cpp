@@ -1361,9 +1361,10 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 	if (theEffect->getType() == EFFECT_TYPE::EXPLOSION && gameState != Gamestate::SERVER)
 	{
 		vec3 distanceFromExplosion = hi.playerPos - hi.hitPos;
-		vec3 reflectedVel = reflect(p->getVelocity(), distanceFromExplosion);
-		float speed = length(reflectedVel);
-		float distanceFromRadius = theEffect->getInterestingVariable() - length(distanceFromExplosion);
+		vec3 playerPos = p->getVelocity();
+		float speed = length(playerPos);
+		vec3 reflectedVel = reflect(normalize(playerPos), normalize(distanceFromExplosion)) * speed;
+		float distanceFromRadius = theEffect->getInterestingVariable()+p->getRole()->getBoxRadius() - length(distanceFromExplosion);
 		vec3 dirMod = normalize(distanceFromExplosion)*distanceFromRadius;
 		vec3 newVel = normalize(reflectedVel + dirMod) * speed;
 		p->setVelocity(newVel);
@@ -1617,7 +1618,7 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 
 			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
 			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(6.0f);
-			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setDamage(28);
+			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setDamage(0);
 			//This is where you send it to physics
 			std::vector<float> eBox;
 			eBox.push_back(parent->getPos().x);
@@ -1638,7 +1639,7 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 		{
 			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
 			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(3.0f);
-			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setDamage(8);
+			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setDamage(0);
 			if (GetSoundActivated())
 				GetSound()->playExternalSound(SOUNDS::soundEffectClusterlingExplosion, parent->getPos().x, parent->getPos().y, parent->getPos().z);
 
