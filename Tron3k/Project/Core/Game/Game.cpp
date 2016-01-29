@@ -1383,11 +1383,11 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 			}
 		}*/
 		vec3 normalFromExplosion = normalize(hi.playerPos - hi.hitPos);
-		vec3 newVel = normalFromExplosion*theEffect->getInterestingVariable()/2.0f;
+		vec3 newVel = normalFromExplosion*theEffect->getInterestingVariable()/3.0f;
 		if (p->getGrounded())
 		{
 			p->setGrounded(false);
-			newVel.y = theEffect->getInterestingVariable()*1.5f; //10.0f and 1.5f are arbitrary values
+			newVel.y = theEffect->getInterestingVariable()*1.5f; //3.0f and 1.5f are arbitrary values
 		}
 		
 		p->setVelocity(newVel);
