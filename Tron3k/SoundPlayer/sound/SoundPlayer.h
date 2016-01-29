@@ -12,7 +12,7 @@
 #include<vector>
 #include"SoundList.h"
 
-int const MAXSOUNDS = 50;
+int const MAXSOUNDS = 80;
 
 using namespace std;
 
