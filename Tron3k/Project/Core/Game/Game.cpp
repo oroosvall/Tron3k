@@ -213,7 +213,7 @@ void Game::update(float dt)
 	if (gameState == Gamestate::ROAM)
 	{
 		checkPlayerVWorldCollision(dt);
-		checkBulletVWorldCollision();
+		checkBulletVWorldCollision(dt);
 		checkPlayerVEffectCollision();
 		checkBulletVEffectCollision();
 	}
@@ -228,7 +228,7 @@ void Game::update(float dt)
 
 	if (gameState == Gamestate::SERVER)
 	{
-		checkBulletVWorldCollision();
+		checkBulletVWorldCollision(dt);
 		checkPlayerVBulletCollision();
 		checkPlayerVEffectCollision();
 		checkBulletVEffectCollision();
@@ -683,7 +683,7 @@ void Game::checkPlayerVWorldCollision(float dt)
 	}
 }
 
-void Game::checkBulletVWorldCollision()
+void Game::checkBulletVWorldCollision(float dt)
 {
 	std::vector<glm::vec4> collides;
 
@@ -695,7 +695,7 @@ void Game::checkBulletVWorldCollision()
 			{
 				int pid = -1, bid = -1;
 				bullets[b][j]->getId(pid, bid);
-				collides = physics->BulletVWorldCollision(bullets[b][j]->getPos());
+				collides = physics->BulletVWorldCollision(bullets[b][j]->getPos(), bullets[b][j]->getVel(), bullets[b][j]->getDir(), dt);
 				if (collides.size() > 0)
 				{
 					BulletHitWorldInfo hi;

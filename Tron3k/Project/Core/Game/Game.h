@@ -170,7 +170,7 @@ private:
 	void checkPvPCollision();
 	void checkPlayerVBulletCollision();
 	void checkPlayerVWorldCollision(float dt);
-	void checkBulletVWorldCollision();
+	void checkBulletVWorldCollision(float dt);
 	void checkBulletVEffectCollision();
 	void checkPlayerVEffectCollision();
 

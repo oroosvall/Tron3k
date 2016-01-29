@@ -214,7 +214,7 @@ std::vector<glm::vec4> Physics::checkSpherevSpheretdCollision(CollideMesh mesh1,
 		vec3 d = normalize(dist);
 
 		//if(inside)
-		if(abs(length(dist) - minRad) < abs(length(dist) - radius))
+		if (abs(length(dist) - minRad) < abs(length(dist) - radius))
 		{
 			collided.push_back(vec4(normalize(dist), (mesh2.getSphere().radius - length(dist)))); //works for when we're inside sphere
 		}
@@ -651,25 +651,49 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos)
 	return cNorms;
 }
 
-std::vector<vec4> Physics::BulletVWorldCollision(vec3 bulletPos)
+std::vector<vec4> Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel, vec3 bulletDir, float dt)
 {
 	AABB box;
+	vec3 bPos = bulletPos - (bulletVel * bulletDir * dt);
 	float rad = bulletBox.getSphere().radius;
-	box.max = bulletPos + vec3(rad, rad, rad);
-	box.min = bulletPos - vec3(rad, rad, rad);
+	box.max = bPos + vec3(rad, rad, rad);
+	box.min = bPos - vec3(rad, rad, rad);
 	bulletBox.setAABB(box);
 
 	std::vector<vec4> cNorms;
 	vec4 t;
 	vec3 collisionNormal = vec3(0, 0, 0);
 
-	//each chunk
+	float dtbyI = 0.0f;
+	vec3 deltaDir = vec3(0);
+	vec3 dirTimesVel = vec3(0);
+	dtbyI = dt / 4;
+
+	//bPos += bulletVel * bulletDir * (dt / (float)i);
+	deltaDir = bulletDir * dtbyI;
+	dirTimesVel = bulletVel * deltaDir;
+	
+
+	
+	for (int i = 0; i < 4; i++)
+	{
+		if (cNorms.size() == 0)
+		{
+			
+			bPos += dirTimesVel;
+			box.max = bPos + vec3(rad, rad, rad);
+			box.min = bPos - vec3(rad, rad, rad);
+			bulletBox.setAABB(box);
+
+			//each chunk
 	for (unsigned int i = 0; i < worldBoxes.size(); i++)
 	{
 		//each abb
 		for (unsigned int j = 0; j < worldBoxes[i].size(); j++)
 		{
 			bool contin = false;
+
+			//do or do not, there is a try again at half the position
 
 			if (checkAABBvAABBCollision(&bulletBox.boundingBox, &worldBoxes[i][j].boundingBox))
 			{
@@ -679,7 +703,7 @@ std::vector<vec4> Physics::BulletVWorldCollision(vec3 bulletPos)
 				int size = worldBoxes[i][j].boundingBox.ObbBoxes.size();
 				for (int n = 0; n < size; n++)
 				{
-					t = getSpherevOBBNorms(bulletPos, rad, &worldBoxes[i][j].boundingBox.ObbBoxes[n]);
+					t = getSpherevOBBNorms(bPos, rad, &worldBoxes[i][j].boundingBox.ObbBoxes[n]);
 					t.w = rad - t.w; //penetration depth instead of collision distance 
 					if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 					{
@@ -689,6 +713,8 @@ std::vector<vec4> Physics::BulletVWorldCollision(vec3 bulletPos)
 				}
 			}
 		}
+	}
+	}
 	}
 
 	return cNorms;
