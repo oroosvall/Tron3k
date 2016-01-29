@@ -18,8 +18,10 @@ UI::~UI()
 
 void UI::render(std::vector<GLuint> uiTextureIds)
 {
+	uiRender->disableDepthTest();
 	for (int i = 0; i < UiObjects.size(); i++)
 		UiObjects[i]->render(i);
+	uiRender->enableDepthTest();
 }
 
 void UI::init(std::string fileName, Console* console, IRenderPipeline* uiRender, std::vector<glm::vec2>* textureRes)

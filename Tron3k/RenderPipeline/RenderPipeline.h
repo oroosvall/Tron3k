@@ -158,6 +158,8 @@ public:
 	virtual int portalIntersection(float* pos1, float* pos2, int in_chunk);
 	virtual void setCullingCurrentChunkID(int roomID);
 
+	virtual void enableDepthTest();
+	virtual void disableDepthTest();
 };
 
 

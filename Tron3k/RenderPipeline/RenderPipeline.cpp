@@ -825,3 +825,13 @@ void RenderPipeline::ui_textureRelease(vector<unsigned int> texids)
 	for (unsigned int n = 0; n < texids.size(); n++)
 		glDeleteTextures(1, &texids[n]);
 }
+
+
+void RenderPipeline::enableDepthTest()
+{
+	glEnable(GL_DEPTH_TEST);
+}
+void RenderPipeline::disableDepthTest()
+{
+	glDisable(GL_DEPTH_TEST);
+}

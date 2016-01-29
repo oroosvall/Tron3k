@@ -125,7 +125,7 @@ void UIManager::loadInTexture()
 	texturePaths.clear();
 }
 
-void UIManager::render()
+void UIManager::menuRender()
 {
 	renderPipe->ui_initRender();
 	//
@@ -142,6 +142,11 @@ void UIManager::render()
 	//
 	//renderPipe->ui_renderQuad(&worldtest[0][0], uiTextureIds[0], 1.0f);
 
+	menus[currentMenu].render(uiTextureIds);
+}
+
+void UIManager::inGameRender()
+{
 	menus[currentMenu].render(uiTextureIds);
 }
 

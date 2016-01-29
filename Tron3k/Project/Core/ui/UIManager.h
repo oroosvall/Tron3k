@@ -49,7 +49,8 @@ public:
 
 	void init(Console* console);
 	
-	void render();
+	void menuRender();
+	void inGameRender();
 
 	void setMenu(int menuId);
 	void removeAllMenus();

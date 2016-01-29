@@ -100,6 +100,9 @@ public:
 	virtual void ui_textureRelease(std::vector<unsigned int> texids) = 0;
 	virtual int portalIntersection(float* pos1, float* pos2, int in_chunk) = 0;
 	virtual void setCullingCurrentChunkID(int roomID) = 0;
+
+	virtual void enableDepthTest() = 0;
+	virtual void disableDepthTest() = 0;
 };
 
 extern "C" ENGINE_API IRenderPipeline* CreatePipeline();

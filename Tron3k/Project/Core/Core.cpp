@@ -34,6 +34,7 @@ void Core::init()
 	timepass = 0.0f;
 	
 	current = Gamestate::START;
+
 	tick_timer = 0;
 	client_record = false;
 	client_playback = false;
@@ -183,7 +184,7 @@ void Core::upMenu(float dt)
 	double tX = (x / (double)winX) * 2 - 1.0; // (x/ResolutionX) * 2 - 1
 	double tY = (-y / (double)winY) * 2 + 1.0; // (y/ResolutionY) * 2 - 1
 
-	uiManager->render();
+	uiManager->menuRender();
 	
 	if (i->justPressed(GLFW_MOUSE_BUTTON_LEFT))//button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
 	{
@@ -192,13 +193,15 @@ void Core::upMenu(float dt)
 		{
 		case 0: //Roam
 			current = ROAM;
-			uiManager->removeAllMenus();
+			uiManager->LoadNextSet(1);
+			uiManager->setMenu(0);
 			//Load gui and the rest of in game ui.
 			subState = 0;
 			break;
 		case 1: //Multiplayer
 			//current = CLIENT;
 			//uiManager->removeAllMenus();
+
 			//Load gui and the rest of in game ui.
 			subState = 0;
 			break;
@@ -1325,6 +1328,8 @@ void Core::renderWorld(float dt)
 		}
 
 		renderPipe->finalizeRender();
+
+		//uiManager->inGameRender();
 
 		//viewing 3rd person anims in roam
 		if (i->getKeyInfo(GLFW_KEY_P))
