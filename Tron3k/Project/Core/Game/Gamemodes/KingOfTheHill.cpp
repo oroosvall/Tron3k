@@ -244,14 +244,16 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 		else if (msg == GAMEMODE_MSG::ROUND_WIN_TEAM2)
 		{
 			consolePtr->printMsg("TEAM TWO WINS THE ROUND", "System", '[S]');
-
-			if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 0)
+			if (this->gamePtr->GetGameState() != Gamestate::SERVER)
 			{
-				GetSound()->playUserGeneratedSound(SOUNDS::YouLose);
-			}
-			else if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
-			{
-				GetSound()->playUserGeneratedSound(SOUNDS::YouWin);
+				if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 0)
+				{
+					GetSound()->playUserGeneratedSound(SOUNDS::YouLose);
+				}
+				else if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
+				{
+					GetSound()->playUserGeneratedSound(SOUNDS::YouWin);
+				}
 			}
 		}
 			
