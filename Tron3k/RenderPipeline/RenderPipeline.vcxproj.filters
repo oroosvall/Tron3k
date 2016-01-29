@@ -34,7 +34,7 @@
     <Filter Include="Source Files\Camera">
       <UniqueIdentifier>{d672e48f-2d88-4d01-af47-f86ce387fd15}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\LeakDetect">
+    <Filter Include="Source Files\DebugStuffs">
       <UniqueIdentifier>{45ad5fdd-b6a3-4e64-886c-458f3e8fb9f2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -58,7 +58,7 @@
       <Filter>Source Files\Map</Filter>
     </ClCompile>
     <ClCompile Include="Utils\GPUMemoryLeakChecker.cpp">
-      <Filter>Source Files\LeakDetect</Filter>
+      <Filter>Source Files\DebugStuffs</Filter>
     </ClCompile>
     <ClCompile Include="Manager\ContentManager.cpp">
       <Filter>Source Files\Manager</Filter>
@@ -92,6 +92,9 @@
     </ClCompile>
     <ClCompile Include="Text\Text.cpp">
       <Filter>Source Files\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\TimeQuery.cpp">
+      <Filter>Source Files\DebugStuffs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -129,7 +132,7 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Utils\GPUMemoryLeakChecker.h">
-      <Filter>Source Files\LeakDetect</Filter>
+      <Filter>Source Files\DebugStuffs</Filter>
     </ClInclude>
     <ClInclude Include="Manager\AnimManager.h">
       <Filter>Source Files\Manager</Filter>
@@ -163,6 +166,9 @@
     </ClInclude>
     <ClInclude Include="Text\Text.h">
       <Filter>Source Files\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\TimeQuery.h">
+      <Filter>Source Files\DebugStuffs</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

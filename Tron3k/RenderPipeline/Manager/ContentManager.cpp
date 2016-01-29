@@ -189,21 +189,21 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 				for (int p = 0; p < size; p++) // render the portals
 				{
 					// dont render if it bridges between chunks that are already in the rendernextqueue
-					//if (renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[0]] == false ||
-					//	renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[1]] == false)
-					//{
+					if (renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[0]] == false ||
+						renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[1]] == false)
+					{
 						glBeginQuery(GL_SAMPLES_PASSED, portalQuery);
 						testMap.chunks[n].portals[p].render();
 						GLint passed = 2222;
 						glEndQuery(GL_SAMPLES_PASSED);
 						glGetQueryObjectiv(portalQuery, GL_QUERY_RESULT, &passed);
-
+	
 						if (passed > 0)
 						{
 							renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[0]] = true;
 							renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[1]] = true;
 						}
-					//}
+					}
 				}
 			}
 		}
@@ -240,6 +240,9 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 				}
 			}
 		}
+
+		testMap.renderCapAbb();
+
 	}
 }
 

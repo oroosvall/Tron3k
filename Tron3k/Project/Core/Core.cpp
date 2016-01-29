@@ -1657,11 +1657,11 @@ void Core::disconnect()
 	top = nullptr;
 	game->release();
 	game = nullptr;
-	if (renderPipe != nullptr) //server might not have a renderpipe
-	{
-		renderPipe->release();
-		renderPipe = nullptr;
-	}
+	//if (renderPipe != nullptr) //server might not have a renderpipe
+	//{
+	//	renderPipe->release();
+	//	renderPipe = nullptr;
+	//}
 	current = Gamestate::START;
 	subState = 0;
 }

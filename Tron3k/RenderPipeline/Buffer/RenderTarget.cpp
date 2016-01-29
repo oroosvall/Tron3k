@@ -43,7 +43,7 @@ void RenderTarget::resize(int x, int y, bool use32bit)
 
 	glBindTexture(GL_TEXTURE_2D, targetId);
 	if (depth)
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, x, y, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, x, y, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
 	else if(use32bit)
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, x, y, 0, GL_RGB, GL_FLOAT, nullptr);
 	else

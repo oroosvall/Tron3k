@@ -100,6 +100,11 @@ private:
 	float timepass = 0;
 	float delta = 0;
 
+	string result;
+
+	int counter;
+	int renderFrameTimeID;
+
 	bool initialized;
 
 public:

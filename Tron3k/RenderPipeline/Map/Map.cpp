@@ -2,6 +2,43 @@
 #include <fstream>
 #include <iostream>
 
+void CapturePoint::buildABBS()
+{
+	renderBigAbb.abbBoxR.init_ABB(bigAABB);
+
+	renderAbb = new CollisionRenderABB[aabbCount];
+
+	for (int i = 0; i < aabbCount; i++)
+	{
+		renderAbb[i].abbBoxR.init_ABB(aabb[i]);
+	}
+}
+
+void CapturePoint::release()
+{
+
+	renderBigAbb.abbBoxR.release();
+
+	for (int i = 0; i < aabbCount; i++)
+	{
+		renderAbb[i].abbBoxR.release();
+	}
+
+	delete[] renderAbb;
+
+	delete aabb;
+
+	delete[] mats;
+
+	for (int i = 0; i < meshCount; i++)
+	{
+		meshes[i].release();
+	}
+
+	delete[] meshes;
+
+}
+
 void Map::init()
 {
 	currentChunk = 0;
@@ -19,7 +56,7 @@ void Map::init()
 	{
 		tex[i].textureID = loadTexture("GameFiles/Textures/map/" + std::string(tex[i].textureName));
 	}
-
+	
 }
 
 void Map::release()
@@ -57,6 +94,15 @@ void Map::release()
 		{
 			chunks[i].portals[p].visualPortal.release();
 		}
+	}
+
+	if (capturePoints)
+	{
+		for (int i = 0; i < capCount; i++)
+		{
+			capturePoints[i].release();
+		}
+		delete[] capturePoints;
 	}
 
 	if (spA)
@@ -122,6 +168,31 @@ void Map::renderChunk(GLuint shader, GLuint shaderLocation, int chunkID)
 	}
 }
 
+void Map::renderCapturePoint(GLuint shader, GLuint shaderLocation, int capturePointID)
+{
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, blank_diffuse);
+	glBindVertexArray(capturePoints[capturePointID].meshes[0].vertexArray);
+	glBindBuffer(GL_ARRAY_BUFFER, capturePoints[capturePointID].meshes[0].vertexBuffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, capturePoints[capturePointID].meshes[0].indexBuffer);
+
+	glProgramUniformMatrix4fv(shader, shaderLocation, 1, GL_FALSE, (GLfloat*)&capturePoints[0].mats[0][0][0]);
+
+	glDrawElements(GL_TRIANGLES, capturePoints[capturePointID].meshes[0].indexCount, GL_UNSIGNED_INT, 0);
+}
+
+void Map::renderCapAbb()
+{
+	capturePoints[0].renderBigAbb.abbBoxR.BindVertData();
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 20);
+
+	for (int i = 0; i < capturePoints[0].aabbCount; i++)
+	{
+		capturePoints[0].renderAbb[i].abbBoxR.BindVertData();
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, 20);
+	}
+}
+
 void Map::loadMap(std::string mapName)
 {
 	using namespace std;
@@ -129,6 +200,8 @@ void Map::loadMap(std::string mapName)
 	ifstream inFile;
 	inFile.open(mapName, ios::in | ios::binary);
 	
+	if (!inFile.is_open())
+		return;
 	SharedFileHDR fileHeader;
 	
 	inFile.read((char*)&fileHeader, sizeof(fileHeader));
@@ -142,7 +215,7 @@ void Map::loadMap(std::string mapName)
 	materialCount = (int)fileHeader.materialCount;
 	textureCount = (int)fileHeader.textureCount;
 	int portalCount = (int)fileHeader.portalCount;
-	int capCount = (int)fileHeader.capturePointCount;
+	capCount = (int)fileHeader.capturePointCount;
 	spTACount = (int)fileHeader.SPCountTeamA;
 	spTBCount = (int)fileHeader.SPCountTeamB;
 	spFFACount = (int)fileHeader.SPCountTeamFFA;
@@ -281,10 +354,71 @@ void Map::loadMap(std::string mapName)
 
 	delete[] portalData;
 	
-	CapturePoints* cps = new CapturePoints[capCount];
-	inFile.read((char*)cps, sizeof(CapturePoints) * capCount);
-	delete[] cps;
+	capPointAABBCount = new int[capCount];
+	capPointWallCount = new int[capCount];
 
+	inFile.read((char*)capPointAABBCount, sizeof(int) * capCount);
+	inFile.read((char*)capPointWallCount, sizeof(int) * capCount);
+
+	capturePoints = new CapturePoint[capCount];
+
+	for (int i = 0; i < capCount; i++)
+	{
+		int room;
+		ABB bigAABB;
+		ABB* aabbs = new ABB[capPointAABBCount[i]];
+
+		inFile.read((char*)&room, sizeof(int));
+		inFile.read((char*)&bigAABB, sizeof(ABB));
+		inFile.read((char*)aabbs, sizeof(ABB) * capPointAABBCount[i]);
+
+		capturePoints[i].roomID = room;
+		capturePoints[i].bigAABB = bigAABB;
+		capturePoints[i].aabb = aabbs;
+
+		int* indicesCount = new int[capPointWallCount[i]];
+		int* vertexCount = new int[capPointWallCount[i]];
+		
+		inFile.read((char*)indicesCount, sizeof(int) * capPointWallCount[i]);
+		inFile.read((char*)vertexCount, sizeof(int) * capPointWallCount[i]);
+
+		capturePoints[i].meshes = new StaticMesh[capPointWallCount[i]];
+		capturePoints[i].mats = new glm::mat4[capPointWallCount[i]];
+
+		capturePoints[i].meshCount = capPointWallCount[i];
+		capturePoints[i].aabbCount = capPointAABBCount[i];
+
+		for (int j = 0; j < capPointWallCount[i]; j++)
+		{
+			glm::mat4 mat;
+
+			int* indices = new int[indicesCount[j]];
+			Vertex11* verts = new Vertex11[vertexCount[j]];
+
+			inFile.read((char*)&mat, sizeof(glm::mat4));
+
+			inFile.read((char*)indices, sizeof(int) * indicesCount[j]);
+			inFile.read((char*)verts, sizeof(Vertex11) * vertexCount[j]);
+
+			capturePoints[i].mats[j] = mat;
+
+			capturePoints[i].meshes[j].init(1);
+			capturePoints[i].meshes[j].setVertices((float*&)verts, vertexCount[j]);
+			capturePoints[i].meshes[j].setIndices((int*&)indices, indicesCount[j]);
+			capturePoints[i].meshes[j].stream();
+
+		}
+
+		capturePoints[i].buildABBS();
+
+		delete[] indicesCount;
+		delete[] vertexCount;
+
+	}
+
+	delete[] capPointAABBCount;
+	delete[] capPointWallCount;
+	
 	spA = new SpawnPoint[spTACount];
 	spB = new SpawnPoint[spTBCount];
 	spFFA = new SpawnPoint[spFFACount];
