@@ -708,6 +708,7 @@ std::vector<vec4> Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel,
 					if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 					{
 						t = vec4(normalize(vec3(t)), t.w);
+						t.w = t.w * (4 - i);
 						cNorms.push_back(t);
 					}
 				}
