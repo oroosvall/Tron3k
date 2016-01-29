@@ -186,7 +186,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 				{
 					pID = team2ids->at(c);
 					pIsAlive = gamePtr->getPlayer(pID)->isAlive();
-					if (pIsAlive && timer <= 0)
+					if (pIsAlive)
 					{
 						allDead = false;
 					}
