@@ -247,17 +247,17 @@ public:
 	virtual void in_event_effect_hit_player(Packet* rec)
 	{
 		EffectHitPlayerInfo hi;
-		Uint8 playerHit, PID, EID, bt, hpTotal;
+		Uint8 playerHit, PID, EID, et, hpTotal;
 		glm::vec3 hitPosition;
 		Uint8 size;
 		*rec >> size;
 		for (int c = 0; c < size; c++)
 		{
-			*rec >> playerHit >> PID >> EID >> bt >> hpTotal;
+			*rec >> playerHit >> PID >> EID >> et;
 			*rec >> hitPosition.x >> hitPosition.y >> hitPosition.z;
 			*rec >> hpTotal;
 			hi.playerHit = playerHit;
-			hi.et = EFFECT_TYPE(bt);
+			hi.et = EFFECT_TYPE(et);
 			hi.effectID = EID;
 			hi.effectPID = PID;
 			hi.newHPtotal = hpTotal;
