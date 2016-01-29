@@ -613,7 +613,6 @@ void Game::checkPlayerVEffectCollision()
 					}
 				}
 			}
-
 		}
 	}
 }

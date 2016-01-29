@@ -96,7 +96,7 @@
     </Filter>
     <Filter Include="Source Files\Core\Ui\uiClasses\SuperClass">
       <UniqueIdentifier>{2cb0017d-5d22-42e4-86bd-e2f93ff5c201}</UniqueIdentifier>
-	</Filter>
+    </Filter>
     <Filter Include="Source Files\Core\Game\Gamemodes">
       <UniqueIdentifier>{38580f1e-01aa-4511-9fd3-970da0b217fd}</UniqueIdentifier>
     </Filter>
@@ -290,7 +290,7 @@
     </ClCompile>
     <ClCompile Include="Core\ui\StaticTextureBoxes.cpp">
       <Filter>Source Files\Core\Ui\uiClasses</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\ThunderDomeEffect.cpp">
       <Filter>Source Files\Core\Game\Role\PlayerEffects\Effects</Filter>
     </ClCompile>
@@ -302,6 +302,9 @@
     </ClCompile>
     <ClCompile Include="Core\Game\Gamemodes\KingOfTheHill.cpp">
       <Filter>Source Files\Core\Game\Gamemodes</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\ThermiteEffect.cpp">
+      <Filter>Source Files\Core\Game\Role\PlayerEffects\Effects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -535,7 +538,7 @@
     </ClInclude>
     <ClInclude Include="Core\ui\StaticTextureBoxes.h">
       <Filter>Source Files\Core\Ui\uiClasses</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\ThunderDomeEffect.h">
       <Filter>Source Files\Core\Game\Role\PlayerEffects\Effects</Filter>
     </ClInclude>
@@ -547,6 +550,9 @@
     </ClInclude>
     <ClInclude Include="Core\Game\Gamemodes\KingOfTheHill.h">
       <Filter>Source Files\Core\Game\Gamemodes</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\ThermiteEffect.h">
+      <Filter>Source Files\Core\Game\Role\PlayerEffects\Effects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

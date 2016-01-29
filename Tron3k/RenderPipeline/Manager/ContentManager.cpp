@@ -288,6 +288,7 @@ void ContentManager::renderBullet(int bid)
 	case BULLET_TYPE::CLUSTER_GRENADE:
 	case BULLET_TYPE::CLUSTERLING:
 	case BULLET_TYPE::GRENADE_SHOT:
+	case BULLET_TYPE::THERMITE_GRENADE:
 		trapperConsume.draw();
 		break;
 	case BULLET_TYPE::DISC_SHOT:

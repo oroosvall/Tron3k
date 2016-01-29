@@ -4,9 +4,9 @@
 ThermiteGrenade::ThermiteGrenade(glm::vec3 position, glm::vec3 direction, int pID, int bID, int tID)
 {
 	initValues(position, direction, pID, bID, tID);
-	ttl = 1;
+	ttl = 3;
 	vel = glm::vec3(25.0f);
-	damage = 25;
+	damage = 10;
 }
 
 int ThermiteGrenade::update(float dt)

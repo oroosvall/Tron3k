@@ -30,6 +30,7 @@
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effect.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\Explosion.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\LightwallEffect.cpp" />
+    <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\ThermiteEffect.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\ThunderDomeEffect.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Modifier.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Modifiers\HackingDartModifier.cpp" />
@@ -103,6 +104,7 @@
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\AllEffects.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\Explosion.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\LightwallEffect.h" />
+    <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\ThermiteEffect.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\ThunderDomeEffect.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Modifier.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Modifiers\AllModifiers.h" />
