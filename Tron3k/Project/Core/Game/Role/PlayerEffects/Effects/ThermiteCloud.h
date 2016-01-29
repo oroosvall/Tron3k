@@ -1,10 +1,10 @@
-#ifndef THERMITEEFFECT_H
-#define THERMITEEFFECT_H
+#ifndef THERMITECLOUD_H
+#define THERMITECLOUD_H
 
 #include "../Effect.h"
 #include "../../../Player.h"
 
-class ThermiteEffect : public Effect
+class ThermiteCloud : public Effect
 {
 private:
 	float lifeTime;
@@ -12,7 +12,7 @@ private:
 	float exploRadius;
 	float damage;
 public:
-	ThermiteEffect();
+	ThermiteCloud();
 	void init(int pid, int eid, glm::vec3 position);
 	void setInterestingVariable(float f) { exploRadius = f; }
 	float getInterestingVariable() { return exploRadius; }

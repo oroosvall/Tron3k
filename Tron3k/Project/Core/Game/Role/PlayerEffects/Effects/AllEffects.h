@@ -5,5 +5,6 @@
 #include "LightwallEffect.h"
 #include "Explosion.h"
 #include "ThunderDomeEffect.h"
+#include "ThermiteCloud.h"
 
 #endif
