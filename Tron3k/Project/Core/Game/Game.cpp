@@ -215,7 +215,7 @@ void Game::update(float dt)
 		checkPlayerVWorldCollision(dt);
 		checkBulletVWorldCollision(dt);
 		checkPlayerVEffectCollision();
-		checkBulletVEffectCollision();
+		checkBulletVEffectCollision(dt);
 	}
 
 	if (gameState == Gamestate::CLIENT)
@@ -231,7 +231,7 @@ void Game::update(float dt)
 		checkBulletVWorldCollision(dt);
 		checkPlayerVBulletCollision();
 		checkPlayerVEffectCollision();
-		checkBulletVEffectCollision();
+		checkBulletVEffectCollision(dt);
 	}
 
 	for (int c = 0; c < max_con; c++)
@@ -716,7 +716,7 @@ void Game::checkBulletVWorldCollision(float dt)
 	}
 }
 
-void Game::checkBulletVEffectCollision()
+void Game::checkBulletVEffectCollision(float dt)
 {
 	std::vector<glm::vec4> collNormals;
 	if (gameState == Gamestate::ROAM || gameState == Gamestate::SERVER)
@@ -736,7 +736,7 @@ void Game::checkBulletVEffectCollision()
 					effects[EFFECT_TYPE::LIGHT_WALL][c]->getId(pid, eid);
 					if (((LightwallEffect*)effects[EFFECT_TYPE::LIGHT_WALL][c])->getCollidable())
 					{
-						collNormalWalls = physics->checkBulletVEffectCollision(bullets[b][j]->getPos(), EFFECT_TYPE::LIGHT_WALL, eid);
+						collNormalWalls = physics->checkBulletVEffectCollision(bullets[b][j]->getPos(),	bullets[b][j]->getVel(), bullets[b][j]->getDir(), EFFECT_TYPE::LIGHT_WALL, eid, dt);
 						collNormals.reserve(collNormalWalls.size()); // preallocate memory
 						collNormals.insert(collNormals.end(), collNormalWalls.begin(), collNormalWalls.end());
 						collNormalWalls.clear();

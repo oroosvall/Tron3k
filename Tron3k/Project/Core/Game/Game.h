@@ -172,7 +172,7 @@ private:
 	void checkPlayerVBulletCollision();
 	void checkPlayerVWorldCollision(float dt);
 	void checkBulletVWorldCollision(float dt);
-	void checkBulletVEffectCollision();
+	void checkBulletVEffectCollision(float dt);
 	void checkPlayerVEffectCollision();
 
 	void sendEffectBox(Effect* ef);

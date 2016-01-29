@@ -147,6 +147,7 @@ void reportGPULeaks()
 
 	if (found)
 	{
+		//breakLaptopBySlammingItClosedCauseIWasWatchingPornAtWork();
 		// if break here u have gpu mem leaks, press break and check console
 		DebugBreak();
 	}
