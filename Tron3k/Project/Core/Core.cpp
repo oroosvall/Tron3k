@@ -33,7 +33,7 @@ void Core::init()
 
 	timepass = 0.0f;
 	
-	current = Gamestate::START;
+	current = Gamestate::MENU;
 
 	tick_timer = 0;
 	client_record = false;
@@ -204,9 +204,7 @@ void Core::upMenu(float dt)
 			subState = 0;
 			break;
 		case 1: //Multiplayer
-			//current = CLIENT;
-			//uiManager->LoadNextSet(1);
-			//uiManager->setMenu(Team:  vilket troligtvis är 1);
+			uiManager->setMenu(1); //Connect window
 
 			//Load gui and the rest of in game ui.
 			subState = 0;

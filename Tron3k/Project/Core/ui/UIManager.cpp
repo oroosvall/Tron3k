@@ -32,6 +32,10 @@ UIManager::~UIManager()
 	console = nullptr;
 	if (textureRes)
 		delete textureRes;
+	if (openedMenus != nullptr)
+		delete[] openedMenus;
+	if (currentMenu != nullptr)
+		delete[] currentMenu;
 }
 
 //Start menu
