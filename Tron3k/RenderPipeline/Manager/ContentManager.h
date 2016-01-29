@@ -77,6 +77,7 @@ public:
 	void renderChunks(GLuint shader, GLuint shaderLocation, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation, GLuint DglowColor, GLuint SglowColor, GLuint portal_shader, GLuint portal_world);
 
 	void renderBullet(int bid);
+	void renderThunderDome();
 	void renderMisc(int renderID);
 
 	void renderPlayer(AnimManager::animState, glm::mat4 world, GLuint uniformKeyMatrixLocation, bool first);

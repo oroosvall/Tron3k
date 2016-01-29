@@ -301,6 +301,11 @@ void ContentManager::renderBullet(int bid)
 	
 }
 
+void ContentManager::renderThunderDome()
+{
+	bruteThunderDome.draw();
+}
+
 void ContentManager::renderPlayer(AnimManager::animState state, glm::mat4 world, GLuint uniformKeyMatrixLocation, bool first)
 {
 	playerCharacters[state.role].draw(uniformKeyMatrixLocation, state.state, state.frame, first);
