@@ -18,6 +18,8 @@ void ContentManager::init()
 
 	playerCharacters[0].load("trapper");
 
+	playerCharacters[1].load("destroyer");
+
 	playerCharacters[2].load("shanker");
 
 	playerCharacters[3].load("brute");
@@ -28,6 +30,10 @@ void ContentManager::init()
 	int* lengths = playerCharacters[0].loadAnimations("trapper");
 	for (int i = 0; i < AnimationState::none; i++)
 		keyFrameLengths[0 * AnimationState::none + i] = lengths[i];
+
+	lengths = playerCharacters[1].loadAnimations("destroyer");
+	for (int i = 0; i < AnimationState::none; i++)
+		keyFrameLengths[1 * AnimationState::none + i] = lengths[i];
 
 	lengths = playerCharacters[2].loadAnimations("shanker");
 	for (int i = 0; i < AnimationState::none; i++)
