@@ -207,7 +207,8 @@ std::vector<glm::vec4> Physics::checkSpherevSpheretdCollision(CollideMesh mesh1,
 
 	glm::vec3 dist = mesh1.getSphere().pos - mesh2.getSphere().pos;
 	float radius = mesh1.getSphere().radius + mesh2.getSphere().radius;
-	float minRad = mesh1.getSphere().radius - 1.0f + mesh2.getSphere().radius;
+	float minRad = mesh1.getSphere().radius - 3.0f + mesh2.getSphere().radius;
+	
 	if (length(dist) <= radius && length(dist) >= minRad)
 	{
 		//collision
@@ -216,7 +217,7 @@ std::vector<glm::vec4> Physics::checkSpherevSpheretdCollision(CollideMesh mesh1,
 		//if(inside)
 		if (abs(length(dist) - minRad) < abs(length(dist) - radius))
 		{
-			collided.push_back(vec4(normalize(dist), (mesh2.getSphere().radius - length(dist)))); //works for when we're inside sphere
+			collided.push_back(vec4(normalize(dist), -abs(minRad - length(dist)))); //works for when we're inside sphere
 		}
 		else
 		{
@@ -708,7 +709,7 @@ std::vector<vec4> Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel,
 					if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 					{
 						t = vec4(normalize(vec3(t)), t.w);
-						t.w = t.w * (4 - i);
+						t.w = t.w * (4 - i);//gets the pendepth based on where in the dt we are
 						cNorms.push_back(t);
 					}
 				}
