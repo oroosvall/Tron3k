@@ -10,7 +10,7 @@ void Map::init()
 	spFFA = 0;
 
 	//loadMap("GameFiles/TestFiles/PortalTest.bin");
-	loadMap("GameFiles/TestFiles/levelTesting.bin");
+	loadMap("GameFiles/TestFiles/tron3k_map.bin");
 	for (int i = 0; i < meshCount; i++)
 	{
 		meshes[i].stream();

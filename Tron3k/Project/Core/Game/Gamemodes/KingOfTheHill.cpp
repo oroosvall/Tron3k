@@ -259,7 +259,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			
 
 		else if (msg == GAMEMODE_MSG::ROUND_DRAW)
-			consolePtr->printMsg("THE ROUND IS DRAW", "System", '[S]');
+			consolePtr->printMsg("THE ROUND IS A DRAW", "System", '[S]');
 		if (msg == GAMEMODE_MSG::MATCH_WIN_TEAM1)
 			consolePtr->printMsg("TEAM ONE WINS THE MATCH", "System", '[S]');
 		else if (msg == GAMEMODE_MSG::MATCH_WIN_TEAM2)
