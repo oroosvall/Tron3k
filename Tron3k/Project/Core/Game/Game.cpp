@@ -594,14 +594,19 @@ void Game::checkPlayerVEffectCollision()
 
 					if (pid != j && playerList[pid]->getTeam() != playerList[j]->getTeam())
 					{
-						EffectHitPlayerInfo hi;
-						hi.playerHit = j;
-						hi.effectPID = pid;
-						hi.effectID = eid;
-						hi.et = EFFECT_TYPE::EXPLOSION;
-						hi.hitPos = effects[EFFECT_TYPE::EXPLOSION][i]->getPos();
-						hi.newHPtotal = -1;
-						allEffectHitsOnPlayers.push_back(hi);
+						collNormals = physics->checkPlayerVEffectCollision(playerList[j]->getPos(), EFFECT_TYPE::EXPLOSION, eid);
+						if (collNormals.size() != 0)
+						{
+							EffectHitPlayerInfo hi;
+							hi.playerHit = j;
+							hi.effectPID = pid;
+							hi.effectID = eid;
+							hi.et = EFFECT_TYPE::EXPLOSION;
+							hi.hitPos = effects[EFFECT_TYPE::EXPLOSION][i]->getPos();
+							hi.playerPos = playerList[j]->getPos();
+							hi.newHPtotal = -1;
+							allEffectHitsOnPlayers.push_back(hi);
+						}
 					}
 				}
 			}
@@ -1355,13 +1360,13 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 	updateEffectBox(theEffect);
 	if (theEffect->getType() == EFFECT_TYPE::EXPLOSION && gameState != Gamestate::SERVER)
 	{
-		std::vector<vec4> explosColls = physics->checkPlayerVEffectCollision(playerList[hi.playerHit]->getPos(), EFFECT_TYPE::EXPLOSION, hi.effectID);
-		std::vector<vec4> collNormals;
-		collNormals.reserve(explosColls.size()); // preallocate memory
-		collNormals.insert(collNormals.end(), explosColls.begin(), explosColls.end());
-		explosColls.clear();
-		playerList[hi.playerHit]->setExplodingInfo(collNormals);
-		collNormals.clear();
+		vec3 distanceFromExplosion = hi.playerPos - hi.hitPos;
+		vec3 reflectedVel = reflect(p->getVelocity(), distanceFromExplosion);
+		float speed = length(reflectedVel);
+		float distanceFromRadius = theEffect->getInterestingVariable() - length(distanceFromExplosion);
+		vec3 dirMod = normalize(distanceFromExplosion)*distanceFromRadius;
+		vec3 newVel = normalize(reflectedVel + dirMod) * speed;
+		p->setVelocity(newVel);
 	}
 
 	p->hitByEffect(theEffect, hi.newHPtotal);

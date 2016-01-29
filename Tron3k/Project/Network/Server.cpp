@@ -66,6 +66,7 @@ void Server::event_effect_hit_player(std::vector<EffectHitPlayerInfo> allhits)
 		*out << Uint8(allhits[c].playerHit) << Uint8(allhits[c].effectPID) << Uint8(allhits[c].effectID);
 		*out << Uint8(allhits[c].et);
 		*out << allhits[c].hitPos.x << allhits[c].hitPos.y << allhits[c].hitPos.z;
+		*out << allhits[c].playerPos.x << allhits[c].playerPos.y << allhits[c].playerPos.z;
 		*out << Uint8(allhits[c].newHPtotal);
 	}
 

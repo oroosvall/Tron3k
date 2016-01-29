@@ -40,6 +40,7 @@ struct EffectHitPlayerInfo
 	int effectID;
 	EFFECT_TYPE et;
 	glm::vec3 hitPos;
+	glm::vec3 playerPos;
 	int newHPtotal;
 };
 

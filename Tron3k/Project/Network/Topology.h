@@ -249,12 +249,14 @@ public:
 		EffectHitPlayerInfo hi;
 		Uint8 playerHit, PID, EID, et, hpTotal;
 		glm::vec3 hitPosition;
+		glm::vec3 pPosition;
 		Uint8 size;
 		*rec >> size;
 		for (int c = 0; c < size; c++)
 		{
 			*rec >> playerHit >> PID >> EID >> et;
 			*rec >> hitPosition.x >> hitPosition.y >> hitPosition.z;
+			*rec >> pPosition.x >> pPosition.y >> pPosition.z;
 			*rec >> hpTotal;
 			hi.playerHit = playerHit;
 			hi.et = EFFECT_TYPE(et);
@@ -262,6 +264,7 @@ public:
 			hi.effectPID = PID;
 			hi.newHPtotal = hpTotal;
 			hi.hitPos = hitPosition;
+			hi.playerPos = pPosition;
 			gamePtr->handleEffectHitPlayerEvent(hi);
 		}
 	}
