@@ -591,7 +591,7 @@ void Game::checkPlayerVEffectCollision()
 				{
 					int eid = -1, pid = -1;
 					effects[EFFECT_TYPE::EXPLOSION][i]->getId(pid, eid);
-					if (effects[EFFECT_TYPE::EXPLOSION][i]->thisPlayerHasBeenHitByMe(j))
+					if (!effects[EFFECT_TYPE::EXPLOSION][i]->thisPlayerHasBeenHitByMe(j))
 					{
 						if (pid != j && playerList[pid]->getTeam() != playerList[j]->getTeam())
 						{
