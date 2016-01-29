@@ -1367,6 +1367,8 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 		float distanceFromRadius = theEffect->getInterestingVariable()+p->getRole()->getBoxRadius() - length(distanceFromExplosion);
 		vec3 dirMod = normalize(distanceFromExplosion)*distanceFromRadius;
 		vec3 newVel = normalize(reflectedVel + dirMod) * speed;
+		if (p->getGrounded())
+			newVel.y = length(newVel);
 		p->setVelocity(newVel);
 	}
 
