@@ -926,6 +926,7 @@ bool Player::searchModifier(MODIFIER_TYPE search)
 	return false;
 }
 
+
 Modifier* Player::searchModifierGet(MODIFIER_TYPE search)
 {
 	for (int i = 0; i < myModifiers.size(); i++)
@@ -937,10 +938,44 @@ Modifier* Player::searchModifierGet(MODIFIER_TYPE search)
 
 glm::mat4 Player::getFPSmat()
 {
-	mat4 ret = glm::lookAt(cam->getPos(), cam->getPos() + cam->getDir() * -2.0f, vec3(0, 1, 0));
-	ret[0].w += cam->getPos().x;
-	ret[1].w += cam->getPos().y;
-	ret[2].w += cam->getPos().z;
+	mat4 ret = glm::lookAt(cam->getPos(), cam->getPos() + cam->getDir() * -1.0f, vec3(0, 1, 0));
+
+	vec3 tangentRight = cross(cam->getDir(), vec3(0, 1, 0));
+	vec3 tangentDown = -cross(tangentRight, cam->getDir());
+
+	float yOffset = 0.0f;
+	float xOffset = 0.0f;
+	float zOffset = 0.0f;
+
+	switch (role.getRole())
+	{
+	case TRAPPER:
+
+		break;
+	case DESTROYER:
+		yOffset = 0.3f;
+		xOffset = 0.0f;
+		zOffset = 0.2f;
+		break;
+	case MOBILITY:
+
+		break;
+	case BRUTE:
+		yOffset = 0.5f;
+		xOffset = -0.3f;
+		zOffset = 0.5f;
+		break;
+	case MANIPULATOR:
+		yOffset = 0.0f;
+		xOffset = 0.0f;
+		zOffset = 0.0f;
+		break;
+	}
+	vec3 renderpos = cam->getDir() * zOffset + normalize(tangentDown) * yOffset + normalize(tangentRight) * xOffset + cam->getPos();
+
+	ret[0].w += renderpos.x;
+	ret[1].w += renderpos.y;
+	ret[2].w += renderpos.z;
 	return ret;
 }
 
