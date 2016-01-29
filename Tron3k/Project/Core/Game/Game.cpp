@@ -1247,13 +1247,15 @@ void Game::addEffectToList(int conID, int effectId, EFFECT_TYPE et, glm::vec3 po
 		e = new LightwallEffect(p);
 		if (GetSoundActivated())
 			GetSound()->playExternalSound(SOUNDS::soundEffectLightWall, pos.x, pos.y, pos.z);
-
 		break;
 	case EFFECT_TYPE::THUNDER_DOME:
 		e = new ThunderDomeEffect(p);
 		break;
 	case EFFECT_TYPE::EXPLOSION:
 		e = new Explosion();
+		break;
+	case EFFECT_TYPE::THERMITE_CLOUD:
+		e = new ThermiteCloud();
 		break;
 	}
 	e->init(conID, effectId, pos);
@@ -1694,8 +1696,8 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 		}
 		case BULLET_TYPE::THERMITE_GRENADE:
 		{
-			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
-			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(35.0f);
+			addEffectToList(PID, BID, EFFECT_TYPE::THERMITE_CLOUD, parent->getPos());
+			effects[EFFECT_TYPE::THERMITE_CLOUD][effects[EFFECT_TYPE::THERMITE_CLOUD].size() - 1]->setInterestingVariable(10.0f);
 			if (GetSoundActivated())
 				GetSound()->playExternalSound(SOUNDS::soundEffectThermiteGrenade, parent->getPos().x, parent->getPos().y, parent->getPos().z);
 			break;
