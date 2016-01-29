@@ -591,21 +591,24 @@ void Game::checkPlayerVEffectCollision()
 				{
 					int eid = -1, pid = -1;
 					effects[EFFECT_TYPE::EXPLOSION][i]->getId(pid, eid);
-
-					if (pid != j && playerList[pid]->getTeam() != playerList[j]->getTeam())
+					if (effects[EFFECT_TYPE::EXPLOSION][i]->thisPlayerHasBeenHitByMe(j))
 					{
-						collNormals = physics->checkPlayerVEffectCollision(playerList[j]->getPos(), EFFECT_TYPE::EXPLOSION, eid);
-						if (collNormals.size() != 0)
+						if (pid != j && playerList[pid]->getTeam() != playerList[j]->getTeam())
 						{
-							EffectHitPlayerInfo hi;
-							hi.playerHit = j;
-							hi.effectPID = pid;
-							hi.effectID = eid;
-							hi.et = EFFECT_TYPE::EXPLOSION;
-							hi.hitPos = effects[EFFECT_TYPE::EXPLOSION][i]->getPos();
-							hi.playerPos = playerList[j]->getPos();
-							hi.newHPtotal = -1;
-							allEffectHitsOnPlayers.push_back(hi);
+							collNormals = physics->checkPlayerVEffectCollision(playerList[j]->getPos(), EFFECT_TYPE::EXPLOSION, eid);
+							if (collNormals.size() != 0)
+							{
+								effects[EFFECT_TYPE::EXPLOSION][i]->thisPlayerHit(j);
+								EffectHitPlayerInfo hi;
+								hi.playerHit = j;
+								hi.effectPID = pid;
+								hi.effectID = eid;
+								hi.et = EFFECT_TYPE::EXPLOSION;
+								hi.hitPos = effects[EFFECT_TYPE::EXPLOSION][i]->getPos();
+								hi.playerPos = playerList[j]->getPos();
+								hi.newHPtotal = -1;
+								allEffectHitsOnPlayers.push_back(hi);
+							}
 						}
 					}
 				}
@@ -1376,11 +1379,11 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 			}
 		}*/
 		vec3 normalFromExplosion = normalize(hi.playerPos - hi.hitPos);
-		vec3 newVel = normalFromExplosion*2.5f;
+		vec3 newVel = normalFromExplosion*theEffect->getInterestingVariable()/10.0f;
 		if (p->getGrounded())
 		{
 			p->setGrounded(false);
-			newVel.y = 16.0f;
+			newVel.y = theEffect->getInterestingVariable()/1.5f; //10.0f and 1.5f are arbitrary values
 		}
 		
 		p->setVelocity(newVel);
@@ -1620,7 +1623,7 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 		{
 		case BULLET_TYPE::CLUSTER_GRENADE: //FUCKING EVERYTHING	
 		{
-			/*vec3 lingDir;
+			vec3 lingDir;
 			lingDir = parent->getDir();
 			lingDir.x += 0.35f;
 			lingDir.z += 0.35f;
@@ -1631,7 +1634,7 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 			addBulletToList(PID, BID + 2, CLUSTERLING, parent->getPos(), lingDir);
 			lingDir.x = -lingDir.x;
 			addBulletToList(PID, BID + 3, CLUSTERLING, parent->getPos(), lingDir);
-			*/
+			
 			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
 			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(6.0f);
 			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setDamage(0);

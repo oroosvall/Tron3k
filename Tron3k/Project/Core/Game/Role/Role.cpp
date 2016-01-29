@@ -133,7 +133,8 @@ void Role::loadRoleSpecifics(int _role)
 			mobility = new Dash();
 			mobility->init();
 			consumable = new Consumable();
-			consumable->init(CONSUMABLE_TYPE::THERMITEGRENADE);
+			consumable->init(CONSUMABLE_TYPE::CLUSTERGRENADE);
+			//consumable->init(CONSUMABLE_TYPE::THERMITEGRENADE);
 			break;
 		case MANIPULATOR:
 			role = 4;

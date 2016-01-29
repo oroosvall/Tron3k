@@ -2,6 +2,7 @@
 #define EFFECT_H
 
 #include <glm/glm.hpp>
+#include <vector>
 
 #include "../../GameDataIndex.h"
 
@@ -13,6 +14,8 @@ protected:
 	int playerId;
 	int effectId;
 	EFFECT_TYPE type;
+
+	std::vector<int> playersHitByMe;
 public:
 	// orka göra funktion
 	glm::vec3 getPos() { return pos; };
@@ -26,6 +29,9 @@ public:
 	virtual void setDamage(int dmg) {};
 	virtual void setInterestingVariable(float f) {};
 	virtual float getInterestingVariable() { return -1; };
+
+	void thisPlayerHit(int conid) { playersHitByMe.push_back(conid); };
+	bool thisPlayerHasBeenHitByMe(int conid);
 
 	EFFECT_TYPE getType() { return type; };
 };
