@@ -170,7 +170,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 						allDead = false;
 					}
 				}
-				if (allDead)
+				if (allDead && !ended)
 				{
 					msg = GAMEMODE_MSG::ROUND_WIN_TEAM2;
 					ended = true;
@@ -191,7 +191,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 						allDead = false;
 					}
 				}
-				if (allDead)
+				if (allDead && !ended)
 				{
 					ended = true;
 					msg = GAMEMODE_MSG::ROUND_WIN_TEAM1;
