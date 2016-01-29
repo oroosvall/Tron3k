@@ -33,8 +33,12 @@ public:
 
 	int getRespawnTokens(int team);
 	bool getOvertime() { return overtime; };
+	bool getStarted() { return started; };
+	bool getEnded() { return ended; };
 
 	bool playerRespawn(int conId);
+
+	void setGamemodeData(int respawn1, int respawn2, bool over, bool start, bool end);
 };
 
 #endif

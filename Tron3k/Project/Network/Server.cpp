@@ -23,6 +23,31 @@ void Server::disconnected(Uint8 _conID)
 		consolePtr->printMsg("ERROR Disconnect", "System", 'S');
 }
 
+void Server::event_gamemode_data()
+{
+	Packet* out = new Packet();
+	*out << Uint8(NET_INDEX::EVENT) << Uint8(NET_EVENT::GAMEMODE_DATA);
+	Gamemode* gm = gamePtr->getGameMode();
+	GAMEMODE_TYPE type = gm->getType();
+	*out << Uint8(type);
+	if (type == GAMEMODE_TYPE::KOTH)
+	{
+		KingOfTheHill* koth = (KingOfTheHill*)gm;
+		int teamOneTokens = koth->getRespawnTokens(1);
+		int teamTwoTokens = koth->getRespawnTokens(2);
+		bool overtime = koth->getOvertime();
+		bool started = koth->getStarted();
+		bool ended = koth->getEnded();
+		*out << Uint8(teamOneTokens) << Uint8(teamTwoTokens);
+		*out << overtime;
+		*out << started;
+		*out << ended;
+	}
+	
+	branch(out, -1);
+	delete out;
+}
+
 void Server::event_bullet_hit_player(std::vector<BulletHitPlayerInfo> allhits)
 {
 	Packet* out = new Packet();

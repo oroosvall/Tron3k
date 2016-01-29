@@ -297,3 +297,12 @@ bool KingOfTheHill::playerRespawn(int conId)
 	}
 	return false;
 }
+
+void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, bool over, bool start, bool end)
+{
+	teamOneSpawnTokens = respawn1;
+	teamTwoSpawnTokens = respawn2;
+	overtime = over;
+	started = start;
+	ended = end;
+}

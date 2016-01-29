@@ -180,12 +180,11 @@ private:
 	bool localPlayerWantsRespawn = false;
 	bool localPlayerRespawnWaiting = false;
 public:
-
-
 	Game();
 	void release();
 	void init(int max_connections, int state, Console* con);
 
+	Gamemode* getGameMode() { return gamemode; };
 	int GetGameState();
 	int getMaxCon();
 	Player** getPlayerList();

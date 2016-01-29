@@ -166,6 +166,8 @@ public:
 			gamePtr->clearSpectateID();
 	}
 
+	virtual void event_gamemode_data() {};
+
 	virtual void event_effect_timed_out(std::vector<EffectTimeOutInfo> alleffects) {};
 	virtual void event_bullet_timed_out(std::vector<BulletTimeOutInfo> allbullets) {};
 	virtual void event_bullet_hit_player(std::vector<BulletHitPlayerInfo> allhits) {};
@@ -178,6 +180,11 @@ public:
 		Uint8 tryAgain;
 		*rec >> tryAgain;
 		gamePtr->denyPlayerRespawn(tryAgain);
+	}
+
+	virtual void in_event_gamemode_data(Packet* rec)
+	{
+
 	}
 
 	virtual void in_event_bullet_hit_player(Packet* rec)
