@@ -33,12 +33,12 @@ void Server::event_gamemode_data()
 	if (type == GAMEMODE_TYPE::KOTH)
 	{
 		KingOfTheHill* koth = (KingOfTheHill*)gm;
-		int teamOneTokens = koth->getRespawnTokens(1);
-		int teamTwoTokens = koth->getRespawnTokens(2);
-		bool overtime = koth->getOvertime();
-		bool started = koth->getStarted();
-		bool ended = koth->getEnded();
-		*out << Uint8(teamOneTokens) << Uint8(teamTwoTokens);
+		Uint8 teamOneTokens = koth->getRespawnTokens(1);
+		Uint8 teamTwoTokens = koth->getRespawnTokens(2);
+		Uint8 overtime = koth->getOvertime();
+		Uint8 started = koth->getStarted();
+		Uint8 ended = koth->getEnded();
+		*out << teamOneTokens << teamTwoTokens;
 		*out << overtime;
 		*out << started;
 		*out << ended;
