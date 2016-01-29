@@ -695,7 +695,7 @@ void Game::checkPlayerVWorldCollision(float dt)
 
 void Game::checkBulletVWorldCollision(float dt)
 {
-	std::vector<glm::vec4> collides;
+	glm::vec4 collides = vec4(-1, -1, -1, -1);
 
 	for (unsigned int b = 0; b < BULLET_TYPE::NROFBULLETS; b++)
 	{
@@ -706,12 +706,12 @@ void Game::checkBulletVWorldCollision(float dt)
 				int pid = -1, bid = -1;
 				bullets[b][j]->getId(pid, bid);
 				collides = physics->BulletVWorldCollision(bullets[b][j]->getPos(), bullets[b][j]->getVel(), bullets[b][j]->getDir(), dt);
-				if (collides.size() > 0)
+				if (collides.w > -1 || collides.w < -1)
 				{
 					BulletHitWorldInfo hi;
 					hi.bt = BULLET_TYPE(b); hi.hitPos = bullets[b][j]->getPos(); hi.hitDir = bullets[b][j]->getDir();
 					bullets[b][j]->getId(hi.bulletPID, hi.bulletBID);
-					hi.collisionNormal = collides[0];
+					hi.collisionNormal = collides;
 					allBulletHitsOnWorld.push_back(hi);
 				}
 			}
