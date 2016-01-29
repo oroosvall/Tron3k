@@ -445,7 +445,7 @@ int SoundPlayer::playExternalSound(int sound, float x, float y, float z)
 		//std::cout << "x: " << x << " y: " << y << " z: " << z << endl;
 		//sounds[nrOfSoundsPlaying].isRelativeToListener();
 		sounds[nrOfSoundsPlaying].setMinDistance(10.0f);		//Set the sound's distance it travels before it starts to attenuate. Could be passed in through a parameter.
-		sounds[nrOfSoundsPlaying].setAttenuation(2.0f);
+
 		sounds[nrOfSoundsPlaying].setBuffer(soundList[sound]);
 		sounds[nrOfSoundsPlaying].setVolume(soundVolume);
 		sounds[nrOfSoundsPlaying].play();
