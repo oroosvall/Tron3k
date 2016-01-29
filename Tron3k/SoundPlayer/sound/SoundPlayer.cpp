@@ -84,6 +84,7 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->soundList[SOUNDS::announcerRound2].loadFromFile("GameFiles/Sound/announcerRound2.ogg");
 		singleton->soundList[SOUNDS::announcerRound3].loadFromFile("GameFiles/Sound/announcerRound3.ogg");
 		singleton->soundList[SOUNDS::soundEffectCaptureScored].loadFromFile("GameFiles/Sound/soundEffectCaptureScored.ogg");
+		singleton->soundList[SOUNDS::soundEffectBruteDash].loadFromFile("GameFiles/Sound/soundEffectBruteDash.ogg");
 
 		initialized = true;
 	}

@@ -1226,6 +1226,10 @@ void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec
 	case SPECIAL_TYPE::DASH:
 	{
 		p->addModifier(MODIFIER_TYPE::TRUEGRITMODIFIER);
+		if (GetSoundActivated())
+		{
+			GetSound()->playExternalSound(SOUNDS::soundEffectBruteDash, pos.x, pos.y, pos.z);
+		}
 	}
 	break;
 	}
