@@ -1,6 +1,8 @@
 #include "ContentManager.h"
 #include "..\Texture.h"
 
+#include "../Utils/TimeQuery.h"
+
 void ContentManager::init()
 {
 	//init flags
@@ -123,6 +125,9 @@ void ContentManager::release()
 	trapperConsume.release();
 	shankerBullet.release();
 	shankerSpecial.release();
+
+	bruteThunderDome.release();
+
 }
 
 ContentManager::~ContentManager()
@@ -178,6 +183,8 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 	glDisable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
 
+	int portal = startTimer("Portals");
+
 	if (f_freeze_portals == false)
 	{
 		//render portals from the rendered chunks
@@ -189,21 +196,21 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 				for (int p = 0; p < size; p++) // render the portals
 				{
 					// dont render if it bridges between chunks that are already in the rendernextqueue
-					//if (renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[0]] == false ||
-					//	renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[1]] == false)
-					//{
+					if (renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[0]] == false ||
+						renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[1]] == false)
+					{
 						glBeginQuery(GL_SAMPLES_PASSED, portalQuery);
 						testMap.chunks[n].portals[p].render();
 						GLint passed = 2222;
 						glEndQuery(GL_SAMPLES_PASSED);
 						glGetQueryObjectiv(portalQuery, GL_QUERY_RESULT, &passed);
-
+	
 						if (passed > 0)
 						{
 							renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[0]] = true;
 							renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[1]] = true;
 						}
-					//}
+					}
 				}
 			}
 		}
@@ -211,6 +218,8 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 		renderNextChunks[0] = true;
 		renderNextChunks[testMap.currentChunk] = true;
 	}
+
+	stopTimer(portal);
 
 	if (f_render_abb || f_render_obb)
 	{
@@ -240,6 +249,9 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 				}
 			}
 		}
+
+		testMap.renderCapAbb();
+
 	}
 }
 

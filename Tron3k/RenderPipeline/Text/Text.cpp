@@ -75,7 +75,8 @@ void Text::fillBuffer()
 	vec2 uv_down_right;
 	vec2 uv_down_left;
 
-	vector<Float5> verts;
+	int index = 0;
+	Float5* verts = new Float5[text.length() * 4];
 
 	int nrOfLineBreaks = 0;
 	int lineBreakPos = 0;
@@ -148,7 +149,7 @@ void Text::fillBuffer()
 			vert.u = uv_up_left.x;
 			vert.v = uv_up_left.y;
 
-			verts.push_back(vert);
+			verts[index] = vert;
 
 			// down left
 			vert.x = vertex_down_left.x;
@@ -156,7 +157,7 @@ void Text::fillBuffer()
 			vert.u = uv_down_left.x;
 			vert.v = uv_down_left.y;
 
-			verts.push_back(vert);
+			verts[index + 1] = vert;
 
 			// down right
 			vert.x = vertex_down_right.x;
@@ -164,7 +165,7 @@ void Text::fillBuffer()
 			vert.u = uv_down_right.x;
 			vert.v = uv_down_right.y;
 
-			verts.push_back(vert);
+			verts[index + 2] = vert;
 
 			// down left
 			vert.x = vertex_up_right.x;
@@ -172,7 +173,9 @@ void Text::fillBuffer()
 			vert.u = uv_up_right.x;
 			vert.v = uv_up_right.y;
 
-			verts.push_back(vert);
+			verts[index + 3] = vert;
+
+			index += 4;
 
 		}
 		else
@@ -184,12 +187,14 @@ void Text::fillBuffer()
 		}
 	}
 
-	if (verts.size() != 0)
+	if (index != 0)
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(Float5)* verts.size(), &verts[0], GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(Float5)* index, verts, GL_STATIC_DRAW);
 	}
-	quadCount = verts.size();
+	quadCount = index;
+
+	delete[] verts;
 
 }
 

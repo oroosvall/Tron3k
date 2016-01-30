@@ -138,10 +138,11 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 				overtime = true;
 				timer = 30.0f;
 
-				if (GetSoundActivated() && this->gamePtr->GetGameState() != Gamestate::SERVER)
+				if (GetSoundActivated() && !overtimePlayed && this->gamePtr->GetGameState() != Gamestate::SERVER)
 				{
 					GetSound()->playUserGeneratedSound(SOUNDS::announcerCommence);
 					GetSound()->playUserGeneratedSound(SOUNDS::SoundForOvertime);
+					overtimePlayed = true;
 				}
 			}
 
@@ -167,13 +168,13 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 					pIsAlive = gamePtr->getPlayer(pID)->isAlive();
 					if (pIsAlive)
 					{
-						ended = true;
 						allDead = false;
 					}
 				}
-				if (allDead)
+				if (allDead && !ended)
 				{
 					msg = GAMEMODE_MSG::ROUND_WIN_TEAM2;
+					ended = true;
 				}
 			}
 			else if (teamTwoSpawnTokens == 0)
@@ -188,26 +189,30 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 					pIsAlive = gamePtr->getPlayer(pID)->isAlive();
 					if (pIsAlive)
 					{
-						ended = true;
 						allDead = false;
 					}
 				}
-				if (allDead)
+				if (allDead && !ended)
 				{
+					ended = true;
 					msg = GAMEMODE_MSG::ROUND_WIN_TEAM1;
 				}
 			}
 			if (timer < FLT_EPSILON)
 			{
+				ended = true;
 				msg = roundScoring();
+				timer = 1000.0f;		//TEMP
 			}
-			if (timer = 15.0f && this->gamePtr->GetGameState() != Gamestate::SERVER)
+			if (timer < 15.0f && !fifteenPlayed && this->gamePtr->GetGameState() != Gamestate::SERVER)
 			{
 				GetSound()->playUserGeneratedSound(SOUNDS::announcer15Seconds);
+				fifteenPlayed = true;
 			}
-			else if (timer = 5.0f && this->gamePtr->GetGameState() != Gamestate::SERVER)
+			else if (timer < 5.0f && !fivePlayed && this->gamePtr->GetGameState() != Gamestate::SERVER)
 			{
 				GetSound()->playUserGeneratedSound(SOUNDS::announcer5Seconds);
+				fivePlayed = true;
 			}
 
 		}
@@ -226,33 +231,40 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 		if (msg == GAMEMODE_MSG::ROUND_WIN_TEAM1)
 		{
 			consolePtr->printMsg("TEAM ONE WINS THE ROUND", "System", '[S]');
-			if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 0)
+
+			if (this->gamePtr->GetGameState() != Gamestate::SERVER)
 			{
-				GetSound()->playUserGeneratedSound(SOUNDS::YouWin);
+				if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
+				{
+					GetSound()->playUserGeneratedSound(SOUNDS::YouWin);
+				}
+				else if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 2)
+				{
+					GetSound()->playUserGeneratedSound(SOUNDS::YouLose);
+				}
 			}
-			else if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
-			{
-				GetSound()->playUserGeneratedSound(SOUNDS::YouLose);
-			}
+			
 		}
 			
 		else if (msg == GAMEMODE_MSG::ROUND_WIN_TEAM2)
 		{
 			consolePtr->printMsg("TEAM TWO WINS THE ROUND", "System", '[S]');
-
-			if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 0)
+			if (this->gamePtr->GetGameState() != Gamestate::SERVER)
 			{
-				GetSound()->playUserGeneratedSound(SOUNDS::YouLose);
-			}
-			else if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
-			{
-				GetSound()->playUserGeneratedSound(SOUNDS::YouWin);
+				if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
+				{
+					GetSound()->playUserGeneratedSound(SOUNDS::YouLose);
+				}
+				else if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 2)
+				{
+					GetSound()->playUserGeneratedSound(SOUNDS::YouWin);
+				}
 			}
 		}
 			
 
 		else if (msg == GAMEMODE_MSG::ROUND_DRAW)
-			consolePtr->printMsg("THE ROUND IS DRAW", "System", '[S]');
+			consolePtr->printMsg("THE ROUND IS A DRAW", "System", '[S]');
 		if (msg == GAMEMODE_MSG::MATCH_WIN_TEAM1)
 			consolePtr->printMsg("TEAM ONE WINS THE MATCH", "System", '[S]');
 		else if (msg == GAMEMODE_MSG::MATCH_WIN_TEAM2)

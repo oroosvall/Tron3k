@@ -119,7 +119,7 @@ GLuint loadTexture(std::string texturePath, bool PNGuploadComrpessint, int* xres
 
 	GLuint textureID = 0;
 
-	if (hasEnding(texturePath, ".dds"))
+	if (hasEnding(texturePath, ".dds") || hasEnding(texturePath, ".DDS"))
 	{
 		printf("Loading dds texture %s\n", texturePath.c_str());
 

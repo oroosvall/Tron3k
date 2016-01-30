@@ -11,6 +11,7 @@ private:
 	float startingLifetime;
 	float exploRadius;
 	float damage;
+	float damageTimer;
 public:
 	ThermiteCloud();
 	void init(int pid, int eid, glm::vec3 position);

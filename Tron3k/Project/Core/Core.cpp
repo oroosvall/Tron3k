@@ -198,22 +198,39 @@ void Core::upMenu(float dt)
 		case 0: //Roam
 			current = ROAM;
 			//uiManager->LoadNextSet(1);
-			//uiManager->setMenu(0);
+			//uiManager->setMenu(Team: vilket troligtvis är 1);
 
 			//Load gui and the rest of in game ui.
 			subState = 0;
 			break;
 		case 1: //Multiplayer
-			//current = CLIENT;
-			//uiManager->removeAllMenus();
-
-			//Load gui and the rest of in game ui.
-			subState = 0;
+			uiManager->setMenu(1); //Connect window
 			break;
 		case 2: //Settings
 			break;
 		case 3: //Exit
 			glfwHideWindow(win);
+			break;
+		case 4: //Connect
+		{
+			bool ipCheck = false;
+			//ipCheck = Ipcheck()
+			if (ipCheck)
+			{
+				current = CLIENT;
+				uiManager->LoadNextSet(1);
+				uiManager->setMenu(0);
+				subState = 0;
+			}
+			else
+			{
+				console.printMsg("Error: Ip adress isn't valid.", "System", 'S');
+				//Rensa kanske det som har skivits
+			}
+			break;
+		}
+		case 5: //Back
+			uiManager->setMenu(-1); //Last menu
 			break;
 		default:
 			break;
@@ -627,6 +644,17 @@ void Core::upServer(float dt)
 			}
 			top->event_effect_timed_out(effectTimeOut);
 			game->clearTimedOutEffects();
+		}
+	
+		/*
+		MIGHT WANT TO CHANGE THIS LOL
+		*/
+		static float gameModeTimer = 0.0f;
+		gameModeTimer += dt;
+		if (gameModeTimer > 0.25f)
+		{
+			top->event_gamemode_data();
+			gameModeTimer = 0.0f;
 		}
 
 		serverHandleCmds();
@@ -1341,9 +1369,79 @@ void Core::renderWorld(float dt)
 		if (i->getKeyInfo(GLFW_KEY_P))
 			cam->setCam(camPos, camDir);
 
-		if(renderUI)
-			uiManager->inGameRender();
+		if (renderUI) //Temp
+			inGameUIUpdate();
 	}
+}
+
+void Core::inGameUIUpdate() //Ingame ui update
+{
+	double x = (0.0);
+	double y = (0.0);
+	//Get mouse position
+	i->getCursor(x, y);
+	double tX = (x / (double)winX) * 2 - 1.0; // (x/ResolutionX) * 2 - 1
+	double tY = (-y / (double)winY) * 2 + 1.0; // (y/ResolutionY) * 2 - 1
+
+	
+	uiManager->inGameRender();
+
+	if (i->justPressed(GLFW_MOUSE_BUTTON_LEFT))//button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
+	{
+		int eventIndex = uiManager->collisionCheck(glm::vec2((float)tX, (float)tY));
+		switch (eventIndex)
+		{
+		case 20: //Team 1
+			//Get p_conID and spawnPosition
+			//game->addPlayerToTeam(, 1, );
+			uiManager->setMenu(2);
+			break;
+		case 21: //Team 2
+			//Get p_conID and spawnPosition
+			//game->addPlayerToTeam(, 2, );
+			uiManager->setMenu(2);
+			break;
+		case 30: //Class 1
+			uiManager->setOpenedGuiBool(true);
+			//player->setRole(1);
+			uiManager->setMenu(0);
+			break;
+		case 31: //Class 2
+			uiManager->setOpenedGuiBool(true);
+			//player->setRole(2);
+			uiManager->setMenu(0);
+			break;
+		case 32: //Class 3
+			uiManager->setOpenedGuiBool(true);
+			//player->setRole(3);
+			uiManager->setMenu(0);
+			break;
+		case 33: //Class 4
+			uiManager->setOpenedGuiBool(true);
+			//player->setRole(4);
+			uiManager->setMenu(0);
+			break;
+		case 34: //Class 5
+			uiManager->setOpenedGuiBool(true);
+			//player->setRole(5);
+			uiManager->setMenu(0);
+			break;
+		case 40: //Continue
+			uiManager->backToGui();
+			break;
+		case 41: //Settings
+			break;
+		case 42: //Quit
+			current = MENU;
+			uiManager->setOpenedGuiBool(false);
+			uiManager->LoadNextSet(0);
+			break;
+		default:
+			break;
+		}
+	}
+	else
+		uiManager->hoverCheck(glm::vec2((float)tX, (float)tY));
 }
 
 void Core::handleCulling()
@@ -1560,11 +1658,11 @@ void Core::disconnect()
 	top = nullptr;
 	game->release();
 	game = nullptr;
-	if (renderPipe != nullptr) //server might not have a renderpipe
-	{
-		renderPipe->release();
-		renderPipe = nullptr;
-	}
+	//if (renderPipe != nullptr) //server might not have a renderpipe
+	//{
+	//	renderPipe->release();
+	//	renderPipe = nullptr;
+	//}
 	current = Gamestate::START;
 	subState = 0;
 }

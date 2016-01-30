@@ -206,11 +206,6 @@ struct BBPoint
 	Vertex4 BBPos[8];
 };
 
-struct CapturePoints
-{
-	uint32_t capturePoints;
-};
-
 struct SpawnPoint
 {
 	uint32_t roomID;

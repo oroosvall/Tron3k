@@ -156,6 +156,7 @@ void UI::clean()
 	if (textureIdList != nullptr)
 		delete[] textureIdList;
 
+
 	textureIdList = nullptr;
 	console = nullptr;
 

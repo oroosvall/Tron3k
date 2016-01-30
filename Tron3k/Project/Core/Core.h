@@ -74,12 +74,14 @@ private:
 	void upClient(float dt);
 	void upServer(float dt);
 
+	
 	void startHandleCmds();
 	void roamHandleCmds();
 	void clientHandleCmds(); 
 	void serverHandleCmds();
 
 	void renderWorld(float dt);
+	void inGameUIUpdate();
 	void handleCulling();
 	void createWindow(int x, int y, bool fullscreen);
 	void removeWindow();

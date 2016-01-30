@@ -167,6 +167,7 @@
     <ClCompile Include="Text\Text.cpp" />
     <ClCompile Include="Text\TextObject.cpp" />
     <ClCompile Include="Utils\GPUMemoryLeakChecker.cpp" />
+    <ClCompile Include="Utils\TimeQuery.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BlitQuad.h" />
@@ -192,6 +193,7 @@
     <ClInclude Include="Text\Text.h" />
     <ClInclude Include="Text\TextObject.h" />
     <ClInclude Include="Utils\GPUMemoryLeakChecker.h" />
+    <ClInclude Include="Utils\TimeQuery.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

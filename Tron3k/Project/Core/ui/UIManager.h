@@ -13,15 +13,22 @@
 class UIManager
 {
 private:
-
+	
+	//Sent in by Core
+	Console* console;
 	IRenderPipeline* renderPipe;
 
+	//Menu attributes
 	UI* menus;
 	int nrOfMenus;
 	int maxMenus;
-	int currentMenu;
+	int* currentMenu;
+	int nrOfCurretMenus;
+	int* openedMenus;
+	int nrOfOpenedMenus;
 
-	Console* console;
+	//Since multiple menus needs to be rendered when the gui is opened
+	bool guiOpened;
 
 	//Lists of file names
 	std::string* fileNamesListFirstGroup; //First set of menus(Those you can use before going ingame)
@@ -53,6 +60,7 @@ public:
 	void inGameRender();
 
 	void setMenu(int menuId);
+	void backToGui();
 	void removeAllMenus();
 
 	int collisionCheck(glm::vec2 pos);
@@ -61,6 +69,8 @@ public:
 	void changeTex(int objId, int whichTex);
 
 	bool LoadNextSet(int whichMenuGroup);
+
+	void setOpenedGuiBool(bool guiBool);
 };
 
 #endif

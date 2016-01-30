@@ -218,7 +218,7 @@ void Game::update(float dt)
 		checkPlayerVWorldCollision(dt);
 		checkBulletVWorldCollision(dt);
 		checkPlayerVEffectCollision();
-		checkBulletVEffectCollision();
+		checkBulletVEffectCollision(dt);
 	}
 
 	if (gameState == Gamestate::CLIENT)
@@ -234,7 +234,7 @@ void Game::update(float dt)
 		checkBulletVWorldCollision(dt);
 		checkPlayerVBulletCollision();
 		checkPlayerVEffectCollision();
-		checkBulletVEffectCollision();
+		checkBulletVEffectCollision(dt);
 	}
 
 	for (int c = 0; c < max_con; c++)
@@ -590,27 +590,30 @@ void Game::checkPlayerVEffectCollision()
 		{
 			if (playerList[j] != nullptr)
 			{
-				for (int i = 0; i < effects[EFFECT_TYPE::EXPLOSION].size(); i++)
+				for (int t = EFFECT_TYPE::EXPLOSION; t < EFFECT_TYPE::NROFEFFECTS; t++)
 				{
-					int eid = -1, pid = -1;
-					effects[EFFECT_TYPE::EXPLOSION][i]->getId(pid, eid);
-					if (!effects[EFFECT_TYPE::EXPLOSION][i]->thisPlayerHasBeenHitByMe(j))
+					for (int i = 0; i < effects[t].size(); i++)
 					{
-						if (pid != j && playerList[pid]->getTeam() != playerList[j]->getTeam())
+						int eid = -1, pid = -1;
+						effects[t][i]->getId(pid, eid);
+						if (!effects[t][i]->thisPlayerHasBeenHitByMe(j))
 						{
-							collNormals = physics->checkPlayerVEffectCollision(playerList[j]->getPos(), EFFECT_TYPE::EXPLOSION, eid);
-							if (collNormals.size() != 0)
+							if (pid != j && playerList[pid]->getTeam() != playerList[j]->getTeam())
 							{
-								effects[EFFECT_TYPE::EXPLOSION][i]->thisPlayerHit(j);
-								EffectHitPlayerInfo hi;
-								hi.playerHit = j;
-								hi.effectPID = pid;
-								hi.effectID = eid;
-								hi.et = EFFECT_TYPE::EXPLOSION;
-								hi.hitPos = effects[EFFECT_TYPE::EXPLOSION][i]->getPos();
-								hi.playerPos = playerList[j]->getPos();
-								hi.newHPtotal = -1;
-								allEffectHitsOnPlayers.push_back(hi);
+								collNormals = physics->checkPlayerVEffectCollision(playerList[j]->getPos(), t, eid);
+								if (collNormals.size() != 0)
+								{
+									effects[t][i]->thisPlayerHit(j);
+									EffectHitPlayerInfo hi;
+									hi.playerHit = j;
+									hi.effectPID = pid;
+									hi.effectID = eid;
+									hi.et = EFFECT_TYPE(t);
+									hi.hitPos = effects[t][i]->getPos();
+									hi.playerPos = playerList[j]->getPos();
+									hi.newHPtotal = -1;
+									allEffectHitsOnPlayers.push_back(hi);
+								}
 							}
 						}
 					}
@@ -695,7 +698,7 @@ void Game::checkPlayerVWorldCollision(float dt)
 
 void Game::checkBulletVWorldCollision(float dt)
 {
-	std::vector<glm::vec4> collides;
+	glm::vec4 collides = vec4(-1, -1, -1, -1);
 
 	for (unsigned int b = 0; b < BULLET_TYPE::NROFBULLETS; b++)
 	{
@@ -706,12 +709,12 @@ void Game::checkBulletVWorldCollision(float dt)
 				int pid = -1, bid = -1;
 				bullets[b][j]->getId(pid, bid);
 				collides = physics->BulletVWorldCollision(bullets[b][j]->getPos(), bullets[b][j]->getVel(), bullets[b][j]->getDir(), dt);
-				if (collides.size() > 0)
+				if (collides.w > -1 || collides.w < -1)
 				{
 					BulletHitWorldInfo hi;
 					hi.bt = BULLET_TYPE(b); hi.hitPos = bullets[b][j]->getPos(); hi.hitDir = bullets[b][j]->getDir();
 					bullets[b][j]->getId(hi.bulletPID, hi.bulletBID);
-					hi.collisionNormal = collides[0];
+					hi.collisionNormal = collides;
 					allBulletHitsOnWorld.push_back(hi);
 				}
 			}
@@ -719,7 +722,7 @@ void Game::checkBulletVWorldCollision(float dt)
 	}
 }
 
-void Game::checkBulletVEffectCollision()
+void Game::checkBulletVEffectCollision(float dt)
 {
 	std::vector<glm::vec4> collNormals;
 	if (gameState == Gamestate::ROAM || gameState == Gamestate::SERVER)
@@ -739,7 +742,7 @@ void Game::checkBulletVEffectCollision()
 					effects[EFFECT_TYPE::LIGHT_WALL][c]->getId(pid, eid);
 					if (((LightwallEffect*)effects[EFFECT_TYPE::LIGHT_WALL][c])->getCollidable())
 					{
-						collNormalWalls = physics->checkBulletVEffectCollision(bullets[b][j]->getPos(), EFFECT_TYPE::LIGHT_WALL, eid);
+						collNormalWalls = physics->checkBulletVEffectCollision(bullets[b][j]->getPos(),	bullets[b][j]->getVel(), bullets[b][j]->getDir(), EFFECT_TYPE::LIGHT_WALL, eid, dt);
 						collNormals.reserve(collNormalWalls.size()); // preallocate memory
 						collNormals.insert(collNormals.end(), collNormalWalls.begin(), collNormalWalls.end());
 						collNormalWalls.clear();
@@ -1371,30 +1374,29 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 	updateEffectBox(theEffect);
 	if (theEffect->getType() == EFFECT_TYPE::EXPLOSION && gameState != Gamestate::SERVER)
 	{
-		/*vec3 distanceFromExplosion = hi.playerPos - hi.hitPos;
-		vec3 playerPos = p->getVelocity();
-		float speed = length(playerPos);
-		vec3 reflectedVel = reflect(normalize(playerPos), normalize(distanceFromExplosion)) * speed;
-		float distanceFromRadius = theEffect->getInterestingVariable()+p->getRole()->getBoxRadius() - length(distanceFromExplosion);
-		vec3 dirMod = normalize(distanceFromExplosion)*distanceFromRadius;
-		vec3 newVel = normalize(reflectedVel + dirMod) * speed;
-		if (p->getGrounded())
+		switch (theEffect->getType())
 		{
-			p->setGrounded(false);
-			if (newVel.y < 0.0f)
+		case EFFECT_TYPE::EXPLOSION:
+		{
+			vec3 normalFromExplosion = normalize(hi.playerPos - hi.hitPos);
+			vec3 newVel = normalFromExplosion*theEffect->getInterestingVariable() / 3.0f;
+			if (p->getGrounded())
 			{
-				newVel.y = -newVel.y;
+				p->setGrounded(false);
+				newVel.y = theEffect->getInterestingVariable()*1.5f; //3.0f and 1.5f are arbitrary values
 			}
-		}*/
-		vec3 normalFromExplosion = normalize(hi.playerPos - hi.hitPos);
-		vec3 newVel = normalFromExplosion*theEffect->getInterestingVariable()/3.0f;
-		if (p->getGrounded())
-		{
-			p->setGrounded(false);
-			newVel.y = theEffect->getInterestingVariable()*1.5f; //3.0f and 1.5f are arbitrary values
+
+			p->setVelocity(newVel);
+		}
+		break;
+		case EFFECT_TYPE::THERMITE_CLOUD:
+			break;
+		case EFFECT_TYPE::BATTERY_SLOW:
+			break;
+		default:
+			break;
 		}
 		
-		p->setVelocity(newVel);
 	}
 
 	p->hitByEffect(theEffect, hi.newHPtotal);

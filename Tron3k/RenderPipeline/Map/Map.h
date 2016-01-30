@@ -11,6 +11,26 @@
 
 using std::vector;
 
+struct CapturePoint
+{
+	int roomID;
+
+	ABB bigAABB;
+	CollisionRenderABB renderBigAbb;
+	ABB* aabb;
+	CollisionRenderABB* renderAbb;
+	StaticMesh* meshes;
+
+	glm::mat4* mats;
+
+	int meshCount;
+	int aabbCount;
+
+	void buildABBS();
+	void release();
+
+};
+
 class Map
 {
 
@@ -24,9 +44,15 @@ private:
 	BBPoint* bbPoints;
 	StaticMesh* meshes;
 
+	int* capPointAABBCount;
+	int* capPointWallCount;
+
+	CapturePoint* capturePoints;
+
 	int meshCount;
 	int textureCount;
 	int materialCount;
+	int capCount;
 
 	int bbCount;
 
@@ -46,6 +72,10 @@ public:
 	void release();
 
 	void renderChunk(GLuint shader, GLuint shaderLocation, int chunkID);
+
+	void renderCapturePoint(GLuint shader, GLuint shaderLocation, int spawnPointID);
+
+	void renderCapAbb();
 
 	void loadMap(std::string mapName);
 
