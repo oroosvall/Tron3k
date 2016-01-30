@@ -62,11 +62,17 @@ private:
 	GLuint ui_World;
 
 	GLuint decal_Shader;
-	GLuint decal_struct_UBO;
-	GLuint decal_struct_UBO_index = 0;
-	GLuint decal_Uniformtexsample;
+	//GLuint decal_struct_UBO;
+	//GLuint decal_struct_UBO_index;
+	//GLuint decal_Uniformtexsample;
+	//GLuint decal_nrDecals;
 	GLuint decal_viewProj;
-	GLuint decal_nrDecals;
+	GLuint decal_pos;
+	GLuint decal_normal;
+	GLuint decal_color;
+	GLuint decal_inten;
+
+	
 
 	BlitQuad uiQuad;
 

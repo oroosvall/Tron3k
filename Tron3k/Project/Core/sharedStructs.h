@@ -10,7 +10,15 @@ struct SpawnpointG
 	int roomID;
 };
 
-
+struct Decal_RenderInfo_temp
+{
+	float inten;
+	glm::vec3 pos;
+	glm::vec3 color;
+	glm::vec3 normal;
+	float dummy;
+	float dumm2;
+};
 
 
 #endif

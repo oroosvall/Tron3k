@@ -147,6 +147,11 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 	uiQuad.Init(vec3(-1, -1, 0), vec3(1, 1, 0));
 
+	//glGenBuffers(1, &decal_struct_UBO);
+	//int maxDecals = 50;
+	//glBindBuffer(GL_UNIFORM_BUFFER, decal_struct_UBO);
+	//glBufferData(GL_UNIFORM_BUFFER, maxDecals * sizeof(float) * 12, NULL, GL_DYNAMIC_DRAW);
+
 	initialized = true;
 	return true;
 }
@@ -234,14 +239,17 @@ void RenderPipeline::reloadShaders()
 	ui_World = glGetUniformLocation(uiShader, "WorldMatrix");
 
 	//decal uniforms
-	decal_Uniformtexsample = glGetUniformLocation(decal_Shader, "texsample");
-	decal_viewProj = glGetUniformLocation(decal_Shader, "ViewProjMatrix");
-	decal_nrDecals = glGetUniformLocation(decal_Shader, "NrDecals");
 	//http:/d/www.opentk.com/node/2926
-	decal_struct_UBO = glGetUniformBlockIndex(decal_Shader, "decal_in");
-	glUniformBlockBinding(decal_Shader, decal_struct_UBO, decal_struct_UBO_index);
+	//decal_struct_UBO_index = glGetUniformBlockIndex(decal_Shader, "decal_in");
+	//decal_nrDecals = glGetUniformLocation(decal_Shader, "NrDecals");
+	decal_viewProj = glGetUniformLocation(decal_Shader, "ViewProjMatrix");
+	decal_pos = glGetUniformLocation(decal_Shader, "pos");
+	decal_normal = glGetUniformLocation(decal_Shader, "normal");
+	decal_color = glGetUniformLocation(decal_Shader, "color");
 
-
+	decal_inten = glGetUniformLocation(decal_Shader, "inten");
+	//decal_Uniformtexsample = glGetUniformLocation(decal_Shader, "texsample");
+	
 	worldMat[0] = glGetUniformLocation(regularShader, "WorldMatrix"); //worldMat regular shader
 	viewMat = glGetUniformLocation(regularShader, "ViewMatrix"); //view
 	viewProjMat[0] = glGetUniformLocation(regularShader, "ViewProjMatrix"); //view regular shader
@@ -327,6 +335,7 @@ void RenderPipeline::release()
 	glDeleteShader(regularShader);
 	glDeleteShader(animationShader);
 	glDeleteShader(uiShader);
+	glDeleteShader(decal_Shader);
 	uiQuad.release();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -546,18 +555,30 @@ void RenderPipeline::renderThunderDomeEffect(float* pos, float rad, float transp
 
 void RenderPipeline::renderDecals(void* data, int size)
 {
-	glUseProgram(decal_Shader);
-	glBindBuffer(GL_UNIFORM_BUFFER, decal_struct_UBO);
-	glBufferSubData(GL_UNIFORM_BUFFER, size * sizeof(float) * 12, sizeof(float) * 12, data);
-	
-	glProgramUniform1i(decal_Shader, decal_nrDecals, size);
-//	glProgramUniformMatrix4fv(decal_Shader, )
+	if (size > 0)
+	{
+		glUseProgram(decal_Shader);
+		//glBindBuffer(GL_UNIFORM_BUFFER, decal_struct_UBO);
+		//glBufferData(GL_UNIFORM_BUFFER, sizeof(float) * 12 * size, data, GL_DYNAMIC_DRAW);
+		//glBindBufferBase(GL_UNIFORM_BUFFER, decal_struct_UBO_index, decal_struct_UBO);
+		//glProgramUniform1i(decal_Shader, decal_nrDecals, size);
+		cam.setViewProjMat(decal_Shader, decal_viewProj);
+		glBindBuffer(GL_ARRAY_BUFFER, lwVertexDataId);
+		glBindVertexArray(lwVertexAttribute);
 
-//	glProgramUniform3fv(regularShader, uniformDynamicGlowColorLocation[0], 1, (GLfloat*)&dgColor[0]);
+		Decal_RenderInfo_temp* decals = (Decal_RenderInfo_temp*)data;
 
-	glBindBuffer(GL_ARRAY_BUFFER, lwVertexDataId);
-	glBindVertexArray(lwVertexAttribute);
-	glDrawArrays(GL_POINTS, 0, 1);
+		for (int n = 0; n < size; n++)
+		{
+			glProgramUniform3fv(decal_Shader, decal_pos, 1, &decals[n].pos[0]);
+			glProgramUniform3fv(decal_Shader, decal_normal, 1, &decals[n].normal[0]);
+			glProgramUniform3fv(decal_Shader, decal_color, 1, &decals[n].color[0]);
+			glProgramUniform1f(decal_Shader, decal_inten, decals[n].inten);
+
+			glDrawArrays(GL_POINTS, 0, 1);
+		}
+		
+	}
 }
 
 void RenderPipeline::renderEffects()

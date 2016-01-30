@@ -181,6 +181,8 @@ void Game::update(float dt)
 		}
 	}
 
+	updateDecals(dt);
+
 	for (unsigned int i = 0; i < EFFECT_TYPE::NROFEFFECTS; i++)
 	{
 		for (unsigned int c = 0; c < effects[i].size(); c++)
@@ -1434,6 +1436,8 @@ void Game::bounceBullet(BulletHitWorldInfo hwi, Bullet* theBullet)
 
 void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 {
+	decalAdd(hi);
+
 	int arraypos = -1;
 	Bullet* b = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, arraypos);
 	if (b != nullptr)
@@ -1795,9 +1799,6 @@ int Game::GetLocalPlayerId()
 	return this->localPlayerId;
 }
 
-
-
-
 unsigned int Game::getNrOfDecals()
 {
 	return decalCounter;
@@ -1835,18 +1836,18 @@ void Game::updateDecals(float dt)
 
 void Game::decalAdd(BulletHitWorldInfo info)
 {
-	if (!decalCounter < Max_Decals)
+	if (decalCounter >= Max_Decals)
 		return;
 
 	Player* p = getPlayer(info.bulletPID);
-	if (p = nullptr)
+	if (p == nullptr)
 		return;
 
 	decals_gameInfo[decalCounter].lifeLeft = decals_gameInfo[decalCounter].lifeTime = 5;
 
 	decals_renderInfo[decalCounter].inten = 1.0f;
 	decals_renderInfo[decalCounter].normal = vec3(info.collisionNormal);
-	decals_renderInfo[decalCounter].pos = info.hitPos - vec3(info.collisionNormal) * info.collisionNormal.w;
+	decals_renderInfo[decalCounter].pos = info.hitPos;// -vec3(info.collisionNormal) * info.collisionNormal.w;
 	
 	if (p->getTeam() == 1)
 		decals_renderInfo[decalCounter].color = TEAMONECOLOR;

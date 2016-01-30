@@ -15,7 +15,7 @@
 
 #include "Gamemodes/KingOfTheHill.h"
 
-#define Max_Decals 50
+#define Max_Decals 250
 
 enum Gamestate
 {

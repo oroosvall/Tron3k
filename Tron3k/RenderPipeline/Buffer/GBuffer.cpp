@@ -180,8 +180,8 @@ void Gbuffer::pushLights(SpotLight* light, int nrLight)
 	{
 		if (nrOfLights < maxLights)
 		{
-			glBindBuffer(GL_UNIFORM_BUFFER, lightBuffer);
-			glBufferSubData(GL_UNIFORM_BUFFER, nrOfLights * sizeof(SpotLight), 1 * sizeof(SpotLight), &light[i]);
+			//glBindBuffer(GL_UNIFORM_BUFFER, lightBuffer);
+			glBufferSubData(GL_UNIFORM_BUFFER, nrOfLights * sizeof(SpotLight), nrLight * sizeof(SpotLight), &light[i]);
 			nrOfLights++;
 		}
 	}
