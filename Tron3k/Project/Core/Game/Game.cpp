@@ -71,6 +71,7 @@ void Game::init(int max_connections, int state, Console* con)
 
 	freecam = false;
 	spectateID = -1;
+	decalCounter = 0;
 }
 
 void Game::loadRoles()
@@ -179,6 +180,8 @@ void Game::update(float dt)
 			}
 		}
 	}
+
+	updateDecals(dt);
 
 	for (unsigned int i = 0; i < EFFECT_TYPE::NROFEFFECTS; i++)
 	{
@@ -1435,6 +1438,8 @@ void Game::bounceBullet(BulletHitWorldInfo hwi, Bullet* theBullet)
 
 void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 {
+	decalAdd(hi);
+
 	int arraypos = -1;
 	Bullet* b = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, arraypos);
 	if (b != nullptr)
@@ -1794,4 +1799,62 @@ int Game::GetGameState()
 int Game::GetLocalPlayerId()
 {
 	return this->localPlayerId;
+}
+
+unsigned int Game::getNrOfDecals()
+{
+	return decalCounter;
+}
+
+Decal_GameInfo* Game::getAllDecalGameInfo()
+{
+	return &decals_gameInfo[0];
+}
+
+Decal_RenderInfo* Game::getAllDecalRenderInfo()
+{
+	return &decals_renderInfo[0];
+}
+
+void Game::updateDecals(float dt)
+{
+	float inten = 0;
+
+	for (unsigned int n = 0; n < decalCounter; n++)
+	{
+		if (decals_gameInfo[n].update_true_if_dead(dt, inten))
+		{
+			//if timeout
+			decals_gameInfo[n] = decals_gameInfo[decalCounter - 1];
+			decals_renderInfo[n] = decals_renderInfo[decalCounter - 1];
+			decalCounter--;
+			n--;
+		}
+		else // still alive, set new inten
+			decals_renderInfo[n].inten = inten;
+	}
+}
+
+
+void Game::decalAdd(BulletHitWorldInfo info)
+{
+	if (decalCounter >= Max_Decals)
+		return;
+
+	Player* p = getPlayer(info.bulletPID);
+	if (p == nullptr)
+		return;
+
+	decals_gameInfo[decalCounter].lifeLeft = decals_gameInfo[decalCounter].lifeTime = 5;
+
+	decals_renderInfo[decalCounter].inten = 1.0f;
+	decals_renderInfo[decalCounter].normal = vec3(info.collisionNormal);
+	decals_renderInfo[decalCounter].pos = info.hitPos;// -vec3(info.collisionNormal) * info.collisionNormal.w;
+	
+	if (p->getTeam() == 1)
+		decals_renderInfo[decalCounter].color = TEAMONECOLOR;
+	else
+		decals_renderInfo[decalCounter].color = TEAMTWOCOLOR;
+
+		decalCounter++;
 }

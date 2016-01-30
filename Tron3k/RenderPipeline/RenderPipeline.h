@@ -61,6 +61,19 @@ private:
 	GLuint ui_Texture;
 	GLuint ui_World;
 
+	GLuint decal_Shader;
+	//GLuint decal_struct_UBO;
+	//GLuint decal_struct_UBO_index;
+	//GLuint decal_Uniformtexsample;
+	//GLuint decal_nrDecals;
+	GLuint decal_viewProj;
+	GLuint decal_pos;
+	GLuint decal_normal;
+	GLuint decal_color;
+	GLuint decal_inten;
+
+	
+
 	BlitQuad uiQuad;
 
 	GLuint worldMat[2];
@@ -139,6 +152,8 @@ public:
 	virtual void renderWallEffect(void* pos1, void* pos2, float uvStartOffset, float* dgColor);
 	virtual void renderExploEffect(float* pos, float rad, float transp, float* dgColor);
 	virtual void renderThunderDomeEffect(float* pos, float rad, float transp, float* dgColor);
+
+	virtual void renderDecals(void* data, int size);
 
 	virtual void forceReset() {};
 
