@@ -111,6 +111,12 @@ struct PortalDataRead
 
 struct PortalData
 {
+	GLuint query;
+	GLuint available;
+	GLuint passed;
+	bool waiting;
+	bool lastAvaliableState;
+
 	uint32_t portalID;
 	uint32_t bridgedRooms[2];
 	glm::vec3 positions[4];
@@ -125,9 +131,20 @@ struct PortalData
 	vec3 v3;
 	vec3 v4;
 
+	~PortalData()
+	{
+		glDeleteQueries(1, &query);
+	}
+
 	//init with bottom left and top right corners
 	void init(uint32_t _portalID, uint32_t room1, uint32_t room2, vec3 topleft, vec3 topright, vec3 botright, vec3 botleft)
 	{
+		glGenQueries(1, &query);
+		available = 0;
+		passed = 0;
+		waiting = false;
+		lastAvaliableState = false;
+
 		portalID = _portalID;
 		bridgedRooms[0] = room1;
 		bridgedRooms[1] = room2;
@@ -191,8 +208,40 @@ struct PortalData
 
 	void render()
 	{
-		visualPortal.BindVertData();
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		if (waiting == false)
+		{
+			glBeginQuery(GL_ANY_SAMPLES_PASSED, query);
+
+			visualPortal.BindVertData();
+			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+			glEndQuery(GL_ANY_SAMPLES_PASSED);
+		}
+	}
+
+	bool passedCulling()
+	{
+		glGetQueryObjectuiv(query, GL_QUERY_RESULT_AVAILABLE, &available);
+
+		if (available)
+		{
+			waiting = false;
+			passed = 0;
+			glGetQueryObjectuiv(query, GL_QUERY_RESULT, &passed);
+			
+			if (passed)
+			{
+				lastAvaliableState = true;
+				return true;
+			}
+			else
+			{
+				lastAvaliableState = false;
+				return false;
+			}
+		}
+
+		return lastAvaliableState;
 	}
 };
 

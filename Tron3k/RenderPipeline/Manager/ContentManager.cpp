@@ -77,7 +77,7 @@ void ContentManager::init()
 	else
 		f_portal_culling = false;
 
-	glGenQueries(1, &portalQuery);
+	
 	
 }
 
@@ -90,8 +90,6 @@ void ContentManager::release()
 	glDeleteTextures(1, &skyTexture);
 
 	testMap.release();
-
-	glDeleteQueries(1, &portalQuery);
 
 	if (nrChunks > 0)
 	{
@@ -137,6 +135,36 @@ ContentManager::~ContentManager()
 
 void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation, GLuint DglowColor, GLuint SglowColor, GLuint portal_shader, GLuint portal_world)
 {
+	for (int n = 0; n < nrChunks; n++)
+	{
+		renderNextChunks[n] = false;
+	}
+
+	//get querie status from last frame
+	
+	//render portals from the rendered chunks
+	for (int n = 0; n < nrChunks; n++)
+		if (renderedChunks[n] == true)
+		{
+			int size = testMap.chunks[n].portals.size();
+			for (int p = 0; p < size; p++)
+			{
+				if (testMap.chunks[n].portals[p].passedCulling())
+				{
+					renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[0]] = true;
+					renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[1]] = true;
+				}
+			}
+		}
+
+	//reset rendered chunks from last frame
+	for (int n = 0; n < nrChunks; n++)
+		renderedChunks[n] = false;
+
+	//set enviroment chunk to true
+	renderNextChunks[0] = true;
+	renderNextChunks[testMap.currentChunk] = true;
+
 	glUseProgram(shader);
 	//diffuse
 	glActiveTexture(GL_TEXTURE0);
@@ -153,10 +181,6 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 	glProgramUniform1i(shader, normalLocation, 1);
 	glProgramUniform1i(shader, glowSpecLocation, 2);
 
-	//reset rendered chunks from last frame
-	for (int n = 0; n < nrChunks; n++)
-		renderedChunks[n] = false;
-
 	//render chunks logged from last frame
 	for (int n = 0; n < nrChunks; n++)
 	{
@@ -170,11 +194,6 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 			renderedChunks[n] = true;
 		}
 	}
-
-	//reset the renderrednextlist
-	if(f_freeze_portals == false)
-		for (int n = 0; n < nrChunks; n++)
-			renderNextChunks[n] = false;
 
 	glUseProgram(portal_shader);
 	glm::mat4 alreadyinworldpace;
@@ -199,24 +218,11 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 					if (renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[0]] == false ||
 						renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[1]] == false)
 					{
-						glBeginQuery(GL_SAMPLES_PASSED, portalQuery);
 						testMap.chunks[n].portals[p].render();
-						GLint passed = 2222;
-						glEndQuery(GL_SAMPLES_PASSED);
-						glGetQueryObjectiv(portalQuery, GL_QUERY_RESULT, &passed);
-	
-						if (passed > 0)
-						{
-							renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[0]] = true;
-							renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[1]] = true;
-						}
 					}
 				}
 			}
 		}
-		//set enviroment chunk to true
-		renderNextChunks[0] = true;
-		renderNextChunks[testMap.currentChunk] = true;
 	}
 
 	stopTimer(portal);
