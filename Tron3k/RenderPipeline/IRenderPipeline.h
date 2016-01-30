@@ -77,6 +77,8 @@ public:
 	virtual void renderExploEffect(float* pos, float rad, float transp, float* dgColor) = 0;
 	virtual void renderThunderDomeEffect(float* pos, float rad, float transp, float* dgColor) = 0;
 
+	virtual void renderDecals(void* data, int size) = 0;
+
 	virtual void forceReset() = 0;
 
 	virtual void setChatHistoryText(std::string text) = 0;

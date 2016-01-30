@@ -1332,6 +1332,9 @@ void Core::renderWorld(float dt)
 			}
 		}
 
+		// render Decals
+		//renderPipe->renderDecals(game->getAllDecalRenderInfo(), game->getNrOfDecals());
+
 		renderPipe->finalizeRender();
 
 		//viewing 3rd person anims in roam

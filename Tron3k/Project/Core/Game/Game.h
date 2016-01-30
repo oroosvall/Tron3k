@@ -15,6 +15,8 @@
 
 #include "Gamemodes/KingOfTheHill.h"
 
+#define Max_Decals 50
+
 enum Gamestate
 {
 	START,
@@ -83,10 +85,37 @@ struct EffectTimeOutInfo
 
 struct EffectHitEffectInfo
 {
+	float transp;
 	int effectPID;
 	int effectSID;
 	EFFECT_TYPE et;
 	int posInArr;
+};
+
+struct Decal_RenderInfo
+{
+	float inten;
+	glm::vec3 pos;
+	glm::vec3 color;
+	glm::vec3 normal;
+	float dummy;
+	float dumm2;
+};
+
+struct Decal_GameInfo
+{
+	float lifeTime;
+	float lifeLeft;
+
+	bool update_true_if_dead(float dt, float& newInten)
+	{
+		lifeLeft -= dt;
+		if (lifeLeft < 0)
+			return true;
+
+		newInten = lifeLeft / lifeTime;
+		return false;
+	}
 };
 
 class Game
@@ -100,6 +129,10 @@ private:
 
 	std::vector<Bullet*> bullets[BULLET_TYPE::NROFBULLETS];
 	std::vector<Effect*> effects[EFFECT_TYPE::NROFEFFECTS];
+
+	Decal_GameInfo decals_gameInfo[Max_Decals];
+	Decal_RenderInfo decals_renderInfo[Max_Decals];
+	unsigned int decalCounter = 0;
 
 	std::vector<int> teamSpectators; //Team vectors hold connection IDs
 	std::vector<int> teamOne;
@@ -180,6 +213,10 @@ private:
 	bool localPlayerWantsRespawn = false;
 	bool localPlayerRespawnWaiting = false;
 public:
+
+	vec3 TEAMONECOLOR = vec3(1.0f, 0.5f, 0.0f);
+	vec3 TEAMTWOCOLOR = vec3(0.0f, 0.5f, 0.0f);
+
 	Game();
 	void release();
 	void init(int max_connections, int state, Console* con);
@@ -264,6 +301,13 @@ public:
 	std::vector<EffectTimeOutInfo> getAllTimedOutEffects() { return allEffectTimeOuts; };
 	void clearTimedOutEffects() { allEffectTimeOuts.clear(); };
 	void handleEffectTimeOuts(EffectTimeOutInfo hi);
+
+	unsigned int getNrOfDecals();
+	Decal_GameInfo* getAllDecalGameInfo();
+	Decal_RenderInfo* getAllDecalRenderInfo();
+	void updateDecals(float dt);
+	void setnewDecalInten(unsigned int id, float inten);
+	void decalAdd(BulletHitWorldInfo info);
 
 	int Game::findPlayerPosInTeam(int conID);
 
