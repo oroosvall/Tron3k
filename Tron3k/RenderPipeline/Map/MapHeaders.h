@@ -116,6 +116,7 @@ struct PortalData
 	GLuint passed;
 	bool waiting;
 	bool lastAvaliableState;
+	bool rendered;
 
 	uint32_t portalID;
 	uint32_t bridgedRooms[2];
@@ -139,11 +140,12 @@ struct PortalData
 	//init with bottom left and top right corners
 	void init(uint32_t _portalID, uint32_t room1, uint32_t room2, vec3 topleft, vec3 topright, vec3 botright, vec3 botleft)
 	{
-		glGenQueries(1, &query);
+		query = 0;
 		available = 0;
 		passed = 0;
 		waiting = false;
 		lastAvaliableState = false;
+		rendered = false;
 
 		portalID = _portalID;
 		bridgedRooms[0] = room1;
@@ -217,6 +219,11 @@ struct PortalData
 
 			glEndQuery(GL_ANY_SAMPLES_PASSED);
 		}
+		else //render for debug only, dont have to when they are invisable
+		{
+			visualPortal.BindVertData();
+			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		}
 	}
 
 	bool passedCulling()
@@ -226,7 +233,6 @@ struct PortalData
 		if (available)
 		{
 			waiting = false;
-			passed = 0;
 			glGetQueryObjectuiv(query, GL_QUERY_RESULT, &passed);
 			
 			if (passed)
@@ -240,7 +246,7 @@ struct PortalData
 				return false;
 			}
 		}
-
+		waiting = true;
 		return lastAvaliableState;
 	}
 };

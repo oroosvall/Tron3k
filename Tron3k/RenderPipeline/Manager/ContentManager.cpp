@@ -60,6 +60,29 @@ void ContentManager::init()
 	skybox.load("GameFiles/TestFiles/Skybox.v");
 
 	testMap.init();
+
+	//count portals
+	int nrofportals = 0;
+	for (int n = 0; n < testMap.chunks.size(); n++)
+		nrofportals += testMap.chunks[n].portals.size();
+
+	//gen portals and assign them
+	if (nrofportals > 0)
+	{
+		GLuint* querieIDS = new GLuint[nrofportals];
+		glGenQueries(nrofportals, querieIDS);
+
+		int id = 0;
+
+		for (int n = 0; n < testMap.chunks.size(); n++)
+			for (int k = 0; k < testMap.chunks[n].portals.size(); k++)
+			{
+				testMap.chunks[n].portals[k].query = querieIDS[id];
+				id++;
+			}
+		delete [] querieIDS;
+	}
+
 	nrChunks = testMap.chunks.size();
 	if (nrChunks > 0)
 	{
@@ -135,36 +158,6 @@ ContentManager::~ContentManager()
 
 void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation, GLuint DglowColor, GLuint SglowColor, GLuint portal_shader, GLuint portal_world)
 {
-	for (int n = 0; n < nrChunks; n++)
-	{
-		renderNextChunks[n] = false;
-	}
-
-	//get querie status from last frame
-	
-	//render portals from the rendered chunks
-	for (int n = 0; n < nrChunks; n++)
-		if (renderedChunks[n] == true)
-		{
-			int size = testMap.chunks[n].portals.size();
-			for (int p = 0; p < size; p++)
-			{
-				if (testMap.chunks[n].portals[p].passedCulling())
-				{
-					renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[0]] = true;
-					renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[1]] = true;
-				}
-			}
-		}
-
-	//reset rendered chunks from last frame
-	for (int n = 0; n < nrChunks; n++)
-		renderedChunks[n] = false;
-
-	//set enviroment chunk to true
-	renderNextChunks[0] = true;
-	renderNextChunks[testMap.currentChunk] = true;
-
 	glUseProgram(shader);
 	//diffuse
 	glActiveTexture(GL_TEXTURE0);
@@ -180,6 +173,11 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 	glProgramUniform1i(shader, textureLocation, 0);
 	glProgramUniform1i(shader, normalLocation, 1);
 	glProgramUniform1i(shader, glowSpecLocation, 2);
+
+	for (int n = 0; n < nrChunks; n++)
+	{
+		renderedChunks[n] = false;
+	}
 
 	//render chunks logged from last frame
 	for (int n = 0; n < nrChunks; n++)
@@ -202,9 +200,9 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 	glDisable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
 
-	int portal = startTimer("Portals");
 
-	if (f_freeze_portals == false)
+	int portal = startTimer("Portals");
+	if (f_portal_culling)
 	{
 		//render portals from the rendered chunks
 		for (int n = 0; n < nrChunks; n++)
@@ -215,16 +213,44 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 				for (int p = 0; p < size; p++) // render the portals
 				{
 					// dont render if it bridges between chunks that are already in the rendernextqueue
-					if (renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[0]] == false ||
-						renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[1]] == false)
+					//if (renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[0]] == false ||
+					//	renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[1]] == false)
 					{
 						testMap.chunks[n].portals[p].render();
 					}
 				}
 			}
 		}
-	}
 
+		if (f_freeze_portals == false)
+		{
+			//Get queries
+			for (int n = 0; n < nrChunks; n++)
+				renderNextChunks[n] = false;
+
+			//set enviroment and current chunk to true
+			renderNextChunks[0] = true;
+			renderNextChunks[testMap.currentChunk] = true;
+
+			//get querie status from last frame
+			for (int n = 0; n < nrChunks; n++)
+			{
+				if (renderedChunks[n] == true)
+				{
+					int size = testMap.chunks[n].portals.size();
+					for (int p = 0; p < size; p++)
+					{
+						if (testMap.chunks[n].portals[p].passedCulling())
+						{
+							renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[0]] = true;
+							renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[1]] = true;
+						}
+					}
+					renderedChunks[n] = false;
+				}
+			}
+		}
+	}
 	stopTimer(portal);
 
 	if (f_render_abb || f_render_obb)
