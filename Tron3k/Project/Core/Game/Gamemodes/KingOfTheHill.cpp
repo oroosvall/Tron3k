@@ -15,6 +15,10 @@ void KingOfTheHill::init(Console* cptr, Game* gptr)
 {
 	gameMode = GAMEMODE_TYPE::KOTH;
 
+	capturePoint = 0;
+	teamOnePlayersAtPoint = 0;
+	teamTwoPlayersAtPoint = 0;
+
 	teamOneScore = 0;
 	teamTwoScore = 0;
 	winScore = 2;
@@ -39,6 +43,25 @@ void KingOfTheHill::capturePointScoring()
 	1 - 2 spelare övertag : Laget med färre spelare förlorar 1 token.
 	3 + spelare övertag : Laget med färre spelare förlorar 3 tokens.
 	*/
+	if (teamOnePlayersAtPoint == teamTwoPlayersAtPoint)
+	{
+		teamOneSpawnTokens--;
+		teamTwoSpawnTokens--;
+	}
+	else if (teamOnePlayersAtPoint < teamTwoPlayersAtPoint)
+	{
+		if (teamTwoPlayersAtPoint - teamOnePlayersAtPoint >= 3)
+			teamOnePlayersAtPoint -= 3;
+		else
+			teamOnePlayersAtPoint--;
+	}
+	else if (teamTwoPlayersAtPoint < teamOnePlayersAtPoint)
+	{
+		if (teamOnePlayersAtPoint - teamTwoPlayersAtPoint >= 3)
+			teamTwoPlayersAtPoint -= 3;
+		else
+			teamTwoPlayersAtPoint--;
+	}
 	timerModifierForCaptureScoring += tickForCaptureScoring;
 }
 
@@ -69,6 +92,21 @@ GAMEMODE_MSG KingOfTheHill::roundScoring()
 	/*
 		Antal spelare på kontrollpunkten.Har ena laget fler spelare på punkten vinner detta laget.
 	*/
+
+	if (teamOnePlayersAtPoint < teamTwoPlayersAtPoint)
+	{
+		teamTwoScore++;
+		if (teamTwoScore == winScore)
+			return GAMEMODE_MSG::MATCH_WIN_TEAM2;
+		return GAMEMODE_MSG::ROUND_WIN_TEAM2;
+	}
+	if (teamTwoPlayersAtPoint < teamOnePlayersAtPoint)
+	{
+		teamOneScore++;
+		if (teamOneScore == winScore)
+			return GAMEMODE_MSG::MATCH_WIN_TEAM1;
+		return GAMEMODE_MSG::ROUND_WIN_TEAM1;
+	}
 
 	/*
 		Spelare vid liv.Har ena laget fler spelare vid liv vinner detta laget.
@@ -228,6 +266,10 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 	
 	if (started && ended) //Round has ended, check if match ends, else reset round
 	{
+		/*
+		Must save the round/match win message for more than one frame!!!
+		*/
+
 		if (msg == GAMEMODE_MSG::ROUND_WIN_TEAM1)
 		{
 			consolePtr->printMsg("TEAM ONE WINS THE ROUND", "System", '[S]');
@@ -317,4 +359,27 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, bool over, bool 
 	overtime = over;
 	started = start;
 	ended = end;
+}
+
+int KingOfTheHill::getPlayersOnPoint(int team)
+{
+	if (team == 1)
+		return teamOnePlayersAtPoint;
+	else if (team == 2)
+		return teamTwoPlayersAtPoint;
+	return -1;
+}
+
+void KingOfTheHill::playerOnCapPointThisFrame(int team)
+{
+	if (team == 1)
+		teamOnePlayersAtPoint++;
+	else if (team == 2)
+		teamTwoPlayersAtPoint++;
+}
+
+void KingOfTheHill::clearPlayersOnCapPointAtStartOfFrame()
+{
+	teamOnePlayersAtPoint = 0;
+	teamTwoPlayersAtPoint = 0;
 }
