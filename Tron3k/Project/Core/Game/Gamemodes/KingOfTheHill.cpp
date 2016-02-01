@@ -224,7 +224,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 		if (consolePtr->getCommand() == "/start")
 		{
 			timer = 20.0f; //20 seconds in the pre-round
-			teamOneSpawnTokens = teamTwoSpawnTokens = 10;
+			teamOneSpawnTokens = teamTwoSpawnTokens = 3;
 			state = PREROUND;
 		}
 		break;
@@ -248,7 +248,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 		timer += dt;
 		if (timer - timerModifierForCaptureScoring > 0.0f) //15 seconds have passed and we should now proceed with scoring for capture point control
 		{
-			capturePointScoring();
+			//capturePointScoring();
 		}
 		if (teamOneSpawnTokens == 0 || teamTwoSpawnTokens == 0)
 		{
