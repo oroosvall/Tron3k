@@ -433,12 +433,12 @@ void Map::loadMap(std::string mapName)
 	inFile.read((char*)spB, sizeof(SpawnPoint) * spTBCount);
 	inFile.read((char*)spFFA, sizeof(SpawnPoint) * spFFACount);
 
-	ABB* chunkAABB = new ABB[roomCount-1];
+	ABB* chunkAABB = new ABB[roomCount];
 	inFile.read((char*)chunkAABB, sizeof(ABB) * (roomCount-1));
 
-	for (int i = 1; i < roomCount; i++)
+	for (int i = 0; i < roomCount; i++)
 	{
-		chunks[i].roomBox = chunkAABB[i - 1];
+		chunks[i].roomBox = chunkAABB[i];
 	}
 
 	delete[] chunkAABB;
