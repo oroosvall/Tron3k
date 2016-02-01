@@ -22,6 +22,7 @@ private:
 
 	KOTHSTATE state; //State on the process running
 	KOTHSTATE serverState; //State of the server, if we're a client
+	GAMEMODE_MSG lastMsg;
 
 	int capturePoint; //Which cap point is active
 	int teamOnePlayersAtPoint;
@@ -57,13 +58,14 @@ public:
 
 	bool playerRespawn(int conId); //Checks if a given player is allowed to respawn
 
-	void setGamemodeData(int respawn1, int respawn2, int onCap1, int onCap2, KOTHSTATE state); //Used to keep clients updated over network
+	void setGamemodeData(int respawn1, int respawn2, int onCap1, int onCap2, KOTHSTATE state, GAMEMODE_MSG serverMsg); //Used to keep clients updated over network
 
 	int getCapturePoint() { return capturePoint; }; //Returns currently active cap point
 	int getPlayersOnPoint(int team); //Number of people on the point this frame (must be run after collision has been run that frame)
 	void playerOnCapPointThisFrame(int team); //When Game detects a player within the cap zone, it signals with this
 
 	KOTHSTATE getState();
+	GAMEMODE_MSG getLastMsg() { return lastMsg; };
 };
 
 #endif

@@ -14,6 +14,7 @@ KingOfTheHill::~KingOfTheHill()
 void KingOfTheHill::init(Console* cptr, Game* gptr)
 {
 	gameMode = GAMEMODE_TYPE::KOTH;
+	lastMsg = GAMEMODE_MSG::NIL;
 
 	capturePoint = 0;
 	teamOnePlayersAtPoint = 0;
@@ -79,8 +80,7 @@ GAMEMODE_MSG KingOfTheHill::roundScoring()
 {
 	/*
 		Vinnande laget definieras av.
-		Ett lag dör.Dör ena laget utan spawn tokens vinner andra laget.
-		Spawn tokens kvar.Har ett lag spawn tokens kvar vinner detta laget.
+		Spawn tokens kvar. Har ett lag spawn tokens kvar vinner detta laget.
 	*/
 
 	if (teamOneSpawnTokens > 0)
@@ -99,7 +99,7 @@ GAMEMODE_MSG KingOfTheHill::roundScoring()
 	}
 
 	/*
-		Antal spelare på kontrollpunkten.Har ena laget fler spelare på punkten vinner detta laget.
+		Antal spelare på kontrollpunkten. Har ena laget fler spelare på punkten vinner detta laget.
 	*/
 
 	if (teamOnePlayersAtPoint < teamTwoPlayersAtPoint)
@@ -118,7 +118,7 @@ GAMEMODE_MSG KingOfTheHill::roundScoring()
 	}
 
 	/*
-		Spelare vid liv.Har ena laget fler spelare vid liv vinner detta laget.
+		Spelare vid liv. Har ena laget fler spelare vid liv vinner detta laget.
 	*/
 
 	vector<int>* team1ids = gamePtr->getTeamConIds(1);
@@ -166,7 +166,7 @@ GAMEMODE_MSG KingOfTheHill::roundScoring()
 GAMEMODE_MSG KingOfTheHill::update(float dt)
 {
 	clearPlayersOnCapPoint();
-	GAMEMODE_MSG msg = GAMEMODE_MSG::NIL;
+	GAMEMODE_MSG msg = lastMsg;
 
 	switch (state)
 	{
@@ -232,6 +232,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 
 		//PREROUND is the period where people pick their classes and wait for the round to begin
 	case PREROUND:
+		msg = GAMEMODE_MSG::NIL;
 		if (timer < FLT_EPSILON) //Time is up!
 		{
 			timer = 0.0f;
@@ -355,7 +356,8 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 	case ENDMATCH:
 		break;
 	}
-
+	
+	lastMsg = msg;
 	return msg;
 }
 
@@ -402,7 +404,7 @@ bool KingOfTheHill::playerRespawn(int conId)
 	return false;
 }
 
-void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int onCap2, KOTHSTATE state)
+void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int onCap2, KOTHSTATE state, GAMEMODE_MSG serverMsg)
 {
 	teamOneSpawnTokens = respawn1;
 	teamTwoSpawnTokens = respawn2;
@@ -420,6 +422,7 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 			}
 		}
 	}
+	lastMsg = serverMsg;
 	serverState = state;
 }
 
