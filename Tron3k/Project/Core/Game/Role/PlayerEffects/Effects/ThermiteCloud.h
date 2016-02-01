@@ -10,7 +10,7 @@ private:
 	float lifeTime;
 	float startingLifetime;
 	float exploRadius;
-	float damage;
+	float damage = 10;
 	float damageTimer;
 public:
 	ThermiteCloud();
