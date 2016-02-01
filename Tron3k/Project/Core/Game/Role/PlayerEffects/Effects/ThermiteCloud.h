@@ -15,7 +15,6 @@ private:
 public:
 	ThermiteCloud();
 	void init(int pid, int eid, glm::vec3 position);
-	void setInterestingVariable(float f) { exploRadius = f; }
 	float getInterestingVariable() { return exploRadius; }
 	int update(float dt);
 

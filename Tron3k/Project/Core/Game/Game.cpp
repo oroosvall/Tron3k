@@ -1734,7 +1734,7 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 			lingDir.x = -lingDir.x;
 			addBulletToList(PID, BID + 3, CLUSTERLING, parent->getPos(), lingDir);
 			
-			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos(), 25, 1.0f);
+			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos(), 25, 2.0f);
 
 			if (GetSoundActivated())
 				GetSound()->playExternalSound(SOUNDS::soundEffectClusterGrenade, parent->getPos().x, parent->getPos().y, parent->getPos().z);
@@ -1742,7 +1742,7 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 		}
 		case BULLET_TYPE::CLUSTERLING:
 		{
-			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos(), 10, 0.5f);
+			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos(), 10, 1.0f);
 
 			if (GetSoundActivated())
 				GetSound()->playExternalSound(SOUNDS::soundEffectClusterlingExplosion, parent->getPos().x, parent->getPos().y, parent->getPos().z);
@@ -1750,17 +1750,17 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 		}
 		case BULLET_TYPE::CLEANSE_BOMB:
 		{
-			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos(), 0, 2.0f);
+			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos(), 0, 4.0f);
 			break;
 		}
 		case BULLET_TYPE::VACUUM_GRENADE:
 		{
-			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos(), 10, 2.0f);
+			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos(), 10, 4.0f);
 			break;
 		}
 		case BULLET_TYPE::THERMITE_GRENADE:
 		{
-			addEffectToList(PID, BID, EFFECT_TYPE::THERMITE_CLOUD, parent->getPos(), 10, 1.0f);
+			addEffectToList(PID, BID, EFFECT_TYPE::THERMITE_CLOUD, parent->getPos(), 10, 0.0f);
 			if (GetSoundActivated())
 				GetSound()->playExternalSound(SOUNDS::soundEffectThermiteGrenade, parent->getPos().x, parent->getPos().y, parent->getPos().z);
 			break;
@@ -1770,9 +1770,7 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 			if (GetSoundActivated())
 				GetSound()->playExternalSound(SOUNDS::soundEffectClusterGrenade, parent->getPos().x, parent->getPos().y, parent->getPos().z);
 
-			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos(), 5, 0.3f);
-			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(0.3f);
-			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setDamage(10);
+			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos(), 5, 0.8f);
 			break;
 		}
 		}
