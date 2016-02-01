@@ -16,6 +16,7 @@ enum NET_EVENT
 	EMPTY =					int('E'),
 	SERVER_STATUS =			int('S'),
 	GAMEMODE_DATA =			int('G'),
+	PLAYERDATA =			int('P'),
 	PLAYER_JOINED =			int('J'),
 	PLAYER_LEFT =			int('L'),
 	PLAYER_HIT =			int('H'),

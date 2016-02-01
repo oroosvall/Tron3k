@@ -657,12 +657,13 @@ void Core::upServer(float dt)
 		/*
 		MIGHT WANT TO CHANGE THIS LOL
 		*/
-		static float gameModeTimer = 0.0f;
-		gameModeTimer += dt;
-		if (gameModeTimer > 0.25f)
+		static float serverDataTimer = 0.0f;
+		serverDataTimer += dt;
+		if (serverDataTimer > 0.25f)
 		{
 			top->event_gamemode_data();
-			gameModeTimer = 0.0f;
+			top->event_player_data();
+			serverDataTimer = 0.0f;
 		}
 
 		serverHandleCmds();

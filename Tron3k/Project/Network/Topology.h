@@ -167,6 +167,7 @@ public:
 	}
 
 	virtual void event_gamemode_data() {};
+	virtual void event_player_data() {};
 
 	virtual void event_effect_timed_out(std::vector<EffectTimeOutInfo> alleffects) {};
 	virtual void event_bullet_timed_out(std::vector<BulletTimeOutInfo> allbullets) {};
@@ -180,6 +181,20 @@ public:
 		Uint8 tryAgain;
 		*rec >> tryAgain;
 		gamePtr->denyPlayerRespawn(tryAgain);
+	}
+
+	virtual void in_event_playerdata(Packet* rec)
+	{
+		Uint8 HP;
+		for (int c = 0; c < 20; c++)
+		{
+			Player* p = gamePtr->getPlayer(c);
+			if (p != nullptr)
+			{
+				*rec >> HP;
+				p->setHP(HP);
+			}
+		}
 	}
 
 	virtual void in_event_gamemode_data(Packet* rec)

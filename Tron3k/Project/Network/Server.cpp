@@ -23,6 +23,27 @@ void Server::disconnected(Uint8 _conID)
 		consolePtr->printMsg("ERROR Disconnect", "System", 'S');
 }
 
+void Server::event_player_data()
+{
+	Packet* out = new Packet();
+	Uint8 HP;
+	bool shouldSend = false;
+	*out << Uint8(NET_INDEX::EVENT) << Uint8(NET_EVENT::PLAYERDATA);
+	for (int c = 0; c < 20; c++)
+	{
+		Player* p = gamePtr->getPlayer(c);
+		if (p != nullptr)
+		{
+			shouldSend = true;
+			HP = p->getHP();
+			*out << HP;
+		}
+	}
+	if (shouldSend)
+		branch(out, -1);
+	delete out;
+}
+
 void Server::event_gamemode_data()
 {
 	Packet* out = new Packet();
