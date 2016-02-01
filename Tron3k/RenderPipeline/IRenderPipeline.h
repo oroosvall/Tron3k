@@ -32,7 +32,8 @@ enum RENDER_FLAGS
 	FREEZE_CULLING,
 	RENDER_CHUNK,
 	RENDER_ABB,
-	RENDER_OBB
+	RENDER_OBB,
+	RENDER_DEBUG_TEXT
 };
 
 struct PipelineValues
@@ -91,6 +92,7 @@ public:
 
 	virtual void* getChunkCollisionVectorAsPoint(int chunkID) = 0;
 	virtual void* getCapPointsAsPoint(int& count) = 0;
+	virtual void* getRoomBoxes() = 0;
 
 	virtual void getPlayerBox(float &xMax, float &xMin, float &yMax, float &yMin, float &zMax, float &zMin) = 0;
 	virtual void getWorldBoxes(int &current, float &xMax, float &xMin, float &yMax, float &yMin, float &zMax, float &zMin) = 0;
@@ -108,6 +110,10 @@ public:
 
 	virtual void enableDepthTest() = 0;
 	virtual void disableDepthTest() = 0;
+
+	virtual int startExecTimer(std::string name) = 0;
+	virtual void stopExecTimer(int id) = 0;
+
 };
 
 extern "C" ENGINE_API IRenderPipeline* CreatePipeline();

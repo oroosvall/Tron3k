@@ -93,7 +93,7 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 	fontTexture = loadTexture("GameFiles/Font/font16.png", false);
 
-	debugText = new Text("Debug Test\nNew line :)", 16, fontTexture, vec2(10, 24));
+	debugText = new Text("", 16, fontTexture, vec2(10, 24));
 	chatHistoryText = ".\n.\n.\n.\n.\n";
 	chatTypeText = "..";
 	chatText = new Text(chatHistoryText + chatTypeText, 11, fontTexture, vec2(10, 420));
@@ -380,26 +380,28 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 
 	terminateQuery();
 	
-	ss << "Draw count: " << drawCount << "\n";
-	ss << "Primitive count: " << primitiveCount << "\n";
-	ss << "Buffer count: " << genBufferPeak << "\n";
-	ss << "Vao count: " << genVaoPeak << "\n";
-	ss << "Texture count: " << genTexturePeak << "\n";
-	ss << "Memory usage: " << memusage << "(B)\n";
-	ss << "Memory usage: " << memusage/1024.0f/1024.0f << "(MB)\n";
-	ss << "Texture binds: " << textureBinds << "\n";
-	ss << "Buffer binds: " << bufferBinds << "\n";
-	ss << "Shader binds: " << shaderBinds << "\n";
-	ss << result << "\n";
-	if (counter > 3.0f)
+	if (renderDebugText)
 	{
-		result = getQueryResult();
-		counter = 0;
+		ss << "Draw count: " << drawCount << "\n";
+		ss << "Primitive count: " << primitiveCount << "\n";
+		ss << "Buffer count: " << genBufferPeak << "\n";
+		ss << "Vao count: " << genVaoPeak << "\n";
+		ss << "Texture count: " << genTexturePeak << "\n";
+		ss << "Memory usage: " << memusage << "(B)\n";
+		ss << "Memory usage: " << memusage / 1024.0f / 1024.0f << "(MB)\n";
+		ss << "Texture binds: " << textureBinds << "\n";
+		ss << "Buffer binds: " << bufferBinds << "\n";
+		ss << "Shader binds: " << shaderBinds << "\n";
+		ss << result << "\n";
+		if (counter > 1.0f)
+		{
+			result = getQueryResult();
+			counter = 0;
+			debugText->setText(ss.str());
+		}
 	}
 
 	resetQuery();
-
-	debugText->setText(ss.str());
 
 	drawCount = 0;
 	primitiveCount = 0;
@@ -450,14 +452,12 @@ void RenderPipeline::render()
 	contMan.renderChunks(regularShader, worldMat[0], uniformTextureLocation[0], uniformNormalLocation[0], uniformGlowSpecLocation[0], uniformDynamicGlowColorLocation[0], uniformStaticGlowIntensityLocation[0],  *gBuffer->portal_shaderPtr, gBuffer->portal_model);
 	
 	stopTimer(chunkRender);
-	renderOther = startTimer("Render Other");
 	//glDepthMask(GL_TRUE);glEnable(GL_CULL_FACE);glDisable(GL_BLEND);)
 	//renderEffects();
 }
 
 void RenderPipeline::finalizeRender()
 {
-	stopTimer(renderOther);
 	glDepthMask(GL_TRUE);
 	glEnable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
@@ -510,15 +510,15 @@ void RenderPipeline::renderWallEffect(void* pos1, void* pos2, float uvStartOffse
 	glBindBuffer(GL_ARRAY_BUFFER, lwVertexDataId);
 	glBindVertexArray(lwVertexAttribute);
 
-	float of = timepass * 0.1f;
+	float of = timepass * 0.4f;
 
 	glm::vec3 wpos1 = *(glm::vec3*)pos1;
 	glm::vec3 wpos2 = *(glm::vec3*)pos2;
 
 	float dist = glm::distance(wpos1, wpos2) / 2.0f;
 
-	vec2 uv1 = vec2(uvStartOffset + of, 0);
-	vec2 uv2 = vec2(uvStartOffset + dist + of, 0);
+	vec2 uv1 = vec2(uvStartOffset - of, 0);
+	vec2 uv2 = vec2(uvStartOffset - dist - of, 0);
 	glProgramUniform2fv(lw_Shader, lw_uv1, 1, &uv1[0]);
 	glProgramUniform2fv(lw_Shader, lw_uv2, 1, &uv2[0]);
 	glProgramUniform3fv(lw_Shader, lw_pos1, 1, &wpos1[0]);
@@ -722,9 +722,6 @@ void RenderPipeline::renderBullet(int bid, void* world, float* dgColor, float sg
 
 void RenderPipeline::renderAnimation(int playerID, int roleID, void* world, AnimationState animState, float* dgColor, float sgInten, bool first)
 {
-
-	int anim = startTimer("Player");
-
 	glUseProgram(animationShader);
 
 	if (animState == AnimationState::third_primary_jump_begin)
@@ -750,9 +747,7 @@ void RenderPipeline::renderAnimation(int playerID, int roleID, void* world, Anim
 
 	if (anims.animStates[playerID].state != AnimationState::none && anims.animStates[playerID].frameEnd > 0)
 		contMan.renderPlayer(anims.animStates[playerID], *(glm::mat4*)world, uniformKeyMatrixLocation, first);
-
-	stopTimer(anim);
-
+	
 }
 
 bool RenderPipeline::setSetting(PIPELINE_SETTINGS type, PipelineValues value)
@@ -803,6 +798,13 @@ void* RenderPipeline::getChunkCollisionVectorAsPoint(int chunkID)
 void* RenderPipeline::getCapPointsAsPoint(int& count)
 {
 	return contMan.getCapAsPointer(count);
+
+
+}
+
+void* RenderPipeline::getRoomBoxes()
+{
+	return contMan.getRoomBoxes();
 }
 
 void RenderPipeline::getPlayerBox(float &xMax, float &xMin, float &yMax, float &yMin, float &zMax, float &zMin)
@@ -846,11 +848,12 @@ void RenderPipeline::setRenderFlag(RENDER_FLAGS flag)
 {
 	switch (flag)
 	{
-		case PORTAL_CULLING:	contMan.f_portal_culling = !contMan.f_portal_culling;	break;
-		case FREEZE_CULLING:	contMan.f_freeze_portals = !contMan.f_freeze_portals;	break;
-		case RENDER_CHUNK:		contMan.f_render_chunks = !contMan.f_render_chunks;		break;
-		case RENDER_ABB:		contMan.f_render_abb = !contMan.f_render_abb;			break;
-		case RENDER_OBB:		contMan.f_render_obb = !contMan.f_render_obb;			break;
+		case PORTAL_CULLING:	contMan.f_portal_culling = !contMan.f_portal_culling;		break;
+		case FREEZE_CULLING:	contMan.f_freeze_portals = !contMan.f_freeze_portals;		break;
+		case RENDER_CHUNK:		contMan.f_render_chunks = !contMan.f_render_chunks;			break;
+		case RENDER_ABB:		contMan.f_render_abb = !contMan.f_render_abb;				break;
+		case RENDER_OBB:		contMan.f_render_obb = !contMan.f_render_obb;				break;
+		case RENDER_DEBUG_TEXT:	renderDebugText = !renderDebugText; debugText->setText(""); break;
 	}
 }
 
@@ -971,4 +974,14 @@ void RenderPipeline::enableDepthTest()
 void RenderPipeline::disableDepthTest()
 {
 	glDisable(GL_DEPTH_TEST);
+}
+
+int RenderPipeline::startExecTimer(std::string name)
+{
+	return startTimer(name);
+}
+
+void RenderPipeline::stopExecTimer(int id)
+{
+	stopTimer(id);
 }

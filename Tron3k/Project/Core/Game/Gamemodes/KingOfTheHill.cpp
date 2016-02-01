@@ -38,8 +38,8 @@ void KingOfTheHill::init(Console* cptr, Game* gptr)
 	teamTwoScore = 0;
 	winScore = 2;
 
-	teamOneSpawnTokens = 1;
-	teamTwoSpawnTokens = 1;
+	teamOneSpawnTokens = 20;
+	teamTwoSpawnTokens = 20;
 
 	tickForCaptureScoring = 15.0f;
 	timerModifierForCaptureScoring = tickForCaptureScoring;
@@ -78,6 +78,25 @@ void KingOfTheHill::capturePointScoring()
 GAMEMODE_MSG KingOfTheHill::roundScoring()
 {
 	/*
+	Antal spelare på kontrollpunkten. Har ena laget fler spelare på punkten vinner detta laget.
+	*/
+
+	if (teamOnePlayersAtPoint < teamTwoPlayersAtPoint)
+	{
+		teamTwoScore++;
+		if (teamTwoScore == winScore)
+			return GAMEMODE_MSG::MATCH_WIN_TEAM2;
+		return GAMEMODE_MSG::ROUND_WIN_TEAM2;
+	}
+	if (teamTwoPlayersAtPoint < teamOnePlayersAtPoint)
+	{
+		teamOneScore++;
+		if (teamOneScore == winScore)
+			return GAMEMODE_MSG::MATCH_WIN_TEAM1;
+		return GAMEMODE_MSG::ROUND_WIN_TEAM1;
+	}
+
+	/*
 		Vinnande laget definieras av.
 		Spawn tokens kvar. Har ett lag spawn tokens kvar vinner detta laget.
 	*/
@@ -95,25 +114,6 @@ GAMEMODE_MSG KingOfTheHill::roundScoring()
 		if (teamTwoScore == winScore)
 			return GAMEMODE_MSG::MATCH_WIN_TEAM2;
 		return GAMEMODE_MSG::ROUND_WIN_TEAM2;
-	}
-
-	/*
-		Antal spelare på kontrollpunkten. Har ena laget fler spelare på punkten vinner detta laget.
-	*/
-
-	if (teamOnePlayersAtPoint < teamTwoPlayersAtPoint)
-	{
-		teamTwoScore++;
-		if (teamTwoScore == winScore)
-			return GAMEMODE_MSG::MATCH_WIN_TEAM2;
-		return GAMEMODE_MSG::ROUND_WIN_TEAM2;
-	}
-	if (teamTwoPlayersAtPoint < teamOnePlayersAtPoint)
-	{
-		teamOneScore++;
-		if (teamOneScore == winScore)
-			return GAMEMODE_MSG::MATCH_WIN_TEAM1;
-		return GAMEMODE_MSG::ROUND_WIN_TEAM1;
 	}
 
 	/*
@@ -171,7 +171,10 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 	{
 		//The LOCAL state must never leave said LOCAL state. It only recieves information from the server
 	case LOCAL: 
-		if (serverState == ROUND)
+		if (serverState == PREROUND)
+		{
+		}
+		else if (serverState == ROUND)
 		{
 			timer += dt;
 
@@ -187,19 +190,17 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 				GetSound()->playUserGeneratedSound(SOUNDS::announcer5Tokens);
 				this->fiveTokensPlayed = true;
 			}
+			*/
 
-			if (GetSoundActivated())
+			if (timer - timerModifierForCaptureScoring > 0.0f) //Sound for score plays
 			{
-				GetSound()->playUserGeneratedSound(SOUNDS::soundEffectCaptureScored);
+				if (GetSoundActivated())
+				{
+					GetSound()->playUserGeneratedSound(SOUNDS::soundEffectCaptureScored);
+				}
+				timerModifierForCaptureScoring += tickForCaptureScoring;
 			}
 			
-			if (GetSoundActivated() && !overtimePlayed)
-			{
-				GetSound()->playUserGeneratedSound(SOUNDS::announcerCommence);
-				GetSound()->playUserGeneratedSound(SOUNDS::SoundForOvertime);
-				overtimePlayed = true;
-			}
-			*/
 		}
 		else if (serverState == OVERTIME)
 		{
@@ -223,8 +224,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 	case WARMUP:
 		if (consolePtr->getCommand() == "/start")
 		{
-			timer = 20.0f; //20 seconds in the pre-round
-			teamOneSpawnTokens = teamTwoSpawnTokens = 10;
+			timer = 15.0f; //20 seconds in the pre-round
 			state = PREROUND;
 		}
 		break;
@@ -235,6 +235,17 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 		if (timer < FLT_EPSILON) //Time is up!
 		{
 			timer = 0.0f;
+			std::vector<int>* teamOne = gamePtr->getTeamConIds(1);
+			std::vector<int>* teamTwo = gamePtr->getTeamConIds(2);
+			for (int c = 0; c < teamOne->size(); c++)
+			{
+				gamePtr->allowPlayerRespawn(teamOne->at(c), c);
+			}
+			for (int c = 0; c < teamTwo->size(); c++)
+			{
+				gamePtr->allowPlayerRespawn(teamTwo->at(c), c);
+			}
+			teamOneSpawnTokens = teamTwoSpawnTokens = 5;
 			state = ROUND;
 		}
 		else
@@ -252,7 +263,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 		}
 		if (teamOneSpawnTokens == 0 || teamTwoSpawnTokens == 0)
 		{
-			consolePtr->printMsg("OVERTIME BEGINS", "System", '[S]');
+			consolePtr->printMsg("OVERTIME BEGINS", "System", 'S');
 			state = OVERTIME;
 			timer = 30.0f;
 		}
@@ -307,12 +318,36 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 		{
 			state = ENDROUND;
 			msg = roundScoring();
-			timer = 1000.0f;		//TEMP
+			timer = 10.0f;		//TEMP
 		}
 		break;
 
 		//After the ROUND ends, ENDROUND is the buffer time between end of a round and the PREROUND
 	case ENDROUND:
+		if (teamOneScore == winScore)
+		{
+			msg = GAMEMODE_MSG::MATCH_WIN_TEAM1;
+			state = ENDMATCH;
+		}
+		else if (teamTwoScore == winScore)
+		{
+			msg = GAMEMODE_MSG::MATCH_WIN_TEAM2;
+			state = ENDMATCH;
+		}
+		else if (teamTwoScore == winScore && teamOneScore == winScore)
+		{
+			msg = GAMEMODE_MSG::MATCH_DRAW;
+			state = ENDMATCH;
+		}
+		else //Match has not ended, let's start another round!
+		{
+			timer -= dt;
+			if (timer < FLT_EPSILON)
+			{
+				state = PREROUND;
+				timer = 15.0f;
+			}
+		}
 		/*
 		if (msg == GAMEMODE_MSG::ROUND_WIN_TEAM1)
 		{
@@ -411,14 +446,74 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 	teamTwoPlayersAtPoint = onCap2;
 	if (serverState != state)
 	{
-		if (serverState == OVERTIME)
+		if (state == PREROUND)
 		{
-			if (GetSoundActivated() && !overtimePlayed)
+			consolePtr->printMsg("ROUND STARTS IN 20 SECONDS", "System", 'S');
+		}
+		else if (state == ROUND)
+		{
+			int myConID = gamePtr->GetLocalPlayerId();
+			std::vector<int>* myTeam = gamePtr->getTeamConIds(gamePtr->getPlayer(myConID)->getTeam());
+			bool found = false;
+			for (int c = 0; c < myTeam->size() && !found; c++)
+			{
+				if (myConID == myTeam->at(c))
+				{
+					found = true;
+					gamePtr->allowPlayerRespawn(myConID, c);
+				}
+			}
+		}
+		else if (state == OVERTIME)
+		{
+			if (GetSoundActivated())
 			{
 				GetSound()->playUserGeneratedSound(SOUNDS::announcerCommence);
 				GetSound()->playUserGeneratedSound(SOUNDS::SoundForOvertime);
-				overtimePlayed = true;
 			}
+		}
+		else if (state == ENDROUND)
+		{
+			if (serverMsg == GAMEMODE_MSG::ROUND_WIN_TEAM1)
+			{
+				consolePtr->printMsg("TEAM ONE WINS THE ROUND", "System", 'S');
+				if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
+				{
+					GetSound()->playUserGeneratedSound(SOUNDS::YouWin);
+				}
+				else if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 2)
+				{
+					GetSound()->playUserGeneratedSound(SOUNDS::YouLose);
+				}
+			}
+
+			else if (serverMsg == GAMEMODE_MSG::ROUND_WIN_TEAM2)
+			{
+				consolePtr->printMsg("TEAM TWO WINS THE ROUND", "System", 'S');
+				if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
+				{
+					GetSound()->playUserGeneratedSound(SOUNDS::YouLose);
+				}
+				else if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 2)
+				{
+					GetSound()->playUserGeneratedSound(SOUNDS::YouWin);
+				}
+			}
+		}
+		else if (state == ENDMATCH)
+		{
+			if (serverMsg == GAMEMODE_MSG::MATCH_WIN_TEAM1)
+			{
+				consolePtr->printMsg("TEAM ONE WINS THE MATCH", "System", 'S');
+			}
+			else if (serverMsg == GAMEMODE_MSG::MATCH_WIN_TEAM2)
+			{
+				consolePtr->printMsg("TEAM TWO WINS THE MATCH", "System", 'S');
+			}
+			else if (serverMsg == GAMEMODE_MSG::MATCH_DRAW)
+				consolePtr->printMsg("TEAM TWO WINS THE MATCH", "System", 'S');
+			else
+				consolePtr->printMsg("This shouldn't happen", "Adam", 'S');
 		}
 	}
 	lastMsg = serverMsg;

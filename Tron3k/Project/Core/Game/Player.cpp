@@ -678,6 +678,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			isDead = true;
 			vel = glm::vec3(0, 0, 0);
 		}
+		modifiersSetData(dt);
 	}
 	
 	return msg;
@@ -950,7 +951,9 @@ glm::mat4 Player::getFPSmat()
 	switch (role.getRole())
 	{
 	case TRAPPER:
-
+		yOffset = 0.0f;
+		xOffset = 0.0f;
+		zOffset = -0.0f;
 		break;
 	case DESTROYER:
 		yOffset = 0.3f;
@@ -961,9 +964,9 @@ glm::mat4 Player::getFPSmat()
 
 		break;
 	case BRUTE:
-		yOffset = 0.5f;
-		xOffset = -0.3f;
-		zOffset = 0.5f;
+		yOffset = 0.35f;
+		xOffset = 0.45f;
+		zOffset = 0.40f;
 		break;
 	case MANIPULATOR:
 		yOffset = 0.0f;

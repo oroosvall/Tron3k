@@ -40,8 +40,6 @@ private:
 	bool fiveTokensPlayed = false;
 	bool fifteenPlayed = false;
 	bool fivePlayed = false;
-	bool commencePlayed = false;
-	bool overtimePlayed = false;
 
 	float tickForCaptureScoring; //Used to keep track of when scoring should take place
 	float timerModifierForCaptureScoring; //Used to keep track of when scoring should take place

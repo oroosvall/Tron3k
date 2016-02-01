@@ -100,7 +100,7 @@ void Core::update(float dt)
 	{
 		renderPipe->setChatTypeMessage(console.pollLatest());
 	}
-	if (console.messageReady() && renderPipe)
+	if (console.getHistoryUpdate() && renderPipe)
 	{
 		renderPipe->setChatHistoryText(console.getHistory());
 	}
@@ -151,7 +151,9 @@ void Core::update(float dt)
 	i->clearOnPress();
 	console.discardCommandAndLastMsg();
 
+	int swapTime = renderPipe->startExecTimer("Swap");
 	glfwSwapBuffers(win);
+	renderPipe->stopExecTimer(swapTime);
 }
 
 void Core::upStart(float dt)
@@ -256,6 +258,7 @@ void Core::upRoam(float dt)
 		for (int i = 0; !allchunksSent; i++)
 			allchunksSent = sendChunkBoxes(i);
 		sendCapPointBoxes();
+		sendRoomBoxes();
 		Player* p = new Player();
 		p->init("Roam", glm::vec3(0, 0, 0));
 		game->createPlayer(p, 0, 100, 0, true);
@@ -402,6 +405,7 @@ void Core::upClient(float dt)
 				for (int i = 0; !allchunksSent; i++)
 					allchunksSent = sendChunkBoxes(i);
 				sendCapPointBoxes();
+				sendRoomBoxes();
 				top->setGamePtr(game);
 				subState++;
 				return; //On sucsess
@@ -559,6 +563,7 @@ void Core::upServer(float dt)
 		for (int i = 0; !allchunksSent; i++)
 			allchunksSent = sendChunkBoxes(i);
 		sendCapPointBoxes();
+		sendRoomBoxes();
 		game->freecam = true;
 		//load map
 
@@ -856,6 +861,7 @@ void Core::roamHandleCmds()
 				console.printMsg("/rs  chunk	RENDER_CHUNK ", "", ' ');
 				console.printMsg("/rs  abb		RENDER_ABB ", "", ' ');
 				console.printMsg("/rs  obb		RENDER_OBB ", "", ' ');
+				console.printMsg("/rs  debug	RENDER_DEBUG_TEXT ", "", ' ');
 			}
 			else if (token == "portal")
 				renderPipe->setRenderFlag(PORTAL_CULLING);
@@ -867,6 +873,8 @@ void Core::roamHandleCmds()
 				renderPipe->setRenderFlag(RENDER_ABB);
 			else if (token == "obb")
 				renderPipe->setRenderFlag(RENDER_OBB);
+			else if(token == "debug")
+				renderPipe->setRenderFlag(RENDER_DEBUG_TEXT);
 		}
 		else if (token == "/disconnect")
 			disconnect();
@@ -1190,6 +1198,8 @@ void Core::renderWorld(float dt)
 			dgColor = TEAMONECOLOR;
 		}
 
+		int playerTime = renderPipe->startExecTimer("Players");
+
 		for (size_t i = 0; i < MAX_CONNECT; i++)
 		{
 			Player* p = game->getPlayer(i);
@@ -1246,6 +1256,7 @@ void Core::renderWorld(float dt)
 			}
 		}
 
+		renderPipe->stopExecTimer(playerTime);
 		//*** Render Bullets ***
 
 		if (hackedTeam == -1)
@@ -1304,6 +1315,8 @@ void Core::renderWorld(float dt)
 			dgColor = TEAMTWOCOLOR;
 		else if (hackedTeam == 2)
 			dgColor = TEAMONECOLOR;
+
+		int effectTime = renderPipe->startExecTimer("Effects & decals");
 
 		for (int c = 0; c < EFFECT_TYPE::NROFEFFECTS; c++)
 		{
@@ -1370,6 +1383,8 @@ void Core::renderWorld(float dt)
 
 		// render Decals
 		renderPipe->renderDecals(game->getAllDecalRenderInfo(), game->getNrOfDecals());
+
+		renderPipe->stopExecTimer(effectTime);
 
 		renderPipe->finalizeRender();
 
@@ -1633,6 +1648,18 @@ void Core::sendCapPointBoxes()
 		if (capBoxes != nullptr)
 		{
 			game->sendCapBoxes(count, capBoxes);
+		}
+	}
+}
+
+void Core::sendRoomBoxes()
+{
+	if (renderPipe != nullptr)
+	{
+		void* send = renderPipe->getRoomBoxes();
+		if (send != nullptr)
+		{
+			game->sendRoomBoxes(send);
 		}
 	}
 }

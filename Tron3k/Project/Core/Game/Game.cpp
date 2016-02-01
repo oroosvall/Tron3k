@@ -139,12 +139,21 @@ void Game::update(float dt)
 	if(gameState != SERVER)
 		console->setInChatMode(playerList[localPlayerId]->getLockedControls());
 
+
 	GAMEMODE_MSG gameMsg = gamemode->update(dt);
-	if (gameState == Gamestate::SERVER)
+	if (gamemode->getType() == GAMEMODE_TYPE::KOTH && gameState == Gamestate::SERVER)
 	{
-		/*
-		Handling most messages
-		*/
+		KingOfTheHill* k = (KingOfTheHill*)gamemode;
+		for (int c = 0; c < 20; c++)
+		{
+			if (playerList[c] != nullptr)
+			{
+				if (physics->checkPlayerVCaptureCollision(playerList[c]->getPos(), k->getCapturePoint()))
+				{
+					k->playerOnCapPointThisFrame(playerList[c]->getTeam());
+				}
+			}
+		}
 	}
 
 	for (int c = 0; c < max_con; c++)
@@ -360,7 +369,13 @@ void Game::sendChunkBoxes(int chunkID, void* cBoxes)
 
 void Game::sendCapBoxes(int nrCaps, void* capBoxes)
 {
+	//oh capbox my capbox
 	physics->receiveCap(nrCaps, capBoxes);
+}
+
+void Game::sendRoomBoxes(void* roomboxes)
+{
+	physics->receiveRoomBoxes(roomboxes);
 }
 
 void Game::sendPlayerBox(std::vector<float> pBox)
@@ -1041,8 +1056,8 @@ void Game::addBulletToList(int conID, int bulletId, BULLET_TYPE bt, glm::vec3 po
 		b = new HackingDart(pos, dir, conID, bulletId, p->getTeam(), BULLET_TYPE::HACKING_DART);
 		break;
 	case BULLET_TYPE::MELEE_ATTACK:
-		b = new MeleeAttack(pos, dir, conID, bulletId, p->getTeam(), BULLET_TYPE::MELEE_ATTACK);
-		break;
+		b = new MeleeAttack(vec3(999.0f, 999.0f, 999.0f), dir, conID, bulletId, p->getTeam(), p);
+	break;
 	}
 
 	bullets[bt].push_back(b);
@@ -1106,10 +1121,8 @@ void Game::handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm
 				GetSound()->playExternalSound(SOUNDS::soundEffectShotGun, pos.x, pos.y, pos.z);
 		glm::vec3 rightV = normalize(cross(dir, vec3(0, 1, 0)));
 		glm::vec3 upV = normalize(cross(dir, rightV));
-		for (int k = 0; k < 16; k++)
+		for (int k = 0; k < 10; k++)
 		{
-			//float xrand = (rand() % 50) / 100.0f - 0.25f;
-			//float yrand = (rand() % 50) / 100.0f - 0.25f;
 			float xoff = glm::sin(k);
 			float yoff = glm::cos(k);
 			float r = (rand() % 100) / 1000.0f;
@@ -1320,6 +1333,13 @@ void Game::addEffectToPhysics(Effect* effect)
 		eBox.push_back(effect->getPos().z);
 		eBox.push_back(effect->getInterestingVariable());
 		physics->receiveEffectBox(eBox, EFFECT_TYPE::EXPLOSION, pid, eid);
+		break;
+	case EFFECT_TYPE::THERMITE_CLOUD:
+		eBox.push_back(effect->getPos().x);
+		eBox.push_back(effect->getPos().y);
+		eBox.push_back(effect->getPos().z);
+		eBox.push_back(effect->getInterestingVariable());
+		physics->receiveEffectBox(eBox, EFFECT_TYPE::THERMITE_CLOUD, pid, eid);
 		break;
 	}
 }
@@ -1745,7 +1765,7 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 				GetSound()->playExternalSound(SOUNDS::soundEffectClusterGrenade, parent->getPos().x, parent->getPos().y, parent->getPos().z);
 
 			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
-			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(5.0f);
+			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(2.5f);
 			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setDamage(10);
 			break;
 		}

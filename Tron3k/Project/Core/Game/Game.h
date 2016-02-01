@@ -240,6 +240,7 @@ public:
 
 	void sendChunkBoxes(int chunkID, void* cBoxes);
 	void sendCapBoxes(int nrCaps, void* capBoxes);
+	void sendRoomBoxes(void* roomboxes);
 	void sendWorldBoxes(std::vector<std::vector<float>> wBoxes);
 	void sendPlayerBox(std::vector<float> pBox);
 	void sendPlayerRadSize(float rad);

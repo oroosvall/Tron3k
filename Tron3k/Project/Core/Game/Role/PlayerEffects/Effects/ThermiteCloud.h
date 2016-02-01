@@ -10,7 +10,7 @@ private:
 	float lifeTime;
 	float startingLifetime;
 	float exploRadius;
-	float damage = 10;
+	int damage;
 	float damageTimer;
 public:
 	ThermiteCloud();
@@ -20,7 +20,6 @@ public:
 	int update(float dt);
 
 	int getDamage() { return damage; }; //WOOO DAMAGE YO
-	void setDamage(int dmg) { damage = dmg; };
 	float explotionRenderRad();
 };
 #endif
