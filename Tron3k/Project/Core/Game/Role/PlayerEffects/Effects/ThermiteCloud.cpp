@@ -31,5 +31,5 @@ int ThermiteCloud::update(float dt)
 
 float ThermiteCloud::explotionRenderRad()
 {
-	return  5 * exploRadius * (1 - (lifeTime * 0.1f));
+	return  20 * exploRadius;// *(1 - (lifeTime * 0.1f));
 }
