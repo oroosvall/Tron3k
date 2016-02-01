@@ -360,7 +360,7 @@ void Game::sendCapBoxes(int nrCaps, void* capBoxes)
 
 void Game::sendRoomBoxes(void* roomboxes)
 {
-
+	physics->receiveRoomBoxes(roomboxes);
 }
 
 void Game::sendPlayerBox(std::vector<float> pBox)

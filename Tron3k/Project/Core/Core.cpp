@@ -256,6 +256,7 @@ void Core::upRoam(float dt)
 		for (int i = 0; !allchunksSent; i++)
 			allchunksSent = sendChunkBoxes(i);
 		sendCapPointBoxes();
+		sendRoomBoxes();
 		Player* p = new Player();
 		p->init("Roam", glm::vec3(0, 0, 0));
 		game->createPlayer(p, 0, 100, 0, true);
@@ -402,6 +403,7 @@ void Core::upClient(float dt)
 				for (int i = 0; !allchunksSent; i++)
 					allchunksSent = sendChunkBoxes(i);
 				sendCapPointBoxes();
+				sendRoomBoxes();
 				top->setGamePtr(game);
 				subState++;
 				return; //On sucsess
@@ -559,6 +561,7 @@ void Core::upServer(float dt)
 		for (int i = 0; !allchunksSent; i++)
 			allchunksSent = sendChunkBoxes(i);
 		sendCapPointBoxes();
+		sendRoomBoxes();
 		game->freecam = true;
 		//load map
 
