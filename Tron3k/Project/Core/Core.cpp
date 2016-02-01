@@ -100,7 +100,7 @@ void Core::update(float dt)
 	{
 		renderPipe->setChatTypeMessage(console.pollLatest());
 	}
-	if (console.messageReady() && renderPipe)
+	if (console.getHistoryUpdate() && renderPipe)
 	{
 		renderPipe->setChatHistoryText(console.getHistory());
 	}
