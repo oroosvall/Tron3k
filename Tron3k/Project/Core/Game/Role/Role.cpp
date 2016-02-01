@@ -107,7 +107,7 @@ void Role::loadRoleSpecifics(int _role)
 			mobility->init();
 			consumable = new Consumable();
 			consumable->init(CONSUMABLE_TYPE::CLUSTERGRENADE);
-			this->size = glm::vec3(0.4, 1, 0.4);
+			this->size = glm::vec3(0.4, 0.9, 0.4);
 			break;
 		case DESTROYER:
 			role = 1;
@@ -117,7 +117,7 @@ void Role::loadRoleSpecifics(int _role)
 			mobility->init();
 			consumable = new Consumable();
 			consumable->init(CONSUMABLE_TYPE::OVERCHARGE);
-			this->size = glm::vec3(0.8, 1.5, 0.8);
+			this->size = glm::vec3(0.8, 0.75, 0.8);
 			break;
 		case MOBILITY:
 			role = 2;
@@ -127,7 +127,7 @@ void Role::loadRoleSpecifics(int _role)
 			mobility->init();
 			consumable = new Consumable();
 			consumable->init(CONSUMABLE_TYPE::LIGHTSPEED);
-			this->size = glm::vec3(0.8, 1.7, 0.8);
+			this->size = glm::vec3(0.8, 0.85, 0.8);
 			break;
 		case BRUTE:
 			role = 3;
@@ -148,7 +148,7 @@ void Role::loadRoleSpecifics(int _role)
 			mobility->init();
 			consumable = new Consumable();
 			consumable->init(CONSUMABLE_TYPE::VACUUMGRENADE);
-			this->size = glm::vec3(0.7, 1.6, 0.7);
+			this->size = glm::vec3(0.7, 0.8, 0.7);
 			break;
 	}
 
