@@ -677,6 +677,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		{
 			isDead = true;
 			vel = glm::vec3(0, 0, 0);
+			cleanseModifiers();
 		}
 		modifiersSetData(dt);
 	}
