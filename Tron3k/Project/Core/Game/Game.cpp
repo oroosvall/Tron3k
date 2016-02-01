@@ -139,13 +139,8 @@ void Game::update(float dt)
 	if(gameState != SERVER)
 		console->setInChatMode(playerList[localPlayerId]->getLockedControls());
 
+
 	GAMEMODE_MSG gameMsg = gamemode->update(dt);
-	if (gameState == Gamestate::SERVER)
-	{
-		/*
-		Handling most messages
-		*/
-	}
 
 	for (int c = 0; c < max_con; c++)
 	{

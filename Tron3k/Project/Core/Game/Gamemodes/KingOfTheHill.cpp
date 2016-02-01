@@ -171,7 +171,10 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 	{
 		//The LOCAL state must never leave said LOCAL state. It only recieves information from the server
 	case LOCAL: 
-		if (serverState == ROUND)
+		if (serverState == PREROUND)
+		{
+		}
+		else if (serverState == ROUND)
 		{
 			timer += dt;
 
@@ -235,6 +238,16 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 		if (timer < FLT_EPSILON) //Time is up!
 		{
 			timer = 0.0f;
+			std::vector<int>* teamOne = gamePtr->getTeamConIds(1);
+			std::vector<int>* teamTwo = gamePtr->getTeamConIds(2);
+			for (int c = 0; c < teamOne->size(); c++)
+			{
+				gamePtr->allowPlayerRespawn(teamOne->at(c), c);
+			}
+			for (int c = 0; c < teamTwo->size(); c++)
+			{
+				gamePtr->allowPlayerRespawn(teamTwo->at(c), c);
+			}
 			state = ROUND;
 		}
 		else
@@ -411,6 +424,20 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 	teamTwoPlayersAtPoint = onCap2;
 	if (serverState != state)
 	{
+		if (state == ROUND)
+		{
+			int myConID = gamePtr->GetLocalPlayerId();
+			std::vector<int>* myTeam = gamePtr->getTeamConIds(gamePtr->getPlayer(myConID)->getTeam());
+			bool found = false;
+			for (int c = 0; c < myTeam->size() && !found; c++)
+			{
+				if (myConID == myTeam->at(c))
+				{
+					found = true;
+					gamePtr->allowPlayerRespawn(myConID, c);
+				}
+			}
+		}
 		if (state == OVERTIME)
 		{
 			if (GetSoundActivated() && !overtimePlayed)
