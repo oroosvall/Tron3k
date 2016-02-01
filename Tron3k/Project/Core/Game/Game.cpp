@@ -1123,8 +1123,6 @@ void Game::handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm
 		glm::vec3 upV = normalize(cross(dir, rightV));
 		for (int k = 0; k < 10; k++)
 		{
-			//float xrand = (rand() % 50) / 100.0f - 0.25f;
-			//float yrand = (rand() % 50) / 100.0f - 0.25f;
 			float xoff = glm::sin(k);
 			float yoff = glm::cos(k);
 			float r = (rand() % 100) / 1000.0f;
@@ -1335,6 +1333,13 @@ void Game::addEffectToPhysics(Effect* effect)
 		eBox.push_back(effect->getPos().z);
 		eBox.push_back(effect->getInterestingVariable());
 		physics->receiveEffectBox(eBox, EFFECT_TYPE::EXPLOSION, pid, eid);
+		break;
+	case EFFECT_TYPE::THERMITE_CLOUD:
+		eBox.push_back(effect->getPos().x);
+		eBox.push_back(effect->getPos().y);
+		eBox.push_back(effect->getPos().z);
+		eBox.push_back(effect->getInterestingVariable());
+		physics->receiveEffectBox(eBox, EFFECT_TYPE::THERMITE_CLOUD, pid, eid);
 		break;
 	}
 }
