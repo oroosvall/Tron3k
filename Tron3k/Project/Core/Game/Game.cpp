@@ -219,6 +219,7 @@ void Game::update(float dt)
 		checkBulletVWorldCollision(dt);
 		checkPlayerVEffectCollision();
 		checkBulletVEffectCollision(dt);
+		checkPlayerVCapCollision();
 	}
 
 	if (gameState == Gamestate::CLIENT)
@@ -235,6 +236,7 @@ void Game::update(float dt)
 		checkPlayerVBulletCollision();
 		checkPlayerVEffectCollision();
 		checkBulletVEffectCollision(dt);
+		checkPlayerVCapCollision();
 	}
 
 	for (int c = 0; c < max_con; c++)
@@ -619,6 +621,24 @@ void Game::checkPlayerVEffectCollision()
 					}
 				}
 			}
+		}
+	}
+}
+
+void Game::checkPlayerVCapCollision()
+{
+	if (gameState == Gamestate::ROAM)
+	{
+		bool localCollided = physics->checkPlayerVCaptureCollision(playerList[localPlayerId]->getPos(), 0);
+	}
+
+	bool inPoint = false;
+
+	for (int i = 0; i < max_con; i++)
+	{
+		if (playerList[i] != nullptr)
+		{
+			inPoint = physics->checkPlayerVCaptureCollision(playerList[i]->getPos(), 0);
 		}
 	}
 }

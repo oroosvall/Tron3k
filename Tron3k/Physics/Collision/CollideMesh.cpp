@@ -35,7 +35,7 @@ void CollideMesh::setAABB(glm::vec3 pos, glm::vec3 max, glm::vec3 min)
 	temp.corners[DRB] = glm::vec3(max.x/* + pos.x*/, min.y/* + pos.y*/, min.z/* + pos.z*/);
 	temp.corners[ULB] = glm::vec3(min.x/* + pos.x*/, max.y/* + pos.y*/, min.z/* + pos.z*/);
 	temp.corners[URB] = glm::vec3(max.x/* + pos.x*/, max.y/* + pos.y*/, min.z/* + pos.z*/);
-																					
+
 	boundingBox.ObbBoxes.push_back(temp);
 
 	//getCylinderFromAABB();
@@ -216,4 +216,10 @@ void CollideMesh::setPos(glm::vec3 pos)
 	boundingBox.pos = glm::vec3(pos);
 
 	cylinder.pos = pos;
+
+	sphere.pos = pos;
+
+	capBox.pos = vec4(pos, 1);
+
+	angledCylinder.pos = pos;
 }

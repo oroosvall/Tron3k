@@ -324,6 +324,8 @@ public:
 	void setSphere(Sphere sphere);
 	Sphere getSphere();
 
+	AABBCapPoint getCapBox() { return capBox; };
+
 	void setPos(vec3 pos);
 };
 #endif
