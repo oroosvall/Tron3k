@@ -630,6 +630,20 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos)
 	//each chunk
 	for (unsigned int i = 0; i < worldBoxes.size(); i++)
 	{
+		//culling player intersection tests vs room aabbs
+		if (i > 0)
+		{
+			bool passed = false;
+			if (box.max.x > roomBoxes[i - 1].min.x && box.min.x < roomBoxes[i - 1].max.x)//x
+				if (box.max.y > roomBoxes[i - 1].min.y && box.min.y < roomBoxes[i - 1].max.y)//y
+					if (box.max.z > roomBoxes[i - 1].min.z && box.min.z < roomBoxes[i - 1].max.z)//y
+						passed = true;
+		
+			if (passed == false)
+				continue;	
+		}
+		//printf("inside room %d \n", i);
+
 		//each abb
 		for (unsigned int j = 0; j < worldBoxes[i].size(); j++)
 		{
