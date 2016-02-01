@@ -59,9 +59,9 @@ vec3 Physics::checkAABBvAABBCollision(Geometry* obj1, Geometry* obj2)
 
 bool Physics::checkAABBvAABBCollision(AABB* mesh1, AABB* mesh2)
 {
-	if (mesh1->max.x > mesh2->min.x && mesh1->min.x < mesh2->max.x)//x
-		if (mesh1->max.y > mesh2->min.y && mesh1->min.y  < mesh2->max.y )//y
-			if (mesh1->max.z > mesh2->min.z && mesh1->min.z  < mesh2->max.z )//y
+	if (mesh1->max.x + FLT_EPSILON >= mesh2->min.x - FLT_EPSILON && mesh1->min.x - FLT_EPSILON <= mesh2->max.x + FLT_EPSILON)//x
+		if (mesh1->max.y + FLT_EPSILON >= mesh2->min.y - FLT_EPSILON && mesh1->min.y - FLT_EPSILON <= mesh2->max.y + FLT_EPSILON)//y
+			if (mesh1->max.z + FLT_EPSILON >= mesh2->min.z - FLT_EPSILON && mesh1->min.z - FLT_EPSILON <= mesh2->max.z + FLT_EPSILON)//y
 				return true;
 
 	return false;
@@ -773,37 +773,17 @@ vec4 Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel, vec3 bulletD
 					{
 						t = getSpherevOBBNorms(box.pos, rad, &worldBoxes[i][j].boundingBox.ObbBoxes[n]);
 						t.w = rad - t.w; //penetration depth instead of collision distance 
-						if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
+						if (t.w + FLT_EPSILON > 0 - FLT_EPSILON && t.w - FLT_EPSILON < rad + FLT_EPSILON)
 						{
 							t = vec4(normalize(vec3(t)), t.w);
 							t.w = t.w * (4 - k);//gets the pendepth based on where in the dt we are
-							//bulletNormal[index] = t;
 							return t;
 						}
 					}
 				}
 			}
-		}
-		//bthreads[i] = std::thread(&Physics::checkBulletvWorldInternal, this, tBox, rad, i);
-		
+		}		
 	}
-
-
-	
-	/*int longestInd = 0;
-	for (int i = 0; i < 4; i++)
-	{
-		if (length(bulletNormal[i]) > length(bulletNormal[longestInd]))
-			longestInd = i;
-	}
-
-	for (int i = 0; i < 4; i++)
-	{
-		bthreads[i].join();
-	}*/
-
-//	if (length(bulletNormal[longestInd]) > 0.0f)
-	//	return bulletNormal[longestInd];
 
 	return vec4(-1, -1, -1, -1);
 }
