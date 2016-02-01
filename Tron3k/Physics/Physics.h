@@ -95,7 +95,8 @@ private:
 	glm::vec4 getSpherevOBBNorms(glm::vec3 pos, float rad, OBB* obb);
 	//--------------//--------------//
 
-	void checkBulletvWorldInternal(AABB bulletBox);
+	void* checkBulletvWorldInternal(AABB* bulletBox, float rad, int index);
+	vec4 bulletNormal[4];
 
 	void storeChunkBox(int chunkID, std::vector<AABB> cBox);
 	void storeEffectBox(EffectMesh efml);

@@ -674,14 +674,50 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos)
 	return cNorms;
 }
 
-void Physics::checkBulletvWorldInternal(AABB bulletBox)
+void* Physics::checkBulletvWorldInternal(AABB* bulletBox, float rad, int index)
 {
 	std::vector<vec4> cNorms;
-	//return cNorms;
+
+	//each chunk
+	vec4 t = vec4(0);
+	for (unsigned int i = 0; i < worldBoxes.size(); i++)
+	{
+		//each abb
+		for (unsigned int j = 0; j < worldBoxes[i].size(); j++)
+		{
+			bool contin = false;
+
+			//do or do not, there is a try again at half the position
+
+			if (checkAABBvAABBCollision(bulletBox, &worldBoxes[i][j].boundingBox))
+			{
+				//printf("%d %d \n", i, j); // test for abbs so they register
+
+				//for each obb contained in that abb
+				int size = worldBoxes[i][j].boundingBox.ObbBoxes.size();
+				for (int n = 0; n < size; n++)
+				{
+					t = getSpherevOBBNorms(bulletBox->pos, rad, &worldBoxes[i][j].boundingBox.ObbBoxes[n]);
+					t.w = rad - t.w; //penetration depth instead of collision distance 
+					if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
+					{
+						t = vec4(normalize(vec3(t)), t.w);
+						t.w = t.w * (4 - i);//gets the pendepth based on where in the dt we are
+						bulletNormal[index] = t;
+					}
+				}
+			}
+		}
+	}
+	return (void*)&t;
 }
 
 vec4 Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel, vec3 bulletDir, float dt)
 {
+	for (int i = 0; i < 4; i++)
+	{
+		bulletNormal[i] = (vec4(0));
+	}
 	AABB box;
 	vec3 bPos = bulletPos - (bulletVel * bulletDir * dt);
 	float rad = bulletBox.getSphere().radius;
@@ -702,9 +738,9 @@ vec4 Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel, vec3 bulletD
 	deltaDir = bulletDir * dtbyI;
 	dirTimesVel = bulletVel * deltaDir;
 
-	//std::thread bthreads[4];
+	std::thread bthreads[4];
 
-	for (int i = 0; i < 4 && cNorms.size() == 0; i++)
+	for (int i = 0; i < 4; i++)
 	{
 
 
@@ -712,41 +748,25 @@ vec4 Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel, vec3 bulletD
 		box.max = bPos + vec3(rad, rad, rad);
 		box.min = bPos - vec3(rad, rad, rad);
 		bulletBox.setAABB(box);
+		box.pos = bPos;
+		AABB* tBox = &box;
 
-
-
-		//bthreads[i] = std::thread(&Physics::checkBulletvWorldInternal, (void*)&box);
-		//each chunk
-		for (unsigned int i = 0; i < worldBoxes.size(); i++)
-		{
-			//each abb
-			for (unsigned int j = 0; j < worldBoxes[i].size(); j++)
-			{
-				bool contin = false;
-
-				//do or do not, there is a try again at half the position
-
-				if (checkAABBvAABBCollision(&bulletBox.boundingBox, &worldBoxes[i][j].boundingBox))
-				{
-					//printf("%d %d \n", i, j); // test for abbs so they register
-
-					//for each obb contained in that abb
-					int size = worldBoxes[i][j].boundingBox.ObbBoxes.size();
-					for (int n = 0; n < size; n++)
-					{
-						t = getSpherevOBBNorms(bPos, rad, &worldBoxes[i][j].boundingBox.ObbBoxes[n]);
-						t.w = rad - t.w; //penetration depth instead of collision distance 
-						if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
-						{
-							t = vec4(normalize(vec3(t)), t.w);
-							t.w = t.w * (4 - i);//gets the pendepth based on where in the dt we are
-							return t;
-						}
-					}
-				}
-			}
-		}
+		bthreads[i] = std::thread(&Physics::checkBulletvWorldInternal, this, tBox, rad, i);
+		
 	}
+
+	for (int i = 0; i < 4; i++)
+	{
+		bthreads[i].join();
+	}
+	int longestInd = 0;
+	for (int i = 0; i < 4; i++)
+	{
+		if (length(bulletNormal[i]) > length(bulletNormal[longestInd]))
+			longestInd = i;
+	}
+	if (length(bulletNormal[longestInd]) > 0.0f)
+		return bulletNormal[longestInd];
 
 	return vec4(-1, -1, -1, -1);
 }
