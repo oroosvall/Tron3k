@@ -1121,7 +1121,7 @@ void Game::handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm
 				GetSound()->playExternalSound(SOUNDS::soundEffectShotGun, pos.x, pos.y, pos.z);
 		glm::vec3 rightV = normalize(cross(dir, vec3(0, 1, 0)));
 		glm::vec3 upV = normalize(cross(dir, rightV));
-		for (int k = 0; k < 16; k++)
+		for (int k = 0; k < 10; k++)
 		{
 			//float xrand = (rand() % 50) / 100.0f - 0.25f;
 			//float yrand = (rand() % 50) / 100.0f - 0.25f;
