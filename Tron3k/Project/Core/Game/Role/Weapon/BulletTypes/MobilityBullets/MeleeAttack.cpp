@@ -20,6 +20,10 @@ int MeleeAttack::update(float dt)
 		attackTimer -= dt;
 	else
 	{
+		if (!teleported)
+		{
+			teleported = true;
+		}
 		pos += dir * vel * dt;
 
 		updateWorldMat();
