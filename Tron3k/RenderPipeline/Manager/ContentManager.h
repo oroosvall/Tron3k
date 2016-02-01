@@ -33,6 +33,7 @@ private:
 	//skybox
 	Mesh skybox;
 
+	GLuint lightWallTex;
 	GLuint skyTexture;
 
 	GLuint portalQuery;

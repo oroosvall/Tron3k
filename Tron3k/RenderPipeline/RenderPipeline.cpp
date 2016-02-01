@@ -510,7 +510,7 @@ void RenderPipeline::renderWallEffect(void* pos1, void* pos2, float uvStartOffse
 	glBindBuffer(GL_ARRAY_BUFFER, lwVertexDataId);
 	glBindVertexArray(lwVertexAttribute);
 
-	float of = timepass * 0.1f;
+	float of = timepass * 0.4f;
 
 	glm::vec3 wpos1 = *(glm::vec3*)pos1;
 	glm::vec3 wpos2 = *(glm::vec3*)pos2;

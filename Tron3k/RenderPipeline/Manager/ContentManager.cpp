@@ -18,6 +18,8 @@ void ContentManager::init()
 
 	skyTexture = loadTexture("GameFiles/Textures/skybox.dds");
 
+	lightWallTex = loadTexture("GameFiles/Textures/Blob.png");
+
 	playerCharacters[0].load("trapper");
 
 	playerCharacters[1].load("destroyer");
@@ -111,6 +113,8 @@ void ContentManager::release()
 	glDeleteTextures(1, &blank_glow);
 
 	glDeleteTextures(1, &skyTexture);
+
+	glDeleteTextures(1, &lightWallTex);
 
 	testMap.release();
 
@@ -391,7 +395,7 @@ std::vector<std::vector<float>> ContentManager::getMeshBoxes()
 void ContentManager::bindLightwalTexture()
 {
 	glActiveTexture(GL_TEXTURE0);
-	//glBindTexture(GL_TEXTURE_2D, textures[12].textureID);
+	glBindTexture(GL_TEXTURE_2D, lightWallTex);
 }
 
 void ContentManager::setRoomID(int room)
