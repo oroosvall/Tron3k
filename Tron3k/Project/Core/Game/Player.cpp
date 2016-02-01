@@ -678,6 +678,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			isDead = true;
 			vel = glm::vec3(0, 0, 0);
 		}
+		modifiersSetData(dt);
 	}
 	
 	return msg;
@@ -961,9 +962,9 @@ glm::mat4 Player::getFPSmat()
 
 		break;
 	case BRUTE:
-		yOffset = 0.5f;
-		xOffset = -0.3f;
-		zOffset = 0.5f;
+		yOffset = 0;
+		xOffset = 0;
+		zOffset = 1;
 		break;
 	case MANIPULATOR:
 		yOffset = 0.0f;

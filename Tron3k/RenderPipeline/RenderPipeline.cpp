@@ -809,7 +809,7 @@ void* RenderPipeline::getCapPointsAsPoint(int& count)
 
 void* RenderPipeline::getRoomBoxes()
 {
-	return 0;
+	return contMan.getRoomBoxes();
 }
 
 void RenderPipeline::getPlayerBox(float &xMax, float &xMin, float &yMax, float &yMin, float &zMax, float &zMin)

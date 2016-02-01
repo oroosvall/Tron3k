@@ -361,7 +361,7 @@ void Game::sendCapBoxes(int nrCaps, void* capBoxes)
 
 void Game::sendRoomBoxes(void* roomboxes)
 {
-
+	physics->receiveRoomBoxes(roomboxes);
 }
 
 void Game::sendPlayerBox(std::vector<float> pBox)
@@ -1042,7 +1042,7 @@ void Game::addBulletToList(int conID, int bulletId, BULLET_TYPE bt, glm::vec3 po
 		b = new HackingDart(pos, dir, conID, bulletId, p->getTeam(), BULLET_TYPE::HACKING_DART);
 		break;
 	case BULLET_TYPE::MELEE_ATTACK:
-		b = new MeleeAttack(pos, dir, conID, bulletId, p->getTeam(), p);
+		b = new MeleeAttack(vec3(999.0f, 999.0f, 999.0f), dir, conID, bulletId, p->getTeam(), p);
 	break;
 	}
 

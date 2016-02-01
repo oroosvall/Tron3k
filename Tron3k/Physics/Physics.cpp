@@ -741,6 +741,7 @@ vec4 Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel, vec3 bulletD
 	std::thread bthreads[4];
 
 	for (int i = 0; i < 4; i++)
+
 	{
 
 
@@ -754,6 +755,7 @@ vec4 Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel, vec3 bulletD
 		bthreads[i] = std::thread(&Physics::checkBulletvWorldInternal, this, tBox, rad, i);
 		
 	}
+
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -1223,6 +1225,21 @@ void Physics::receiveWorldBoxes(std::vector<std::vector<float>> wBoxes)
 		temp.setAABB(vec3(xPos, yPos, zPos), vec3(xSize, ySize, zSize), vec3(-xSize, -ySize, -zSize));
 
 		worldBoxes[0].push_back(temp);
+	}
+}
+
+void Physics::receiveRoomBoxes(void* _roomboxes)
+{
+	AABBcapLoaded* inRooms = (AABBcapLoaded*)_roomboxes;
+
+	//nr of chunks
+	int size = worldBoxes.size();
+	for (int n = 0; n < size; n++)
+	{
+		roomBoxes.push_back(AABBCapPointDivide());
+		roomBoxes[n].pos = vec3(inRooms[n].pos);
+		roomBoxes[n].max = vec3(inRooms[n].max);
+		roomBoxes[n].min = vec3(inRooms[n].min);
 	}
 }
 
