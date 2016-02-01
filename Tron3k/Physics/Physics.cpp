@@ -821,7 +821,7 @@ bool Physics::checkPlayerVCaptureCollision(vec3 playerPos, int capID)
 {
 	for (int i = 0; i < captureBoxes.size(); i++)
 	{
-		if (captureBoxes[i].capBox.capID == capID)
+		if (captureBoxes[i].capID == capID)
 		{
 			AABB box;
 			box.pos = playerPos;
@@ -831,7 +831,7 @@ bool Physics::checkPlayerVCaptureCollision(vec3 playerPos, int capID)
 
 			playerBox.setPos(playerPos);
 
-			return checkPlayerVCapCollision(playerBox.getAABB(), captureBoxes[i].getCapBox());
+			return checkPlayerVCapCollision(playerBox.getAABB(), captureBoxes[i]);
 		}
 	}
 	return false;

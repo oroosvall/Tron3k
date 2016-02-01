@@ -81,7 +81,7 @@ struct AABBCapPoint
 			aabbs[n].max = vec3(in.subabbs[n].max);
 			aabbs[n].min = vec3(in.subabbs[n].min);
 		}
-	};
+	}
 
 };
 
