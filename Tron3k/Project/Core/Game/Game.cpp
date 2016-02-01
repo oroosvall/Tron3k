@@ -1556,13 +1556,6 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 				if (GetSoundActivated())
 					GetSound()->playExternalSound(SOUNDS::soundEffectDiscBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
 				bounceBullet(hi, b);
-				temp = b->getDir();
-				temp.x *= 0.6;
-				temp.y *= 0.6;
-				temp.z *= 0.6;
-				if (length(temp) < 0.05f)
-					removeBullet(hi.bt, arraypos);
-				b->setDir(temp);
 				break;
 			case BULLET_TYPE::GRENADE_SHOT:
 				if (GetSoundActivated())
