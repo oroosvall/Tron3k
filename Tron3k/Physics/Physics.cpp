@@ -702,7 +702,7 @@ vec4 Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel, vec3 bulletD
 	deltaDir = bulletDir * dtbyI;
 	dirTimesVel = bulletVel * deltaDir;
 
-	std::thread bthreads[4];
+	//std::thread bthreads[4];
 
 	for (int i = 0; i < 4 && cNorms.size() == 0; i++)
 	{
@@ -715,7 +715,7 @@ vec4 Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel, vec3 bulletD
 
 
 
-		bthreads[i] = std::thread(&Physics::checkBulletvWorldInternal, (void*)&box);
+		//bthreads[i] = std::thread(&Physics::checkBulletvWorldInternal, (void*)&box);
 		//each chunk
 		for (unsigned int i = 0; i < worldBoxes.size(); i++)
 		{
