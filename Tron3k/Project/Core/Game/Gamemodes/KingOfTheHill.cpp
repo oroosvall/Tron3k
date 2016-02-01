@@ -176,6 +176,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 		{
 			timer += dt;
 
+			/*
 			if (!this->fiveTokensPlayed && teamOneSpawnTokens == 5 && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
 			{
 				GetSound()->playUserGeneratedSound(SOUNDS::announcer5Tokens);
