@@ -951,7 +951,9 @@ glm::mat4 Player::getFPSmat()
 	switch (role.getRole())
 	{
 	case TRAPPER:
-
+		yOffset = 0.0f;
+		xOffset = 0.0f;
+		zOffset = -0.0f;
 		break;
 	case DESTROYER:
 		yOffset = 0.3f;
@@ -962,9 +964,9 @@ glm::mat4 Player::getFPSmat()
 
 		break;
 	case BRUTE:
-		yOffset = 0;
-		xOffset = 0;
-		zOffset = 1;
+		yOffset = 0.35f;
+		xOffset = 0.45f;
+		zOffset = 0.40f;
 		break;
 	case MANIPULATOR:
 		yOffset = 0.0f;
