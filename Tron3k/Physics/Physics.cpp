@@ -704,7 +704,7 @@ vec4 Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel, vec3 bulletD
 
 	//std::thread bthreads[4];
 
-	for (int i = 0; i < 4 && cNorms.size() == 0; i++)
+	for (int k = 0; k < 4 && cNorms.size() == 0; k++)
 	{
 
 
@@ -739,7 +739,7 @@ vec4 Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel, vec3 bulletD
 						if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 						{
 							t = vec4(normalize(vec3(t)), t.w);
-							t.w = t.w * (4 - i);//gets the pendepth based on where in the dt we are
+							t.w = t.w * (4 - k);//gets the pendepth based on where in the dt we are
 							return t;
 						}
 					}
