@@ -3,14 +3,17 @@
 
 #include <glm/glm.hpp>
 #include "../../Bullet.h"
+#include "../../../../Player.h"
 
 #include "../../../../GameDataIndex.h"
 
 class MeleeAttack : public Bullet
 {
 private:
+	Player* target;
+	float attackTimer = 10.0f;
 public:
-	MeleeAttack(glm::vec3 pos, glm::vec3 dir, int pID, int bID, int tID, int type);
+	MeleeAttack(glm::vec3 pos, glm::vec3 dir, int pID, int bID, int tID, Player* player);
 	~MeleeAttack();
 
 	int update(float dt);

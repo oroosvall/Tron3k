@@ -1041,8 +1041,8 @@ void Game::addBulletToList(int conID, int bulletId, BULLET_TYPE bt, glm::vec3 po
 		b = new HackingDart(pos, dir, conID, bulletId, p->getTeam(), BULLET_TYPE::HACKING_DART);
 		break;
 	case BULLET_TYPE::MELEE_ATTACK:
-		b = new MeleeAttack(pos, dir, conID, bulletId, p->getTeam(), BULLET_TYPE::MELEE_ATTACK);
-		break;
+		b = new MeleeAttack(pos, dir, conID, bulletId, p->getTeam(), p);
+	break;
 	}
 
 	bullets[bt].push_back(b);
