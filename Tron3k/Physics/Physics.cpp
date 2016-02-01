@@ -672,6 +672,12 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos)
 	return cNorms;
 }
 
+void Physics::checkBulletvWorldInternal(AABB bulletBox)
+{
+	std::vector<vec4> cNorms;
+	//return cNorms;
+}
+
 vec4 Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel, vec3 bulletDir, float dt)
 {
 	AABB box;
@@ -694,7 +700,7 @@ vec4 Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel, vec3 bulletD
 	deltaDir = bulletDir * dtbyI;
 	dirTimesVel = bulletVel * deltaDir;
 
-
+	//std::thread bthreads[4];
 
 	for (int i = 0; i < 4 && cNorms.size() == 0; i++)
 	{
@@ -705,6 +711,9 @@ vec4 Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel, vec3 bulletD
 		box.min = bPos - vec3(rad, rad, rad);
 		bulletBox.setAABB(box);
 
+
+
+		//bthreads[i] = std::thread(&Physics::checkBulletvWorldInternal, (void*)&box);
 		//each chunk
 		for (unsigned int i = 0; i < worldBoxes.size(); i++)
 		{

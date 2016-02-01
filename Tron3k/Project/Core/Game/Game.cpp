@@ -631,14 +631,16 @@ void Game::checkPlayerVCapCollision()
 	{
 		bool localCollided = physics->checkPlayerVCaptureCollision(playerList[localPlayerId]->getPos(), 0);
 	}
-
-	bool inPoint = false;
-
-	for (int i = 0; i < max_con; i++)
+	else if (gameState == Gamestate::SERVER)
 	{
-		if (playerList[i] != nullptr)
+		bool inPoint = false;
+
+		for (int i = 0; i < max_con; i++)
 		{
-			inPoint = physics->checkPlayerVCaptureCollision(playerList[i]->getPos(), 0);
+			if (playerList[i] != nullptr)
+			{
+				inPoint = physics->checkPlayerVCaptureCollision(playerList[i]->getPos(), 0);
+			}
 		}
 	}
 }

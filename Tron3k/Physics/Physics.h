@@ -17,6 +17,7 @@
 #include "Effect\EffectMesh.h"
 #include<vector>
 #include<iterator>
+#include<thread>
 
 
 //----COLLISION INFO----
@@ -92,6 +93,8 @@ private:
 	glm::vec4 getSpherevOBBlwNorms(glm::vec3 pos, float rad, OBB* obb);
 	glm::vec4 getSpherevOBBNorms(glm::vec3 pos, float rad, OBB* obb);
 	//--------------//--------------//
+
+	void checkBulletvWorldInternal(AABB bulletBox);
 
 	void storeChunkBox(int chunkID, std::vector<AABB> cBox);
 	void storeEffectBox(EffectMesh efml);
