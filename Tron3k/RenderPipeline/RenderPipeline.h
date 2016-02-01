@@ -120,6 +120,8 @@ private:
 
 	bool initialized;
 
+	bool renderDebugText = false;
+
 public:
 
 	RenderPipeline() {};

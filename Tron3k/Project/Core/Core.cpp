@@ -861,6 +861,7 @@ void Core::roamHandleCmds()
 				console.printMsg("/rs  chunk	RENDER_CHUNK ", "", ' ');
 				console.printMsg("/rs  abb		RENDER_ABB ", "", ' ');
 				console.printMsg("/rs  obb		RENDER_OBB ", "", ' ');
+				console.printMsg("/rs  debug	RENDER_DEBUG_TEXT ", "", ' ');
 			}
 			else if (token == "portal")
 				renderPipe->setRenderFlag(PORTAL_CULLING);
@@ -872,6 +873,8 @@ void Core::roamHandleCmds()
 				renderPipe->setRenderFlag(RENDER_ABB);
 			else if (token == "obb")
 				renderPipe->setRenderFlag(RENDER_OBB);
+			else if(token == "debug")
+				renderPipe->setRenderFlag(RENDER_DEBUG_TEXT);
 		}
 		else if (token == "/disconnect")
 			disconnect();

@@ -93,7 +93,7 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 	fontTexture = loadTexture("GameFiles/Font/font16.png", false);
 
-	debugText = new Text("Debug Test\nNew line :)", 16, fontTexture, vec2(10, 24));
+	debugText = new Text("", 16, fontTexture, vec2(10, 24));
 	chatHistoryText = ".\n.\n.\n.\n.\n";
 	chatTypeText = "..";
 	chatText = new Text(chatHistoryText + chatTypeText, 11, fontTexture, vec2(10, 420));
@@ -380,22 +380,25 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 
 	terminateQuery();
 	
-	ss << "Draw count: " << drawCount << "\n";
-	ss << "Primitive count: " << primitiveCount << "\n";
-	ss << "Buffer count: " << genBufferPeak << "\n";
-	ss << "Vao count: " << genVaoPeak << "\n";
-	ss << "Texture count: " << genTexturePeak << "\n";
-	ss << "Memory usage: " << memusage << "(B)\n";
-	ss << "Memory usage: " << memusage/1024.0f/1024.0f << "(MB)\n";
-	ss << "Texture binds: " << textureBinds << "\n";
-	ss << "Buffer binds: " << bufferBinds << "\n";
-	ss << "Shader binds: " << shaderBinds << "\n";
-	ss << result << "\n";
-	if (counter > 1.0f)
+	if (renderDebugText)
 	{
-		result = getQueryResult();
-		counter = 0;
-		debugText->setText(ss.str());
+		ss << "Draw count: " << drawCount << "\n";
+		ss << "Primitive count: " << primitiveCount << "\n";
+		ss << "Buffer count: " << genBufferPeak << "\n";
+		ss << "Vao count: " << genVaoPeak << "\n";
+		ss << "Texture count: " << genTexturePeak << "\n";
+		ss << "Memory usage: " << memusage << "(B)\n";
+		ss << "Memory usage: " << memusage / 1024.0f / 1024.0f << "(MB)\n";
+		ss << "Texture binds: " << textureBinds << "\n";
+		ss << "Buffer binds: " << bufferBinds << "\n";
+		ss << "Shader binds: " << shaderBinds << "\n";
+		ss << result << "\n";
+		if (counter > 1.0f)
+		{
+			result = getQueryResult();
+			counter = 0;
+			debugText->setText(ss.str());
+		}
 	}
 
 	resetQuery();
@@ -845,11 +848,12 @@ void RenderPipeline::setRenderFlag(RENDER_FLAGS flag)
 {
 	switch (flag)
 	{
-		case PORTAL_CULLING:	contMan.f_portal_culling = !contMan.f_portal_culling;	break;
-		case FREEZE_CULLING:	contMan.f_freeze_portals = !contMan.f_freeze_portals;	break;
-		case RENDER_CHUNK:		contMan.f_render_chunks = !contMan.f_render_chunks;		break;
-		case RENDER_ABB:		contMan.f_render_abb = !contMan.f_render_abb;			break;
-		case RENDER_OBB:		contMan.f_render_obb = !contMan.f_render_obb;			break;
+		case PORTAL_CULLING:	contMan.f_portal_culling = !contMan.f_portal_culling;		break;
+		case FREEZE_CULLING:	contMan.f_freeze_portals = !contMan.f_freeze_portals;		break;
+		case RENDER_CHUNK:		contMan.f_render_chunks = !contMan.f_render_chunks;			break;
+		case RENDER_ABB:		contMan.f_render_abb = !contMan.f_render_abb;				break;
+		case RENDER_OBB:		contMan.f_render_obb = !contMan.f_render_obb;				break;
+		case RENDER_DEBUG_TEXT:	renderDebugText = !renderDebugText; debugText->setText(""); break;
 	}
 }
 
