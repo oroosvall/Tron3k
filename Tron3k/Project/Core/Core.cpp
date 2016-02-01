@@ -662,7 +662,7 @@ void Core::upServer(float dt)
 		if (serverDataTimer > 0.25f)
 		{
 			top->event_gamemode_data();
-			top->event_player_data();
+			//top->event_player_data();
 			serverDataTimer = 0.0f;
 		}
 
