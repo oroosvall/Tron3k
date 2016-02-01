@@ -6,7 +6,7 @@
 class LightSpeed : public Modifier
 {
 private:
-	float lightSpeed = 2.5f;
+	float lightSpeed = 2.0f;
 	float timer = 5.0f;
 public:
 	void init(Player* myTarget);

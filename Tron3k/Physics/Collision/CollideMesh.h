@@ -34,22 +34,55 @@ struct AABBloaded
 	std::vector<OBBloaded> ObbBoxes;
 };
 
-struct AABBCapPointDivide
+struct AABBcapLoaded
 {
 	vec4 pos;
 	vec4 max;
 	vec4 min;
 };
 
+struct CaptureLoaded
+{
+	int roomID;
+	AABBcapLoaded bigAABB;
+	int subcount;
+	AABBcapLoaded* subabbs;
+};
+
+struct AABBCapPointDivide
+{
+	vec3 pos;
+	vec3 max;
+	vec3 min;
+};
+
 struct AABBCapPoint
 {
-	vec4 pos;
-	vec4 max;
-	vec4 min;
+	vec3 pos;
+	vec3 max;
+	vec3 min;
 
 	int capID;
 
 	std::vector<AABBCapPointDivide> aabbs;
+
+	void init(CaptureLoaded in)
+	{
+		capID = in.roomID;
+		pos = vec3(in.bigAABB.pos);
+		max = vec3(in.bigAABB.max);
+		min = vec3(in.bigAABB.min);
+		int size = in.subcount;
+
+		for (int n = 0; n < size; n++)
+		{
+			aabbs.push_back(AABBCapPointDivide());
+			aabbs[n].pos = vec3(in.subabbs[n].pos);
+			aabbs[n].max = vec3(in.subabbs[n].max);
+			aabbs[n].min = vec3(in.subabbs[n].min);
+		}
+	}
+
 };
 
 struct OBB_LINES
@@ -323,6 +356,8 @@ public:
 	void setSphere(vec3 pos, float radius);
 	void setSphere(Sphere sphere);
 	Sphere getSphere();
+
+	AABBCapPoint getCapBox() { return capBox; };
 
 	void setPos(vec3 pos);
 };

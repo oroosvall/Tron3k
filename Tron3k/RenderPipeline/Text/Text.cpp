@@ -190,7 +190,7 @@ void Text::fillBuffer()
 	if (index != 0)
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(Float5)* index, verts, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(Float5) * index, verts, GL_STATIC_DRAW);
 	}
 	quadCount = index;
 

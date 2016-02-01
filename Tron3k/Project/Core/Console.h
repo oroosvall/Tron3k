@@ -37,6 +37,7 @@ private:
 	bool cmdReady;
 
 	bool inChatMode = false;
+	bool historyUpdate = false;
 public:
 	Console();
 	~Console();
@@ -51,6 +52,7 @@ public:
 	string getCommand();
 
 	string getHistory();
+	bool getHistoryUpdate();
 
 	void discardCommandAndLastMsg();
 

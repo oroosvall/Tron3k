@@ -31,14 +31,20 @@ struct CapturePoint
 
 };
 
+struct CaptureExportToGame
+{
+	int roomID;
+	ABB bigAABB;
+	int subcount;
+	ABB* subabbs;
+};
+
 class Map
 {
 
 private:
-
 	Material* materials;
-
-	
+	ABB* chunkAABB;
 	TextureStruct* tex;
 
 	BBPoint* bbPoints;
@@ -46,7 +52,6 @@ private:
 
 	int* capPointAABBCount;
 	int* capPointWallCount;
-
 	CapturePoint* capturePoints;
 
 	int meshCount;
@@ -61,9 +66,9 @@ public:
 	int currentChunk;
 	int roomCount;
 
-	SpawnPoint* spA;	
-	SpawnPoint* spB;	
-	SpawnPoint* spFFA;	
+	SpawnPoint* spA;
+	SpawnPoint* spB;
+	SpawnPoint* spFFA;
 	int spTACount;
 	int spTBCount;
 	int spFFACount;
@@ -82,6 +87,9 @@ public:
 	int portalintersection(glm::vec3* oldPos, glm::vec3* newPos, int in_currentchunk);
 
 	ChunkCollision* getChunkCollision(int chunkID);
+	void* getCapAsPointer(int& count);
+	void* getRoomBoxes() { return chunkAABB; };
+	
 
 	void deleteSpawnposData();
 };

@@ -17,6 +17,8 @@ void ContentManager::init()
 	blank_glow = loadTexture("GameFiles/Textures/blank_g.dds");
 
 	skyTexture = loadTexture("GameFiles/Textures/skybox.dds");
+	lightWallTex = loadTexture("GameFiles/Textures/Blob.png");
+	decalTexture = loadTexture("GameFiles/Textures/decal.png");
 
 	playerCharacters[0].load("trapper");
 
@@ -111,6 +113,9 @@ void ContentManager::release()
 	glDeleteTextures(1, &blank_glow);
 
 	glDeleteTextures(1, &skyTexture);
+
+	glDeleteTextures(1, &lightWallTex);
+	glDeleteTextures(1, &decalTexture);
 
 	testMap.release();
 
@@ -369,6 +374,16 @@ void* ContentManager::getChunkCollisionVectorAsPointer(int chunkID)
 	return nullptr;
 }
 
+void* ContentManager::getCapAsPointer(int& count)
+{
+	return testMap.getCapAsPointer(count);
+}
+
+void* ContentManager::getRoomBoxes()
+{
+	return testMap.getRoomBoxes();
+}
+
 std::vector<std::vector<float>> ContentManager::getMeshBoxes()
 {
 	std::vector<std::vector<float>> size;
@@ -380,7 +395,13 @@ std::vector<std::vector<float>> ContentManager::getMeshBoxes()
 void ContentManager::bindLightwalTexture()
 {
 	glActiveTexture(GL_TEXTURE0);
-	//glBindTexture(GL_TEXTURE_2D, textures[12].textureID);
+	glBindTexture(GL_TEXTURE_2D, lightWallTex);
+}
+
+void ContentManager::bindDecalTexture()
+{
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, decalTexture);
 }
 
 void ContentManager::setRoomID(int room)

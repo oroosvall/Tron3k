@@ -30,6 +30,7 @@ private:
 	float swapWeaponTimer;
 	string roles[NROFROLES];
 	string loadedRoles[NROFROLES][NROFREADPROPERTIES];
+	glm::vec3 size;
 
 	void loadWeapons(int role, int wpn); //wpn = main or sec
 	void loadRoleSpecifics(int role);
@@ -50,6 +51,11 @@ public:
 	Role();
 	Role(string inLoadedRoles[NROFROLES][NROFREADPROPERTIES]);
 	~Role();
+
+	glm::vec3 GetSize()
+	{
+		return this->size;
+	}
 
 	float getMovementSpeed();
 

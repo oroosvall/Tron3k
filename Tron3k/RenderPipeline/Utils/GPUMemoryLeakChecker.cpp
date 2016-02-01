@@ -35,6 +35,8 @@ GLenum elementBufferLast = 0;
 
 GLuint textureBindMap[5];
 
+GLuint bufferBindMap[5];
+
 
 void glGenBuffers_D(GLsizei n, GLuint* id, char* file, int line)
 {
@@ -154,8 +156,11 @@ void glBufferData_D(GLenum target, GLsizeiptr size, const GLvoid * data, GLenum 
 
 void glActiveTexture_D(GLenum texture)
 {
-	currentActiveTexture = texture;
-	glActiveTexture(texture);
+	if (texture != currentActiveTexture)
+	{
+		currentActiveTexture = texture;
+		glActiveTexture(texture);
+	}
 }
 
 void glBindTexture_D(GLenum target, GLuint texture)
@@ -170,7 +175,12 @@ void glBindTexture_D(GLenum target, GLuint texture)
 
 void glBindBuffer_D(GLenum target, GLuint buffer)
 {
-	glBindBuffer(target, buffer);
+	if (bufferBindMap[target - GL_ARRAY_BUFFER] != buffer)
+	{
+		bufferBinds++;
+		glBindBuffer(target, buffer);
+		bufferBindMap[target - GL_ARRAY_BUFFER] = buffer;
+	}
 }
 
 void glTexImage2D_D(GLenum target, GLint level, GLint internalFormat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const GLvoid * data)

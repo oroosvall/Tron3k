@@ -167,6 +167,7 @@ public:
 	}
 
 	virtual void event_gamemode_data() {};
+	virtual void event_player_data() {};
 
 	virtual void event_effect_timed_out(std::vector<EffectTimeOutInfo> alleffects) {};
 	virtual void event_bullet_timed_out(std::vector<BulletTimeOutInfo> allbullets) {};
@@ -182,6 +183,20 @@ public:
 		gamePtr->denyPlayerRespawn(tryAgain);
 	}
 
+	virtual void in_event_playerdata(Packet* rec)
+	{
+		Uint8 HP;
+		for (int c = 0; c < 20; c++)
+		{
+			Player* p = gamePtr->getPlayer(c);
+			if (p != nullptr)
+			{
+				*rec >> HP;
+				p->setHP(HP);
+			}
+		}
+	}
+
 	virtual void in_event_gamemode_data(Packet* rec)
 	{
 		Uint8 type;
@@ -191,11 +206,12 @@ public:
 			KingOfTheHill* koth = (KingOfTheHill*)gamePtr->getGameMode();
 			Uint8 teamOneTokens;
 			Uint8 teamTwoTokens;
-			Uint8 overtime;
-			Uint8 started;
-			Uint8 ended;
-			*rec >> teamOneTokens >> teamTwoTokens >> overtime >> started >> ended;
-			koth->setGamemodeData(teamOneTokens, teamTwoTokens, overtime, started, ended);
+			Uint8 teamOneOnCapP;
+			Uint8 teamTwoOnCapP;
+			Uint8 state;
+			Uint8 lastMsg;
+			*rec >> teamOneTokens >> teamTwoTokens >> teamOneOnCapP >> teamTwoOnCapP >> state >> lastMsg;
+			koth->setGamemodeData(teamOneTokens, teamTwoTokens, teamOneOnCapP, teamTwoOnCapP, (KOTHSTATE)state, (GAMEMODE_MSG)lastMsg);
 		}
 	}
 

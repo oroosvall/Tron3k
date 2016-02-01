@@ -100,7 +100,7 @@ void Core::update(float dt)
 	{
 		renderPipe->setChatTypeMessage(console.pollLatest());
 	}
-	if (console.messageReady() && renderPipe)
+	if (console.getHistoryUpdate() && renderPipe)
 	{
 		renderPipe->setChatHistoryText(console.getHistory());
 	}
@@ -151,7 +151,9 @@ void Core::update(float dt)
 	i->clearOnPress();
 	console.discardCommandAndLastMsg();
 
+	int swapTime = renderPipe->startExecTimer("Swap");
 	glfwSwapBuffers(win);
+	renderPipe->stopExecTimer(swapTime);
 }
 
 void Core::upStart(float dt)
@@ -255,6 +257,8 @@ void Core::upRoam(float dt)
 		bool allchunksSent = false;
 		for (int i = 0; !allchunksSent; i++)
 			allchunksSent = sendChunkBoxes(i);
+		sendCapPointBoxes();
+		sendRoomBoxes();
 		Player* p = new Player();
 		p->init("Roam", glm::vec3(0, 0, 0));
 		game->createPlayer(p, 0, 100, 0, true);
@@ -400,6 +404,8 @@ void Core::upClient(float dt)
 				bool allchunksSent = false;
 				for (int i = 0; !allchunksSent; i++)
 					allchunksSent = sendChunkBoxes(i);
+				sendCapPointBoxes();
+				sendRoomBoxes();
 				top->setGamePtr(game);
 				subState++;
 				return; //On sucsess
@@ -556,6 +562,8 @@ void Core::upServer(float dt)
 		bool allchunksSent = false;
 		for (int i = 0; !allchunksSent; i++)
 			allchunksSent = sendChunkBoxes(i);
+		sendCapPointBoxes();
+		sendRoomBoxes();
 		game->freecam = true;
 		//load map
 
@@ -649,12 +657,13 @@ void Core::upServer(float dt)
 		/*
 		MIGHT WANT TO CHANGE THIS LOL
 		*/
-		static float gameModeTimer = 0.0f;
-		gameModeTimer += dt;
-		if (gameModeTimer > 0.25f)
+		static float serverDataTimer = 0.0f;
+		serverDataTimer += dt;
+		if (serverDataTimer > 0.25f)
 		{
 			top->event_gamemode_data();
-			gameModeTimer = 0.0f;
+			//top->event_player_data();
+			serverDataTimer = 0.0f;
 		}
 
 		serverHandleCmds();
@@ -853,6 +862,7 @@ void Core::roamHandleCmds()
 				console.printMsg("/rs  chunk	RENDER_CHUNK ", "", ' ');
 				console.printMsg("/rs  abb		RENDER_ABB ", "", ' ');
 				console.printMsg("/rs  obb		RENDER_OBB ", "", ' ');
+				console.printMsg("/rs  debug	RENDER_DEBUG_TEXT ", "", ' ');
 			}
 			else if (token == "portal")
 				renderPipe->setRenderFlag(PORTAL_CULLING);
@@ -864,6 +874,8 @@ void Core::roamHandleCmds()
 				renderPipe->setRenderFlag(RENDER_ABB);
 			else if (token == "obb")
 				renderPipe->setRenderFlag(RENDER_OBB);
+			else if(token == "debug")
+				renderPipe->setRenderFlag(RENDER_DEBUG_TEXT);
 		}
 		else if (token == "/disconnect")
 			disconnect();
@@ -1187,6 +1199,8 @@ void Core::renderWorld(float dt)
 			dgColor = TEAMONECOLOR;
 		}
 
+		int playerTime = renderPipe->startExecTimer("Players");
+
 		for (size_t i = 0; i < MAX_CONNECT; i++)
 		{
 			Player* p = game->getPlayer(i);
@@ -1243,6 +1257,7 @@ void Core::renderWorld(float dt)
 			}
 		}
 
+		renderPipe->stopExecTimer(playerTime);
 		//*** Render Bullets ***
 
 		if (hackedTeam == -1)
@@ -1302,6 +1317,8 @@ void Core::renderWorld(float dt)
 		else if (hackedTeam == 2)
 			dgColor = TEAMONECOLOR;
 
+		int effectTime = renderPipe->startExecTimer("Effects & decals");
+
 		for (int c = 0; c < EFFECT_TYPE::NROFEFFECTS; c++)
 		{
 			std::vector<Effect*> eff = game->getEffects(EFFECT_TYPE(c));
@@ -1351,6 +1368,11 @@ void Core::renderWorld(float dt)
 				case BATTERY_SPEED:
 					break;
 				case THERMITE_CLOUD:
+				{
+					ThermiteCloud* asd = (ThermiteCloud*)eff[i];
+					vec3 pos = asd->getPos();
+					renderPipe->renderExploEffect(&pos.x, asd->explotionRenderRad(), 0, &dgColor.x);
+				}
 					break;
 				case ZEROFRICTION:
 					break;
@@ -1362,6 +1384,8 @@ void Core::renderWorld(float dt)
 
 		// render Decals
 		renderPipe->renderDecals(game->getAllDecalRenderInfo(), game->getNrOfDecals());
+
+		renderPipe->stopExecTimer(effectTime);
 
 		renderPipe->finalizeRender();
 
@@ -1613,6 +1637,32 @@ bool Core::sendChunkBoxes(int chunkID)
 	}
 	//when we're done with all chunks, we'll get here cause cBoxes will be nullptr, so we'll end the for-loop
 	return 1;
+}
+
+void Core::sendCapPointBoxes()
+{
+	if (renderPipe != nullptr)
+	{
+		int count = 0;
+		void* capBoxes = renderPipe->getCapPointsAsPoint(count);
+
+		if (capBoxes != nullptr)
+		{
+			game->sendCapBoxes(count, capBoxes);
+		}
+	}
+}
+
+void Core::sendRoomBoxes()
+{
+	if (renderPipe != nullptr)
+	{
+		void* send = renderPipe->getRoomBoxes();
+		if (send != nullptr)
+		{
+			game->sendRoomBoxes(send);
+		}
+	}
 }
 
 void Core::sendWorldBoxes()

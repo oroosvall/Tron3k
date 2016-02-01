@@ -22,5 +22,5 @@ int Explosion::update(float dt)
 
 float Explosion::explotionRenderRad()
 {
-	return  10 * exploRadius * (1 - (lifeTime / 0.1f));
+	return  exploRadius;// *(1 - (lifeTime / 0.1f));
 }

@@ -36,7 +36,9 @@ class Physics
 private:
 	//General physics components will go here, and things will be added as we go
 	std::vector<std::vector<CollideMesh>> worldBoxes; //each CollideMesh is an ABB, and the vector is all CollideMeshes in the chunk
-	std::vector<CollideMesh> captureBoxes;
+	std::vector<AABBCapPoint> captureBoxes;
+	std::vector<AABBCapPointDivide> roomBoxes;
+	//std::vector<CollideMesh> captureBoxes;
 	std::vector<EffectMesh*> effectBoxes;
 	CollideMesh playerBox;
 	CollideMesh bulletBox;
@@ -44,7 +46,8 @@ private:
 	//--------AABB Collisions--------//
 	bool checkAABBvAABBCollision(AABB* mesh1, AABB* mesh2);
 	glm::vec3 checkAABBvAABBCollision(Geometry* obj1, Geometry* obj2); //unnecessary redefinition
-	
+	bool checkPlayerVCapCollision(AABB* player, AABBCapPoint capPoint);
+
 	glm::vec3 checkAABBvAngledCylinderCollision(CollideMesh mesh1, CollideMesh mesh2);
 	glm::vec3 checkAABBvCylinderCollision(CollideMesh mesh1, CollideMesh mesh2);
 	
@@ -92,6 +95,9 @@ private:
 	glm::vec4 getSpherevOBBNorms(glm::vec3 pos, float rad, OBB* obb);
 	//--------------//--------------//
 
+	void* checkBulletvWorldInternal(AABB bulletBox, float rad, int index);
+	vec4 bulletNormal[4];
+
 	void storeChunkBox(int chunkID, std::vector<AABB> cBox);
 	void storeEffectBox(EffectMesh efml);
 
@@ -108,17 +114,20 @@ public:
 	virtual bool removeEffect(int eid, int pid, unsigned int eType); //SKRIV EN FUNKTIONSFAN
 	
 	virtual glm::vec3 checkPlayerVPlayerCollision(glm::vec3 playerPos1, glm::vec3 playerPos2);
-	virtual glm::vec3 checkPlayerVBulletCollision(glm::vec3 playerPos, glm::vec3 bulletPos);
+	virtual glm::vec3 checkPlayerVBulletCollision(glm::vec3 playerPos, glm::vec3 bulletPos, vec3 size);
 	virtual std::vector<glm::vec4> PlayerVWorldCollision(glm::vec3 playerPos);
 	virtual glm::vec4 BulletVWorldCollision(glm::vec3 bulletPos, vec3 bulletVel, vec3 bulletDir, float dt);
 	virtual glm::vec3 checkBulletVWorldCollision(glm::vec3 bulletPos);
 	virtual std::vector<glm::vec4> checkPlayerVEffectCollision(glm::vec3 playerPos, unsigned int eType, int eid);
 	virtual std::vector<glm::vec4> checkBulletVEffectCollision(glm::vec3 bulletPos, vec3 bulletVel, vec3 bulletDir, unsigned int eType, int eid, float dt);
+	virtual bool checkPlayerVCaptureCollision(vec3 playerPos, int capID);
 
 	virtual float addGravity(float dt);
 
 	virtual void receiveChunkBoxes(int chunkID, void* cBoxes);
+	virtual void receiveCap(int nrCaps, void* capBoxes);
 	virtual void receiveWorldBoxes(std::vector<std::vector<float>> wBoxes);
+	virtual void receiveRoomBoxes(void* roomboxes);
 	virtual void receivePlayerBox(std::vector<float> pBox, float rad);
 	virtual void receivePlayerRad(float rad);
 	virtual void receiveEffectBox(std::vector<float> eBox, unsigned int etype, int pID, int eID);

@@ -117,9 +117,10 @@ private:
 
 	float counter;
 	int renderFrameTimeID;
-	int renderOther;
 
 	bool initialized;
+
+	bool renderDebugText = false;
 
 public:
 
@@ -166,6 +167,8 @@ public:
 	virtual void setGBufferWin(unsigned int WindowWidth, unsigned int WindowHeight);
 
 	virtual void* getChunkCollisionVectorAsPoint(int chunkID);
+	virtual void* getCapPointsAsPoint(int& count);
+	virtual void* getRoomBoxes();
 
 	virtual void getPlayerBox(float &xMax, float &xMin, float &yMax, float &yMin, float &zMax, float &zMin);
 	virtual void getWorldBoxes(int &current, float &xMax, float &xMin, float &yMax, float &yMin, float &zMax, float &zMin);
@@ -183,6 +186,10 @@ public:
 
 	virtual void enableDepthTest();
 	virtual void disableDepthTest();
+
+	virtual int startExecTimer(std::string name);
+	virtual void stopExecTimer(int id);
+
 };
 
 

@@ -5,7 +5,7 @@ GrenadeShot::GrenadeShot(glm::vec3 position, glm::vec3 direction, int pID, int b
 {
 	initValues(position, direction, pID, bID, tID);
 	vel = glm::vec3(35.0f);
-	damage = 25.0f;
+	damage = 15.0f;
 }
 
 GrenadeShot::~GrenadeShot()
