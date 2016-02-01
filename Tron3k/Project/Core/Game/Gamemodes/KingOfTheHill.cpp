@@ -411,13 +411,42 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 	teamTwoPlayersAtPoint = onCap2;
 	if (serverState != state)
 	{
-		if (serverState == OVERTIME)
+		if (state == OVERTIME)
 		{
 			if (GetSoundActivated() && !overtimePlayed)
 			{
 				GetSound()->playUserGeneratedSound(SOUNDS::announcerCommence);
 				GetSound()->playUserGeneratedSound(SOUNDS::SoundForOvertime);
 				overtimePlayed = true;
+			}
+		}
+
+		if (state == ENDROUND)
+		{
+			if (serverMsg == GAMEMODE_MSG::ROUND_WIN_TEAM1)
+			{
+				consolePtr->printMsg("TEAM ONE WINS THE ROUND", "System", '[S]');
+				if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
+				{
+					GetSound()->playUserGeneratedSound(SOUNDS::YouWin);
+				}
+				else if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 2)
+				{
+					GetSound()->playUserGeneratedSound(SOUNDS::YouLose);
+				}
+			}
+
+			else if (serverMsg == GAMEMODE_MSG::ROUND_WIN_TEAM2)
+			{
+				consolePtr->printMsg("TEAM TWO WINS THE ROUND", "System", '[S]');
+				if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
+				{
+					GetSound()->playUserGeneratedSound(SOUNDS::YouLose);
+				}
+				else if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 2)
+				{
+					GetSound()->playUserGeneratedSound(SOUNDS::YouWin);
+				}
 			}
 		}
 	}
