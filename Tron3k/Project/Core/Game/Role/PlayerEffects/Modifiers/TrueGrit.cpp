@@ -57,7 +57,7 @@ int TrueGrit::setData(float dt)
 
 	if (damageTaken > 0 && timer <= 0)		//Heal atm since damage reduction was impossibru
 	{
-		target->setHP(oldHealth - damageTaken + 5);
+		target->setHP(oldHealth - damageTaken + 1);
 		timer = healDelay;
 	}
 	else
