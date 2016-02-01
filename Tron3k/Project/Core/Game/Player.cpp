@@ -597,11 +597,6 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 						GetSound()->enableSounds();
 					}
 				}
-
-				if (i->justPressed(GLFW_KEY_O))
-				{
-					role.setHealth(0);
-				}
 				if (i->justPressed(GLFW_KEY_M))
 					role.setSpecialMeter(100.0f);
 			} // end of player input
@@ -788,12 +783,16 @@ void Player::hitByBullet(Bullet* b, int newHPtotal)
 	{
 		if (newHPtotal == -1) //We are actually taking damage on the server now
 		{
-			int dmg = b->getDamage();
-			role.takeDamage(dmg);
+			if (!isDead)
+			{
+				int dmg = b->getDamage();
+				role.takeDamage(dmg);
+			}
 		}
 		else //We are on a client, and thus are only interested on our HP on the server
 		{
-			role.setHealth(newHPtotal);
+			if (!isDead)
+				role.setHealth(newHPtotal);
 		}
 
 		if (b->getType() == BULLET_TYPE::HACKING_DART)
