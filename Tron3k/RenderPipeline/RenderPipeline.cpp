@@ -517,8 +517,8 @@ void RenderPipeline::renderWallEffect(void* pos1, void* pos2, float uvStartOffse
 
 	float dist = glm::distance(wpos1, wpos2) / 2.0f;
 
-	vec2 uv1 = vec2(uvStartOffset + of, 0);
-	vec2 uv2 = vec2(uvStartOffset + dist + of, 0);
+	vec2 uv1 = vec2(uvStartOffset - of, 0);
+	vec2 uv2 = vec2(uvStartOffset - dist - of, 0);
 	glProgramUniform2fv(lw_Shader, lw_uv1, 1, &uv1[0]);
 	glProgramUniform2fv(lw_Shader, lw_uv2, 1, &uv2[0]);
 	glProgramUniform3fv(lw_Shader, lw_pos1, 1, &wpos1[0]);
