@@ -191,11 +191,11 @@ public:
 			KingOfTheHill* koth = (KingOfTheHill*)gamePtr->getGameMode();
 			Uint8 teamOneTokens;
 			Uint8 teamTwoTokens;
-			Uint8 overtime;
-			Uint8 started;
-			Uint8 ended;
-			*rec >> teamOneTokens >> teamTwoTokens >> overtime >> started >> ended;
-			koth->setGamemodeData(teamOneTokens, teamTwoTokens, overtime, started, ended);
+			Uint8 teamOneOnCapP;
+			Uint8 teamTwoOnCapP;
+			Uint8 state;
+			*rec >> teamOneTokens >> teamTwoTokens >> teamOneOnCapP >> teamTwoOnCapP >> state;
+			koth->setGamemodeData(teamOneTokens, teamTwoTokens, teamOneOnCapP, teamTwoOnCapP, (KOTHSTATE)state);
 		}
 	}
 

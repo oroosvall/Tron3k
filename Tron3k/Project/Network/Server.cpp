@@ -35,13 +35,11 @@ void Server::event_gamemode_data()
 		KingOfTheHill* koth = (KingOfTheHill*)gm;
 		Uint8 teamOneTokens = koth->getRespawnTokens(1);
 		Uint8 teamTwoTokens = koth->getRespawnTokens(2);
-		Uint8 overtime = koth->getOvertime();
-		Uint8 started = koth->getStarted();
-		Uint8 ended = koth->getEnded();
-		*out << teamOneTokens << teamTwoTokens;
-		*out << overtime;
-		*out << started;
-		*out << ended;
+		Uint8 teamOneOnCapP = koth->getPlayersOnPoint(1);
+		Uint8 teamTwoOnCapP = koth->getPlayersOnPoint(2);
+		Uint8 state = koth->getState();
+		*out << teamOneTokens << teamTwoTokens << teamOneOnCapP << teamTwoOnCapP;
+		*out << state;
 	}
 	
 	branch(out, -1);

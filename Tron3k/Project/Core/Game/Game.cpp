@@ -1479,11 +1479,13 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 					GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeLauncherBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
 
 				bounceBullet(hi, b);
-				temp = b->getVel();
+				temp = b->getDir();
 				temp.x *= 0.6;
 				temp.y *= 0.6;
 				temp.z *= 0.6;
-				b->setVel(temp);
+				if (length(temp) < 0.05f)
+					removeBullet(hi.bt, arraypos);
+				b->setDir(temp);
 				break;
 			default:
 				removeBullet(hi.bt, arraypos);
@@ -1651,7 +1653,7 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 			
 			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
 			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(6.0f);
-			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setDamage(0);
+			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setDamage(25);
 			//This is where you send it to physics
 			std::vector<float> eBox;
 			eBox.push_back(parent->getPos().x);
@@ -1672,7 +1674,7 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 		{
 			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
 			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(3.0f);
-			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setDamage(0);
+			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setDamage(10);
 			if (GetSoundActivated())
 				GetSound()->playExternalSound(SOUNDS::soundEffectClusterlingExplosion, parent->getPos().x, parent->getPos().y, parent->getPos().z);
 
@@ -1715,7 +1717,8 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 				GetSound()->playExternalSound(SOUNDS::soundEffectClusterGrenade, parent->getPos().x, parent->getPos().y, parent->getPos().z);
 
 			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
-			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(10.0f);
+			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(5.0f);
+			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setDamage(10);
 			break;
 		}
 		}
