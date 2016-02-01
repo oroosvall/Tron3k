@@ -38,8 +38,8 @@ void KingOfTheHill::init(Console* cptr, Game* gptr)
 	teamTwoScore = 0;
 	winScore = 2;
 
-	teamOneSpawnTokens = 1;
-	teamTwoSpawnTokens = 1;
+	teamOneSpawnTokens = 20;
+	teamTwoSpawnTokens = 20;
 
 	tickForCaptureScoring = 15.0f;
 	timerModifierForCaptureScoring = tickForCaptureScoring;
@@ -190,12 +190,17 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 				GetSound()->playUserGeneratedSound(SOUNDS::announcer5Tokens);
 				this->fiveTokensPlayed = true;
 			}
-
-			if (GetSoundActivated())
-			{
-				GetSound()->playUserGeneratedSound(SOUNDS::soundEffectCaptureScored);
-			}
 			*/
+
+			if (timer - timerModifierForCaptureScoring > 0.0f) //Sound for score plays
+			{
+				if (GetSoundActivated())
+				{
+					GetSound()->playUserGeneratedSound(SOUNDS::soundEffectCaptureScored);
+				}
+				timerModifierForCaptureScoring += tickForCaptureScoring;
+			}
+			
 		}
 		else if (serverState == OVERTIME)
 		{
@@ -240,7 +245,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			{
 				gamePtr->allowPlayerRespawn(teamTwo->at(c), c);
 			}
-			teamOneSpawnTokens = teamTwoSpawnTokens = 3;
+			teamOneSpawnTokens = teamTwoSpawnTokens = 5;
 			state = ROUND;
 		}
 		else
