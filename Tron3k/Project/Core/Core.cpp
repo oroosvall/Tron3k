@@ -255,6 +255,7 @@ void Core::upRoam(float dt)
 		bool allchunksSent = false;
 		for (int i = 0; !allchunksSent; i++)
 			allchunksSent = sendChunkBoxes(i);
+		sendCapPointBoxes();
 		Player* p = new Player();
 		p->init("Roam", glm::vec3(0, 0, 0));
 		game->createPlayer(p, 0, 100, 0, true);
@@ -400,6 +401,7 @@ void Core::upClient(float dt)
 				bool allchunksSent = false;
 				for (int i = 0; !allchunksSent; i++)
 					allchunksSent = sendChunkBoxes(i);
+				sendCapPointBoxes();
 				top->setGamePtr(game);
 				subState++;
 				return; //On sucsess
@@ -556,6 +558,7 @@ void Core::upServer(float dt)
 		bool allchunksSent = false;
 		for (int i = 0; !allchunksSent; i++)
 			allchunksSent = sendChunkBoxes(i);
+		sendCapPointBoxes();
 		game->freecam = true;
 		//load map
 
@@ -1618,6 +1621,20 @@ bool Core::sendChunkBoxes(int chunkID)
 	}
 	//when we're done with all chunks, we'll get here cause cBoxes will be nullptr, so we'll end the for-loop
 	return 1;
+}
+
+void Core::sendCapPointBoxes()
+{
+	if (renderPipe != nullptr)
+	{
+		int count = 0;
+		void* capBoxes = renderPipe->getCapPointsAsPoint(count);
+
+		if (capBoxes != nullptr)
+		{
+			game->sendCapBoxes(count, capBoxes);
+		}
+	}
 }
 
 void Core::sendWorldBoxes()

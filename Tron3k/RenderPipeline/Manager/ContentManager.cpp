@@ -369,6 +369,11 @@ void* ContentManager::getChunkCollisionVectorAsPointer(int chunkID)
 	return nullptr;
 }
 
+void* ContentManager::getCapAsPointer(int& count)
+{
+	return testMap.getCapAsPointer(count);
+}
+
 std::vector<std::vector<float>> ContentManager::getMeshBoxes()
 {
 	std::vector<std::vector<float>> size;

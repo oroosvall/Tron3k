@@ -1146,6 +1146,19 @@ void Physics::receiveChunkBoxes(int chunkID, void* _cBoxes)
 	worldBoxes.push_back(cMeshes);
 }
 
+void Physics::receiveCap(int nrCaps, void* capBoxes)
+{
+	CaptureLoaded* caps = (CaptureLoaded*)capBoxes;
+
+	for (int n = 0; n < nrCaps; n++)
+	{
+		captureBoxes.push_back(AABBCapPoint());
+		captureBoxes[n].init(caps[n]);
+	}
+
+	delete [] caps;
+}
+
 void Physics::receivePlayerBox(std::vector<float> pBox, float rad)
 {
 	float xPos, yPos, zPos;

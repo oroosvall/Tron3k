@@ -800,6 +800,11 @@ void* RenderPipeline::getChunkCollisionVectorAsPoint(int chunkID)
 	return contMan.getChunkCollisionVectorAsPointer(chunkID);
 }
 
+void* RenderPipeline::getCapPointsAsPoint(int& count)
+{
+	return contMan.getCapAsPointer(count);
+}
+
 void RenderPipeline::getPlayerBox(float &xMax, float &xMin, float &yMax, float &yMin, float &zMax, float &zMin)
 {
 	//Will be changed later, this is number for now

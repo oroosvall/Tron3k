@@ -166,6 +166,7 @@ public:
 	virtual void setGBufferWin(unsigned int WindowWidth, unsigned int WindowHeight);
 
 	virtual void* getChunkCollisionVectorAsPoint(int chunkID);
+	virtual void* getCapPointsAsPoint(int& count);
 
 	virtual void getPlayerBox(float &xMax, float &xMin, float &yMax, float &yMin, float &zMax, float &zMin);
 	virtual void getWorldBoxes(int &current, float &xMax, float &xMin, float &yMax, float &yMin, float &zMax, float &zMin);

@@ -99,6 +99,8 @@ private:
 
 	//Relays BoundingBoxes to Physics
 	bool sendChunkBoxes(int chunkID);
+	void sendCapPointBoxes();
+
 	void sendPlayerBox();
 	void sendWorldBoxes();
 

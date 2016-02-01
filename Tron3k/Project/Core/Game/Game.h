@@ -239,6 +239,7 @@ public:
 	std::vector< std::vector < SpawnpointG > >* getSpawnpoints() { return &spawnpoints; };
 
 	void sendChunkBoxes(int chunkID, void* cBoxes);
+	void sendCapBoxes(int nrCaps, void* capBoxes);
 	void sendWorldBoxes(std::vector<std::vector<float>> wBoxes);
 	void sendPlayerBox(std::vector<float> pBox);
 	void sendPlayerRadSize(float rad);

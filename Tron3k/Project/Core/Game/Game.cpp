@@ -358,6 +358,11 @@ void Game::sendChunkBoxes(int chunkID, void* cBoxes)
 	physics->receiveChunkBoxes(chunkID, cBoxes);
 }
 
+void Game::sendCapBoxes(int nrCaps, void* capBoxes)
+{
+	physics->receiveCap(nrCaps, capBoxes);
+}
+
 void Game::sendPlayerBox(std::vector<float> pBox)
 {
 	physics->receivePlayerBox(pBox, 0.9f);

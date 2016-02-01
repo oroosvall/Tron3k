@@ -37,7 +37,8 @@ class Physics
 private:
 	//General physics components will go here, and things will be added as we go
 	std::vector<std::vector<CollideMesh>> worldBoxes; //each CollideMesh is an ABB, and the vector is all CollideMeshes in the chunk
-	std::vector<CollideMesh> captureBoxes;
+	std::vector<AABBCapPoint> captureBoxes;
+	//std::vector<CollideMesh> captureBoxes;
 	std::vector<EffectMesh*> effectBoxes;
 	CollideMesh playerBox;
 	CollideMesh bulletBox;
@@ -123,6 +124,7 @@ public:
 	virtual float addGravity(float dt);
 
 	virtual void receiveChunkBoxes(int chunkID, void* cBoxes);
+	virtual void receiveCap(int nrCaps, void* capBoxes);
 	virtual void receiveWorldBoxes(std::vector<std::vector<float>> wBoxes);
 	virtual void receivePlayerBox(std::vector<float> pBox, float rad);
 	virtual void receivePlayerRad(float rad);

@@ -475,6 +475,23 @@ ChunkCollision* Map::getChunkCollision(int chunkID)
 	return chunks[chunkID].getChunkCollision();
 }
 
+void* Map::getCapAsPointer(int& count)
+{
+	count = capCount;
+
+	CaptureExportToGame* cap = new CaptureExportToGame[capCount];
+
+	for (int n = 0; n < capCount; n++)
+	{
+		cap[n].roomID = capturePoints[n].roomID;
+		cap[n].bigAABB = capturePoints[n].bigAABB;
+		cap[n].subcount = capturePoints[n].aabbCount;
+		cap[n].subabbs = capturePoints[n].aabb;
+	}
+	
+	return cap;
+}
+
 void Map::deleteSpawnposData()
 {
 	if (spA)
