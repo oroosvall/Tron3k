@@ -17,7 +17,6 @@
 #include "Effect\EffectMesh.h"
 #include<vector>
 #include<iterator>
-#include<thread>
 
 
 //----COLLISION INFO----

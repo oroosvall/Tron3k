@@ -128,21 +128,6 @@ vec3 Physics::checkAABBvCylinderCollision(CollideMesh mesh1, CollideMesh mesh2)
 	}
 
 	return vec3(0, 0, 0);
-	/*if (mesh1.getAABB().posX + mesh1.getAABB().sizeX > mesh2.getAABB().posX - mesh2.getAABB().sizeX &&
-		mesh1.getAABB().posX - mesh1.getAABB().sizeX < mesh2.getAABB().posX + mesh2.getAABB().sizeX)//x
-	{
-		if (mesh1.getAABB().posY + mesh1.getAABB().sizeY > mesh2.getAABB().posY - mesh2.getAABB().sizeY &&
-			mesh1.getAABB().posY - mesh1.getAABB().sizeY < mesh2.getAABB().posY + mesh2.getAABB().sizeY)//y
-		{
-			if (mesh1.getAABB().posZ + mesh1.getAABB().sizeZ > mesh2.getAABB().posZ - mesh2.getAABB().sizeZ &&
-				mesh1.getAABB().posZ - mesh1.getAABB().sizeZ < mesh2.getAABB().posZ + mesh2.getAABB().sizeZ)//z
-			{
-				return 1;
-			}
-		}
-	}
-
-	return 0;*/
 }
 
 vec3 Physics::checkAABBvAngledCylinderCollision(CollideMesh mesh1, CollideMesh mesh2)
@@ -740,9 +725,8 @@ vec4 Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel, vec3 bulletD
 	dirTimesVel = bulletVel * deltaDir;
 
 	//std::thread bthreads[4];
-
+	AABB roomBox;
 	for (int k = 0; k < 4; k++)
-
 	{
 
 
@@ -750,34 +734,39 @@ vec4 Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel, vec3 bulletD
 		box.max = bPos + vec3(rad, rad, rad);
 		box.min = bPos - vec3(rad, rad, rad);
 		bulletBox.setAABB(box);
-		box.pos = bPos;
-		AABB tBox = box;
 		//each chunk
 		vec4 t = vec4(0);
 		for (unsigned int i = 0; i < worldBoxes.size(); i++)
 		{
 			//each abb
-			for (unsigned int j = 0; j < worldBoxes[i].size(); j++)
+			
+			roomBox.pos = roomBoxes[i].pos;
+			roomBox.max = roomBoxes[i].max;
+			roomBox.min = roomBoxes[i].min;
+			//if (checkAABBvAABBCollision(bulletBox.getAABB(), &roomBox))
 			{
-				bool contin = false;
-
-				//do or do not, there is a try again at half the position
-
-				if (checkAABBvAABBCollision(&box, &worldBoxes[i][j].boundingBox))
+				for (unsigned int j = 0; j < worldBoxes[i].size(); j++)
 				{
-					//printf("%d %d \n", i, j); // test for abbs so they register
+					bool contin = false;
 
-					//for each obb contained in that abb
-					int size = worldBoxes[i][j].boundingBox.ObbBoxes.size();
-					for (int n = 0; n < size; n++)
+					//do or do not, there is a try again at half the position
+
+					if (checkAABBvAABBCollision(&box, &worldBoxes[i][j].boundingBox))
 					{
-						t = getSpherevOBBNorms(box.pos, rad, &worldBoxes[i][j].boundingBox.ObbBoxes[n]);
-						t.w = rad - t.w; //penetration depth instead of collision distance 
-						if (t.w + FLT_EPSILON > 0 - FLT_EPSILON && t.w - FLT_EPSILON < rad + FLT_EPSILON)
+						//printf("%d %d \n", i, j); // test for abbs so they register
+
+						//for each obb contained in that abb
+						int size = worldBoxes[i][j].boundingBox.ObbBoxes.size();
+						for (int n = 0; n < size; n++)
 						{
-							t = vec4(normalize(vec3(t)), t.w);
-							t.w = t.w * (4 - k);//gets the pendepth based on where in the dt we are
-							return t;
+							t = getSpherevOBBNorms(bPos, rad, &worldBoxes[i][j].boundingBox.ObbBoxes[n]);
+							t.w = rad - t.w; //penetration depth instead of collision distance 
+							if (t.w + FLT_EPSILON > 0 - FLT_EPSILON && t.w - FLT_EPSILON < rad + FLT_EPSILON)
+							{
+								t = vec4(normalize(vec3(t)), t.w);
+								t.w = t.w * (4 - k);//gets the pendepth based on where in the dt we are
+								return t;
+							}
 						}
 					}
 				}
