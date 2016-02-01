@@ -1013,9 +1013,9 @@ void Game::addBulletToList(int conID, int bulletId, BULLET_TYPE bt, glm::vec3 po
 		b = new GrenadeShot(pos, dir, conID, bulletId, p->getTeam());
 		break;
 	case BULLET_TYPE::SHOTGUN_PELLET:
-		rightV *= 0.3;
-		upV *= -0.17f;
-		dirMod *= 0.1f;
+		rightV *= 0.4;
+		upV *= -0.3f;
+		dirMod *= 0.3f;
 		pos += upV + rightV + dirMod;
 		b = new ShotgunPellet(pos, dir, conID, bulletId, p->getTeam());
 		break;
