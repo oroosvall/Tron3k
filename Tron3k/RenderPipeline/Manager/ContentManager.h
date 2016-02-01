@@ -34,6 +34,7 @@ private:
 	Mesh skybox;
 
 	GLuint lightWallTex;
+	GLuint decalTexture;
 	GLuint skyTexture;
 
 	GLuint portalQuery;
@@ -90,6 +91,8 @@ public:
 	void* getRoomBoxes();
 
 	void bindLightwalTexture();
+
+	void bindDecalTexture();
 
 	std::vector<std::vector<float>> getMeshBoxes(); //Will send out all meshboxes, for now it'll just send a static one
 

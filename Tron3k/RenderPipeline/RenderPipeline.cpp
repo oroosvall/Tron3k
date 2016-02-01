@@ -66,7 +66,6 @@ extern "C"
 			printf("---------------------opengl-callback-end--------------\n");
 		}
 	}
-
 }
 #endif
 
@@ -501,7 +500,7 @@ void RenderPipeline::finalizeRender()
 void RenderPipeline::renderWallEffect(void* pos1, void* pos2, float uvStartOffset, float* dgColor)
 {
 	glUseProgram(lw_Shader);
-	glProgramUniform1i(lw_Shader, lw_tex, 0);
+	//glProgramUniform1i(lw_Shader, lw_tex, 0);
 	//call contentman and bind the lightwal texture to 0
 	contMan.bindLightwalTexture();
 	cam.setViewProjMat(lw_Shader, lw_vp);
@@ -598,6 +597,7 @@ void RenderPipeline::renderDecals(void* data, int size)
 		//glBindBufferBase(GL_UNIFORM_BUFFER, decal_struct_UBO_index, decal_struct_UBO);
 		//glProgramUniform1i(decal_Shader, decal_nrDecals, size);
 		cam.setViewProjMat(decal_Shader, decal_viewProj);
+		contMan.bindDecalTexture();
 		glBindBuffer(GL_ARRAY_BUFFER, lwVertexDataId);
 		glBindVertexArray(lwVertexAttribute);
 
