@@ -14,6 +14,7 @@ class Lightwall : public Special
 private:
 	Role* myRole = nullptr;
 	bool activated = false;
+	float cooldown = 0.0f;
 public:
 	Lightwall(Role* r);
 	~Lightwall();
