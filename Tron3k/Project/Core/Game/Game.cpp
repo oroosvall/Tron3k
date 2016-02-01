@@ -141,6 +141,20 @@ void Game::update(float dt)
 
 
 	GAMEMODE_MSG gameMsg = gamemode->update(dt);
+	if (gamemode->getType() == GAMEMODE_TYPE::KOTH && gameState == Gamestate::SERVER)
+	{
+		KingOfTheHill* k = (KingOfTheHill*)gamemode;
+		for (int c = 0; c < 20; c++)
+		{
+			if (playerList[c] != nullptr)
+			{
+				if (physics->checkPlayerVCaptureCollision(playerList[c]->getPos(), k->getCapturePoint()))
+				{
+					k->playerOnCapPointThisFrame(playerList[c]->getTeam());
+				}
+			}
+		}
+	}
 
 	for (int c = 0; c < max_con; c++)
 	{

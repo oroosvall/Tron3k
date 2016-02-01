@@ -195,13 +195,6 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			{
 				GetSound()->playUserGeneratedSound(SOUNDS::soundEffectCaptureScored);
 			}
-			
-			if (GetSoundActivated() && !overtimePlayed)
-			{
-				GetSound()->playUserGeneratedSound(SOUNDS::announcerCommence);
-				GetSound()->playUserGeneratedSound(SOUNDS::SoundForOvertime);
-				overtimePlayed = true;
-			}
 			*/
 		}
 		else if (serverState == OVERTIME)
@@ -261,7 +254,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 		timer += dt;
 		if (timer - timerModifierForCaptureScoring > 0.0f) //15 seconds have passed and we should now proceed with scoring for capture point control
 		{
-			//capturePointScoring();
+			capturePointScoring();
 		}
 		if (teamOneSpawnTokens == 0 || teamTwoSpawnTokens == 0)
 		{
