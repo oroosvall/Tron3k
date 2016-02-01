@@ -604,21 +604,21 @@ vec3 Physics::checkPlayerVPlayerCollision(vec3 playerPos1, vec3 playerPos2)
 	return vec3(0, 0, 0);
 }
 
-vec3 Physics::checkPlayerVBulletCollision(vec3 playerPos, vec3 bulletPos)
+vec3 Physics::checkPlayerVBulletCollision(vec3 playerPos, vec3 bulletPos, vec3 size)
 {
 	playerBox.setPos(playerPos);
 	bulletBox.setPos(bulletPos);
 	float prad = playerBox.getSphere().radius;
 	AABB box;
-	box.max = playerPos + vec3(prad, prad, prad);
-	box.min = playerPos - vec3(prad, prad, prad);
+	box.max = playerPos + size;
+	box.min = playerPos - size;
 	playerBox.setAABB(box);
 
 	//TEMPORARY
 
 	float brad = bulletBox.getSphere().radius;
-	box.max = bulletPos + vec3(brad, brad, brad);
-	box.min = bulletPos - vec3(brad, brad, brad);
+	box.max = bulletPos + vec3(0.2, 0.2, 0.2);
+	box.min = bulletPos - vec3(0.2, 0.2, 0.2);
 	bulletBox.setAABB(box);
 
 
