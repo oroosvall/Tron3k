@@ -1639,8 +1639,14 @@ void Core::sendCapPointBoxes()
 
 void Core::sendRoomBoxes()
 {
-	void* send = renderPipe->getRoomBoxes();
-
+	if (renderPipe != nullptr)
+	{
+		void* send = renderPipe->getRoomBoxes();
+		if (send != nullptr)
+		{
+			game->sendRoomBoxes(send);
+		}
+	}
 }
 
 void Core::sendWorldBoxes()

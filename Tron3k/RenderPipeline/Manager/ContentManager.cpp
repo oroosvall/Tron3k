@@ -380,8 +380,7 @@ void* ContentManager::getCapAsPointer(int& count)
 
 void* ContentManager::getRoomBoxes()
 {
-	testMap.getRoomBoxes();
-	return 0;
+	return testMap.getRoomBoxes();
 }
 
 std::vector<std::vector<float>> ContentManager::getMeshBoxes()

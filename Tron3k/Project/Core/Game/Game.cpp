@@ -355,7 +355,7 @@ void Game::sendChunkBoxes(int chunkID, void* cBoxes)
 
 void Game::sendCapBoxes(int nrCaps, void* capBoxes)
 {
-	//physics->receiveCap(nrCaps, capBoxes);
+	physics->receiveCap(nrCaps, capBoxes);
 }
 
 void Game::sendRoomBoxes(void* roomboxes)
