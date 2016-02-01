@@ -67,6 +67,26 @@ bool Physics::checkAABBvAABBCollision(AABB* mesh1, AABB* mesh2)
 	return false;
 }
 
+bool Physics::checkPlayerVCapCollision(AABB* player, AABBCapPoint capPoint)
+{
+	if (player->max.x + FLT_EPSILON >= capPoint.min.x - FLT_EPSILON && player->min.x - FLT_EPSILON <= capPoint.max.x + FLT_EPSILON)//x
+		if (player->max.y + FLT_EPSILON >= capPoint.min.y - FLT_EPSILON && player->min.y - FLT_EPSILON <= capPoint.max.y + FLT_EPSILON)//y
+			if (player->max.z + FLT_EPSILON >= capPoint.min.z - FLT_EPSILON && player->min.z - FLT_EPSILON <= capPoint.max.z + FLT_EPSILON)//y
+			{
+				//we collided with the outer box
+				bool innerCollide = false;
+				for (int i = 0; i < capPoint.aabbs.size() && !innerCollide; i++)
+				{
+					if (player->max.x + FLT_EPSILON >= capPoint.aabbs[i].min.x - FLT_EPSILON && player->min.x - FLT_EPSILON <= capPoint.aabbs[i].max.x + FLT_EPSILON)//x
+						if (player->max.y + FLT_EPSILON >= capPoint.aabbs[i].min.y - FLT_EPSILON && player->min.y - FLT_EPSILON <= capPoint.aabbs[i].max.y + FLT_EPSILON)//y
+							if (player->max.z + FLT_EPSILON >= capPoint.aabbs[i].min.z - FLT_EPSILON && player->min.z - FLT_EPSILON <= capPoint.aabbs[i].max.z + FLT_EPSILON)//y
+								return true;
+
+				}
+			}
+	return false;
+}
+
 vec3 Physics::checkAABBvCylinderCollision(CollideMesh mesh1, CollideMesh mesh2)
 {
 	Cylinder cylinder;
@@ -784,6 +804,26 @@ std::vector<vec4> Physics::checkPlayerVEffectCollision(glm::vec3 playerPos, unsi
 			collided[i].y = 0;
 	}
 	return collided;
+}
+
+bool Physics::checkPlayerVCaptureCollision(vec3 playerPos, int capID)
+{
+	for (int i = 0; i < captureBoxes.size(); i++)
+	{
+		if (captureBoxes[i].capBox.capID == capID)
+		{
+			AABB box;
+			box.pos = playerPos;
+			box.max = playerPos + playerBox.getSphere().radius;
+			box.max = playerPos - playerBox.getSphere().radius;
+			playerBox.setAABB(box);
+
+			playerBox.setPos(playerPos);
+
+			return checkPlayerVCapCollision(playerBox.getAABB(), captureBoxes[i].getCapBox());
+		}
+	}
+	return false;
 }
 
 std::vector<glm::vec4> Physics::checkBulletVEffectCollision(glm::vec3 bulletPos, vec3 bulletVel, vec3 bulletDir, unsigned int eType, int eid, float dt)

@@ -44,7 +44,8 @@ private:
 	//--------AABB Collisions--------//
 	bool checkAABBvAABBCollision(AABB* mesh1, AABB* mesh2);
 	glm::vec3 checkAABBvAABBCollision(Geometry* obj1, Geometry* obj2); //unnecessary redefinition
-	
+	bool checkPlayerVCapCollision(AABB* player, AABBCapPoint capPoint);
+
 	glm::vec3 checkAABBvAngledCylinderCollision(CollideMesh mesh1, CollideMesh mesh2);
 	glm::vec3 checkAABBvCylinderCollision(CollideMesh mesh1, CollideMesh mesh2);
 	
@@ -114,6 +115,7 @@ public:
 	virtual glm::vec3 checkBulletVWorldCollision(glm::vec3 bulletPos);
 	virtual std::vector<glm::vec4> checkPlayerVEffectCollision(glm::vec3 playerPos, unsigned int eType, int eid);
 	virtual std::vector<glm::vec4> checkBulletVEffectCollision(glm::vec3 bulletPos, vec3 bulletVel, vec3 bulletDir, unsigned int eType, int eid, float dt);
+	virtual bool checkPlayerVCaptureCollision(vec3 playerPos, int capID);
 
 	virtual float addGravity(float dt);
 

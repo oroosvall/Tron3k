@@ -1351,6 +1351,11 @@ void Core::renderWorld(float dt)
 				case BATTERY_SPEED:
 					break;
 				case THERMITE_CLOUD:
+				{
+					ThermiteCloud* asd = (ThermiteCloud*)eff[i];
+					vec3 pos = asd->getPos();
+					renderPipe->renderExploEffect(&pos.x, asd->explotionRenderRad(), 0, &dgColor.x);
+				}
 					break;
 				case ZEROFRICTION:
 					break;

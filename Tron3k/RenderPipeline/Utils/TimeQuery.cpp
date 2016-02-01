@@ -58,7 +58,7 @@ void stopTimer(int index)
 
 std::string getQueryResult()
 {
-	std::string result = "TimeQuerry\n";
+	std::string result = "TimeQuery\n";
 
 	for (unsigned int i = 0; i < querry.size(); i++)
 	{

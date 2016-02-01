@@ -219,6 +219,7 @@ void Game::update(float dt)
 		checkBulletVWorldCollision(dt);
 		checkPlayerVEffectCollision();
 		checkBulletVEffectCollision(dt);
+		checkPlayerVCapCollision();
 	}
 
 	if (gameState == Gamestate::CLIENT)
@@ -235,6 +236,7 @@ void Game::update(float dt)
 		checkPlayerVBulletCollision();
 		checkPlayerVEffectCollision();
 		checkBulletVEffectCollision(dt);
+		checkPlayerVCapCollision();
 	}
 
 	for (int c = 0; c < max_con; c++)
@@ -623,6 +625,24 @@ void Game::checkPlayerVEffectCollision()
 	}
 }
 
+void Game::checkPlayerVCapCollision()
+{
+	if (gameState == Gamestate::ROAM)
+	{
+		bool localCollided = physics->checkPlayerVCaptureCollision(playerList[localPlayerId]->getPos(), 0);
+	}
+
+	bool inPoint = false;
+
+	for (int i = 0; i < max_con; i++)
+	{
+		if (playerList[i] != nullptr)
+		{
+			inPoint = physics->checkPlayerVCaptureCollision(playerList[i]->getPos(), 0);
+		}
+	}
+}
+
 void Game::checkPlayerVBulletCollision()
 {
 	glm::vec3 collides = glm::vec3(0, 0, 0);
@@ -953,19 +973,20 @@ void Game::addBulletToList(int conID, int bulletId, BULLET_TYPE bt, glm::vec3 po
 	case BULLET_TYPE::PULSE_SHOT:
 		rightV *= 0.3;
 		upV *= -0.17f;
-		dirMod *= 0.4f;
+		dirMod *= 0.1f;
 		pos += upV + rightV + dirMod;
 		b = new PulseShot(pos, dir, conID, bulletId, p->getTeam());
 		break;
 	case BULLET_TYPE::PLASMA_SHOT:
 		upV *= -0.17;
-		pos += upV;
+		dirMod *= 0.1f;
+		pos += upV +dirMod;
 		b = new PlasmaShot(pos, dir, conID, bulletId, p->getTeam());
 		break;
 	case BULLET_TYPE::GRENADE_SHOT:
 		rightV *= -0.3;
 		upV *= -0.17f;
-		dirMod *= 0.4f;
+		dirMod *= 0.1f;
 		pos += upV + rightV + dirMod;
 		b = new GrenadeShot(pos, dir, conID, bulletId, p->getTeam());
 		break;

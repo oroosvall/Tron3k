@@ -53,7 +53,7 @@ bool Lightwall::allowedToActivate(Player* p)
 			if (activated && cooldown < FLT_EPSILON)
 			{
 				specialId++;
-				cooldown = 1.5f;
+				cooldown = 1.0f;
 				return true;
 			}
 		}
