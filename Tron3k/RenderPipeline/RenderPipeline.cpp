@@ -391,15 +391,14 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	ss << "Buffer binds: " << bufferBinds << "\n";
 	ss << "Shader binds: " << shaderBinds << "\n";
 	ss << result << "\n";
-	if (counter > 3.0f)
+	if (counter > 1.0f)
 	{
 		result = getQueryResult();
 		counter = 0;
+		debugText->setText(ss.str());
 	}
 
 	resetQuery();
-
-	debugText->setText(ss.str());
 
 	drawCount = 0;
 	primitiveCount = 0;
@@ -450,14 +449,12 @@ void RenderPipeline::render()
 	contMan.renderChunks(regularShader, worldMat[0], uniformTextureLocation[0], uniformNormalLocation[0], uniformGlowSpecLocation[0], uniformDynamicGlowColorLocation[0], uniformStaticGlowIntensityLocation[0],  *gBuffer->portal_shaderPtr, gBuffer->portal_model);
 	
 	stopTimer(chunkRender);
-	renderOther = startTimer("Render Other");
 	//glDepthMask(GL_TRUE);glEnable(GL_CULL_FACE);glDisable(GL_BLEND);)
 	//renderEffects();
 }
 
 void RenderPipeline::finalizeRender()
 {
-	stopTimer(renderOther);
 	glDepthMask(GL_TRUE);
 	glEnable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
@@ -722,9 +719,6 @@ void RenderPipeline::renderBullet(int bid, void* world, float* dgColor, float sg
 
 void RenderPipeline::renderAnimation(int playerID, int roleID, void* world, AnimationState animState, float* dgColor, float sgInten, bool first)
 {
-
-	int anim = startTimer("Player");
-
 	glUseProgram(animationShader);
 
 	if (animState == AnimationState::third_primary_jump_begin)
@@ -750,9 +744,7 @@ void RenderPipeline::renderAnimation(int playerID, int roleID, void* world, Anim
 
 	if (anims.animStates[playerID].state != AnimationState::none && anims.animStates[playerID].frameEnd > 0)
 		contMan.renderPlayer(anims.animStates[playerID], *(glm::mat4*)world, uniformKeyMatrixLocation, first);
-
-	stopTimer(anim);
-
+	
 }
 
 bool RenderPipeline::setSetting(PIPELINE_SETTINGS type, PipelineValues value)
@@ -978,4 +970,14 @@ void RenderPipeline::enableDepthTest()
 void RenderPipeline::disableDepthTest()
 {
 	glDisable(GL_DEPTH_TEST);
+}
+
+int RenderPipeline::startExecTimer(std::string name)
+{
+	return startTimer(name);
+}
+
+void RenderPipeline::stopExecTimer(int id)
+{
+	stopTimer(id);
 }

@@ -117,7 +117,6 @@ private:
 
 	float counter;
 	int renderFrameTimeID;
-	int renderOther;
 
 	bool initialized;
 
@@ -185,6 +184,10 @@ public:
 
 	virtual void enableDepthTest();
 	virtual void disableDepthTest();
+
+	virtual int startExecTimer(std::string name);
+	virtual void stopExecTimer(int id);
+
 };
 
 

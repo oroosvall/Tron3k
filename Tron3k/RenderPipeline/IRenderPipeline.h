@@ -109,6 +109,10 @@ public:
 
 	virtual void enableDepthTest() = 0;
 	virtual void disableDepthTest() = 0;
+
+	virtual int startExecTimer(std::string name) = 0;
+	virtual void stopExecTimer(int id) = 0;
+
 };
 
 extern "C" ENGINE_API IRenderPipeline* CreatePipeline();

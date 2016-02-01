@@ -151,7 +151,9 @@ void Core::update(float dt)
 	i->clearOnPress();
 	console.discardCommandAndLastMsg();
 
+	int swapTime = renderPipe->startExecTimer("Swap");
 	glfwSwapBuffers(win);
+	renderPipe->stopExecTimer(swapTime);
 }
 
 void Core::upStart(float dt)
@@ -1193,6 +1195,8 @@ void Core::renderWorld(float dt)
 			dgColor = TEAMONECOLOR;
 		}
 
+		int playerTime = renderPipe->startExecTimer("Players");
+
 		for (size_t i = 0; i < MAX_CONNECT; i++)
 		{
 			Player* p = game->getPlayer(i);
@@ -1249,6 +1253,7 @@ void Core::renderWorld(float dt)
 			}
 		}
 
+		renderPipe->stopExecTimer(playerTime);
 		//*** Render Bullets ***
 
 		if (hackedTeam == -1)
@@ -1307,6 +1312,8 @@ void Core::renderWorld(float dt)
 			dgColor = TEAMTWOCOLOR;
 		else if (hackedTeam == 2)
 			dgColor = TEAMONECOLOR;
+
+		int effectTime = renderPipe->startExecTimer("Effects & decals");
 
 		for (int c = 0; c < EFFECT_TYPE::NROFEFFECTS; c++)
 		{
@@ -1373,6 +1380,8 @@ void Core::renderWorld(float dt)
 
 		// render Decals
 		renderPipe->renderDecals(game->getAllDecalRenderInfo(), game->getNrOfDecals());
+
+		renderPipe->stopExecTimer(effectTime);
 
 		renderPipe->finalizeRender();
 
