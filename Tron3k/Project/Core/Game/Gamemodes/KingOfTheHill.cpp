@@ -226,7 +226,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 	case WARMUP:
 		if (consolePtr->getCommand() == "/start")
 		{
-			timer = 20.0f; //20 seconds in the pre-round
+			timer = 15.0f; //20 seconds in the pre-round
 			state = PREROUND;
 		}
 		break;
@@ -320,7 +320,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 		{
 			state = ENDROUND;
 			msg = roundScoring();
-			timer = 1000.0f;		//TEMP
+			timer = 10.0f;		//TEMP
 		}
 		break;
 
@@ -343,8 +343,12 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 		}
 		else //Match has not ended, let's start another round!
 		{
-			state = PREROUND;
-			timer = 20.0f;
+			timer -= dt;
+			if (timer < FLT_EPSILON)
+			{
+				state = PREROUND;
+				timer = 15.0f;
+			}
 		}
 		/*
 		if (msg == GAMEMODE_MSG::ROUND_WIN_TEAM1)
@@ -464,11 +468,10 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 		}
 		else if (state == OVERTIME)
 		{
-			if (GetSoundActivated() && !overtimePlayed)
+			if (GetSoundActivated())
 			{
 				GetSound()->playUserGeneratedSound(SOUNDS::announcerCommence);
 				GetSound()->playUserGeneratedSound(SOUNDS::SoundForOvertime);
-				overtimePlayed = true;
 			}
 		}
 		else if (state == ENDROUND)
