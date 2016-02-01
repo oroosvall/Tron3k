@@ -23,6 +23,8 @@ int MeleeAttack::update(float dt)
 		if (!teleported)
 		{
 			teleported = true;
+			pos = target->getPos();
+			dir = target->getDir();
 		}
 		pos += dir * vel * dt;
 

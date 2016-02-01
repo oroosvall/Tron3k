@@ -11,7 +11,7 @@ class MeleeAttack : public Bullet
 {
 private:
 	Player* target;
-	float attackTimer = 10.0f;
+	float attackTimer = 0.5f;
 	bool teleported = false;
 public:
 	MeleeAttack(glm::vec3 pos, glm::vec3 dir, int pID, int bID, int tID, Player* player);
