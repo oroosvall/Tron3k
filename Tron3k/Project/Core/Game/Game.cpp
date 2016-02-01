@@ -785,10 +785,7 @@ void Game::checkBulletVEffectCollision(float dt)
 					if (((LightwallEffect*)effects[EFFECT_TYPE::LIGHT_WALL][c])->getCollidable())
 					{
 						collNormalWalls = physics->checkBulletVEffectCollision(bullets[b][j]->getPos(),	bullets[b][j]->getVel(), bullets[b][j]->getDir(), EFFECT_TYPE::LIGHT_WALL, eid, dt);
-						collNormals.reserve(collNormalWalls.size()); // preallocate memory
-						collNormals.insert(collNormals.end(), collNormalWalls.begin(), collNormalWalls.end());
-						collNormalWalls.clear();
-						if (collNormals.size() > 0)
+						if (collNormalWalls.size() > 0)
 						{
 							BulletHitEffectInfo bi;
 							bullets[b][j]->getId(bi.bulletPID, bi.bulletBID);
@@ -796,10 +793,11 @@ void Game::checkBulletVEffectCollision(float dt)
 							bi.et = EFFECT_TYPE::LIGHT_WALL;
 							bi.hitPos = bullets[b][j]->getPos();
 							bi.hitDir = bullets[b][j]->getDir();
-							bi.collisionNormal = collNormals[0];
+							bi.collisionNormal = collNormalWalls[0];
 							allBulletHitsOnEffects.push_back(bi);
-							collNormals.clear();
+							
 						}
+						collNormalWalls.clear();
 					}
 
 				}
@@ -809,10 +807,18 @@ void Game::checkBulletVEffectCollision(float dt)
 					effects[EFFECT_TYPE::THUNDER_DOME][c]->getId(pid, eid);
 					collNormalDomes = physics->checkPlayerVEffectCollision(bullets[b][j]->getPos(), EFFECT_TYPE::THUNDER_DOME, eid);
 					if (collNormalDomes.size() > 0)
+					{
 						int x = 0;
-					//glm::vec3 vel = bullets[b][j]->getPos()->getVelocity();
-					collNormals.reserve(collNormalDomes.size()); // preallocate memory
-					collNormals.insert(collNormals.end(), collNormalDomes.begin(), collNormalDomes.end());
+						BulletHitEffectInfo bi;
+						bullets[b][j]->getId(bi.bulletPID, bi.bulletBID);
+						bi.bt = BULLET_TYPE(b);
+						bi.et = EFFECT_TYPE::THUNDER_DOME;
+						bi.hitPos = bullets[b][j]->getPos();
+						bi.hitDir = bullets[b][j]->getDir();
+						bi.collisionNormal = collNormalDomes[0];
+						allBulletHitsOnEffects.push_back(bi);
+					}
+						//glm::vec3 vel = bullets[b][j]->getPos()->getVelocity();
 					collNormalDomes.clear();
 				}
 			}
