@@ -162,7 +162,7 @@ private:
 	void removeBullet(BULLET_TYPE bt, int posInArray);
 	void bounceBullet(BulletHitWorldInfo hwi, Bullet* theBullet);
 
-	void addEffectToList(int conID, int effectId, EFFECT_TYPE et, glm::vec3 pos);
+	void addEffectToList(int conID, int effectId, EFFECT_TYPE et, glm::vec3 pos, int dmg, float interestingVariable);
 	Effect* getSpecificEffect(int PID, int SID, EFFECT_TYPE et, int &posInEffectArray);
 	void removeEffect(EFFECT_TYPE et, int posInArray);
 	void addEffectToPhysics(Effect* effect);

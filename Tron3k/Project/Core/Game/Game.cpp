@@ -1212,14 +1212,14 @@ void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec
 		p->addModifier(MODIFIER_TYPE::LIGHTWALLCONTROLLOCK);
 		int arraypos = -1;
 		//Effect* lwe = getSpecificEffect(conID, sID - 1, EFFECT_TYPE::LIGHT_WALL, arraypos);
-		addEffectToList(conID, sID, EFFECT_TYPE::LIGHT_WALL, pos);
+		addEffectToList(conID, sID, EFFECT_TYPE::LIGHT_WALL, pos, 0, 0.0f);
 
 	}
 	break;
 	case SPECIAL_TYPE::THUNDERDOME:
 		if (!p->isLocal())
 			p->setDir(dir);
-		addEffectToList(conID, sID, EFFECT_TYPE::THUNDER_DOME, pos);
+		addEffectToList(conID, sID, EFFECT_TYPE::THUNDER_DOME, pos, 0, 0.0f);
 		break;
 	case SPECIAL_TYPE::MULTIJUMP:
 	{
@@ -1287,12 +1287,11 @@ void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec
 	}
 }
 
-void Game::addEffectToList(int conID, int effectId, EFFECT_TYPE et, glm::vec3 pos)
+void Game::addEffectToList(int conID, int effectId, EFFECT_TYPE et, glm::vec3 pos, int dmg, float interestingVariable)
 {
 	Effect* e = nullptr;
 	Player* p = playerList[conID];
 
-	std::vector<float> eBox;
 	int eid = -1, pid = -1;
 	switch (et)
 	{
@@ -1306,6 +1305,8 @@ void Game::addEffectToList(int conID, int effectId, EFFECT_TYPE et, glm::vec3 po
 		break;
 	case EFFECT_TYPE::EXPLOSION:
 		e = new Explosion();
+		e->setDamage(dmg);
+		e->setInterestingVariable(interestingVariable);
 		break;
 	case EFFECT_TYPE::THERMITE_CLOUD:
 		e = new ThermiteCloud();
@@ -1555,6 +1556,13 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 				if (GetSoundActivated())
 					GetSound()->playExternalSound(SOUNDS::soundEffectDiscBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
 				bounceBullet(hi, b);
+				temp = b->getDir();
+				temp.x *= 0.6;
+				temp.y *= 0.6;
+				temp.z *= 0.6;
+				if (length(temp) < 0.05f)
+					removeBullet(hi.bt, arraypos);
+				b->setDir(temp);
 				break;
 			case BULLET_TYPE::GRENADE_SHOT:
 				if (GetSoundActivated())
@@ -1733,20 +1741,7 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 			lingDir.x = -lingDir.x;
 			addBulletToList(PID, BID + 3, CLUSTERLING, parent->getPos(), lingDir);
 			
-			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
-			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(1.0f);
-			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setDamage(25);
-			//This is where you send it to physics
-			std::vector<float> eBox;
-			eBox.push_back(parent->getPos().x);
-			eBox.push_back(parent->getPos().y);
-			eBox.push_back(parent->getPos().z);
-			eBox.push_back(20);
-
-			int pid, eid;
-			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->getId(pid, eid);
-
-			physics->receiveEffectBox(eBox, EFFECT_TYPE::EXPLOSION, pid, eid);
+			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos(), 25, 1.0f);
 
 			if (GetSoundActivated())
 				GetSound()->playExternalSound(SOUNDS::soundEffectClusterGrenade, parent->getPos().x, parent->getPos().y, parent->getPos().z);
@@ -1754,41 +1749,25 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 		}
 		case BULLET_TYPE::CLUSTERLING:
 		{
-			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
-			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(0.5f);
-			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setDamage(10);
+			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos(), 10, 0.5f);
+
 			if (GetSoundActivated())
 				GetSound()->playExternalSound(SOUNDS::soundEffectClusterlingExplosion, parent->getPos().x, parent->getPos().y, parent->getPos().z);
-
-			//This is where you send it to physics
-			std::vector<float> eBox;
-			eBox.push_back(parent->getPos().x);
-			eBox.push_back(parent->getPos().y);
-			eBox.push_back(parent->getPos().z);
-			eBox.push_back(20);
-
-			int pid, eid;
-			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->getId(pid, eid);
-
-			physics->receiveEffectBox(eBox, EFFECT_TYPE::EXPLOSION, pid, eid);
 			break;
 		}
 		case BULLET_TYPE::CLEANSE_BOMB:
 		{
-			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
-			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(2.0f);
+			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos(), 0, 2.0f);
 			break;
 		}
 		case BULLET_TYPE::VACUUM_GRENADE:
 		{
-			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
-			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(2.0f);
+			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos(), 10, 2.0f);
 			break;
 		}
 		case BULLET_TYPE::THERMITE_GRENADE:
 		{
-			addEffectToList(PID, BID, EFFECT_TYPE::THERMITE_CLOUD, parent->getPos());
-			effects[EFFECT_TYPE::THERMITE_CLOUD][effects[EFFECT_TYPE::THERMITE_CLOUD].size() - 1]->setInterestingVariable(1.0f);
+			addEffectToList(PID, BID, EFFECT_TYPE::THERMITE_CLOUD, parent->getPos(), 10, 1.0f);
 			if (GetSoundActivated())
 				GetSound()->playExternalSound(SOUNDS::soundEffectThermiteGrenade, parent->getPos().x, parent->getPos().y, parent->getPos().z);
 			break;
@@ -1798,7 +1777,7 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 			if (GetSoundActivated())
 				GetSound()->playExternalSound(SOUNDS::soundEffectClusterGrenade, parent->getPos().x, parent->getPos().y, parent->getPos().z);
 
-			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
+			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos(), 5, 0.3f);
 			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(0.3f);
 			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setDamage(10);
 			break;
