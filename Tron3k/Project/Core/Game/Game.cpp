@@ -53,9 +53,6 @@ void Game::init(int max_connections, int state, Console* con)
 	console = con;
 	max_con = max_connections;
 
-	gamemode = new KingOfTheHill();
-	gamemode->init(con, this);
-
 	loadRoles();
 	initPhysics();
 	if (GetSoundActivated())
@@ -64,6 +61,9 @@ void Game::init(int max_connections, int state, Console* con)
 	}
 
 	gameState = state;
+
+	gamemode = new KingOfTheHill();
+	gamemode->init(con, this);
 
 	playerList = new Player*[max_con];
 	for (int c = 0; c < max_con; c++)

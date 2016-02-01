@@ -13,8 +13,22 @@ KingOfTheHill::~KingOfTheHill()
 
 void KingOfTheHill::init(Console* cptr, Game* gptr)
 {
+	consolePtr = cptr;
+	gamePtr = gptr;
+
 	gameMode = GAMEMODE_TYPE::KOTH;
 	lastMsg = GAMEMODE_MSG::NIL;
+
+	if (gamePtr->GetGameState() == Gamestate::CLIENT) //We are a client
+	{
+		state = LOCAL;
+		serverState = WARMUP;
+	}
+	else //We are the server
+	{
+		state = WARMUP;
+		serverState = LOCAL;
+	}
 
 	capturePoint = 0;
 	teamOnePlayersAtPoint = 0;
@@ -24,23 +38,8 @@ void KingOfTheHill::init(Console* cptr, Game* gptr)
 	teamTwoScore = 0;
 	winScore = 2;
 
-	consolePtr = cptr;
-	gamePtr = gptr;
 	teamOneSpawnTokens = 1;
 	teamTwoSpawnTokens = 1;
-
-
-	if (gamePtr->GetLocalPlayerId() == -1) //We are the server
-	{
-		state = WARMUP;
-		serverState = LOCAL;
-	}
-	else //We are a local client
-	{
-		state = LOCAL;
-		serverState = WARMUP;
-	}
-
 
 	tickForCaptureScoring = 15.0f;
 	timerModifierForCaptureScoring = tickForCaptureScoring;
