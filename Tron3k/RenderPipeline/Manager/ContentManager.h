@@ -86,6 +86,8 @@ public:
 
 	void* getChunkCollisionVectorAsPointer(int chunkID);
 	void* getCapAsPointer(int& count);
+	void* getRoomBoxes();
+
 	void bindLightwalTexture();
 
 	std::vector<std::vector<float>> getMeshBoxes(); //Will send out all meshboxes, for now it'll just send a static one

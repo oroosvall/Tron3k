@@ -78,6 +78,9 @@ void Map::release()
 		materials = nullptr;
 	}
 
+	if(chunkAABB)
+		delete[] chunkAABB;
+
 	if (tex)
 	{
 		for (int i = 0; i < textureCount; i++)
@@ -433,15 +436,13 @@ void Map::loadMap(std::string mapName)
 	inFile.read((char*)spB, sizeof(SpawnPoint) * spTBCount);
 	inFile.read((char*)spFFA, sizeof(SpawnPoint) * spFFACount);
 
-	ABB* chunkAABB = new ABB[roomCount-1];
+	chunkAABB = new ABB[roomCount-1];
 	inFile.read((char*)chunkAABB, sizeof(ABB) * (roomCount-1));
 
 	for (int i = 1; i < roomCount; i++)
 	{
 		chunks[i].roomBox = chunkAABB[i - 1];
 	}
-
-	delete[] chunkAABB;
 
 	inFile.close();
 

@@ -44,7 +44,7 @@ class Map
 
 private:
 	Material* materials;
-	
+	ABB* chunkAABB;
 	TextureStruct* tex;
 
 	BBPoint* bbPoints;
@@ -65,10 +65,10 @@ public:
 	vector<Chunk> chunks;
 	int currentChunk;
 	int roomCount;
-	
-	SpawnPoint* spA;	
-	SpawnPoint* spB;	
-	SpawnPoint* spFFA;	
+
+	SpawnPoint* spA;
+	SpawnPoint* spB;
+	SpawnPoint* spFFA;
 	int spTACount;
 	int spTBCount;
 	int spFFACount;
@@ -88,6 +88,7 @@ public:
 
 	ChunkCollision* getChunkCollision(int chunkID);
 	void* getCapAsPointer(int& count);
+	void* getRoomBoxes() { return chunkAABB; };
 	
 
 	void deleteSpawnposData();

@@ -374,6 +374,12 @@ void* ContentManager::getCapAsPointer(int& count)
 	return testMap.getCapAsPointer(count);
 }
 
+void* ContentManager::getRoomBoxes()
+{
+	testMap.getRoomBoxes();
+	return 0;
+}
+
 std::vector<std::vector<float>> ContentManager::getMeshBoxes()
 {
 	std::vector<std::vector<float>> size;

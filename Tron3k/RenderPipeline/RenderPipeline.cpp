@@ -803,6 +803,13 @@ void* RenderPipeline::getChunkCollisionVectorAsPoint(int chunkID)
 void* RenderPipeline::getCapPointsAsPoint(int& count)
 {
 	return contMan.getCapAsPointer(count);
+
+
+}
+
+void* RenderPipeline::getRoomBoxes()
+{
+	return 0;
 }
 
 void RenderPipeline::getPlayerBox(float &xMax, float &xMin, float &yMax, float &yMin, float &zMax, float &zMin)

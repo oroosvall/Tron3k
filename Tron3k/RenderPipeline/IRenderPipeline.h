@@ -91,6 +91,7 @@ public:
 
 	virtual void* getChunkCollisionVectorAsPoint(int chunkID) = 0;
 	virtual void* getCapPointsAsPoint(int& count) = 0;
+	virtual void* getRoomBoxes() = 0;
 
 	virtual void getPlayerBox(float &xMax, float &xMin, float &yMax, float &yMin, float &zMax, float &zMin) = 0;
 	virtual void getWorldBoxes(int &current, float &xMax, float &xMin, float &yMax, float &yMin, float &zMax, float &zMin) = 0;

@@ -1637,6 +1637,12 @@ void Core::sendCapPointBoxes()
 	}
 }
 
+void Core::sendRoomBoxes()
+{
+	void* send = renderPipe->getRoomBoxes();
+
+}
+
 void Core::sendWorldBoxes()
 {
 	if (renderPipe != nullptr)
