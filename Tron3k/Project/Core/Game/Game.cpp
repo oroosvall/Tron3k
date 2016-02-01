@@ -1500,27 +1500,62 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 			switch (hi.bt)
 			{
 			case BULLET_TYPE::CLUSTER_GRENADE:
-				bounceBullet(hi, b);
 				if (GetSoundActivated())
 					GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+				bounceBullet(hi, b);
+				temp = b->getDir();
+				temp.x *= 0.6;
+				temp.y *= 0.6;
+				temp.z *= 0.6;
+				if (length(temp) < 0.05f)
+					removeBullet(hi.bt, arraypos);
+				b->setDir(temp);
 				break;
 			case BULLET_TYPE::CLUSTERLING:
-				bounceBullet(hi, b);
 				if (GetSoundActivated())
 					GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+				bounceBullet(hi, b);
+				temp = b->getDir();
+				temp.x *= 0.6;
+				temp.y *= 0.6;
+				temp.z *= 0.6;
+				if (length(temp) < 0.05f)
+					removeBullet(hi.bt, arraypos);
+				b->setDir(temp);
 				break;
 			case BULLET_TYPE::THERMITE_GRENADE:
-				bounceBullet(hi, b);
 				if (GetSoundActivated())
 					GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+				bounceBullet(hi, b);
+				temp = b->getDir();
+				temp.x *= 0.6;
+				temp.y *= 0.6;
+				temp.z *= 0.6;
+				if (length(temp) < 0.05f)
+					removeBullet(hi.bt, arraypos);
+				b->setDir(temp);
 				break;
 			case BULLET_TYPE::VACUUM_GRENADE:
 				bounceBullet(hi, b);
+				temp = b->getDir();
+				temp.x *= 0.6;
+				temp.y *= 0.6;
+				temp.z *= 0.6;
+				if (length(temp) < 0.05f)
+					removeBullet(hi.bt, arraypos);
+				b->setDir(temp);
 				break;
 			case BULLET_TYPE::DISC_SHOT:
-				bounceBullet(hi, b);
 				if (GetSoundActivated())
 					GetSound()->playExternalSound(SOUNDS::soundEffectDiscBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+				bounceBullet(hi, b);
+				temp = b->getDir();
+				temp.x *= 0.6;
+				temp.y *= 0.6;
+				temp.z *= 0.6;
+				if (length(temp) < 0.05f)
+					removeBullet(hi.bt, arraypos);
+				b->setDir(temp);
 				break;
 			case BULLET_TYPE::GRENADE_SHOT:
 				if (GetSoundActivated())
