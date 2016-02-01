@@ -59,9 +59,9 @@ vec3 Physics::checkAABBvAABBCollision(Geometry* obj1, Geometry* obj2)
 
 bool Physics::checkAABBvAABBCollision(AABB* mesh1, AABB* mesh2)
 {
-	if (mesh1->max.x + FLT_EPSILON >= mesh2->min.x - FLT_EPSILON && mesh1->min.x - FLT_EPSILON <= mesh2->max.x + FLT_EPSILON)//x
-		if (mesh1->max.y + FLT_EPSILON >= mesh2->min.y - FLT_EPSILON && mesh1->min.y - FLT_EPSILON <= mesh2->max.y + FLT_EPSILON)//y
-			if (mesh1->max.z + FLT_EPSILON >= mesh2->min.z - FLT_EPSILON && mesh1->min.z - FLT_EPSILON <= mesh2->max.z + FLT_EPSILON)//y
+	if (mesh1->max.x > mesh2->min.x && mesh1->min.x < mesh2->max.x)//x
+		if (mesh1->max.y > mesh2->min.y && mesh1->min.y  < mesh2->max.y )//y
+			if (mesh1->max.z > mesh2->min.z && mesh1->min.z  < mesh2->max.z )//y
 				return true;
 
 	return false;
@@ -674,7 +674,7 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos)
 	return cNorms;
 }
 
-void* Physics::checkBulletvWorldInternal(AABB* bulletBox, float rad, int index)
+void* Physics::checkBulletvWorldInternal(AABB bulletBox, float rad, int index)
 {
 	std::vector<vec4> cNorms;
 
@@ -689,7 +689,7 @@ void* Physics::checkBulletvWorldInternal(AABB* bulletBox, float rad, int index)
 
 			//do or do not, there is a try again at half the position
 
-			if (checkAABBvAABBCollision(bulletBox, &worldBoxes[i][j].boundingBox))
+			if (checkAABBvAABBCollision(&bulletBox, &worldBoxes[i][j].boundingBox))
 			{
 				//printf("%d %d \n", i, j); // test for abbs so they register
 
@@ -697,13 +697,14 @@ void* Physics::checkBulletvWorldInternal(AABB* bulletBox, float rad, int index)
 				int size = worldBoxes[i][j].boundingBox.ObbBoxes.size();
 				for (int n = 0; n < size; n++)
 				{
-					t = getSpherevOBBNorms(bulletBox->pos, rad, &worldBoxes[i][j].boundingBox.ObbBoxes[n]);
+					t = getSpherevOBBNorms(bulletBox.pos, rad, &worldBoxes[i][j].boundingBox.ObbBoxes[n]);
 					t.w = rad - t.w; //penetration depth instead of collision distance 
 					if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 					{
 						t = vec4(normalize(vec3(t)), t.w);
 						t.w = t.w * (4 - i);//gets the pendepth based on where in the dt we are
 						bulletNormal[index] = t;
+						return (void*)&t;
 					}
 				}
 			}
@@ -738,9 +739,9 @@ vec4 Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel, vec3 bulletD
 	deltaDir = bulletDir * dtbyI;
 	dirTimesVel = bulletVel * deltaDir;
 
-	std::thread bthreads[4];
+	//std::thread bthreads[4];
 
-	for (int i = 0; i < 4; i++)
+	for (int k = 0; k < 4; k++)
 
 	{
 
@@ -750,25 +751,59 @@ vec4 Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel, vec3 bulletD
 		box.min = bPos - vec3(rad, rad, rad);
 		bulletBox.setAABB(box);
 		box.pos = bPos;
-		AABB* tBox = &box;
+		AABB tBox = box;
+		//each chunk
+		vec4 t = vec4(0);
+		for (unsigned int i = 0; i < worldBoxes.size(); i++)
+		{
+			//each abb
+			for (unsigned int j = 0; j < worldBoxes[i].size(); j++)
+			{
+				bool contin = false;
 
-		bthreads[i] = std::thread(&Physics::checkBulletvWorldInternal, this, tBox, rad, i);
+				//do or do not, there is a try again at half the position
+
+				if (checkAABBvAABBCollision(&box, &worldBoxes[i][j].boundingBox))
+				{
+					//printf("%d %d \n", i, j); // test for abbs so they register
+
+					//for each obb contained in that abb
+					int size = worldBoxes[i][j].boundingBox.ObbBoxes.size();
+					for (int n = 0; n < size; n++)
+					{
+						t = getSpherevOBBNorms(box.pos, rad, &worldBoxes[i][j].boundingBox.ObbBoxes[n]);
+						t.w = rad - t.w; //penetration depth instead of collision distance 
+						if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
+						{
+							t = vec4(normalize(vec3(t)), t.w);
+							t.w = t.w * (4 - k);//gets the pendepth based on where in the dt we are
+							//bulletNormal[index] = t;
+							return t;
+						}
+					}
+				}
+			}
+		}
+		//bthreads[i] = std::thread(&Physics::checkBulletvWorldInternal, this, tBox, rad, i);
 		
 	}
 
 
-	for (int i = 0; i < 4; i++)
-	{
-		bthreads[i].join();
-	}
-	int longestInd = 0;
+	
+	/*int longestInd = 0;
 	for (int i = 0; i < 4; i++)
 	{
 		if (length(bulletNormal[i]) > length(bulletNormal[longestInd]))
 			longestInd = i;
 	}
-	if (length(bulletNormal[longestInd]) > 0.0f)
-		return bulletNormal[longestInd];
+
+	for (int i = 0; i < 4; i++)
+	{
+		bthreads[i].join();
+	}*/
+
+//	if (length(bulletNormal[longestInd]) > 0.0f)
+	//	return bulletNormal[longestInd];
 
 	return vec4(-1, -1, -1, -1);
 }
