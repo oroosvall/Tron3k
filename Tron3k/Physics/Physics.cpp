@@ -608,15 +608,17 @@ vec3 Physics::checkPlayerVBulletCollision(vec3 playerPos, vec3 bulletPos)
 {
 	playerBox.setPos(playerPos);
 	bulletBox.setPos(bulletPos);
-
+	float prad = playerBox.getSphere().radius;
 	AABB box;
-	box.max = playerPos + vec3(1, 1, 1);
-	box.min = playerPos - vec3(1, 1, 1);
+	box.max = playerPos + vec3(prad, prad, prad);
+	box.min = playerPos - vec3(prad, prad, prad);
 	playerBox.setAABB(box);
 
 	//TEMPORARY
-	box.max = bulletPos + vec3(0.2f, 0.2f, 0.2f);
-	box.min = bulletPos - vec3(0.2f, 0.2f, 0.2f);
+
+	float brad = bulletBox.getSphere().radius;
+	box.max = bulletPos + vec3(brad, brad, brad);
+	box.min = bulletPos - vec3(brad, brad, brad);
 	bulletBox.setAABB(box);
 
 
@@ -700,7 +702,7 @@ vec4 Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel, vec3 bulletD
 	deltaDir = bulletDir * dtbyI;
 	dirTimesVel = bulletVel * deltaDir;
 
-	//std::thread bthreads[4];
+	std::thread bthreads[4];
 
 	for (int i = 0; i < 4 && cNorms.size() == 0; i++)
 	{
@@ -713,7 +715,7 @@ vec4 Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel, vec3 bulletD
 
 
 
-		//bthreads[i] = std::thread(&Physics::checkBulletvWorldInternal, (void*)&box);
+		bthreads[i] = std::thread(&Physics::checkBulletvWorldInternal, (void*)&box);
 		//each chunk
 		for (unsigned int i = 0; i < worldBoxes.size(); i++)
 		{
