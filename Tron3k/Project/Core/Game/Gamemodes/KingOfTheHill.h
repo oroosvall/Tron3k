@@ -3,6 +3,16 @@
 
 #include "../Gamemode.h"
 
+enum KOTHSTATES
+{
+	LOCAL,
+	WARMUP,
+	PREROUND,
+	ROUND,
+	ENDROUND,
+	ENDMATCH
+};
+
 class KingOfTheHill : public Gamemode
 {
 private:

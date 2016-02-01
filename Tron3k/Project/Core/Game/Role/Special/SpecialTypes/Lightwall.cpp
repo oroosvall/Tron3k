@@ -42,7 +42,6 @@ bool Lightwall::allowedToActivate(Player* p)
 				{
 					int currentSpecial = p->getRole()->getSpecialMeter();
 					p->getRole()->setSpecialMeter(currentSpecial - 15.0f);
-					cooldown = 1.5f;
 				}
 			}
 			else if (p->getRole()->getSpecialMeter() - 100.0f < FLT_EPSILON && p->getRole()->getSpecialMeter() - 100.0f > -FLT_EPSILON)
@@ -51,9 +50,10 @@ bool Lightwall::allowedToActivate(Player* p)
 				p->getRole()->setSpecialMeter(92.0f);
 			}
 
-			if (activated)
+			if (activated && cooldown < FLT_EPSILON)
 			{
 				specialId++;
+				cooldown = 1.5f;
 				return true;
 			}
 		}
