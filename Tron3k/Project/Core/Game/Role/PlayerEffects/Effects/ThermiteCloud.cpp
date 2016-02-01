@@ -9,6 +9,7 @@ void ThermiteCloud::init(int pid, int eid, glm::vec3 position)
 	playerId = pid; effectId = eid; pos = position;
 	lifeTime = 5.0f;
 	damageTimer = 1.0f;
+	damage = 10;	
 }
 
 int ThermiteCloud::update(float dt)
@@ -22,6 +23,7 @@ int ThermiteCloud::update(float dt)
 	if (damageTimer <= 0)
 	{
 		playersHitByMe.clear();
+		damageTimer = 1.0;
 	}
 
 	return 0;
