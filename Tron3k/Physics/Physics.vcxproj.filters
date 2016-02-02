@@ -39,6 +39,21 @@
     <ClInclude Include="Collision\Meshes\CollideMesh.h">
       <Filter>Source Files\Collision\Meshes</Filter>
     </ClInclude>
+    <ClInclude Include="Collision\Meshes\WorldMesh.h">
+      <Filter>Source Files\Collision\Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision\Meshes\RoomMesh.h">
+      <Filter>Source Files\Collision\Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision\Meshes\PlayerMesh.h">
+      <Filter>Source Files\Collision\Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision\Meshes\BulletMesh.h">
+      <Filter>Source Files\Collision\Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision\Meshes\CaptureMesh.h">
+      <Filter>Source Files\Collision\Meshes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Collision\Geometry.cpp">
@@ -54,6 +69,21 @@
       <Filter>Source Files\Effect</Filter>
     </ClCompile>
     <ClCompile Include="Collision\Meshes\CollideMesh.cpp">
+      <Filter>Source Files\Collision\Meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="Collision\Meshes\BulletMesh.cpp">
+      <Filter>Source Files\Collision\Meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="Collision\Meshes\CaptureMesh.cpp">
+      <Filter>Source Files\Collision\Meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="Collision\Meshes\RoomMesh.cpp">
+      <Filter>Source Files\Collision\Meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="Collision\Meshes\WorldMesh.cpp">
+      <Filter>Source Files\Collision\Meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="Collision\Meshes\PlayerMesh.cpp">
       <Filter>Source Files\Collision\Meshes</Filter>
     </ClCompile>
   </ItemGroup>

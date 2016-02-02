@@ -14,6 +14,11 @@
 
 #include "Collision\Geometry.h"
 #include "Collision\Meshes\CollideMesh.h"
+#include "Collision\Meshes\BulletMesh.h"
+#include "Collision\Meshes\CaptureMesh.h"
+#include "Collision\Meshes\PlayerMesh.h"
+#include "Collision\Meshes\RoomMesh.h"
+#include "Collision\Meshes\WorldMesh.h"
 #include "Effect\EffectMesh.h"
 #include<vector>
 #include<iterator>
@@ -35,13 +40,13 @@ class Physics
 {
 private:
 	//General physics components will go here, and things will be added as we go
-	std::vector<std::vector<CollideMesh>> worldBoxes; //each CollideMesh is an ABB, and the vector is all CollideMeshes in the chunk
-	std::vector<AABBCapPoint> captureBoxes;
-	std::vector<AABBCapPointDivide> roomBoxes;
+	std::vector<std::vector<WorldMesh>> worldBoxes; //each CollideMesh is an ABB, and the vector is all CollideMeshes in the chunk
+	std::vector<CaptureMesh> captureBoxes;
+	std::vector<RoomMesh> roomBoxes;
 	//std::vector<CollideMesh> captureBoxes;
 	std::vector<EffectMesh*> effectBoxes;
-	CollideMesh playerBox;
-	CollideMesh bulletBox;
+	PlayerMesh playerBox;
+	BulletMesh bulletBox;
 
 	//--------AABB Collisions--------//
 	bool checkAABBvAABBCollision(AABB* mesh1, AABB* mesh2);

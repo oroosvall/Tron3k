@@ -582,8 +582,7 @@ vec3 Physics::checkPlayerVPlayerCollision(vec3 playerPos1, vec3 playerPos2)
 	p2.setPos(playerPos2);
 	//p2.setSize(playerBox.getSize());
 
-
-	bool ret = checkAABBvAABBCollision(&playerBox.boundingBox, &p2.boundingBox);
+	bool ret = checkAABBvAABBCollision(&playerBox.getAABB(), &p2.boundingBox);
 	if (ret)
 		return vec3(1, 1, 1);
 	return vec3(0, 0, 0);
@@ -1255,7 +1254,7 @@ void Physics::receiveRoomBoxes(void* _roomboxes)
 	int size = worldBoxes.size();
 	for (int n = 0; n < size; n++)
 	{
-		roomBoxes.push_back(AABBCapPointDivide());
+		roomBoxes.push_back(AABBSingle());
 		roomBoxes[n].pos = vec3(inRooms[n].pos);
 		roomBoxes[n].max = vec3(inRooms[n].max);
 		roomBoxes[n].min = vec3(inRooms[n].min);

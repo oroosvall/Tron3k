@@ -49,7 +49,7 @@ struct CaptureLoaded
 	AABBcapLoaded* subabbs;
 };
 
-struct AABBCapPointDivide
+struct AABBSingle
 {
 	vec3 pos;
 	vec3 max;
@@ -64,7 +64,7 @@ struct AABBCapPoint
 
 	int capID;
 
-	std::vector<AABBCapPointDivide> aabbs;
+	std::vector<AABBSingle> aabbs;
 
 	void init(CaptureLoaded in)
 	{
@@ -76,7 +76,7 @@ struct AABBCapPoint
 
 		for (int n = 0; n < size; n++)
 		{
-			aabbs.push_back(AABBCapPointDivide());
+			aabbs.push_back(AABBSingle());
 			aabbs[n].pos = vec3(in.subabbs[n].pos);
 			aabbs[n].max = vec3(in.subabbs[n].max);
 			aabbs[n].min = vec3(in.subabbs[n].min);
