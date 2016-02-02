@@ -25,6 +25,7 @@ private:
 	//Hover key
 	int hoverCheckKey;
 
+	float lastScale;
 
 public:
 	Button();
@@ -45,7 +46,7 @@ public:
 
 	virtual void setTexture(std::vector<GLuint> uiTextureIds);
 
-
+	virtual void scaleBarFromRight(float procentOfMax);
 };
 
 #endif

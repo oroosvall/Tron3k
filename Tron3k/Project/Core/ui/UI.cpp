@@ -18,10 +18,8 @@ UI::~UI()
 
 void UI::render(std::vector<GLuint> uiTextureIds)
 {
-	uiRender->disableDepthTest();
 	for (int i = 0; i < UiObjects.size(); i++)
 		UiObjects[i]->render(i);
-	uiRender->enableDepthTest();
 }
 
 void UI::init(std::string fileName, Console* console, IRenderPipeline* uiRender, std::vector<glm::vec2>* textureRes)
@@ -33,6 +31,8 @@ void UI::init(std::string fileName, Console* console, IRenderPipeline* uiRender,
 	bool result = loadUI(fileName);
 	if (!result)
 		console->printMsg("Error: LoadUI in UI was unsucessfull","System",'S');
+
+	//UiObjects[0]->scaleBarFromRight(0.5f);
 }
 
 //Needs to be modified

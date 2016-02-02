@@ -139,15 +139,19 @@ void UIManager::menuRender()
 {
 	renderPipe->ui_initRender();
 	
+	renderPipe->disableDepthTest();
 	menus[currentMenu[0]].render(uiTextureIds);
+	renderPipe->enableDepthTest();
 }
 
 void UIManager::inGameRender()
 {
 	renderPipe->ui_InGameRenderInit();
 
+	renderPipe->disableDepthTest();
 	for (int i = 0; i < nrOfCurretMenus; i++)
 		menus[currentMenu[i]].render(uiTextureIds);
+	renderPipe->enableDepthTest();
 }
 
 

@@ -44,7 +44,7 @@ void Core::init()
 	uiManager->init(&console);
 
 	renderUI = false;
-	startTeamSelect = false; //Temp
+	startTeamSelect = true; //Temp
 	renderMenu = true;
 }
 
@@ -220,11 +220,11 @@ void Core::upMenu(float dt)
 			break;
 		case 5: //Server -> starts a server
 			current = SERVER;
+			subState = 0;
 			uiManager->removeAllMenus();
 			renderPipe->clearBothBuffers();
 			glfwSwapBuffers(win);
 			renderPipe->clearBothBuffers();
-			subState = 0;
 			renderMenu = false;
 			break;
 		case 6: //Connect
@@ -757,8 +757,7 @@ void Core::startHandleCmds(std::string com)
 			client_record = false;
 			client_playback = false;
 			subState = 0;
-
-			showTeamSelect();
+			renderMenu = false;
 		}
 
 		else if (token == "/2")
@@ -776,7 +775,9 @@ void Core::startHandleCmds(std::string com)
 		{
 			current = Gamestate::ROAM;
 			subState = 0;
+			
 			showTeamSelect();
+			renderMenu = false;
 		}
 		else if (token == "/4")
 		{
