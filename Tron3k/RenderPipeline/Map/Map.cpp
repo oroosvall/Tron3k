@@ -463,9 +463,6 @@ int Map::portalintersection(glm::vec3* oldPos, glm::vec3* newPos, int in_current
 				in_currentChunk = chunks[in_currentChunk].portals[n].bridgedRooms[1];
 			else
 				in_currentChunk = chunks[in_currentChunk].portals[n].bridgedRooms[0];
-	
-			printf("Now in room %d \n", in_currentChunk);
-	
 			return in_currentChunk;
 		}
 	

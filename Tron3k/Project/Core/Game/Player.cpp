@@ -909,7 +909,7 @@ void Player::respawn(glm::vec3 respawnPos, glm::vec3 _dir, int _roomID)
 	role.returnToLife();
 
 	roomID = _roomID;
-	printf("Now in room %d", _roomID);
+	//printf("Now in room %d", _roomID);
 
 	if (isLocalPlayer)
 		cam->roomID = _roomID;
