@@ -708,7 +708,6 @@ void Game::checkPlayerVBulletCollision()
 							bullets[b][j]->getId(hit.bulletPID, hit.bulletBID);
 							hit.newHPtotal = -1;
 							allBulletHitsOnPlayers.push_back(hit);
-							return;
 						}
 					}
 				}
