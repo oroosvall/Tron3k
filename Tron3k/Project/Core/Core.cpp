@@ -958,6 +958,8 @@ void Core::clientHandleCmds(std::string com)
 				int team = stoi(token);
 				top->command_team_change(top->getConId(), team);
 				console.printMsg("Change team request sent to server", "System", 'S');
+
+				uiManager->setMenu(2);
 			}
 			else
 				console.printMsg("Invalid team. Use /team <1/2/3>", "System", 'S');
@@ -982,6 +984,9 @@ void Core::clientHandleCmds(std::string com)
 			{
 				int role = stoi(token);
 				top->command_role_change(top->getConId(), role);
+
+				uiManager->setFirstMenuSet(false);
+				uiManager->setMenu(0);
 			}
 			else
 				console.printMsg("Invalid role. Use /role <1-5>", "System", 'S');
