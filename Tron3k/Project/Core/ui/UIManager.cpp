@@ -214,6 +214,8 @@ void UIManager::removeAllMenus()
 	if(menus != nullptr)
 		delete[] menus;
 	menus = nullptr;
+	openedMenus = nullptr;
+	currentMenu = nullptr;
 
 	nrOfOpenedMenus = 0;
 	nrOfCurretMenus = 0;

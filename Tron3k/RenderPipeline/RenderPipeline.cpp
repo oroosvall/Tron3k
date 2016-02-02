@@ -974,6 +974,11 @@ void RenderPipeline::disableDepthTest()
 	glDisable(GL_DEPTH_TEST);
 }
 
+void RenderPipeline::clearBothBuffers()
+{
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
 int RenderPipeline::startExecTimer(std::string name)
 {
 	return startTimer(name);

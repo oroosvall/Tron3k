@@ -45,6 +45,7 @@ void Core::init()
 
 	renderUI = false;
 	startTeamSelect = false; //Temp
+	renderMenu = true;
 }
 
 Core::~Core()
@@ -174,9 +175,11 @@ void Core::upStart(float dt)
 	case 1:
 		//start console commands
 		startHandleCmds();
+		if(renderMenu)
+			upMenu(dt);
 		break;
 	}
-	upMenu(dt);
+	
 }
 
 void Core::upMenu(float dt)
@@ -217,8 +220,12 @@ void Core::upMenu(float dt)
 			break;
 		case 5: //Server -> starts a server
 			current = SERVER;
-			uiManager->setFirstMenuSet(false);
+			uiManager->removeAllMenus();
+			renderPipe->clearBothBuffers();
+			glfwSwapBuffers(win);
+			renderPipe->clearBothBuffers();
 			subState = 0;
+			renderMenu = false;
 			break;
 		case 6: //Connect
 		{
@@ -758,6 +765,11 @@ void Core::startHandleCmds(std::string com)
 		{
 			current = Gamestate::SERVER;
 			subState = 0;
+			uiManager->removeAllMenus();
+			renderPipe->clearBothBuffers();
+			glfwSwapBuffers(win);
+			renderPipe->clearBothBuffers();
+			renderMenu = false;
 		}
 
 		else if (token == "/3")

@@ -107,6 +107,7 @@ private:
 
 	void showTeamSelect();
 	bool startTeamSelect; //temp
+	bool renderMenu;
 
 public:
 	
