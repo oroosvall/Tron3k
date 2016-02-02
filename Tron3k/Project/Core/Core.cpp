@@ -1811,6 +1811,7 @@ void Core::showTeamSelect()
 	{
 		uiManager->LoadNextSet(1);
 		uiManager->setFirstMenuSet(false);
-		uiManager->setMenu(0);
+		uiManager->setOpenedGuiBool(true);
+		uiManager->setMenu(0); 
 	}
 }
