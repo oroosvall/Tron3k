@@ -920,6 +920,7 @@ void Core::clientHandleCmds(std::string com)
 			console.printMsg("/disconnect", "", ' ');
 			console.printMsg("/free (turns freecam on/off)", "", ' ');
 			console.printMsg("/spec # (spectate player id)", "", ' ');
+			console.printMsg("/rs  show render settings", "", ' ');
 		}
 		else if (token == "/name")
 		{
@@ -1016,6 +1017,32 @@ void Core::clientHandleCmds(std::string com)
 				else
 					game->spectateID = -1;
 			}
+		}
+		else if (token == "/rs")
+		{
+			ss >> token;
+			if (token == "/rs") // help menu
+			{
+				console.printMsg("Render settings commands", "", ' ');
+				console.printMsg("/rs  portal	PORTAL_CULLING ", "", ' ');
+				console.printMsg("/rs  fportal	FREEZE_CULLING ", "", ' ');
+				console.printMsg("/rs  chunk	RENDER_CHUNK ", "", ' ');
+				console.printMsg("/rs  abb		RENDER_ABB ", "", ' ');
+				console.printMsg("/rs  obb		RENDER_OBB ", "", ' ');
+				console.printMsg("/rs  debug	RENDER_DEBUG_TEXT ", "", ' ');
+			}
+			else if (token == "portal")
+				renderPipe->setRenderFlag(PORTAL_CULLING);
+			else if (token == "fportal")
+				renderPipe->setRenderFlag(FREEZE_CULLING);
+			else if (token == "chunk")
+				renderPipe->setRenderFlag(RENDER_CHUNK);
+			else if (token == "abb")
+				renderPipe->setRenderFlag(RENDER_ABB);
+			else if (token == "obb")
+				renderPipe->setRenderFlag(RENDER_OBB);
+			else if (token == "debug")
+				renderPipe->setRenderFlag(RENDER_DEBUG_TEXT);
 		}
 	}
 }
