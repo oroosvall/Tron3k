@@ -39,6 +39,7 @@ public:
 	float getTimer() { return timer; };
 
 	virtual bool allowTeamChange() { return true; };
+	virtual bool allowRoleChange() { return true; };
 };
 
 #endif

@@ -70,6 +70,7 @@ public:
 	GAMEMODE_MSG getLastMsg() { return lastMsg; };
 
 	bool allowTeamChange();
+	bool allowRoleChange();
 };
 
 #endif

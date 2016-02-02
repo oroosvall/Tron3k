@@ -967,13 +967,13 @@ void Core::clientHandleCmds(std::string com)
 		else if (token == "/role")
 		{
 			ss >> token;
-			int role = stoi(token);
-			if (role < 1 || role > 5)
-				console.printMsg("Invalid role. Use /role <1-5>", "System", 'S');
-			else
+			if (token == "1" || token == "2" || token == "3" || token == "4" || token == "5")
 			{
+				int role = stoi(token);
 				top->command_role_change(top->getConId(), role);
 			}
+			else
+				console.printMsg("Invalid role. Use /role <1-5>", "System", 'S');
 		}
 		else if (token == "/disconnect")
 			disconnect();

@@ -609,6 +609,15 @@ public:
 		Uint8 role;
 		*rec >> p_conID >> role;
 
+		if (isClient)
+		{
+			if (role == 9)
+			{
+				consolePtr->printMsg("Can't change role!", "System", 'S');
+				return;
+			}
+		}
+
 		Player* p = gamePtr->getPlayer(p_conID);
 		if (p == nullptr)
 		{
@@ -616,8 +625,25 @@ public:
 			return;
 		}
 
+		if (!isClient) //Check if we're allowed
+		{
+			Gamemode* gm = gamePtr->getGameMode();
+			if (gm->allowRoleChange())
+			{
+
+			}
+			else
+			{
+				Packet* out = new Packet();
+				*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::ROLESWITCH) << p_conID << Uint8(9);
+				branch(out, -1);
+				delete out;
+				return;
+			}
+		}
+
 		p->getRole()->chooseRole(role-1);
-		gamePtr->sendPlayerRadSize(0.9f); //TEMP BUT W/E
+		gamePtr->sendPlayerRadSize(p->getRole()->getBoxRadius()); //TEMP BUT W/E
 		consolePtr->printMsg("Player " + p->getName() + " switched class!", "System", 'S');
 
 		if (isClient == false)

@@ -550,3 +550,10 @@ bool KingOfTheHill::allowTeamChange()
 		return true;
 	return false;
 }
+
+bool KingOfTheHill::allowRoleChange()
+{
+	if (state == ROUND)
+		return false;
+	return true;
+}
