@@ -330,11 +330,34 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 		{
 			msg = GAMEMODE_MSG::MATCH_WIN_TEAM1;
 			state = ENDMATCH;
+			if (this->gamePtr->GetGameState() != Gamestate::SERVER)
+			{
+				if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
+				{
+					GetSound()->playUserGeneratedSound(SOUNDS::announcerYouWin);
+				}
+				else if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 2)
+				{
+					GetSound()->playUserGeneratedSound(SOUNDS::announcerYouLose);
+				}
+			}
 		}
 		else if (teamTwoScore == winScore)
 		{
 			msg = GAMEMODE_MSG::MATCH_WIN_TEAM2;
 			state = ENDMATCH;
+			if (this->gamePtr->GetGameState() != Gamestate::SERVER)
+			{
+				if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
+				{
+					GetSound()->playUserGeneratedSound(SOUNDS::announcerYouLose);
+				}
+				else if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 2)
+				{
+					GetSound()->playUserGeneratedSound(SOUNDS::announcerYouWin);
+				}
+				
+			}
 		}
 		else if (teamTwoScore == winScore && teamOneScore == winScore)
 		{
