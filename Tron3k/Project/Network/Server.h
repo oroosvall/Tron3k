@@ -35,6 +35,7 @@ public:
 	void in_message(Packet* rec, Uint8 conID);
 
 	void event_gamemode_data();
+	void event_player_data();
 
 	void event_bullet_hit_player(std::vector<BulletHitPlayerInfo> allhits);
 

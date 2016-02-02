@@ -213,7 +213,7 @@ void AnimatedMeshV2::load(std::string character)
 	first.load(file + "_first.bin", character);
 	glGenBuffers(1, &matricesBuffer);
 	glBindBuffer(GL_UNIFORM_BUFFER, matricesBuffer);
-	//glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4)* animIdle->header.jointCount, animIdle->keyFrames[0].jointTransform, GL_STATIC_DRAW);
+	glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4) * animations[0].header.jointCount, (void*)1, GL_STATIC_DRAW);
 }
 
 int* AnimatedMeshV2::loadAnimations(std::string character)
@@ -294,6 +294,7 @@ void AnimatedMeshV2::draw(GLuint uniformKeyMatrixLocation,int animationID, int k
 			first.render();	
 		else
 			third.render();
+	   
 	}
 
 

@@ -138,7 +138,7 @@ void Console::addMsg(string &m, string n, char s)
 	history[latestMsg] = newmsg;
 
 	m = "";
-
+	historyUpdate = true;
 	printConsole();
 }
 
@@ -157,6 +157,11 @@ string Console::getCommand()
 	return cmd;
 }
 
+bool Console::getHistoryUpdate()
+{
+	return historyUpdate;
+}
+
 string Console::getHistory()
 {
 	string result = "";
@@ -171,7 +176,7 @@ string Console::getHistory()
 		iter++;
 		iter = iter%MAXHISTORY;
 	}
-
+	historyUpdate = false;
 	return result;
 }
 

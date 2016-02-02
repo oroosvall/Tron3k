@@ -25,11 +25,12 @@ private:
 	//Hover key
 	int hoverCheckKey;
 
+	float lastLength;
 
 public:
 	Button();
 	Button(glm::vec2 center, int textureId1, int textureId2, int uniqueKey, int hoverKey, IRenderPipeline* uiRender, glm::vec2 textRes1, glm::vec2 textRes2);
-	~Button();
+	virtual ~Button();
 
 	virtual void render(int id);
 
@@ -45,7 +46,7 @@ public:
 
 	virtual void setTexture(std::vector<GLuint> uiTextureIds);
 
-
+	virtual void scaleBarFromRight(float procentOfMax);
 };
 
 #endif

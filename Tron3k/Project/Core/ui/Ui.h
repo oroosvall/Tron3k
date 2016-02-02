@@ -6,6 +6,7 @@
 
 #include "UIElements.h"
 #include "Button.h"
+#include "StaticTextureBoxes.h"
 #include "VertexBufferUI.h"
 #include "uiVertex.h"
 

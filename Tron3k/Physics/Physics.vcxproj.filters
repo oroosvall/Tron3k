@@ -19,6 +19,9 @@
     <Filter Include="Source Files\Effect">
       <UniqueIdentifier>{83fbf811-151c-4244-aa98-242bcc256376}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Collision\Meshes">
+      <UniqueIdentifier>{95100673-b4d6-4662-8aa5-698d89948b89}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Collision\Geometry.h">
@@ -33,8 +36,8 @@
     <ClInclude Include="Effect\EffectMesh.h">
       <Filter>Source Files\Effect</Filter>
     </ClInclude>
-    <ClInclude Include="Collision\CollideMesh.h">
-      <Filter>Source Files\Collision</Filter>
+    <ClInclude Include="Collision\Meshes\CollideMesh.h">
+      <Filter>Source Files\Collision\Meshes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -44,14 +47,14 @@
     <ClCompile Include="Physics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Collision\CollideMesh.cpp">
-      <Filter>Source Files\Collision</Filter>
-    </ClCompile>
     <ClCompile Include="Collision\Chunk.cpp">
       <Filter>Source Files\Collision</Filter>
     </ClCompile>
     <ClCompile Include="Effect\EffectMesh.cpp">
       <Filter>Source Files\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="Collision\Meshes\CollideMesh.cpp">
+      <Filter>Source Files\Collision\Meshes</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

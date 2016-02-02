@@ -13,8 +13,9 @@ StaticTextureBoxes::StaticTextureBoxes()
 				    0, 0, 0, 1 };
 	uniqueKey = -1;
 	nrOfTextures = 0;
+	lastScale = 1.0f;
 }
-StaticTextureBoxes::StaticTextureBoxes(glm::vec2 center, int textureId1[], int nrOfTextures, IRenderPipeline* uiRender, glm::vec2 textRes[])
+StaticTextureBoxes::StaticTextureBoxes(glm::vec2 center, int* textureId1, int nrOfTextures, IRenderPipeline* uiRender, std::vector<glm::vec2>  textRes)
 {
 	this->uiRender = uiRender;
 	this->center = center;
@@ -28,6 +29,8 @@ StaticTextureBoxes::StaticTextureBoxes(glm::vec2 center, int textureId1[], int n
 		this->textureRes[i] = textRes[i];
 	}
 	textureInUse = textureIndexList[0];
+
+	lastScale = 1.0f;
 
 	float xScale = textRes[0].x / 1980;
 	float yScale = textRes[0].y / 1080;
@@ -45,8 +48,10 @@ StaticTextureBoxes::StaticTextureBoxes(glm::vec2 center, int textureId1[], int n
 }
 StaticTextureBoxes::~StaticTextureBoxes() 
 {
-	delete[] textureRes;
-	delete[] textureIndexList;
+	if(textureRes != nullptr)
+		delete[] textureRes;
+	if (textureIndexList != nullptr)
+		delete[] textureIndexList;
 }
 
 void StaticTextureBoxes::render(int id)
@@ -117,3 +122,17 @@ void StaticTextureBoxes::setTexture(std::vector<GLuint> uiTextureIds)
 	textureInUse = textureIndexList[0];
 }
 
+void StaticTextureBoxes::scaleBarFromRight(float procentOfMax) //
+{
+	//Calc the new size.
+	float scale = (textureRes[0].x * procentOfMax) / 1920.0f;
+	worldMatrix[0].x = scale;
+
+	//Calc the new position
+	float difference =  lastScale - scale;
+
+	difference = (difference * textureRes[0].x) / 1920.0f;
+	worldMatrix[0].w += difference;
+
+	lastScale = scale;
+}

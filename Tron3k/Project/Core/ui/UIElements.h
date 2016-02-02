@@ -15,6 +15,8 @@
 class UIElements
 {
 public:
+	virtual ~UIElements() {};
+
 	virtual void render(int id) = 0;
 
 	virtual void setWorldMatrix(float x, float y, int id) = 0;
@@ -28,6 +30,8 @@ public:
 	virtual void hoverCheck(glm::vec2 pos) = 0;
 
 	virtual void setTexture(std::vector<GLuint> uiTextureIds) = 0;
+
+	virtual void scaleBarFromRight(float procentOfMax) = 0;
 
 	//virtual uiVertex* returnPosAUv(int id) = 0;
 };

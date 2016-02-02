@@ -117,9 +117,10 @@ private:
 
 	float counter;
 	int renderFrameTimeID;
-	int renderOther;
 
 	bool initialized;
+
+	bool renderDebugText = false;
 
 public:
 
@@ -137,14 +138,14 @@ public:
 	virtual void render();
 	virtual void finalizeRender();
 
-	virtual void addLight(SpotLight* newLight);
+	virtual void addLight(SpotLight* newLight, int roomID);
 	virtual void setChunkColorAndInten(int ID, float* color, float inten);
 
 	virtual void* getView();
 
 	virtual void renderMISC(int miscID, void* world, float* dgColor, float sgInten);
 	virtual void renderBullet(int bid, void* world, float* dgColor, float sgInten);
-	virtual void renderAnimation(int playerID, int roleID, void* world, AnimationState animState, float* dgColor, float sgInten, bool first);
+	virtual void renderAnimation(int playerID, int roleID, void* world, AnimationState animState, float* dgColor, float sgInten, bool first, int roomID);
 
 	virtual std::string getStatus() { return ""; };
 
@@ -166,6 +167,8 @@ public:
 	virtual void setGBufferWin(unsigned int WindowWidth, unsigned int WindowHeight);
 
 	virtual void* getChunkCollisionVectorAsPoint(int chunkID);
+	virtual void* getCapPointsAsPoint(int& count);
+	virtual void* getRoomBoxes();
 
 	virtual void getPlayerBox(float &xMax, float &xMin, float &yMax, float &yMin, float &zMax, float &zMin);
 	virtual void getWorldBoxes(int &current, float &xMax, float &xMin, float &yMax, float &yMin, float &zMax, float &zMin);
@@ -183,6 +186,11 @@ public:
 
 	virtual void enableDepthTest();
 	virtual void disableDepthTest();
+	virtual void clearBothBuffers();
+
+	virtual int startExecTimer(std::string name);
+	virtual void stopExecTimer(int id);
+	virtual bool* getRenderedChunks(int& get_size);
 };
 
 

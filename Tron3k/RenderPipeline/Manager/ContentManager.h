@@ -33,6 +33,8 @@ private:
 	//skybox
 	Mesh skybox;
 
+	GLuint lightWallTex;
+	GLuint decalTexture;
 	GLuint skyTexture;
 
 	GLuint portalQuery;
@@ -85,7 +87,12 @@ public:
 	int getPortalID(glm::vec3* oldpos, glm::vec3* newpos, int in_chunk) { return testMap.portalintersection(oldpos, newpos, in_chunk); }
 
 	void* getChunkCollisionVectorAsPointer(int chunkID);
+	void* getCapAsPointer(int& count);
+	void* getRoomBoxes();
+
 	void bindLightwalTexture();
+
+	void bindDecalTexture();
 
 	std::vector<std::vector<float>> getMeshBoxes(); //Will send out all meshboxes, for now it'll just send a static one
 

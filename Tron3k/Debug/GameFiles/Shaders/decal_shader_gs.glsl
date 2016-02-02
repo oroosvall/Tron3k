@@ -28,9 +28,7 @@ vec3 right;
 vec3 down;
 
 void main() 
-{
-	UV = vec2(0,0);
-	
+{	
 	float size = 0.1f;
 	
 	if(normal.y > 0.99 || normal.y < -0.99)
@@ -44,12 +42,16 @@ void main()
 		down = normalize(cross(normal, right)) * size;
 	}
 	
+	UV = vec2(0,1);
 	gl_Position = ViewProjMatrix * vec4(pos - down - right, 1);
 	EmitVertex();
+	UV = vec2(0,0);
 	gl_Position = ViewProjMatrix * vec4(pos + down - right, 1);
 	EmitVertex();
+	UV = vec2(1,1);
 	gl_Position = ViewProjMatrix * vec4(pos - down + right, 1);
 	EmitVertex();
+	UV = vec2(1,0);
 	gl_Position = ViewProjMatrix * vec4(pos + down + right, 1);
 	EmitVertex();
 	

@@ -78,6 +78,9 @@ void Map::release()
 		materials = nullptr;
 	}
 
+	if(chunkAABB)
+		delete[] chunkAABB;
+
 	if (tex)
 	{
 		for (int i = 0; i < textureCount; i++)
@@ -141,17 +144,17 @@ void Map::renderChunk(GLuint shader, GLuint shaderLocation, int chunkID)
 
 		glActiveTexture(GL_TEXTURE0);
 		if(mat.textureMapIndex != -1)
-			glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].textureMapIndex].textureID);
+			glBindTexture(GL_TEXTURE_2D, tex[mat.textureMapIndex].textureID);
 		else
 			glBindTexture(GL_TEXTURE_2D, blank_diffuse);
 		glActiveTexture(GL_TEXTURE0 + 1);
 		if (mat.normalMapIndex != -1)
-			glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].normalMapIndex].textureID);
+			glBindTexture(GL_TEXTURE_2D, tex[mat.normalMapIndex].textureID);
 		else
 			glBindTexture(GL_TEXTURE_2D, blank_normal);
 		glActiveTexture(GL_TEXTURE0 + 2);
 		if (mat.specularMapIndex != -1)
-			glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].specularMapIndex].textureID);
+			glBindTexture(GL_TEXTURE_2D, tex[mat.specularMapIndex].textureID);
 		else
 			glBindTexture(GL_TEXTURE_2D, blank_glow);
 		
@@ -433,15 +436,15 @@ void Map::loadMap(std::string mapName)
 	inFile.read((char*)spB, sizeof(SpawnPoint) * spTBCount);
 	inFile.read((char*)spFFA, sizeof(SpawnPoint) * spFFACount);
 
-	ABB* chunkAABB = new ABB[roomCount-1];
-	inFile.read((char*)chunkAABB, sizeof(ABB) * (roomCount-1));
 
-	for (int i = 1; i < roomCount; i++)
+	chunkAABB = new ABB[roomCount];
+
+	inFile.read((char*)chunkAABB, sizeof(ABB) * (roomCount));
+
+	for (int i = 0; i < roomCount; i++)
 	{
-		chunks[i].roomBox = chunkAABB[i - 1];
+		chunks[i].roomBox = chunkAABB[i];
 	}
-
-	delete[] chunkAABB;
 
 	inFile.close();
 
@@ -460,9 +463,6 @@ int Map::portalintersection(glm::vec3* oldPos, glm::vec3* newPos, int in_current
 				in_currentChunk = chunks[in_currentChunk].portals[n].bridgedRooms[1];
 			else
 				in_currentChunk = chunks[in_currentChunk].portals[n].bridgedRooms[0];
-	
-			printf("Now in room %d \n", in_currentChunk);
-	
 			return in_currentChunk;
 		}
 	
@@ -473,6 +473,23 @@ int Map::portalintersection(glm::vec3* oldPos, glm::vec3* newPos, int in_current
 ChunkCollision* Map::getChunkCollision(int chunkID)
 {
 	return chunks[chunkID].getChunkCollision();
+}
+
+void* Map::getCapAsPointer(int& count)
+{
+	count = capCount;
+
+	CaptureExportToGame* cap = new CaptureExportToGame[capCount];
+
+	for (int n = 0; n < capCount; n++)
+	{
+		cap[n].roomID = capturePoints[n].roomID;
+		cap[n].bigAABB = capturePoints[n].bigAABB;
+		cap[n].subcount = capturePoints[n].aabbCount;
+		cap[n].subabbs = capturePoints[n].aabb;
+	}
+	
+	return cap;
 }
 
 void Map::deleteSpawnposData()

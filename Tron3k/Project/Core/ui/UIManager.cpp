@@ -16,6 +16,7 @@ UIManager::UIManager()
 	nrOfOpenedMenus = 0;
 
 	guiOpened = false;
+	firstMenuSet = false;
 }
 UIManager::~UIManager() 
 {
@@ -41,8 +42,8 @@ UIManager::~UIManager()
 //Start menu
 void UIManager::init(Console* console)
 {
-	std::string fileNameFirstGroup = "GameFiles/UIFiles/menuFileNames.txt";
-	std::string fileNameSecondGroup = "GameFiles/UIFiles/menuFileNames2.txt";
+	std::string fileNameFirstGroup = "GameFiles/UIFiles/MenuFileNames.txt";
+	std::string fileNameSecondGroup = "GameFiles/UIFiles/InGameFileNames.txt";
 	this->console = console;
 
 	//Texture Paths
@@ -137,29 +138,20 @@ void UIManager::loadInTexture()
 void UIManager::menuRender()
 {
 	renderPipe->ui_initRender();
-	//
-	////test render
-	//glm::mat4 worldtest;
-	//// position
-	//worldtest[0].w;
-	//worldtest[1].w;
-	//worldtest[2].w;
-	////sacle
-	//worldtest[0].x = 0.25f;
-	//worldtest[1].y = 0.25f;
-	//worldtest[2].z;
-	//
-	//renderPipe->ui_renderQuad(&worldtest[0][0], uiTextureIds[0], 1.0f);
-
+	
+	renderPipe->disableDepthTest();
 	menus[currentMenu[0]].render(uiTextureIds);
+	renderPipe->enableDepthTest();
 }
 
 void UIManager::inGameRender()
 {
 	renderPipe->ui_InGameRenderInit();
 
+	renderPipe->disableDepthTest();
 	for (int i = 0; i < nrOfCurretMenus; i++)
 		menus[currentMenu[i]].render(uiTextureIds);
+	renderPipe->enableDepthTest();
 }
 
 
@@ -168,27 +160,53 @@ void UIManager::setMenu(int menuId)
 {
 	if (menuId > -1 && menuId < nrOfMenus)
 	{
-		if (guiOpened)
+		if (guiOpened) //guiOpened is true when the gui needs to be rendered, since menus needs to be rendered together with the gui.
 		{
+			if (!firstMenuSet)//Changing menu
+			{
+				nrOfCurretMenus = 0;
+				firstMenuSet = true;
+			}
 			currentMenu[nrOfCurretMenus] = menuId;
 			nrOfCurretMenus++;
 		}
-		else
+		else if(firstMenuSet)//Changing menu
+		{
+			openedMenus[nrOfOpenedMenus] = currentMenu[0];
 			currentMenu[0] = menuId;
-		nrOfOpenedMenus++;
+			nrOfOpenedMenus++;
+		}
+		else
+		{
+			currentMenu[0] = menuId;
+			nrOfCurretMenus++;
+			firstMenuSet = true;
+		}
 	}
-	else if (menuId == -1)
+	else if (menuId == -1) //This is for going back to the last menu
 	{
-		nrOfOpenedMenus--;
-		currentMenu[0] = openedMenus[nrOfOpenedMenus];
+		if (guiOpened) //remove extra windows ingame for example continue/quit window(esc) window or score window(tab).
+			nrOfCurretMenus--;
+		else //Going back in the menu
+		{
+			if (nrOfOpenedMenus > 0)
+			{
+				nrOfOpenedMenus--;
+				currentMenu[0] = openedMenus[nrOfOpenedMenus];
+			}
+		}
 	}
 	else
 		console->printMsg("Error: invalid menuId in function setMenu.", "System", 'S');
 }
-void UIManager::backToGui()
+void UIManager::backToGui() //This is used when you go back to esc window from settings
 {
-	nrOfCurretMenus = 1;
-	nrOfOpenedMenus = 1;
+	nrOfCurretMenus = 2;
+	nrOfOpenedMenus = 2;
+	currentMenu[0] = openedMenus[0];
+	currentMenu[1] = openedMenus[1];
+
+	setOpenedGuiBool(true);
 }
 void UIManager::removeAllMenus() 
 {
@@ -200,8 +218,9 @@ void UIManager::removeAllMenus()
 	if(menus != nullptr)
 		delete[] menus;
 	menus = nullptr;
-	if (openedMenus != nullptr)
-		delete[] openedMenus;
+	openedMenus = nullptr;
+	currentMenu = nullptr;
+
 	nrOfOpenedMenus = 0;
 	nrOfCurretMenus = 0;
 }
@@ -263,7 +282,7 @@ bool UIManager::LoadNextSet(int whichMenuGroup)
 	default:
 		break;
 	}
-	nrOfCurretMenus = 1;
+	nrOfCurretMenus = 0;
 
 	return true;
 }
@@ -271,4 +290,9 @@ bool UIManager::LoadNextSet(int whichMenuGroup)
 void UIManager::setOpenedGuiBool(bool guiBool)
 {
 	guiOpened = guiBool;
+}
+
+void UIManager::setFirstMenuSet(bool set)
+{
+	firstMenuSet = set;
 }

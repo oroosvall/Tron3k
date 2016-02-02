@@ -53,9 +53,6 @@ void Game::init(int max_connections, int state, Console* con)
 	console = con;
 	max_con = max_connections;
 
-	gamemode = new KingOfTheHill();
-	gamemode->init(con, this);
-
 	loadRoles();
 	initPhysics();
 	if (GetSoundActivated())
@@ -64,6 +61,9 @@ void Game::init(int max_connections, int state, Console* con)
 	}
 
 	gameState = state;
+
+	gamemode = new KingOfTheHill();
+	gamemode->init(con, this);
 
 	playerList = new Player*[max_con];
 	for (int c = 0; c < max_con; c++)
@@ -139,12 +139,21 @@ void Game::update(float dt)
 	if(gameState != SERVER)
 		console->setInChatMode(playerList[localPlayerId]->getLockedControls());
 
+
 	GAMEMODE_MSG gameMsg = gamemode->update(dt);
-	if (gameState == Gamestate::SERVER)
+	if (gamemode->getType() == GAMEMODE_TYPE::KOTH && gameState == Gamestate::SERVER)
 	{
-		/*
-		Handling most messages
-		*/
+		KingOfTheHill* k = (KingOfTheHill*)gamemode;
+		for (int c = 0; c < 20; c++)
+		{
+			if (playerList[c] != nullptr)
+			{
+				if (physics->checkPlayerVCaptureCollision(playerList[c]->getPos(), k->getCapturePoint()))
+				{
+					k->playerOnCapPointThisFrame(playerList[c]->getTeam());
+				}
+			}
+		}
 	}
 
 	for (int c = 0; c < max_con; c++)
@@ -337,7 +346,8 @@ void Game::createPlayer(Player* p, int conID, int hp, int role, bool isLocal)
 	playerList[conID]->setTeam(p->getTeam());
 	playerList[conID]->setHP(hp);
 	playerList[conID]->setRole(*templateRole);
-	playerList[conID]->getRole()->chooseRole(role);
+	if (role != ROLES::NROFROLES)
+		playerList[conID]->chooseRole(role);
 
 	if (isLocal)
 	{
@@ -356,6 +366,17 @@ void Game::removePlayer(int conID)
 void Game::sendChunkBoxes(int chunkID, void* cBoxes)
 {
 	physics->receiveChunkBoxes(chunkID, cBoxes);
+}
+
+void Game::sendCapBoxes(int nrCaps, void* capBoxes)
+{
+	//oh capbox my capbox
+	physics->receiveCap(nrCaps, capBoxes);
+}
+
+void Game::sendRoomBoxes(void* roomboxes)
+{
+	physics->receiveRoomBoxes(roomboxes);
 }
 
 void Game::sendPlayerBox(std::vector<float> pBox)
@@ -631,14 +652,16 @@ void Game::checkPlayerVCapCollision()
 	{
 		bool localCollided = physics->checkPlayerVCaptureCollision(playerList[localPlayerId]->getPos(), 0);
 	}
-
-	bool inPoint = false;
-
-	for (int i = 0; i < max_con; i++)
+	else if (gameState == Gamestate::SERVER)
 	{
-		if (playerList[i] != nullptr)
+		bool inPoint = false;
+
+		for (int i = 0; i < max_con; i++)
 		{
-			inPoint = physics->checkPlayerVCaptureCollision(playerList[i]->getPos(), 0);
+			if (playerList[i] != nullptr)
+			{
+				inPoint = physics->checkPlayerVCaptureCollision(playerList[i]->getPos(), 0);
+			}
 		}
 	}
 }
@@ -664,7 +687,7 @@ void Game::checkPlayerVBulletCollision()
 						if ((bullets[b][j]->getTeamId() != playerList[i]->getTeam() && playerList[i]->getTeam() != 0) || (playerList[pid]->searchModifier(MODIFIER_TYPE::HACKINGDARTMODIFIER) && pid != i)) //Don't shoot same team, don't shoot spectators
 						{
 							if (playerList[i]->isAlive()) //Don't shoot dead people
-								collides = physics->checkPlayerVBulletCollision(playerList[i]->getPos() - (vec3(0, playerList[i]->getRole()->getBoxModifier(), 0)), bullets[b][j]->getPos());
+								collides = physics->checkPlayerVBulletCollision(playerList[i]->getPos() - (vec3(0, playerList[i]->getRole()->getBoxModifier(), 0)), bullets[b][j]->getPos(), this->playerList[i]->getRole()->GetSize());
 						}
 						if (collides != glm::vec3(0, 0, 0))
 						{
@@ -686,7 +709,6 @@ void Game::checkPlayerVBulletCollision()
 							bullets[b][j]->getId(hit.bulletPID, hit.bulletBID);
 							hit.newHPtotal = -1;
 							allBulletHitsOnPlayers.push_back(hit);
-							return;
 						}
 					}
 				}
@@ -700,7 +722,6 @@ void Game::checkPlayerVWorldCollision(float dt)
 {
 	if (localPlayerId != -1)
 	{
-
 		vec3 posadjust = vec3(0);
 		//lower with distance from eyes to center
 		std::vector<vec4> cNorms = physics->PlayerVWorldCollision(playerList[localPlayerId]->getPos() - (vec3(0, playerList[localPlayerId]->getRole()->getBoxModifier(), 0)));
@@ -763,10 +784,7 @@ void Game::checkBulletVEffectCollision(float dt)
 					if (((LightwallEffect*)effects[EFFECT_TYPE::LIGHT_WALL][c])->getCollidable())
 					{
 						collNormalWalls = physics->checkBulletVEffectCollision(bullets[b][j]->getPos(),	bullets[b][j]->getVel(), bullets[b][j]->getDir(), EFFECT_TYPE::LIGHT_WALL, eid, dt);
-						collNormals.reserve(collNormalWalls.size()); // preallocate memory
-						collNormals.insert(collNormals.end(), collNormalWalls.begin(), collNormalWalls.end());
-						collNormalWalls.clear();
-						if (collNormals.size() > 0)
+						if (collNormalWalls.size() > 0)
 						{
 							BulletHitEffectInfo bi;
 							bullets[b][j]->getId(bi.bulletPID, bi.bulletBID);
@@ -774,10 +792,11 @@ void Game::checkBulletVEffectCollision(float dt)
 							bi.et = EFFECT_TYPE::LIGHT_WALL;
 							bi.hitPos = bullets[b][j]->getPos();
 							bi.hitDir = bullets[b][j]->getDir();
-							bi.collisionNormal = collNormals[0];
+							bi.collisionNormal = collNormalWalls[0];
 							allBulletHitsOnEffects.push_back(bi);
-							collNormals.clear();
+							
 						}
+						collNormalWalls.clear();
 					}
 
 				}
@@ -787,10 +806,18 @@ void Game::checkBulletVEffectCollision(float dt)
 					effects[EFFECT_TYPE::THUNDER_DOME][c]->getId(pid, eid);
 					collNormalDomes = physics->checkPlayerVEffectCollision(bullets[b][j]->getPos(), EFFECT_TYPE::THUNDER_DOME, eid);
 					if (collNormalDomes.size() > 0)
+					{
 						int x = 0;
-					//glm::vec3 vel = bullets[b][j]->getPos()->getVelocity();
-					collNormals.reserve(collNormalDomes.size()); // preallocate memory
-					collNormals.insert(collNormals.end(), collNormalDomes.begin(), collNormalDomes.end());
+						BulletHitEffectInfo bi;
+						bullets[b][j]->getId(bi.bulletPID, bi.bulletBID);
+						bi.bt = BULLET_TYPE(b);
+						bi.et = EFFECT_TYPE::THUNDER_DOME;
+						bi.hitPos = bullets[b][j]->getPos();
+						bi.hitDir = bullets[b][j]->getDir();
+						bi.collisionNormal = collNormalDomes[0];
+						allBulletHitsOnEffects.push_back(bi);
+					}
+						//glm::vec3 vel = bullets[b][j]->getPos()->getVelocity();
 					collNormalDomes.clear();
 				}
 			}
@@ -916,37 +943,25 @@ void Game::removeConIDfromTeams(int conID)
 	}
 }
 
-void Game::addPlayerToTeam(int p_conID, int team, int spawnPosition)
+void Game::addPlayerToTeam(int p_conID, int team)
 {
 	switch (team)
 	{
 	case 0:
 		removeConIDfromTeams(p_conID);
-		//if (playerList[p_conID] != nullptr)
-		//	delete playerList[p_conID];
 		teamSpectators.push_back(p_conID);
 		playerList[p_conID]->setTeam(0);
 		break;
 	case 1:
 		removeConIDfromTeams(p_conID);
-		//if (playerList[p_conID] != nullptr)
-		//	delete playerList[p_conID];
 		teamOne.push_back(p_conID);
 		playerList[p_conID]->setTeam(1);
-		allowPlayerRespawn(p_conID, spawnPosition);
 
-		//if (playerList[p_conID]->isLocal())
-		//{
-
-		//}
 		break;
 	case 2:
 		removeConIDfromTeams(p_conID);
-		//if (playerList[p_conID] != nullptr)
-		//	delete playerList[p_conID];
 		teamTwo.push_back(p_conID);
 		playerList[p_conID]->setTeam(2);
-		allowPlayerRespawn(p_conID, spawnPosition);
 		break;
 	}
 }
@@ -991,9 +1006,9 @@ void Game::addBulletToList(int conID, int bulletId, BULLET_TYPE bt, glm::vec3 po
 		b = new GrenadeShot(pos, dir, conID, bulletId, p->getTeam());
 		break;
 	case BULLET_TYPE::SHOTGUN_PELLET:
-		rightV *= 0.3;
-		upV *= -0.17f;
-		dirMod *= 0.1f;
+		rightV *= 0.4;
+		upV *= -0.3f;
+		dirMod *= 0.3f;
 		pos += upV + rightV + dirMod;
 		b = new ShotgunPellet(pos, dir, conID, bulletId, p->getTeam());
 		break;
@@ -1034,8 +1049,8 @@ void Game::addBulletToList(int conID, int bulletId, BULLET_TYPE bt, glm::vec3 po
 		b = new HackingDart(pos, dir, conID, bulletId, p->getTeam(), BULLET_TYPE::HACKING_DART);
 		break;
 	case BULLET_TYPE::MELEE_ATTACK:
-		b = new MeleeAttack(pos, dir, conID, bulletId, p->getTeam(), BULLET_TYPE::MELEE_ATTACK);
-		break;
+		b = new MeleeAttack(vec3(999.0f, 999.0f, 999.0f), dir, conID, bulletId, p->getTeam(), p);
+	break;
 	}
 
 	bullets[bt].push_back(b);
@@ -1099,13 +1114,11 @@ void Game::handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm
 				GetSound()->playExternalSound(SOUNDS::soundEffectShotGun, pos.x, pos.y, pos.z);
 		glm::vec3 rightV = normalize(cross(dir, vec3(0, 1, 0)));
 		glm::vec3 upV = normalize(cross(dir, rightV));
-		for (int k = 0; k < 16; k++)
+		for (int k = 0; k < 10; k++)
 		{
-			//float xrand = (rand() % 50) / 100.0f - 0.25f;
-			//float yrand = (rand() % 50) / 100.0f - 0.25f;
 			float xoff = glm::sin(k);
 			float yoff = glm::cos(k);
-			float r = (rand() % 100) / 1000.0f;
+			float r = (rand() % 100) / 2500.0f;
 			rightV *= xoff*r;
 			upV *= yoff*r;
 			glm::vec3 ndir = dir + upV + rightV;
@@ -1186,14 +1199,14 @@ void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec
 		p->addModifier(MODIFIER_TYPE::LIGHTWALLCONTROLLOCK);
 		int arraypos = -1;
 		//Effect* lwe = getSpecificEffect(conID, sID - 1, EFFECT_TYPE::LIGHT_WALL, arraypos);
-		addEffectToList(conID, sID, EFFECT_TYPE::LIGHT_WALL, pos);
+		addEffectToList(conID, sID, EFFECT_TYPE::LIGHT_WALL, pos, 0, 0.0f);
 
 	}
 	break;
 	case SPECIAL_TYPE::THUNDERDOME:
 		if (!p->isLocal())
 			p->setDir(dir);
-		addEffectToList(conID, sID, EFFECT_TYPE::THUNDER_DOME, pos);
+		addEffectToList(conID, sID, EFFECT_TYPE::THUNDER_DOME, pos, 0, 0.0f);
 		break;
 	case SPECIAL_TYPE::MULTIJUMP:
 	{
@@ -1261,12 +1274,11 @@ void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec
 	}
 }
 
-void Game::addEffectToList(int conID, int effectId, EFFECT_TYPE et, glm::vec3 pos)
+void Game::addEffectToList(int conID, int effectId, EFFECT_TYPE et, glm::vec3 pos, int dmg, float interestingVariable)
 {
 	Effect* e = nullptr;
 	Player* p = playerList[conID];
 
-	std::vector<float> eBox;
 	int eid = -1, pid = -1;
 	switch (et)
 	{
@@ -1280,6 +1292,8 @@ void Game::addEffectToList(int conID, int effectId, EFFECT_TYPE et, glm::vec3 po
 		break;
 	case EFFECT_TYPE::EXPLOSION:
 		e = new Explosion();
+		e->setDamage(dmg);
+		e->setInterestingVariable(interestingVariable);
 		break;
 	case EFFECT_TYPE::THERMITE_CLOUD:
 		e = new ThermiteCloud();
@@ -1313,6 +1327,13 @@ void Game::addEffectToPhysics(Effect* effect)
 		eBox.push_back(effect->getPos().z);
 		eBox.push_back(effect->getInterestingVariable());
 		physics->receiveEffectBox(eBox, EFFECT_TYPE::EXPLOSION, pid, eid);
+		break;
+	case EFFECT_TYPE::THERMITE_CLOUD:
+		eBox.push_back(effect->getPos().x);
+		eBox.push_back(effect->getPos().y);
+		eBox.push_back(effect->getPos().z);
+		eBox.push_back(effect->getInterestingVariable());
+		physics->receiveEffectBox(eBox, EFFECT_TYPE::THERMITE_CLOUD, pid, eid);
 		break;
 	}
 }
@@ -1473,27 +1494,55 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 			switch (hi.bt)
 			{
 			case BULLET_TYPE::CLUSTER_GRENADE:
-				bounceBullet(hi, b);
 				if (GetSoundActivated())
 					GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+				bounceBullet(hi, b);
+				temp = b->getDir();
+				temp.x *= 0.6;
+				temp.y *= 0.6;
+				temp.z *= 0.6;
+				if (length(temp) < 0.05f)
+					removeBullet(hi.bt, arraypos);
+				b->setDir(temp);
 				break;
 			case BULLET_TYPE::CLUSTERLING:
-				bounceBullet(hi, b);
 				if (GetSoundActivated())
 					GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+				bounceBullet(hi, b);
+				temp = b->getDir();
+				temp.x *= 0.6;
+				temp.y *= 0.6;
+				temp.z *= 0.6;
+				if (length(temp) < 0.05f)
+					removeBullet(hi.bt, arraypos);
+				b->setDir(temp);
 				break;
 			case BULLET_TYPE::THERMITE_GRENADE:
-				bounceBullet(hi, b);
 				if (GetSoundActivated())
 					GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+				bounceBullet(hi, b);
+				temp = b->getDir();
+				temp.x *= 0.6;
+				temp.y *= 0.6;
+				temp.z *= 0.6;
+				if (length(temp) < 0.05f)
+					removeBullet(hi.bt, arraypos);
+				b->setDir(temp);
 				break;
 			case BULLET_TYPE::VACUUM_GRENADE:
 				bounceBullet(hi, b);
+				temp = b->getDir();
+				temp.x *= 0.6;
+				temp.y *= 0.6;
+				temp.z *= 0.6;
+				if (length(temp) < 0.05f)
+					removeBullet(hi.bt, arraypos);
+				b->setDir(temp);
 				break;
 			case BULLET_TYPE::DISC_SHOT:
-				bounceBullet(hi, b);
 				if (GetSoundActivated())
 					GetSound()->playExternalSound(SOUNDS::soundEffectDiscBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+				bounceBullet(hi, b);
 				break;
 			case BULLET_TYPE::GRENADE_SHOT:
 				if (GetSoundActivated())
@@ -1672,20 +1721,7 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 			lingDir.x = -lingDir.x;
 			addBulletToList(PID, BID + 3, CLUSTERLING, parent->getPos(), lingDir);
 			
-			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
-			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(6.0f);
-			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setDamage(25);
-			//This is where you send it to physics
-			std::vector<float> eBox;
-			eBox.push_back(parent->getPos().x);
-			eBox.push_back(parent->getPos().y);
-			eBox.push_back(parent->getPos().z);
-			eBox.push_back(20);
-
-			int pid, eid;
-			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->getId(pid, eid);
-
-			physics->receiveEffectBox(eBox, EFFECT_TYPE::EXPLOSION, pid, eid);
+			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos(), 25, 5.0f);
 
 			if (GetSoundActivated())
 				GetSound()->playExternalSound(SOUNDS::soundEffectClusterGrenade, parent->getPos().x, parent->getPos().y, parent->getPos().z);
@@ -1693,41 +1729,25 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 		}
 		case BULLET_TYPE::CLUSTERLING:
 		{
-			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
-			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(3.0f);
-			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setDamage(10);
+			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos(), 10, 2.0f);
+
 			if (GetSoundActivated())
 				GetSound()->playExternalSound(SOUNDS::soundEffectClusterlingExplosion, parent->getPos().x, parent->getPos().y, parent->getPos().z);
-
-			//This is where you send it to physics
-			std::vector<float> eBox;
-			eBox.push_back(parent->getPos().x);
-			eBox.push_back(parent->getPos().y);
-			eBox.push_back(parent->getPos().z);
-			eBox.push_back(20);
-
-			int pid, eid;
-			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->getId(pid, eid);
-
-			physics->receiveEffectBox(eBox, EFFECT_TYPE::EXPLOSION, pid, eid);
 			break;
 		}
 		case BULLET_TYPE::CLEANSE_BOMB:
 		{
-			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
-			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(15.0f);
+			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos(), 0, 4.0f);
 			break;
 		}
 		case BULLET_TYPE::VACUUM_GRENADE:
 		{
-			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
-			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(15.0f);
+			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos(), 10, 4.0f);
 			break;
 		}
 		case BULLET_TYPE::THERMITE_GRENADE:
 		{
-			addEffectToList(PID, BID, EFFECT_TYPE::THERMITE_CLOUD, parent->getPos());
-			effects[EFFECT_TYPE::THERMITE_CLOUD][effects[EFFECT_TYPE::THERMITE_CLOUD].size() - 1]->setInterestingVariable(10.0f);
+			addEffectToList(PID, BID, EFFECT_TYPE::THERMITE_CLOUD, parent->getPos(), 10, 0.0f);
 			if (GetSoundActivated())
 				GetSound()->playExternalSound(SOUNDS::soundEffectThermiteGrenade, parent->getPos().x, parent->getPos().y, parent->getPos().z);
 			break;
@@ -1737,9 +1757,7 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 			if (GetSoundActivated())
 				GetSound()->playExternalSound(SOUNDS::soundEffectClusterGrenade, parent->getPos().x, parent->getPos().y, parent->getPos().z);
 
-			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos());
-			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setInterestingVariable(5.0f);
-			effects[EFFECT_TYPE::EXPLOSION][effects[EFFECT_TYPE::EXPLOSION].size() - 1]->setDamage(10);
+			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos(), 5, 2.5f);
 			break;
 		}
 		}
@@ -1760,11 +1778,14 @@ bool Game::playerWantsToRespawn()
 
 void Game::allowPlayerRespawn(int p_conID, int respawnPosition)
 {
-	playerList[p_conID]->respawn(spawnpoints[playerList[p_conID]->getTeam()][respawnPosition].pos, spawnpoints[playerList[p_conID]->getTeam()][respawnPosition].dir, spawnpoints[playerList[p_conID]->getTeam()][respawnPosition].roomID);
-	localPlayerWantsRespawn = false;
-	localPlayerRespawnWaiting = false;
-	if (playerList[p_conID]->isLocal())
-		freecam = false;
+	if (playerList[p_conID] != nullptr)
+	{
+		playerList[p_conID]->respawn(spawnpoints[playerList[p_conID]->getTeam()][respawnPosition].pos, spawnpoints[playerList[p_conID]->getTeam()][respawnPosition].dir, spawnpoints[playerList[p_conID]->getTeam()][respawnPosition].roomID);
+		localPlayerWantsRespawn = false;
+		localPlayerRespawnWaiting = false;
+		if (playerList[p_conID]->isLocal())
+			freecam = false;
+	}
 }
 
 void Game::denyPlayerRespawn(char tryAgain)
@@ -1881,4 +1902,9 @@ void Game::decalAdd(BulletHitWorldInfo info)
 		decals_renderInfo[decalCounter].color = TEAMTWOCOLOR;
 
 		decalCounter++;
+}
+
+void Game::cullingPointvsRoom(glm::vec3* pos, int* arr_interIDs, int& interCount, int maxsize)
+{
+	physics->cullingPointvsRoom(pos, arr_interIDs, interCount, maxsize);
 }

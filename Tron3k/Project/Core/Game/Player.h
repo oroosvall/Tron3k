@@ -57,7 +57,7 @@ private:
 	int collisionNormalSize = 0;
 	void clearCollisionNormals() { collisionNormalSize = 0; };
 
-	bool isDead = true;
+	bool isDead = false;
 	float respawnTimer = 0.0f;
 
 	glm::vec3 oldPos;
@@ -172,6 +172,7 @@ public:
 	void addModifier(MODIFIER_TYPE mt);
 
 	void setRole(Role role);
+	void chooseRole(int r);
 
 	void respawn(glm::vec3 respawnPos, glm::vec3 dir, int roomID);
 	bool getJustRespawned() { return justRespawned; };

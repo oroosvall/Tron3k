@@ -162,7 +162,7 @@ private:
 	void removeBullet(BULLET_TYPE bt, int posInArray);
 	void bounceBullet(BulletHitWorldInfo hwi, Bullet* theBullet);
 
-	void addEffectToList(int conID, int effectId, EFFECT_TYPE et, glm::vec3 pos);
+	void addEffectToList(int conID, int effectId, EFFECT_TYPE et, glm::vec3 pos, int dmg, float interestingVariable);
 	Effect* getSpecificEffect(int PID, int SID, EFFECT_TYPE et, int &posInEffectArray);
 	void removeEffect(EFFECT_TYPE et, int posInArray);
 	void addEffectToPhysics(Effect* effect);
@@ -239,6 +239,8 @@ public:
 	std::vector< std::vector < SpawnpointG > >* getSpawnpoints() { return &spawnpoints; };
 
 	void sendChunkBoxes(int chunkID, void* cBoxes);
+	void sendCapBoxes(int nrCaps, void* capBoxes);
+	void sendRoomBoxes(void* roomboxes);
 	void sendWorldBoxes(std::vector<std::vector<float>> wBoxes);
 	void sendPlayerBox(std::vector<float> pBox);
 	void sendPlayerRadSize(float rad);
@@ -251,7 +253,7 @@ public:
 	void allowPlayerRespawn(int p_conID, int respawnPosition);
 	void denyPlayerRespawn(char tryAgain);
 
-	void addPlayerToTeam(int p_conID, int team, int spawnPosition);
+	void addPlayerToTeam(int p_conID, int team);
 	int getPlayersOnTeam(int team);
 	int getMaxTeamSize(bool spec = false) { if (spec) return maxSpec; return maxTeamSize; };
 	vector<int>* getTeamConIds(int team);
@@ -312,10 +314,12 @@ public:
 
 	int Game::findPlayerPosInTeam(int conID);
 
+	void setPlayerWantsToRespawn(bool w) { localPlayerWantsRespawn = w; };
 	bool checkIfPlayerCanRespawn(int conid, char &tryAgain);
 
 	bool freecam; // freecam is active also when in spectate but specctate overides
 	int spectateID; // -1 = none, else use conID
+	void cullingPointvsRoom(glm::vec3* pos, int* arr_interIDs, int& interCount, int maxsize);
 
 	float lastDT = 0;
 };

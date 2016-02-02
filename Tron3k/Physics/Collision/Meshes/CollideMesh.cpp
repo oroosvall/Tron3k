@@ -219,7 +219,7 @@ void CollideMesh::setPos(glm::vec3 pos)
 
 	sphere.pos = pos;
 
-	capBox.pos = vec4(pos, 1);
+	//capBox.pos = vec4(pos, 1);
 
 	angledCylinder.pos = pos;
 }

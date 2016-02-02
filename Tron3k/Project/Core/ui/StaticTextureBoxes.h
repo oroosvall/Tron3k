@@ -16,11 +16,12 @@ private:
 	int uniqueKey;
 	glm::mat4 worldMatrix;
 	int nrOfTextures;
+	float lastScale;
 
 public:
 	StaticTextureBoxes();
-	StaticTextureBoxes(glm::vec2 center, int textureId1[], int nrOfTextures, IRenderPipeline* uiRender, glm::vec2 textRes[]);
-	~StaticTextureBoxes();
+	StaticTextureBoxes(glm::vec2 center, int* textureId1, int nrOfTextures, IRenderPipeline* uiRender, std::vector<glm::vec2> textRes);
+	virtual ~StaticTextureBoxes();
 
 	virtual void render(int id);
 
@@ -35,6 +36,8 @@ public:
 	virtual void hoverCheck(glm::vec2 pos);
 
 	virtual void setTexture(std::vector<GLuint> uiTextureIds);
+
+	virtual void scaleBarFromRight(float procentOfMax);
 };
 
 #endif

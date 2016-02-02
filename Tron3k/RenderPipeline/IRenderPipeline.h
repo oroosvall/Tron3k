@@ -32,7 +32,8 @@ enum RENDER_FLAGS
 	FREEZE_CULLING,
 	RENDER_CHUNK,
 	RENDER_ABB,
-	RENDER_OBB
+	RENDER_OBB,
+	RENDER_DEBUG_TEXT
 };
 
 struct PipelineValues
@@ -60,13 +61,13 @@ public:
 	virtual void render() = 0;
 	virtual void finalizeRender() = 0;
 
-	virtual void addLight(SpotLight* newLight) = 0;
+	virtual void addLight(SpotLight* newLight, int roomID) = 0;
 	virtual void setChunkColorAndInten(int ID, float* color, float inten) = 0;
 
 	virtual void* getView() = 0;
 	virtual void renderMISC(int miscID, void* world, float* dgColor, float sgInten) = 0;
 	virtual void renderBullet(int bid, void* world, float* dgColor, float sgInten) = 0;
-	virtual void renderAnimation(int playerID, int roleID, void* world, AnimationState animState, float* dgColor, float sgInten, bool first) = 0;
+	virtual void renderAnimation(int playerID, int roleID, void* world, AnimationState animState, float* dgColor, float sgInten, bool first, int roomID) = 0;
 
 	virtual std::string getStatus() = 0;
 
@@ -90,6 +91,8 @@ public:
 	virtual void setGBufferWin(unsigned int WindowWidth, unsigned int WindowHeight) = 0;
 
 	virtual void* getChunkCollisionVectorAsPoint(int chunkID) = 0;
+	virtual void* getCapPointsAsPoint(int& count) = 0;
+	virtual void* getRoomBoxes() = 0;
 
 	virtual void getPlayerBox(float &xMax, float &xMin, float &yMax, float &yMin, float &zMax, float &zMin) = 0;
 	virtual void getWorldBoxes(int &current, float &xMax, float &xMin, float &yMax, float &yMin, float &zMax, float &zMin) = 0;
@@ -107,6 +110,12 @@ public:
 
 	virtual void enableDepthTest() = 0;
 	virtual void disableDepthTest() = 0;
+	virtual void clearBothBuffers() = 0;
+
+	virtual int startExecTimer(std::string name) = 0;
+	virtual void stopExecTimer(int id) = 0;
+	virtual bool* getRenderedChunks(int& get_size) = 0;
+
 };
 
 extern "C" ENGINE_API IRenderPipeline* CreatePipeline();

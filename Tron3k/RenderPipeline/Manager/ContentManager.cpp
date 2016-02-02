@@ -17,6 +17,8 @@ void ContentManager::init()
 	blank_glow = loadTexture("GameFiles/Textures/blank_g.dds");
 
 	skyTexture = loadTexture("GameFiles/Textures/skybox.dds");
+	lightWallTex = loadTexture("GameFiles/Textures/Blob.png");
+	decalTexture = loadTexture("GameFiles/Textures/decal.png");
 
 	playerCharacters[0].load("trapper");
 
@@ -111,6 +113,9 @@ void ContentManager::release()
 	glDeleteTextures(1, &blank_glow);
 
 	glDeleteTextures(1, &skyTexture);
+
+	glDeleteTextures(1, &lightWallTex);
+	glDeleteTextures(1, &decalTexture);
 
 	testMap.release();
 
@@ -246,7 +251,6 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 							renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[1]] = true;
 						}
 					}
-					renderedChunks[n] = false;
 				}
 			}
 		}
@@ -359,7 +363,8 @@ void ContentManager::renderThunderDome()
 
 void ContentManager::renderPlayer(AnimManager::animState state, glm::mat4 world, GLuint uniformKeyMatrixLocation, bool first)
 {
-	playerCharacters[state.role].draw(uniformKeyMatrixLocation, state.state, state.frame, first);
+	if (state.role != 5)
+		playerCharacters[state.role].draw(uniformKeyMatrixLocation, state.state, state.frame, first);
 }
 
 void* ContentManager::getChunkCollisionVectorAsPointer(int chunkID)
@@ -367,6 +372,16 @@ void* ContentManager::getChunkCollisionVectorAsPointer(int chunkID)
 	if (chunkID < nrChunks)
 		return (void*)testMap.getChunkCollision(chunkID);
 	return nullptr;
+}
+
+void* ContentManager::getCapAsPointer(int& count)
+{
+	return testMap.getCapAsPointer(count);
+}
+
+void* ContentManager::getRoomBoxes()
+{
+	return testMap.getRoomBoxes();
 }
 
 std::vector<std::vector<float>> ContentManager::getMeshBoxes()
@@ -380,7 +395,13 @@ std::vector<std::vector<float>> ContentManager::getMeshBoxes()
 void ContentManager::bindLightwalTexture()
 {
 	glActiveTexture(GL_TEXTURE0);
-	//glBindTexture(GL_TEXTURE_2D, textures[12].textureID);
+	glBindTexture(GL_TEXTURE_2D, lightWallTex);
+}
+
+void ContentManager::bindDecalTexture()
+{
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, decalTexture);
 }
 
 void ContentManager::setRoomID(int room)
