@@ -227,8 +227,8 @@ std::vector<glm::vec4> Physics::checkSpherevSpheretdCollision(CollideMesh mesh1,
 		else
 		{
 			/*works if we outside sphere*/
-			dist = dist - d * mesh1.getSphere().radius;
-			collided.push_back(vec4(normalize(dist), abs(mesh2.getSphere().radius - length(dist))));
+			//dist = dist - d * mesh1.getSphere().radius;
+			collided.push_back(vec4(normalize(dist), abs(radius - length(dist))));
 		}
 	}
 	return collided;
