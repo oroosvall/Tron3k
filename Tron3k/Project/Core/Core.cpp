@@ -266,7 +266,7 @@ void Core::upRoam(float dt)
 		sendRoomBoxes();
 		Player* p = new Player();
 		p->init("Roam", glm::vec3(0, 0, 0));
-		game->createPlayer(p, 0, 100, ROLES::NROFROLES, true);
+		game->createPlayer(p, 0, 100, ROLES::TRAPPER, true);
 		game->freecam = true;
 		delete p;
 		subState++;
@@ -867,10 +867,8 @@ void Core::roamHandleCmds(std::string com)
 			if (token != "/role" || token == "1" || token == "2" || token == "3" || token == "4"|| token == "5")
 			{
 				int role = stoi(token);
-				game->getPlayer(0)->getRole()->chooseRole(role - 1);
+				game->getPlayer(0)->chooseRole(role - 1);
 				game->sendPlayerRadSize(game->getPlayer(0)->getRole()->getBoxRadius());
-				if (role == TRAPPER)
-					game->getPlayer(0)->addModifier(MODIFIER_TYPE::TRAPPERSHAREAMMO);
 				console.printMsg("You switched class!", "System", 'S');
 			
 			}
