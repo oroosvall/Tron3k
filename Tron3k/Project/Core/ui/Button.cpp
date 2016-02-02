@@ -19,7 +19,7 @@ Button::Button()
 					};
 	uniqueKey = -1;
 	hoverCheckKey = 0;
-	lastScale = 1.0f;
+	lastLength = 2.0f;
 }
 
 Button::Button(glm::vec2 center, int textureId1, int textureId2, int uniqueKey, int hoverKey, IRenderPipeline* uiRender, glm::vec2 textRes1, glm::vec2 textRes2)
@@ -35,7 +35,7 @@ Button::Button(glm::vec2 center, int textureId1, int textureId2, int uniqueKey, 
 	hoverCheckKey = hoverKey;
 	textureIdInUse = textureId1;
 
-	lastScale = 1.0f;
+	lastLength = 1.0f;
 
 	float xScale = textureRes[0].x / 1980;
 	float yScale = textureRes[0].y / 1080;
@@ -140,14 +140,11 @@ void Button::setTexture(std::vector<GLuint> uiTextureIds)
 void Button::scaleBarFromRight(float procentOfMax)
 {
 	//Calc the new size.
+	
 	float scale = (textureRes[0].x * procentOfMax) / 1920.0f;
 	worldMatrix[0].x = scale;
+	float length = scale * 2;
 
-	//Calc the new position
-	float difference = lastScale - scale;
+	worldMatrix[0].w += length * 0.5f;
 
-	difference = (difference * textureRes[0].x) / 1920.0f;
-	worldMatrix[0].w += difference;
-
-	lastScale = scale;
 }

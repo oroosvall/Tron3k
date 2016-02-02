@@ -25,7 +25,7 @@ private:
 	//Hover key
 	int hoverCheckKey;
 
-	float lastScale;
+	float lastLength;
 
 public:
 	Button();

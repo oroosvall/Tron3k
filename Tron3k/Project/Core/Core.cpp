@@ -989,6 +989,7 @@ void Core::clientHandleCmds(std::string com)
 				int role = stoi(token);
 				top->command_role_change(top->getConId(), role);
 
+				uiManager->setOpenedGuiBool(true);
 				uiManager->setFirstMenuSet(false);
 				uiManager->setMenu(0);
 			}
@@ -1475,7 +1476,6 @@ void Core::inGameUIUpdate() //Ingame ui update
 	i->getCursor(x, y);
 	double tX = (x / (double)winX) * 2 - 1.0; // (x/ResolutionX) * 2 - 1
 	double tY = (-y / (double)winY) * 2 + 1.0; // (y/ResolutionY) * 2 - 1
-
 	
 	uiManager->inGameRender();
 
@@ -1489,50 +1489,36 @@ void Core::inGameUIUpdate() //Ingame ui update
 				roamHandleCmds("/team 1");
 			else
 				clientHandleCmds("/team 1");
-			uiManager->setMenu(2);
 			break;
 		case 21: //Team 2
 			if (current == ROAM)
 				roamHandleCmds("/team 2");
 			else
 				clientHandleCmds("/team 2");
-			uiManager->setMenu(2);
 			break;
 		case 30: //Class 1
-			uiManager->setOpenedGuiBool(true);
 			if (current == ROAM)
 				roamHandleCmds("/role 1");
 			else
 				clientHandleCmds("/role 1");
-			uiManager->setFirstMenuSet(false);
-			uiManager->setMenu(0);
 			break;
 		case 31: //Class 2
-			uiManager->setOpenedGuiBool(true);
 			if (current == ROAM)
 				roamHandleCmds("/role 2");
 			else
 				clientHandleCmds("/role 2");
-			uiManager->setFirstMenuSet(false);
-			uiManager->setMenu(0);
 			break;
 		case 32: //Class 3
-			uiManager->setOpenedGuiBool(true);
 			if (current == ROAM)
 				roamHandleCmds("/role 3");
 			else
 				clientHandleCmds("/role 3");
-			uiManager->setFirstMenuSet(false);
-			uiManager->setMenu(0);
 			break;
 		case 33: //Class 4
-			uiManager->setOpenedGuiBool(true);
 			if (current == ROAM)
 				roamHandleCmds("/role 4");
 			else
 				clientHandleCmds("/role 4");
-			uiManager->setFirstMenuSet(false);
-			uiManager->setMenu(0);
 			break;
 		case 34: //Class 5
 			uiManager->setOpenedGuiBool(true);
@@ -1540,8 +1526,6 @@ void Core::inGameUIUpdate() //Ingame ui update
 				roamHandleCmds("/role 5");
 			else
 				clientHandleCmds("/role 5");
-			uiManager->setFirstMenuSet(false);
-			uiManager->setMenu(0);
 			break;
 		case 40: //Continue
 			uiManager->backToGui();
