@@ -1131,7 +1131,7 @@ void Game::handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm
 		{
 			float xoff = glm::sin(k);
 			float yoff = glm::cos(k);
-			float r = (rand() % 100) / 1000.0f;
+			float r = (rand() % 100) / 2500.0f;
 			rightV *= xoff*r;
 			upV *= yoff*r;
 			glm::vec3 ndir = dir + upV + rightV;
