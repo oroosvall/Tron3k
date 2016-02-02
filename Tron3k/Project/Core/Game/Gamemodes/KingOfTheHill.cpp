@@ -290,6 +290,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			if (allDead)
 			{
 				msg = GAMEMODE_MSG::ROUND_WIN_TEAM2;
+				teamTwoScore++;
 				state = ENDROUND;
 			}
 		}
@@ -311,6 +312,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			if (allDead)
 			{
 				msg = GAMEMODE_MSG::ROUND_WIN_TEAM1;
+				teamOneScore++;
 				state = ENDROUND;
 			}
 		}
@@ -348,42 +350,6 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 				timer = 15.0f;
 			}
 		}
-		/*
-		if (msg == GAMEMODE_MSG::ROUND_WIN_TEAM1)
-		{
-			consolePtr->printMsg("TEAM ONE WINS THE ROUND", "System", '[S]');
-
-			if (this->gamePtr->GetGameState() != Gamestate::SERVER)
-			{
-				if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
-				{
-					GetSound()->playUserGeneratedSound(SOUNDS::YouWin);
-				}
-				else if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 2)
-				{
-					GetSound()->playUserGeneratedSound(SOUNDS::YouLose);
-				}
-			}
-
-		}
-
-		else if (msg == GAMEMODE_MSG::ROUND_WIN_TEAM2)
-		{
-			consolePtr->printMsg("TEAM TWO WINS THE ROUND", "System", '[S]');
-			if (this->gamePtr->GetGameState() != Gamestate::SERVER)
-			{
-				if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
-				{
-					GetSound()->playUserGeneratedSound(SOUNDS::YouLose);
-				}
-				else if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 2)
-				{
-					GetSound()->playUserGeneratedSound(SOUNDS::YouWin);
-				}
-			}
-		}
-		*/
-		
 		break;
 
 		//If a winscore has been met for either team, we ENDMATCH and ask for rematch.
