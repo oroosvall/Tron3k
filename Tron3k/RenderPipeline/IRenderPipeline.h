@@ -61,7 +61,7 @@ public:
 	virtual void render() = 0;
 	virtual void finalizeRender() = 0;
 
-	virtual void addLight(SpotLight* newLight) = 0;
+	virtual void addLight(SpotLight* newLight, int roomID) = 0;
 	virtual void setChunkColorAndInten(int ID, float* color, float inten) = 0;
 
 	virtual void* getView() = 0;

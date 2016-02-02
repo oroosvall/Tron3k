@@ -428,9 +428,15 @@ void RenderPipeline::setCullingCurrentChunkID(int roomID)
 	contMan.setRoomID(roomID);
 }
 
-void RenderPipeline::addLight(SpotLight* newLight)
+void RenderPipeline::addLight(SpotLight* newLight, int roomID)
 {
-	gBuffer->pushLights(newLight, 1);
+	if (contMan.f_portal_culling)
+	{
+		if(contMan.renderedChunks[roomID] == true)
+			gBuffer->pushLights(newLight, 1);
+	}
+	else
+		gBuffer->pushLights(newLight, 1);
 }
 
 void RenderPipeline::renderIni()
@@ -461,13 +467,21 @@ void RenderPipeline::finalizeRender()
 	glEnable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
 
+	//system("CLS");
+
 	//push the lights of the rendered chunks
 	for (int n = 0; n < contMan.nrChunks; n++)
 		if (contMan.renderedChunks[n] == true)
-			for (size_t k = 0; k < contMan.testMap.chunks[n].lights.size(); k++)
+		{
+			if (n > 0)
 			{
-				gBuffer->pushLights(&contMan.testMap.chunks[n].lights[k], 1);
+				int count = contMan.testMap.chunks[n].lights.size();
+				if (count > 0)
+					gBuffer->pushLights(&contMan.testMap.chunks[n].lights[0], count);
+			//printf("Chunk : %d Lights: %d \n", n, count);
 			}
+		}
+	
 
 	glUseProgram(glowShaderTweeks);
 	

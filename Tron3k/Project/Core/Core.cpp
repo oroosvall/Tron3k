@@ -107,30 +107,30 @@ void Core::update(float dt)
 		renderPipe->setChatHistoryText(console.getHistory());
 	}
 
-	if (game)
-	{
-		if (console.getInChatMode() == false)
-		{
-			if (i->justPressed(GLFW_KEY_7))
-			{
-				playbackSpeed *= 2.0f;
-				if (playbackSpeed > 16.0f)
-					playbackSpeed = 16.0f;
-				CameraInput* cam = CameraInput::getCam();
-				cam->setPlaybackSpeed(playbackSpeed);
-			}
-			if (i->justPressed(GLFW_KEY_6))
-			{
-				playbackSpeed *= 0.5f;
-				if (playbackSpeed < 0.03125f)
-					playbackSpeed = 0.03125f;
-				CameraInput* cam = CameraInput::getCam();
-				cam->setPlaybackSpeed(playbackSpeed);
-			}
-		}
-	}
+	//if (game)
+	//{
+	//	if (console.getInChatMode() == false)
+	//	{
+	//		if (i->justPressed(GLFW_KEY_7))
+	//		{
+	//			playbackSpeed *= 2.0f;
+	//			if (playbackSpeed > 16.0f)
+	//				playbackSpeed = 16.0f;
+	//			CameraInput* cam = CameraInput::getCam();
+	//			cam->setPlaybackSpeed(playbackSpeed);
+	//		}
+	//		if (i->justPressed(GLFW_KEY_6))
+	//		{
+	//			playbackSpeed *= 0.5f;
+	//			if (playbackSpeed < 0.03125f)
+	//				playbackSpeed = 0.03125f;
+	//			CameraInput* cam = CameraInput::getCam();
+	//			cam->setPlaybackSpeed(playbackSpeed);
+	//		}
+	//	}
+	//}
 
-	dt *= playbackSpeed;
+	//dt *= playbackSpeed;
 
 	switch (current)
 	{
@@ -1192,14 +1192,14 @@ void Core::renderWorld(float dt)
 	{
 		//temp set to see anims in 3p 
 		CameraInput* cam = CameraInput::getCam();
-		vec3 camPos = cam->getPos();
-		vec3 camDir = cam->getDir();
+		//vec3 camPos = cam->getPos();
+		//vec3 camDir = cam->getDir();
 		bool force3rd = false;
-		if (i->getKeyInfo(GLFW_KEY_P))
-		{
-			cam->setCam(vec3(-11, 1, 14), vec3(0, 0, 1));
-			force3rd = true;
-		}
+		//if (i->getKeyInfo(GLFW_KEY_P))
+		//{
+		//	cam->setCam(vec3(-11, 1, 14), vec3(0, 0, 1));
+		//	force3rd = true;
+		//}
 
 		glm::vec3 tmpEyePos = CameraInput::getCam()->getPos();
 		renderPipe->update(tmpEyePos.x, tmpEyePos.y, tmpEyePos.z, dt); // sets the view/proj matrix
@@ -1212,7 +1212,7 @@ void Core::renderWorld(float dt)
 		light.Color = vec3(1,1,1);
 		light.DiffuseIntensity = 0.0f;
 		light.AmbientIntensity = 0.3f;
-		renderPipe->addLight(&light);
+		renderPipe->addLight(&light, 0);
 		light.AmbientIntensity = 0.0f;
 
 		vec3 dgColor(0);
@@ -1293,7 +1293,7 @@ void Core::renderWorld(float dt)
 					light.Direction = vec3(0.0f);//p->getDir();
 					light.Color = dgColor;
 					light.DiffuseIntensity = 0.2f;
-					renderPipe->addLight(&light);
+					renderPipe->addLight(&light, p->roomID);
 
 					//If first person render
 					if (!force3rd && p->isLocal() && !game->freecam || game->spectateID == i)
@@ -1451,8 +1451,8 @@ void Core::renderWorld(float dt)
 		renderPipe->finalizeRender();
 
 		//viewing 3rd person anims in roam
-		if (i->getKeyInfo(GLFW_KEY_P))
-			cam->setCam(camPos, camDir);
+		//if (i->getKeyInfo(GLFW_KEY_P))
+		//	cam->setCam(camPos, camDir);
 
 		if (renderUI) //Temp
 			inGameUIUpdate();

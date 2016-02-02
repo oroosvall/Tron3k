@@ -138,7 +138,7 @@ public:
 	virtual void render();
 	virtual void finalizeRender();
 
-	virtual void addLight(SpotLight* newLight);
+	virtual void addLight(SpotLight* newLight, int roomID);
 	virtual void setChunkColorAndInten(int ID, float* color, float inten);
 
 	virtual void* getView();
