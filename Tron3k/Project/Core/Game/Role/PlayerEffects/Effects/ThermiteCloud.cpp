@@ -5,7 +5,7 @@ ThermiteCloud::ThermiteCloud() {}
 void ThermiteCloud::init(int pid, int eid, glm::vec3 position)
 {
 	type = EFFECT_TYPE::THERMITE_CLOUD;
-	exploRadius = 4.0f;
+	exploRadius = 5.0f;
 	playerId = pid; effectId = eid; pos = position;
 	lifeTime = 5.0f;
 	damageTimer = 0.5f;

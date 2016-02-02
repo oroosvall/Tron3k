@@ -14,15 +14,15 @@ void GrenadeLauncher::init()
 {
 	weaponType = WEAPON_TYPE::GRENADE_LAUNCHER;
 
-	maxClipSize = 8;
+	maxClipSize = 6;
 	currentClipAmmo = maxClipSize;
 
 	currentBulletId = 0;
 
-	firingSpeed = 1.0f;
+	firingSpeed = 1.2f;
 	firingSpeedCurrentDelay = 0;
 
-	reloadTime = 3.5f;
+	reloadTime = 4.0f;
 	rldTimer = 0;
 }
 

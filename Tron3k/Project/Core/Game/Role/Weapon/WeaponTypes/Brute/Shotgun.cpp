@@ -14,7 +14,7 @@ void Shotgun::init()
 {
 	weaponType = WEAPON_TYPE::SHOTGUN;
 
-	maxClipSize = 5;
+	maxClipSize = 4;
 	currentClipAmmo = maxClipSize;
 
 	currentBulletId = 0;
