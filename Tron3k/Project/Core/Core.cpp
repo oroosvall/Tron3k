@@ -845,6 +845,8 @@ void Core::roamHandleCmds(std::string com)
 					game->freecam = false;
 				else
 					game->freecam = true;
+
+				uiManager->setMenu(2);
 			}
 			else
 				console.printMsg("Invalid team. Use /team <1/2/3>", "System", 'S');
@@ -872,6 +874,8 @@ void Core::roamHandleCmds(std::string com)
 				game->sendPlayerRadSize(game->getPlayer(0)->getRole()->getBoxRadius());
 				console.printMsg("You switched class!", "System", 'S');
 			
+				uiManager->setFirstMenuSet(false);
+				uiManager->setMenu(0);
 			}
 			else 
 				console.printMsg("Invalid role. Use /role <1-5>", "System", 'S');
