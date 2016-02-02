@@ -22,7 +22,7 @@ private:
 public:
 	Slider();
 	Slider(glm::vec2 center, int textureId1, int textureId2, int uniqueKey, int objId1, int objId2, IRenderPipeline* uiRender, glm::vec2 textRes, glm::vec2 textRes2);
-	~Slider();
+	virtual ~Slider();
 
 	virtual void render(int id);
 

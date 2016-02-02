@@ -50,7 +50,7 @@ bool UI::loadUI(std::string fileName)
 		int convertedResult = -1;
 		float x = -1.0f, y = -1.0f, u = -1.0f, v = -1.0f;
 		int textureId1 = -1, textureId2 = -1, scale = -1, counter = 0, uniqueKey = 0, classId = -1, hoverKey = 0, tmpCounter = 0;;
-		int* textureArray;
+		int* textureArray = nullptr;
 
 		//Number of objects
 		getline(myfile, inputString);
@@ -116,12 +116,12 @@ bool UI::loadUI(std::string fileName)
 			}
 			else if (classId == 1) //StaticTextBox
 			{
-				//UiObjects.push_back(StaticTextBox(xy, textureArray, tmpCounter, uiRender, textureRes[0][counter]));
-				//textureIdList[counter] = textureId1;
-				//result = true;
-				//counter++;
-				//delete[] textureArray;
-				//textureArray = nullptr;
+				UiObjects.push_back(new StaticTextureBoxes(xy, textureArray, tmpCounter, uiRender, textureRes[0]));
+				textureIdList[counter] = textureArray[0];
+				result = true;
+				counter++;
+				delete[] textureArray;
+				textureArray = nullptr;
 			}
 			else if (classId == 3) //Slider
 			{
@@ -186,10 +186,10 @@ int UI::mouseCollission(glm::vec2 pos)
 		hit = UiObjects[i]->checkCollision(pos);
 	}
 	
-	if (hit != -1)
-		result = collisionEvent(hit);
+	//if (hit != -1)
+	//	result = collisionEvent(hit);
 	
-	return result;
+	return hit;
 }
 
 void UI::mouseHover(glm::vec2 pos)

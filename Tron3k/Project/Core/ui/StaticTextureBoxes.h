@@ -19,8 +19,8 @@ private:
 
 public:
 	StaticTextureBoxes();
-	StaticTextureBoxes(glm::vec2 center, int textureId1[], int nrOfTextures, IRenderPipeline* uiRender, glm::vec2 textRes[]);
-	~StaticTextureBoxes();
+	StaticTextureBoxes(glm::vec2 center, int* textureId1, int nrOfTextures, IRenderPipeline* uiRender, std::vector<glm::vec2> textRes);
+	virtual ~StaticTextureBoxes();
 
 	virtual void render(int id);
 

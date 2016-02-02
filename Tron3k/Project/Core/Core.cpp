@@ -199,39 +199,51 @@ void Core::upMenu(float dt)
 		{
 		case 0: //Roam
 			current = ROAM;
-			//uiManager->LoadNextSet(1);
-			//uiManager->setMenu(Team: vilket troligtvis är 1);
-
-			//Load gui and the rest of in game ui.
+			uiManager->LoadNextSet(1);
+			uiManager->setMenu(1);
 			subState = 0;
 			break;
-		case 1: //Multiplayer
-			uiManager->setMenu(1); //Connect window
+		case 1: //Multiplayer -> multiplayer window
+			uiManager->setMenu(1);
 			break;
 		case 2: //Settings
 			break;
 		case 3: //Exit
 			glfwHideWindow(win);
 			break;
-		case 4: //Connect
+		case 4: //Client -> connect window
+			uiManager->setMenu(2);
+			break;
+		case 5: //Server -> starts a server
+			current = SERVER;
+			//Clean
+			subState = 0;
+			//Cleans
+			break;
+		case 6: //Connect
 		{
-			bool ipCheck = false;
-			//ipCheck = Ipcheck()
-			if (ipCheck)
-			{
-				current = CLIENT;
-				uiManager->LoadNextSet(1);
-				uiManager->setMenu(0);
-				subState = 0;
-			}
-			else
-			{
-				console.printMsg("Error: Ip adress isn't valid.", "System", 'S');
-				//Rensa kanske det som har skivits
-			}
+			//default ip at the moment
+			startHandleCmds("/1"); //Start the game as a client
+			uiManager->LoadNextSet(1);
+			uiManager->setMenu(1);
+
+			//bool ipCheck = false;
+			////ipCheck = Ipcheck()
+			//if (ipCheck)
+			//{
+			//	current = CLIENT;
+			//	uiManager->LoadNextSet(1);
+			//	uiManager->setMenu(0);
+			//	subState = 0;
+			//}
+			//else
+			//{
+			//	console.printMsg("Error: Ip adress isn't valid.", "System", 'S');
+			//	//Rensa kanske det som har skivits
+			//}
 			break;
 		}
-		case 5: //Back
+		case 7: //Back
 			uiManager->setMenu(-1); //Last menu
 			break;
 		default:
@@ -692,13 +704,19 @@ void Core::upServer(float dt)
 	}
 }
 
-void Core::startHandleCmds()
+void Core::startHandleCmds(std::string com)
 {
-	if (console.commandReady())
+	if (console.commandReady() || com != "")
 	{
 		string token;
-		istringstream ss = istringstream(console.getCommand());
+		istringstream ss;
+
+		if (com != "")
+			ss = istringstream(com);
+		else
+			ss = istringstream(console.getCommand());
 		ss >> token;
+
 		if (token == "/help")
 		{
 			console.printMsg("Console commands", "", ' ');
@@ -773,13 +791,19 @@ void Core::startHandleCmds()
 	}
 }
 
-void Core::roamHandleCmds()
+void Core::roamHandleCmds(std::string com)
 {
-	if (console.commandReady())
+	if (console.commandReady() || com != "")
 	{
 		string token;
-		istringstream ss = istringstream(console.getCommand());
+		istringstream ss;
+
+		if (com != "")
+			ss = istringstream(com);
+		else
+			ss = istringstream(console.getCommand());
 		ss >> token;
+
 		if (token == "/help")
 		{
 			console.printMsg("Console commands", "", ' ');
@@ -882,13 +906,19 @@ void Core::roamHandleCmds()
 	}
 }
 
-void Core::clientHandleCmds()
+void Core::clientHandleCmds(std::string com)
 {
-	if (console.commandReady())
+	if (console.commandReady() || com != "")
 	{
 		string token;
-		istringstream ss = istringstream(console.getCommand());
+		istringstream ss;
+
+		if (com != "")
+			ss = istringstream(com);
+		else
+			ss = istringstream(console.getCommand());
 		ss >> token;
+
 		if (token == "/help")
 		{
 			console.printMsg("Console commands", "", ' ');
@@ -1416,38 +1446,57 @@ void Core::inGameUIUpdate() //Ingame ui update
 		switch (eventIndex)
 		{
 		case 20: //Team 1
-			//Get p_conID and spawnPosition
-			//game->addPlayerToTeam(, 1, );
+			if (current == ROAM)
+				roamHandleCmds("/team 1");
+			else
+				clientHandleCmds("/team 1");
 			uiManager->setMenu(2);
 			break;
 		case 21: //Team 2
-			//Get p_conID and spawnPosition
-			//game->addPlayerToTeam(, 2, );
+			if (current == ROAM)
+				roamHandleCmds("/team 2");
+			else
+				clientHandleCmds("/team 2");
 			uiManager->setMenu(2);
 			break;
 		case 30: //Class 1
 			uiManager->setOpenedGuiBool(true);
-			//player->setRole(1);
+			if (current == ROAM)
+				roamHandleCmds("/role 1");
+			else
+				clientHandleCmds("/role 1");
 			uiManager->setMenu(0);
 			break;
 		case 31: //Class 2
 			uiManager->setOpenedGuiBool(true);
-			//player->setRole(2);
+			if (current == ROAM)
+				roamHandleCmds("/role 2");
+			else
+				clientHandleCmds("/role 2");
 			uiManager->setMenu(0);
 			break;
 		case 32: //Class 3
 			uiManager->setOpenedGuiBool(true);
-			//player->setRole(3);
+			if (current == ROAM)
+				roamHandleCmds("/role 3");
+			else
+				clientHandleCmds("/role 3");
 			uiManager->setMenu(0);
 			break;
 		case 33: //Class 4
 			uiManager->setOpenedGuiBool(true);
-			//player->setRole(4);
+			if (current == ROAM)
+				roamHandleCmds("/role 4");
+			else
+				clientHandleCmds("/role 4");
 			uiManager->setMenu(0);
 			break;
 		case 34: //Class 5
 			uiManager->setOpenedGuiBool(true);
-			//player->setRole(5);
+			if (current == ROAM)
+				roamHandleCmds("/role 5");
+			else
+				clientHandleCmds("/role 5");
 			uiManager->setMenu(0);
 			break;
 		case 40: //Continue
@@ -1457,6 +1506,10 @@ void Core::inGameUIUpdate() //Ingame ui update
 			break;
 		case 42: //Quit
 			current = MENU;
+			if (current == ROAM)
+				roamHandleCmds("/disconnect");
+			else
+				clientHandleCmds("/disconnect");
 			uiManager->setOpenedGuiBool(false);
 			uiManager->LoadNextSet(0);
 			break;

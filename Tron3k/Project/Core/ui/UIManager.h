@@ -3,7 +3,6 @@
 #define UIMANAGER_H
 
 #include "UI.h"
-//#include "../../../RenderPipeline/IRenderPipeline.h"
 #include <string>
 #include <iostream>
 #include <sstream>
@@ -29,6 +28,8 @@ private:
 
 	//Since multiple menus needs to be rendered when the gui is opened
 	bool guiOpened;
+
+	bool firstMenuSet;
 
 	//Lists of file names
 	std::string* fileNamesListFirstGroup; //First set of menus(Those you can use before going ingame)

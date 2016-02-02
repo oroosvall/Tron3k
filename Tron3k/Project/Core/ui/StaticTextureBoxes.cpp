@@ -14,7 +14,7 @@ StaticTextureBoxes::StaticTextureBoxes()
 	uniqueKey = -1;
 	nrOfTextures = 0;
 }
-StaticTextureBoxes::StaticTextureBoxes(glm::vec2 center, int textureId1[], int nrOfTextures, IRenderPipeline* uiRender, glm::vec2 textRes[])
+StaticTextureBoxes::StaticTextureBoxes(glm::vec2 center, int* textureId1, int nrOfTextures, IRenderPipeline* uiRender, std::vector<glm::vec2>  textRes)
 {
 	this->uiRender = uiRender;
 	this->center = center;
@@ -45,8 +45,10 @@ StaticTextureBoxes::StaticTextureBoxes(glm::vec2 center, int textureId1[], int n
 }
 StaticTextureBoxes::~StaticTextureBoxes() 
 {
-	delete[] textureRes;
-	delete[] textureIndexList;
+	if(textureRes != nullptr)
+		delete[] textureRes;
+	if (textureIndexList != nullptr)
+		delete[] textureIndexList;
 }
 
 void StaticTextureBoxes::render(int id)

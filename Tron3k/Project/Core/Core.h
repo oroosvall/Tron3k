@@ -75,9 +75,9 @@ private:
 	void upServer(float dt);
 
 	
-	void startHandleCmds();
-	void roamHandleCmds();
-	void clientHandleCmds(); 
+	void startHandleCmds(std::string com = "");
+	void roamHandleCmds(std::string com = "");
+	void clientHandleCmds(std::string com = "");
 	void serverHandleCmds();
 
 	void renderWorld(float dt);
