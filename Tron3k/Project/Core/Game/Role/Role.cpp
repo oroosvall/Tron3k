@@ -108,7 +108,7 @@ void Role::loadRoleSpecifics(int _role)
 			mobility->init();
 			consumable = new Consumable();
 			consumable->init(CONSUMABLE_TYPE::CLUSTERGRENADE);
-			this->size = glm::vec3(0.4, 0.9, 0.4);
+			this->size = glm::vec3(0.4, 0.91, 0.4);
 			break;
 		case DESTROYER:
 			role = 1;
