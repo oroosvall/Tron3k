@@ -142,7 +142,7 @@ public:
 		*rec >> p_conID;
 		*rec >> pName;
 		temp->init(pName, glm::vec3(0, 0, 0), gamePtr->getPhysics());
-		gamePtr->createPlayer(temp, p_conID, 100, 0);
+		gamePtr->createPlayer(temp, p_conID, 100, ROLES::NROFROLES);
 		consolePtr->printMsg("Player (" + pName + ") joined the server", "System", 'S');
 		delete temp;
 	}
@@ -560,7 +560,7 @@ public:
 			{
 
 			}
-			else
+			else //Too many people in team
 			{
 				Packet* out = new Packet();
 				*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::TEAM_CHANGE) << p_conID << Uint8(9); //9 is a good error code, whatever
@@ -642,7 +642,9 @@ public:
 			}
 		}
 
-		p->getRole()->chooseRole(role-1);
+		p->chooseRole(role - 1);
+		if (p_conID == gamePtr->GetLocalPlayerId())
+			gamePtr->setPlayerWantsToRespawn(true);
 		gamePtr->sendPlayerRadSize(p->getRole()->getBoxRadius()); //TEMP BUT W/E
 		consolePtr->printMsg("Player " + p->getName() + " switched class!", "System", 'S');
 

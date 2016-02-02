@@ -314,7 +314,7 @@ void Server::in_new_connection(Packet* rec, Uint8 conID)
 			{
 				Player* temp = new Player();
 				temp->init(pName, glm::vec3(0, 0, 0), gamePtr->getPhysics());
-				gamePtr->createPlayer(temp, conID, 100, 0);
+				gamePtr->createPlayer(temp, conID, 100, ROLES::NROFROLES);
 				delete temp;
 			}
 		}

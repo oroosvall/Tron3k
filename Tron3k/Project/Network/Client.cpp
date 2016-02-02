@@ -133,7 +133,7 @@ void Client::in_new_connection(Packet* rec, Uint8 _conID)
 
 	temp = new Player();
 	temp->init("ClientName", glm::vec3(0, 0, 0), gamePtr->getPhysics());
-	gamePtr->createPlayer(temp, conID, 100, 0, true);
+	gamePtr->createPlayer(temp, conID, 100, ROLES::NROFROLES, true);
 	delete temp;
 	
 	printf("My connection ID : %d \n", conID);

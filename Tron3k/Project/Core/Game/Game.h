@@ -314,6 +314,7 @@ public:
 
 	int Game::findPlayerPosInTeam(int conID);
 
+	void setPlayerWantsToRespawn(bool w) { localPlayerWantsRespawn = w; };
 	bool checkIfPlayerCanRespawn(int conid, char &tryAgain);
 
 	bool freecam; // freecam is active also when in spectate but specctate overides

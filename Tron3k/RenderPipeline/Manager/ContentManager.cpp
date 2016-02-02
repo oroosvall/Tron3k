@@ -363,7 +363,8 @@ void ContentManager::renderThunderDome()
 
 void ContentManager::renderPlayer(AnimManager::animState state, glm::mat4 world, GLuint uniformKeyMatrixLocation, bool first)
 {
-	playerCharacters[state.role].draw(uniformKeyMatrixLocation, state.state, state.frame, first);
+	if (state.role != 5)
+		playerCharacters[state.role].draw(uniformKeyMatrixLocation, state.state, state.frame, first);
 }
 
 void* ContentManager::getChunkCollisionVectorAsPointer(int chunkID)

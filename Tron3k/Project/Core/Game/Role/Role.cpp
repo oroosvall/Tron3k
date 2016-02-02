@@ -22,6 +22,7 @@ Role::Role(string inLoadedRoles[NROFROLES][NROFREADPROPERTIES])
 	currentWpn = 0;
 	health = 1;
 	swapWeaponTimer = 0.0f;
+	role = ROLES::NROFROLES;
 }
 
 Role::~Role()
@@ -177,11 +178,11 @@ void Role::update(float dt)
 	}
 }
 
-void Role::chooseRole(int role)
+void Role::chooseRole(int r)
 {
-	if (role < NROFROLES)
+	if (r < NROFROLES)
 	{
-		this->role = role;
+		role = r;
 		health = atoi(loadedRoles[role][HEALTH].c_str());
 		maxHealth = health;
 

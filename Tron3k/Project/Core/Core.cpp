@@ -266,7 +266,7 @@ void Core::upRoam(float dt)
 		sendRoomBoxes();
 		Player* p = new Player();
 		p->init("Roam", glm::vec3(0, 0, 0));
-		game->createPlayer(p, 0, 100, 0, true);
+		game->createPlayer(p, 0, 100, ROLES::NROFROLES, true);
 		game->freecam = true;
 		delete p;
 		subState++;

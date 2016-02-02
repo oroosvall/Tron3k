@@ -607,7 +607,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			role.setHealth(0);
 		}
 
-		if (role.getHealth() <= 0 && !isDead)
+		if (role.getHealth() <= 0 && !isDead && role.getRole() != ROLES::NROFROLES)
 		{
 			isDead = true;
 			msg = DEATH;
@@ -883,10 +883,7 @@ void Player::addModifier(MODIFIER_TYPE mt)
 
 void Player::setRole(Role role)
 {
-	cleanseModifiers(true);
 	this->role = role;
-	this->role.chooseRole(TRAPPER);
-	addModifier(MODIFIER_TYPE::TRAPPERSHAREAMMO);
 }
 
 void Player::respawn(glm::vec3 respawnPos, glm::vec3 _dir, int _roomID)
@@ -1103,4 +1100,14 @@ void Player::movementAnimationChecks(float dt)
 
 	animOverideIfPriority(anim_third_framePeak, anim_third_current);
 	animOverideIfPriority(anim_first_framePeak, anim_first_current);
+}
+
+void Player::chooseRole(int r)
+{
+	cleanseModifiers(true);
+	role.chooseRole(r);
+	if (r == ROLES::TRAPPER)
+	{
+		addModifier(MODIFIER_TYPE::TRAPPERSHAREAMMO);
+	}
 }

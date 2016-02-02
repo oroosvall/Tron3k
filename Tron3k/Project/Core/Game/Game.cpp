@@ -346,7 +346,8 @@ void Game::createPlayer(Player* p, int conID, int hp, int role, bool isLocal)
 	playerList[conID]->setTeam(p->getTeam());
 	playerList[conID]->setHP(hp);
 	playerList[conID]->setRole(*templateRole);
-	playerList[conID]->getRole()->chooseRole(role);
+	if (role != ROLES::NROFROLES)
+		playerList[conID]->chooseRole(role);
 
 	if (isLocal)
 	{
@@ -948,37 +949,19 @@ void Game::addPlayerToTeam(int p_conID, int team)
 	{
 	case 0:
 		removeConIDfromTeams(p_conID);
-		//if (playerList[p_conID] != nullptr)
-		//	delete playerList[p_conID];
 		teamSpectators.push_back(p_conID);
 		playerList[p_conID]->setTeam(0);
 		break;
 	case 1:
 		removeConIDfromTeams(p_conID);
-		//if (playerList[p_conID] != nullptr)
-		//	delete playerList[p_conID];
 		teamOne.push_back(p_conID);
 		playerList[p_conID]->setTeam(1);
-		
-		if (p_conID == localPlayerId) //If I'm local, attempt to respawn
-			localPlayerWantsRespawn = true;
-		//allowPlayerRespawn(p_conID, spawnPosition);
 
-		//if (playerList[p_conID]->isLocal())
-		//{
-
-		//}
 		break;
 	case 2:
 		removeConIDfromTeams(p_conID);
-		//if (playerList[p_conID] != nullptr)
-		//	delete playerList[p_conID];
 		teamTwo.push_back(p_conID);
 		playerList[p_conID]->setTeam(2);
-
-		if (p_conID == localPlayerId) //If I'm local, attempt to respawn
-			localPlayerWantsRespawn = true;
-		//allowPlayerRespawn(p_conID, spawnPosition);
 		break;
 	}
 }
