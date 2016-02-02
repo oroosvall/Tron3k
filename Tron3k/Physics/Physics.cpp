@@ -1262,6 +1262,24 @@ void Physics::receiveRoomBoxes(void* _roomboxes)
 	}
 }
 
+void Physics::cullingPointvsRoom(glm::vec3* pos, int* arr_interIDs, int& interCount, int maxsize)
+{
+	interCount = 0;
+	for (int i = 1; i < worldBoxes.size(); i++)
+	{
+		if (pos->x > roomBoxes[i - 1].min.x && pos->x < roomBoxes[i - 1].max.x)//x
+			if (pos->y > roomBoxes[i - 1].min.y && pos->y < roomBoxes[i - 1].max.y)//y
+				if (pos->z > roomBoxes[i - 1].min.z && pos->z < roomBoxes[i - 1].max.z)//y
+				{
+					arr_interIDs[interCount] = i;
+					interCount++;
+					if (interCount == maxsize)
+						return;
+				}
+	}
+	
+}
+
 Physics* CreatePhysics()
 {
 	return new Physics();

@@ -721,7 +721,6 @@ void Game::checkPlayerVWorldCollision(float dt)
 {
 	if (localPlayerId != -1)
 	{
-
 		vec3 posadjust = vec3(0);
 		//lower with distance from eyes to center
 		std::vector<vec4> cNorms = physics->PlayerVWorldCollision(playerList[localPlayerId]->getPos() - (vec3(0, playerList[localPlayerId]->getRole()->getBoxModifier(), 0)));
@@ -1911,4 +1910,9 @@ void Game::decalAdd(BulletHitWorldInfo info)
 		decals_renderInfo[decalCounter].color = TEAMTWOCOLOR;
 
 		decalCounter++;
+}
+
+void Game::cullingPointvsRoom(glm::vec3* pos, int* arr_interIDs, int& interCount, int maxsize)
+{
+	physics->cullingPointvsRoom(pos, arr_interIDs, interCount, maxsize);
 }

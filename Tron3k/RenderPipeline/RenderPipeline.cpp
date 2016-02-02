@@ -720,33 +720,30 @@ void RenderPipeline::renderBullet(int bid, void* world, float* dgColor, float sg
 	contMan.renderBullet(bid);
 }
 
-void RenderPipeline::renderAnimation(int playerID, int roleID, void* world, AnimationState animState, float* dgColor, float sgInten, bool first)
+void RenderPipeline::renderAnimation(int playerID, int roleID, void* world, AnimationState animState, float* dgColor, float sgInten, bool first, int roomID)
 {
-	glUseProgram(animationShader);
-
-	if (animState == AnimationState::third_primary_jump_begin)
-		int debug = 3;
-
-	if (animState == AnimationState::third_primary_air)
-   		int debug = 3;
-
-	//Glow values for player
-	glProgramUniform1f(animationShader, uniformStaticGlowIntensityLocation[1], sgInten);
-	glProgramUniform3fv(animationShader, uniformDynamicGlowColorLocation[1], 1, (GLfloat*)&dgColor[0]);
-	glProgramUniform1f(animationShader, uniformGlowTrail[1], 0.0f);
-
-	//Texture for the glow
-	glProgramUniform1i(animationShader, uniformTextureLocation[1], 0);
-	glProgramUniform1i(animationShader, uniformNormalLocation[1], 1);
-	glProgramUniform1i(animationShader, uniformGlowSpecLocation[1], 2);
-
-	//set temp objects worldmat
-	glProgramUniformMatrix4fv(animationShader, worldMat[1], 1, GL_FALSE, (GLfloat*)world);
-
 	anims.updateAnimStates(playerID, roleID, animState, delta, first);
 
-	if (anims.animStates[playerID].state != AnimationState::none && anims.animStates[playerID].frameEnd > 0)
-		contMan.renderPlayer(anims.animStates[playerID], *(glm::mat4*)world, uniformKeyMatrixLocation, first);
+	if (contMan.renderedChunks[roomID] == true || contMan.f_portal_culling == false)
+	{
+		glUseProgram(animationShader);
+
+		//Glow values for player
+		glProgramUniform1f(animationShader, uniformStaticGlowIntensityLocation[1], sgInten);
+		glProgramUniform3fv(animationShader, uniformDynamicGlowColorLocation[1], 1, (GLfloat*)&dgColor[0]);
+		glProgramUniform1f(animationShader, uniformGlowTrail[1], 0.0f);
+
+		//Texture for the glow
+		glProgramUniform1i(animationShader, uniformTextureLocation[1], 0);
+		glProgramUniform1i(animationShader, uniformNormalLocation[1], 1);
+		glProgramUniform1i(animationShader, uniformGlowSpecLocation[1], 2);
+
+		//set temp objects worldmat
+		glProgramUniformMatrix4fv(animationShader, worldMat[1], 1, GL_FALSE, (GLfloat*)world);
+
+		if (anims.animStates[playerID].state != AnimationState::none && anims.animStates[playerID].frameEnd > 0)
+			contMan.renderPlayer(anims.animStates[playerID], *(glm::mat4*)world, uniformKeyMatrixLocation, first);
+	}
 	
 }
 
@@ -971,6 +968,7 @@ void RenderPipeline::enableDepthTest()
 {
 	glEnable(GL_DEPTH_TEST);
 }
+
 void RenderPipeline::disableDepthTest()
 {
 	glDisable(GL_DEPTH_TEST);
@@ -984,4 +982,10 @@ int RenderPipeline::startExecTimer(std::string name)
 void RenderPipeline::stopExecTimer(int id)
 {
 	stopTimer(id);
+}
+
+bool* RenderPipeline::getRenderedChunks(int& get_size)
+{
+	get_size = contMan.nrChunks;
+	return contMan.renderedChunks;
 }

@@ -488,7 +488,7 @@ void Core::upClient(float dt)
 			//Fetch current player position
 			//Add to topology packet
 			Player* local = game->getPlayer(top->getConId());
-			top->frame_pos(top->getConId(), local->getPos(), local->getDir(), local->getVelocity());
+			top->frame_pos(top->getConId(), local->getPos(), local->getDir(), local->getVelocity(), local->roomID);
 		
 			if (game->weaponSwitchReady())
 			{
@@ -1268,9 +1268,9 @@ void Core::renderWorld(float dt)
 					if (!force3rd && p->isLocal() && !game->freecam || game->spectateID == i)
 					{
 						if (p->isLocal())   //use current anim
-							renderPipe->renderAnimation(i, p->getRole()->getRole(), &p->getFPSmat(), p->getAnimState_f_c(), &dgColor.x, hpval, true);
+							renderPipe->renderAnimation(i, p->getRole()->getRole(), &p->getFPSmat(), p->getAnimState_f_c(), &dgColor.x, hpval, true, cam->roomID);
 						else			   //use peak anim
-							renderPipe->renderAnimation(i, p->getRole()->getRole(), &p->getFPSmat(), p->getAnimState_f_p(), &dgColor.x, hpval, true);
+							renderPipe->renderAnimation(i, p->getRole()->getRole(), &p->getFPSmat(), p->getAnimState_f_p(), &dgColor.x, hpval, true, cam->roomID);
 					}
 					else
 					{
@@ -1279,9 +1279,9 @@ void Core::renderWorld(float dt)
 							playermat[0][1].w -= 1.55f;
 
 						if (p->isLocal()) //use current anim
-							renderPipe->renderAnimation(i, p->getRole()->getRole(), playermat, p->getAnimState_t_c(), &dgColor.x, hpval, false);
+							renderPipe->renderAnimation(i, p->getRole()->getRole(), playermat, p->getAnimState_t_c(), &dgColor.x, hpval, false, p->roomID);
 						else              //use peak anim
-							renderPipe->renderAnimation(i, p->getRole()->getRole(), playermat, p->getAnimState_t_p(), &dgColor.x, hpval, false);
+							renderPipe->renderAnimation(i, p->getRole()->getRole(), playermat, p->getAnimState_t_p(), &dgColor.x, hpval, false, p->roomID);
 					}
 				}
 			}
@@ -1526,10 +1526,28 @@ void Core::handleCulling()
 	CameraInput* cam = CameraInput::getCam();
 	if (game->spectateID == -1) // if we are not spectating some one
 	{
-		int newRoom = renderPipe->portalIntersection((float*)&lastCampos, (float*)&cam->getPos(), cam->roomID);
-		if (newRoom != -1)
-			cam->roomID = newRoom;
-	
+		int interarr[2];
+		int count;
+		//check vs roomboxes to verify. Roomboxes have priority if only intersecting with one room
+		game->cullingPointvsRoom(&cam->getPos(), interarr, count, 2);
+		if (count == 1)
+		{
+			if (cam->roomID != interarr[0])
+			{
+				cam->roomID = interarr[0];
+				//printf("RoomIntersect Cam setRoomID %d", interarr[0]);
+			}
+		}
+		else
+		{
+			int newRoom = renderPipe->portalIntersection((float*)&lastCampos, (float*)&cam->getPos(), cam->roomID);
+			if (newRoom != -1)
+			{
+				cam->roomID = newRoom;
+				//printf("Portal Cam setRoomID %d", newRoom);
+			}
+		}
+
 		if (game->freecam == false)
 		{
 			//will set local players roomID to same as cam in player update
@@ -1544,17 +1562,31 @@ void Core::handleCulling()
 	
 			if (p)
 			{
-				if (p->getJustRespawned())
+				game->cullingPointvsRoom(&p->getPos(), interarr, count, 2);
+				if (count == 1)
+				{
+					if (p->roomID != interarr[0])
+					{
+						p->roomID = interarr[0];
+						//printf("RoomIntersect Player setRoomID %d", interarr[0]);
+					}
+				}
+				else
+				{
+					if (p->getJustRespawned())
+						lastPlayerPos = p->getPos();
+
+					int newRoom = renderPipe->portalIntersection((float*)&lastPlayerPos, (float*)&p->getPos(), p->roomID);
+					if (newRoom != -1)
+					{
+						p->roomID = newRoom;
+						//printf("Portal Player setRoomID %d", interarr[0]);
+					}
 					lastPlayerPos = p->getPos();
-	
-				newRoom = renderPipe->portalIntersection((float*)&lastPlayerPos, (float*)&p->getPos(), p->roomID);
-				if (newRoom != -1)
-					p->roomID = newRoom;
-				lastPlayerPos = p->getPos();
+				}
 			}
 		}
 	}
-	
 	lastCampos = cam->getPos();
 	
 	renderPipe->setCullingCurrentChunkID(cam->roomID);

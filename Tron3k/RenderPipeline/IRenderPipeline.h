@@ -67,7 +67,7 @@ public:
 	virtual void* getView() = 0;
 	virtual void renderMISC(int miscID, void* world, float* dgColor, float sgInten) = 0;
 	virtual void renderBullet(int bid, void* world, float* dgColor, float sgInten) = 0;
-	virtual void renderAnimation(int playerID, int roleID, void* world, AnimationState animState, float* dgColor, float sgInten, bool first) = 0;
+	virtual void renderAnimation(int playerID, int roleID, void* world, AnimationState animState, float* dgColor, float sgInten, bool first, int roomID) = 0;
 
 	virtual std::string getStatus() = 0;
 
@@ -113,6 +113,7 @@ public:
 
 	virtual int startExecTimer(std::string name) = 0;
 	virtual void stopExecTimer(int id) = 0;
+	virtual bool* getRenderedChunks(int& get_size) = 0;
 
 };
 

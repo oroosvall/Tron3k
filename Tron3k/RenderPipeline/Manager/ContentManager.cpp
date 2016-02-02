@@ -251,7 +251,6 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 							renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[1]] = true;
 						}
 					}
-					renderedChunks[n] = false;
 				}
 			}
 		}
