@@ -1770,7 +1770,7 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 			if (GetSoundActivated())
 				GetSound()->playExternalSound(SOUNDS::soundEffectClusterGrenade, parent->getPos().x, parent->getPos().y, parent->getPos().z);
 
-			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos(), 5, 0.8f);
+			addEffectToList(PID, BID, EFFECT_TYPE::EXPLOSION, parent->getPos(), 5, 10.0f);
 			break;
 		}
 		}
