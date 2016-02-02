@@ -72,6 +72,7 @@ public:
 	bool LoadNextSet(int whichMenuGroup);
 
 	void setOpenedGuiBool(bool guiBool);
+	void setFirstMenuSet(bool set);
 };
 
 #endif

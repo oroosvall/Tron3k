@@ -175,7 +175,7 @@ void UIManager::setMenu(int menuId)
 		else
 		{
 			currentMenu[0] = menuId;
-			nrOfOpenedMenus++;
+			nrOfCurretMenus++;
 			firstMenuSet = true;
 		}
 	}
@@ -276,7 +276,7 @@ bool UIManager::LoadNextSet(int whichMenuGroup)
 	default:
 		break;
 	}
-	nrOfCurretMenus = 1;
+	nrOfCurretMenus = 0;
 
 	return true;
 }
@@ -284,4 +284,9 @@ bool UIManager::LoadNextSet(int whichMenuGroup)
 void UIManager::setOpenedGuiBool(bool guiBool)
 {
 	guiOpened = guiBool;
+}
+
+void UIManager::setFirstMenuSet(bool set)
+{
+	firstMenuSet = set;
 }

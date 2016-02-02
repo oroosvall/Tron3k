@@ -44,6 +44,7 @@ void Core::init()
 	uiManager->init(&console);
 
 	renderUI = false;
+	startTeamSelect = false; //Temp
 }
 
 Core::~Core()
@@ -133,7 +134,6 @@ void Core::update(float dt)
 	switch (current)
 	{
 	case START:		upStart(dt);	break;
-	case MENU:		upMenu(dt);		break;
 	case ROAM:		upRoam(dt);		break;
 	case CLIENT:	upClient(dt);	break;
 	case SERVER:	upServer(dt);	break;
@@ -174,9 +174,9 @@ void Core::upStart(float dt)
 	case 1:
 		//start console commands
 		startHandleCmds();
-		//uiManager->render();
 		break;
 	}
+	upMenu(dt);
 }
 
 void Core::upMenu(float dt)
@@ -200,6 +200,7 @@ void Core::upMenu(float dt)
 		case 0: //Roam
 			current = ROAM;
 			uiManager->LoadNextSet(1);
+			uiManager->setFirstMenuSet(false);
 			uiManager->setMenu(1);
 			subState = 0;
 			break;
@@ -216,31 +217,16 @@ void Core::upMenu(float dt)
 			break;
 		case 5: //Server -> starts a server
 			current = SERVER;
-			//Clean
+			uiManager->setFirstMenuSet(false);
 			subState = 0;
-			//Cleans
 			break;
 		case 6: //Connect
 		{
 			//default ip at the moment
-			startHandleCmds("/1"); //Start the game as a client
-			uiManager->LoadNextSet(1);
-			uiManager->setMenu(1);
-
-			//bool ipCheck = false;
-			////ipCheck = Ipcheck()
-			//if (ipCheck)
-			//{
-			//	current = CLIENT;
-			//	uiManager->LoadNextSet(1);
-			//	uiManager->setMenu(0);
-			//	subState = 0;
-			//}
-			//else
-			//{
-			//	console.printMsg("Error: Ip adress isn't valid.", "System", 'S');
-			//	//Rensa kanske det som har skivits
-			//}
+			current = Gamestate::CLIENT; //Start the game as a client
+			client_record = false;
+			client_playback = false;
+			subState = 0; 
 			break;
 		}
 		case 7: //Back
@@ -420,6 +406,9 @@ void Core::upClient(float dt)
 				sendRoomBoxes();
 				top->setGamePtr(game);
 				subState++;
+
+				showTeamSelect();
+
 				return; //On sucsess
 			}
 		}
@@ -761,6 +750,8 @@ void Core::startHandleCmds(std::string com)
 			client_record = false;
 			client_playback = false;
 			subState = 0;
+
+			showTeamSelect();
 		}
 
 		else if (token == "/2")
@@ -773,6 +764,7 @@ void Core::startHandleCmds(std::string com)
 		{
 			current = Gamestate::ROAM;
 			subState = 0;
+			showTeamSelect();
 		}
 		else if (token == "/4")
 		{
@@ -1465,6 +1457,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 				roamHandleCmds("/role 1");
 			else
 				clientHandleCmds("/role 1");
+			uiManager->setFirstMenuSet(false);
 			uiManager->setMenu(0);
 			break;
 		case 31: //Class 2
@@ -1473,6 +1466,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 				roamHandleCmds("/role 2");
 			else
 				clientHandleCmds("/role 2");
+			uiManager->setFirstMenuSet(false);
 			uiManager->setMenu(0);
 			break;
 		case 32: //Class 3
@@ -1481,6 +1475,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 				roamHandleCmds("/role 3");
 			else
 				clientHandleCmds("/role 3");
+			uiManager->setFirstMenuSet(false);
 			uiManager->setMenu(0);
 			break;
 		case 33: //Class 4
@@ -1489,6 +1484,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 				roamHandleCmds("/role 4");
 			else
 				clientHandleCmds("/role 4");
+			uiManager->setFirstMenuSet(false);
 			uiManager->setMenu(0);
 			break;
 		case 34: //Class 5
@@ -1497,6 +1493,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 				roamHandleCmds("/role 5");
 			else
 				clientHandleCmds("/role 5");
+			uiManager->setFirstMenuSet(false);
 			uiManager->setMenu(0);
 			break;
 		case 40: //Continue
@@ -1800,4 +1797,20 @@ void Core::disconnect()
 	//}
 	current = Gamestate::START;
 	subState = 0;
+}
+
+void Core::showTeamSelect()
+{
+	if(startTeamSelect)
+	{
+		uiManager->LoadNextSet(1);
+		uiManager->setFirstMenuSet(false);
+		uiManager->setMenu(1);
+	}
+	else
+	{
+		uiManager->LoadNextSet(1);
+		uiManager->setFirstMenuSet(false);
+		uiManager->setMenu(0);
+	}
 }

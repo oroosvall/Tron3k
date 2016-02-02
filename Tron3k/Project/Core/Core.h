@@ -105,6 +105,9 @@ private:
 	void sendPlayerBox();
 	void sendWorldBoxes();
 
+	void showTeamSelect();
+	bool startTeamSelect; //temp
+
 public:
 	
 	vec3 TEAMONECOLOR = vec3(1.0f, 0.5f, 0.0f);
