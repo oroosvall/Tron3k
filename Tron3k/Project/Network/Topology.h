@@ -496,7 +496,7 @@ public:
 	virtual void command_team_change(Uint8 conid, Uint8 team)
 	{
 		Packet* out = new Packet();
-		*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::TEAM_CHANGE) << conid << team << (Uint8)0;
+		*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::TEAM_CHANGE) << conid << team;
 		con->send(out);
 		delete out;
 	}
@@ -521,8 +521,16 @@ public:
 	{
 		Uint8 p_conID;
 		Uint8 team;
-		Uint8 spawnPosition;
-		*rec >> p_conID >> team >> spawnPosition;
+		*rec >> p_conID >> team;
+
+		if (isClient)
+		{
+			if (team == 9)
+			{
+				consolePtr->printMsg("Can't join team!", "System", 'S');
+				return;
+			}
+		}
 
 		Player* p = gamePtr->getPlayer(p_conID);
 		if (p == nullptr)
@@ -533,18 +541,41 @@ public:
 
 		if (isClient == false) //Decide if the command is OK
 		{
-			if (gamePtr->getPlayersOnTeam(team) + 1 < gamePtr->getMaxTeamSize())
-			{
+			//if (gamePtr->getPlayersOnTeam(team) + 1 < gamePtr->getMaxTeamSize())
+			//{
 				/*
 				TO DO
 				Add logic to give player a new place to spawn after team change
 				*/
-			}
-			else
-			{
+			//}
+			//else
+			//{
 				/*
 				CAN'T CHANGE TEAM
 				*/
+			//}
+
+			//Check with the game mode
+			if (gamePtr->getPlayersOnTeam(team) + 1 < gamePtr->getMaxTeamSize())
+			{
+
+			}
+			else
+			{
+				Packet* out = new Packet();
+				*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::TEAM_CHANGE) << p_conID << Uint8(9); //9 is a good error code, whatever
+				branch(out, -1);
+				delete out;
+				return;
+			}
+			Gamemode* gm = gamePtr->getGameMode();
+			if (!gm->allowTeamChange())
+			{
+				Packet* out = new Packet();
+				*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::TEAM_CHANGE) << p_conID << Uint8(9);
+				branch(out, -1);
+				delete out;
+				return;
 			}
 		}
 
@@ -557,23 +588,19 @@ public:
 
 		if (p_conID == getConId())
 		{
-			if (team != 0)
-				gamePtr->freecam = false;
-			else
+			if (team == 0)
 				gamePtr->freecam = true;
 		}
-		//Ugly. Needs a team before he can spawn but need spawnpos before he joins a team
-		gamePtr->addPlayerToTeam(p_conID, team, spawnPosition);
+
 		if (isClient == false)
 		{
-			spawnPosition = gamePtr->findPlayerPosInTeam(conID) % 5;
 			Packet* out = new Packet();
-			*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::TEAM_CHANGE) << p_conID << team << spawnPosition;
+			*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::TEAM_CHANGE) << p_conID << team;
 			branch(out, -1);
 			delete out;
 		}
 		//Adds player to the game in chosen team. Both clients and server
-		gamePtr->addPlayerToTeam(p_conID, team, spawnPosition);
+		gamePtr->addPlayerToTeam(p_conID, team);
 	}
 
 	virtual void in_command_role_change(Packet* rec, Uint8 conID)

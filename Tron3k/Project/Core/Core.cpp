@@ -823,10 +823,10 @@ void Core::roamHandleCmds(std::string com)
 		else if (token == "/team")
 		{
 			ss >> token;
-			if (token != "/team" || token == "0" || token == "1" || token == "2")
+			if (token == "0" || token == "1" || token == "2")
 			{
 				int team = stoi(token);
-				game->addPlayerToTeam(0, team, 0);
+				game->addPlayerToTeam(0, team);
 				game->allowPlayerRespawn(0, 0);
 				if (team != 0)
 					game->freecam = false;

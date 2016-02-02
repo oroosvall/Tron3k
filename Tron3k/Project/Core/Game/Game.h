@@ -253,7 +253,7 @@ public:
 	void allowPlayerRespawn(int p_conID, int respawnPosition);
 	void denyPlayerRespawn(char tryAgain);
 
-	void addPlayerToTeam(int p_conID, int team, int spawnPosition);
+	void addPlayerToTeam(int p_conID, int team);
 	int getPlayersOnTeam(int team);
 	int getMaxTeamSize(bool spec = false) { if (spec) return maxSpec; return maxTeamSize; };
 	vector<int>* getTeamConIds(int team);

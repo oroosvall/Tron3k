@@ -942,7 +942,7 @@ void Game::removeConIDfromTeams(int conID)
 	}
 }
 
-void Game::addPlayerToTeam(int p_conID, int team, int spawnPosition)
+void Game::addPlayerToTeam(int p_conID, int team)
 {
 	switch (team)
 	{
@@ -959,7 +959,10 @@ void Game::addPlayerToTeam(int p_conID, int team, int spawnPosition)
 		//	delete playerList[p_conID];
 		teamOne.push_back(p_conID);
 		playerList[p_conID]->setTeam(1);
-		allowPlayerRespawn(p_conID, spawnPosition);
+		
+		if (p_conID == localPlayerId) //If I'm local, attempt to respawn
+			localPlayerWantsRespawn = true;
+		//allowPlayerRespawn(p_conID, spawnPosition);
 
 		//if (playerList[p_conID]->isLocal())
 		//{
@@ -972,7 +975,10 @@ void Game::addPlayerToTeam(int p_conID, int team, int spawnPosition)
 		//	delete playerList[p_conID];
 		teamTwo.push_back(p_conID);
 		playerList[p_conID]->setTeam(2);
-		allowPlayerRespawn(p_conID, spawnPosition);
+
+		if (p_conID == localPlayerId) //If I'm local, attempt to respawn
+			localPlayerWantsRespawn = true;
+		//allowPlayerRespawn(p_conID, spawnPosition);
 		break;
 	}
 }
@@ -1789,11 +1795,14 @@ bool Game::playerWantsToRespawn()
 
 void Game::allowPlayerRespawn(int p_conID, int respawnPosition)
 {
-	playerList[p_conID]->respawn(spawnpoints[playerList[p_conID]->getTeam()][respawnPosition].pos, spawnpoints[playerList[p_conID]->getTeam()][respawnPosition].dir, spawnpoints[playerList[p_conID]->getTeam()][respawnPosition].roomID);
-	localPlayerWantsRespawn = false;
-	localPlayerRespawnWaiting = false;
-	if (playerList[p_conID]->isLocal())
-		freecam = false;
+	if (playerList[p_conID] != nullptr)
+	{
+		playerList[p_conID]->respawn(spawnpoints[playerList[p_conID]->getTeam()][respawnPosition].pos, spawnpoints[playerList[p_conID]->getTeam()][respawnPosition].dir, spawnpoints[playerList[p_conID]->getTeam()][respawnPosition].roomID);
+		localPlayerWantsRespawn = false;
+		localPlayerRespawnWaiting = false;
+		if (playerList[p_conID]->isLocal())
+			freecam = false;
+	}
 }
 
 void Game::denyPlayerRespawn(char tryAgain)

@@ -2,6 +2,7 @@
 #define KINGOFTHEHILL_H
 
 #include "../Gamemode.h"
+#include <vector>
 
 enum KOTHSTATE
 {
@@ -23,6 +24,9 @@ private:
 	KOTHSTATE state; //State on the process running
 	KOTHSTATE serverState; //State of the server, if we're a client
 	GAMEMODE_MSG lastMsg;
+
+	std::vector<int> teamOnePlayers;
+	std::vector<int> teamTwoPlayers;
 
 	int capturePoint; //Which cap point is active
 	int teamOnePlayersAtPoint;
@@ -64,6 +68,8 @@ public:
 
 	KOTHSTATE getState();
 	GAMEMODE_MSG getLastMsg() { return lastMsg; };
+
+	bool allowTeamChange();
 };
 
 #endif
