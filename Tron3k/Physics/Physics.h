@@ -13,7 +13,7 @@
 
 
 #include "Collision\Geometry.h"
-#include "Collision\CollideMesh.h"
+#include "Collision\Meshes\CollideMesh.h"
 #include "Effect\EffectMesh.h"
 #include<vector>
 #include<iterator>
