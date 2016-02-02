@@ -59,9 +59,9 @@ vec3 Physics::checkAABBvAABBCollision(Geometry* obj1, Geometry* obj2)
 
 bool Physics::checkAABBvAABBCollision(AABB* mesh1, AABB* mesh2)
 {
-	if (mesh1->max.x + FLT_EPSILON > mesh2->min.x - FLT_EPSILON && mesh1->min.x - FLT_EPSILON < mesh2->max.x + FLT_EPSILON)//x
-		if (mesh1->max.y + FLT_EPSILON > mesh2->min.y - FLT_EPSILON && mesh1->min.y - FLT_EPSILON < mesh2->max.y + FLT_EPSILON)//y
-			if (mesh1->max.z + FLT_EPSILON > mesh2->min.z - FLT_EPSILON && mesh1->min.z - FLT_EPSILON < mesh2->max.z + FLT_EPSILON)//y
+	if (mesh1->max.x + FLT_EPSILON >= mesh2->min.x - FLT_EPSILON && mesh1->min.x - FLT_EPSILON <= mesh2->max.x + FLT_EPSILON)//x
+		if (mesh1->max.y + FLT_EPSILON >= mesh2->min.y - FLT_EPSILON && mesh1->min.y - FLT_EPSILON <= mesh2->max.y + FLT_EPSILON)//y
+			if (mesh1->max.z + FLT_EPSILON >= mesh2->min.z - FLT_EPSILON && mesh1->min.z - FLT_EPSILON <= mesh2->max.z + FLT_EPSILON)//y
 				return true;
 
 	return false;
