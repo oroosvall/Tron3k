@@ -851,6 +851,7 @@ std::vector<vec4> Physics::checkPlayerVEffectCollision(glm::vec3 playerPos, unsi
 
 	for (int i = 0; i < collided.size(); i++)
 	{
+		if(eType == 0)
 		if (collided[i].y > 0.01f || collided[i].y < -0.01f)
 			collided[i].y = 0;
 	}
