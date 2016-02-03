@@ -14,6 +14,7 @@ bool MultiJump::allowedToActivate(Player* p)
 {
 	if (this->coolDown < 0.01 && !p->getGrounded())
 	{
+		p->movmentSpecialAnimUse();
 		coolDown = 2.0f;
 		return true;
 	}
