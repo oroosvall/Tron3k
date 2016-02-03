@@ -5,6 +5,8 @@
 
 CameraInput* CameraInput::singleton = nullptr;
 
+float CameraInput::mouseSpeed = 0.2f;
+
 CameraInput::CameraInput()
 {
 
@@ -86,8 +88,8 @@ void CameraInput::keypan(float dt)
 
 void CameraInput::mousepan(float x, float y)
 {
-	angleH -= x / mouseSpeed;
-	angleV -= y / mouseSpeed;
+	angleH -= x * mouseSpeed;
+	angleV -= y * mouseSpeed;
 	if (angleV > 89)
 		angleV = 89;
 	if (angleV < -89)

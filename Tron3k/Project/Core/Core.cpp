@@ -1149,9 +1149,14 @@ void Core::saveSettings()
 		file << "IP: " << _addrs.toString() << endl;
 		file << "Port: " << _port << endl;
 		if(GetSoundActivated() == 1)
-			file << "Sound: " << "1";
+			file << "Sound: " << "1" << endl;
 		else
-			file << "Sound: " << "0";
+			file << "Sound: " << "0" << endl;
+
+		float sens = serverCam->getSensitivity();
+		file << "Sensitivity: " << sens;
+
+		file.close();
 	}
 }
 
@@ -1188,7 +1193,17 @@ void Core::loadSettings()
 					GetSound()->playMusic(mainMenu);
 				}
 			}
+			else if (in == "Sensitivity:")
+			{
+				float sens = atof(in2.c_str());
+				if (sens < FLT_EPSILON)
+				{
+					sens = 0.2f;
+				}
+				serverCam->setSensitivity(sens);
+			}
 		}
+		file.close();
 	}
 	else
 	{
