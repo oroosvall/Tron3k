@@ -1395,6 +1395,10 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 		Bullet* theBullet = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, bulletPosInArray);
 		if (theBullet != nullptr)
 			p->hitByBullet(theBullet, hi.newHPtotal);
+		if (p->getHP() == 0)
+		{
+			console->printMsg(p->getName() + " was fragged by " + playerList[hi.bulletPID]->getName() + "!", "System", 'S');
+		}
 
 		removeBullet(hi.bt, bulletPosInArray);
 
@@ -1442,6 +1446,10 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 	}
 
 	p->hitByEffect(theEffect, hi.newHPtotal);
+	if (p->getHP() == 0)
+	{
+		console->printMsg(p->getName() + " was fragged by " + playerList[hi.effectPID]->getName() + "!", "System", 'S');
+	}
 
 	int newHP = p->getHP();
 	return newHP;

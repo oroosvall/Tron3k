@@ -691,7 +691,6 @@ public:
 			}
 		}
 		gamePtr->allowPlayerRespawn(p_conID, respawnPosition);
-		consolePtr->printMsg("Player (" + p->getName() + ") respawned!", "System", 'S');
 
 		if (isClient == false)
 		{
