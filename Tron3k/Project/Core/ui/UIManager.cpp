@@ -48,31 +48,32 @@ void UIManager::init(Console* console)
 
 	//Texture Paths
 	//Main menu
-	texturePaths.push_back("GameFiles/Textures/UITextures/testmap.png"); //0
-	texturePaths.push_back("GameFiles/Textures/UITextures/multiplayer.png"); //1
-	texturePaths.push_back("GameFiles/Textures/UITextures/settings.png"); //2
-	texturePaths.push_back("GameFiles/Textures/UITextures/exit.png"); //3
+	texturePaths.push_back("GameFiles/Textures/UITextures/main_menu_background.png"); //0
+	texturePaths.push_back("GameFiles/Textures/UITextures/testmap.png"); //1
+	texturePaths.push_back("GameFiles/Textures/UITextures/multiplayer.png"); //2
+	texturePaths.push_back("GameFiles/Textures/UITextures/settings.png"); //3
+	texturePaths.push_back("GameFiles/Textures/UITextures/exit.png"); //4
 
 	//Multiplayer
-	//Background  //4
-	//Client  //5
-	//Server  //6
+	//Background  //5
+	//Client  //6
+	//Server  //7
 
 	//Connect
-	texturePaths.push_back("GameFiles/Textures/UITextures/connect_to_server_background.png"); //4
-	texturePaths.push_back("GameFiles/Textures/UITextures/connect_to_server_connect.png"); //5
-	texturePaths.push_back("GameFiles/Textures/UITextures/connect_to_server_back.png"); //6
+	texturePaths.push_back("GameFiles/Textures/UITextures/connect_to_server_background.png"); //5
+	texturePaths.push_back("GameFiles/Textures/UITextures/connect_to_server_connect.png"); //6
+	texturePaths.push_back("GameFiles/Textures/UITextures/connect_to_server_back.png"); //7
 
 	//Team select
-	texturePaths.push_back("GameFiles/Textures/UITextures/team_selection_background.png"); //7
-	texturePaths.push_back("GameFiles/Textures/UITextures/team_selection_alpha.png"); //8
-	texturePaths.push_back("GameFiles/Textures/UITextures/team_selection_beta.png"); //9
+	texturePaths.push_back("GameFiles/Textures/UITextures/team_selection_background.png"); //8
+	texturePaths.push_back("GameFiles/Textures/UITextures/team_selection_alpha.png"); //9
+	texturePaths.push_back("GameFiles/Textures/UITextures/team_selection_beta.png"); //10
 
 	//Class select
-	texturePaths.push_back("GameFiles/Textures/UITextures/class_selection_background.png"); //10
-	texturePaths.push_back("GameFiles/Textures/UITextures/class_selection_trapper.png"); //11
-	texturePaths.push_back("GameFiles/Textures/UITextures/class_selection_stalker.png"); //12
-	texturePaths.push_back("GameFiles/Textures/UITextures/class_selection_punisher.png"); //13
+	texturePaths.push_back("GameFiles/Textures/UITextures/class_selection_background.png"); //11
+	texturePaths.push_back("GameFiles/Textures/UITextures/class_selection_trapper.png"); //12
+	texturePaths.push_back("GameFiles/Textures/UITextures/class_selection_stalker.png"); //13
+	texturePaths.push_back("GameFiles/Textures/UITextures/class_selection_punisher.png"); //14
 
 	loadInTexture();
 
