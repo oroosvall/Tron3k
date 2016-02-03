@@ -4,9 +4,9 @@
 MeleeAttack::MeleeAttack(glm::vec3 position, glm::vec3 direction, int pID, int bID, int tID, Player* player)
 {
 	initValues(position, direction, pID, bID, tID);
-	vel = glm::vec3(25.0f);
+	vel = glm::vec3(75.0f);
 	damage = 70;
-	ttl = 0.15f;
+	ttl = 0.05f;
 	target = player;
 	type = BULLET_TYPE::MELEE_ATTACK;
 }
