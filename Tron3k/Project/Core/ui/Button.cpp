@@ -145,6 +145,8 @@ void Button::scaleBarFromRight(float procentOfMax)
 	worldMatrix[0].x = scale;
 	float length = scale * 2;
 
-	worldMatrix[0].w += length * 0.5f;
+	float difference = 1.0f - procentOfMax;
+
+	worldMatrix[0].w -= length * difference;
 
 }

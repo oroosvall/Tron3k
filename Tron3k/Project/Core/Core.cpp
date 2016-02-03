@@ -846,6 +846,7 @@ void Core::roamHandleCmds(std::string com)
 				else
 					game->freecam = true;
 
+				uiManager->setFirstMenuSet(false);
 				uiManager->setMenu(2);
 			}
 			else
@@ -963,6 +964,7 @@ void Core::clientHandleCmds(std::string com)
 				top->command_team_change(top->getConId(), team);
 				console.printMsg("Change team request sent to server", "System", 'S');
 
+				uiManager->setFirstMenuSet(false);
 				uiManager->setMenu(2);
 			}
 			else

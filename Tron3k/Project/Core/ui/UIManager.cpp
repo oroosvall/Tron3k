@@ -179,7 +179,7 @@ void UIManager::setMenu(int menuId)
 		else
 		{
 			currentMenu[0] = menuId;
-			nrOfCurretMenus++;
+			nrOfCurretMenus = 1;
 			firstMenuSet = true;
 		}
 	}
