@@ -597,11 +597,6 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 						GetSound()->enableSounds();
 					}
 				}
-
-				if (i->justPressed(GLFW_KEY_O))
-				{
-					role.setHealth(0);
-				}
 				if (i->justPressed(GLFW_KEY_M))
 					role.setSpecialMeter(100.0f);
 			} // end of player input
@@ -612,7 +607,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			role.setHealth(0);
 		}
 
-		if (role.getHealth() <= 0 && !isDead)
+		if (role.getHealth() <= 0 && !isDead && role.getRole() != ROLES::NROFROLES)
 		{
 			isDead = true;
 			msg = DEATH;
@@ -677,6 +672,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		{
 			isDead = true;
 			vel = glm::vec3(0, 0, 0);
+			cleanseModifiers();
 		}
 		modifiersSetData(dt);
 	}
@@ -748,6 +744,9 @@ void Player::reloadCurrentWeapon()
 				GetSound()->playUserGeneratedSound(SOUNDS::soundEffectTrapperReload);
 			else if (this->role.getRole() == 2)
 				GetSound()->playUserGeneratedSound(SOUNDS::soundEffectStalkerReload);
+			else if (this->role.getRole() == 3)
+				GetSound()->playUserGeneratedSound(SOUNDS::soundEffectPunisherReload);
+			
 		}
 
 		role.getCurrentWeapon()->reload();
@@ -787,12 +786,16 @@ void Player::hitByBullet(Bullet* b, int newHPtotal)
 	{
 		if (newHPtotal == -1) //We are actually taking damage on the server now
 		{
-			int dmg = b->getDamage();
-			role.takeDamage(dmg);
+			if (!isDead)
+			{
+				int dmg = b->getDamage();
+				role.takeDamage(dmg);
+			}
 		}
 		else //We are on a client, and thus are only interested on our HP on the server
 		{
-			role.setHealth(newHPtotal);
+			if (!isDead)
+				role.setHealth(newHPtotal);
 		}
 
 		if (b->getType() == BULLET_TYPE::HACKING_DART)
@@ -879,10 +882,7 @@ void Player::addModifier(MODIFIER_TYPE mt)
 
 void Player::setRole(Role role)
 {
-	cleanseModifiers(true);
 	this->role = role;
-	this->role.chooseRole(TRAPPER);
-	addModifier(MODIFIER_TYPE::TRAPPERSHAREAMMO);
 }
 
 void Player::respawn(glm::vec3 respawnPos, glm::vec3 _dir, int _roomID)
@@ -905,7 +905,7 @@ void Player::respawn(glm::vec3 respawnPos, glm::vec3 _dir, int _roomID)
 	role.returnToLife();
 
 	roomID = _roomID;
-	printf("Now in room %d", _roomID);
+	//printf("Now in room %d", _roomID);
 
 	if (isLocalPlayer)
 		cam->roomID = _roomID;
@@ -926,7 +926,6 @@ bool Player::searchModifier(MODIFIER_TYPE search)
 
 	return false;
 }
-
 
 Modifier* Player::searchModifierGet(MODIFIER_TYPE search)
 {
@@ -980,6 +979,27 @@ glm::mat4 Player::getFPSmat()
 	ret[1].w += renderpos.y;
 	ret[2].w += renderpos.z;
 	return ret;
+}
+
+void Player::movmentSpecialAnimUse(int react)
+{
+	switch (animRole)
+	{
+	case TRAPPER:		animOverideIfPriority(anim_third_current, AnimationState::third_primary_jump_begin);	return;
+	case DESTROYER:		return;
+	case MOBILITY:	
+	{
+		switch (react)
+		{
+		case 0: animOverideIfPriority(anim_third_current, AnimationState::third_primary_jump_begin);			return;
+		case 1:	animOverideIfPriority(anim_third_current, AnimationState::third_shankbot_walljump_right);		return;
+		case 2:	animOverideIfPriority(anim_third_current, AnimationState::third_shankbot_walljump_left);		return;
+		}
+		
+	}
+	case BRUTE:			return;
+	case MANIPULATOR:	return;
+	}
 }
 
 void Player::movementAnimationChecks(float dt)
@@ -1080,6 +1100,10 @@ void Player::movementAnimationChecks(float dt)
 					animOverideIfPriority(anim_third_current, AnimationState::third_brute_secondary_dash);
 			}
 	}
+	if (animRole == ROLES::MOBILITY)
+	{
+
+	}
 
 
 	//death checks
@@ -1099,4 +1123,14 @@ void Player::movementAnimationChecks(float dt)
 
 	animOverideIfPriority(anim_third_framePeak, anim_third_current);
 	animOverideIfPriority(anim_first_framePeak, anim_first_current);
+}
+
+void Player::chooseRole(int r)
+{
+	cleanseModifiers(true);
+	role.chooseRole(r);
+	if (r == ROLES::TRAPPER)
+	{
+		addModifier(MODIFIER_TYPE::TRAPPERSHAREAMMO);
+	}
 }

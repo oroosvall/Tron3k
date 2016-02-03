@@ -1,7 +1,7 @@
 #ifndef EFFECTMESH_H
 #define EFFECTMESH_H
 
-#include"../Collision/CollideMesh.h"
+#include"../Collision/Meshes/CollideMesh.h"
 
 class EffectMesh
 {

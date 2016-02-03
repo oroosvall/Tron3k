@@ -210,20 +210,10 @@ struct PortalData
 
 	void render()
 	{
-		if (waiting == false)
-		{
-			glBeginQuery(GL_ANY_SAMPLES_PASSED, query);
-
-			visualPortal.BindVertData();
-			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-
-			glEndQuery(GL_ANY_SAMPLES_PASSED);
-		}
-		else //render for debug only, dont have to when they are invisable
-		{
-			visualPortal.BindVertData();
-			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-		}
+		visualPortal.BindVertData();
+		glBeginQuery(GL_ANY_SAMPLES_PASSED, query);
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		glEndQuery(GL_ANY_SAMPLES_PASSED);
 	}
 
 	bool passedCulling()

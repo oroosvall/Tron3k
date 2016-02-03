@@ -66,7 +66,6 @@ extern "C"
 			printf("---------------------opengl-callback-end--------------\n");
 		}
 	}
-
 }
 #endif
 
@@ -243,6 +242,7 @@ void RenderPipeline::reloadShaders()
 	//UI shaderLocations
 	ui_Texture = glGetUniformLocation(uiShader, "textureSample");
 	ui_World = glGetUniformLocation(uiShader, "WorldMatrix");
+	uniformPivotLocation = glGetUniformLocation(uiShader, "pivot");
 
 	//decal uniforms
 	//http:/d/www.opentk.com/node/2926
@@ -255,7 +255,7 @@ void RenderPipeline::reloadShaders()
 
 	decal_inten = glGetUniformLocation(decal_Shader, "inten");
 	//decal_Uniformtexsample = glGetUniformLocation(decal_Shader, "texsample");
-	
+
 	worldMat[0] = glGetUniformLocation(regularShader, "WorldMatrix"); //worldMat regular shader
 	viewMat = glGetUniformLocation(regularShader, "ViewMatrix"); //view
 	viewProjMat[0] = glGetUniformLocation(regularShader, "ViewProjMatrix"); //view regular shader
@@ -437,9 +437,15 @@ void RenderPipeline::setCullingCurrentChunkID(int roomID)
 	contMan.setRoomID(roomID);
 }
 
-void RenderPipeline::addLight(SpotLight* newLight)
+void RenderPipeline::addLight(SpotLight* newLight, int roomID)
 {
-	gBuffer->pushLights(newLight, 1);
+	if (contMan.f_portal_culling)
+	{
+		if(contMan.renderedChunks[roomID] == true)
+			gBuffer->pushLights(newLight, 1);
+	}
+	else
+		gBuffer->pushLights(newLight, 1);
 }
 
 void RenderPipeline::renderIni()
@@ -470,13 +476,21 @@ void RenderPipeline::finalizeRender()
 	glEnable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
 
+	//system("CLS");
+
 	//push the lights of the rendered chunks
 	for (int n = 0; n < contMan.nrChunks; n++)
 		if (contMan.renderedChunks[n] == true)
-			for (size_t k = 0; k < contMan.testMap.chunks[n].lights.size(); k++)
+		{
+			if (n > 0)
 			{
-				gBuffer->pushLights(&contMan.testMap.chunks[n].lights[k], 1);
+				int count = contMan.testMap.chunks[n].lights.size();
+				if (count > 0)
+					gBuffer->pushLights(&contMan.testMap.chunks[n].lights[0], count);
+			//printf("Chunk : %d Lights: %d \n", n, count);
 			}
+		}
+	
 
 	glUseProgram(glowShaderTweeks);
 	
@@ -510,7 +524,7 @@ void RenderPipeline::finalizeRender()
 void RenderPipeline::renderWallEffect(void* pos1, void* pos2, float uvStartOffset, float* dgColor)
 {
 	glUseProgram(lw_Shader);
-	glProgramUniform1i(lw_Shader, lw_tex, 0);
+	//glProgramUniform1i(lw_Shader, lw_tex, 0);
 	//call contentman and bind the lightwal texture to 0
 	contMan.bindLightwalTexture(lw_Shader, lw_tex);
 	cam.setViewProjMat(lw_Shader, lw_vp);
@@ -607,6 +621,7 @@ void RenderPipeline::renderDecals(void* data, int size)
 		//glBindBufferBase(GL_UNIFORM_BUFFER, decal_struct_UBO_index, decal_struct_UBO);
 		//glProgramUniform1i(decal_Shader, decal_nrDecals, size);
 		cam.setViewProjMat(decal_Shader, decal_viewProj);
+		contMan.bindDecalTexture();
 		glBindBuffer(GL_ARRAY_BUFFER, lwVertexDataId);
 		glBindVertexArray(lwVertexAttribute);
 
@@ -729,33 +744,30 @@ void RenderPipeline::renderBullet(int bid, void* world, float* dgColor, float sg
 	contMan.renderBullet(bid);
 }
 
-void RenderPipeline::renderAnimation(int playerID, int roleID, void* world, AnimationState animState, float* dgColor, float sgInten, bool first)
+void RenderPipeline::renderAnimation(int playerID, int roleID, void* world, AnimationState animState, float* dgColor, float sgInten, bool first, int roomID)
 {
-	glUseProgram(animationShader);
-
-	if (animState == AnimationState::third_primary_jump_begin)
-		int debug = 3;
-
-	if (animState == AnimationState::third_primary_air)
-   		int debug = 3;
-
-	//Glow values for player
-	glProgramUniform1f(animationShader, uniformStaticGlowIntensityLocation[1], sgInten);
-	glProgramUniform3fv(animationShader, uniformDynamicGlowColorLocation[1], 1, (GLfloat*)&dgColor[0]);
-	glProgramUniform1f(animationShader, uniformGlowTrail[1], 0.0f);
-
-	//Texture for the glow
-	//glProgramUniform1i(animationShader, uniformTextureLocation[1], 0);
-	//glProgramUniform1i(animationShader, uniformNormalLocation[1], 1);
-	//glProgramUniform1i(animationShader, uniformGlowSpecLocation[1], 2);
-
-	//set temp objects worldmat
-	glProgramUniformMatrix4fv(animationShader, worldMat[1], 1, GL_FALSE, (GLfloat*)world);
-
 	anims.updateAnimStates(playerID, roleID, animState, delta, first);
+
+	if (contMan.renderedChunks[roomID] == true || contMan.f_portal_culling == false)
+	{
+		glUseProgram(animationShader);
+
+		//Texture for the glow
+		//glProgramUniform1i(animationShader, uniformTextureLocation[1], 0);
+		//glProgramUniform1i(animationShader, uniformNormalLocation[1], 1);
+		//glProgramUniform1i(animationShader, uniformGlowSpecLocation[1], 2);
+
+		//Glow values for player
+		glProgramUniform1f(animationShader, uniformStaticGlowIntensityLocation[1], sgInten);
+		glProgramUniform3fv(animationShader, uniformDynamicGlowColorLocation[1], 1, (GLfloat*)&dgColor[0]);
+		glProgramUniform1f(animationShader, uniformGlowTrail[1], 0.0f);
+
+		//set temp objects worldmat
+		glProgramUniformMatrix4fv(animationShader, worldMat[1], 1, GL_FALSE, (GLfloat*)world);
 
 	if (anims.animStates[playerID].state != AnimationState::none && anims.animStates[playerID].frameEnd > 0)
 		contMan.renderPlayer(anims.animStates[playerID], *(glm::mat4*)world, uniformKeyMatrixLocation, first, animationShader, uniformTextureLocation[1], uniformNormalLocation[1], uniformGlowSpecLocation[1]);
+	}
 	
 }
 
@@ -959,13 +971,20 @@ void RenderPipeline::ui_loadTexture(unsigned int* texid, char* filepath, int* xr
 	*texid = loadTexture(std::string(filepath), true, xres, yres);
 }
 
-void RenderPipeline::ui_renderQuad(float* mat, GLuint textureID, float transp, int i)
+void RenderPipeline::ui_renderQuad(float* mat, float* pivot, GLuint textureID, float transp, int i)
 {
 	glm::mat4* world = (glm::mat4*)mat;
 
 	//glActiveTexture(GL_TEXTURE0);
-	//glBindTexture(GL_TEXTURE_2D, textureID);
+
+	TextureInfo temp;
+	temp.state = TEXTURE_LOADED;
+	temp.lastTextureSlot = GL_TEXTURE0;
+	temp.textureID = textureID;
+	TextureManager::gTm->bind(temp, uiShader, ui_Texture);
+	glBindTexture(GL_TEXTURE_2D, textureID);
 	glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, mat);
+	glProgramUniform3fv(uiShader, uniformPivotLocation, 1, pivot);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
 
@@ -980,9 +999,15 @@ void RenderPipeline::enableDepthTest()
 {
 	glEnable(GL_DEPTH_TEST);
 }
+
 void RenderPipeline::disableDepthTest()
 {
 	glDisable(GL_DEPTH_TEST);
+}
+
+void RenderPipeline::clearBothBuffers()
+{
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 int RenderPipeline::startExecTimer(std::string name)
@@ -993,4 +1018,10 @@ int RenderPipeline::startExecTimer(std::string name)
 void RenderPipeline::stopExecTimer(int id)
 {
 	stopTimer(id);
+}
+
+bool* RenderPipeline::getRenderedChunks(int& get_size)
+{
+	get_size = contMan.nrChunks;
+	return contMan.renderedChunks;
 }

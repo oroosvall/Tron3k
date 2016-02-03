@@ -182,11 +182,12 @@ void PlayerMesh::render(GLuint shader, GLuint textureLocation, GLuint normalLoca
 	if (materials[0].normalMapIndex != -1)
 		TextureManager::gTm->bindTexture(tex[materials[0].normalMapIndex].textureID, shader, normalLocation, NORMAL_FB);
 	else
-		TextureManager::gTm->bindDefault(shader, textureLocation, NORMAL_FB);
+		TextureManager::gTm->bindDefault(shader, normalLocation, NORMAL_FB);
+
 	if (materials[0].specularMapIndex != -1)
 		TextureManager::gTm->bindTexture(tex[materials[0].specularMapIndex].textureID, shader, glowSpecLocation, GLOW_FB);
 	else
-		TextureManager::gTm->bindDefault(shader, textureLocation, GLOW_FB);
+		TextureManager::gTm->bindDefault(shader, glowSpecLocation, GLOW_FB);
 
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -284,6 +285,8 @@ int* AnimatedMeshV2::loadAnimations(std::string character)
 	animations[AnimationState::third_melee_standing			].load(file + "_third_melee_standing.bin");
 	animations[AnimationState::third_melee_run				].load(file + "_third_melee_run.bin");
 	animations[AnimationState::third_shankbot_charge		].load(file + "_third_shankbot_charge.bin");
+	animations[AnimationState::third_shankbot_walljump_right].load(file + "_third_shankbot_walljump_right.bin");
+	animations[AnimationState::third_shankbot_walljump_left	].load(file + "_third_shankbot_walljump_left.bin");
 																				
 	animations[AnimationState::third_primary_death			].load(file + "_third_primary_death.bin");
 	animations[AnimationState::third_secondary_death		].load(file + "_third_secondary_death.bin");
@@ -295,13 +298,11 @@ int* AnimatedMeshV2::loadAnimations(std::string character)
 	{
 		frames[i] = animations[i].header.keyCount;
 	}
-
 	return frames;
 }
 
 void AnimatedMeshV2::draw(GLuint uniformKeyMatrixLocation,int animationID, int keyFrame, bool _first, GLuint shader, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation)
 {
-
 	glBindBuffer(GL_UNIFORM_BUFFER, matricesBuffer);
 	glBindBufferBase(GL_UNIFORM_BUFFER, uniformKeyMatrixLocation, matricesBuffer);
 
@@ -312,8 +313,6 @@ void AnimatedMeshV2::draw(GLuint uniformKeyMatrixLocation,int animationID, int k
 			first.render(shader, textureLocation, normalLocation, glowSpecLocation);	
 		else
 			third.render(shader, textureLocation, normalLocation, glowSpecLocation);
-	   
+
 	}
-
-
 }

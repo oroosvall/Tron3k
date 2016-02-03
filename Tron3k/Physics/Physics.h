@@ -13,11 +13,10 @@
 
 
 #include "Collision\Geometry.h"
-#include "Collision\CollideMesh.h"
+#include "Collision\Meshes\CollideMesh.h"
 #include "Effect\EffectMesh.h"
 #include<vector>
 #include<iterator>
-#include<thread>
 
 
 //----COLLISION INFO----
@@ -115,7 +114,7 @@ public:
 	virtual bool removeEffect(int eid, int pid, unsigned int eType); //SKRIV EN FUNKTIONSFAN
 	
 	virtual glm::vec3 checkPlayerVPlayerCollision(glm::vec3 playerPos1, glm::vec3 playerPos2);
-	virtual glm::vec3 checkPlayerVBulletCollision(glm::vec3 playerPos, glm::vec3 bulletPos);
+	virtual glm::vec3 checkPlayerVBulletCollision(glm::vec3 playerPos, glm::vec3 bulletPos, vec3 size);
 	virtual std::vector<glm::vec4> PlayerVWorldCollision(glm::vec3 playerPos);
 	virtual glm::vec4 BulletVWorldCollision(glm::vec3 bulletPos, vec3 bulletVel, vec3 bulletDir, float dt);
 	virtual glm::vec3 checkBulletVWorldCollision(glm::vec3 bulletPos);
@@ -132,6 +131,8 @@ public:
 	virtual void receivePlayerBox(std::vector<float> pBox, float rad);
 	virtual void receivePlayerRad(float rad);
 	virtual void receiveEffectBox(std::vector<float> eBox, unsigned int etype, int pID, int eID);
+
+	virtual void cullingPointvsRoom(glm::vec3* pos, int* arr_interIDs, int& interCount, int maxsize);
 };
 
 extern "C" PHYSICS_API Physics* CreatePhysics();

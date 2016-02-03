@@ -6,6 +6,7 @@
 
 #include "UIElements.h"
 #include "Button.h"
+#include "StaticTextureBoxes.h"
 #include "VertexBufferUI.h"
 #include "uiVertex.h"
 
@@ -69,6 +70,8 @@ public:
 	void setWorldMatrix(float x, float y, int objId);
 
 	void setTextureId(std::vector<GLuint> uiTextureIds);
+
+
 };
 
 #endif

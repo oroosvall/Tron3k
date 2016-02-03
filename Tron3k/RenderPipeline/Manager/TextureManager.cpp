@@ -65,7 +65,7 @@ void TextureManager::update(float dt)
 		if (textureList[i].state == TEXTURE_LOADED)
 		{
 			textureList[i].timeNotUsed += dt;
-			if (textureList[i].timeNotUsed > 10.0f)
+			if (textureList[i].timeNotUsed > 100.0f)
 			{
 				printf("Texture %d have not been used for 300seconds unloading\n", i);
 				glDeleteTextures(1, &textureList[i].textureID);
@@ -153,13 +153,13 @@ void TextureManager::bindDefault(GLuint shader, GLuint textureLocation, TEXTURE_
 		slot = &defaultGlowSlot;
 	}
 
-	if (textureSlotBinds[*slot - GL_TEXTURE0] != texture)
-	{
+	//f (textureSlotBinds[*slot - GL_TEXTURE0] != texture)
+	//
 		*slot = GL_TEXTURE0 + textureUnitCounter;
 		textureUnitCounter = ((textureUnitCounter + 1) % maxTextureUnitSize);
 
-		textureSlotBinds[*slot - GL_TEXTURE0] = texture;
-	}
+	//	textureSlotBinds[*slot - GL_TEXTURE0] = texture;
+	//}
 	
 	glActiveTexture(*slot);
 	glBindTexture(GL_TEXTURE_2D, texture);
@@ -173,14 +173,14 @@ void TextureManager::bind(TextureInfo &ti, GLuint shader, GLuint textureLocation
 	GLuint texture = ti.textureID;
 	GLuint slot = ti.lastTextureSlot;
 
-	if (textureSlotBinds[slot - GL_TEXTURE0] != texture)
-	{
+	//if (textureSlotBinds[slot - GL_TEXTURE0] != texture)
+	//{
 		slot = GL_TEXTURE0 + textureUnitCounter;
 		textureUnitCounter = ((textureUnitCounter + 1) % maxTextureUnitSize);
 
-		textureSlotBinds[slot - GL_TEXTURE0] = texture;
-		ti.lastTextureSlot = slot;
-	}
+	//	textureSlotBinds[slot - GL_TEXTURE0] = texture;
+	//	ti.lastTextureSlot = slot;
+	//}
 
 	glActiveTexture(slot);
 	glBindTexture(GL_TEXTURE_2D, texture);

@@ -22,6 +22,7 @@ Role::Role(string inLoadedRoles[NROFROLES][NROFREADPROPERTIES])
 	currentWpn = 0;
 	health = 1;
 	swapWeaponTimer = 0.0f;
+	role = ROLES::NROFROLES;
 }
 
 Role::~Role()
@@ -107,6 +108,7 @@ void Role::loadRoleSpecifics(int _role)
 			mobility->init();
 			consumable = new Consumable();
 			consumable->init(CONSUMABLE_TYPE::CLUSTERGRENADE);
+			this->size = glm::vec3(0.4, 0.9, 0.4);
 			break;
 		case DESTROYER:
 			role = 1;
@@ -116,6 +118,7 @@ void Role::loadRoleSpecifics(int _role)
 			mobility->init();
 			consumable = new Consumable();
 			consumable->init(CONSUMABLE_TYPE::OVERCHARGE);
+			this->size = glm::vec3(0.8, 0.75, 0.8);
 			break;
 		case MOBILITY:
 			role = 2;
@@ -125,6 +128,7 @@ void Role::loadRoleSpecifics(int _role)
 			mobility->init();
 			consumable = new Consumable();
 			consumable->init(CONSUMABLE_TYPE::LIGHTSPEED);
+			this->size = glm::vec3(0.8, 0.85, 0.8);
 			break;
 		case BRUTE:
 			role = 3;
@@ -135,6 +139,7 @@ void Role::loadRoleSpecifics(int _role)
 			consumable = new Consumable();
 			consumable->init(CONSUMABLE_TYPE::THERMITEGRENADE);
 			consumable->init(CONSUMABLE_TYPE::THERMITEGRENADE);
+			this->size = glm::vec3(0.6, 0.85, 0.6);
 			break;
 		case MANIPULATOR:
 			role = 4;
@@ -144,6 +149,7 @@ void Role::loadRoleSpecifics(int _role)
 			mobility->init();
 			consumable = new Consumable();
 			consumable->init(CONSUMABLE_TYPE::VACUUMGRENADE);
+			this->size = glm::vec3(0.7, 0.8, 0.7);
 			break;
 	}
 
@@ -172,11 +178,11 @@ void Role::update(float dt)
 	}
 }
 
-void Role::chooseRole(int role)
+void Role::chooseRole(int r)
 {
-	if (role < NROFROLES)
+	if (r < NROFROLES)
 	{
-		this->role = role;
+		role = r;
 		health = atoi(loadedRoles[role][HEALTH].c_str());
 		maxHealth = health;
 

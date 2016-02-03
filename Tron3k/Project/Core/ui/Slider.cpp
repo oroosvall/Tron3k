@@ -69,7 +69,7 @@ void Slider::createAdditionalPoint()
 void Slider::render(int id)
 {
 	for(int i = 0; i < 2; i++)
-		uiRender->ui_renderQuad((float*)&worldMatrix[i][0][0], textureIndexList[i], 1.0f, id);
+		uiRender->ui_renderQuad((float*)&worldMatrix[i][0][0], (float*)&pivot.x, textureIndexList[i], 1.0f, id);
 }
 
 void Slider::setWorldMatrix(float x, float y, int id)
@@ -123,29 +123,16 @@ void Slider::setTexture(std::vector<GLuint> uiTextureIds)
 	}
 }
 
+void Slider::scaleBar(float procentOfMax, bool fromRight) //
+{
+	pivot = glm::vec3(1.0f, 0.0f, 0.0f);
 
+	float scale = (textureRes[0].x * procentOfMax) / 1920.0f;
+	worldMatrix[0][0].x = scale;
 
+	float fullLength = textureRes[0].x / 1920.0f;
+	pivot.x = fullLength - scale;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	if (!fromRight)
+		pivot.x = -pivot.x;
+}

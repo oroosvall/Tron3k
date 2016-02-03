@@ -37,6 +37,9 @@ public:
 	virtual GAMEMODE_MSG update(float dt) = 0;
 	GAMEMODE_TYPE getType() { return gameMode; };
 	float getTimer() { return timer; };
+
+	virtual bool allowTeamChange() { return true; };
+	virtual bool allowRoleChange() { return true; };
 };
 
 #endif

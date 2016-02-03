@@ -19,6 +19,7 @@ void ContentManager::init()
 	//blank_glow =		loadTexture("GameFiles/Textures/blank_g.dds");
 
 	//skyTexture = loadTexture("GameFiles/Textures/skybox.dds");
+	decalTexture = loadTexture("GameFiles/Textures/decal.png");
 
 	//lightWallTex = loadTexture("GameFiles/Textures/Blob.png");
 
@@ -112,7 +113,6 @@ void ContentManager::init()
 	}
 	else
 		f_portal_culling = false;
-
 }
 
 void ContentManager::release()
@@ -124,6 +124,7 @@ void ContentManager::release()
 	glDeleteTextures(1, &skyTexture);
 
 	glDeleteTextures(1, &lightWallTex);
+	glDeleteTextures(1, &decalTexture);
 
 	testMap.release();
 
@@ -221,10 +222,16 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 	glEnable(GL_BLEND);
 
 
-	int portal = startTimer("Portals");
+	int portaltimer = startTimer("Portals");
 	if (f_portal_culling)
 	{
-		//render portals from the rendered chunks
+		for (int n = 0; n < nrChunks; n++)
+			renderNextChunks[n] = false;
+
+		renderNextChunks[0] = true;
+		renderNextChunks[testMap.currentChunk] = true;
+
+		PortalData* portal;
 		for (int n = 0; n < nrChunks; n++)
 		{
 			if (renderedChunks[n] == true)
@@ -232,46 +239,29 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 				int size = testMap.chunks[n].portals.size();
 				for (int p = 0; p < size; p++) // render the portals
 				{
-					// dont render if it bridges between chunks that are already in the rendernextqueue
-					//if (renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[0]] == false ||
-					//	renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[1]] == false)
+					portal = &testMap.chunks[n].portals[p];
+
+					if (renderNextChunks[portal->bridgedRooms[0]] == false ||
+						renderNextChunks[portal->bridgedRooms[1]] == false)
 					{
-						testMap.chunks[n].portals[p].render();
-					}
-				}
-			}
-		}
-
-		if (f_freeze_portals == false)
-		{
-			//Get queries
-			for (int n = 0; n < nrChunks; n++)
-				renderNextChunks[n] = false;
-
-			//set enviroment and current chunk to true
-			renderNextChunks[0] = true;
-			renderNextChunks[testMap.currentChunk] = true;
-
-			//get querie status from last frame
-			for (int n = 0; n < nrChunks; n++)
-			{
-				if (renderedChunks[n] == true)
-				{
-					int size = testMap.chunks[n].portals.size();
-					for (int p = 0; p < size; p++)
-					{
-						if (testMap.chunks[n].portals[p].passedCulling())
+						if (portal->rendered && portal->passedCulling())
 						{
-							renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[0]] = true;
-							renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[1]] = true;
+							renderNextChunks[portal->bridgedRooms[0]] = true;
+							renderNextChunks[portal->bridgedRooms[1]] = true;
+						}
+						if (portal->waiting == false)
+						{
+							//dont render if it bridges between chunks that are already in the rendernextqueue
+							portal->render();
+							portal->rendered = true;
+							portal->waiting = true;
 						}
 					}
-					renderedChunks[n] = false;
 				}
 			}
 		}
 	}
-	stopTimer(portal);
+	stopTimer(portaltimer);
 
 	if (f_render_abb || f_render_obb)
 	{
@@ -383,7 +373,8 @@ void ContentManager::renderThunderDome()
 
 void ContentManager::renderPlayer(AnimManager::animState state, glm::mat4 world, GLuint uniformKeyMatrixLocation, bool first, GLuint shader, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation)
 {
-	playerCharacters[state.role].draw(uniformKeyMatrixLocation, state.state, state.frame, first, shader, textureLocation, normalLocation, glowSpecLocation);
+	if (state.role != 5)
+		playerCharacters[state.role].draw(uniformKeyMatrixLocation, state.state, state.frame, first, shader, textureLocation, normalLocation, glowSpecLocation);
 }
 
 void* ContentManager::getChunkCollisionVectorAsPointer(int chunkID)
@@ -414,6 +405,12 @@ std::vector<std::vector<float>> ContentManager::getMeshBoxes()
 void ContentManager::bindLightwalTexture(GLuint shader, GLuint location)
 {
 	tm.bindTexture(lightWallTex, shader, location, DIFFUSE_FB);
+}
+
+void ContentManager::bindDecalTexture()
+{
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, decalTexture);
 }
 
 void ContentManager::setRoomID(int room)

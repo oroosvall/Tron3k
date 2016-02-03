@@ -133,7 +133,7 @@ void Client::in_new_connection(Packet* rec, Uint8 _conID)
 
 	temp = new Player();
 	temp->init("ClientName", glm::vec3(0, 0, 0), gamePtr->getPhysics());
-	gamePtr->createPlayer(temp, conID, 100, 0, true);
+	gamePtr->createPlayer(temp, conID, 100, ROLES::NROFROLES, true);
 	delete temp;
 	
 	printf("My connection ID : %d \n", conID);
@@ -153,6 +153,7 @@ void Client::in_event(Packet* rec, Uint8 _conID)
 		case NET_EVENT::PLAYER_JOINED:	in_event_player_joined(rec); break;
 		case NET_EVENT::PLAYER_LEFT: in_event_player_left(rec); break;
 		case NET_EVENT::GAMEMODE_DATA: in_event_gamemode_data(rec); break;
+		case NET_EVENT::PLAYERDATA: in_event_playerdata(rec); break;
 		case NET_EVENT::PLAYER_HIT: in_event_bullet_hit_player(rec); break;
 		case NET_EVENT::BULLET_WORLD_HIT: in_event_bullet_hit_world(rec); break;
 		case NET_EVENT::BULLET_EFFECT_HIT: in_event_bullet_hit_effect(rec); break;

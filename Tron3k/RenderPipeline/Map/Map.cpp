@@ -148,17 +148,17 @@ void Map::renderChunk(GLuint shader, GLuint shaderLocation, GLuint diffuseLocati
 			}
 		}
 		if(mat.textureMapIndex != -1)
-			tm->bindTexture(tex[materials[meshes[meshID].material].textureMapIndex].textureID, shader, diffuseLocation, DIFFUSE_FB);
+			tm->bindTexture(tex[mat.textureMapIndex].textureID, shader, diffuseLocation, DIFFUSE_FB);
 		else
 			tm->bindDefault(shader, diffuseLocation, DIFFUSE_FB);
 		
 		if (mat.normalMapIndex != -1)
-			tm->bindTexture(tex[materials[meshes[meshID].material].normalMapIndex].textureID, shader, normalLocation, NORMAL_FB);
+			tm->bindTexture(tex[mat.normalMapIndex].textureID, shader, normalLocation, NORMAL_FB);
 		else
 			tm->bindDefault(shader, diffuseLocation, DIFFUSE_FB);
 		
 		if (mat.specularMapIndex != -1)
-			tm->bindTexture(tex[materials[meshes[meshID].material].specularMapIndex].textureID, shader, glowLocation, GLOW_FB);
+			tm->bindTexture(tex[mat.specularMapIndex].textureID, shader, glowLocation, GLOW_FB);
 		else
 			tm->bindDefault(shader, diffuseLocation, DIFFUSE_FB);
 
@@ -456,12 +456,14 @@ void Map::loadMap(std::string mapName)
 	inFile.read((char*)spB, sizeof(SpawnPoint) * spTBCount);
 	inFile.read((char*)spFFA, sizeof(SpawnPoint) * spFFACount);
 
-	chunkAABB = new ABB[roomCount-1];
-	inFile.read((char*)chunkAABB, sizeof(ABB) * (roomCount-1));
 
-	for (int i = 1; i < roomCount; i++)
+	chunkAABB = new ABB[roomCount];
+
+	inFile.read((char*)chunkAABB, sizeof(ABB) * (roomCount));
+
+	for (int i = 0; i < roomCount; i++)
 	{
-		chunks[i].roomBox = chunkAABB[i - 1];
+		chunks[i].roomBox = chunkAABB[i];
 	}
 
 	inFile.close();
@@ -481,9 +483,6 @@ int Map::portalintersection(glm::vec3* oldPos, glm::vec3* newPos, int in_current
 				in_currentChunk = chunks[in_currentChunk].portals[n].bridgedRooms[1];
 			else
 				in_currentChunk = chunks[in_currentChunk].portals[n].bridgedRooms[0];
-	
-			printf("Now in room %d \n", in_currentChunk);
-	
 			return in_currentChunk;
 		}
 	

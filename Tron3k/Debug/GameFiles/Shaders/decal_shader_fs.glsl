@@ -15,6 +15,6 @@ void main()
 	WorldPosOut	= vec4(0);				
 	DiffuseOut	= vec4(0);	
 	NormalOut = vec4(0);
-	//GlowMap += texture(texsample, vec2(UV.x, 1.0f-UV.y)) * vec4(dynamicGlowColor, 0.4f);
-	GlowMap = vec4(color, inten);
+	GlowMap = texture(texsample, vec2(UV.x, 1.0f-UV.y)) * vec4(color, inten);
+	//GlowMap = vec4(color, inten);
 }

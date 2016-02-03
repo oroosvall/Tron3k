@@ -22,6 +22,8 @@ void TrueGrit::init(Player* myTarget)
 
 int TrueGrit::getData(float dt)
 {
+	if (!target->isAlive())
+		return 1;
 	if (target->getHP() < oldHealth)
 	{
 		damageTaken = oldHealth - target->getHP();
@@ -32,6 +34,8 @@ int TrueGrit::getData(float dt)
 
 int TrueGrit::setData(float dt)
 {
+	if (!target->isAlive())
+		return 1;
 	lifeTime -= dt;
 
 	if (!dashDone)

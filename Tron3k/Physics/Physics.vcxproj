@@ -20,15 +20,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Collision\Chunk.h" />
-    <ClInclude Include="Collision\CollideMesh.h" />
     <ClInclude Include="Collision\Geometry.h" />
+    <ClInclude Include="Collision\Meshes\CollideMesh.h" />
     <ClInclude Include="Effect\EffectMesh.h" />
     <ClInclude Include="Physics.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Collision\Chunk.cpp" />
-    <ClCompile Include="Collision\CollideMesh.cpp" />
     <ClCompile Include="Collision\Geometry.cpp" />
+    <ClCompile Include="Collision\Meshes\CollideMesh.cpp" />
     <ClCompile Include="Effect\EffectMesh.cpp" />
     <ClCompile Include="Physics.cpp" />
   </ItemGroup>

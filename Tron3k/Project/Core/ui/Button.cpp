@@ -19,6 +19,7 @@ Button::Button()
 					};
 	uniqueKey = -1;
 	hoverCheckKey = 0;
+	pivot = glm::vec3(0);
 }
 
 Button::Button(glm::vec2 center, int textureId1, int textureId2, int uniqueKey, int hoverKey, IRenderPipeline* uiRender, glm::vec2 textRes1, glm::vec2 textRes2)
@@ -53,7 +54,7 @@ Button::~Button() {}
 
 void Button::render(int id)
 {
-	uiRender->ui_renderQuad((float*)&worldMatrix[0][0], textureIdInUse, 1.0f, id);
+	uiRender->ui_renderQuad((float*)&worldMatrix[0][0], (float*)&pivot.x, textureIdInUse, 1.0f, id);
 }
 
 void Button::setWorldMatrix(float x, float y, int id)
@@ -132,4 +133,19 @@ void Button::setTexture(std::vector<GLuint> uiTextureIds)
 		textureIdList[i] = uiTextureIds[textureIdList[i]];
 	}
 	textureIdInUse = textureIdList[0];
+}
+
+void Button::scaleBar(float procentOfMax, bool fromRight)
+{
+	pivot = glm::vec3(1.0f, 0.0f, 0.0f);
+
+	float scale = (textureRes[0].x * procentOfMax) / 1920.0f;
+	worldMatrix[0].x = scale;
+
+	float fullLength = textureRes[0].x / 1920.0f;
+	pivot.x = fullLength - scale;
+	
+	if (!fromRight)
+		pivot.x = -pivot.x;
+
 }
