@@ -96,7 +96,7 @@ void Core::update(float dt)
 	}
 
 	glfwPollEvents();
-	console.update(_name, 'A'); //Updates to check for new messages and commands
+	console.update(_name); //Updates to check for new messages and commands
 	
 	if (cursorVisible && renderPipe)
 	{
@@ -463,8 +463,9 @@ void Core::upClient(float dt)
 		//Command and message handle
 		if (console.messageReady())
 		{
-			top->msg_out = console.getMessage();
-			top->scope_out = Uint8(ALL);
+			char scope;
+			top->msg_out = console.getMessage(scope);
+			top->scope_out = Uint8(scope);
 		}
 
 		clientHandleCmds();
@@ -590,8 +591,9 @@ void Core::upServer(float dt)
 		//handle commands and messages
 		if (console.messageReady())
 		{
-			top->msg_out = console.getMessage();
-			top->scope_out = Uint8(ALL);
+			char scope;
+			top->msg_out = console.getMessage(scope);
+			top->scope_out = Uint8(ALL); //Server always communicates with everyone
 		}
 
 		std::vector<BulletHitPlayerInfo> bulletHitsOnPlayer = game->getAllHitPlayerInfo();

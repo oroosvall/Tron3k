@@ -564,7 +564,7 @@ public:
 			{
 				Packet* out = new Packet();
 				*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::TEAM_CHANGE) << p_conID << Uint8(9); //9 is a good error code, whatever
-				branch(out, -1);
+				con[p_conID].send(out);
 				delete out;
 				return;
 			}
@@ -573,7 +573,7 @@ public:
 			{
 				Packet* out = new Packet();
 				*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::TEAM_CHANGE) << p_conID << Uint8(9);
-				branch(out, -1);
+				con[p_conID].send(out);
 				delete out;
 				return;
 			}
@@ -636,7 +636,7 @@ public:
 			{
 				Packet* out = new Packet();
 				*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::ROLESWITCH) << p_conID << Uint8(9);
-				branch(out, -1);
+				con[p_conID].send(out);
 				delete out;
 				return;
 			}

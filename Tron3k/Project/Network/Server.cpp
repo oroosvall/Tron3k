@@ -391,6 +391,15 @@ void Server::in_message(Packet* rec, Uint8 conID)
 		consolePtr->printMsg(msg_in, name, scope_in);
 		if (scope_in == NET_MESSAGE::ALL)
 			branch(rec, conID);
+		if (scope_in == NET_MESSAGE::TEAM)
+		{
+			std::vector<int>* team = gamePtr->getTeamConIds(gamePtr->getPlayer(conID_in)->getTeam());
+			for (int c = 0; c < team->size(); c++)
+			{
+				if (team->at(c) != conID)
+					con[team->at(c)].send(rec);
+			}
+		}
 	}
 	else
 		consolePtr->printMsg("ERROR in_message", "System", 'S');
