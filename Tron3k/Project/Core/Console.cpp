@@ -83,13 +83,17 @@ bool Console::update(string clientName, char scope)
 			{
 				cmd = msg;
 				cmdReady = true;
+				addMsg(msg, clientName, scope);
 			}
 			else
 			{
-				lastMsg = msg;
-				msgReady = true;
+				if (msg.size() > 0)
+				{
+					lastMsg = msg;
+					msgReady = true;
+					addMsg(msg, clientName, scope);
+				}
 			}
-			addMsg(msg, clientName, scope);
 			inChatMode = false;
 		}
 	}
