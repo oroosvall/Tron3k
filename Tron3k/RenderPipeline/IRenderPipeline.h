@@ -85,8 +85,11 @@ public:
 	virtual void setChatHistoryText(std::string text) = 0;
 	virtual void setChatTypeMessage(std::string text) = 0;
 
-	virtual unsigned int createMesh(...) = 0;
-	virtual void removeMesh(unsigned int id) = 0;
+	virtual int createTextObject(std::string text, int fontSize, glm::vec2 pos) = 0;
+	virtual void setTextObjectText(int id, std::string text) = 0;
+	virtual void setTextPos(int id, glm::vec2 pos) = 0;
+	virtual void removeTextObject(int id) = 0;
+	virtual void renderTextObject(int id) = 0;
 
 	virtual void setGBufferWin(unsigned int WindowWidth, unsigned int WindowHeight) = 0;
 

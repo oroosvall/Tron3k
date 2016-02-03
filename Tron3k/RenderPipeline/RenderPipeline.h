@@ -123,6 +123,8 @@ private:
 
 	bool renderDebugText = true;
 
+	vector<Text*> textObjects;
+
 public:
 
 	RenderPipeline() {};
@@ -162,8 +164,11 @@ public:
 	virtual void setChatHistoryText(std::string text);
 	virtual void setChatTypeMessage(std::string text);
 
-	virtual unsigned int createMesh(...) { return 0; }; // fix parameters
-	virtual void removeMesh(unsigned int id) {};
+	virtual int createTextObject(std::string text, int fontSize, glm::vec2 pos);
+	virtual void setTextObjectText(int id, std::string text);
+	virtual void setTextPos(int id, glm::vec2 pos);
+	virtual void removeTextObject(int id);
+	virtual void renderTextObject(int id);
 
 	virtual void setGBufferWin(unsigned int WindowWidth, unsigned int WindowHeight);
 

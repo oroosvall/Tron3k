@@ -982,7 +982,7 @@ void RenderPipeline::ui_renderQuad(float* mat, float* pivot, GLuint textureID, f
 	temp.lastTextureSlot = GL_TEXTURE0;
 	temp.textureID = textureID;
 	TextureManager::gTm->bind(temp, uiShader, ui_Texture);
-	glBindTexture(GL_TEXTURE_2D, textureID);
+	//glBindTexture(GL_TEXTURE_2D, textureID);
 	glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, mat);
 	glProgramUniform3fv(uiShader, uniformPivotLocation, 1, pivot);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
@@ -1024,4 +1024,36 @@ bool* RenderPipeline::getRenderedChunks(int& get_size)
 {
 	get_size = contMan.nrChunks;
 	return contMan.renderedChunks;
+}
+
+int RenderPipeline::createTextObject(std::string text, int fontSize, glm::vec2 pos)
+{
+	int id = textObjects.size();
+
+	textObjects.push_back(new Text(text, fontSize, fontTexture, pos));
+
+	return id;
+}
+
+void RenderPipeline::setTextObjectText(int id, std::string text)
+{
+	textObjects[id]->setText(text);
+}
+
+void RenderPipeline::setTextPos(int id, glm::vec2 pos)
+{
+	textObjects[id]->setPos(pos);
+}
+
+void RenderPipeline::removeTextObject(int id)
+{
+	delete textObjects[id];
+}
+
+void RenderPipeline::renderTextObject(int id)
+{
+	glUseProgram(textShader);
+	TextureManager::gTm->bindTexture(fontTexture, textShader, textShaderLocation, DIFFUSE_FB);
+
+	textObjects[id]->draw();
 }
