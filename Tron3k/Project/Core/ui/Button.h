@@ -46,7 +46,7 @@ public:
 
 	virtual void setTexture(std::vector<GLuint> uiTextureIds);
 
-	virtual void scaleBar(float procentOfMax, bool fromRight);;
+	virtual void scaleBar(float procentOfMax, bool fromRight);
 };
 
 #endif
