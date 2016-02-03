@@ -34,7 +34,7 @@ int LightwallEffect::update(float dt)
 		if (curVel.x != playerVel.x || curVel.z != playerVel.z ||
 			endPoint.y < pos.y - FLT_EPSILON || endPoint.y > pos.y + FLT_EPSILON)
 		{
-
+			endPoint = myPlayer->getPos();
 			expandDong = false;
 			lifeTime = 10.0f;
 			if (length(endPoint - pos) < 1.5f)
