@@ -933,22 +933,6 @@ glm::vec4 Physics::checkBulletVEffectCollision(glm::vec3 bulletPos, vec3 bulletV
 
 					}
 				}
-				if (effectBoxes[i]->getEType() == eType)
-				{
-					if (effectBoxes[i]->getEType() == 0)//Lightwall, aka OBB
-					{
-						collided = checkSpherevOBBlwCollision(bulletBox.getSphere(), effectBoxes[i]->getOBB());
-					}
-					else if (effectBoxes[i]->getEType() > 8)//False box, no collision
-					{
-
-					}
-					else //evrything else is a sphere, if not, not my goddamn problem
-					{
-						collided = checkSpherevSphereCollision(bulletBox.getSphere(), effectBoxes[i]->getSphere());
-					}
-					collided.w *= (4 - k);
-				}
 			}
 		}
 	}
@@ -1136,6 +1120,11 @@ void Physics::receiveEffectBox(std::vector<float> eBox, unsigned int etype, int 
 		sphere.pos.y = eBox[1];
 		sphere.pos.z = eBox[2];
 		sphere.radius = eBox[3];
+
+		aabb.pos = sphere.pos;
+		aabb.max = aabb.pos + vec3(eBox[3], eBox[3], eBox[3]);
+		aabb.min = aabb.pos - vec3(eBox[3], eBox[3], eBox[3]);
+		effMesh->setAABB(aabb);
 		effMesh->setSphere(sphere);
 		effMesh->setPos(sphere.pos);
 	}
