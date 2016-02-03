@@ -100,6 +100,9 @@
     <Filter Include="Source Files\Core\Game\Gamemodes">
       <UniqueIdentifier>{38580f1e-01aa-4511-9fd3-970da0b217fd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Core\Ui\uiClasses\Text">
+      <UniqueIdentifier>{1c871bed-abad-47ab-ae8c-443e5cce4ddb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -305,6 +308,9 @@
     </ClCompile>
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\ThermiteCloud.cpp">
       <Filter>Source Files\Core\Game\Role\PlayerEffects\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\ui\InputBox.cpp">
+      <Filter>Source Files\Core\Ui\uiClasses\Text</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -553,6 +559,9 @@
     </ClInclude>
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\ThermiteCloud.h">
       <Filter>Source Files\Core\Game\Role\PlayerEffects\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\ui\InputBox.h">
+      <Filter>Source Files\Core\Ui\uiClasses\Text</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

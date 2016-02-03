@@ -75,6 +75,11 @@ void UIManager::init(Console* console)
 	texturePaths.push_back("GameFiles/Textures/UITextures/class_selection_stalker.png"); //13
 	texturePaths.push_back("GameFiles/Textures/UITextures/class_selection_punisher.png"); //14
 
+	//Ip input
+	texturePaths.push_back("GameFiles/Textures/UITextures/ip_field.png"); //15
+	//Port input
+	texturePaths.push_back("GameFiles/Textures/UITextures/port_field.png"); //16
+
 	loadInTexture();
 
 	//Open tthe first groups file
