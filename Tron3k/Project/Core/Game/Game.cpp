@@ -391,7 +391,8 @@ void Game::sendPlayerRadSize(float rad)
 
 void Game::sendWorldBoxes(std::vector<std::vector<float>> wBoxes)
 {
-	physics->receiveWorldBoxes(wBoxes);
+	int x = 0;
+	//physics->receiveWorldBoxes(wBoxes);
 }
 
 void Game::updateEffectBox(Effect* effect)
@@ -554,14 +555,14 @@ void Game::checkPvPCollision()
 
 void Game::checkPlayerVEffectCollision()
 {
-	std::vector<glm::vec4> collNormals;
+	glm::vec4 collNormals = vec4(0, 0, 0, 0);
 	if (gameState == Gamestate::ROAM || gameState == Gamestate::CLIENT)
 	{
 		Player* local = playerList[localPlayerId];
 		//Collision for all wall-like effects i.e. only Lightwall and Thunderdome
 
-		std::vector<glm::vec4> collNormalWalls;
-		std::vector<glm::vec4> collNormalDomes;
+		glm::vec4 collNormalWalls;
+		glm::vec4 collNormalDomes;
 
 		for (int c = 0; c < effects[EFFECT_TYPE::LIGHT_WALL].size(); c++)
 		{
@@ -570,9 +571,7 @@ void Game::checkPlayerVEffectCollision()
 			if (((LightwallEffect*)effects[EFFECT_TYPE::LIGHT_WALL][c])->getCollidable() || localPlayerId != pid)
 			{
 				collNormalWalls = physics->checkPlayerVEffectCollision(local->getPos(), EFFECT_TYPE::LIGHT_WALL, eid);
-				collNormals.reserve(collNormalWalls.size()); // preallocate memory
-				collNormals.insert(collNormals.end(), collNormalWalls.begin(), collNormalWalls.end());
-				collNormalWalls.clear();
+				playerList[localPlayerId]->addCollisionNormal(collNormalWalls);
 			}
 
 		}
@@ -582,33 +581,23 @@ void Game::checkPlayerVEffectCollision()
 			int eid = -1, pid = -1;
 			effects[EFFECT_TYPE::THUNDER_DOME][c]->getId(pid, eid);
 			collNormalDomes = physics->checkPlayerVEffectCollision(local->getPos(), EFFECT_TYPE::THUNDER_DOME, eid);
-
-			glm::vec3 vel = local->getVelocity();
-			if (collNormalDomes.size() > 0)
-				int x = 0;
+			playerList[localPlayerId]->addCollisionNormal(collNormalDomes);
 			//this is to be changed, we need to calculate a proper normal for the dome
 
 			//vec3 n = vec3(collNormalDomes[0]);
 
 			//n = normalize(n);
-
-			collNormals.reserve(collNormalDomes.size()); // preallocate memory
-			collNormals.insert(collNormals.end(), collNormalDomes.begin(), collNormalDomes.end());
-			collNormalDomes.clear();
 		}
 
 		/*//merge normals into one vector
 		collNormals.reserve(collNormalWalls.size() + collNormalDomes.size()); // preallocate memory
 		collNormals.insert(collNormals.end(), collNormalWalls.begin(), collNormalWalls.end());
 		collNormals.insert(collNormals.end(), collNormalDomes.begin(), collNormalDomes.end());*/
-
-		if (collNormals.size() > 0)
-			playerList[localPlayerId]->setCollisionInfo(collNormals);
 	}
 	if (gameState == Gamestate::ROAM || gameState == Gamestate::SERVER)
 	{
 		//Collision for all non-wall effects
-		collNormals.clear();
+
 		for (int j = 0; j < max_con; j++)
 		{
 			if (playerList[j] != nullptr)
@@ -624,7 +613,7 @@ void Game::checkPlayerVEffectCollision()
 							if (pid != j && playerList[pid]->getTeam() != playerList[j]->getTeam())
 							{
 								collNormals = physics->checkPlayerVEffectCollision(playerList[j]->getPos(), t, eid);
-								if (collNormals.size() != 0)
+								if (collNormals != vec4(0, 0, 0, 0))
 								{
 									effects[t][i]->thisPlayerHit(j);
 									EffectHitPlayerInfo hi;
@@ -765,13 +754,13 @@ void Game::checkBulletVWorldCollision(float dt)
 
 void Game::checkBulletVEffectCollision(float dt)
 {
-	std::vector<glm::vec4> collNormals;
+	glm::vec4 collNormals = vec4(0, 0, 0, 0);
 	if (gameState == Gamestate::ROAM || gameState == Gamestate::SERVER)
 	{
 		//Collision for all wall-like effects i.e. only Lightwall and Thunderdome
 
-		std::vector<glm::vec4> collNormalWalls;
-		std::vector<glm::vec4> collNormalDomes;
+		glm::vec4 collNormalWalls = vec4(0, 0, 0, 0);
+		glm::vec4 collNormalDomes = vec4(0, 0, 0, 0);
 
 		for (unsigned int b = 0; b < BULLET_TYPE::NROFBULLETS; b++)
 		{
@@ -784,7 +773,7 @@ void Game::checkBulletVEffectCollision(float dt)
 					if (((LightwallEffect*)effects[EFFECT_TYPE::LIGHT_WALL][c])->getCollidable())
 					{
 						collNormalWalls = physics->checkBulletVEffectCollision(bullets[b][j]->getPos(),	bullets[b][j]->getVel(), bullets[b][j]->getDir(), EFFECT_TYPE::LIGHT_WALL, eid, dt);
-						if (collNormalWalls.size() > 0)
+						if (collNormalWalls != vec4(0, 0, 0, 0))
 						{
 							BulletHitEffectInfo bi;
 							bullets[b][j]->getId(bi.bulletPID, bi.bulletBID);
@@ -792,11 +781,10 @@ void Game::checkBulletVEffectCollision(float dt)
 							bi.et = EFFECT_TYPE::LIGHT_WALL;
 							bi.hitPos = bullets[b][j]->getPos();
 							bi.hitDir = bullets[b][j]->getDir();
-							bi.collisionNormal = collNormalWalls[0];
+							bi.collisionNormal = collNormalWalls;
 							allBulletHitsOnEffects.push_back(bi);
 							
 						}
-						collNormalWalls.clear();
 					}
 
 				}
@@ -805,7 +793,7 @@ void Game::checkBulletVEffectCollision(float dt)
 					int eid = -1, pid = -1;
 					effects[EFFECT_TYPE::THUNDER_DOME][c]->getId(pid, eid);
 					collNormalDomes = physics->checkPlayerVEffectCollision(bullets[b][j]->getPos(), EFFECT_TYPE::THUNDER_DOME, eid);
-					if (collNormalDomes.size() > 0)
+					if (collNormalDomes != vec4(0, 0, 0, 0))
 					{
 						int x = 0;
 						BulletHitEffectInfo bi;
@@ -814,11 +802,10 @@ void Game::checkBulletVEffectCollision(float dt)
 						bi.et = EFFECT_TYPE::THUNDER_DOME;
 						bi.hitPos = bullets[b][j]->getPos();
 						bi.hitDir = bullets[b][j]->getDir();
-						bi.collisionNormal = collNormalDomes[0];
+						bi.collisionNormal = collNormalDomes;
 						allBulletHitsOnEffects.push_back(bi);
 					}
 						//glm::vec3 vel = bullets[b][j]->getPos()->getVelocity();
-					collNormalDomes.clear();
 				}
 			}
 		}

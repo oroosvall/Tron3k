@@ -260,6 +260,7 @@ void Core::upRoam(float dt)
 		renderPipe->getSpawnpoints(*game->getSpawnpoints());
 		// fetch all collision boxes
 		bool allchunksSent = false;
+		
 		for (int i = 0; !allchunksSent; i++)
 			allchunksSent = sendChunkBoxes(i);
 		sendCapPointBoxes();
