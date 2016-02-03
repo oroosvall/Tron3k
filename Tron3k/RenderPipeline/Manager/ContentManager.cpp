@@ -27,7 +27,7 @@ void ContentManager::init()
 	lightWallTex = 0;
 
 	skyTexture = tm.createTexture("GameFiles/Textures/skybox.dds");
-	lightWallTex = tm.createTexture("GameFiles/Textures/Blob.dds");
+	lightWallTex = tm.createTexture("GameFiles/Textures/Blob.png");
 
 	//addToStreamQueue(&skyTexture, "GameFiles/Textures/skybox.dds");
 	//addToStreamQueue(&lightWallTex, "GameFiles/Textures/Blob.png");

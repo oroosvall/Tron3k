@@ -155,12 +155,12 @@ void Map::renderChunk(GLuint shader, GLuint shaderLocation, GLuint diffuseLocati
 		if (mat.normalMapIndex != -1)
 			tm->bindTexture(tex[mat.normalMapIndex].textureID, shader, normalLocation, NORMAL_FB);
 		else
-			tm->bindDefault(shader, diffuseLocation, DIFFUSE_FB);
+			tm->bindDefault(shader, normalLocation, DIFFUSE_FB);
 		
 		if (mat.specularMapIndex != -1)
 			tm->bindTexture(tex[mat.specularMapIndex].textureID, shader, glowLocation, GLOW_FB);
 		else
-			tm->bindDefault(shader, diffuseLocation, DIFFUSE_FB);
+			tm->bindDefault(shader, glowLocation, DIFFUSE_FB);
 
 		//glActiveTexture(GL_TEXTURE0);
 		//if(mat.textureMapIndex != -1)
