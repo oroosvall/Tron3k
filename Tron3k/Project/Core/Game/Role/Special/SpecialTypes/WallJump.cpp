@@ -21,6 +21,18 @@ bool WallJump::allowedToActivate(Player* p)
 		{
 			if (cNorms[c].y < 0.5f && cNorms[c].y > -0.2f)
 			{
+				float angle = dot(vec3(cNorms[c]), p->getDir());
+				if (angle < -0.8f || angle > 0.8f)
+				{
+					p->movmentSpecialAnimUse(0); // regular jump anim
+					return true;
+				}
+
+				if(glm::cross(vec3(cNorms[c]), p->getDir()).y > 0)
+					p->movmentSpecialAnimUse(2); // right anim
+				else
+					p->movmentSpecialAnimUse(1); // left anim
+
 				return true;
 			}
 		}

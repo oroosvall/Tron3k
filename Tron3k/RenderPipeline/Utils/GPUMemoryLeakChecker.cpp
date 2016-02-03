@@ -27,6 +27,8 @@ unsigned int bufferBinds = 0;
 
 unsigned int shaderBinds = 0;
 
+unsigned int stateChange = 0;
+
 GLuint lastProgram = 0;
 GLenum currentActiveTexture = GL_TEXTURE0;
 
@@ -117,6 +119,45 @@ void glDeleteTexture_D(GLsizei n, GLuint* id)
 	{
 		if (genTextureCheck[i].bufferID == *id)
 		{
+
+
+			int oldW = 0, oldH = 0;
+			int oldSize = 0;
+
+			int compressed = 0;
+
+			int internalComponentSize = 0;
+
+			GLenum target = GL_TEXTURE_2D;
+			GLint level = 0;
+			glBindTexture(target, *id);
+			glGetTexLevelParameteriv(target, level, GL_TEXTURE_COMPRESSED, (GLint*)&compressed);
+			if (compressed)
+				glGetTexLevelParameteriv(target, level, GL_TEXTURE_COMPRESSED_IMAGE_SIZE, &oldSize);
+			else
+			{
+				glGetTexLevelParameteriv(target, level, GL_TEXTURE_WIDTH, &oldW);
+				glGetTexLevelParameteriv(target, level, GL_TEXTURE_HEIGHT, &oldH);
+
+				glGetTexLevelParameteriv(target, level, GL_TEXTURE_RED_SIZE, &internalComponentSize);
+				int temp;
+				glGetTexLevelParameteriv(target, level, GL_TEXTURE_GREEN_SIZE, &temp);
+				internalComponentSize += temp;
+				glGetTexLevelParameteriv(target, level, GL_TEXTURE_BLUE_SIZE, &temp);
+				internalComponentSize += temp;
+				glGetTexLevelParameteriv(target, level, GL_TEXTURE_ALPHA_SIZE, &temp);
+				internalComponentSize += temp;
+				glGetTexLevelParameteriv(target, level, GL_TEXTURE_DEPTH_SIZE, &temp);
+				internalComponentSize += temp;
+
+				internalComponentSize /= 8;
+
+				oldSize = oldW * oldH * internalComponentSize;
+
+			}
+
+			memusage -= oldSize;
+
 			glDeleteTextures(n, id);
 			genTextureCheck.erase(genTextureCheck.begin() + i);
 			break;
@@ -165,12 +206,12 @@ void glActiveTexture_D(GLenum texture)
 
 void glBindTexture_D(GLenum target, GLuint texture)
 {
-	if (textureBindMap[currentActiveTexture - GL_TEXTURE0] != texture)
-	{
+	//if (textureBindMap[currentActiveTexture - GL_TEXTURE0] != texture)
+	//{
 		textureBinds++;
 		glBindTexture(target, texture);
-		textureBindMap[currentActiveTexture - GL_TEXTURE0] = texture;
-	}
+	//	textureBindMap[currentActiveTexture - GL_TEXTURE0] = texture;
+	//}
 }
 
 void glBindBuffer_D(GLenum target, GLuint buffer)
@@ -243,8 +284,9 @@ void glTexImage2D_D(GLenum target, GLint level, GLint internalFormat, GLsizei wi
 		internalComponentSize /= 8;
 
 		newSize = newW * newH * internalComponentSize;
-
 	}
+
+	printf("Texture size %d bytes\n", newSize);
 
 	memusage += (newSize - oldSize);
 
@@ -369,6 +411,18 @@ void reportGPULeaks()
 
 }
 
+void glEnable_D(GLenum state)
+{
+	stateChange++;
+	glEnable(state);
+}
+
+void glDisable_D(GLenum state)
+{
+	stateChange++;
+	glDisable(state);
+}
+
 #undef glGenBuffers
 #undef glGenVertexArrays
 #undef glGenTextures
@@ -391,6 +445,9 @@ void reportGPULeaks()
 #undef glCompressedTexImage2D
 
 #undef glUseProgram
+
+#undef glEnable
+#undef glDisable
 
 #define glGenBuffers(n,i)			glGenBuffers_D(n,i, __FILE__, __LINE__)
 #define glGenVertexArrays(n,i)		glGenVertexArray_D(n,i, __FILE__, __LINE__)
@@ -415,5 +472,7 @@ void reportGPULeaks()
 
 #define glCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, data) glCompressedTexImage2D_D(target, level, internalformat, width, height, border, imageSize, data)
 
-
 #define glUseProgram(program)	glUseProgram_D(program)
+
+#define glEnable(state)		glEnable_D(state)
+#define glDisable(state)	glDisable_D(state)

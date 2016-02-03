@@ -176,14 +176,11 @@ void Gbuffer::pushLights(SpotLight* light, int nrLight)
 {
 	glBindBuffer(GL_UNIFORM_BUFFER, lightBuffer);
 
-	for (int i = 0; i < nrLight; i++)
+	if (nrOfLights + nrLight < maxLights)
 	{
-		if (nrOfLights < maxLights)
-		{
-			//glBindBuffer(GL_UNIFORM_BUFFER, lightBuffer);
-			glBufferSubData(GL_UNIFORM_BUFFER, nrOfLights * sizeof(SpotLight), nrLight * sizeof(SpotLight), &light[i]);
-			nrOfLights++;
-		}
+		//glBindBuffer(GL_UNIFORM_BUFFER, lightBuffer);
+		glBufferSubData(GL_UNIFORM_BUFFER, nrOfLights * sizeof(SpotLight), nrLight * sizeof(SpotLight), &light[0]);
+		nrOfLights += nrLight;
 	}
 }
 
@@ -259,6 +256,7 @@ void Gbuffer::render(/*glm::vec3 playerPos, glm::vec3 playerDir*/)
 
 void Gbuffer::clearLights()
 {
+	//printf("Nr of Lights %d \n", nrOfLights);
 	nrOfLights = 0;
 }
 

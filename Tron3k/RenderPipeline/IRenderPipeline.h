@@ -61,13 +61,13 @@ public:
 	virtual void render() = 0;
 	virtual void finalizeRender() = 0;
 
-	virtual void addLight(SpotLight* newLight) = 0;
+	virtual void addLight(SpotLight* newLight, int roomID) = 0;
 	virtual void setChunkColorAndInten(int ID, float* color, float inten) = 0;
 
 	virtual void* getView() = 0;
 	virtual void renderMISC(int miscID, void* world, float* dgColor, float sgInten) = 0;
 	virtual void renderBullet(int bid, void* world, float* dgColor, float sgInten) = 0;
-	virtual void renderAnimation(int playerID, int roleID, void* world, AnimationState animState, float* dgColor, float sgInten, bool first) = 0;
+	virtual void renderAnimation(int playerID, int roleID, void* world, AnimationState animState, float* dgColor, float sgInten, bool first, int roomID) = 0;
 
 	virtual std::string getStatus() = 0;
 
@@ -85,8 +85,11 @@ public:
 	virtual void setChatHistoryText(std::string text) = 0;
 	virtual void setChatTypeMessage(std::string text) = 0;
 
-	virtual unsigned int createMesh(...) = 0;
-	virtual void removeMesh(unsigned int id) = 0;
+	virtual int createTextObject(std::string text, int fontSize, glm::vec2 pos) = 0;
+	virtual void setTextObjectText(int id, std::string text) = 0;
+	virtual void setTextPos(int id, glm::vec2 pos) = 0;
+	virtual void removeTextObject(int id) = 0;
+	virtual void renderTextObject(int id) = 0;
 
 	virtual void setGBufferWin(unsigned int WindowWidth, unsigned int WindowHeight) = 0;
 
@@ -103,16 +106,18 @@ public:
 	virtual void ui_initRender() = 0;
 	virtual void ui_InGameRenderInit() = 0;
 	virtual void ui_loadTexture(unsigned int* texid, char* filepath, int* xres, int* yres) = 0;
-	virtual void ui_renderQuad(float* mat, unsigned int textureID, float transp, int i) = 0;
+	virtual void ui_renderQuad(float* mat, float* pivot, unsigned int textureID, float transp, int i) = 0;
 	virtual void ui_textureRelease(std::vector<unsigned int> texids) = 0;
 	virtual int portalIntersection(float* pos1, float* pos2, int in_chunk) = 0;
 	virtual void setCullingCurrentChunkID(int roomID) = 0;
 
 	virtual void enableDepthTest() = 0;
 	virtual void disableDepthTest() = 0;
+	virtual void clearBothBuffers() = 0;
 
 	virtual int startExecTimer(std::string name) = 0;
 	virtual void stopExecTimer(int id) = 0;
+	virtual bool* getRenderedChunks(int& get_size) = 0;
 
 };
 

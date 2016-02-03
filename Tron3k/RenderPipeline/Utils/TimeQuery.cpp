@@ -23,6 +23,8 @@ void resetQuery()
 
 int startTimer(std::string name)
 {
+	if (querry.size() > 2000)
+		querry.clear();
 	TimeQuery t;
 	t.terminated = false;
 	t.name = name;

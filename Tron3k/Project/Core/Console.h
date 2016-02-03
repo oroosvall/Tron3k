@@ -23,6 +23,7 @@ private:
 		GLFW_KEY_Z, GLFW_KEY_X, GLFW_KEY_C, GLFW_KEY_V, GLFW_KEY_B, GLFW_KEY_N, GLFW_KEY_M, GLFW_KEY_COMMA, GLFW_KEY_PERIOD, GLFW_KEY_SPACE,
 		GLFW_KEY_1, GLFW_KEY_2, GLFW_KEY_3, GLFW_KEY_4, GLFW_KEY_5, GLFW_KEY_6, GLFW_KEY_7, GLFW_KEY_8, GLFW_KEY_9, GLFW_KEY_0, SWE_KEY_APOSTROPHE, SWE_KEY_DASH, SWE_KEY_PLUS};
 	string msg;
+	char scope = 'T';
 
 	string history[MAXHISTORY];
 	int latestMsg = MAXHISTORY-1;
@@ -41,12 +42,12 @@ private:
 public:
 	Console();
 	~Console();
-	bool update(string clientName, char scope);
+	bool update(string clientName);
 
 	void printMsg(string m, string n, char scope); //Immediately prints a message to history without affecting message being written
 
 	bool messageReady();
-	string getMessage();
+	string getMessage(char &s);
 
 	bool commandReady();
 	string getCommand();

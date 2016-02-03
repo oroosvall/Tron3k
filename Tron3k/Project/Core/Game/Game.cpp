@@ -346,7 +346,8 @@ void Game::createPlayer(Player* p, int conID, int hp, int role, bool isLocal)
 	playerList[conID]->setTeam(p->getTeam());
 	playerList[conID]->setHP(hp);
 	playerList[conID]->setRole(*templateRole);
-	playerList[conID]->getRole()->chooseRole(role);
+	if (role != ROLES::NROFROLES)
+		playerList[conID]->chooseRole(role);
 
 	if (isLocal)
 	{
@@ -710,7 +711,6 @@ void Game::checkPlayerVWorldCollision(float dt)
 {
 	if (localPlayerId != -1)
 	{
-
 		vec3 posadjust = vec3(0);
 		//lower with distance from eyes to center
 		std::vector<vec4> cNorms = physics->PlayerVWorldCollision(playerList[localPlayerId]->getPos() - (vec3(0, playerList[localPlayerId]->getRole()->getBoxModifier(), 0)));
@@ -930,37 +930,25 @@ void Game::removeConIDfromTeams(int conID)
 	}
 }
 
-void Game::addPlayerToTeam(int p_conID, int team, int spawnPosition)
+void Game::addPlayerToTeam(int p_conID, int team)
 {
 	switch (team)
 	{
 	case 0:
 		removeConIDfromTeams(p_conID);
-		//if (playerList[p_conID] != nullptr)
-		//	delete playerList[p_conID];
 		teamSpectators.push_back(p_conID);
 		playerList[p_conID]->setTeam(0);
 		break;
 	case 1:
 		removeConIDfromTeams(p_conID);
-		//if (playerList[p_conID] != nullptr)
-		//	delete playerList[p_conID];
 		teamOne.push_back(p_conID);
 		playerList[p_conID]->setTeam(1);
-		allowPlayerRespawn(p_conID, spawnPosition);
 
-		//if (playerList[p_conID]->isLocal())
-		//{
-
-		//}
 		break;
 	case 2:
 		removeConIDfromTeams(p_conID);
-		//if (playerList[p_conID] != nullptr)
-		//	delete playerList[p_conID];
 		teamTwo.push_back(p_conID);
 		playerList[p_conID]->setTeam(2);
-		allowPlayerRespawn(p_conID, spawnPosition);
 		break;
 	}
 }
@@ -1215,11 +1203,11 @@ void Game::handleSpecialAbilityUse(int conID, int sID, SPECIAL_TYPE st, glm::vec
 		vec3 vel = p->getVelocity();
 		if (vel.y < 0)
 		{
-			vel.y = 8.0f;
+			vel.y = 7.0f;
 		}
 		else
 		{
-			vel.y += 8.0f;
+			vel.y += 7.0f;
 		}
 		p->setVelocity(vel);
 	}
@@ -1394,6 +1382,12 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 		Bullet* theBullet = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, bulletPosInArray);
 		if (theBullet != nullptr)
 			p->hitByBullet(theBullet, hi.newHPtotal);
+		if (p->getHP() == 0)
+		{
+			console->printMsg(p->getName() + " was fragged by " + playerList[hi.bulletPID]->getName() + "!", "System", 'S');
+			playerList[hi.bulletPID]->addKill();
+			p->addDeath();
+		}
 
 		removeBullet(hi.bt, bulletPosInArray);
 
@@ -1441,6 +1435,12 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 	}
 
 	p->hitByEffect(theEffect, hi.newHPtotal);
+	if (p->getHP() == 0)
+	{
+		console->printMsg(p->getName() + " was fragged by " + playerList[hi.effectPID]->getName() + "!", "System", 'S');
+		playerList[hi.effectPID]->addKill();
+		p->addDeath();
+	}
 
 	int newHP = p->getHP();
 	return newHP;
@@ -1777,11 +1777,14 @@ bool Game::playerWantsToRespawn()
 
 void Game::allowPlayerRespawn(int p_conID, int respawnPosition)
 {
-	playerList[p_conID]->respawn(spawnpoints[playerList[p_conID]->getTeam()][respawnPosition].pos, spawnpoints[playerList[p_conID]->getTeam()][respawnPosition].dir, spawnpoints[playerList[p_conID]->getTeam()][respawnPosition].roomID);
-	localPlayerWantsRespawn = false;
-	localPlayerRespawnWaiting = false;
-	if (playerList[p_conID]->isLocal())
-		freecam = false;
+	if (playerList[p_conID] != nullptr)
+	{
+		playerList[p_conID]->respawn(spawnpoints[playerList[p_conID]->getTeam()][respawnPosition].pos, spawnpoints[playerList[p_conID]->getTeam()][respawnPosition].dir, spawnpoints[playerList[p_conID]->getTeam()][respawnPosition].roomID);
+		localPlayerWantsRespawn = false;
+		localPlayerRespawnWaiting = false;
+		if (playerList[p_conID]->isLocal())
+			freecam = false;
+	}
 }
 
 void Game::denyPlayerRespawn(char tryAgain)
@@ -1898,4 +1901,18 @@ void Game::decalAdd(BulletHitWorldInfo info)
 		decals_renderInfo[decalCounter].color = TEAMTWOCOLOR;
 
 		decalCounter++;
+}
+
+void Game::cullingPointvsRoom(glm::vec3* pos, int* arr_interIDs, int& interCount, int maxsize)
+{
+	physics->cullingPointvsRoom(pos, arr_interIDs, interCount, maxsize);
+}
+
+void Game::clearAllPlayerKD()
+{
+	for (int c = 0; c < max_con; c++)
+	{
+		if (playerList[c] != nullptr)
+			playerList[c]->clearKD();
+	}
 }

@@ -12,14 +12,26 @@ void ContentManager::init()
 	f_render_abb = false;
 	f_render_obb = false;
 
-	blank_diffuse = loadTexture("GameFiles/Textures/blank_d.dds");
-	blank_normal = loadTexture("GameFiles/Textures/blank_n.dds");
-	blank_glow = loadTexture("GameFiles/Textures/blank_g.dds");
+	tm.init();
 
-	skyTexture = loadTexture("GameFiles/Textures/skybox.dds");
-	lightWallTex = loadTexture("GameFiles/Textures/Blob.png");
+	//blank_diffuse =		loadTexture("GameFiles/Textures/blank_d.dds");
+	//blank_normal =		loadTexture("GameFiles/Textures/blank_n.dds");
+	//blank_glow =		loadTexture("GameFiles/Textures/blank_g.dds");
+
+	//skyTexture = loadTexture("GameFiles/Textures/skybox.dds");
 	decalTexture = loadTexture("GameFiles/Textures/decal.png");
 
+	//lightWallTex = loadTexture("GameFiles/Textures/Blob.png");
+
+	skyTexture = 0;
+	lightWallTex = 0;
+
+	skyTexture = tm.createTexture("GameFiles/Textures/skybox.dds");
+	lightWallTex = tm.createTexture("GameFiles/Textures/Blob.png");
+
+	//addToStreamQueue(&skyTexture, "GameFiles/Textures/skybox.dds");
+	//addToStreamQueue(&lightWallTex, "GameFiles/Textures/Blob.png");
+		
 	playerCharacters[0].load("trapper");
 
 	playerCharacters[1].load("destroyer");
@@ -61,7 +73,7 @@ void ContentManager::init()
 	skybox.init(0, 0, 0);
 	skybox.load("GameFiles/TestFiles/Skybox.v");
 
-	testMap.init();
+	testMap.init(&tm);
 
 	//count portals
 	int nrofportals = 0;
@@ -101,9 +113,6 @@ void ContentManager::init()
 	}
 	else
 		f_portal_culling = false;
-
-	
-	
 }
 
 void ContentManager::release()
@@ -154,6 +163,13 @@ void ContentManager::release()
 
 	bruteThunderDome.release();
 
+	tm.release();
+
+}
+
+void ContentManager::update(float dt)
+{
+	tm.update(dt);
 }
 
 ContentManager::~ContentManager()
@@ -175,9 +191,9 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 	//glActiveTexture(GL_TEXTURE0 + 2);
 	//glBindTexture(GL_TEXTURE_2D, textures[6].textureID);
 
-	glProgramUniform1i(shader, textureLocation, 0);
-	glProgramUniform1i(shader, normalLocation, 1);
-	glProgramUniform1i(shader, glowSpecLocation, 2);
+	//glProgramUniform1i(shader, textureLocation, 0);
+	//glProgramUniform1i(shader, normalLocation, 1);
+	//glProgramUniform1i(shader, glowSpecLocation, 2);
 
 	for (int n = 0; n < nrChunks; n++)
 	{
@@ -193,7 +209,7 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 			glProgramUniform3fv(shader, DglowColor, 1, (GLfloat*)&testMap.chunks[n].color[0]);
 			glProgramUniform1f(shader, SglowColor, testMap.chunks[n].staticIntes);
 			if (f_render_chunks)
-				testMap.renderChunk(shader, shaderLocation, n);
+				testMap.renderChunk(shader, shaderLocation, textureLocation, normalLocation, glowSpecLocation, n);
 			renderedChunks[n] = true;
 		}
 	}
@@ -206,10 +222,16 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 	glEnable(GL_BLEND);
 
 
-	int portal = startTimer("Portals");
+	int portaltimer = startTimer("Portals");
 	if (f_portal_culling)
 	{
-		//render portals from the rendered chunks
+		for (int n = 0; n < nrChunks; n++)
+			renderNextChunks[n] = false;
+
+		renderNextChunks[0] = true;
+		renderNextChunks[testMap.currentChunk] = true;
+
+		PortalData* portal;
 		for (int n = 0; n < nrChunks; n++)
 		{
 			if (renderedChunks[n] == true)
@@ -217,46 +239,29 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 				int size = testMap.chunks[n].portals.size();
 				for (int p = 0; p < size; p++) // render the portals
 				{
-					// dont render if it bridges between chunks that are already in the rendernextqueue
-					//if (renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[0]] == false ||
-					//	renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[1]] == false)
+					portal = &testMap.chunks[n].portals[p];
+
+					if (renderNextChunks[portal->bridgedRooms[0]] == false ||
+						renderNextChunks[portal->bridgedRooms[1]] == false)
 					{
-						testMap.chunks[n].portals[p].render();
-					}
-				}
-			}
-		}
-
-		if (f_freeze_portals == false)
-		{
-			//Get queries
-			for (int n = 0; n < nrChunks; n++)
-				renderNextChunks[n] = false;
-
-			//set enviroment and current chunk to true
-			renderNextChunks[0] = true;
-			renderNextChunks[testMap.currentChunk] = true;
-
-			//get querie status from last frame
-			for (int n = 0; n < nrChunks; n++)
-			{
-				if (renderedChunks[n] == true)
-				{
-					int size = testMap.chunks[n].portals.size();
-					for (int p = 0; p < size; p++)
-					{
-						if (testMap.chunks[n].portals[p].passedCulling())
+						if (portal->rendered && portal->passedCulling())
 						{
-							renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[0]] = true;
-							renderNextChunks[testMap.chunks[n].portals[p].bridgedRooms[1]] = true;
+							renderNextChunks[portal->bridgedRooms[0]] = true;
+							renderNextChunks[portal->bridgedRooms[1]] = true;
+						}
+						if (portal->waiting == false)
+						{
+							//dont render if it bridges between chunks that are already in the rendernextqueue
+							portal->render();
+							portal->rendered = true;
+							portal->waiting = true;
 						}
 					}
-					renderedChunks[n] = false;
 				}
 			}
 		}
 	}
-	stopTimer(portal);
+	stopTimer(portaltimer);
 
 	if (f_render_abb || f_render_obb)
 	{
@@ -292,21 +297,25 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 	}
 }
 
-void ContentManager::renderMisc(int renderID)
+void ContentManager::renderMisc(int renderID, GLuint shader, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation)
 {
 	if (renderID == -3) //skybox
 	{
 		glDisable(GL_DEPTH_TEST);
 		//glEnable(GL_BLEND);
 
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, skyTexture);
+		//glActiveTexture(GL_TEXTURE0);
+		//glBindTexture(GL_TEXTURE_2D, skyTexture);
+		//
+		//glActiveTexture(GL_TEXTURE0 + 1);
+		//glBindTexture(GL_TEXTURE_2D, blank_normal);
+		//
+		//glActiveTexture(GL_TEXTURE0 + 2);
+		//glBindTexture(GL_TEXTURE_2D, blank_glow);
 
-		glActiveTexture(GL_TEXTURE0 + 1);
-		glBindTexture(GL_TEXTURE_2D, blank_normal);
-
-		glActiveTexture(GL_TEXTURE0 + 2);
-		glBindTexture(GL_TEXTURE_2D, blank_glow);
+		tm.bindTexture(skyTexture, shader, textureLocation, DIFFUSE_FB);
+		tm.bindDefault(shader, normalLocation, NORMAL_FB);
+		tm.bindDefault(shader, glowSpecLocation, GLOW_FB);
 
 		glBindVertexArray(skybox.vao);
 		glBindBuffer(GL_ARRAY_BUFFER, skybox.vbo);
@@ -362,9 +371,10 @@ void ContentManager::renderThunderDome()
 	bruteThunderDome.draw();
 }
 
-void ContentManager::renderPlayer(AnimManager::animState state, glm::mat4 world, GLuint uniformKeyMatrixLocation, bool first)
+void ContentManager::renderPlayer(AnimManager::animState state, glm::mat4 world, GLuint uniformKeyMatrixLocation, bool first, GLuint shader, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation)
 {
-	playerCharacters[state.role].draw(uniformKeyMatrixLocation, state.state, state.frame, first);
+	if (state.role != 5)
+		playerCharacters[state.role].draw(uniformKeyMatrixLocation, state.state, state.frame, first, shader, textureLocation, normalLocation, glowSpecLocation);
 }
 
 void* ContentManager::getChunkCollisionVectorAsPointer(int chunkID)
@@ -392,10 +402,9 @@ std::vector<std::vector<float>> ContentManager::getMeshBoxes()
 	return size;
 }
 
-void ContentManager::bindLightwalTexture()
+void ContentManager::bindLightwalTexture(GLuint shader, GLuint location)
 {
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, lightWallTex);
+	tm.bindTexture(lightWallTex, shader, location, DIFFUSE_FB);
 }
 
 void ContentManager::bindDecalTexture()

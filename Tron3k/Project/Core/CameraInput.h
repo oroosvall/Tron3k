@@ -31,7 +31,7 @@ private:
 	float angleH;
 	float angleV;
 
-	float mouseSpeed = 5.0f; //higher val = slower
+	static float mouseSpeed; //higher val = faster
 	float camSpeed = 10.0f; // higher val = faster
 
 	mat3 rotH;
@@ -45,6 +45,9 @@ private:
 
 public:
 	static CameraInput* getCam();
+
+	void setSensitivity(float sens) { mouseSpeed = sens; };
+	float getSensitivity() { return mouseSpeed; };
 
 	void init(glm::mat4* viewMat, int _xres, int _yres);
 	//dont need to do this when we have a real crosshair in the game

@@ -47,10 +47,33 @@ void UIManager::init(Console* console)
 	this->console = console;
 
 	//Texture Paths
-	texturePaths.push_back("GameFiles/Textures/UITextures/testmap.png");
-	texturePaths.push_back("GameFiles/Textures/UITextures/multiplayer.png");
-	texturePaths.push_back("GameFiles/Textures/UITextures/settings.png");
-	texturePaths.push_back("GameFiles/Textures/UITextures/exit.png");
+	//Main menu
+	texturePaths.push_back("GameFiles/Textures/UITextures/main_menu_background.png"); //0
+	texturePaths.push_back("GameFiles/Textures/UITextures/testmap.png"); //1
+	texturePaths.push_back("GameFiles/Textures/UITextures/multiplayer.png"); //2
+	texturePaths.push_back("GameFiles/Textures/UITextures/settings.png"); //3
+	texturePaths.push_back("GameFiles/Textures/UITextures/exit.png"); //4
+
+	//Multiplayer
+	//Background  //5
+	//Client  //6
+	//Server  //7
+
+	//Connect
+	texturePaths.push_back("GameFiles/Textures/UITextures/connect_to_server_background.png"); //5
+	texturePaths.push_back("GameFiles/Textures/UITextures/connect_to_server_connect.png"); //6
+	texturePaths.push_back("GameFiles/Textures/UITextures/connect_to_server_back.png"); //7
+
+	//Team select
+	texturePaths.push_back("GameFiles/Textures/UITextures/team_selection_background.png"); //8
+	texturePaths.push_back("GameFiles/Textures/UITextures/team_selection_alpha.png"); //9
+	texturePaths.push_back("GameFiles/Textures/UITextures/team_selection_beta.png"); //10
+
+	//Class select
+	texturePaths.push_back("GameFiles/Textures/UITextures/class_selection_background.png"); //11
+	texturePaths.push_back("GameFiles/Textures/UITextures/class_selection_trapper.png"); //12
+	texturePaths.push_back("GameFiles/Textures/UITextures/class_selection_stalker.png"); //13
+	texturePaths.push_back("GameFiles/Textures/UITextures/class_selection_punisher.png"); //14
 
 	loadInTexture();
 
@@ -139,15 +162,19 @@ void UIManager::menuRender()
 {
 	renderPipe->ui_initRender();
 	
+	renderPipe->disableDepthTest();
 	menus[currentMenu[0]].render(uiTextureIds);
+	renderPipe->enableDepthTest();
 }
 
 void UIManager::inGameRender()
 {
 	renderPipe->ui_InGameRenderInit();
 
+	renderPipe->disableDepthTest();
 	for (int i = 0; i < nrOfCurretMenus; i++)
 		menus[currentMenu[i]].render(uiTextureIds);
+	renderPipe->enableDepthTest();
 }
 
 
@@ -175,7 +202,7 @@ void UIManager::setMenu(int menuId)
 		else
 		{
 			currentMenu[0] = menuId;
-			nrOfOpenedMenus++;
+			nrOfCurretMenus = 1;
 			firstMenuSet = true;
 		}
 	}
@@ -214,6 +241,8 @@ void UIManager::removeAllMenus()
 	if(menus != nullptr)
 		delete[] menus;
 	menus = nullptr;
+	openedMenus = nullptr;
+	currentMenu = nullptr;
 
 	nrOfOpenedMenus = 0;
 	nrOfCurretMenus = 0;
@@ -276,7 +305,7 @@ bool UIManager::LoadNextSet(int whichMenuGroup)
 	default:
 		break;
 	}
-	nrOfCurretMenus = 1;
+	nrOfCurretMenus = 0;
 
 	return true;
 }
@@ -284,4 +313,9 @@ bool UIManager::LoadNextSet(int whichMenuGroup)
 void UIManager::setOpenedGuiBool(bool guiBool)
 {
 	guiOpened = guiBool;
+}
+
+void UIManager::setFirstMenuSet(bool set)
+{
+	firstMenuSet = set;
 }

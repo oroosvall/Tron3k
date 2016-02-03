@@ -86,6 +86,23 @@ void DDSTexture::load(std::string file)
 
 }
 
+void* DDSTexture::getDataPtr(int &size, int &xres, int &yres, int &_format)
+{
+	char* ret = new char[dataSize];
+
+	xres = width;
+	yres = height;
+	_format = format;
+
+	if (textureData)
+		memcpy(ret, textureData, dataSize);
+	else
+		ZeroMemory(ret, dataSize);
+	size = dataSize;
+
+	return ret;
+}
+
 bool DDSTexture::uploadTexture(GLuint &id)
 {
 
@@ -102,6 +119,58 @@ bool DDSTexture::uploadTexture(GLuint &id)
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 
 	return true;
+}
+
+void* loadTextureData(std::string texturePath, int &format, int &xres, int &yres, int &size)
+{
+
+	int x;
+	int y;
+	int comp;
+
+	GLuint textureID = 0;
+
+	if (hasEnding(texturePath, ".dds") || hasEnding(texturePath, ".DDS"))
+	{
+		printf("Loading dds texture %s\n", texturePath.c_str());
+
+		DDSTexture tex;
+		tex.load(texturePath);
+
+		return tex.getDataPtr(size, xres, yres, format);
+
+	}
+	else
+	{
+		printf("Loading other texture %s\n", texturePath.c_str());
+
+		stbi_uc* image = stbi_load(texturePath.c_str(), &x, &y, &comp, 4);
+
+		if (!(x > 0 && y > 0))
+		{
+			x = y = 1;
+			comp = 4;
+		}
+		
+		xres = x;
+		yres = y;
+
+		size = x*y*comp;
+
+		char* data = new char[size];
+		
+		if (image)
+			memcpy(data, image, size);
+		else
+			ZeroMemory(data, size);
+
+		format = GL_COMPRESSED_RGBA;
+
+		stbi_image_free(image);
+
+		return data;
+	}
+
 }
 
 GLuint loadTexture(std::string texturePath, bool PNGuploadComrpessint, int* xres, int* yres)

@@ -59,7 +59,7 @@ public:
 
 	float getMovementSpeed();
 
-	void chooseRole(int role);
+	void chooseRole(int r);
 	void swapWeapon(WEAPON_TYPE wt, int swapTo);
 	void swapWeaponLocal(int swapTo);
 	int getWeaponNRequiped() { return currentWpn; };

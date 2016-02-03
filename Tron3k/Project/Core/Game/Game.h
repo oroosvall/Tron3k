@@ -253,7 +253,7 @@ public:
 	void allowPlayerRespawn(int p_conID, int respawnPosition);
 	void denyPlayerRespawn(char tryAgain);
 
-	void addPlayerToTeam(int p_conID, int team, int spawnPosition);
+	void addPlayerToTeam(int p_conID, int team);
 	int getPlayersOnTeam(int team);
 	int getMaxTeamSize(bool spec = false) { if (spec) return maxSpec; return maxTeamSize; };
 	vector<int>* getTeamConIds(int team);
@@ -314,12 +314,16 @@ public:
 
 	int Game::findPlayerPosInTeam(int conID);
 
+	void setPlayerWantsToRespawn(bool w) { localPlayerWantsRespawn = w; };
 	bool checkIfPlayerCanRespawn(int conid, char &tryAgain);
 
 	bool freecam; // freecam is active also when in spectate but specctate overides
 	int spectateID; // -1 = none, else use conID
+	void cullingPointvsRoom(glm::vec3* pos, int* arr_interIDs, int& interCount, int maxsize);
 
 	float lastDT = 0;
+
+	void clearAllPlayerKD();
 };
 
 #endif

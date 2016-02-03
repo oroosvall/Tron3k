@@ -44,6 +44,8 @@ void Core::init()
 	uiManager->init(&console);
 
 	renderUI = false;
+	startTeamSelect = true; //Temp
+	renderMenu = true;
 }
 
 Core::~Core()
@@ -94,7 +96,7 @@ void Core::update(float dt)
 	}
 
 	glfwPollEvents();
-	console.update(_name, 'A'); //Updates to check for new messages and commands
+	console.update(_name); //Updates to check for new messages and commands
 	
 	if (cursorVisible && renderPipe)
 	{
@@ -105,35 +107,34 @@ void Core::update(float dt)
 		renderPipe->setChatHistoryText(console.getHistory());
 	}
 
-	if (game)
-	{
-		if (console.getInChatMode() == false)
-		{
-			if (i->justPressed(GLFW_KEY_7))
-			{
-				playbackSpeed *= 2.0f;
-				if (playbackSpeed > 16.0f)
-					playbackSpeed = 16.0f;
-				CameraInput* cam = CameraInput::getCam();
-				cam->setPlaybackSpeed(playbackSpeed);
-			}
-			if (i->justPressed(GLFW_KEY_6))
-			{
-				playbackSpeed *= 0.5f;
-				if (playbackSpeed < 0.03125f)
-					playbackSpeed = 0.03125f;
-				CameraInput* cam = CameraInput::getCam();
-				cam->setPlaybackSpeed(playbackSpeed);
-			}
-		}
-	}
+	//if (game)
+	//{
+	//	if (console.getInChatMode() == false)
+	//	{
+	//		if (i->justPressed(GLFW_KEY_7))
+	//		{
+	//			playbackSpeed *= 2.0f;
+	//			if (playbackSpeed > 16.0f)
+	//				playbackSpeed = 16.0f;
+	//			CameraInput* cam = CameraInput::getCam();
+	//			cam->setPlaybackSpeed(playbackSpeed);
+	//		}
+	//		if (i->justPressed(GLFW_KEY_6))
+	//		{
+	//			playbackSpeed *= 0.5f;
+	//			if (playbackSpeed < 0.03125f)
+	//				playbackSpeed = 0.03125f;
+	//			CameraInput* cam = CameraInput::getCam();
+	//			cam->setPlaybackSpeed(playbackSpeed);
+	//		}
+	//	}
+	//}
 
-	dt *= playbackSpeed;
+	//dt *= playbackSpeed;
 
 	switch (current)
 	{
 	case START:		upStart(dt);	break;
-	case MENU:		upMenu(dt);		break;
 	case ROAM:		upRoam(dt);		break;
 	case CLIENT:	upClient(dt);	break;
 	case SERVER:	upServer(dt);	break;
@@ -174,9 +175,11 @@ void Core::upStart(float dt)
 	case 1:
 		//start console commands
 		startHandleCmds();
-		//uiManager->render();
+		if(renderMenu)
+			upMenu(dt);
 		break;
 	}
+	
 }
 
 void Core::upMenu(float dt)
@@ -200,6 +203,7 @@ void Core::upMenu(float dt)
 		case 0: //Roam
 			current = ROAM;
 			uiManager->LoadNextSet(1);
+			uiManager->setFirstMenuSet(false);
 			uiManager->setMenu(1);
 			subState = 0;
 			break;
@@ -216,31 +220,20 @@ void Core::upMenu(float dt)
 			break;
 		case 5: //Server -> starts a server
 			current = SERVER;
-			//Clean
 			subState = 0;
-			//Cleans
+			uiManager->removeAllMenus();
+			renderPipe->clearBothBuffers();
+			glfwSwapBuffers(win);
+			renderPipe->clearBothBuffers();
+			renderMenu = false;
 			break;
 		case 6: //Connect
 		{
 			//default ip at the moment
-			startHandleCmds("/1"); //Start the game as a client
-			uiManager->LoadNextSet(1);
-			uiManager->setMenu(1);
-
-			//bool ipCheck = false;
-			////ipCheck = Ipcheck()
-			//if (ipCheck)
-			//{
-			//	current = CLIENT;
-			//	uiManager->LoadNextSet(1);
-			//	uiManager->setMenu(0);
-			//	subState = 0;
-			//}
-			//else
-			//{
-			//	console.printMsg("Error: Ip adress isn't valid.", "System", 'S');
-			//	//Rensa kanske det som har skivits
-			//}
+			current = Gamestate::CLIENT; //Start the game as a client
+			client_record = false;
+			client_playback = false;
+			subState = 0; 
 			break;
 		}
 		case 7: //Back
@@ -274,7 +267,7 @@ void Core::upRoam(float dt)
 		sendRoomBoxes();
 		Player* p = new Player();
 		p->init("Roam", glm::vec3(0, 0, 0));
-		game->createPlayer(p, 0, 100, 0, true);
+		game->createPlayer(p, 0, 100, ROLES::TRAPPER, true);
 		game->freecam = true;
 		delete p;
 		subState++;
@@ -421,6 +414,9 @@ void Core::upClient(float dt)
 				sendRoomBoxes();
 				top->setGamePtr(game);
 				subState++;
+
+				showTeamSelect();
+
 				return; //On sucsess
 			}
 		}
@@ -468,8 +464,9 @@ void Core::upClient(float dt)
 		//Command and message handle
 		if (console.messageReady())
 		{
-			top->msg_out = console.getMessage();
-			top->scope_out = Uint8(ALL);
+			char scope;
+			top->msg_out = console.getMessage(scope);
+			top->scope_out = Uint8(scope);
 		}
 
 		clientHandleCmds();
@@ -489,7 +486,7 @@ void Core::upClient(float dt)
 			//Fetch current player position
 			//Add to topology packet
 			Player* local = game->getPlayer(top->getConId());
-			top->frame_pos(top->getConId(), local->getPos(), local->getDir(), local->getVelocity());
+			top->frame_pos(top->getConId(), local->getPos(), local->getDir(), local->getVelocity(), local->roomID);
 		
 			if (game->weaponSwitchReady())
 			{
@@ -595,8 +592,9 @@ void Core::upServer(float dt)
 		//handle commands and messages
 		if (console.messageReady())
 		{
-			top->msg_out = console.getMessage();
-			top->scope_out = Uint8(ALL);
+			char scope;
+			top->msg_out = console.getMessage(scope);
+			top->scope_out = Uint8(ALL); //Server always communicates with everyone
 		}
 
 		std::vector<BulletHitPlayerInfo> bulletHitsOnPlayer = game->getAllHitPlayerInfo();
@@ -762,18 +760,27 @@ void Core::startHandleCmds(std::string com)
 			client_record = false;
 			client_playback = false;
 			subState = 0;
+			renderMenu = false;
 		}
 
 		else if (token == "/2")
 		{
 			current = Gamestate::SERVER;
 			subState = 0;
+			uiManager->removeAllMenus();
+			renderPipe->clearBothBuffers();
+			glfwSwapBuffers(win);
+			renderPipe->clearBothBuffers();
+			renderMenu = false;
 		}
 
 		else if (token == "/3")
 		{
 			current = Gamestate::ROAM;
 			subState = 0;
+			
+			showTeamSelect();
+			renderMenu = false;
 		}
 		else if (token == "/4")
 		{
@@ -832,15 +839,18 @@ void Core::roamHandleCmds(std::string com)
 		else if (token == "/team")
 		{
 			ss >> token;
-			if (token != "/team" || token == "0" || token == "1" || token == "2")
+			if (token == "0" || token == "1" || token == "2")
 			{
 				int team = stoi(token);
-				game->addPlayerToTeam(0, team, 0);
+				game->addPlayerToTeam(0, team);
 				game->allowPlayerRespawn(0, 0);
 				if (team != 0)
 					game->freecam = false;
 				else
 					game->freecam = true;
+
+				uiManager->setFirstMenuSet(false);
+				uiManager->setMenu(2);
 			}
 			else
 				console.printMsg("Invalid team. Use /team <1/2/3>", "System", 'S');
@@ -864,12 +874,12 @@ void Core::roamHandleCmds(std::string com)
 			if (token != "/role" || token == "1" || token == "2" || token == "3" || token == "4"|| token == "5")
 			{
 				int role = stoi(token);
-				game->getPlayer(0)->getRole()->chooseRole(role - 1);
+				game->getPlayer(0)->chooseRole(role - 1);
 				game->sendPlayerRadSize(game->getPlayer(0)->getRole()->getBoxRadius());
-				if (role == TRAPPER)
-					game->getPlayer(0)->addModifier(MODIFIER_TYPE::TRAPPERSHAREAMMO);
 				console.printMsg("You switched class!", "System", 'S');
 			
+				uiManager->setFirstMenuSet(false);
+				uiManager->setMenu(0);
 			}
 			else 
 				console.printMsg("Invalid role. Use /role <1-5>", "System", 'S');
@@ -929,6 +939,7 @@ void Core::clientHandleCmds(std::string com)
 			console.printMsg("/disconnect", "", ' ');
 			console.printMsg("/free (turns freecam on/off)", "", ' ');
 			console.printMsg("/spec # (spectate player id)", "", ' ');
+			console.printMsg("/rs  show render settings", "", ' ');
 		}
 		else if (token == "/name")
 		{
@@ -955,6 +966,9 @@ void Core::clientHandleCmds(std::string com)
 				int team = stoi(token);
 				top->command_team_change(top->getConId(), team);
 				console.printMsg("Change team request sent to server", "System", 'S');
+
+				uiManager->setFirstMenuSet(false);
+				uiManager->setMenu(2);
 			}
 			else
 				console.printMsg("Invalid team. Use /team <1/2/3>", "System", 'S');
@@ -975,13 +989,17 @@ void Core::clientHandleCmds(std::string com)
 		else if (token == "/role")
 		{
 			ss >> token;
-			int role = stoi(token);
-			if (role < 1 || role > 5)
-				console.printMsg("Invalid role. Use /role <1-5>", "System", 'S');
-			else
+			if (token == "1" || token == "2" || token == "3" || token == "4" || token == "5")
 			{
+				int role = stoi(token);
 				top->command_role_change(top->getConId(), role);
+
+				uiManager->setOpenedGuiBool(true);
+				uiManager->setFirstMenuSet(false);
+				uiManager->setMenu(0);
 			}
+			else
+				console.printMsg("Invalid role. Use /role <1-5>", "System", 'S');
 		}
 		else if (token == "/disconnect")
 			disconnect();
@@ -1025,6 +1043,32 @@ void Core::clientHandleCmds(std::string com)
 				else
 					game->spectateID = -1;
 			}
+		}
+		else if (token == "/rs")
+		{
+			ss >> token;
+			if (token == "/rs") // help menu
+			{
+				console.printMsg("Render settings commands", "", ' ');
+				console.printMsg("/rs  portal	PORTAL_CULLING ", "", ' ');
+				console.printMsg("/rs  fportal	FREEZE_CULLING ", "", ' ');
+				console.printMsg("/rs  chunk	RENDER_CHUNK ", "", ' ');
+				console.printMsg("/rs  abb		RENDER_ABB ", "", ' ');
+				console.printMsg("/rs  obb		RENDER_OBB ", "", ' ');
+				console.printMsg("/rs  debug	RENDER_DEBUG_TEXT ", "", ' ');
+			}
+			else if (token == "portal")
+				renderPipe->setRenderFlag(PORTAL_CULLING);
+			else if (token == "fportal")
+				renderPipe->setRenderFlag(FREEZE_CULLING);
+			else if (token == "chunk")
+				renderPipe->setRenderFlag(RENDER_CHUNK);
+			else if (token == "abb")
+				renderPipe->setRenderFlag(RENDER_ABB);
+			else if (token == "obb")
+				renderPipe->setRenderFlag(RENDER_OBB);
+			else if (token == "debug")
+				renderPipe->setRenderFlag(RENDER_DEBUG_TEXT);
 		}
 	}
 }
@@ -1108,9 +1152,14 @@ void Core::saveSettings()
 		file << "IP: " << _addrs.toString() << endl;
 		file << "Port: " << _port << endl;
 		if(GetSoundActivated() == 1)
-			file << "Sound: " << "1";
+			file << "Sound: " << "1" << endl;
 		else
-			file << "Sound: " << "0";
+			file << "Sound: " << "0" << endl;
+
+		float sens = serverCam->getSensitivity();
+		file << "Sensitivity: " << sens;
+
+		file.close();
 	}
 }
 
@@ -1147,7 +1196,17 @@ void Core::loadSettings()
 					GetSound()->playMusic(mainMenu);
 				}
 			}
+			else if (in == "Sensitivity:")
+			{
+				float sens = atof(in2.c_str());
+				if (sens < FLT_EPSILON)
+				{
+					sens = 0.2f;
+				}
+				serverCam->setSensitivity(sens);
+			}
 		}
+		file.close();
 	}
 	else
 	{
@@ -1167,7 +1226,7 @@ void Core::renderWorld(float dt)
 		bool force3rd = false;
 		if (i->getKeyInfo(GLFW_KEY_P))
 		{
-			cam->setCam(vec3(-11, 1, 14), vec3(0, 0, 1));
+			cam->setCam(vec3(-6, 1.5f, 14), vec3(0, 0, 1));
 			force3rd = true;
 		}
 
@@ -1182,7 +1241,7 @@ void Core::renderWorld(float dt)
 		light.Color = vec3(1,1,1);
 		light.DiffuseIntensity = 0.0f;
 		light.AmbientIntensity = 0.3f;
-		renderPipe->addLight(&light);
+		renderPipe->addLight(&light, 0);
 		light.AmbientIntensity = 0.0f;
 
 		vec3 dgColor(0);
@@ -1263,15 +1322,15 @@ void Core::renderWorld(float dt)
 					light.Direction = vec3(0.0f);//p->getDir();
 					light.Color = dgColor;
 					light.DiffuseIntensity = 0.2f;
-					renderPipe->addLight(&light);
+					renderPipe->addLight(&light, p->roomID);
 
 					//If first person render
 					if (!force3rd && p->isLocal() && !game->freecam || game->spectateID == i)
 					{
 						if (p->isLocal())   //use current anim
-							renderPipe->renderAnimation(i, p->getRole()->getRole(), &p->getFPSmat(), p->getAnimState_f_c(), &dgColor.x, hpval, true);
+							renderPipe->renderAnimation(i, p->getRole()->getRole(), &p->getFPSmat(), p->getAnimState_f_c(), &dgColor.x, hpval, true, cam->roomID);
 						else			   //use peak anim
-							renderPipe->renderAnimation(i, p->getRole()->getRole(), &p->getFPSmat(), p->getAnimState_f_p(), &dgColor.x, hpval, true);
+							renderPipe->renderAnimation(i, p->getRole()->getRole(), &p->getFPSmat(), p->getAnimState_f_p(), &dgColor.x, hpval, true, cam->roomID);
 					}
 					else
 					{
@@ -1280,9 +1339,9 @@ void Core::renderWorld(float dt)
 							playermat[0][1].w -= 1.55f;
 
 						if (p->isLocal()) //use current anim
-							renderPipe->renderAnimation(i, p->getRole()->getRole(), playermat, p->getAnimState_t_c(), &dgColor.x, hpval, false);
+							renderPipe->renderAnimation(i, p->getRole()->getRole(), playermat, p->getAnimState_t_c(), &dgColor.x, hpval, false, p->roomID);
 						else              //use peak anim
-							renderPipe->renderAnimation(i, p->getRole()->getRole(), playermat, p->getAnimState_t_p(), &dgColor.x, hpval, false);
+							renderPipe->renderAnimation(i, p->getRole()->getRole(), playermat, p->getAnimState_t_p(), &dgColor.x, hpval, false, p->roomID);
 					}
 				}
 			}
@@ -1437,7 +1496,6 @@ void Core::inGameUIUpdate() //Ingame ui update
 	i->getCursor(x, y);
 	double tX = (x / (double)winX) * 2 - 1.0; // (x/ResolutionX) * 2 - 1
 	double tY = (-y / (double)winY) * 2 + 1.0; // (y/ResolutionY) * 2 - 1
-
 	
 	uiManager->inGameRender();
 
@@ -1451,46 +1509,36 @@ void Core::inGameUIUpdate() //Ingame ui update
 				roamHandleCmds("/team 1");
 			else
 				clientHandleCmds("/team 1");
-			uiManager->setMenu(2);
 			break;
 		case 21: //Team 2
 			if (current == ROAM)
 				roamHandleCmds("/team 2");
 			else
 				clientHandleCmds("/team 2");
-			uiManager->setMenu(2);
 			break;
 		case 30: //Class 1
-			uiManager->setOpenedGuiBool(true);
 			if (current == ROAM)
 				roamHandleCmds("/role 1");
 			else
 				clientHandleCmds("/role 1");
-			uiManager->setMenu(0);
 			break;
 		case 31: //Class 2
-			uiManager->setOpenedGuiBool(true);
 			if (current == ROAM)
 				roamHandleCmds("/role 2");
 			else
 				clientHandleCmds("/role 2");
-			uiManager->setMenu(0);
 			break;
 		case 32: //Class 3
-			uiManager->setOpenedGuiBool(true);
 			if (current == ROAM)
 				roamHandleCmds("/role 3");
 			else
 				clientHandleCmds("/role 3");
-			uiManager->setMenu(0);
 			break;
 		case 33: //Class 4
-			uiManager->setOpenedGuiBool(true);
 			if (current == ROAM)
 				roamHandleCmds("/role 4");
 			else
 				clientHandleCmds("/role 4");
-			uiManager->setMenu(0);
 			break;
 		case 34: //Class 5
 			uiManager->setOpenedGuiBool(true);
@@ -1498,7 +1546,6 @@ void Core::inGameUIUpdate() //Ingame ui update
 				roamHandleCmds("/role 5");
 			else
 				clientHandleCmds("/role 5");
-			uiManager->setMenu(0);
 			break;
 		case 40: //Continue
 			uiManager->backToGui();
@@ -1527,10 +1574,28 @@ void Core::handleCulling()
 	CameraInput* cam = CameraInput::getCam();
 	if (game->spectateID == -1) // if we are not spectating some one
 	{
-		int newRoom = renderPipe->portalIntersection((float*)&lastCampos, (float*)&cam->getPos(), cam->roomID);
-		if (newRoom != -1)
-			cam->roomID = newRoom;
-	
+		int interarr[2];
+		int count;
+		//check vs roomboxes to verify. Roomboxes have priority if only intersecting with one room
+		game->cullingPointvsRoom(&cam->getPos(), interarr, count, 2);
+		if (count == 1)
+		{
+			if (cam->roomID != interarr[0])
+			{
+				cam->roomID = interarr[0];
+				//printf("RoomIntersect Cam setRoomID %d", interarr[0]);
+			}
+		}
+		else
+		{
+			int newRoom = renderPipe->portalIntersection((float*)&lastCampos, (float*)&cam->getPos(), cam->roomID);
+			if (newRoom != -1)
+			{
+				cam->roomID = newRoom;
+				//printf("Portal Cam setRoomID %d", newRoom);
+			}
+		}
+
 		if (game->freecam == false)
 		{
 			//will set local players roomID to same as cam in player update
@@ -1545,17 +1610,31 @@ void Core::handleCulling()
 	
 			if (p)
 			{
-				if (p->getJustRespawned())
+				game->cullingPointvsRoom(&p->getPos(), interarr, count, 2);
+				if (count == 1)
+				{
+					if (p->roomID != interarr[0])
+					{
+						p->roomID = interarr[0];
+						//printf("RoomIntersect Player setRoomID %d", interarr[0]);
+					}
+				}
+				else
+				{
+					if (p->getJustRespawned())
+						lastPlayerPos = p->getPos();
+
+					int newRoom = renderPipe->portalIntersection((float*)&lastPlayerPos, (float*)&p->getPos(), p->roomID);
+					if (newRoom != -1)
+					{
+						p->roomID = newRoom;
+						//printf("Portal Player setRoomID %d", interarr[0]);
+					}
 					lastPlayerPos = p->getPos();
-	
-				newRoom = renderPipe->portalIntersection((float*)&lastPlayerPos, (float*)&p->getPos(), p->roomID);
-				if (newRoom != -1)
-					p->roomID = newRoom;
-				lastPlayerPos = p->getPos();
+				}
 			}
 		}
 	}
-	
 	lastCampos = cam->getPos();
 	
 	renderPipe->setCullingCurrentChunkID(cam->roomID);
@@ -1769,4 +1848,21 @@ void Core::disconnect()
 	//}
 	current = Gamestate::START;
 	subState = 0;
+}
+
+void Core::showTeamSelect()
+{
+	if(startTeamSelect)
+	{
+		uiManager->LoadNextSet(1);
+		uiManager->setFirstMenuSet(false);
+		uiManager->setMenu(1);
+	}
+	else
+	{
+		uiManager->LoadNextSet(1);
+		uiManager->setFirstMenuSet(false);
+		uiManager->setOpenedGuiBool(true);
+		uiManager->setMenu(0); 
+	}
 }

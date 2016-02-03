@@ -134,6 +134,8 @@ public:
 	virtual void receivePlayerBox(std::vector<float> pBox, float rad);
 	virtual void receivePlayerRad(float rad);
 	virtual void receiveEffectBox(std::vector<float> eBox, unsigned int etype, int pID, int eID);
+
+	virtual void cullingPointvsRoom(glm::vec3* pos, int* arr_interIDs, int& interCount, int maxsize);
 };
 
 extern "C" PHYSICS_API Physics* CreatePhysics();

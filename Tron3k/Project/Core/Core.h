@@ -105,6 +105,10 @@ private:
 	void sendPlayerBox();
 	void sendWorldBoxes();
 
+	void showTeamSelect();
+	bool startTeamSelect; //temp
+	bool renderMenu;
+
 public:
 	
 	vec3 TEAMONECOLOR = vec3(1.0f, 0.5f, 0.0f);

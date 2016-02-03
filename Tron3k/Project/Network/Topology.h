@@ -142,7 +142,7 @@ public:
 		*rec >> p_conID;
 		*rec >> pName;
 		temp->init(pName, glm::vec3(0, 0, 0), gamePtr->getPhysics());
-		gamePtr->createPlayer(temp, p_conID, 100, 0);
+		gamePtr->createPlayer(temp, p_conID, 100, ROLES::NROFROLES);
 		consolePtr->printMsg("Player (" + pName + ") joined the server", "System", 'S');
 		delete temp;
 	}
@@ -374,12 +374,13 @@ public:
 		*package << Uint8(NET_FRAME::NAME_CHANGE) << conid << name;
 	}
 
-	virtual void frame_pos(Uint8 conid, glm::vec3 cPos, glm::vec3 cDir, glm::vec3 cVel)
+	virtual void frame_pos(Uint8 conid, glm::vec3 cPos, glm::vec3 cDir, glm::vec3 cVel, Uint8 roomID)
 	{
 		*package << Uint8(NET_FRAME::POS) << conid <<
 			cPos.x << cPos.y << cPos.z <<
 			cDir.x << cDir.y << cDir.z <<
-			cVel.x << cVel.y << cVel.z;
+			cVel.x << cVel.y << cVel.z <<
+			roomID;
 	}
 
 	virtual void frame_anim(Uint8 conid, Uint8 anim_peak_first, Uint8 anim_peak_third)
@@ -456,10 +457,12 @@ public:
 		glm::vec3 p_pos;
 		glm::vec3 p_dir;
 		glm::vec3 p_vel;
+		Uint8 p_roomid;
 		*rec >> p_conID;
 		*rec >> p_pos.x >> p_pos.y >> p_pos.z;
 		*rec >> p_dir.x >> p_dir.y >> p_dir.z;
 		*rec >> p_vel.x >> p_vel.y >> p_vel.z;
+		*rec >> p_roomid;
 
 		Player* p = gamePtr->getPlayer(p_conID);
 		if (p != nullptr) 
@@ -468,6 +471,7 @@ public:
 			p->setGoalDir(p_dir);
 			if (!p->isLocal())
 				p->setVelocity(p_vel);
+			p->roomID = p_roomid;
 		}
 		else
 			consolePtr->printMsg("ERROR in_frame_current_pos", "System", 'S');
@@ -492,7 +496,7 @@ public:
 	virtual void command_team_change(Uint8 conid, Uint8 team)
 	{
 		Packet* out = new Packet();
-		*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::TEAM_CHANGE) << conid << team << (Uint8)0;
+		*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::TEAM_CHANGE) << conid << team;
 		con->send(out);
 		delete out;
 	}
@@ -517,8 +521,16 @@ public:
 	{
 		Uint8 p_conID;
 		Uint8 team;
-		Uint8 spawnPosition;
-		*rec >> p_conID >> team >> spawnPosition;
+		*rec >> p_conID >> team;
+
+		if (isClient)
+		{
+			if (team == 9)
+			{
+				consolePtr->printMsg("Can't join team!", "System", 'S');
+				return;
+			}
+		}
 
 		Player* p = gamePtr->getPlayer(p_conID);
 		if (p == nullptr)
@@ -529,18 +541,41 @@ public:
 
 		if (isClient == false) //Decide if the command is OK
 		{
-			if (gamePtr->getPlayersOnTeam(team) + 1 < gamePtr->getMaxTeamSize())
-			{
+			//if (gamePtr->getPlayersOnTeam(team) + 1 < gamePtr->getMaxTeamSize())
+			//{
 				/*
 				TO DO
 				Add logic to give player a new place to spawn after team change
 				*/
-			}
-			else
-			{
+			//}
+			//else
+			//{
 				/*
 				CAN'T CHANGE TEAM
 				*/
+			//}
+
+			//Check with the game mode
+			if (gamePtr->getPlayersOnTeam(team) + 1 < gamePtr->getMaxTeamSize())
+			{
+
+			}
+			else //Too many people in team
+			{
+				Packet* out = new Packet();
+				*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::TEAM_CHANGE) << p_conID << Uint8(9); //9 is a good error code, whatever
+				con[p_conID].send(out);
+				delete out;
+				return;
+			}
+			Gamemode* gm = gamePtr->getGameMode();
+			if (!gm->allowTeamChange())
+			{
+				Packet* out = new Packet();
+				*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::TEAM_CHANGE) << p_conID << Uint8(9);
+				con[p_conID].send(out);
+				delete out;
+				return;
 			}
 		}
 
@@ -553,23 +588,19 @@ public:
 
 		if (p_conID == getConId())
 		{
-			if (team != 0)
-				gamePtr->freecam = false;
-			else
+			if (team == 0)
 				gamePtr->freecam = true;
 		}
-		//Ugly. Needs a team before he can spawn but need spawnpos before he joins a team
-		gamePtr->addPlayerToTeam(p_conID, team, spawnPosition);
+
 		if (isClient == false)
 		{
-			spawnPosition = gamePtr->findPlayerPosInTeam(conID) % 5;
 			Packet* out = new Packet();
-			*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::TEAM_CHANGE) << p_conID << team << spawnPosition;
+			*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::TEAM_CHANGE) << p_conID << team;
 			branch(out, -1);
 			delete out;
 		}
 		//Adds player to the game in chosen team. Both clients and server
-		gamePtr->addPlayerToTeam(p_conID, team, spawnPosition);
+		gamePtr->addPlayerToTeam(p_conID, team);
 	}
 
 	virtual void in_command_role_change(Packet* rec, Uint8 conID)
@@ -578,6 +609,15 @@ public:
 		Uint8 role;
 		*rec >> p_conID >> role;
 
+		if (isClient)
+		{
+			if (role == 9)
+			{
+				consolePtr->printMsg("Can't change role!", "System", 'S');
+				return;
+			}
+		}
+
 		Player* p = gamePtr->getPlayer(p_conID);
 		if (p == nullptr)
 		{
@@ -585,8 +625,27 @@ public:
 			return;
 		}
 
-		p->getRole()->chooseRole(role-1);
-		gamePtr->sendPlayerRadSize(0.9f); //TEMP BUT W/E
+		if (!isClient) //Check if we're allowed
+		{
+			Gamemode* gm = gamePtr->getGameMode();
+			if (gm->allowRoleChange())
+			{
+
+			}
+			else
+			{
+				Packet* out = new Packet();
+				*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::ROLESWITCH) << p_conID << Uint8(9);
+				con[p_conID].send(out);
+				delete out;
+				return;
+			}
+		}
+
+		p->chooseRole(role - 1);
+		if (p_conID == gamePtr->GetLocalPlayerId())
+			gamePtr->setPlayerWantsToRespawn(true);
+		gamePtr->sendPlayerRadSize(p->getRole()->getBoxRadius()); //TEMP BUT W/E
 		consolePtr->printMsg("Player " + p->getName() + " switched class!", "System", 'S');
 
 		if (isClient == false)
@@ -632,7 +691,6 @@ public:
 			}
 		}
 		gamePtr->allowPlayerRespawn(p_conID, respawnPosition);
-		consolePtr->printMsg("Player (" + p->getName() + ") respawned!", "System", 'S');
 
 		if (isClient == false)
 		{

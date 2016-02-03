@@ -15,7 +15,7 @@ Console::~Console()
 
 }
 
-bool Console::update(string clientName, char scope)
+bool Console::update(string clientName)
 {
 	Input* i = Input::getInput();
 	if (inChatMode)
@@ -83,13 +83,19 @@ bool Console::update(string clientName, char scope)
 			{
 				cmd = msg;
 				cmdReady = true;
+				addMsg(msg, clientName, scope);
 			}
 			else
 			{
-				lastMsg = msg;
-				msgReady = true;
+				if (msg.size() > 0)
+				{
+					lastMsg = msg;
+					msgReady = true;
+					addMsg(msg, clientName, scope);
+				}
+				else
+					scope = 'T';
 			}
-			addMsg(msg, clientName, scope);
 			inChatMode = false;
 		}
 	}
@@ -98,6 +104,8 @@ bool Console::update(string clientName, char scope)
 		if (i->justPressed(GLFW_KEY_ENTER))
 		{
 			inChatMode = true;
+			if (i->getKeyInfo(GLFW_KEY_LEFT_SHIFT))
+				scope = 'A';
 		}
 	}
 
@@ -194,7 +202,9 @@ bool Console::messageReady()
 	return msgReady;
 }
 
-string Console::getMessage()
+string Console::getMessage(char &s)
 {
+	s = scope;
+	scope = 'T';
 	return lastMsg;
 }

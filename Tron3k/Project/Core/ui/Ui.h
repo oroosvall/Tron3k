@@ -70,6 +70,8 @@ public:
 	void setWorldMatrix(float x, float y, int objId);
 
 	void setTextureId(std::vector<GLuint> uiTextureIds);
+
+
 };
 
 #endif

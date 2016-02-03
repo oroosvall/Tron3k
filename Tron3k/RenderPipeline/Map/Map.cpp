@@ -2,6 +2,8 @@
 #include <fstream>
 #include <iostream>
 
+#include "../Streaming/TextureStreamer.h"
+
 void CapturePoint::buildABBS()
 {
 	renderBigAbb.abbBoxR.init_ABB(bigAABB);
@@ -39,8 +41,9 @@ void CapturePoint::release()
 
 }
 
-void Map::init()
+void Map::init(TextureManager* _tm)
 {
+	tm = _tm;
 	currentChunk = 0;
 	spA = 0;
 	spB = 0;
@@ -54,7 +57,10 @@ void Map::init()
 	}
 	for (int i = 0; i < textureCount; i++)
 	{
-		tex[i].textureID = loadTexture("GameFiles/Textures/map/" + std::string(tex[i].textureName));
+		tex[i].textureID = 0;
+		//tex[i].textureID = loadTexture("GameFiles/Textures/map/" + std::string(tex[i].textureName));
+		//addToStreamQueue(&tex[i].textureID, "GameFiles/Textures/map/" + std::string(tex[i].textureName));
+		tex[i].textureID = tm->createTexture("GameFiles/Textures/map/" + std::string(tex[i].textureName));
 	}
 	
 }
@@ -123,7 +129,7 @@ void Map::release()
 
 }
 
-void Map::renderChunk(GLuint shader, GLuint shaderLocation, int chunkID)
+void Map::renderChunk(GLuint shader, GLuint shaderLocation, GLuint diffuseLocation, GLuint normalLocation, GLuint glowLocation, int chunkID)
 {
 	int meshID;
 
@@ -141,22 +147,36 @@ void Map::renderChunk(GLuint shader, GLuint shaderLocation, int chunkID)
 				break;
 			}
 		}
-
-		glActiveTexture(GL_TEXTURE0);
 		if(mat.textureMapIndex != -1)
-			glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].textureMapIndex].textureID);
+			tm->bindTexture(tex[mat.textureMapIndex].textureID, shader, diffuseLocation, DIFFUSE_FB);
 		else
-			glBindTexture(GL_TEXTURE_2D, blank_diffuse);
-		glActiveTexture(GL_TEXTURE0 + 1);
+			tm->bindDefault(shader, diffuseLocation, DIFFUSE_FB);
+		
 		if (mat.normalMapIndex != -1)
-			glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].normalMapIndex].textureID);
+			tm->bindTexture(tex[mat.normalMapIndex].textureID, shader, normalLocation, NORMAL_FB);
 		else
-			glBindTexture(GL_TEXTURE_2D, blank_normal);
-		glActiveTexture(GL_TEXTURE0 + 2);
+			tm->bindDefault(shader, normalLocation, DIFFUSE_FB);
+		
 		if (mat.specularMapIndex != -1)
-			glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].specularMapIndex].textureID);
+			tm->bindTexture(tex[mat.specularMapIndex].textureID, shader, glowLocation, GLOW_FB);
 		else
-			glBindTexture(GL_TEXTURE_2D, blank_glow);
+			tm->bindDefault(shader, glowLocation, DIFFUSE_FB);
+
+		//glActiveTexture(GL_TEXTURE0);
+		//if(mat.textureMapIndex != -1)
+		//	glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].textureMapIndex].textureID);
+		//else
+		//	glBindTexture(GL_TEXTURE_2D, blank_diffuse);
+		//glActiveTexture(GL_TEXTURE0 + 1);
+		//if (mat.normalMapIndex != -1)
+		//	glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].normalMapIndex].textureID);
+		//else
+		//	glBindTexture(GL_TEXTURE_2D, blank_normal);
+		//glActiveTexture(GL_TEXTURE0 + 2);
+		//if (mat.specularMapIndex != -1)
+		//	glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].specularMapIndex].textureID);
+		//else
+		//	glBindTexture(GL_TEXTURE_2D, blank_glow);
 		
 		glBindVertexArray(meshes[meshID].vertexArray);
 		glBindBuffer(GL_ARRAY_BUFFER, meshes[meshID].vertexBuffer);
@@ -170,10 +190,10 @@ void Map::renderChunk(GLuint shader, GLuint shaderLocation, int chunkID)
 		}
 	}
 
-	if (capturePoints[0].roomID == chunkID)
-	{
-		renderCapturePoint(shader, shaderLocation, 0);
-	}
+	//if (capturePoints[0].roomID == chunkID)
+	//{
+	//	renderCapturePoint(shader, shaderLocation, 0);
+	//}
 
 }
 
@@ -463,9 +483,6 @@ int Map::portalintersection(glm::vec3* oldPos, glm::vec3* newPos, int in_current
 				in_currentChunk = chunks[in_currentChunk].portals[n].bridgedRooms[1];
 			else
 				in_currentChunk = chunks[in_currentChunk].portals[n].bridgedRooms[0];
-	
-			printf("Now in room %d \n", in_currentChunk);
-	
 			return in_currentChunk;
 		}
 	

@@ -57,7 +57,7 @@ private:
 	int collisionNormalSize = 0;
 	void clearCollisionNormals() { collisionNormalSize = 0; };
 
-	bool isDead = true;
+	bool isDead = false;
 	float respawnTimer = 0.0f;
 
 	glm::vec3 oldPos;
@@ -76,6 +76,7 @@ private:
 	int animRole = 0;
 	int animPrimary = true;
 	void movementAnimationChecks(float dt);
+	
 	void peakAnimsUpdate();
 	bool animLastDead = false;
 
@@ -94,6 +95,9 @@ private:
 
 	void rotatePlayer(vec3 olddir, vec3 newdir);
 	void reloadCurrentWeapon();
+
+	int kills;
+	int deaths;
 public:
 	Player();
 	~Player();
@@ -172,6 +176,7 @@ public:
 	void addModifier(MODIFIER_TYPE mt);
 
 	void setRole(Role role);
+	void chooseRole(int r);
 
 	void respawn(glm::vec3 respawnPos, glm::vec3 dir, int roomID);
 	bool getJustRespawned() { return justRespawned; };
@@ -182,10 +187,17 @@ public:
 
 	glm::mat4 getFPSmat();
 
+	void movmentSpecialAnimUse(int react = 0);
 	bool searchModifier(MODIFIER_TYPE search);
 	Modifier* searchModifierGet(MODIFIER_TYPE search);
 
 	int roomID;
+
+	void clearKD() { kills = 0; deaths = 0; };
+	int getKills() { return kills; };
+	int getDeaths() { return deaths; };
+	void addKill() { kills++; };
+	void addDeath() { deaths++;	};
 };
 
 #endif

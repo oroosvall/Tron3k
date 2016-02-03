@@ -3,6 +3,8 @@
 
 #include "../Texture.h"
 
+#include "../Streaming/TextureStreamer.h"
+
 #include <Windows.h>
 
 using std::ios;
@@ -53,7 +55,9 @@ void PlayerMesh::load(string fileName, std::string _character)
 
 			for (int i = 0; i < textureCount; i++)
 			{
-				tex[i].textureID = loadTexture(tex[i].textureName);
+				//tex[i].textureID = loadTexture(tex[i].textureName);
+				//addToStreamQueue(&tex[i].textureID, std::string(tex[i].textureName));
+				tex[i].textureID = TextureManager::gTm->createTexture(tex[i].textureName);
 			}
 		}
 
@@ -118,58 +122,73 @@ void PlayerMesh::release()
 		delete[] materials;
 }
 
-void PlayerMesh::render()
+void PlayerMesh::render(GLuint shader, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation)
 {
-	if (GetAsyncKeyState(VK_F8))
-	{
-		if (materials[0].textureMapIndex != -1)
-		{
-			glDeleteTextures(1, &tex[materials[0].textureMapIndex].textureID);
-			tex[materials[0].textureMapIndex].textureID = loadTexture(tex[materials[0].textureMapIndex].textureName);
-		}
+	//if (GetAsyncKeyState(VK_F8))
+	//{
+	//	if (materials[0].textureMapIndex != -1)
+	//	{
+	//		glDeleteTextures(1, &tex[materials[0].textureMapIndex].textureID);
+	//		tex[materials[0].textureMapIndex].textureID = loadTexture(tex[materials[0].textureMapIndex].textureName);
+	//	}
+	//
+	//	if (materials[0].normalMapIndex != -1)
+	//	{
+	//		glDeleteTextures(1, &tex[materials[0].normalMapIndex].textureID);
+	//		tex[materials[0].normalMapIndex].textureID = loadTexture(tex[materials[0].normalMapIndex].textureName);
+	//	}
+	//	if (materials[0].specularMapIndex != -1)
+	//	{
+	//		glDeleteTextures(1, &tex[materials[0].specularMapIndex].textureID);
+	//		tex[materials[0].specularMapIndex].textureID = loadTexture(tex[materials[0].specularMapIndex].textureName);
+	//	}
+	//}
+	//
+	//if (tex)
+	//{
+	//	glActiveTexture(GL_TEXTURE0);
+	//	if (materials[0].textureMapIndex != -1)
+	//	{
+	//		glBindTexture(GL_TEXTURE_2D, tex[materials[0].textureMapIndex].textureID);
+	//	}
+	//	else
+	//	{
+	//		glBindTexture(GL_TEXTURE_2D, blank_normal);
+	//	}
+	//	glActiveTexture(GL_TEXTURE0 + 1);
+	//	if (materials[0].normalMapIndex != -1)
+	//	{
+	//		glBindTexture(GL_TEXTURE_2D, tex[materials[0].normalMapIndex].textureID);
+	//	}
+	//	else
+	//	{
+	//		glBindTexture(GL_TEXTURE_2D, blank_normal);
+	//	}
+	//	glActiveTexture(GL_TEXTURE0 + 2);
+	//	if (materials[0].specularMapIndex != -1)
+	//	{
+	//		glBindTexture(GL_TEXTURE_2D, tex[materials[0].specularMapIndex].textureID);
+	//	}
+	//	else
+	//	{
+	//		glBindTexture(GL_TEXTURE_2D, blank_glow);
+	//	}
+	//}
 
-		if (materials[0].normalMapIndex != -1)
-		{
-			glDeleteTextures(1, &tex[materials[0].normalMapIndex].textureID);
-			tex[materials[0].normalMapIndex].textureID = loadTexture(tex[materials[0].normalMapIndex].textureName);
-		}
-		if (materials[0].specularMapIndex != -1)
-		{
-			glDeleteTextures(1, &tex[materials[0].specularMapIndex].textureID);
-			tex[materials[0].specularMapIndex].textureID = loadTexture(tex[materials[0].specularMapIndex].textureName);
-		}
-	}
+	if (materials[0].textureMapIndex != -1)
+		TextureManager::gTm->bindTexture(tex[materials[0].textureMapIndex].textureID, shader, textureLocation, DIFFUSE_FB);
+	else
+		TextureManager::gTm->bindDefault(shader, textureLocation, DIFFUSE_FB);
+	if (materials[0].normalMapIndex != -1)
+		TextureManager::gTm->bindTexture(tex[materials[0].normalMapIndex].textureID, shader, normalLocation, NORMAL_FB);
+	else
+		TextureManager::gTm->bindDefault(shader, normalLocation, NORMAL_FB);
 
-	if (tex)
-	{
-		glActiveTexture(GL_TEXTURE0);
-		if (materials[0].textureMapIndex != -1)
-		{
-			glBindTexture(GL_TEXTURE_2D, tex[materials[0].textureMapIndex].textureID);
-		}
-		else
-		{
-			glBindTexture(GL_TEXTURE_2D, blank_normal);
-		}
-		glActiveTexture(GL_TEXTURE0 + 1);
-		if (materials[0].normalMapIndex != -1)
-		{
-			glBindTexture(GL_TEXTURE_2D, tex[materials[0].normalMapIndex].textureID);
-		}
-		else
-		{
-			glBindTexture(GL_TEXTURE_2D, blank_normal);
-		}
-		glActiveTexture(GL_TEXTURE0 + 2);
-		if (materials[0].specularMapIndex != -1)
-		{
-			glBindTexture(GL_TEXTURE_2D, tex[materials[0].specularMapIndex].textureID);
-		}
-		else
-		{
-			glBindTexture(GL_TEXTURE_2D, blank_glow);
-		}
-	}
+	if (materials[0].specularMapIndex != -1)
+		TextureManager::gTm->bindTexture(tex[materials[0].specularMapIndex].textureID, shader, glowSpecLocation, GLOW_FB);
+	else
+		TextureManager::gTm->bindDefault(shader, glowSpecLocation, GLOW_FB);
+
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
@@ -263,13 +282,14 @@ int* AnimatedMeshV2::loadAnimations(std::string character)
 	animations[AnimationState::third_turn_left				].load(file + "_third_turn_left.bin");
 	animations[AnimationState::third_turn_right				].load(file + "_third_turn_right.bin");
 																					
-	animations[AnimationState::third_melee_standing			].load(file + "_third_melee_standing.bin");
-	animations[AnimationState::third_melee_run				].load(file + "_third_melee_run.bin");
+	animations[AnimationState::third_shankbot_melee_standing].load(file + "_third_shankbot_melee_standing.bin");
+	animations[AnimationState::third_shankbot_melee_run		].load(file + "_third_shankbot_melee_run.bin");
 	animations[AnimationState::third_shankbot_charge		].load(file + "_third_shankbot_charge.bin");
+	animations[AnimationState::third_shankbot_walljump_right].load(file + "_third_shankbot_walljump_right.bin");
+	animations[AnimationState::third_shankbot_walljump_left	].load(file + "_third_shankbot_walljump_left.bin");
 																				
 	animations[AnimationState::third_primary_death			].load(file + "_third_primary_death.bin");
 	animations[AnimationState::third_secondary_death		].load(file + "_third_secondary_death.bin");
-
 
 	int frames[AnimationState::none];
 
@@ -277,13 +297,11 @@ int* AnimatedMeshV2::loadAnimations(std::string character)
 	{
 		frames[i] = animations[i].header.keyCount;
 	}
-
 	return frames;
 }
 
-void AnimatedMeshV2::draw(GLuint uniformKeyMatrixLocation,int animationID, int keyFrame, bool _first)
+void AnimatedMeshV2::draw(GLuint uniformKeyMatrixLocation,int animationID, int keyFrame, bool _first, GLuint shader, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation)
 {
-
 	glBindBuffer(GL_UNIFORM_BUFFER, matricesBuffer);
 	glBindBufferBase(GL_UNIFORM_BUFFER, uniformKeyMatrixLocation, matricesBuffer);
 
@@ -291,11 +309,9 @@ void AnimatedMeshV2::draw(GLuint uniformKeyMatrixLocation,int animationID, int k
 	{
 		glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4)* animations[animationID].header.jointCount, animations[animationID].keyFrames[keyFrame].jointTransform, GL_STATIC_DRAW);
 		if(_first)
-			first.render();	
+			first.render(shader, textureLocation, normalLocation, glowSpecLocation);	
 		else
-			third.render();
-	   
+			third.render(shader, textureLocation, normalLocation, glowSpecLocation);
+
 	}
-
-
 }

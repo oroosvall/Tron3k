@@ -9,12 +9,14 @@
 #include "AnimationData.h"
 #include "../../Project/Core/AnimationState.h"
 
+#include "../Manager/TextureManager.h"
+
 struct PlayerMesh
 {
 
 	void load(string fileName, std::string character);
 	void release();
-	void render();
+	void render(GLuint shader, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation);
 
 	int* matOffsets;
 	int* indices;
@@ -55,7 +57,7 @@ public:
 	void load(std::string fileName);
 	int* loadAnimations(std::string character);
 
-	void draw(GLuint uniformKeyMatrixLocation, int animationID, int keyFrame, bool first);
+	void draw(GLuint uniformKeyMatrixLocation, int animationID, int keyFrame, bool first, GLuint shader, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation);
 
 };
 

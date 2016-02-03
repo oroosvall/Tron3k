@@ -17,6 +17,8 @@ private:
 	int uniqueKey;
 	int nrOfButtons;
 	int objId[2];
+	float lastScale;
+	glm::vec3 pivot;
 
 	void createAdditionalPoint();
 public:
@@ -37,6 +39,8 @@ public:
 	virtual void hoverCheck(glm::vec2 pos);
 
 	virtual void setTexture(std::vector<GLuint> uiTextureIds);
+
+	virtual void scaleBar(float procentOfMax, bool fromRight);
 };
 
 #endif

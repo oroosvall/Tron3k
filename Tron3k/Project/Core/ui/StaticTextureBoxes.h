@@ -8,7 +8,6 @@ class StaticTextureBoxes : public UIElements
 {
 private:
 	IRenderPipeline* uiRender;
-	glm::vec2 pos[2];
 	glm::vec2 center;
 	glm::vec2* textureRes;
 	int* textureIndexList;
@@ -16,6 +15,7 @@ private:
 	int uniqueKey;
 	glm::mat4 worldMatrix;
 	int nrOfTextures;
+	glm::vec3 pivot;
 
 public:
 	StaticTextureBoxes();
@@ -35,6 +35,8 @@ public:
 	virtual void hoverCheck(glm::vec2 pos);
 
 	virtual void setTexture(std::vector<GLuint> uiTextureIds);
+
+	virtual void scaleBar(float procentOfMax, bool fromRight);
 };
 
 #endif

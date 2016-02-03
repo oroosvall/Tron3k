@@ -57,10 +57,12 @@ enum SOUNDS
 	announcerRound1,
 	announcerRound2,
 	announcerRound3,
+	announcerYouLose,
+	announcerYouWin,
 	soundEffectCaptureScored,
 	soundEffectBruteDash,
 	soundEffectThermiteGrenade,
-
+	soundEffectPunisherReload,
 	soundEffectDestroyerStart,
 	soundEffectDestroyerStop,
 	soundEffectDestroyerSteps,

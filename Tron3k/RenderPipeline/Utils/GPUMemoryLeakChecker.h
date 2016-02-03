@@ -36,6 +36,8 @@ extern unsigned int bufferBinds;
 
 extern unsigned int shaderBinds;
 
+extern unsigned int stateChange;
+
 
 #ifdef _DEBUG
 
@@ -63,6 +65,9 @@ void glCompressedTexImage2D_D(GLenum target, GLint level,	GLenum internalformat,
 
 void glUseProgram_D(GLuint program);
 
+void glEnable_D(GLenum state);
+
+void glDisable_D(GLenum state);
 
 void reportGPULeaks();
 
@@ -90,6 +95,9 @@ void reportGPULeaks();
 
 #undef glUseProgram
 
+#undef glEnable
+#undef glDisable
+
 #define glGenBuffers(n,i)			glGenBuffers_D(n,i, __FILE__, __LINE__)
 #define glGenVertexArrays(n,i)		glGenVertexArray_D(n,i, __FILE__, __LINE__)
 #define glGenTextures(n,i)			glGenTexture_D(n,i, __FILE__, __LINE__)
@@ -116,6 +124,9 @@ void reportGPULeaks();
 #define glTexImage2D(target, level, internalFormat, width, height, border, format, type, data) glTexImage2D_D(target, level, internalFormat, width, height, border, format, type, data)
 
 #define glCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, data) glCompressedTexImage2D_D(target, level, internalformat, width, height, border, imageSize, data)
+
+#define glEnable(state)		glEnable_D(state)
+#define glDisable(state)	glDisable_D(state)
 
 
 #endif

@@ -31,6 +31,8 @@ public:
 
 	virtual void setTexture(std::vector<GLuint> uiTextureIds) = 0;
 
+	virtual void scaleBar(float procentOfMax, bool fromRight) = 0;
+
 	//virtual uiVertex* returnPosAUv(int id) = 0;
 };
 

@@ -80,6 +80,7 @@ private:
 	GLuint viewProjMat[2];
 	GLuint viewMat;
 
+	GLuint uniformPivotLocation;
 	GLuint uniformTextureLocation[2];
 	GLuint uniformNormalLocation[2];
 	GLuint uniformGlowSpecLocation[2];
@@ -120,7 +121,9 @@ private:
 
 	bool initialized;
 
-	bool renderDebugText = false;
+	bool renderDebugText = true;
+
+	vector<Text*> textObjects;
 
 public:
 
@@ -138,14 +141,14 @@ public:
 	virtual void render();
 	virtual void finalizeRender();
 
-	virtual void addLight(SpotLight* newLight);
+	virtual void addLight(SpotLight* newLight, int roomID);
 	virtual void setChunkColorAndInten(int ID, float* color, float inten);
 
 	virtual void* getView();
 
 	virtual void renderMISC(int miscID, void* world, float* dgColor, float sgInten);
 	virtual void renderBullet(int bid, void* world, float* dgColor, float sgInten);
-	virtual void renderAnimation(int playerID, int roleID, void* world, AnimationState animState, float* dgColor, float sgInten, bool first);
+	virtual void renderAnimation(int playerID, int roleID, void* world, AnimationState animState, float* dgColor, float sgInten, bool first, int roomID);
 
 	virtual std::string getStatus() { return ""; };
 
@@ -161,8 +164,11 @@ public:
 	virtual void setChatHistoryText(std::string text);
 	virtual void setChatTypeMessage(std::string text);
 
-	virtual unsigned int createMesh(...) { return 0; }; // fix parameters
-	virtual void removeMesh(unsigned int id) {};
+	virtual int createTextObject(std::string text, int fontSize, glm::vec2 pos);
+	virtual void setTextObjectText(int id, std::string text);
+	virtual void setTextPos(int id, glm::vec2 pos);
+	virtual void removeTextObject(int id);
+	virtual void renderTextObject(int id);
 
 	virtual void setGBufferWin(unsigned int WindowWidth, unsigned int WindowHeight);
 
@@ -179,17 +185,18 @@ public:
 	virtual void ui_initRender();
 	virtual void ui_InGameRenderInit();
 	virtual void ui_loadTexture(unsigned int* texid, char* filepath, int* xres, int* yres);
-	virtual void ui_renderQuad(float* mat, unsigned int textureID, float transp, int i);
+	virtual void ui_renderQuad(float* mat, float* pivot, unsigned int textureID, float transp, int i);
 	virtual void ui_textureRelease(vector<unsigned int> texids);
 	virtual int portalIntersection(float* pos1, float* pos2, int in_chunk);
 	virtual void setCullingCurrentChunkID(int roomID);
 
 	virtual void enableDepthTest();
 	virtual void disableDepthTest();
+	virtual void clearBothBuffers();
 
 	virtual int startExecTimer(std::string name);
 	virtual void stopExecTimer(int id);
-
+	virtual bool* getRenderedChunks(int& get_size);
 };
 
 

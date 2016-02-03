@@ -54,9 +54,11 @@ enum AnimationState
 	third_manipulator_pounce,		//			|			|		   |	   | Manipulator |
 
 									//shank bot only								 						
-	third_melee_standing,			//			|			| Shankbot |	   |	         |
-	third_melee_run,				//			|			| Shankbot |	   |	         |
+	third_shankbot_melee_standing,	//			|			| Shankbot |	   |	         |
+	third_shankbot_melee_run,		//			|			| Shankbot |	   |	         |
 	third_shankbot_charge,			//			|			| Shankbot |	   |	         |
+	third_shankbot_walljump_right,	//			|			| Shankbot |	   |	         |
+	third_shankbot_walljump_left,	//			|			| Shankbot |	   |	         |
 
 	third_primary_death,			// Trapper	| Destroyer | Shankbot | Brute | Manipulator |
 	third_secondary_death,			//			|			|		   | Brute | Manipulator |
@@ -118,8 +120,10 @@ int static getAnimRank(AnimationState test)
 
 		//shank bot 					
 	case third_shankbot_charge:			return 0;
-	case third_melee_standing:			return 1;
-	case third_melee_run:				return 1;
+	case third_shankbot_melee_standing:	return 1;
+	case third_shankbot_melee_run:		return 1;
+	case third_shankbot_walljump_right: return 1;
+	case third_shankbot_walljump_left:  return 1;
 
 		//special case Brute & Manipula
 	case third_primary_switch:			return 1;
