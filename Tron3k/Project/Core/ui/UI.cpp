@@ -91,6 +91,11 @@ bool UI::loadUI(std::string fileName)
 					textureArray[i] = std::stoi(inputString);
 				}
 			}
+			else if (classId == 4)
+			{
+				getline(myfile, inputString); //tex1
+				textureId1 = std::stoi(inputString);
+			}
 			else
 			{
 				getline(myfile, inputString); //tex1
@@ -131,8 +136,14 @@ bool UI::loadUI(std::string fileName)
 				//result = true;
 				//counter++;
 			}
+			else if(classId == 4) //InputBox
+			{
+				UiObjects.push_back(new InputBox(xy, textureId1, uniqueKey, uiRender, textureRes[0][textureId1]));
+				textureIdList[counter] = textureId1;
+				result = true;
+				counter++;
+			}
 			//else if(classId == 2) {} //DynamicText
-			//else if(classId == 4) {} //Input window
 		}
 	}
 	else

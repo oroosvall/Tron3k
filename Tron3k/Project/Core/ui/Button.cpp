@@ -90,7 +90,6 @@ void Button::fromPosToQuadScreen(glm::vec2 positions, int id)
 	worldMatrix[2].w = 0.0f;
 	pos[0] = glm::vec2(worldMatrix[0].w - worldMatrix[0].x, worldMatrix[1].w - worldMatrix[1].y);
 	pos[1] = glm::vec2(worldMatrix[0].w + worldMatrix[0].x, worldMatrix[1].w + worldMatrix[1].y);
-
 }
 
 int Button::checkCollision(glm::vec2 mpos)

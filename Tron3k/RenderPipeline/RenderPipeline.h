@@ -121,7 +121,7 @@ private:
 
 	bool initialized;
 
-	bool renderDebugText = true;
+	bool renderDebugText = false;
 
 	vector<Text*> textObjects;
 

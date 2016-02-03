@@ -1879,7 +1879,6 @@ void Game::updateDecals(float dt)
 	}
 }
 
-
 void Game::decalAdd(BulletHitWorldInfo info)
 {
 	if (decalCounter >= Max_Decals)
@@ -1893,7 +1892,8 @@ void Game::decalAdd(BulletHitWorldInfo info)
 
 	decals_renderInfo[decalCounter].inten = 1.0f;
 	decals_renderInfo[decalCounter].normal = vec3(info.collisionNormal);
-	decals_renderInfo[decalCounter].pos = info.hitPos;// -vec3(info.collisionNormal) * info.collisionNormal.w;
+	//for correct; pos = pos - collision.normal * (Bulletrad - pendepth)
+	decals_renderInfo[decalCounter].pos = info.hitPos -vec3(info.collisionNormal) * (0.3f - info.collisionNormal.w);
 	
 	if (p->getTeam() == 1)
 		decals_renderInfo[decalCounter].color = TEAMONECOLOR;
