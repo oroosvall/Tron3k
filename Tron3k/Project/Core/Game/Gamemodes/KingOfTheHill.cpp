@@ -38,8 +38,7 @@ void KingOfTheHill::init(Console* cptr, Game* gptr)
 	teamTwoScore = 0;
 	winScore = 2;
 
-	teamOneSpawnTokens = 20;
-	teamTwoSpawnTokens = 20;
+	tokensPerTeam = 5;
 
 	tickForCaptureScoring = 15.0f;
 	timerModifierForCaptureScoring = tickForCaptureScoring;
@@ -226,7 +225,8 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			{
 				gamePtr->allowPlayerRespawn(teamTwoPlayers[c], c);
 			}
-			teamOneSpawnTokens = teamTwoSpawnTokens = 5;
+			gamePtr->clearAllPlayerKD();
+			teamOneSpawnTokens = teamTwoSpawnTokens = tokensPerTeam;
 			state = ROUND;
 		}
 		else
@@ -432,6 +432,7 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 					gamePtr->allowPlayerRespawn(myConID, c);
 				}
 			}
+			gamePtr->clearAllPlayerKD();
 		}
 		else if (state == OVERTIME)
 		{

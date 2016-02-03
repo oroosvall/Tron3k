@@ -37,6 +37,7 @@ private:
 	int teamTwoScore;
 	int winScore;
 
+	int tokensPerTeam;
 	int teamOneSpawnTokens;
 	int teamTwoSpawnTokens;
 

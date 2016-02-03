@@ -1398,6 +1398,8 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 		if (p->getHP() == 0)
 		{
 			console->printMsg(p->getName() + " was fragged by " + playerList[hi.bulletPID]->getName() + "!", "System", 'S');
+			playerList[hi.bulletPID]->addKill();
+			p->addDeath();
 		}
 
 		removeBullet(hi.bt, bulletPosInArray);
@@ -1449,6 +1451,8 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 	if (p->getHP() == 0)
 	{
 		console->printMsg(p->getName() + " was fragged by " + playerList[hi.effectPID]->getName() + "!", "System", 'S');
+		playerList[hi.effectPID]->addKill();
+		p->addDeath();
 	}
 
 	int newHP = p->getHP();
@@ -1915,4 +1919,13 @@ void Game::decalAdd(BulletHitWorldInfo info)
 void Game::cullingPointvsRoom(glm::vec3* pos, int* arr_interIDs, int& interCount, int maxsize)
 {
 	physics->cullingPointvsRoom(pos, arr_interIDs, interCount, maxsize);
+}
+
+void Game::clearAllPlayerKD()
+{
+	for (int c = 0; c < max_con; c++)
+	{
+		if (playerList[c] != nullptr)
+			playerList[c]->clearKD();
+	}
 }

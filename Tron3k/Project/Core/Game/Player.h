@@ -94,6 +94,9 @@ private:
 
 	void rotatePlayer(vec3 olddir, vec3 newdir);
 	void reloadCurrentWeapon();
+
+	int kills;
+	int deaths;
 public:
 	Player();
 	~Player();
@@ -187,6 +190,12 @@ public:
 	Modifier* searchModifierGet(MODIFIER_TYPE search);
 
 	int roomID;
+
+	void clearKD() { kills = 0; deaths = 0; };
+	int getKills() { return kills; };
+	int getDeaths() { return deaths; };
+	void addKill() { kills++; };
+	void addDeath() { deaths++;	};
 };
 
 #endif

@@ -322,6 +322,8 @@ public:
 	void cullingPointvsRoom(glm::vec3* pos, int* arr_interIDs, int& interCount, int maxsize);
 
 	float lastDT = 0;
+
+	void clearAllPlayerKD();
 };
 
 #endif
