@@ -3,8 +3,6 @@
 StaticTextureBoxes::StaticTextureBoxes()
 {
 	uiRender = nullptr;
-	pos[0] = glm::vec2(0.0f, 0.0f);
-	pos[1] = glm::vec2(0.0f, 0.0f);
 	center = glm::vec2(0.0f, 0.0f);
 	textureInUse = -1;
 	worldMatrix = { 1, 0, 0, 0,
@@ -25,12 +23,13 @@ StaticTextureBoxes::StaticTextureBoxes(glm::vec2 center, int* textureId1, int nr
 	for (int i = 0; i < nrOfTextures; i++)
 	{
 		textureIndexList[i] = textureId1[i];
-		this->textureRes[i] = textRes[i];
+		this->textureRes[i] = textRes[textureId1[i]];
 	}
 	textureInUse = textureIndexList[0];
+	uniqueKey = -1;
 
-	float xScale = textRes[0].x / 1980;
-	float yScale = textRes[0].y / 1080;
+	float xScale = textureRes[0].x / 1980;
+	float yScale = textureRes[0].y / 1080;
 
 	// setpos
 	worldMatrix[0].w = center.x;
@@ -40,8 +39,6 @@ StaticTextureBoxes::StaticTextureBoxes(glm::vec2 center, int* textureId1, int nr
 	worldMatrix[0].x = xScale;
 	worldMatrix[1].y = yScale;
 
-	pos[0] = glm::vec2(worldMatrix[0].w - worldMatrix[0].x, worldMatrix[1].w - worldMatrix[1].y);
-	pos[1] = glm::vec2(worldMatrix[0].w + worldMatrix[0].x, worldMatrix[1].w + worldMatrix[1].y);
 }
 StaticTextureBoxes::~StaticTextureBoxes() 
 {
@@ -75,9 +72,6 @@ void StaticTextureBoxes::changeTexUsed(int id)
 	worldMatrix[0].x = xScale;
 	worldMatrix[1].y = yScale;
 
-	pos[0] = glm::vec2(worldMatrix[0].w - worldMatrix[0].x, worldMatrix[1].w - worldMatrix[1].y);
-	pos[1] = glm::vec2(worldMatrix[0].w + worldMatrix[0].x, worldMatrix[1].w + worldMatrix[1].y);
-
 	textureInUse = textureIndexList[id];
 }
 
@@ -87,22 +81,21 @@ void StaticTextureBoxes::fromPosToQuadScreen(glm::vec2 positions, int id)
 	worldMatrix[0].w = positions.x;
 	worldMatrix[1].w = positions.y;
 	worldMatrix[2].w = 0.0f;
-	pos[0] = glm::vec2(worldMatrix[0].w - worldMatrix[0].x, worldMatrix[1].w - worldMatrix[1].y);
-	pos[1] = glm::vec2(worldMatrix[0].w + worldMatrix[0].x, worldMatrix[1].w + worldMatrix[1].y);
 }
 
 int StaticTextureBoxes::checkCollision(glm::vec2 mpos)
 {
-	int returnValue = -1;
-	if (mpos.x > pos[0].x && mpos.x < pos[1].x)
-	{
-		if (mpos.y > pos[0].y && mpos.y < pos[1].y)
-		{
-			returnValue = uniqueKey;
-		}
-	}
-
-	return returnValue;
+	//int returnValue = -1;
+	//if (mpos.x > pos[0].x && mpos.x < pos[1].x)
+	//{
+	//	if (mpos.y > pos[0].y && mpos.y < pos[1].y)
+	//	{
+	//		returnValue = uniqueKey;
+	//	}
+	//}
+	//
+	//return returnValue;
+	return -1;
 }
 
 void StaticTextureBoxes::hoverCheck(glm::vec2 pos)

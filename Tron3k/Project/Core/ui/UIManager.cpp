@@ -47,10 +47,32 @@ void UIManager::init(Console* console)
 	this->console = console;
 
 	//Texture Paths
-	texturePaths.push_back("GameFiles/Textures/UITextures/testmap.png");
-	texturePaths.push_back("GameFiles/Textures/UITextures/multiplayer.png");
-	texturePaths.push_back("GameFiles/Textures/UITextures/settings.png");
-	texturePaths.push_back("GameFiles/Textures/UITextures/exit.png");
+	//Main menu
+	texturePaths.push_back("GameFiles/Textures/UITextures/testmap.png"); //0
+	texturePaths.push_back("GameFiles/Textures/UITextures/multiplayer.png"); //1
+	texturePaths.push_back("GameFiles/Textures/UITextures/settings.png"); //2
+	texturePaths.push_back("GameFiles/Textures/UITextures/exit.png"); //3
+
+	//Multiplayer
+	//Background  //4
+	//Client  //5
+	//Server  //6
+
+	//Connect
+	texturePaths.push_back("GameFiles/Textures/UITextures/connect_to_server_background.png"); //4
+	texturePaths.push_back("GameFiles/Textures/UITextures/connect_to_server_connect.png"); //5
+	texturePaths.push_back("GameFiles/Textures/UITextures/connect_to_server_back.png"); //6
+
+	//Team select
+	texturePaths.push_back("GameFiles/Textures/UITextures/team_selection_background.png"); //7
+	texturePaths.push_back("GameFiles/Textures/UITextures/team_selection_alpha.png"); //8
+	texturePaths.push_back("GameFiles/Textures/UITextures/team_selection_beta.png"); //9
+
+	//Class select
+	texturePaths.push_back("GameFiles/Textures/UITextures/class_selection_background.png"); //10
+	texturePaths.push_back("GameFiles/Textures/UITextures/class_selection_trapper.png"); //11
+	texturePaths.push_back("GameFiles/Textures/UITextures/class_selection_stalker.png"); //12
+	texturePaths.push_back("GameFiles/Textures/UITextures/class_selection_punisher.png"); //13
 
 	loadInTexture();
 

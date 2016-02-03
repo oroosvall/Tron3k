@@ -8,7 +8,6 @@ class StaticTextureBoxes : public UIElements
 {
 private:
 	IRenderPipeline* uiRender;
-	glm::vec2 pos[2];
 	glm::vec2 center;
 	glm::vec2* textureRes;
 	int* textureIndexList;
