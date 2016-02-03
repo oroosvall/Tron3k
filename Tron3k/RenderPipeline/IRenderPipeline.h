@@ -103,7 +103,7 @@ public:
 	virtual void ui_initRender() = 0;
 	virtual void ui_InGameRenderInit() = 0;
 	virtual void ui_loadTexture(unsigned int* texid, char* filepath, int* xres, int* yres) = 0;
-	virtual void ui_renderQuad(float* mat, unsigned int textureID, float transp, int i) = 0;
+	virtual void ui_renderQuad(float* mat, float* pivot, unsigned int textureID, float transp, int i) = 0;
 	virtual void ui_textureRelease(std::vector<unsigned int> texids) = 0;
 	virtual int portalIntersection(float* pos1, float* pos2, int in_chunk) = 0;
 	virtual void setCullingCurrentChunkID(int roomID) = 0;

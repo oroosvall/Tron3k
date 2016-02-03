@@ -238,6 +238,7 @@ void RenderPipeline::reloadShaders()
 	//UI shaderLocations
 	ui_Texture = glGetUniformLocation(uiShader, "textureSample");
 	ui_World = glGetUniformLocation(uiShader, "WorldMatrix");
+	uniformPivotLocation = glGetUniformLocation(uiShader, "pivot");
 
 	//decal uniforms
 	//http:/d/www.opentk.com/node/2926
@@ -250,7 +251,7 @@ void RenderPipeline::reloadShaders()
 
 	decal_inten = glGetUniformLocation(decal_Shader, "inten");
 	//decal_Uniformtexsample = glGetUniformLocation(decal_Shader, "texsample");
-	
+
 	worldMat[0] = glGetUniformLocation(regularShader, "WorldMatrix"); //worldMat regular shader
 	viewMat = glGetUniformLocation(regularShader, "ViewMatrix"); //view
 	viewProjMat[0] = glGetUniformLocation(regularShader, "ViewProjMatrix"); //view regular shader
@@ -961,13 +962,14 @@ void RenderPipeline::ui_loadTexture(unsigned int* texid, char* filepath, int* xr
 	*texid = loadTexture(std::string(filepath), true, xres, yres);
 }
 
-void RenderPipeline::ui_renderQuad(float* mat, GLuint textureID, float transp, int i)
+void RenderPipeline::ui_renderQuad(float* mat, float* pivot, GLuint textureID, float transp, int i)
 {
 	glm::mat4* world = (glm::mat4*)mat;
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, mat);
+	glProgramUniform3fv(uiShader, uniformPivotLocation, 1, pivot);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
 

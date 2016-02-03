@@ -26,7 +26,6 @@ Slider::Slider()
 	nrOfButtons = 2;
 	objId[0] = -1;
 	objId[1] = -1;
-	lastScale = 1.0f;
 }
 Slider::Slider(glm::vec2 center, int textureId1, int textureId2, int uniqueKey, int objId1, int objId2, IRenderPipeline* uiRender, glm::vec2 textRes, glm::vec2 textRes2)
 {
@@ -38,8 +37,6 @@ Slider::Slider(glm::vec2 center, int textureId1, int textureId2, int uniqueKey, 
 	textureIndexList[0] = textureId1;
 	textureIndexList[1] = textureId2;
 	this->uniqueKey = uniqueKey;
-
-	lastScale = 1.0f;
 
 	objId[0] = objId1;
 	objId[1] = objId2;
@@ -72,7 +69,7 @@ void Slider::createAdditionalPoint()
 void Slider::render(int id)
 {
 	for(int i = 0; i < 2; i++)
-		uiRender->ui_renderQuad((float*)&worldMatrix[i][0][0], textureIndexList[i], 1.0f, id);
+		uiRender->ui_renderQuad((float*)&worldMatrix[i][0][0], (float*)&pivot.x, textureIndexList[i], 1.0f, id);
 }
 
 void Slider::setWorldMatrix(float x, float y, int id)
@@ -126,17 +123,16 @@ void Slider::setTexture(std::vector<GLuint> uiTextureIds)
 	}
 }
 
-void Slider::scaleBarFromRight(float procentOfMax)
+void Slider::scaleBar(float procentOfMax, bool fromRight) //
 {
-	//Calc the new size.
+	pivot = glm::vec3(1.0f, 0.0f, 0.0f);
+
 	float scale = (textureRes[0].x * procentOfMax) / 1920.0f;
 	worldMatrix[0][0].x = scale;
 
-	//Calc the new position
-	float difference = lastScale - scale;
+	float fullLength = textureRes[0].x / 1920.0f;
+	pivot.x = fullLength - scale;
 
-	difference = (difference * textureRes[0].x) / 1920.0f;
-	worldMatrix[0][0].w += difference;
-
-	lastScale = scale;
+	if (!fromRight)
+		pivot.x = -pivot.x;
 }

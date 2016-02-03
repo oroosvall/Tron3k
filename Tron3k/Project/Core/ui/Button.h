@@ -25,7 +25,7 @@ private:
 	//Hover key
 	int hoverCheckKey;
 
-	float lastLength;
+	glm::vec3 pivot;
 
 public:
 	Button();
@@ -46,7 +46,7 @@ public:
 
 	virtual void setTexture(std::vector<GLuint> uiTextureIds);
 
-	virtual void scaleBarFromRight(float procentOfMax);
+	virtual void scaleBar(float procentOfMax, bool fromRight);;
 };
 
 #endif

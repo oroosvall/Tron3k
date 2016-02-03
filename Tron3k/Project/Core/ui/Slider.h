@@ -18,6 +18,7 @@ private:
 	int nrOfButtons;
 	int objId[2];
 	float lastScale;
+	glm::vec3 pivot;
 
 	void createAdditionalPoint();
 public:
@@ -39,7 +40,7 @@ public:
 
 	virtual void setTexture(std::vector<GLuint> uiTextureIds);
 
-	virtual void scaleBarFromRight(float procentOfMax);
+	virtual void scaleBar(float procentOfMax, bool fromRight);
 };
 
 #endif

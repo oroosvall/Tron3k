@@ -13,7 +13,6 @@ StaticTextureBoxes::StaticTextureBoxes()
 				    0, 0, 0, 1 };
 	uniqueKey = -1;
 	nrOfTextures = 0;
-	lastScale = 1.0f;
 }
 StaticTextureBoxes::StaticTextureBoxes(glm::vec2 center, int* textureId1, int nrOfTextures, IRenderPipeline* uiRender, std::vector<glm::vec2>  textRes)
 {
@@ -29,8 +28,6 @@ StaticTextureBoxes::StaticTextureBoxes(glm::vec2 center, int* textureId1, int nr
 		this->textureRes[i] = textRes[i];
 	}
 	textureInUse = textureIndexList[0];
-
-	lastScale = 1.0f;
 
 	float xScale = textRes[0].x / 1980;
 	float yScale = textRes[0].y / 1080;
@@ -56,7 +53,7 @@ StaticTextureBoxes::~StaticTextureBoxes()
 
 void StaticTextureBoxes::render(int id)
 {
-	uiRender->ui_renderQuad((float*)&worldMatrix[0][0], textureInUse, 1.0f, id);
+	uiRender->ui_renderQuad((float*)&worldMatrix[0][0], (float*)&pivot.x, textureInUse, 1.0f, id);
 }
 
 void StaticTextureBoxes::setWorldMatrix(float x, float y, int id)
@@ -122,17 +119,16 @@ void StaticTextureBoxes::setTexture(std::vector<GLuint> uiTextureIds)
 	textureInUse = textureIndexList[0];
 }
 
-void StaticTextureBoxes::scaleBarFromRight(float procentOfMax) //
+void StaticTextureBoxes::scaleBar(float procentOfMax, bool fromRight) //
 {
-	//Calc the new size.
+	pivot = glm::vec3(1.0f, 0.0f, 0.0f);
+
 	float scale = (textureRes[0].x * procentOfMax) / 1920.0f;
 	worldMatrix[0].x = scale;
 
-	//Calc the new position
-	float difference =  lastScale - scale;
+	float fullLength = textureRes[0].x / 1920.0f;
+	pivot.x = fullLength - scale;
 
-	difference = (difference * textureRes[0].x) / 1920.0f;
-	worldMatrix[0].w += difference;
-
-	lastScale = scale;
+	if (!fromRight)
+		pivot.x = -pivot.x;
 }

@@ -33,7 +33,7 @@ void UI::init(std::string fileName, Console* console, IRenderPipeline* uiRender,
 		console->printMsg("Error: LoadUI in UI was unsucessfull","System",'S');
 
 	
-	//UiObjects[0]->scaleBarFromRight(0.75f);
+	UiObjects[0]->scaleBarFromRight(1.33f);
 }
 
 //Needs to be modified
