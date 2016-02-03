@@ -59,9 +59,9 @@ vec3 Physics::checkAABBvAABBCollision(Geometry* obj1, Geometry* obj2)
 
 bool Physics::checkAABBvAABBCollision(AABB* mesh1, AABB* mesh2)
 {
-	if (mesh1->max.x + FLT_EPSILON >= mesh2->min.x - FLT_EPSILON && mesh1->min.x - FLT_EPSILON <= mesh2->max.x + FLT_EPSILON)//x
-		if (mesh1->max.y + FLT_EPSILON >= mesh2->min.y - FLT_EPSILON && mesh1->min.y - FLT_EPSILON <= mesh2->max.y + FLT_EPSILON)//y
-			if (mesh1->max.z + FLT_EPSILON >= mesh2->min.z - FLT_EPSILON && mesh1->min.z - FLT_EPSILON <= mesh2->max.z + FLT_EPSILON)//y
+	if (mesh1->max.x > mesh2->min.x  && mesh1->min.x  < mesh2->max.x )//x
+		if (mesh1->max.y  > mesh2->min.y  && mesh1->min.y  < mesh2->max.y )//y
+			if (mesh1->max.z  > mesh2->min.z && mesh1->min.z < mesh2->max.z)//y
 				return true;
 
 	return false;
@@ -619,8 +619,9 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos)
 {
 	AABB box;
 	float rad = playerBox.getSphere().radius;
-	box.max = playerPos + vec3(rad, rad, rad);
-	box.min = playerPos - vec3(rad, rad, rad);
+	float abbrad = rad + 0.01f;
+	box.max = playerPos + vec3(abbrad, abbrad, abbrad);
+	box.min = playerPos - vec3(abbrad, abbrad, abbrad);
 	playerBox.setAABB(box);
 
 	std::vector<vec4> cNorms;
