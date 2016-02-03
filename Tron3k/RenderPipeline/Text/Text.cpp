@@ -201,8 +201,8 @@ void Text::fillBuffer()
 void Text::draw()
 {
 
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture);
+	//glActiveTexture(GL_TEXTURE0);
+	//glBindTexture(GL_TEXTURE_2D, texture);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBindVertexArray(vao);

@@ -120,7 +120,7 @@ private:
 
 	bool initialized;
 
-	bool renderDebugText = false;
+	bool renderDebugText = true;
 
 public:
 

@@ -16,6 +16,8 @@
 
 #include "../Mesh/MiscMesh.h"
 
+#include "TextureManager.h"
+
 struct TextureLookup
 {
 	std::string textureName;
@@ -53,6 +55,9 @@ private:
 	{
 		float pos[5];
 	};
+
+	TextureManager tm;
+
 public:
 	Map testMap;
 
@@ -75,13 +80,15 @@ public:
 
 	void release();
 
+	void update(float dt);
+
 	void renderChunks(GLuint shader, GLuint shaderLocation, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation, GLuint DglowColor, GLuint SglowColor, GLuint portal_shader, GLuint portal_world);
 
 	void renderBullet(int bid);
 	void renderThunderDome();
-	void renderMisc(int renderID);
+	void renderMisc(int renderID, GLuint shader, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation);
 
-	void renderPlayer(AnimManager::animState, glm::mat4 world, GLuint uniformKeyMatrixLocation, bool first);
+	void renderPlayer(AnimManager::animState, glm::mat4 world, GLuint uniformKeyMatrixLocation, bool first, GLuint shader, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation);
 
 	int getPortalID(glm::vec3* oldpos, glm::vec3* newpos, int in_chunk) { return testMap.portalintersection(oldpos, newpos, in_chunk); }
 
@@ -89,7 +96,7 @@ public:
 	void* getCapAsPointer(int& count);
 	void* getRoomBoxes();
 
-	void bindLightwalTexture();
+	void bindLightwalTexture(GLuint shader, GLuint location);
 
 	std::vector<std::vector<float>> getMeshBoxes(); //Will send out all meshboxes, for now it'll just send a static one
 

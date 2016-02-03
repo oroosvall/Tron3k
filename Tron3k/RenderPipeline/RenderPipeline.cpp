@@ -86,12 +86,16 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 	cam.init(WindowWidth, WindowHeight);
 
+	contMan.init();
+
 	gBuffer = new Gbuffer();
 	
 	Text::ScreenResHeight = WindowHeight;
 	Text::ScreenResWidth = WindowWidth;
 
-	fontTexture = loadTexture("GameFiles/Font/font16.png", false);
+	//fontTexture = loadTexture("GameFiles/Font/font16.png", false);
+
+	fontTexture = TextureManager::gTm->createTexture("GameFiles/Font/font16.png");
 
 	debugText = new Text("", 16, fontTexture, vec2(10, 24));
 	chatHistoryText = ".\n.\n.\n.\n.\n";
@@ -130,8 +134,6 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 	gBuffer->init(WindowWidth, WindowHeight, 5, true);
 
-	contMan.init();
-
 	for (size_t i = 0; i < 5*AnimationState::none; i++)
 	{
 		anims.keyFrameLenghts[i] = contMan.keyFrameLengths[i];
@@ -153,6 +155,8 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	//int maxDecals = 50;
 	//glBindBuffer(GL_UNIFORM_BUFFER, decal_struct_UBO);
 	//glBufferData(GL_UNIFORM_BUFFER, maxDecals * sizeof(float) * 12, NULL, GL_DYNAMIC_DRAW);
+
+	resetQuery();
 
 	initialized = true;
 	return true;
@@ -369,6 +373,8 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	cam.setViewProjMat(animationShader, viewProjMat[1]);
 	cam.setViewProjMat(*gBuffer->portal_shaderPtr, gBuffer->portal_vp);
 
+	contMan.update(dt);
+
 	gBuffer->eyePosLast = gBuffer->eyePos;
 	gBuffer->eyePos.x = x;
 	gBuffer->eyePos.y = y;
@@ -392,6 +398,7 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 		ss << "Texture binds: " << textureBinds << "\n";
 		ss << "Buffer binds: " << bufferBinds << "\n";
 		ss << "Shader binds: " << shaderBinds << "\n";
+		ss << "State changes: " << stateChange << "\n";
 		ss << result << "\n";
 		if (counter > 1.0f)
 		{
@@ -408,6 +415,7 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	textureBinds = 0;
 	bufferBinds = 0;
 	shaderBinds = 0;
+	stateChange = 0;
 
 	startTimer("Frame : Total");
 	renderFrameTimeID = startTimer("Frame : Render only");
@@ -483,7 +491,8 @@ void RenderPipeline::finalizeRender()
 	gBuffer->render();
 	
 	glUseProgram(textShader);
-	glProgramUniform1i(textShader, textShaderLocation, 0);
+	//glProgramUniform1i(textShader, textShaderLocation, 0);
+	TextureManager::gTm->bindTexture(fontTexture, textShader, textShaderLocation, DIFFUSE_FB);
 	
 	glEnable(GL_BLEND);
 
@@ -503,7 +512,7 @@ void RenderPipeline::renderWallEffect(void* pos1, void* pos2, float uvStartOffse
 	glUseProgram(lw_Shader);
 	glProgramUniform1i(lw_Shader, lw_tex, 0);
 	//call contentman and bind the lightwal texture to 0
-	contMan.bindLightwalTexture();
+	contMan.bindLightwalTexture(lw_Shader, lw_tex);
 	cam.setViewProjMat(lw_Shader, lw_vp);
 	glProgramUniform3fv(lw_Shader, uniformDynamicGlowColorLocation_wall, 1, (GLfloat*)&dgColor[0]);
 
@@ -694,7 +703,7 @@ void RenderPipeline::renderMISC(int miscID, void* world, float* dgColor, float s
 	//set temp objects worldmat
 	glProgramUniformMatrix4fv(regularShader, worldMat[0], 1, GL_FALSE, (GLfloat*)world);
 
-	contMan.renderMisc(miscID);
+	contMan.renderMisc(miscID, regularShader, uniformTextureLocation[0], uniformNormalLocation[0], uniformGlowSpecLocation[0]);
 }
 
 void RenderPipeline::renderBullet(int bid, void* world, float* dgColor, float sgInten)
@@ -736,9 +745,9 @@ void RenderPipeline::renderAnimation(int playerID, int roleID, void* world, Anim
 	glProgramUniform1f(animationShader, uniformGlowTrail[1], 0.0f);
 
 	//Texture for the glow
-	glProgramUniform1i(animationShader, uniformTextureLocation[1], 0);
-	glProgramUniform1i(animationShader, uniformNormalLocation[1], 1);
-	glProgramUniform1i(animationShader, uniformGlowSpecLocation[1], 2);
+	//glProgramUniform1i(animationShader, uniformTextureLocation[1], 0);
+	//glProgramUniform1i(animationShader, uniformNormalLocation[1], 1);
+	//glProgramUniform1i(animationShader, uniformGlowSpecLocation[1], 2);
 
 	//set temp objects worldmat
 	glProgramUniformMatrix4fv(animationShader, worldMat[1], 1, GL_FALSE, (GLfloat*)world);
@@ -746,7 +755,7 @@ void RenderPipeline::renderAnimation(int playerID, int roleID, void* world, Anim
 	anims.updateAnimStates(playerID, roleID, animState, delta, first);
 
 	if (anims.animStates[playerID].state != AnimationState::none && anims.animStates[playerID].frameEnd > 0)
-		contMan.renderPlayer(anims.animStates[playerID], *(glm::mat4*)world, uniformKeyMatrixLocation, first);
+		contMan.renderPlayer(anims.animStates[playerID], *(glm::mat4*)world, uniformKeyMatrixLocation, first, animationShader, uniformTextureLocation[1], uniformNormalLocation[1], uniformGlowSpecLocation[1]);
 	
 }
 
@@ -911,7 +920,7 @@ void RenderPipeline::getSpawnpoints(std::vector < std::vector < SpawnpointG > > 
 	}
 	spoints.push_back(team2);
 
-	contMan.testMap.deleteSpawnposData();
+	//contMan.testMap.deleteSpawnposData();
 }
 
 void RenderPipeline::setChatHistoryText(std::string text)
@@ -954,8 +963,8 @@ void RenderPipeline::ui_renderQuad(float* mat, GLuint textureID, float transp, i
 {
 	glm::mat4* world = (glm::mat4*)mat;
 
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, textureID);
+	//glActiveTexture(GL_TEXTURE0);
+	//glBindTexture(GL_TEXTURE_2D, textureID);
 	glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, mat);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }

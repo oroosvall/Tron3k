@@ -9,6 +9,8 @@
 #include "../BlitQuad.h" //used for rendering portals
 #include <vector>
 
+#include "../Manager/TextureManager.h"
+
 using std::vector;
 
 struct CapturePoint
@@ -62,6 +64,9 @@ private:
 	int bbCount;
 
 public:
+
+	TextureManager* tm;
+
 	vector<Chunk> chunks;
 	int currentChunk;
 	int roomCount;
@@ -73,10 +78,10 @@ public:
 	int spTBCount;
 	int spFFACount;
 
-	void init();
+	void init(TextureManager* _tm);
 	void release();
 
-	void renderChunk(GLuint shader, GLuint shaderLocation, int chunkID);
+	void renderChunk(GLuint shader, GLuint shaderLocation, GLuint diffuseLocation, GLuint normalLocation, GLuint glowLocation, int chunkID);
 
 	void renderCapturePoint(GLuint shader, GLuint shaderLocation, int spawnPointID);
 
