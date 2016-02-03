@@ -1,7 +1,7 @@
 #ifndef WORLDMESH_H
 #define WORLDMESH_H
 
-#include "CollideMesh.h"
+#include"MeshTypes.h"
 
 class WorldMesh
 {

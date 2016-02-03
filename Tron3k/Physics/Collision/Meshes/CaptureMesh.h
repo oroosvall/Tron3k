@@ -1,7 +1,7 @@
 #ifndef CAPTUREMESH_H
 #define CAPTUREMESH_H
 
-#include "CollideMesh.h"
+#include "MeshTypes.h"
 
 class CaptureMesh
 {
@@ -20,6 +20,9 @@ public:
 
 	void setPos(vec3 pos);
 	vec3 getPos() { return pos; };
+
+	void setCapID(int capID);
+	int getCapID() { return capID; };
 
 	AABBSingle getAABB() { return aabb; };
 	void setAABB(AABBSingle aabb);

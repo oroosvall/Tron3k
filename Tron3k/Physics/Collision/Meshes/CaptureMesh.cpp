@@ -61,6 +61,11 @@ void CaptureMesh::setPos(vec3 pos)
 	aabb.pos = pos;
 }
 
+void CaptureMesh::setCapID(int capID)
+{
+	this->capID = capID;
+}
+
 void CaptureMesh::setAABB(AABBSingle aabb)
 {
 	this->aabb.max = aabb.max;

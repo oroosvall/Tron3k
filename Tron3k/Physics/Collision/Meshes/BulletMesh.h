@@ -1,7 +1,7 @@
 #ifndef BULLETMESH_H
 #define BULLETMESH_H
 
-#include "CollideMesh.h"
+#include"MeshTypes.h"
 
 class BulletMesh
 {
@@ -10,6 +10,8 @@ private:
 	Sphere sphere;
 
 	vec3 pos;
+	vec3 worldSize;//Size vs terrain
+	vec3 bulletSize;//size vs players
 public:
 	BulletMesh();
 	BulletMesh(vec3 pos);

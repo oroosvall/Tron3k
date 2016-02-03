@@ -1,7 +1,7 @@
 #ifndef ROOMMESH_H
 #define ROOMMESH_H
 
-#include "CollideMesh.h"
+#include"MeshTypes.h"
 #include "WorldMesh.h"
 
 class RoomMesh

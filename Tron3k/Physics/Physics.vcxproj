@@ -19,11 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Collision\Chunk.h" />
-    <ClInclude Include="Collision\Geometry.h" />
     <ClInclude Include="Collision\Meshes\BulletMesh.h" />
     <ClInclude Include="Collision\Meshes\CaptureMesh.h" />
     <ClInclude Include="Collision\Meshes\CollideMesh.h" />
+    <ClInclude Include="Collision\Meshes\MeshTypes.h" />
     <ClInclude Include="Collision\Meshes\PlayerMesh.h" />
     <ClInclude Include="Collision\Meshes\RoomMesh.h" />
     <ClInclude Include="Collision\Meshes\WorldMesh.h" />
@@ -31,8 +30,6 @@
     <ClInclude Include="Physics.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Collision\Chunk.cpp" />
-    <ClCompile Include="Collision\Geometry.cpp" />
     <ClCompile Include="Collision\Meshes\BulletMesh.cpp" />
     <ClCompile Include="Collision\Meshes\CaptureMesh.cpp" />
     <ClCompile Include="Collision\Meshes\CollideMesh.cpp" />

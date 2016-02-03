@@ -1,7 +1,7 @@
 #ifndef PLAYERMESH_H
 #define PLAYERMESH_H
 
-#include "CollideMesh.h"
+#include "MeshTypes.h"
 
 class PlayerMesh
 {
@@ -11,6 +11,8 @@ private:
 	Sphere sphere;
 
 	vec3 pos;
+	vec3 worldSize;//encapsules collision sphere
+	vec3 playerSize;//actual size used to measure against bullets
 public:
 	PlayerMesh();
 	PlayerMesh(vec3 pos);

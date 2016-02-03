@@ -12,7 +12,6 @@
 #define TAU 6.28318530718
 
 
-#include "Collision\Geometry.h"
 #include "Collision\Meshes\CollideMesh.h"
 #include "Collision\Meshes\BulletMesh.h"
 #include "Collision\Meshes\CaptureMesh.h"
@@ -40,18 +39,20 @@ class Physics
 {
 private:
 	//General physics components will go here, and things will be added as we go
-	std::vector<std::vector<WorldMesh>> worldBoxes; //each CollideMesh is an ABB, and the vector is all CollideMeshes in the chunk
+	//std::vector<std::vector<WorldMesh>> worldBoxes; //each CollideMesh is an ABB, and the vector is all CollideMeshes in the chunk
 	std::vector<CaptureMesh> captureBoxes;
+	
 	std::vector<RoomMesh> roomBoxes;
+	//each RoomBox is a room in the world
+	//each also contains all the information for the objects inside it
+
 	//std::vector<CollideMesh> captureBoxes;
 	std::vector<EffectMesh*> effectBoxes;
 	PlayerMesh playerBox;
 	BulletMesh bulletBox;
 
 	//--------AABB Collisions--------//
-	bool checkAABBvAABBCollision(AABB* mesh1, AABB* mesh2);
-	glm::vec3 checkAABBvAABBCollision(Geometry* obj1, Geometry* obj2); //unnecessary redefinition
-	bool checkPlayerVCapCollision(AABB* player, AABBCapPoint capPoint);
+	bool checkAABBvAABBCollision(AABBSingle mesh1, AABBSingle mesh2);
 
 	glm::vec3 checkAABBvAngledCylinderCollision(CollideMesh mesh1, CollideMesh mesh2);
 	glm::vec3 checkAABBvCylinderCollision(CollideMesh mesh1, CollideMesh mesh2);
@@ -61,7 +62,6 @@ private:
 
 	//--------OBB Collisions--------//
 	glm::vec3 checkOBBvOBBCollision(CollideMesh mesh1, CollideMesh mesh2); //Probably not needed
-	glm::vec3 checkOBBvOBBCollision(Geometry* obj1, Geometry* obj2); //Most likely not needed
 	
 	glm::vec3 checkOBBvCylinderCollision(CollideMesh mesh1, CollideMesh mesh2);
 	glm::vec3 checkOBBvAngledCylinderCollision(CollideMesh mesh1, CollideMesh mesh2);
@@ -76,10 +76,10 @@ private:
 	//--------------//--------------//
 
 	//-------Sphere Collision-------//
-	std::vector<glm::vec4> checkSpherevSphereCollision(CollideMesh mesh1, CollideMesh mesh2);
+	glm::vec4 checkSpherevSphereCollision(Sphere mesh1, Sphere mesh2);
 
-	std::vector<glm::vec4> checkSpherevSpheretdCollision(CollideMesh mesh1, CollideMesh mesh2);
-	std::vector<glm::vec4> checkSpherevOBBlwCollision(CollideMesh mesh1, CollideMesh mesh2);
+	glm::vec4 checkSpherevSpheretdCollision(Sphere mesh1, Sphere mesh2);
+	glm::vec4 checkSpherevOBBlwCollision(Sphere mesh1, OBB mesh2);
 	//--------------//--------------//
 
 	//--------Line Collision--------//
@@ -100,7 +100,7 @@ private:
 	glm::vec4 getSpherevOBBNorms(glm::vec3 pos, float rad, OBB* obb);
 	//--------------//--------------//
 
-	void* checkBulletvWorldInternal(AABB bulletBox, float rad, int index);
+	void* checkBulletvWorldInternal(AABBSingle bulletBox, float rad, int index);
 	vec4 bulletNormal[4];
 
 	void storeChunkBox(int chunkID, std::vector<AABB> cBox);
@@ -122,16 +122,14 @@ public:
 	virtual glm::vec3 checkPlayerVBulletCollision(glm::vec3 playerPos, glm::vec3 bulletPos, vec3 size);
 	virtual std::vector<glm::vec4> PlayerVWorldCollision(glm::vec3 playerPos);
 	virtual glm::vec4 BulletVWorldCollision(glm::vec3 bulletPos, vec3 bulletVel, vec3 bulletDir, float dt);
-	virtual glm::vec3 checkBulletVWorldCollision(glm::vec3 bulletPos);
-	virtual std::vector<glm::vec4> checkPlayerVEffectCollision(glm::vec3 playerPos, unsigned int eType, int eid);
-	virtual std::vector<glm::vec4> checkBulletVEffectCollision(glm::vec3 bulletPos, vec3 bulletVel, vec3 bulletDir, unsigned int eType, int eid, float dt);
+	virtual glm::vec4 checkPlayerVEffectCollision(glm::vec3 playerPos, unsigned int eType, int eid);
+	virtual glm::vec4 checkBulletVEffectCollision(glm::vec3 bulletPos, vec3 bulletVel, vec3 bulletDir, unsigned int eType, int eid, float dt);
 	virtual bool checkPlayerVCaptureCollision(vec3 playerPos, int capID);
 
 	virtual float addGravity(float dt);
 
 	virtual void receiveChunkBoxes(int chunkID, void* cBoxes);
 	virtual void receiveCap(int nrCaps, void* capBoxes);
-	virtual void receiveWorldBoxes(std::vector<std::vector<float>> wBoxes);
 	virtual void receiveRoomBoxes(void* roomboxes);
 	virtual void receivePlayerBox(std::vector<float> pBox, float rad);
 	virtual void receivePlayerRad(float rad);

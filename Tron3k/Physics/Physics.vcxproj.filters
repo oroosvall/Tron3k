@@ -24,14 +24,8 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Collision\Geometry.h">
-      <Filter>Source Files\Collision</Filter>
-    </ClInclude>
     <ClInclude Include="Physics.h">
       <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Collision\Chunk.h">
-      <Filter>Source Files\Collision</Filter>
     </ClInclude>
     <ClInclude Include="Effect\EffectMesh.h">
       <Filter>Source Files\Effect</Filter>
@@ -54,16 +48,13 @@
     <ClInclude Include="Collision\Meshes\CaptureMesh.h">
       <Filter>Source Files\Collision\Meshes</Filter>
     </ClInclude>
+    <ClInclude Include="Collision\Meshes\MeshTypes.h">
+      <Filter>Source Files\Collision\Meshes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Collision\Geometry.cpp">
-      <Filter>Source Files\Collision</Filter>
-    </ClCompile>
     <ClCompile Include="Physics.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Collision\Chunk.cpp">
-      <Filter>Source Files\Collision</Filter>
     </ClCompile>
     <ClCompile Include="Effect\EffectMesh.cpp">
       <Filter>Source Files\Effect</Filter>

@@ -62,6 +62,8 @@ void WorldMesh::setAABB(AABBSingle aabb)
 
 void WorldMesh::setBoxes(AABBloaded aabbLoad)
 {
+	obbs.clear();
+
 	pos = vec3(aabbLoad.pos);
 
 	aabb.pos = vec3(aabbLoad.pos);
