@@ -1218,14 +1218,14 @@ void Core::renderWorld(float dt)
 	{
 		//temp set to see anims in 3p 
 		CameraInput* cam = CameraInput::getCam();
-		//vec3 camPos = cam->getPos();
-		//vec3 camDir = cam->getDir();
+		vec3 camPos = cam->getPos();
+		vec3 camDir = cam->getDir();
 		bool force3rd = false;
-		//if (i->getKeyInfo(GLFW_KEY_P))
-		//{
-		//	cam->setCam(vec3(-11, 1, 14), vec3(0, 0, 1));
-		//	force3rd = true;
-		//}
+		if (i->getKeyInfo(GLFW_KEY_P))
+		{
+			cam->setCam(vec3(-6, 1.5f, 14), vec3(0, 0, 1));
+			force3rd = true;
+		}
 
 		glm::vec3 tmpEyePos = CameraInput::getCam()->getPos();
 		renderPipe->update(tmpEyePos.x, tmpEyePos.y, tmpEyePos.z, dt); // sets the view/proj matrix
@@ -1477,8 +1477,8 @@ void Core::renderWorld(float dt)
 		renderPipe->finalizeRender();
 
 		//viewing 3rd person anims in roam
-		//if (i->getKeyInfo(GLFW_KEY_P))
-		//	cam->setCam(camPos, camDir);
+		if (i->getKeyInfo(GLFW_KEY_P))
+			cam->setCam(camPos, camDir);
 
 		if (renderUI) //Temp
 			inGameUIUpdate();

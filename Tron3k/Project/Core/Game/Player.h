@@ -76,6 +76,7 @@ private:
 	int animRole = 0;
 	int animPrimary = true;
 	void movementAnimationChecks(float dt);
+	
 	void peakAnimsUpdate();
 	bool animLastDead = false;
 
@@ -186,6 +187,7 @@ public:
 
 	glm::mat4 getFPSmat();
 
+	void movmentSpecialAnimUse(int react = 0);
 	bool searchModifier(MODIFIER_TYPE search);
 	Modifier* searchModifierGet(MODIFIER_TYPE search);
 

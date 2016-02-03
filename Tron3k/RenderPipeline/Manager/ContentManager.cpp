@@ -101,9 +101,6 @@ void ContentManager::init()
 	}
 	else
 		f_portal_culling = false;
-
-	
-	
 }
 
 void ContentManager::release()

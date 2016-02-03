@@ -927,7 +927,6 @@ bool Player::searchModifier(MODIFIER_TYPE search)
 	return false;
 }
 
-
 Modifier* Player::searchModifierGet(MODIFIER_TYPE search)
 {
 	for (int i = 0; i < myModifiers.size(); i++)
@@ -980,6 +979,27 @@ glm::mat4 Player::getFPSmat()
 	ret[1].w += renderpos.y;
 	ret[2].w += renderpos.z;
 	return ret;
+}
+
+void Player::movmentSpecialAnimUse(int react)
+{
+	switch (animRole)
+	{
+	case TRAPPER:		animOverideIfPriority(anim_third_current, AnimationState::third_primary_jump_begin);	return;
+	case DESTROYER:		return;
+	case MOBILITY:	
+	{
+		switch (react)
+		{
+		case 0: animOverideIfPriority(anim_third_current, AnimationState::third_primary_jump_begin);			return;
+		case 1:	animOverideIfPriority(anim_third_current, AnimationState::third_shankbot_walljump_right);		return;
+		case 2:	animOverideIfPriority(anim_third_current, AnimationState::third_shankbot_walljump_left);		return;
+		}
+		
+	}
+	case BRUTE:			return;
+	case MANIPULATOR:	return;
+	}
 }
 
 void Player::movementAnimationChecks(float dt)
@@ -1079,6 +1099,10 @@ void Player::movementAnimationChecks(float dt)
 				else
 					animOverideIfPriority(anim_third_current, AnimationState::third_brute_secondary_dash);
 			}
+	}
+	if (animRole == ROLES::MOBILITY)
+	{
+
 	}
 
 
