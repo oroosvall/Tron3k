@@ -1802,10 +1802,12 @@ void Game::allowPlayerRespawn(int p_conID, int respawnPosition)
 	if (playerList[p_conID] != nullptr)
 	{
 		playerList[p_conID]->respawn(spawnpoints[playerList[p_conID]->getTeam()][respawnPosition].pos, spawnpoints[playerList[p_conID]->getTeam()][respawnPosition].dir, spawnpoints[playerList[p_conID]->getTeam()][respawnPosition].roomID);
-		localPlayerWantsRespawn = false;
-		localPlayerRespawnWaiting = false;
-		if (playerList[p_conID]->isLocal())
+		if (p_conID == localPlayerId)
+		{
+			localPlayerWantsRespawn = false;
+			localPlayerRespawnWaiting = false;
 			freecam = false;
+		}
 	}
 }
 

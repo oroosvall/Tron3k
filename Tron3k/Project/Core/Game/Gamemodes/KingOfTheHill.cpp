@@ -420,7 +420,6 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 		}
 		else if (state == ROUND)
 		{
-			bool found = false;
 			for (int c = 0; c < teamOnePlayers.size(); c++)
 			{
 				gamePtr->allowPlayerRespawn(teamOnePlayers[c], c);
