@@ -30,7 +30,7 @@ void KingOfTheHill::init(Console* cptr, Game* gptr)
 		serverState = LOCAL;
 	}
 
-	capturePoint = 0;
+	capturePoint = 8; //Capture point IDs are currently 8 and 32!
 	teamOnePlayersAtPoint = 0;
 	teamTwoPlayersAtPoint = 0;
 
