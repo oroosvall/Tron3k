@@ -24,6 +24,7 @@ public:
 	void setAABB(AABBSingle aabb);
 
 	std::vector<OBB> getOBBs() { return obbs; };
+	OBB* getOBB(int pos);
 	void setBoxes(AABBloaded aabbLoad);
 };
 #endif

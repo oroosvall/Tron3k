@@ -45,6 +45,13 @@ WorldMesh::~WorldMesh()
 
 }
 
+OBB* WorldMesh::getOBB(int pos)
+{
+	if (pos < obbs.size())
+		return &obbs[pos];
+	return nullptr;
+}
+
 void WorldMesh::setPos(vec3 pos)
 {
 	this->pos = pos;

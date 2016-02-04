@@ -25,7 +25,9 @@ public:
 	int getRoomID() { return roomID; };
 
 	std::vector<WorldMesh>* getRoomBoxes() { return &roomBoxes; };
+	WorldMesh* getSpecificBox(int pos);
+
 	void setBoxes(std::vector<WorldMesh> roomBoxes);
 	void addBox(WorldMesh roomBox);
 };
-#endif
+#endif/
