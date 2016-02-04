@@ -90,6 +90,7 @@ Core::~Core()
 
 void Core::update(float dt)
 {
+	cursorBlink += dt;
 	if (recreate)
 		createWindow(winX, winY, fullscreen);
 
@@ -109,7 +110,14 @@ void Core::update(float dt)
 	
 	if (cursorVisible && renderPipe)
 	{
-		renderPipe->setChatTypeMessage(console.pollLatest());
+		if (cursorBlink > 0.5f)
+		{
+			renderPipe->setChatTypeMessage(console.pollLatest() + "|");
+			if(cursorBlink > 1.0f)
+				cursorBlink = 0.0f;
+		}
+		else
+			renderPipe->setChatTypeMessage(console.pollLatest());
 	}
 	if (console.getHistoryUpdate() && renderPipe)
 	{

@@ -42,6 +42,7 @@ private:
 	bool renderUI;
 	
 	int* namePlates;
+	float cursorBlink;
 
 	// window
 	GLFWwindow* win;
