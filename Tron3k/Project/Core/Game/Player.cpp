@@ -529,8 +529,13 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 							msg = WPNSWITCH;
 
 							animOverideIfPriority(anim_first_current, AnimationState::first_secondary_switch);
-							if (animRole == ROLES::MANIPULATOR || animRole == ROLES::BRUTE)
+							if (animRole == ROLES::BRUTE)
+							{
 								animOverideIfPriority(anim_third_current, AnimationState::third_secondary_switch);
+								animOverideIfPriority(anim_first_current, AnimationState::first_primary_switch_IN);
+							}
+
+							animSwapActive = true;
 						}
 					}
 
@@ -546,8 +551,13 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 							else
 								animOverideIfPriority(anim_first_current, AnimationState::first_primary_switch);
 
-							if (animRole == ROLES::MANIPULATOR || animRole == ROLES::BRUTE)
+							if (animRole == ROLES::BRUTE)
+							{
+								animOverideIfPriority(anim_first_current, AnimationState::first_secondary_switch_IN);
 								animOverideIfPriority(anim_third_current, AnimationState::third_primary_switch);
+							}
+
+							animSwapActive = true;
 
 						}
 					}
@@ -753,8 +763,14 @@ void Player::reloadCurrentWeapon()
 		}
 
 		role.getCurrentWeapon()->reload();
-		if(animPrimary)
-			animOverideIfPriority(anim_first_current, AnimationState::first_primary_reload);
+
+		if (animRole == ROLES::BRUTE)
+		{
+			if (animPrimary)
+				animOverideIfPriority(anim_first_current, AnimationState::first_primary_reload);
+			else
+				animOverideIfPriority(anim_first_current, AnimationState::first_secondary_reload);
+		}
 		else
 			animOverideIfPriority(anim_first_current, AnimationState::first_primary_reload);
 	}
@@ -1125,11 +1141,44 @@ void Player::movementAnimationChecks(float dt)
 					animOverideIfPriority(anim_third_current, AnimationState::third_brute_secondary_dash);
 			}
 	}
-	if (animRole == ROLES::MOBILITY)
-	{
 
+	//weapon swap special case on brute because of 2 weapon meshes and special animations
+	if (animSwapActive && animRole == ROLES::BRUTE)
+	{
+		//init swap timers
+		if (lastanimSwapActive == false)
+		{
+			if (animPrimary)
+				animSwapTime_OUT = 0.53f;
+			else
+				animSwapTime_OUT = 0.34f;
+			
+			if (animPrimary == false)
+				animOverideIfPriority(anim_first_current, AnimationState::first_secondary_switch);
+			else
+				animOverideIfPriority(anim_first_current, AnimationState::first_primary_switch);
+		}
+		else
+		{
+			if (animSwapTime_OUT > 0)
+			{
+				animPrimary = !animPrimary;
+				animSwapTime_OUT -= dt;
+				if (animSwapTime_OUT < 0.001f) // out swap timeout
+				{
+					if (animPrimary)
+						animOverideIfPriority(anim_first_current, AnimationState::first_secondary_switch_IN);
+					else
+						animOverideIfPriority(anim_first_current, AnimationState::first_primary_switch_IN);
+						
+					animPrimary = !animPrimary;
+					animSwapActive = false;
+				}		
+			}
+		}
 	}
 
+	lastanimSwapActive = animSwapActive;
 
 	//death checks
 	if (isDead != animLastDead)

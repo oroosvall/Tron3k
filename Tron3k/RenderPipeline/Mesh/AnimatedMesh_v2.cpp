@@ -253,6 +253,7 @@ int* AnimatedMeshV2::loadAnimations(std::string character)
 	animations[AnimationState::first_primary_reload			].load(file + "_first_primary_reload.bin");
 	animations[AnimationState::first_primary_throw			].load(file + "_first_primary_throw.bin");
 	animations[AnimationState::first_primary_switch			].load(file + "_first_primary_switch.bin");
+	animations[AnimationState::first_primary_switch_IN		].load(file + "_first_primary_switch_IN.bin");
 																						
 	animations[AnimationState::first_secondary_idle			].load(file + "_first_secondary_idle.bin");
 	animations[AnimationState::first_secondary_run			].load(file + "_first_secondary_run.bin");
@@ -261,6 +262,7 @@ int* AnimatedMeshV2::loadAnimations(std::string character)
 	animations[AnimationState::first_secondary_reload		].load(file + "_first_secondary_reload.bin");
 	animations[AnimationState::first_secondary_throw		].load(file + "_first_secondary_throw.bin");
 	animations[AnimationState::first_secondary_switch		].load(file + "_first_secondary_switch.bin");
+	animations[AnimationState::first_secondary_switch_IN	].load(file + "_first_secondary_switch_IN.bin");
 																				
 	animations[AnimationState::third_primary_idle			].load(file + "_third_primary_idle.bin");
 	animations[AnimationState::third_primary_run			].load(file + "_third_primary_run.bin");

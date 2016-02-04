@@ -10,6 +10,7 @@ enum AnimationState
 	first_primary_reload,			// Trapper	| Destroyer	| Shankbot | Brute | Manipulator |
 	first_primary_throw, 			// Trapper	| use fire?	|		   | Brute | Manipulator |
 	first_primary_switch,			//      	| Destroyer	| Shankbot | Brute | Manipulator |
+	first_primary_switch_IN,		//      	|           |          | Brute |             |
 
 	first_secondary_idle, 			//			| Destroyer | Shankbot | Brute | Manipulator |
 	first_secondary_run,			//			| Destroyer | Shankbot | Brute | Manipulator |
@@ -18,6 +19,7 @@ enum AnimationState
 	first_secondary_reload,			//			| Destroyer |		   | Brute | Manipulator |
 	first_secondary_throw, 			//			| Destroyer |          | Brute | Manipulator |
 	first_secondary_switch,			//      	| Destroyer | Shankbot | Brute | Manipulator |
+	first_secondary_switch_IN,		//      	|           |          | Brute |             |
 
 	third_primary_idle,				// Trapper	| Destroyer | Shankbot | Brute | Manipulator |
 	third_primary_run,				// Trapper	| Destroyer | Shankbot | Brute | Manipulator |
@@ -80,6 +82,7 @@ int static getAnimRank(AnimationState test)
 	case first_primary_reload:			return 1;
 	case first_primary_throw:			return 1;
 	case first_primary_switch:			return 1;
+	case first_primary_switch_IN:		return 1;
 
 	case first_secondary_idle:			return 0;
 	case first_secondary_run:			return 0;
@@ -88,6 +91,7 @@ int static getAnimRank(AnimationState test)
 	case first_secondary_reload:		return 1;
 	case first_secondary_throw:			return 1;
 	case first_secondary_switch:		return 1;
+	case first_secondary_switch_IN:		return 1;
 
 	case third_primary_idle:			return 0;
 	case third_primary_run:				return 0;

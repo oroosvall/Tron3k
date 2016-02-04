@@ -76,6 +76,9 @@ private:
 	int animRole = 0;
 	bool animPrimary = true;
 	void movementAnimationChecks(float dt);
+	float animSwapTime_OUT = 0;
+	bool animSwapActive = false;
+	bool lastanimSwapActive = false;
 	
 	void peakAnimsUpdate();
 	bool animLastDead = false;
