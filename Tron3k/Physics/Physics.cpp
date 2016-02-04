@@ -578,7 +578,7 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos)
 			//printf("%d %d \n", i, j); // test for abbs so they register
 
 			//for each obb contained in that abb
-			int size = roomBoxes[0].getSpecificBox(j)->getOBBs().size();
+			int size = roomBoxes[0].getSpecificBox(j)->getOBBSize();
 
 			for (int n = 0; n < size; n++)
 			{
@@ -616,7 +616,7 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos)
 					//printf("%d %d \n", i, j); // test for abbs so they register
 
 					//for each obb contained in that abb
-					int size = roomBoxes[i].getSpecificBox(j)->getOBBs().size();
+					int size = roomBoxes[i].getSpecificBox(j)->getOBBSize();
 
 					for (int n = 0; n < size; n++)
 					{
@@ -710,7 +710,7 @@ vec4 Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel, vec3 bulletD
 				//printf("%d %d \n", i, j); // test for abbs so they register
 
 				//for each obb contained in that abb
-				int size = roomBoxes[0].getSpecificBox(j)->getOBBs().size();
+				int size = roomBoxes[0].getSpecificBox(j)->getOBBSize();
 				for (int n = 0; n < size; n++)
 				{
 					t = getSpherevOBBNorms(bulletPos, rad, roomBoxes[0].getSpecificBox(j)->getOBB(n));
@@ -757,7 +757,7 @@ vec4 Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel, vec3 bulletD
 								//printf("%d %d \n", i, j); // test for abbs so they register
 
 								//for each obb contained in that abb
-								int size = roomBoxes[0].getSpecificBox(j)->getOBBs().size();
+								int size = roomBoxes[0].getSpecificBox(j)->getOBBSize();
 								for (int n = 0; n < size; n++)
 								{
 									t = getSpherevOBBNorms(bulletPos, rad, roomBoxes[0].getSpecificBox(j)->getOBB(n));
