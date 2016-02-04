@@ -44,7 +44,7 @@ void KingOfTheHill::init(Console* cptr, Game* gptr)
 	timerModifierForCaptureScoring = tickForCaptureScoring;
 }
 
-void KingOfTheHill::capturePointScoring()
+GAMEMODE_MSG KingOfTheHill::capturePointScoring()
 {
 	/*
 	Var 15nde sekund kollas vem som har flest spelare i zonen.
@@ -52,6 +52,8 @@ void KingOfTheHill::capturePointScoring()
 	1 - 2 spelare övertag : Laget med färre spelare förlorar 1 token.
 	3 + spelare övertag : Laget med färre spelare förlorar 3 tokens.
 	*/
+	GAMEMODE_MSG ret = OBJECTIVE_DRAW;
+
 	if (teamOnePlayersAtPoint == teamTwoPlayersAtPoint)
 	{
 		teamOneSpawnTokens--;
@@ -63,6 +65,7 @@ void KingOfTheHill::capturePointScoring()
 			teamOnePlayersAtPoint -= 3;
 		else
 			teamOnePlayersAtPoint--;
+		ret = OBJECTIVE_TEAM2;
 	}
 	else if (teamTwoPlayersAtPoint < teamOnePlayersAtPoint)
 	{
@@ -70,8 +73,10 @@ void KingOfTheHill::capturePointScoring()
 			teamTwoPlayersAtPoint -= 3;
 		else
 			teamTwoPlayersAtPoint--;
+		ret = OBJECTIVE_TEAM1;
 	}
 	timerModifierForCaptureScoring += tickForCaptureScoring;
+	return ret;
 }
 
 GAMEMODE_MSG KingOfTheHill::roundScoring()
@@ -257,7 +262,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 		timer += dt;
 		if (timer - timerModifierForCaptureScoring > 0.0f) //15 seconds have passed and we should now proceed with scoring for capture point control
 		{
-			capturePointScoring();
+			msg = capturePointScoring();
 		}
 		if (teamOneSpawnTokens == 0 || teamTwoSpawnTokens == 0)
 		{

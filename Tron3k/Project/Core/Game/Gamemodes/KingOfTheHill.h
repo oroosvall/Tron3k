@@ -51,7 +51,7 @@ private:
 
 	float tickForCaptureScoring; //Used to keep track of when scoring should take place
 	float timerModifierForCaptureScoring; //Used to keep track of when scoring should take place
-	void capturePointScoring(); //Counts people at the cap point and removes tokens according to the rules
+	GAMEMODE_MSG capturePointScoring(); //Counts people at the cap point and removes tokens according to the rules
 
 	GAMEMODE_MSG roundScoring(); //At the end of a round, this declares the winner
 public:
