@@ -298,7 +298,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 		{
 			state = ENDROUND;
 			msg = roundScoring();
-			timer = 10.0f;		//TEMP
+			timer = 5.0f;		//TEMP
 		}
 		break;
 
@@ -325,7 +325,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			if (timer < FLT_EPSILON)
 			{
 				state = PREROUND;
-				timer = 10.0f;
+				timer = 15.0f;
 			}
 		}
 		break;
