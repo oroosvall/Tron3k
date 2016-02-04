@@ -189,11 +189,11 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 		{
 			timer -= dt;
 
-			if (!commencePlayed && GetSoundActivated())
+			/*if (!commencePlayed && GetSoundActivated())
 			{
 				GetSound()->playUserGeneratedSound(SOUNDS::SoundForOvertime);
 				GetSound()->playUserGeneratedSound(SOUNDS::announcerCommence);
-			}
+			}*/
 
 			if (timer < 15.0f && !fifteenPlayed && GetSoundActivated())
 			{
@@ -459,11 +459,11 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 		}
 		else if (state == OVERTIME)
 		{
-			/*if (GetSoundActivated())
+			if (GetSoundActivated())
 			{
 				GetSound()->playUserGeneratedSound(SOUNDS::announcerCommence);
 				GetSound()->playUserGeneratedSound(SOUNDS::SoundForOvertime);
-			}*/
+			}
 		}
 		else if (state == ENDROUND)
 		{
