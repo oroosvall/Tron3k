@@ -26,6 +26,9 @@ private:
 	int* openedMenus;
 	int nrOfOpenedMenus;
 
+	int winX;
+	int winY;
+
 	//Since multiple menus needs to be rendered when the gui is opened
 	bool guiOpened;
 
@@ -55,7 +58,7 @@ public:
 		renderPipe = ptr; 
 	}
 
-	void init(Console* console);
+	void init(Console* console, int winX, int winY);
 	
 	void menuRender();
 	void inGameRender();
@@ -69,10 +72,14 @@ public:
 
 	void changeTex(int objId, int whichTex);
 
-	bool LoadNextSet(int whichMenuGroup);
+	bool LoadNextSet(int whichMenuGroup, int winX, int winY);
 
 	void setOpenedGuiBool(bool guiBool);
 	void setFirstMenuSet(bool set);
+
+	void setWindowResolution(int winX, int winY);
+
+	void setText(std::string text, int id);
 };
 
 #endif

@@ -27,6 +27,9 @@ private:
 
 	glm::vec3 pivot;
 
+	int winX;
+	int winY;
+
 public:
 	Button();
 	Button(glm::vec2 center, int textureId1, int textureId2, int uniqueKey, int hoverKey, IRenderPipeline* uiRender, glm::vec2 textRes1, glm::vec2 textRes2);
@@ -47,6 +50,10 @@ public:
 	virtual void setTexture(std::vector<GLuint> uiTextureIds);
 
 	virtual void scaleBar(float procentOfMax, bool fromRight);
+
+	virtual void setWindowResolution(int winX, int winY);
+
+	virtual void setText(std::string text);
 };
 
 #endif

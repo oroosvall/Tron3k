@@ -41,7 +41,7 @@ void Core::init()
 
 	uiManager = new UIManager();
 	initPipeline();
-	uiManager->init(&console);
+	uiManager->init(&console, winX, winY);
 
 	renderUI = false;
 	startTeamSelect = true; //Temp
@@ -202,7 +202,7 @@ void Core::upMenu(float dt)
 		{
 		case 0: //Roam
 			current = ROAM;
-			uiManager->LoadNextSet(1);
+			uiManager->LoadNextSet(1, winX, winY);
 			uiManager->setFirstMenuSet(false);
 			uiManager->setMenu(1);
 			subState = 0;
@@ -216,7 +216,12 @@ void Core::upMenu(float dt)
 			glfwHideWindow(win);
 			break;
 		case 4: //Client -> connect window
+			//Block the input to command window
+			//Set so your own function listens after key input.
+
 			uiManager->setMenu(2);
+
+			//uiManager->setText(getPort in string, 8); //Set port text
 			break;
 		case 5: //Server -> starts a server
 			current = SERVER;
@@ -226,6 +231,7 @@ void Core::upMenu(float dt)
 			glfwSwapBuffers(win);
 			renderPipe->clearBothBuffers();
 			renderMenu = false;
+			renderUI = false;
 			break;
 		case 6: //Connect
 		{
@@ -238,6 +244,12 @@ void Core::upMenu(float dt)
 		}
 		case 7: //Back
 			uiManager->setMenu(-1); //Last menu
+			break;
+		case 10: //Ip input
+			
+			break;
+		case 11: //Port
+			
 			break;
 		default:
 			break;
@@ -772,6 +784,7 @@ void Core::startHandleCmds(std::string com)
 			glfwSwapBuffers(win);
 			renderPipe->clearBothBuffers();
 			renderMenu = false;
+			renderUI = false;
 		}
 
 		else if (token == "/3")
@@ -1497,6 +1510,14 @@ void Core::inGameUIUpdate() //Ingame ui update
 	double tX = (x / (double)winX) * 2 - 1.0; // (x/ResolutionX) * 2 - 1
 	double tY = (-y / (double)winY) * 2 + 1.0; // (y/ResolutionY) * 2 - 1
 	
+	//uiManager->setText(getHp in string, 0); //HP
+	//uiManager->setText(getAmmo in string, 1); //Ammo
+	//uiManager->setText(getTickets1 in string, 2); //tickets team 1
+	//uiManager->setText(getTickets2 in string, 3); //tickets team 2
+	//uiManager->setText(getWins1 in string, 4); //rounds won team 1
+	//uiManager->setText(getwins2 in string, 5); //rounds won team 2
+	//uiManager->setText(getTime in string, 6); //time
+
 	uiManager->inGameRender();
 
 	if (i->justPressed(GLFW_MOUSE_BUTTON_LEFT))//button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
@@ -1559,7 +1580,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 			else
 				clientHandleCmds("/disconnect");
 			uiManager->setOpenedGuiBool(false);
-			uiManager->LoadNextSet(0);
+			uiManager->LoadNextSet(0, winX, winY);
 			break;
 		default:
 			break;
@@ -1854,13 +1875,13 @@ void Core::showTeamSelect()
 {
 	if(startTeamSelect)
 	{
-		uiManager->LoadNextSet(1);
+		uiManager->LoadNextSet(1, winX, winY);
 		uiManager->setFirstMenuSet(false);
 		uiManager->setMenu(1);
 	}
 	else
 	{
-		uiManager->LoadNextSet(1);
+		uiManager->LoadNextSet(1, winX, winY);
 		uiManager->setFirstMenuSet(false);
 		uiManager->setOpenedGuiBool(true);
 		uiManager->setMenu(0); 

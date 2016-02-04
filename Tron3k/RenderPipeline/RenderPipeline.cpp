@@ -92,9 +92,7 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	Text::ScreenResHeight = WindowHeight;
 	Text::ScreenResWidth = WindowWidth;
 
-	//fontTexture = loadTexture("GameFiles/Font/font16.png", false);
-
-	fontTexture = TextureManager::gTm->createTexture("GameFiles/Font/font16.png");
+	fontTexture = loadTexture("GameFiles/Font/font16.png", false);
 
 	debugText = new Text("", 16, fontTexture, vec2(10, 24));
 	chatHistoryText = ".\n.\n.\n.\n.\n";
@@ -505,8 +503,7 @@ void RenderPipeline::finalizeRender()
 	gBuffer->render();
 	
 	glUseProgram(textShader);
-	//glProgramUniform1i(textShader, textShaderLocation, 0);
-	TextureManager::gTm->bindTexture(fontTexture, textShader, textShaderLocation, DIFFUSE_FB);
+	glProgramUniform1i(textShader, textShaderLocation, 0);
 	
 	glEnable(GL_BLEND);
 
@@ -982,7 +979,7 @@ void RenderPipeline::ui_renderQuad(float* mat, float* pivot, GLuint textureID, f
 	temp.lastTextureSlot = GL_TEXTURE0;
 	temp.textureID = textureID;
 	TextureManager::gTm->bind(temp, uiShader, ui_Texture);
-	//glBindTexture(GL_TEXTURE_2D, textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
 	glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, mat);
 	glProgramUniform3fv(uiShader, uniformPivotLocation, 1, pivot);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
@@ -1053,7 +1050,6 @@ void RenderPipeline::removeTextObject(int id)
 void RenderPipeline::renderTextObject(int id)
 {
 	glUseProgram(textShader);
-	TextureManager::gTm->bindTexture(fontTexture, textShader, textShaderLocation, DIFFUSE_FB);
 
 	textObjects[id]->draw();
 }

@@ -36,13 +36,15 @@ private:
 	int nrOfObjects;
 	int nrOfObjectsToRender;
 
+	//ids
 	int menuId;
+	int textIdList[9];
 
 	Console* console;
 
 	//	Functions
 	//Load from file
-	bool loadUI(std::string fileName);
+	bool loadUI(std::string fileName, int winX, int winY);
 
 	void removeMenu();
 	//Clean up
@@ -55,7 +57,7 @@ public:
 	~UI();
 
 	//Start
-	void init(std::string fileName, Console* console, IRenderPipeline* uiRender, std::vector<glm::vec2>* textureRes);
+	void init(std::string fileName, Console* console, IRenderPipeline* uiRender, std::vector<glm::vec2>* textureRes, int winX, int winY);
 	
 	void render(std::vector<GLuint> uiTextureIds);
 
@@ -72,7 +74,9 @@ public:
 
 	void setTextureId(std::vector<GLuint> uiTextureIds);
 
+	void setWindowResolution(int winX, int winY);
 
+	void setText(std::string text, int id);
 };
 
 #endif

@@ -19,9 +19,13 @@ InputBox::InputBox()
 
 	active = false;
 
-	pivot = glm::vec3(0.0f);;
+	pivot = glm::vec3(0.0f);
+
+	winX = 0;
+	winY = 0;
+	offset = 0;
 }
-InputBox::InputBox(glm::vec2 center, int textureId1, int uniqueKey, IRenderPipeline* uiRender, glm::vec2 textRes)
+InputBox::InputBox(glm::vec2 center, int textureId1, int uniqueKey, IRenderPipeline* uiRender, glm::vec2 textRes, int winX, int winY)
 {
 	this->uiRender = uiRender;
 	this->center = center;
@@ -30,6 +34,9 @@ InputBox::InputBox(glm::vec2 center, int textureId1, int uniqueKey, IRenderPipel
 	textureId = textureId1;
 	this->uniqueKey = uniqueKey;
 	hoverCheckKey = 0;
+
+	this->winX = winX;
+	this->winY = winY;
 
 	float xScale = textRes.x / 1980;
 	float yScale = textRes.y / 1080;
@@ -44,15 +51,24 @@ InputBox::InputBox(glm::vec2 center, int textureId1, int uniqueKey, IRenderPipel
 
 	pos[0] = glm::vec2(worldMatrix[0].w - worldMatrix[0].x, worldMatrix[1].w - worldMatrix[1].y);
 	pos[1] = glm::vec2(worldMatrix[0].w + worldMatrix[0].x, worldMatrix[1].w + worldMatrix[1].y);
+
+	offset = 40;
+	text = uiRender->createTextObject("Tessadasdasdasdasdast", 26, (glm::vec2(((pos[0].x + 1) * winX) * 0.5 + offset, ((pos[0].y + 1)* winY) * 0.5 + offset)));
+
+	//double tX = (x / (double)winX) * 2 - 1.0; // (x/ResolutionX) * 2 - 1
+	//double tY = (-y / (double)winY) * 2 + 1.0; // (y/ResolutionY) * 2 - 1
+
+
 }
 InputBox::~InputBox()
 {
+	uiRender->removeTextObject(text);
 }
 
 void InputBox::render(int id)
 {
 	uiRender->ui_renderQuad((float*)&worldMatrix[0][0], (float*)&pivot.x, textureId, 1.0f, id);
-
+	uiRender->renderTextObject(text);
 
 }
 
@@ -95,6 +111,7 @@ void InputBox::hoverCheck(glm::vec2 mpos)
 
 void InputBox::setTexture(std::vector<GLuint> uiTextureIds)
 {
+	textureId = uiTextureIds[textureId];
 }
 
 void InputBox::scaleBar(float procentOfMax, bool fromRight)
@@ -114,4 +131,15 @@ void InputBox::scaleBar(float procentOfMax, bool fromRight)
 bool InputBox::activeOrNot()
 {
 	return active;
+}
+
+void InputBox::setWindowResolution(int winX, int winY)
+{
+	this->winX = winX;
+	this->winY = winY;
+}
+
+void InputBox::setText(std::string text)
+{
+	uiRender->setTextObjectText(this->text, text);
 }

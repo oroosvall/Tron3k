@@ -33,6 +33,10 @@ public:
 
 	virtual void scaleBar(float procentOfMax, bool fromRight) = 0;
 
+	virtual void setWindowResolution(int winX, int winY) = 0;
+
+	virtual void setText(std::string text) = 0;
+
 	//virtual uiVertex* returnPosAUv(int id) = 0;
 };
 
