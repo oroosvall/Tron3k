@@ -798,7 +798,7 @@ vec4 Physics::checkPlayerVEffectCollision(glm::vec3 playerPos, unsigned int eTyp
 	//EFFECTMESH NEEDS TO CHANGE
 	for (int i = 0; i < effectBoxes.size(); i++)
 	{
-		if (effectBoxes[i]->getEID() == eid)
+		if (effectBoxes[i]->getEID() == eid && effectBoxes[i]->getEType() == eType)
 		{
 			if (checkAABBvAABBCollision(playerBox.getAABB(), effectBoxes[i]->getAABB()))
 			{
