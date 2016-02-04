@@ -221,6 +221,11 @@ void UIManager::setMenu(int menuId)
 		{
 			if (nrOfOpenedMenus > 0)
 			{
+				if (currentMenu[0] == 2)
+				{
+					menus[currentMenu[0]].cleanText(7);
+					menus[currentMenu[0]].cleanText(8);
+				}
 				nrOfOpenedMenus--;
 				currentMenu[0] = openedMenus[nrOfOpenedMenus];
 			}
@@ -338,4 +343,13 @@ void UIManager::setWindowResolution(int winX, int winY)
 void UIManager::setText(std::string text, int id)
 {
 	menus[currentMenu[nrOfCurretMenus - 1]].setText(text, id);
+}
+
+std::string UIManager::getText(int id)
+{
+	return menus[currentMenu[nrOfCurretMenus - 1]].getText(id);
+}
+void UIManager::removeLastInput(int id)
+{
+	menus[currentMenu[nrOfCurretMenus - 1]].removeLastInput(id);
 }

@@ -80,6 +80,8 @@ public:
 	void setWindowResolution(int winX, int winY);
 
 	void setText(std::string text, int id);
+	std::string getText(int id);
+	void removeLastInput(int id);
 };
 
 #endif

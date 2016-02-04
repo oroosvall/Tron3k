@@ -25,14 +25,18 @@ private:
 	glm::vec3 pivot;
 
 	int text;
+	std::string menuInputText;
+	std::string ingameText;
+	int outPutLength;
 
 	int winX;
 	int winY;
 
-	int offset;
+	int yOffSet;
+	int xOffSet;
 public:
 	InputBox();
-	InputBox(glm::vec2 center, int textureId1, int uniqueKey, IRenderPipeline* uiRender, glm::vec2 textRes, int winX, int winY);
+	InputBox(glm::vec2 center, int textureId1, int uniqueKey, IRenderPipeline* uiRender, glm::vec2 textRes, int winX, int winY, glm::vec3 offSetsTextSize);
 	virtual ~InputBox();
 
 	virtual void render(int id);
@@ -55,7 +59,9 @@ public:
 
 	virtual void setText(std::string text);
 
-	bool activeOrNot();
+	virtual std::string getText();
+	virtual void removeLastInput();
+	virtual void cleanText();
 };
 
 #endif

@@ -165,3 +165,14 @@ void Button::setText(std::string text)
 {
 
 }
+
+std::string Button::getText()
+{
+	return "";
+}
+void Button::removeLastInput()
+{
+}
+void Button::cleanText()
+{
+}

@@ -1,18 +1,31 @@
+//The first two needs to be in all txt and only at the start
 Number of menus   //This value exists only once.
 Menu id		  //Says which menu it is for example main menu eller settings. After this row the button information begins.
+
+Button: //Here is what the button needs
 x y		  //x and y for the center of the button
 class id	  //Says which class the button needs to be.
-number of textures //Only needed if the class id is 1
 texture1	  //First texture and also the texture it shall begin with.
 texture2	  //The second texture
-textId		  //Class 4 only
 UniqueKey	  //A value that says what will happen when its clicked on. If the button doesn't have any event then just leave it at -1
 hoverKey	  //1 if it should change texture when hovered over and 0 if not. Only works for Button objects so put it at 0 for everything else.
 
+StaticTextureBox: //Here is what the staticTextureBox needs
+x y		  //x and y for the center of the button
+class id	  //Says which class the button needs to be.
+number of textures //Only needed if the class id is 1
+texture		   //As many textures as the row above says
+.
+.
+.
 
+InputBox: //Here is what the inputBox needs
+class id	       //Says which class the button needs to be.
+texture1	       //First texture and also the texture it shall begin with.
+textId		       //Class 4 only
+dynamic text x offset  //The amount the text needs to be moved in order to be alined with the texture in x
+dynamic text y offset  //The amount the text needs to be moved in order to be alined with the texture in y
+texture size           //Size of the text
+UniqueKey	  //A value that says what will happen when its clicked on. If the button doesn't have any event then just leave it at -1
 
-
-Note:
-If it has the class id 1 it can have more then two textures,
-so put the amount of textures right under class id.
-Jump over it if the class id isn't 1.
+Slider: //Here is what the slider needs

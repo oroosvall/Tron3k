@@ -153,3 +153,15 @@ void Slider::setText(std::string text)
 {
 
 }
+
+std::string Slider::getText()
+{
+	return "";
+}
+void Slider::removeLastInput()
+{
+}
+void Slider::cleanText()
+{
+
+}

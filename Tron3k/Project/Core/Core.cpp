@@ -48,6 +48,7 @@ void Core::init()
 	renderUI = false;
 	startTeamSelect = true; //Temp
 	renderMenu = true;
+	menuKeyListener = false;
 }
 
 Core::~Core()
@@ -107,7 +108,11 @@ void Core::update(float dt)
 	}
 
 	glfwPollEvents();
-	console.update(_name); //Updates to check for new messages and commands
+
+	if (!menuKeyListener)
+		console.update(_name); //Updates to check for new messages and commands
+	else
+		menuKeyInputUpdate(); //Updates to check input for the ip window
 	
 	if (cursorVisible && renderPipe)
 	{
@@ -247,6 +252,7 @@ void Core::upMenu(float dt)
 	
 	if (i->justPressed(GLFW_MOUSE_BUTTON_LEFT))//button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
 	{
+		menuKeyListener = false;
 		int eventIndex = uiManager->collisionCheck(glm::vec2((float)tX, (float)tY));
 		switch (eventIndex)
 		{
@@ -270,8 +276,7 @@ void Core::upMenu(float dt)
 			//Set so your own function listens after key input.
 
 			uiManager->setMenu(2);
-
-			//uiManager->setText(getPort in string, 8); //Set port text
+			uiManager->setText(to_string(_port), 8);
 			break;
 		case 5: //Server -> starts a server
 			current = SERVER;
@@ -296,7 +301,7 @@ void Core::upMenu(float dt)
 			uiManager->setMenu(-1); //Last menu
 			break;
 		case 10: //Ip input
-			
+			menuKeyListener = true;
 			break;
 		case 11: //Port
 			
@@ -1619,7 +1624,11 @@ void Core::inGameUIUpdate() //Ingame ui update
 
 	uiManager->inGameRender();
 
-	if (i->justPressed(GLFW_MOUSE_BUTTON_LEFT))//button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
+	//***********************************************************//
+	//Lägg in så hover körs endast om esc rutan är igång.
+	//***********************************************************//
+
+	if (i->justPressed(GLFW_MOUSE_BUTTON_LEFT))
 	{
 		int eventIndex = uiManager->collisionCheck(glm::vec2((float)tX, (float)tY));
 		switch (eventIndex)
@@ -1989,5 +1998,32 @@ void Core::showTeamSelect()
 		uiManager->setFirstMenuSet(false);
 		uiManager->setOpenedGuiBool(true);
 		uiManager->setMenu(0); 
+	}
+}
+
+void Core::menuKeyInputUpdate()
+{
+	Input* i = Input::getInput();
+	for (int c = 0; c < VALIDKEYS; c++)
+	{
+		if (i->justPressed(validKeyboardInputs[c]))
+		{
+			char ch = i->keyToChar(validKeyboardInputs[c]);
+			std::string fromChar = "";
+			fromChar += ch;
+
+			uiManager->setText(fromChar, 7); //Set ip object
+		}
+	}
+	if (i->justPressed(GLFW_KEY_BACKSPACE))
+	{
+		uiManager->removeLastInput(7); //remove from ip object
+	}
+	if (i->justPressed(GLFW_KEY_ENTER))
+	{
+		menuKeyListener = false;
+		std::string ip = "/ip ";
+		ip += uiManager->getText(7); //From ip object
+		startHandleCmds(ip);
 	}
 }

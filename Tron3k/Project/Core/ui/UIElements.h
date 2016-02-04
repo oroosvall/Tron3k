@@ -36,6 +36,9 @@ public:
 	virtual void setWindowResolution(int winX, int winY) = 0;
 
 	virtual void setText(std::string text) = 0;
+	virtual std::string getText() = 0;
+	virtual void removeLastInput() = 0;
+	virtual void cleanText() = 0;
 
 	//virtual uiVertex* returnPosAUv(int id) = 0;
 };

@@ -23,9 +23,10 @@ InputBox::InputBox()
 
 	winX = 0;
 	winY = 0;
-	offset = 0;
+	yOffSet = 0;
+	xOffSet = 0;
 }
-InputBox::InputBox(glm::vec2 center, int textureId1, int uniqueKey, IRenderPipeline* uiRender, glm::vec2 textRes, int winX, int winY)
+InputBox::InputBox(glm::vec2 center, int textureId1, int uniqueKey, IRenderPipeline* uiRender, glm::vec2 textRes, int winX, int winY, glm::vec3 offSetsTextSize)
 {
 	this->uiRender = uiRender;
 	this->center = center;
@@ -52,8 +53,10 @@ InputBox::InputBox(glm::vec2 center, int textureId1, int uniqueKey, IRenderPipel
 	pos[0] = glm::vec2(worldMatrix[0].w - worldMatrix[0].x, worldMatrix[1].w - worldMatrix[1].y);
 	pos[1] = glm::vec2(worldMatrix[0].w + worldMatrix[0].x, worldMatrix[1].w + worldMatrix[1].y);
 
-	offset = 40;
-	text = uiRender->createTextObject("Tessadasdasdasdasdast", 26, (glm::vec2(((pos[0].x + 1) * winX) * 0.5 + offset, ((pos[0].y + 1)* winY) * 0.5 + offset)));
+	//Put offsets and text size in a vec3 since since my construct is abit long
+	yOffSet = offSetsTextSize.y; //30
+	xOffSet = offSetsTextSize.x; //25
+	text = uiRender->createTextObject("", offSetsTextSize.z, (glm::vec2(((pos[0].x + 1) * 0.5) * winX + xOffSet, -((pos[0].y - 1)* 0.5) * winY - yOffSet)));
 
 	//double tX = (x / (double)winX) * 2 - 1.0; // (x/ResolutionX) * 2 - 1
 	//double tY = (-y / (double)winY) * 2 + 1.0; // (y/ResolutionY) * 2 - 1
@@ -128,11 +131,6 @@ void InputBox::scaleBar(float procentOfMax, bool fromRight)
 		pivot.x = -pivot.x;
 }
 
-bool InputBox::activeOrNot()
-{
-	return active;
-}
-
 void InputBox::setWindowResolution(int winX, int winY)
 {
 	this->winX = winX;
@@ -141,5 +139,30 @@ void InputBox::setWindowResolution(int winX, int winY)
 
 void InputBox::setText(std::string text)
 {
-	uiRender->setTextObjectText(this->text, text);
+	menuInputText += text;
+	outPutLength++;
+	ingameText = text;
+	uiRender->setTextObjectText(this->text, menuInputText);
 }
+std::string InputBox::getText()
+{
+	return menuInputText;
+}
+void InputBox::removeLastInput()
+{
+	if (outPutLength > 0)
+	{
+		menuInputText.pop_back();
+		outPutLength--;
+		uiRender->setTextObjectText(text, menuInputText);
+	}
+}
+void InputBox::cleanText()
+{
+	menuInputText.clear();
+	ingameText.clear();
+	outPutLength = 0;
+
+	uiRender->setTextObjectText(this->text, menuInputText);
+}
+

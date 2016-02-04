@@ -48,6 +48,10 @@ public:
 	virtual void setWindowResolution(int winX, int winY);
 
 	virtual void setText(std::string text);
+
+	virtual std::string getText();
+	virtual void removeLastInput();
+	virtual void cleanText();
 };
 
 #endif

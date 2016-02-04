@@ -50,6 +50,7 @@ bool UI::loadUI(std::string fileName, int winX, int winY)
 		float x = -1.0f, y = -1.0f, u = -1.0f, v = -1.0f;
 		int textureId1 = -1, textureId2 = -1, scale = -1, counter = 0, uniqueKey = 0, classId = -1, hoverKey = 0, tmpCounter = 0;;
 		int* textureArray = nullptr;
+		glm::vec3 offsetTextSize;
 
 		//Number of objects
 		getline(myfile, inputString);
@@ -80,7 +81,20 @@ bool UI::loadUI(std::string fileName, int winX, int winY)
 			//Which class
 			getline(myfile, inputString);
 			classId = std::stoi(inputString);
-			if (classId == 1)
+			if (classId == 0)
+			{
+				getline(myfile, inputString); //tex1
+				textureId1 = std::stoi(inputString);
+				getline(myfile, inputString); //tex2
+				textureId2 = std::stoi(inputString);
+
+				getline(myfile, inputString); //uniqueKey
+				uniqueKey = std::stoi(inputString);
+
+				getline(myfile, inputString); //hoverKey
+				hoverKey = std::stoi(inputString);
+			}
+			else if (classId == 1)
 			{
 				getline(myfile, inputString);
 				tmpCounter = std::stoi(inputString);
@@ -99,20 +113,17 @@ bool UI::loadUI(std::string fileName, int winX, int winY)
 
 				getline(myfile, inputString); //textId
 				textId = inputString;
-			}
-			else
-			{
-				getline(myfile, inputString); //tex1
-				textureId1 = std::stoi(inputString);
-				getline(myfile, inputString); //tex2
-				textureId2 = std::stoi(inputString);
-			}
 
-			getline(myfile, inputString); //uniqueKey
-			uniqueKey = std::stoi(inputString);
+				getline(myfile, inputString); //XOffSet
+				offsetTextSize.x = std::stoi(inputString);;
+				getline(myfile, inputString); //YOffSet
+				offsetTextSize.y = std::stoi(inputString);;
+				getline(myfile, inputString); //textSize
+				offsetTextSize.z = std::stoi(inputString);
 
-			getline(myfile, inputString); //hoverKey
-			hoverKey = std::stoi(inputString);
+				getline(myfile, inputString); //uniqueKey
+				uniqueKey = std::stoi(inputString);
+			}
 
 			if (classId == 0) //Button
 			{
@@ -132,7 +143,7 @@ bool UI::loadUI(std::string fileName, int winX, int winY)
 			}
 			else if (classId == 3) //Slider
 			{
-				//UiObjects.push_back(Slider(xy, textureId1, textureId2, uniqueKey, counter, counter+1, uiRender, textureRes[0][textureId1], textureRes[0][textureId2]));
+				//UiObjects.push_back(Slider(xy, textureId1, textureId2, counter, counter+1, uiRender, textureRes[0][textureId1], textureRes[0][textureId2]));
 				//textureIdList[counter] = textureId1;
 
 				//counter++;
@@ -142,7 +153,7 @@ bool UI::loadUI(std::string fileName, int winX, int winY)
 			}
 			else if(classId == 4) //InputBox
 			{
-				UiObjects.push_back(new InputBox(xy, textureId1, uniqueKey, uiRender, textureRes[0][textureId1], winX, winY));
+				UiObjects.push_back(new InputBox(xy, textureId1, uniqueKey, uiRender, textureRes[0][textureId1], winX, winY, offsetTextSize));
 				textureIdList[counter] = textureId1;
 				result = true;
 
@@ -160,9 +171,9 @@ bool UI::loadUI(std::string fileName, int winX, int winY)
 					textIdList[5] = counter;
 				else if (textId == "time")
 					textIdList[6] = counter;
-				else if(textId == "ip")
+				else if (textId == "ip")
 					textIdList[7] = counter;
-				else if(textId == "port")
+				else if (textId == "port")
 					textIdList[8] = counter;
 				counter++;
 			}
@@ -296,4 +307,17 @@ void UI::setWindowResolution(int winX, int winY)
 void UI::setText(std::string text, int id)
 {
 	UiObjects[textIdList[id]]->setText(text);
+}
+std::string UI::getText(int id)
+{
+	return UiObjects[textIdList[id]]->getText();
+}
+void UI::removeLastInput(int id)
+{
+	UiObjects[textIdList[id]]->removeLastInput();
+}
+
+void UI::cleanText(int id)
+{
+	UiObjects[textIdList[id]]->cleanText();
 }

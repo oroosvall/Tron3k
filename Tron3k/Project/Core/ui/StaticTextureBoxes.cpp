@@ -142,3 +142,15 @@ void StaticTextureBoxes::setText(std::string text)
 {
 
 }
+
+std::string StaticTextureBoxes::getText()
+{
+	return "";
+}
+void StaticTextureBoxes::removeLastInput()
+{
+}
+void StaticTextureBoxes::cleanText()
+{
+
+}
