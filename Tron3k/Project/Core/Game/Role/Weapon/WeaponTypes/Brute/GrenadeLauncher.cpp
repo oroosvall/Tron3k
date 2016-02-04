@@ -22,7 +22,7 @@ void GrenadeLauncher::init()
 	firingSpeed = 1.2f;
 	firingSpeedCurrentDelay = 0;
 
-	reloadTime = 4.0f;
+	reloadTime = 3.5f;
 	rldTimer = 0;
 }
 
