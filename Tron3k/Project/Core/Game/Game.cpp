@@ -284,7 +284,15 @@ void Game::playerUpdate(int conid, float dt)
 			spectatingThis = true;
 	}
 
-	// apply movement vel and then handle collision 
+	// apply movement vel and then handle collision
+	if (gamemode->getType() == GAMEMODE_TYPE::KOTH)
+	{
+		KingOfTheHill* k = (KingOfTheHill*)gamemode;
+		if (k->getLastMsg() == KOTHSTATE::ENDROUND || k->getLastMsg() == KOTHSTATE::ENDMATCH)
+		{
+
+		}
+	}
 	PLAYERMSG msg = playerList[conid]->update(dt, freecam, spectatingThis, spectating);
 
 	if (msg == PLAYERMSG::SHOOT)
