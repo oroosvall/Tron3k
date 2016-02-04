@@ -310,7 +310,7 @@ public:
 	Decal_RenderInfo* getAllDecalRenderInfo();
 	void updateDecals(float dt);
 	void setnewDecalInten(unsigned int id, float inten);
-	void decalAdd(BulletHitWorldInfo info);
+	void decalAdd(BulletHitWorldInfo info, float rad);
 
 	int Game::findPlayerPosInTeam(int conID);
 

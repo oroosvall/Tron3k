@@ -1499,7 +1499,8 @@ void Game::bounceBullet(BulletHitWorldInfo hwi, Bullet* theBullet)
 
 void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 {
-	decalAdd(hi);
+	//hit info and bullet rad (assumed 0.6 for all)
+	decalAdd(hi, 0.55f);
 
 	int arraypos = -1;
 	Bullet* b = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, arraypos);
@@ -1899,7 +1900,7 @@ void Game::updateDecals(float dt)
 	}
 }
 
-void Game::decalAdd(BulletHitWorldInfo info)
+void Game::decalAdd(BulletHitWorldInfo info, float rad)
 {
 	if (decalCounter >= Max_Decals)
 		return;
@@ -1913,7 +1914,7 @@ void Game::decalAdd(BulletHitWorldInfo info)
 	decals_renderInfo[decalCounter].inten = 1.0f;
 	decals_renderInfo[decalCounter].normal = vec3(info.collisionNormal);
 	//for correct; pos = pos - collision.normal * (Bulletrad - pendepth)
-	decals_renderInfo[decalCounter].pos = info.hitPos -vec3(info.collisionNormal) * (0.3f - info.collisionNormal.w);
+	decals_renderInfo[decalCounter].pos = info.hitPos -vec3(info.collisionNormal) * (rad - info.collisionNormal.w);
 	
 	if (p->getTeam() == 1)
 		decals_renderInfo[decalCounter].color = TEAMONECOLOR;
