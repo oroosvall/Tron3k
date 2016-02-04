@@ -40,6 +40,7 @@ private:
 	sf::Sound bruteSteps;
 	sf::SoundBuffer soundList[SOUNDS::nrOfSounds];
 	string musicList[MUSIC::nrOfMusic];
+	bool fading = false;
 
 	sf::Music musicPlayer;	//Streams big sound files
 	sf::Music theCantinaSong;
@@ -54,12 +55,16 @@ public:
 	static SoundPlayer* getSound();
 	bool destroyerPaused = true;
 	bool brutePaused = true;
+	virtual bool getFading()
+	{
+		return this->fading;
+	}
 
 	virtual void enableSounds();
 	static bool getSoundEnabler();
 	static bool getInitialized();
 
-
+	virtual float getVolumeMusic();
 	virtual void setVolumeMusic(float volume);
 	virtual void setVolumeSound(float volume);
 	virtual void setLocalPlayerDir(glm::vec3 playerDir);

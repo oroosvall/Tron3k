@@ -110,8 +110,14 @@ SoundPlayer::~SoundPlayer()
 	
 }
 
+float SoundPlayer::getVolumeMusic()
+{
+	return musicVolume;
+}
+
 void SoundPlayer::stopMusic()
 {
+	//fading = true;
 	musicPlayer.stop();
 }
 
@@ -245,8 +251,8 @@ void SoundPlayer::enableSounds()
 			sounds[i].setVolume(soundVolume);
 		}
 		soundEnabler = true;
-		playMusic(mainMenu);
-		musicPlayer.setVolume(musicVolume);
+		//playMusic(mainMenu);
+		//musicPlayer.setVolume(musicVolume);
 	}
 	else
 	{
@@ -271,6 +277,7 @@ bool SoundPlayer::getInitialized()
 void SoundPlayer::setVolumeMusic(float volume)
 {
 	musicPlayer.setVolume(volume);
+	cout << volume << endl;
 }
 
 void SoundPlayer::setVolumeSound(float volume)
