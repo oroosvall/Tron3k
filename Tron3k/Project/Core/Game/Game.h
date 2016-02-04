@@ -146,6 +146,7 @@ private:
 	string loadedRoles[NROFROLES][NROFREADPROPERTIES];
 
 	int gameState;
+	float slowmode = 1.0f;
 
 	int max_con;
 	Player** playerList;
