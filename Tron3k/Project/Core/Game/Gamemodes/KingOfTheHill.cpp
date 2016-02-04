@@ -444,9 +444,11 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 				teamTwoPlayers.push_back(teamTwo->at(c));
 			}
 			consolePtr->printMsg("ROUND STARTS IN 15 SECONDS", "System", 'S');
+			timer = 15.0f;
 		}
 		else if (state == ROUND)
 		{
+			timer = 0.0f;
 			if (round == 1 && GetSoundActivated())
 			{
 				GetSound()->playUserGeneratedSound(SOUNDS::announcerRound1);
@@ -479,6 +481,7 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 				GetSound()->playUserGeneratedSound(SOUNDS::announcerCommence);
 				GetSound()->playUserGeneratedSound(SOUNDS::SoundForOvertime);
 			}
+			timer = 30.0f;
 		}
 		else if (state == ENDROUND)
 		{
