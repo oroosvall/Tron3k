@@ -27,7 +27,7 @@ class Core
 {
 private:
 	int uitmpcounter;
-
+	float slowmode = 1.0f;
 
 	float timepass;	//temp
 	Topology* top;

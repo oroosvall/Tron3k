@@ -44,6 +44,13 @@ RoomMesh::~RoomMesh()
 
 }
 
+WorldMesh* RoomMesh::getSpecificBox(int pos)
+{
+	if (pos < roomBoxes.size())
+		return &roomBoxes[pos];
+	return nullptr;
+}
+
 void RoomMesh::setAABB(AABBSingle aabb)
 {
 	this->aabb.max = aabb.max;

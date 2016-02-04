@@ -20,6 +20,9 @@ Button::Button()
 	uniqueKey = -1;
 	hoverCheckKey = 0;
 	pivot = glm::vec3(0);
+
+	winX = 0;
+	winY = 0;
 }
 
 Button::Button(glm::vec2 center, int textureId1, int textureId2, int uniqueKey, int hoverKey, IRenderPipeline* uiRender, glm::vec2 textRes1, glm::vec2 textRes2)
@@ -34,6 +37,9 @@ Button::Button(glm::vec2 center, int textureId1, int textureId2, int uniqueKey, 
 	this->uniqueKey = uniqueKey;
 	hoverCheckKey = hoverKey;
 	textureIdInUse = textureId1;
+
+	winX = 0;
+	winY = 0;
 
 	float xScale = textureRes[0].x / 1980;
 	float yScale = textureRes[0].y / 1080;
@@ -146,5 +152,16 @@ void Button::scaleBar(float procentOfMax, bool fromRight)
 	
 	if (!fromRight)
 		pivot.x = -pivot.x;
+
+}
+
+void Button::setWindowResolution(int winX, int winY)
+{
+	this->winX = winX;
+	this->winY = winY;
+}
+
+void Button::setText(std::string text)
+{
 
 }

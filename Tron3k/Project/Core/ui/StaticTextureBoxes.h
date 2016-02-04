@@ -17,6 +17,9 @@ private:
 	int nrOfTextures;
 	glm::vec3 pivot;
 
+	int winX;
+	int winY;
+
 public:
 	StaticTextureBoxes();
 	StaticTextureBoxes(glm::vec2 center, int* textureId1, int nrOfTextures, IRenderPipeline* uiRender, std::vector<glm::vec2> textRes);
@@ -37,6 +40,10 @@ public:
 	virtual void setTexture(std::vector<GLuint> uiTextureIds);
 
 	virtual void scaleBar(float procentOfMax, bool fromRight);
+
+	virtual void setWindowResolution(int winX, int winY);
+
+	virtual void setText(std::string text);
 };
 
 #endif

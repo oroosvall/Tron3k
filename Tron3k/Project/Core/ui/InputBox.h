@@ -23,9 +23,16 @@ private:
 	bool active;
 
 	glm::vec3 pivot;
+
+	int text;
+
+	int winX;
+	int winY;
+
+	int offset;
 public:
 	InputBox();
-	InputBox(glm::vec2 center, int textureId1, int uniqueKey, IRenderPipeline* uiRender, glm::vec2 textRes);
+	InputBox(glm::vec2 center, int textureId1, int uniqueKey, IRenderPipeline* uiRender, glm::vec2 textRes, int winX, int winY);
 	virtual ~InputBox();
 
 	virtual void render(int id);
@@ -43,6 +50,10 @@ public:
 	virtual void setTexture(std::vector<GLuint> uiTextureIds);
 
 	virtual void scaleBar(float procentOfMax, bool fromRight);
+
+	virtual void setWindowResolution(int winX, int winY);
+
+	virtual void setText(std::string text);
 
 	bool activeOrNot();
 };

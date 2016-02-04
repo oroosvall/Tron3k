@@ -20,6 +20,9 @@ private:
 	float lastScale;
 	glm::vec3 pivot;
 
+	int winX;
+	int winY;
+
 	void createAdditionalPoint();
 public:
 	Slider();
@@ -41,6 +44,10 @@ public:
 	virtual void setTexture(std::vector<GLuint> uiTextureIds);
 
 	virtual void scaleBar(float procentOfMax, bool fromRight);
+
+	virtual void setWindowResolution(int winX, int winY);
+
+	virtual void setText(std::string text);
 };
 
 #endif

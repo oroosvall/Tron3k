@@ -43,7 +43,7 @@ void Core::init()
 
 	uiManager = new UIManager();
 	initPipeline();
-	uiManager->init(&console);
+	uiManager->init(&console, winX, winY);
 
 	renderUI = false;
 	startTeamSelect = true; //Temp
@@ -115,7 +115,25 @@ void Core::update(float dt)
 	{
 		renderPipe->setChatHistoryText(console.getHistory());
 	}
-
+	if (game)
+	{
+		//Slow down when we are in endround
+		if (game->getGameMode()->getType() == GAMEMODE_TYPE::KOTH)
+		{
+			KingOfTheHill* k = (KingOfTheHill*)game->getGameMode();
+			if (k->getState() == KOTHSTATE::ENDROUND || k->getState() == KOTHSTATE::ENDMATCH)
+			{
+				slowmode *= 0.5f;
+				if (slowmode < 0.125f)
+					slowmode = 0.125f;
+				CameraInput* cam = CameraInput::getCam();
+				cam->setPlaybackSpeed(slowmode);
+				dt *= slowmode;
+			}
+			else if (slowmode < 1.0f)
+				slowmode = 1.0f;
+		}
+	}
 	//if (game)
 	//{
 	//	if (console.getInChatMode() == false)
@@ -211,7 +229,7 @@ void Core::upMenu(float dt)
 		{
 		case 0: //Roam
 			current = ROAM;
-			uiManager->LoadNextSet(1);
+			uiManager->LoadNextSet(1, winX, winY);
 			uiManager->setFirstMenuSet(false);
 			uiManager->setMenu(1);
 			subState = 0;
@@ -225,7 +243,12 @@ void Core::upMenu(float dt)
 			glfwHideWindow(win);
 			break;
 		case 4: //Client -> connect window
+			//Block the input to command window
+			//Set so your own function listens after key input.
+
 			uiManager->setMenu(2);
+
+			//uiManager->setText(getPort in string, 8); //Set port text
 			break;
 		case 5: //Server -> starts a server
 			current = SERVER;
@@ -235,6 +258,7 @@ void Core::upMenu(float dt)
 			glfwSwapBuffers(win);
 			renderPipe->clearBothBuffers();
 			renderMenu = false;
+			renderUI = false;
 			break;
 		case 6: //Connect
 		{
@@ -247,6 +271,12 @@ void Core::upMenu(float dt)
 		}
 		case 7: //Back
 			uiManager->setMenu(-1); //Last menu
+			break;
+		case 10: //Ip input
+			
+			break;
+		case 11: //Port
+			
 			break;
 		default:
 			break;
@@ -495,6 +525,7 @@ void Core::upClient(float dt)
 			//Fetch current player position
 			//Add to topology packet
 			Player* local = game->getPlayer(top->getConId());
+
 			top->frame_pos(top->getConId(), local->getPos(), local->getDir(), local->getVelocity(), local->roomID);
 		
 			if (game->weaponSwitchReady())
@@ -504,25 +535,25 @@ void Core::upClient(float dt)
 				top->frame_weapon_switch(top->getConId(), ws, swaploc);
 			}
 
+			if (game->specialActivationReady())
+			{
+				int sid = -1;
+				SPECIAL_TYPE st = game->getSpecialAbilityUsed(top->getConId(), sid);
+				top->frame_special_use(st, top->getConId(), sid, local->getPos(), local->getDir(), local->getTeam());
+			}
+
 			if (game->fireEventReady())
 			{
 				WEAPON_TYPE wt;
 				int bID;
 				game->getLatestWeaponFired(top->getConId(), wt, bID);
-				top->frame_fire(wt, top->getConId(), bID, local->getPos(), local->getDir());
+				top->frame_fire(wt, top->getConId(), bID, local->getPos(), local->getDir(), local->getTeam());
 			}
 
 			if (game->consumableReady())
 			{
 				CONSUMABLE_TYPE ct = game->getConsumableUsed(top->getConId());
-				top->frame_consumable(ct, top->getConId(), local->getPos(), local->getDir());
-			}
-
-			if (game->specialActivationReady())
-			{
-				int sid = -1;
-				SPECIAL_TYPE st = game->getSpecialAbilityUsed(top->getConId(), sid);
-				top->frame_special_use(st, top->getConId(), sid, local->getPos(), local->getDir());
+				top->frame_consumable(ct, top->getConId(), local->getPos(), local->getDir(), local->getTeam());
 			}
 
 			//send animstates
@@ -781,6 +812,7 @@ void Core::startHandleCmds(std::string com)
 			glfwSwapBuffers(win);
 			renderPipe->clearBothBuffers();
 			renderMenu = false;
+			renderUI = false;
 		}
 
 		else if (token == "/3")
@@ -1337,9 +1369,9 @@ void Core::renderWorld(float dt)
 					if (!force3rd && p->isLocal() && !game->freecam || game->spectateID == i)
 					{
 						if (p->isLocal())   //use current anim
-							renderPipe->renderAnimation(i, p->getRole()->getRole(), &p->getFPSmat(), p->getAnimState_f_c(), &dgColor.x, hpval, true, cam->roomID);
+							renderPipe->renderAnimation(i, p->getRole()->getRole(), &p->getFPSmat(), p->getAnimState_f_c(), &dgColor.x, hpval, true, p->getAnimPrimary(), cam->roomID);
 						else			   //use peak anim
-							renderPipe->renderAnimation(i, p->getRole()->getRole(), &p->getFPSmat(), p->getAnimState_f_p(), &dgColor.x, hpval, true, cam->roomID);
+							renderPipe->renderAnimation(i, p->getRole()->getRole(), &p->getFPSmat(), p->getAnimState_f_p(), &dgColor.x, hpval, true, p->getAnimPrimary(), cam->roomID);
 					}
 					else
 					{
@@ -1348,9 +1380,9 @@ void Core::renderWorld(float dt)
 							playermat[0][1].w -= 1.55f;
 
 						if (p->isLocal()) //use current anim
-							renderPipe->renderAnimation(i, p->getRole()->getRole(), playermat, p->getAnimState_t_c(), &dgColor.x, hpval, false, p->roomID);
+							renderPipe->renderAnimation(i, p->getRole()->getRole(), playermat, p->getAnimState_t_c(), &dgColor.x, hpval, false, false, p->roomID);
 						else              //use peak anim
-							renderPipe->renderAnimation(i, p->getRole()->getRole(), playermat, p->getAnimState_t_p(), &dgColor.x, hpval, false, p->roomID);
+							renderPipe->renderAnimation(i, p->getRole()->getRole(), playermat, p->getAnimState_t_p(), &dgColor.x, hpval, false, false, p->roomID);
 					}
 				}
 			}
@@ -1366,10 +1398,10 @@ void Core::renderWorld(float dt)
 				std::vector<Bullet*> bullets = game->getBullets(BULLET_TYPE(c));
 				for (unsigned int i = 0; i < bullets.size(); i++)
 				{
-					if (bullets[i]->getTeamId() == 1)
+					if (bullets[i]->getTeam() == 1)
 						renderPipe->renderBullet(c, bullets[i]->getWorldMat(), &TEAMONECOLOR.x, 0.0f);
 
-					else if (bullets[i]->getTeamId() == 2)
+					else if (bullets[i]->getTeam() == 2)
 						renderPipe->renderBullet(c, bullets[i]->getWorldMat(), &TEAMTWOCOLOR.x, 0.0f);
 				}
 			}
@@ -1381,10 +1413,10 @@ void Core::renderWorld(float dt)
 				std::vector<Bullet*> bullets = game->getBullets(BULLET_TYPE(c));
 				for (unsigned int i = 0; i < bullets.size(); i++)
 				{
-					if (bullets[i]->getTeamId() == 1)
+					if (bullets[i]->getTeam() == 1)
 						renderPipe->renderBullet(c, bullets[i]->getWorldMat(), &TEAMTWOCOLOR.x, 0.0f);
 
-					else if (bullets[i]->getTeamId() == 2)
+					else if (bullets[i]->getTeam() == 2)
 						renderPipe->renderBullet(c, bullets[i]->getWorldMat(), &TEAMTWOCOLOR.x, 0.0f);
 				}
 			}
@@ -1396,10 +1428,10 @@ void Core::renderWorld(float dt)
 				std::vector<Bullet*> bullets = game->getBullets(BULLET_TYPE(c));
 				for (unsigned int i = 0; i < bullets.size(); i++)
 				{
-					if (bullets[i]->getTeamId() == 1)
+					if (bullets[i]->getTeam() == 1)
 						renderPipe->renderBullet(c, bullets[i]->getWorldMat(), &TEAMONECOLOR.x, 0.0f);
 
-					else if (bullets[i]->getTeamId() == 2)
+					else if (bullets[i]->getTeam() == 2)
 						renderPipe->renderBullet(c, bullets[i]->getWorldMat(), &TEAMONECOLOR.x, 0.0f);
 				}
 			}
@@ -1427,7 +1459,7 @@ void Core::renderWorld(float dt)
 				
 				int pid, eid;
 				eff[i]->getId(pid, eid);
-				int team = game->getPlayer(pid)->getTeam();
+				int team = eff[i]->getTeam();
 
 				if (hackedTeam == -1)
 				{
@@ -1543,6 +1575,14 @@ void Core::inGameUIUpdate() //Ingame ui update
 	double tX = (x / (double)winX) * 2 - 1.0; // (x/ResolutionX) * 2 - 1
 	double tY = (-y / (double)winY) * 2 + 1.0; // (y/ResolutionY) * 2 - 1
 	
+	//uiManager->setText(getHp in string, 0); //HP
+	//uiManager->setText(getAmmo in string, 1); //Ammo
+	//uiManager->setText(getTickets1 in string, 2); //tickets team 1
+	//uiManager->setText(getTickets2 in string, 3); //tickets team 2
+	//uiManager->setText(getWins1 in string, 4); //rounds won team 1
+	//uiManager->setText(getwins2 in string, 5); //rounds won team 2
+	//uiManager->setText(getTime in string, 6); //time
+
 	uiManager->inGameRender();
 
 	if (i->justPressed(GLFW_MOUSE_BUTTON_LEFT))//button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
@@ -1605,7 +1645,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 			else
 				clientHandleCmds("/disconnect");
 			uiManager->setOpenedGuiBool(false);
-			uiManager->LoadNextSet(0);
+			uiManager->LoadNextSet(0, winX, winY);
 			break;
 		default:
 			break;
@@ -1905,13 +1945,13 @@ void Core::showTeamSelect()
 {
 	if(startTeamSelect)
 	{
-		uiManager->LoadNextSet(1);
+		uiManager->LoadNextSet(1, winX, winY);
 		uiManager->setFirstMenuSet(false);
 		uiManager->setMenu(1);
 	}
 	else
 	{
-		uiManager->LoadNextSet(1);
+		uiManager->LoadNextSet(1, winX, winY);
 		uiManager->setFirstMenuSet(false);
 		uiManager->setOpenedGuiBool(true);
 		uiManager->setMenu(0); 

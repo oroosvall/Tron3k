@@ -92,9 +92,7 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	Text::ScreenResHeight = WindowHeight;
 	Text::ScreenResWidth = WindowWidth;
 
-	//fontTexture = loadTexture("GameFiles/Font/font16.png", false);
-
-	fontTexture = TextureManager::gTm->createTexture("GameFiles/Font/font16.png");
+	fontTexture = loadTexture("GameFiles/Font/font16.png", false);
 
 	debugText = new Text("", 16, fontTexture, vec2(10, 24));
 	chatHistoryText = ".\n.\n.\n.\n.\n";
@@ -512,7 +510,13 @@ void RenderPipeline::finalizeRender()
 	glProgramUniformMatrix4fv(textShader, textShaderModel, 1, GL_FALSE, (GLfloat*)&glm::mat4());
 	glProgramUniformMatrix4fv(textShader, textShaderVP, 1, GL_FALSE, (GLfloat*)&glm::mat4());
 	glProgramUniform3f(textShader, textShaderOffset,  0, 0, 0);
-	TextureManager::gTm->bindTexture(fontTexture, textShader, textShaderLocation, DIFFUSE_FB);
+	
+	TextureInfo asd;
+	asd.lastTextureSlot = GL_TEXTURE0;
+	asd.state = TEXTURE_LOADED;
+	asd.textureID = fontTexture;
+
+	TextureManager::gTm->bind(asd, textShader, textShaderLocation);//bindTexture(fontTexture, textShader, textShaderLocation, DIFFUSE_FB);
 	
 	glEnable(GL_BLEND);
 
@@ -750,12 +754,13 @@ void RenderPipeline::renderBullet(int bid, void* world, float* dgColor, float sg
 	contMan.renderBullet(bid);
 }
 
-void RenderPipeline::renderAnimation(int playerID, int roleID, void* world, AnimationState animState, float* dgColor, float sgInten, bool first, int roomID)
+void RenderPipeline::renderAnimation(int playerID, int roleID, void* world, AnimationState animState, float* dgColor, float sgInten, bool first, bool primary, int roomID)
 {
 	anims.updateAnimStates(playerID, roleID, animState, delta, first);
 
 	if (contMan.renderedChunks[roomID] == true || contMan.f_portal_culling == false)
 	{
+
 		glUseProgram(animationShader);
 
 		//Texture for the glow
@@ -772,9 +777,8 @@ void RenderPipeline::renderAnimation(int playerID, int roleID, void* world, Anim
 		glProgramUniformMatrix4fv(animationShader, worldMat[1], 1, GL_FALSE, (GLfloat*)world);
 
 	if (anims.animStates[playerID].state != AnimationState::none && anims.animStates[playerID].frameEnd > 0)
-		contMan.renderPlayer(anims.animStates[playerID], *(glm::mat4*)world, uniformKeyMatrixLocation, first, animationShader, uniformTextureLocation[1], uniformNormalLocation[1], uniformGlowSpecLocation[1]);
+		contMan.renderPlayer(anims.animStates[playerID], *(glm::mat4*)world, uniformKeyMatrixLocation, first, primary, animationShader, uniformTextureLocation[1], uniformNormalLocation[1], uniformGlowSpecLocation[1]);
 	}
-	
 }
 
 bool RenderPipeline::setSetting(PIPELINE_SETTINGS type, PipelineValues value)
@@ -988,7 +992,7 @@ void RenderPipeline::ui_renderQuad(float* mat, float* pivot, GLuint textureID, f
 	temp.lastTextureSlot = GL_TEXTURE0;
 	temp.textureID = textureID;
 	TextureManager::gTm->bind(temp, uiShader, ui_Texture);
-	//glBindTexture(GL_TEXTURE_2D, textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
 	glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, mat);
 	glProgramUniform3fv(uiShader, uniformPivotLocation, 1, pivot);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
@@ -1062,7 +1066,13 @@ void RenderPipeline::renderTextObject(int id)
 	glProgramUniformMatrix4fv(textShader, textShaderModel, 1, GL_FALSE, (GLfloat*)&glm::mat4());
 	glProgramUniformMatrix4fv(textShader, textShaderVP, 1, GL_FALSE, (GLfloat*)&glm::mat4());
 	glProgramUniform3f(textShader, textShaderOffset, 0, 0, 0);
-	TextureManager::gTm->bindTexture(fontTexture, textShader, textShaderLocation, DIFFUSE_FB);
+	
+	TextureInfo asd;
+	asd.lastTextureSlot = GL_TEXTURE0;
+	asd.state = TEXTURE_LOADED;
+	asd.textureID = fontTexture;
+
+	TextureManager::gTm->bind(asd, textShader, textShaderLocation);//TextureManager::gTm->bindTexture(fontTexture, textShader, textShaderLocation, DIFFUSE_FB);
 
 	textObjects[id]->draw();
 
@@ -1079,7 +1089,12 @@ void RenderPipeline::renderTextObjectWorldPos(int id, glm::mat4 world)
 
 	glProgramUniform3f(textShader, textShaderOffset, -pos.x ,0,0);
 
-	TextureManager::gTm->bindTexture(fontTexture, textShader, textShaderLocation, DIFFUSE_FB);
+	TextureInfo asd;
+	asd.lastTextureSlot = GL_TEXTURE0;
+	asd.state = TEXTURE_LOADED;
+	asd.textureID = fontTexture;
+
+	TextureManager::gTm->bind(asd, textShader, textShaderLocation);//TextureManager::gTm->bindTexture(fontTexture, textShader, textShaderLocation, DIFFUSE_FB);
 
 	textObjects[id]->draw();
 

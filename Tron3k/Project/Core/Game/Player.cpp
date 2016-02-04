@@ -383,7 +383,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		//}
 
 		//instant stop
-		if (grounded)
+		if (grounded && isLocalPlayer)
 		{
 			airVelocity = vel = vec3(0);
 		}
@@ -970,9 +970,18 @@ glm::mat4 Player::getFPSmat()
 
 		break;
 	case BRUTE:
-		yOffset = 0.35f;
-		xOffset = 0.45f;
-		zOffset = 0.40f;
+		if (animPrimary)
+		{
+			yOffset = -0.2f;
+			xOffset = -0.45f;
+			zOffset = 0.20f;
+		}
+		else
+		{
+			yOffset = 0.35f;
+			xOffset = 0.45f;
+			zOffset = 0.40f;
+		}
 		break;
 	case MANIPULATOR:
 		yOffset = 0.0f;
@@ -1007,6 +1016,15 @@ void Player::movmentSpecialAnimUse(int react)
 	case BRUTE:			return;
 	case MANIPULATOR:	return;
 	}
+}
+
+bool Player::getAnimPrimary()
+{
+	if (animRole == ROLES::BRUTE)
+	{
+		return animPrimary;
+	}
+	return true;
 }
 
 void Player::movementAnimationChecks(float dt)

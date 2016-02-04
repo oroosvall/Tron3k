@@ -22,19 +22,19 @@ void UI::render(std::vector<GLuint> uiTextureIds)
 		UiObjects[i]->render(i);
 }
 
-void UI::init(std::string fileName, Console* console, IRenderPipeline* uiRender, std::vector<glm::vec2>* textureRes)
+void UI::init(std::string fileName, Console* console, IRenderPipeline* uiRender, std::vector<glm::vec2>* textureRes, int winX, int winY)
 {
 	this->textureRes = textureRes;
 	this->uiRender = uiRender;
 	this->console = console;
 
-	bool result = loadUI(fileName);
+	bool result = loadUI(fileName, winX, winY);
 	if (!result)
 		console->printMsg("Error: LoadUI in UI was unsucessfull","System",'S');
 }
 
 //Needs to be modified
-bool UI::loadUI(std::string fileName) 
+bool UI::loadUI(std::string fileName, int winX, int winY)
 {
 	bool result = false;
 	
@@ -45,6 +45,7 @@ bool UI::loadUI(std::string fileName)
 	{
 		//Variables for the while loop
 		std::string inputString;
+		std::string textId;
 		int convertedResult = -1;
 		float x = -1.0f, y = -1.0f, u = -1.0f, v = -1.0f;
 		int textureId1 = -1, textureId2 = -1, scale = -1, counter = 0, uniqueKey = 0, classId = -1, hoverKey = 0, tmpCounter = 0;;
@@ -95,6 +96,9 @@ bool UI::loadUI(std::string fileName)
 			{
 				getline(myfile, inputString); //tex1
 				textureId1 = std::stoi(inputString);
+
+				getline(myfile, inputString); //textId
+				textId = inputString;
 			}
 			else
 			{
@@ -138,9 +142,28 @@ bool UI::loadUI(std::string fileName)
 			}
 			else if(classId == 4) //InputBox
 			{
-				UiObjects.push_back(new InputBox(xy, textureId1, uniqueKey, uiRender, textureRes[0][textureId1]));
+				UiObjects.push_back(new InputBox(xy, textureId1, uniqueKey, uiRender, textureRes[0][textureId1], winX, winY));
 				textureIdList[counter] = textureId1;
 				result = true;
+
+				if (textId == "hpBar")
+					textIdList[0] = counter;
+				else if (textId == "ammoBar")
+					textIdList[1] = counter;
+				else if (textId == "ticket1Bar")
+					textIdList[2] = counter;
+				else if (textId == "ticket2Bar")
+					textIdList[3] = counter;
+				else if (textId == "wins1")
+					textIdList[4] = counter;
+				else if (textId == "wins2")
+					textIdList[5] = counter;
+				else if (textId == "time")
+					textIdList[6] = counter;
+				else if(textId == "ip")
+					textIdList[7] = counter;
+				else if(textId == "port")
+					textIdList[8] = counter;
 				counter++;
 			}
 			//else if(classId == 2) {} //DynamicText
@@ -260,4 +283,17 @@ void UI::setTextureId(std::vector<GLuint> uiTextureIds)
 	{
 		UiObjects[i]->setTexture(uiTextureIds);
 	}
+}
+
+void UI::setWindowResolution(int winX, int winY)
+{
+	for (int i = 0; i < UiObjects.size(); i++)
+	{
+		UiObjects[i]->setWindowResolution(winX, winY);
+	}
+}
+
+void UI::setText(std::string text, int id)
+{
+	UiObjects[textIdList[id]]->setText(text);
 }

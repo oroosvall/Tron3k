@@ -69,7 +69,7 @@ public:
 
 	void update(float dt);
 
-	void setHealth(int newHealth) { health = newHealth; }; //Used by clients
+	void setHealth(int newHealth) { health = newHealth; if (health > maxHealth) health = maxHealth; }; //Used by clients
 	void takeDamage(int dmg); //Used by server
 	void heal(int h); //Used by server
 

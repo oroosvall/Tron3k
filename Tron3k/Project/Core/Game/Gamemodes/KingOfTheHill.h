@@ -31,7 +31,6 @@ private:
 	int capturePoint; //Which cap point is active
 	int teamOnePlayersAtPoint;
 	int teamTwoPlayersAtPoint; //Number of people of each team currently in the capture point area
-	void clearPlayersOnCapPoint(); //Clear the values at the start of each frame
 
 	int teamOneScore;
 	int teamTwoScore;
@@ -72,6 +71,8 @@ public:
 
 	bool allowTeamChange();
 	bool allowRoleChange();
+
+	void clearPlayersOnCapPoint(); //Clear the values at the start of each frame
 };
 
 #endif

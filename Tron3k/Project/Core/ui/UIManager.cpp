@@ -40,7 +40,7 @@ UIManager::~UIManager()
 }
 
 //Start menu
-void UIManager::init(Console* console)
+void UIManager::init(Console* console, int winX, int winY)
 {
 	std::string fileNameFirstGroup = "GameFiles/UIFiles/MenuFileNames.txt";
 	std::string fileNameSecondGroup = "GameFiles/UIFiles/InGameFileNames.txt";
@@ -140,8 +140,10 @@ void UIManager::init(Console* console)
 	myfile.close();
 
 	currentGroup = 1;
+	this->winX = winX;
+	this->winY = winY;
 
-	LoadNextSet(0); //Load the first set of menus.
+	LoadNextSet(0, winX, winY); //Load the first set of menus.
 	setMenu(0); //Set start menu as the current menu
 }
 
@@ -268,7 +270,7 @@ void UIManager::changeTex(int objId, int whichTex)
 	menus[currentMenu[nrOfCurretMenus - 1]].changeTex(objId, whichTex);
 }
 
-bool UIManager::LoadNextSet(int whichMenuGroup)
+bool UIManager::LoadNextSet(int whichMenuGroup, int winX, int winY)
 {
 	removeAllMenus();
 
@@ -288,7 +290,7 @@ bool UIManager::LoadNextSet(int whichMenuGroup)
 		currentMenu = new int[nrOfFileNamesFirstGroup];
 		for (int i = 0; i < nrOfFileNamesFirstGroup; i++)
 		{
-			menus[i].init(fileNamesListFirstGroup[i], console, renderPipe, textureRes);
+			menus[i].init(fileNamesListFirstGroup[i], console, renderPipe, textureRes, winX, winY);
 			menus[i].setTextureId(uiTextureIds);
 			nrOfMenus++;
 		}
@@ -301,7 +303,7 @@ bool UIManager::LoadNextSet(int whichMenuGroup)
 		currentMenu = new int[nrOfFileNamesFirstGroup];
 		for (int i = 0; i < nrOfFileNamesSecondGroup; i++)
 		{
-			menus[i].init(fileNamesListSecondGroup[i], console, renderPipe, textureRes);
+			menus[i].init(fileNamesListSecondGroup[i], console, renderPipe, textureRes, winX, winY);
 			menus[i].setTextureId(uiTextureIds);
 			nrOfMenus++;
 		}
@@ -323,4 +325,17 @@ void UIManager::setOpenedGuiBool(bool guiBool)
 void UIManager::setFirstMenuSet(bool set)
 {
 	firstMenuSet = set;
+}
+
+void UIManager::setWindowResolution(int winX, int winY)
+{
+	this->winX = winX;
+	this->winY = winY;
+
+	menus[currentMenu[nrOfCurretMenus - 1]].setWindowResolution(winX, winY);
+}
+
+void UIManager::setText(std::string text, int id)
+{
+	menus[currentMenu[nrOfCurretMenus - 1]].setText(text, id);
 }

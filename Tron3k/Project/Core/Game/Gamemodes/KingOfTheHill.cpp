@@ -30,7 +30,7 @@ void KingOfTheHill::init(Console* cptr, Game* gptr)
 		serverState = LOCAL;
 	}
 
-	capturePoint = 0;
+	capturePoint = 0; //Capture point IDs are currently 8 and 32! nvm, they're 0 and 1
 	teamOnePlayersAtPoint = 0;
 	teamTwoPlayersAtPoint = 0;
 
@@ -163,7 +163,6 @@ GAMEMODE_MSG KingOfTheHill::roundScoring()
 
 GAMEMODE_MSG KingOfTheHill::update(float dt)
 {
-	clearPlayersOnCapPoint();
 	GAMEMODE_MSG msg = lastMsg;
 
 	switch (state)
@@ -421,16 +420,13 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 		}
 		else if (state == ROUND)
 		{
-			int myConID = gamePtr->GetLocalPlayerId();
-			std::vector<int>* myTeam = gamePtr->getTeamConIds(gamePtr->getPlayer(myConID)->getTeam());
-			bool found = false;
-			for (int c = 0; c < myTeam->size() && !found; c++)
+			for (int c = 0; c < teamOnePlayers.size(); c++)
 			{
-				if (myConID == myTeam->at(c))
-				{
-					found = true;
-					gamePtr->allowPlayerRespawn(myConID, c);
-				}
+				gamePtr->allowPlayerRespawn(teamOnePlayers[c], c);
+			}
+			for (int c = 0; c < teamTwoPlayers.size(); c++)
+			{
+				gamePtr->allowPlayerRespawn(teamTwoPlayers[c], c);
 			}
 			gamePtr->clearAllPlayerKD();
 		}

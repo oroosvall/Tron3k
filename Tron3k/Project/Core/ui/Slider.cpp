@@ -26,6 +26,9 @@ Slider::Slider()
 	nrOfButtons = 2;
 	objId[0] = -1;
 	objId[1] = -1;
+
+	winX = 0;
+	winY = 0;
 }
 Slider::Slider(glm::vec2 center, int textureId1, int textureId2, int uniqueKey, int objId1, int objId2, IRenderPipeline* uiRender, glm::vec2 textRes, glm::vec2 textRes2)
 {
@@ -40,6 +43,9 @@ Slider::Slider(glm::vec2 center, int textureId1, int textureId2, int uniqueKey, 
 
 	objId[0] = objId1;
 	objId[1] = objId2;
+
+	winX = 0;
+	winY = 0;
 
 	float xScale = textRes.x / 1980;
 	float yScale = textRes.y / 1080;
@@ -135,4 +141,15 @@ void Slider::scaleBar(float procentOfMax, bool fromRight) //
 
 	if (!fromRight)
 		pivot.x = -pivot.x;
+}
+
+void Slider::setWindowResolution(int winX, int winY)
+{
+	this->winX = winX;
+	this->winY = winY;
+}
+
+void Slider::setText(std::string text)
+{
+
 }
