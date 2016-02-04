@@ -972,9 +972,9 @@ void Game::addBulletToList(int conID, int teamId, int bulletId, BULLET_TYPE bt, 
 	switch (bt)
 	{
 	case BULLET_TYPE::PULSE_SHOT:
-		rightV *= 0.23;
+		rightV *= 0.2;
 		upV *= -0.13f;
-		dirMod *= 0.12f;
+		dirMod *= 0.3f;
 		pos += upV + rightV + dirMod;
 		b = new PulseShot(pos, dir, conID, bulletId, teamId);
 		break;
@@ -985,9 +985,9 @@ void Game::addBulletToList(int conID, int teamId, int bulletId, BULLET_TYPE bt, 
 		b = new PlasmaShot(pos, dir, conID, bulletId, teamId);
 		break;
 	case BULLET_TYPE::GRENADE_SHOT:
-		rightV *= -0.26;
-		upV *= 0.25f;
-		dirMod *= 0.1f;
+		rightV *= -0.55;
+		upV *= 0.2f;
+		dirMod *= 0.35f;
 		pos += upV + rightV + dirMod;
 		b = new GrenadeShot(pos, dir, conID, bulletId, teamId);
 		break;
@@ -1026,8 +1026,8 @@ void Game::addBulletToList(int conID, int teamId, int bulletId, BULLET_TYPE bt, 
 		break;
 	case BULLET_TYPE::DISC_SHOT:
 		rightV *= 0.25f;
-		upV *= 0.25f;
-		dirMod *= 0.1f;
+		upV *= 0.2f;
+		dirMod *= 0.65f;
 		pos += upV + rightV + dirMod;
 		b = new DiscShot(pos, dir, conID, bulletId, teamId);
 		break;
