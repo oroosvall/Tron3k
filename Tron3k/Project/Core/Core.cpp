@@ -106,7 +106,25 @@ void Core::update(float dt)
 	{
 		renderPipe->setChatHistoryText(console.getHistory());
 	}
-
+	if (game)
+	{
+		//Slow down when we are in endround
+		if (game->getGameMode()->getType() == GAMEMODE_TYPE::KOTH)
+		{
+			KingOfTheHill* k = (KingOfTheHill*)game->getGameMode();
+			if (k->getState() == KOTHSTATE::ENDROUND || k->getState() == KOTHSTATE::ENDMATCH)
+			{
+				slowmode *= 0.5f;
+				if (slowmode < 0.125f)
+					slowmode = 0.125f;
+				CameraInput* cam = CameraInput::getCam();
+				cam->setPlaybackSpeed(slowmode);
+				dt *= slowmode;
+			}
+			else if (slowmode < 1.0f)
+				slowmode = 1.0f;
+		}
+	}
 	//if (game)
 	//{
 	//	if (console.getInChatMode() == false)

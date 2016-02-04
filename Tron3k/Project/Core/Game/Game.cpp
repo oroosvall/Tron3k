@@ -283,22 +283,7 @@ void Game::playerUpdate(int conid, float dt)
 		if (conid == spectateID)
 			spectatingThis = true;
 	}
-	//Slow down when we are in endround
-	if (gamemode->getType() == GAMEMODE_TYPE::KOTH)
-	{
-		KingOfTheHill* k = (KingOfTheHill*)gamemode;
-		if (k->getState() == KOTHSTATE::WARMUP || k->getState() == KOTHSTATE::WARMUP)
-		{
-			slowmode *= 0.5f;
-			if (slowmode < 0.3125f)
-				slowmode = 0.3125f;
-			CameraInput* cam = CameraInput::getCam();
-			cam->setPlaybackSpeed(slowmode);
-			//dt *= slowmode;
-		}
-		else if (slowmode < 1.0f)
-			slowmode = 1.0f;
-	}
+
 	// apply movement vel and then handle collision
 	PLAYERMSG msg = playerList[conid]->update(dt, freecam, spectatingThis, spectating);
 
