@@ -420,7 +420,7 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb)
 				}
 			}
 		}
-		else
+		else //This is for flat lines. Else we occasionally got stuck on slopes. Without this we would also sometimes fall through lines
 		{
 			if (t.w >= 0 - FLT_EPSILON)
 				if (t.w < closest.w) // a new closest dist was found
@@ -490,48 +490,6 @@ vec4 Physics::getSpherevOBBlwNorms(vec3 pos, float rad, OBB* obb)
 
 	return closest;
 }
-
-vec3 Physics::getCollisionNormal(Cylinder cylinder, AABB aabb)
-{
-	glm::vec3 normal = glm::vec3(0, 0, 0);
-	return normal;
-}
-
-vec3 Physics::getCollisionNormal(AngledCylinder cylinder, AABB aabb)
-{
-	glm::vec3 normal = glm::vec3(0, 0, 0);
-	return normal;
-}
-
-vec3 Physics::getCollisionNormal(Sphere sphere, AABB aabb)
-{
-	glm::vec3 normal = glm::vec3(0, 0, 0);
-	return normal;
-}
-
-vec3 Physics::getCollisionNormal(OBB obb1, OBB obb2)
-{
-	glm::vec3 normal = glm::vec3(0, 0, 0);
-	return normal;
-}
-
-vec3 Physics::getCollisionNormal(Cylinder cylinder, OBB obb)
-{
-	glm::vec3 normal = glm::vec3(0, 0, 0);
-	return normal;
-}
-
-vec3 Physics::getCollisionNormal(AngledCylinder cylinder, OBB obb)
-{
-	glm::vec3 normal = glm::vec3(0, 0, 0);
-	return normal;
-}
-
-vec3 Physics::getCollisionNormal(Sphere sphere, OBB obb)
-{
-	glm::vec3 normal = glm::vec3(0, 0, 0);
-	return normal;
-}
 //--------------//--------------//
 
 vec3 Physics::checkPlayerVPlayerCollision(vec3 playerPos1, vec3 playerPos2)
@@ -551,8 +509,6 @@ vec3 Physics::checkPlayerVBulletCollision(vec3 playerPos, vec3 bulletPos, vec3 s
 {
 	playerBox.setPos(playerPos);
 	playerBox.setPlayerSize(size);
-
-
 	//TEMPORARY
 
 	bulletBox.setPos(bulletPos);
@@ -567,18 +523,18 @@ vec3 Physics::checkPlayerVBulletCollision(vec3 playerPos, vec3 bulletPos, vec3 s
 
 std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos)
 {
-	AABBSingle box;
+	AABBSingle box = playerBox.getAABB();
 	float rad = playerBox.getSphere().radius;
 	float abbrad = rad + 0.01f;
-	box.max = playerPos + vec3(abbrad, abbrad, abbrad);
-	box.min = playerPos - vec3(abbrad, abbrad, abbrad);
-	playerBox.setAABB(box);
+	box.max += vec3(abbrad, abbrad, abbrad);
+	box.min -= vec3(abbrad, abbrad, abbrad);
+	
+	playerBox.setPos(playerPos);
+	playerBox.setWorldSize();
 
 	std::vector<vec4> cNorms;
 	vec4 t;
 	vec3 collisionNormal = vec3(0, 0, 0);
-
-
 
 	//each abb
 	for (unsigned int j = 0; j < roomBoxes[0].getRoomBoxes()->size(); j++)
@@ -586,8 +542,6 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos)
 		if (checkAABBvAABBCollision(playerBox.getAABB(), roomBoxes[0].getSpecificBox(j)->getAABB()))
 		{
 			//printf("%d %d \n", i, j); // test for abbs so they register
-
-			//for each obb contained in that abb
 			int size = roomBoxes[0].getSpecificBox(j)->getOBBSize();
 
 			for (int n = 0; n < size; n++)
@@ -620,15 +574,10 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos)
 			//each abb
 			for (unsigned int j = 0; j < roomBoxes[i].getRoomBoxes()->size(); j++)
 			{
-				bool contin = false;
-
 				if (checkAABBvAABBCollision(playerBox.getAABB(), roomBoxes[i].getSpecificBox(j)->getAABB()))
 				{
-					//printf("%d %d \n", i, j); // test for abbs so they register
-
 					//for each obb contained in that abb
 					int size = roomBoxes[i].getSpecificBox(j)->getOBBSize();
-
 					for (int n = 0; n < size; n++)
 					{
 						t = getSpherevOBBNorms(playerPos, rad, roomBoxes[i].getSpecificBox(j)->getOBB(n));
@@ -734,18 +683,11 @@ vec4 Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel, vec3 bulletD
 			if (passed)
 			{
 				//each chunk
-				vec4 t = vec4(0);
 				//each abb
-				//if (checkAABBvAABBCollision(bulletBox.getAABB(), &roomBox))
-
 				for (unsigned int j = 0; j < roomBoxes[i].getRoomBoxes()->size(); j++)
 				{
-					//do or do not, there is a try again at half the position
-
 					if (checkAABBvAABBCollision(box, roomBoxes[i].getSpecificBox(j)->getAABB()))
 					{
-						//printf("%d %d \n", i, j); // test for abbs so they register
-
 						//for each obb contained in that abb
 						int size = roomBoxes[i].getSpecificBox(j)->getOBBSize();
 						for (int n = 0; n < size; n++)
@@ -1216,6 +1158,8 @@ void Physics::receivePlayerRad(float rad)
 	sphere.pos = playerBox.getPos();
 	sphere.radius = rad;
 	playerBox.setSphere(sphere);
+
+	playerBox.setWorldSize(vec3(rad, rad, rad));
 }
 
 void Physics::receiveRoomBoxes(void* _roomboxes)
