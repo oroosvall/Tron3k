@@ -1405,20 +1405,31 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 	Player* p = playerList[hi.playerHit];
 	int effectPosInArray = -1;
 	Effect* theEffect = getSpecificEffect(hi.effectPID, hi.effectID, hi.et, effectPosInArray);
-	theEffect->setPos(hi.hitPos);
-	updateEffectBox(theEffect);
-	if (theEffect->getType() == EFFECT_TYPE::EXPLOSION && gameState != Gamestate::SERVER)
+	if (theEffect != nullptr)
 	{
-		switch (theEffect->getType())
+		theEffect->setPos(hi.hitPos);
+		updateEffectBox(theEffect);
+	}
+	
+	if (gameState != Gamestate::SERVER)
+	{
+		switch (hi.et)
 		{
 		case EFFECT_TYPE::EXPLOSION:
 		{
 			vec3 normalFromExplosion = normalize(hi.playerPos - hi.hitPos);
-			vec3 newVel = normalFromExplosion*theEffect->getInterestingVariable() / 3.0f;
+			vec3 newVel = vec3(0);
+			if (theEffect != nullptr)
+				newVel = normalFromExplosion*theEffect->getInterestingVariable() / 3.0f;
+			else
+				newVel = normalFromExplosion / 3.0f; //If, by any chance, the effect got removed before this occured, we use a default explosion value of 1.0
 			if (p->getGrounded())
 			{
 				p->setGrounded(false);
-				newVel.y = theEffect->getInterestingVariable()*1.5f; //3.0f and 1.5f are arbitrary values
+				if (theEffect != nullptr)
+					newVel.y = theEffect->getInterestingVariable()*1.5f; //3.0f and 1.5f are arbitrary values
+				else
+					newVel.y = 1.5f;
 			}
 
 			p->setVelocity(newVel);
