@@ -198,11 +198,13 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			if (timer < 15.0f && !fifteenPlayed && GetSoundActivated())
 			{
 				GetSound()->playUserGeneratedSound(SOUNDS::announcer15Seconds);
+				fifteenPlayed = true;
 			}
 
 			if (timer < 5.0f && !fivePlayed && GetSoundActivated())
 			{
 				GetSound()->playUserGeneratedSound(SOUNDS::announcer5Seconds);
+				fivePlayed = true;
 			}
 		}
 		break;
