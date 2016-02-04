@@ -28,6 +28,8 @@ class Core
 private:
 	int uitmpcounter;
 	float slowmode = 1.0f;
+	float slowdownFactor = 0.5f;
+	float slowdownTimer = 0.0f;
 
 	float timepass;	//temp
 	Topology* top;

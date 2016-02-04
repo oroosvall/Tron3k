@@ -40,6 +40,8 @@ private:
 	int teamOneSpawnTokens;
 	int teamTwoSpawnTokens;
 
+	bool slowdownTime = false;
+
 	//For managing announcer
 	bool fiveTokensPlayed = false;
 	bool fifteenPlayed = false;
@@ -68,6 +70,7 @@ public:
 
 	KOTHSTATE getState();
 	GAMEMODE_MSG getLastMsg() { return lastMsg; };
+	bool getIfSlowdown() { return slowdownTime; };
 
 	bool allowTeamChange();
 	bool allowRoleChange();

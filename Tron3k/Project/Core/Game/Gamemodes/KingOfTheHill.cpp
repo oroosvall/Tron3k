@@ -406,6 +406,7 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 	{
 		if (state == PREROUND)
 		{
+			slowdownTime = false;
 			std::vector<int>* teamOne = gamePtr->getTeamConIds(1);
 			std::vector<int>* teamTwo = gamePtr->getTeamConIds(2);
 			for (int c = 0; c < teamOne->size(); c++)
@@ -440,6 +441,7 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 		}
 		else if (state == ENDROUND)
 		{
+			slowdownTime = true;
 			if (serverMsg == GAMEMODE_MSG::ROUND_WIN_TEAM1)
 			{
 				consolePtr->printMsg("TEAM ONE WINS THE ROUND", "System", 'S');
@@ -468,6 +470,7 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 		}
 		else if (state == ENDMATCH)
 		{
+			slowdownTime = true;
 			if (serverMsg == GAMEMODE_MSG::MATCH_WIN_TEAM1)
 			{
 				consolePtr->printMsg("TEAM ONE WINS THE MATCH", "System", 'S');
