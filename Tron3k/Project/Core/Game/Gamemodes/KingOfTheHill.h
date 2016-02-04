@@ -31,6 +31,7 @@ private:
 	int capturePoint; //Which cap point is active
 	int teamOnePlayersAtPoint;
 	int teamTwoPlayersAtPoint; //Number of people of each team currently in the capture point area
+	int round = 1;
 
 	int teamOneScore;
 	int teamTwoScore;
