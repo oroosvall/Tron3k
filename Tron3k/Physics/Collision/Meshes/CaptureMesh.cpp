@@ -77,6 +77,7 @@ void CaptureMesh::setAABB(AABBSingle aabb)
 
 void CaptureMesh::setBoxes(CaptureLoaded aabbLoad)
 {
+	subAabbs.clear();
 	capID = aabbLoad.roomID;
 
 	pos = vec3(aabbLoad.bigAABB.pos);

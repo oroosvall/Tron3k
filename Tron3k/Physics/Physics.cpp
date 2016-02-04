@@ -843,7 +843,7 @@ bool Physics::checkPlayerVCaptureCollision(vec3 playerPos, int capID)
 			AABBSingle box;
 			box.pos = playerPos;
 			box.max = playerPos + playerBox.getSphere().radius;
-			box.max = playerPos - playerBox.getSphere().radius;
+			box.min = playerPos - playerBox.getSphere().radius;
 			playerBox.setAABB(box);
 
 			playerBox.setPos(playerPos);
@@ -1198,20 +1198,8 @@ void Physics::receiveCap(int nrCaps, void* capBoxes)
 	{
 		cMesh.setBoxes(caps[n]);
 
-		aabb.pos = vec3(caps->bigAABB.pos);
-		aabb.max = vec3(caps->bigAABB.max);
-		aabb.min = vec3(caps->bigAABB.min);
-
-		cMesh.setAABB(aabb);
-
-		for (int i = 0; i < caps[n].subcount; i++)
-		{
-			aabb.pos = vec3(caps[n].subabbs[i].pos);
-			aabb.max = vec3(caps[n].subabbs[i].max);
-			aabb.min = vec3(caps[n].subabbs[i].min);
-		}
-
 		captureBoxes.push_back(cMesh);
+		captureBoxes[n].setCapID(n);
 	}
 
 	delete[] caps;
