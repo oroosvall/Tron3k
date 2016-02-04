@@ -517,13 +517,6 @@ void Core::upClient(float dt)
 			//Add to topology packet
 			Player* local = game->getPlayer(top->getConId());
 
-			if (game->specialActivationReady())
-			{
-				int sid = -1;
-				SPECIAL_TYPE st = game->getSpecialAbilityUsed(top->getConId(), sid);
-				top->frame_special_use(st, top->getConId(), sid, local->getPos(), local->getDir(), local->getTeam());
-			}
-
 			top->frame_pos(top->getConId(), local->getPos(), local->getDir(), local->getVelocity(), local->roomID);
 		
 			if (game->weaponSwitchReady())
@@ -531,6 +524,13 @@ void Core::upClient(float dt)
 				int swaploc = -1;
 				WEAPON_TYPE ws = game->getWpnSwitch(swaploc);
 				top->frame_weapon_switch(top->getConId(), ws, swaploc);
+			}
+
+			if (game->specialActivationReady())
+			{
+				int sid = -1;
+				SPECIAL_TYPE st = game->getSpecialAbilityUsed(top->getConId(), sid);
+				top->frame_special_use(st, top->getConId(), sid, local->getPos(), local->getDir(), local->getTeam());
 			}
 
 			if (game->fireEventReady())

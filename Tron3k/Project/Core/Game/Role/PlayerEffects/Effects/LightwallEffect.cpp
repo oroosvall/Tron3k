@@ -31,8 +31,7 @@ int LightwallEffect::update(float dt)
 	else
 	{
 		glm::vec3 curVel = normalize(myPlayer->getVelocity());
-		if (dot(curVel, playerVel) < 1.0-FLT_EPSILON) //||
-			//endPoint.y < pos.y - FLT_EPSILON || endPoint.y > pos.y + FLT_EPSILON)
+		if (dot(curVel, playerVel) < 1.0-FLT_EPSILON)
 		{
 			endPoint = myPlayer->getPos();
 			expandDong = false;
