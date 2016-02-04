@@ -424,13 +424,13 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 			int myConID = gamePtr->GetLocalPlayerId();
 			std::vector<int>* myTeam = gamePtr->getTeamConIds(gamePtr->getPlayer(myConID)->getTeam());
 			bool found = false;
-			for (int c = 0; c < myTeam->size() && !found; c++)
+			for (int c = 0; c < teamOnePlayers.size(); c++)
 			{
-				if (myConID == myTeam->at(c))
-				{
-					found = true;
-					gamePtr->allowPlayerRespawn(myConID, c);
-				}
+				gamePtr->allowPlayerRespawn(teamOnePlayers[c], c);
+			}
+			for (int c = 0; c < teamTwoPlayers.size(); c++)
+			{
+				gamePtr->allowPlayerRespawn(teamTwoPlayers[c], c);
 			}
 			gamePtr->clearAllPlayerKD();
 		}
