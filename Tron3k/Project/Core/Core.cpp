@@ -48,7 +48,8 @@ void Core::init()
 	renderUI = false;
 	startTeamSelect = true; //Temp
 	renderMenu = true;
-	menuKeyListener = false;
+	menuIpKeyListener = false;
+	menuNameKeyListener = false;
 }
 
 Core::~Core()
@@ -108,12 +109,18 @@ void Core::update(float dt)
 	}
 
 	glfwPollEvents();
-
-	if (!menuKeyListener)
-		console.update(_name); //Updates to check for new messages and commands
-	else
-		menuKeyInputUpdate(); //Updates to check input for the ip window
 	
+	bool otherListeners = true;
+	if ((menuNameKeyListener || menuIpKeyListener) == true)
+		otherListeners = false;
+
+	if (otherListeners)
+		console.update(_name); //Updates to check for new messages and commands
+	else if (menuIpKeyListener)
+		menuIpKeyInputUpdate(); //Updates to check input for the ip window
+	else
+		menuNameKeyInputUpdate(); //Updates to check input for the name window
+
 	if (cursorVisible && renderPipe)
 	{
 		if (cursorBlink > 0.5f)
@@ -253,7 +260,8 @@ void Core::upMenu(float dt)
 	
 	if (i->justPressed(GLFW_MOUSE_BUTTON_LEFT))//button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
 	{
-		menuKeyListener = false;
+		menuIpKeyListener = false;
+		menuNameKeyListener = false;
 		int eventIndex = uiManager->collisionCheck(glm::vec2((float)tX, (float)tY));
 		switch (eventIndex)
 		{
@@ -279,7 +287,6 @@ void Core::upMenu(float dt)
 			//Set so your own function listens after key input.
 
 			uiManager->setMenu(2);
-			uiManager->setText(to_string(_port), 8);
 			break;
 		case 5: //Server -> starts a server
 			current = SERVER;
@@ -293,6 +300,7 @@ void Core::upMenu(float dt)
 			break;
 		case 6: //Connect
 		{
+			nrOfKeys = 0;
 			//default ip at the moment
 			current = Gamestate::CLIENT; //Start the game as a client
 			client_record = false;
@@ -302,13 +310,14 @@ void Core::upMenu(float dt)
 			break;
 		}
 		case 7: //Back
+			nrOfKeys = 0;
 			uiManager->setMenu(-1); //Last menu
 			break;
 		case 10: //Ip input
-			menuKeyListener = true;
+			menuIpKeyListener = true;
 			break;
 		case 11: //Port
-			
+			menuNameKeyListener = true;
 			break;
 		default:
 			break;
@@ -2042,29 +2051,67 @@ void Core::showTeamSelect()
 	}
 }
 
-void Core::menuKeyInputUpdate()
+void Core::menuIpKeyInputUpdate()
 {
 	Input* i = Input::getInput();
-	for (int c = 0; c < VALIDKEYS; c++)
+	for (int c = 0; c < VALIDKEYSIP; c++)
 	{
 		if (i->justPressed(validKeyboardInputs[c]))
 		{
-			char ch = i->keyToChar(validKeyboardInputs[c]);
-			std::string fromChar = "";
-			fromChar += ch;
+			if (nrOfKeys < 15)
+			{
+				char ch = i->keyToChar(validKeyboardInputs[c]);
+				std::string fromChar = "";
+				fromChar += ch;
 
-			uiManager->setText(fromChar, 7); //Set ip object
+				uiManager->setText(fromChar, 7); //Set ip object
+				nrOfKeys++;
+			}
 		}
 	}
 	if (i->justPressed(GLFW_KEY_BACKSPACE))
 	{
 		uiManager->removeLastInput(7); //remove from ip object
+		nrOfKeys--;
 	}
 	if (i->justPressed(GLFW_KEY_ENTER))
 	{
-		menuKeyListener = false;
+		menuIpKeyListener = false;
 		std::string ip = "/ip ";
 		ip += uiManager->getText(7); //From ip object
 		startHandleCmds(ip);
+	}
+}
+
+void Core::menuNameKeyInputUpdate()
+{
+	Input* i = Input::getInput();
+	for (int c = 0; c < VALIDKEYSNAME; c++)
+	{
+		if (i->justPressed(validKeyboardInputs2[c]))
+		{
+			if (nrOfKeys < 12)
+			{
+				char ch = i->keyToChar(validKeyboardInputs2[c]);
+				std::string fromChar = "";
+				fromChar += ch;
+
+				uiManager->setText(fromChar, 8); //Set ip object
+
+				nrOfKeys++;
+			}
+		}
+	}
+	if (i->justPressed(GLFW_KEY_BACKSPACE))
+	{
+		uiManager->removeLastInput(8); //remove from ip object
+		nrOfKeys--;
+	}
+	if (i->justPressed(GLFW_KEY_ENTER))
+	{
+		menuNameKeyListener = false;
+		std::string name = "/name ";
+		name += uiManager->getText(8); //From ip object
+		startHandleCmds(name);
 	}
 }
