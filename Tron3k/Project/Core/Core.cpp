@@ -1576,6 +1576,17 @@ void Core::renderWorld(float dt)
 					break;
 				case VACUUM:
 					break;
+
+				case HEALTHPACK:
+				{
+					vec3 pos = eff[i]->getPos();
+					if (eff[i]->getTeam() == 1)
+						dgColor = TEAMTWOCOLOR;
+					else
+						dgColor = TEAMONECOLOR;
+					renderPipe->renderExploEffect(&pos.x, eff[i]->getInterestingVariable(), 0, &dgColor.x);
+				}
+				break;
 				}
 			}
 		}
