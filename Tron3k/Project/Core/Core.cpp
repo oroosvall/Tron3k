@@ -103,6 +103,7 @@ void Core::update(float dt)
 			glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 		else
 			glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+		renderPipe->setChatTypeMessage("");
 	}
 
 	glfwPollEvents();
