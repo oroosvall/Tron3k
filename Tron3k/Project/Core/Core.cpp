@@ -130,7 +130,7 @@ void Core::update(float dt)
 		if (game->getGameMode()->getType() == GAMEMODE_TYPE::KOTH)
 		{
 			KingOfTheHill* k = (KingOfTheHill*)game->getGameMode();
-			if (k->getIfSlowdown())
+			if (k->getIfSlowdown() && game->freecam == false)
 			{
 				if (slowdownTimer <= 0)
 				{
@@ -139,14 +139,17 @@ void Core::update(float dt)
 				}
 				else
 					slowdownTimer -= dt;
-				if (slowmode < 0.01f)
-					slowmode = 0.0f;
-				CameraInput* cam = CameraInput::getCam();
-				cam->setPlaybackSpeed(slowmode);
+				if (slowmode < 0.1f)
+				{
+					slowmode = 0.00000001f;
+				}
+				CameraInput::getCam()->setPlaybackSpeed(slowmode);
 				dt *= slowmode;
 			}
 			else if (slowmode < 1.0f)
 				slowmode = 1.0f;
+			else
+				CameraInput::getCam()->setPlaybackSpeed(1.0f);
 		}
 	}
 	//if (game)

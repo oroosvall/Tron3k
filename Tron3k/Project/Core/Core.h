@@ -29,7 +29,7 @@ private:
 	bool settingsLoaded = false;
 	int uitmpcounter;
 	float slowmode = 1.0f;
-	float slowdownFactor = 0.5f;
+	float slowdownFactor = 0.8f;
 	float slowdownTimer = 0.0f;
 
 	float timepass;	//temp
