@@ -110,6 +110,11 @@ SoundPlayer::~SoundPlayer()
 	
 }
 
+void SoundPlayer::stopMusic()
+{
+	musicPlayer.stop();
+}
+
 int SoundPlayer::playJump(int role, float x, float y, float z)
 {
 	if (role == 0)
@@ -485,7 +490,7 @@ int SoundPlayer::playMusic(int music)
 			return -1;
 		}
 
-		//musicPlayer.play();
+		musicPlayer.play();
 		musicPlayer.setLoop(true);
 	}
 

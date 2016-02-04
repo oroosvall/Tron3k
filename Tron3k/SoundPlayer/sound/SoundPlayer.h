@@ -65,6 +65,7 @@ public:
 	virtual void setLocalPlayerDir(glm::vec3 playerDir);
 	virtual void setLocalPlayerPos(glm::vec3 playerPos);
 	virtual int playMusic(int music);
+	virtual void stopMusic();
 
 	virtual int playMapSounds();
 

@@ -217,7 +217,7 @@ void Core::upStart(float dt)
 		console.printMsg("[/3] Roam", "System", 'S');
 		console.printMsg("[/4] Client_Record", "System", 'S');
 		console.printMsg("[/5] Client_Playback", "System", 'S');
-
+	
 		if (!settingsLoaded)
 		{
 			loadSettings();
@@ -239,6 +239,7 @@ void Core::upStart(float dt)
 
 void Core::upMenu(float dt)
 {
+
 	renderUI = true;
 
 	double x = (0.0);
@@ -316,6 +317,11 @@ void Core::upMenu(float dt)
 
 void Core::upRoam(float dt)
 {
+	if (GetSoundActivated())
+	{
+		GetSound()->stopMusic();
+	}
+
 	switch (subState)
 	{
 	case 0: //init
@@ -448,6 +454,11 @@ void Core::upRoam(float dt)
 
 void Core::upClient(float dt)
 {
+	if (GetSoundActivated())
+	{
+		GetSound()->stopMusic();
+	}
+
 	switch (subState)
 	{
 	case 0: //init
@@ -605,6 +616,11 @@ void Core::upClient(float dt)
 
 void Core::upServer(float dt)
 {
+	if (GetSoundActivated())
+	{
+		GetSound()->stopMusic();
+	}
+
 	switch (subState)
 	{
 	case 0:  //init server
