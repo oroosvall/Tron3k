@@ -993,8 +993,8 @@ void Game::addBulletToList(int conID, int teamId, int bulletId, BULLET_TYPE bt, 
 		break;
 	case BULLET_TYPE::SHOTGUN_PELLET:
 		rightV *= 0.4;
-		upV *= -0.3f;
-		dirMod *= 0.3f;
+		upV *= -0.4f;
+		dirMod *= 0.5f;
 		pos += upV + rightV + dirMod;
 		b = new ShotgunPellet(pos, dir, conID, bulletId, teamId);
 		break;
