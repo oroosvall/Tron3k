@@ -39,6 +39,8 @@ void Core::init()
 	client_record = false;
 	client_playback = false;
 
+	namePlates = new int[MAX_CONNECT];
+
 	uiManager = new UIManager();
 	initPipeline();
 	uiManager->init(&console);
@@ -62,8 +64,15 @@ Core::~Core()
 	if (uiManager != nullptr)
 		delete uiManager;
 	if (renderPipe != nullptr)
+	{
+		for (size_t i = 0; i < MAX_CONNECT; i++)
+		{
+			renderPipe->removeTextObject(namePlates[i]);
+		}
 		renderPipe->release();
+	}
 	
+	delete[] namePlates;
 
 	ReleaseSound();
 
@@ -266,7 +275,7 @@ void Core::upRoam(float dt)
 		sendCapPointBoxes();
 		sendRoomBoxes();
 		Player* p = new Player();
-		p->init("Roam", glm::vec3(0, 0, 0));
+		p->init(_name, glm::vec3(0, 0, 0));
 		game->createPlayer(p, 0, 100, ROLES::TRAPPER, true);
 		game->freecam = true;
 		delete p;
@@ -1479,6 +1488,43 @@ void Core::renderWorld(float dt)
 
 		renderPipe->finalizeRender();
 
+		renderPipe->disableDepthTest();
+
+		for (int c = 0; c < 20; c++)
+		{
+			Player* p = game->getPlayer(c);
+			int local = game->GetLocalPlayerId();
+			Player* lP = game->getPlayer(local);
+			if (p != nullptr && p->getTeam() == lP->getTeam())
+			{
+				mat4 bacon;
+				vec3 pPos = p->getPos();
+
+				vec3 dir = normalize(camPos - pPos);
+
+				float rotXZ = -(atan2(dir.x, dir.z) - atan2(0, 1));
+
+				mat4 rotH = mat4(cos(rotXZ), 0.0f, -sin(rotXZ), 0.0f,
+					0.0f, 1.0f, 0.0f, 0.0f,
+					sin(rotXZ), 0.0f, cos(rotXZ), 0.0f,
+					0.0f, 0.0f, 0.0f , 0.0f);
+				bacon = rotH * bacon;
+
+				bacon[0].w = pPos.x;
+				bacon[1].w = pPos.y;
+				bacon[2].w = pPos.z;
+
+				if (p->nameChanged)
+				{
+					renderPipe->setTextObjectText(namePlates[c], p->getName());
+					p->nameChanged = false;
+				}
+				renderPipe->renderTextObjectWorldPos(namePlates[c], bacon);
+			}
+		}
+
+		renderPipe->enableDepthTest();
+
 		//viewing 3rd person anims in roam
 		if (i->getKeyInfo(GLFW_KEY_P))
 			cam->setCam(camPos, camDir);
@@ -1707,6 +1753,11 @@ void Core::initPipeline()
 		if (!renderPipe->setSetting(PIPELINE_SETTINGS::VIEWPORT, pv))
 		{
 			console.printMsg("Error: Failed to set pipeline setting: VIEWPORT", "System", 'S');
+		}
+
+		for (size_t i = 0; i < MAX_CONNECT; i++)
+		{
+			namePlates[i] = renderPipe->createTextObject("", 128, vec2(winX / 2, winY / 2));
 		}
 	}
 

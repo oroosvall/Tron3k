@@ -325,6 +325,10 @@ void RenderPipeline::reloadShaders()
 	}
 
 	textShaderLocation = glGetUniformLocation(textShader, "textureIN");
+	textShaderModel = glGetUniformLocation(textShader, "worldMat");
+	textShaderVP = glGetUniformLocation(textShader, "view");
+	textShaderOffset = glGetUniformLocation(textShader, "offset");
+
 
 	std::cout << "Done loading shaders\n";
 
@@ -505,7 +509,9 @@ void RenderPipeline::finalizeRender()
 	gBuffer->render();
 	
 	glUseProgram(textShader);
-	//glProgramUniform1i(textShader, textShaderLocation, 0);
+	glProgramUniformMatrix4fv(textShader, textShaderModel, 1, GL_FALSE, (GLfloat*)&glm::mat4());
+	glProgramUniformMatrix4fv(textShader, textShaderVP, 1, GL_FALSE, (GLfloat*)&glm::mat4());
+	glProgramUniform3f(textShader, textShaderOffset,  0, 0, 0);
 	TextureManager::gTm->bindTexture(fontTexture, textShader, textShaderLocation, DIFFUSE_FB);
 	
 	glEnable(GL_BLEND);
@@ -1053,7 +1059,28 @@ void RenderPipeline::removeTextObject(int id)
 void RenderPipeline::renderTextObject(int id)
 {
 	glUseProgram(textShader);
+	glProgramUniformMatrix4fv(textShader, textShaderModel, 1, GL_FALSE, (GLfloat*)&glm::mat4());
+	glProgramUniformMatrix4fv(textShader, textShaderVP, 1, GL_FALSE, (GLfloat*)&glm::mat4());
+	glProgramUniform3f(textShader, textShaderOffset, 0, 0, 0);
 	TextureManager::gTm->bindTexture(fontTexture, textShader, textShaderLocation, DIFFUSE_FB);
 
 	textObjects[id]->draw();
+
+}
+
+void RenderPipeline::renderTextObjectWorldPos(int id, glm::mat4 world)
+{
+	glUseProgram(textShader);
+	glProgramUniformMatrix4fv(textShader, textShaderModel, 1, GL_FALSE, (GLfloat*)&world);
+	cam.setViewProjMat(textShader, textShaderVP);
+	//glProgramUniform3fv(textShader, textShaderOffset, 1, (GLfloat*)&textObjects[id]->getOffset()[0]);
+
+	vec3 pos = textObjects[id]->getOffset();
+
+	glProgramUniform3f(textShader, textShaderOffset, -pos.x ,0,0);
+
+	TextureManager::gTm->bindTexture(fontTexture, textShader, textShaderLocation, DIFFUSE_FB);
+
+	textObjects[id]->draw();
+
 }

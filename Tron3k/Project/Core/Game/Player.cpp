@@ -30,11 +30,14 @@ void Player::init(std::string pName, glm::vec3 initPos, bool isLocal)
 	isLocalPlayer = isLocal;
 
 	rotate(0, -3.141592654f, 0);
+
+	nameChanged = true;
 }
 
 void Player::setName(std::string newName)
 {
 	name = newName;
+	nameChanged = true;
 }
 
 void Player::setGoalPos(glm::vec3 newPos)

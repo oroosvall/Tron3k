@@ -48,6 +48,9 @@ private:
 
 	GLuint textShader;
 	GLuint textShaderLocation;
+	GLuint textShaderVP;
+	GLuint textShaderModel;
+	GLuint textShaderOffset;
 
 	Camera cam;
 
@@ -169,6 +172,7 @@ public:
 	virtual void setTextPos(int id, glm::vec2 pos);
 	virtual void removeTextObject(int id);
 	virtual void renderTextObject(int id);
+	virtual void renderTextObjectWorldPos(int id, glm::mat4 world);
 
 	virtual void setGBufferWin(unsigned int WindowWidth, unsigned int WindowHeight);
 

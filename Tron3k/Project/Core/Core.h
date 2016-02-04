@@ -40,6 +40,8 @@ private:
 
 	UIManager* uiManager;
 	bool renderUI;
+	
+	int* namePlates;
 
 	// window
 	GLFWwindow* win;

@@ -167,7 +167,6 @@
     <ClCompile Include="Streaming\TextureStreamer.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Text\Text.cpp" />
-    <ClCompile Include="Text\TextObject.cpp" />
     <ClCompile Include="Utils\GPUMemoryLeakChecker.cpp" />
     <ClCompile Include="Utils\TimeQuery.cpp" />
   </ItemGroup>
@@ -195,7 +194,6 @@
     <ClInclude Include="Streaming\TextureStreamer.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Text\Text.h" />
-    <ClInclude Include="Text\TextObject.h" />
     <ClInclude Include="Utils\GPUMemoryLeakChecker.h" />
     <ClInclude Include="Utils\TimeQuery.h" />
   </ItemGroup>

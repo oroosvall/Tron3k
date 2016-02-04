@@ -198,6 +198,8 @@ public:
 	int getDeaths() { return deaths; };
 	void addKill() { kills++; };
 	void addDeath() { deaths++;	};
+
+	bool nameChanged;
 };
 
 #endif

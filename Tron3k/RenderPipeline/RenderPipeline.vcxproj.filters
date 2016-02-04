@@ -45,9 +45,6 @@
     <ClCompile Include="RenderPipeline.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Text\TextObject.cpp">
-      <Filter>Source Files\Text</Filter>
-    </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files\Camera</Filter>
     </ClCompile>
@@ -112,9 +109,6 @@
     </ClInclude>
     <ClInclude Include="RenderPipeline.h">
       <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Text\TextObject.h">
-      <Filter>Source Files\Text</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Source Files\Camera</Filter>

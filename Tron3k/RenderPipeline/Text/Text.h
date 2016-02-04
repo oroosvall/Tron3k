@@ -34,6 +34,8 @@ private:
 
 	int quadCount;
 
+	vec3 centerOffset;
+
 public:
 
 	Text(std::string text, int fontsize, GLuint textureId, vec2 screenPos);
@@ -41,6 +43,11 @@ public:
 
 	static int ScreenResWidth;
 	static int ScreenResHeight;
+
+	vec3 getOffset()
+	{
+		return centerOffset;
+	}
 
 	void setPos(vec2 screenPos);
 	void setTexture(GLuint textureId);

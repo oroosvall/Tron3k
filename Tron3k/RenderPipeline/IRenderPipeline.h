@@ -90,6 +90,8 @@ public:
 	virtual void setTextPos(int id, glm::vec2 pos) = 0;
 	virtual void removeTextObject(int id) = 0;
 	virtual void renderTextObject(int id) = 0;
+	virtual void renderTextObjectWorldPos(int id, glm::mat4 world) = 0;
+
 
 	virtual void setGBufferWin(unsigned int WindowWidth, unsigned int WindowHeight) = 0;
 

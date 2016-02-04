@@ -7,8 +7,10 @@ layout(location = 0) out vec2 UVCord;
 uniform mat4 worldMat;
 uniform mat4 view;
 
+uniform vec3 offset;
+
 void main () 
 {
 	UVCord = UV;
-	gl_Position =  vec4(vertex_position, 1.0f);
+	gl_Position =  view * vec4((vec4(vertex_position + offset, 1.0f) * worldMat).xyz, 1.0f);
 }

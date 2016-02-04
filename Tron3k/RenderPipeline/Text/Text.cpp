@@ -185,6 +185,10 @@ void Text::fillBuffer()
 			offsetX = 0;
 			offsetY += 4;
 		}
+
+		centerOffset.x = (verts[index-1].x - verts[0].x) / 2;
+		centerOffset.y = (verts[index-1].y - verts[0].y) / 2;
+
 	}
 
 	if (index != 0)
