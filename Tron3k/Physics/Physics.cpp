@@ -903,9 +903,9 @@ glm::vec4 Physics::checkBulletVEffectCollision(glm::vec3 bulletPos, vec3 bulletV
 
 		for (int i = 0; i < effectBoxes.size(); i++)
 		{
-			if (effectBoxes[i]->getEID() == eid)
+			if (effectBoxes[i]->getEID() == eid && effectBoxes[i]->getEType() == eType)
 			{
-				if (checkAABBvAABBCollision(playerBox.getAABB(), effectBoxes[i]->getAABB()))
+				if (checkAABBvAABBCollision(bulletBox.getAABB(), effectBoxes[i]->getAABB()))
 				{
 
 					if (effectBoxes[i]->getEType() == eType)
