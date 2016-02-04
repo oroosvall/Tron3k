@@ -28,6 +28,12 @@ public:
 	Cylinder getCylinder() { return cylinder; };
 	void setCylinder(Cylinder cylinder);
 
+	vec3 getWorldSize() { return worldSize; };
+	void setWorldSize(vec3 size) { worldSize = size; };
+
+	vec3 getPlayerSize() { return playerSize; };
+	void setPlayerSize(vec3 size) { playerSize = size; aabb.max = pos + playerSize; aabb.min = pos - playerSize; };
+
 	Sphere getSphere() { return sphere; };
 	void setSphere(Sphere sphere);
 };

@@ -24,6 +24,12 @@ public:
 	AABBSingle getAABB() { return aabb; };
 	void setAABB(AABBSingle aabb);
 
+	vec3 getWorldSize() { return worldSize; };
+	void setWorldSize(vec3 size) { worldSize = size; };
+
+	vec3 getBulletSize() { return bulletSize; };
+	void setBulletSize(vec3 size) { bulletSize = size; };
+
 	Sphere getSphere() { return sphere; };
 	void setSphere(Sphere sphere);
 };

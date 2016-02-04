@@ -9,7 +9,9 @@ BulletMesh::BulletMesh()
 	aabb.max = vec3(1, 1, 1);
 	aabb.min = vec3(-1, -1, -1);
 
-	sphere.radius = 0.6f;
+	sphere.radius = 0.5f;
+
+	worldSize = vec3(0.5f, 0.5f, 0.5f);
 }
 
 BulletMesh::BulletMesh(vec3 pos)
@@ -21,7 +23,9 @@ BulletMesh::BulletMesh(vec3 pos)
 	aabb.max = pos + vec3(1, 1, 1);
 	aabb.min = pos + vec3(-1, -1, -1);
 
-	sphere.radius = 0.6f;
+	sphere.radius = 0.5f;
+
+	worldSize = vec3(0.5f, 0.5f, 0.5f);
 }
 
 BulletMesh::BulletMesh(vec3 pos, AABBSingle aabb, Sphere sphere)
@@ -42,6 +46,9 @@ void BulletMesh::setPos(vec3 pos)
 	this->pos = pos;
 	aabb.pos = pos;
 	sphere.pos = pos;
+
+	aabb.max = pos + worldSize;
+	aabb.min = pos - worldSize;
 }
 
 void BulletMesh::setAABB(AABBSingle aabb)
@@ -51,6 +58,8 @@ void BulletMesh::setAABB(AABBSingle aabb)
 
 	if (aabb.pos != this->pos)
 		setPos(pos);
+
+	
 }
 
 void BulletMesh::setSphere(Sphere sphere)

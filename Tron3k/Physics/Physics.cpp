@@ -166,7 +166,7 @@ glm::vec4 Physics::checkSpherevSpheretdCollision(Sphere mesh1, Sphere mesh2)
 
 	glm::vec3 dist = mesh1.pos - mesh2.pos;
 	float radius = mesh1.radius + mesh2.radius;
-	float minRad = mesh1.radius - 3.0f + mesh2.radius;
+	float minRad = mesh1.radius - 2.0f + mesh2.radius;
 
 	if (length(dist) <= radius && length(dist) >= minRad)
 	{
@@ -411,10 +411,28 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb)
 	{
 		t = obb->lines[n].sphere_intersects(pos, rad);
 		if (obb->lines[n].line.y < -FLT_EPSILON || obb->lines[n].line.y > FLT_EPSILON)
+		{
+			if (t.w >= 0 - FLT_EPSILON)
+			{
+				if (t.w < closest.w) // a new closest dist was found
+				{
+					closest = t;
+				}
+			}
+		}
+		else
+		{
 			if (t.w >= 0 - FLT_EPSILON)
 				if (t.w < closest.w) // a new closest dist was found
-					closest = t;
+				{
+					closest.x = t.x;
+					closest.y = abs(t.y);
+					closest.z = t.z;
+					closest.w = t.w;
+				}
+		}
 	}
+
 
 	//if we found a line intersection it will always be closer
 	//than all the corner intersections
@@ -531,20 +549,12 @@ vec3 Physics::checkPlayerVPlayerCollision(vec3 playerPos1, vec3 playerPos2)
 
 vec3 Physics::checkPlayerVBulletCollision(vec3 playerPos, vec3 bulletPos, vec3 size)
 {
-
-	float prad = playerBox.getSphere().radius;
-	AABBSingle box;
-	box.max = playerPos + size;
-	box.min = playerPos - size;
-	playerBox.setAABB(box);
 	playerBox.setPos(playerPos);
+	playerBox.setPlayerSize(size);
+
 
 	//TEMPORARY
 
-	float brad = bulletBox.getSphere().radius;
-	box.max = bulletPos + vec3(0.2, 0.2, 0.2);
-	box.min = bulletPos - vec3(0.2, 0.2, 0.2);
-	bulletBox.setAABB(box);
 	bulletBox.setPos(bulletPos);
 
 	vec3 collide = vec3(0, 0, 0);// checkAABBCollision(playerBox, bulletBox);
@@ -568,7 +578,7 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos)
 	vec4 t;
 	vec3 collisionNormal = vec3(0, 0, 0);
 
-	AABBSingle roomBox;
+
 
 	//each abb
 	for (unsigned int j = 0; j < roomBoxes[0].getRoomBoxes()->size(); j++)
@@ -593,15 +603,16 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos)
 		}
 	}
 
+	AABBSingle* roomBox;
 	//each chunk
 	for (unsigned int i = 1; i < roomBoxes.size(); i++)
 	{
 		//culling player intersection tests vs room aabbs
 		roomBox = roomBoxes[i - 1].getAABB();
 		bool passed = false;
-		if (box.max.x > roomBox.min.x && box.min.x < roomBox.max.x)//x
-			if (box.max.y > roomBox.min.y && box.min.y < roomBox.max.y)//y
-				if (box.max.z > roomBox.min.z && box.min.z < roomBox.max.z)//y
+		if (box.max.x > roomBox->min.x && box.min.x < roomBox->max.x)//x
+			if (box.max.y > roomBox->min.y && box.min.y < roomBox->max.y)//y
+				if (box.max.z > roomBox->min.z && box.min.z < roomBox->max.z)//y
 					passed = true;
 
 		if (passed)
@@ -679,55 +690,34 @@ void* Physics::checkBulletvWorldInternal(AABBSingle bulletBox, float rad, int in
 
 vec4 Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel, vec3 bulletDir, float dt)
 {
-	for (int i = 0; i < 4; i++)
-	{
-		bulletNormal[i] = (vec4(0));
-	}
-	AABBSingle box;
+	bulletBox.setPos(bulletPos);
+	vec4 t = vec4(0);
+	AABBSingle box = bulletBox.getAABB();
 	float rad = bulletBox.getSphere().radius;
 
-
-	std::vector<vec4> cNorms;
-	vec4 t;
-	vec3 collisionNormal = vec3(0, 0, 0);
-
-	//std::thread bthreads[4];
-	AABBSingle roomBox;
-	box.max = bulletPos + vec3(rad, rad, rad);
-	box.min = bulletPos - vec3(rad, rad, rad);
-	bulletBox.setAABB(box);
-	bulletBox.setPos(bulletPos);
 	for (unsigned int j = 0; j < roomBoxes[0].getRoomBoxes()->size(); j++)
 	{
+		//each chunk
+		if (checkAABBvAABBCollision(box, roomBoxes[0].getSpecificBox(j)->getAABB()))
+		{
+			//printf("%d %d \n", i, j); // test for abbs so they register
 
-			box.max = bulletPos + vec3(rad, rad, rad);
-			box.min = bulletPos - vec3(rad, rad, rad);
-			bulletBox.setAABB(box);
-			bulletBox.setPos(bulletPos);
-			//each chunk
-			vec4 t = vec4(0);
-
-			//do or do not, there is a try again at half the position
-
-			if (checkAABBvAABBCollision(box, roomBoxes[0].getSpecificBox(j)->getAABB()))
+			//for each obb contained in that abb
+			int size = roomBoxes[0].getSpecificBox(j)->getOBBSize();
+			for (int n = 0; n < size; n++)
 			{
-				//printf("%d %d \n", i, j); // test for abbs so they register
-
-				//for each obb contained in that abb
-				int size = roomBoxes[0].getSpecificBox(j)->getOBBSize();
-				for (int n = 0; n < size; n++)
+				t = getSpherevOBBNorms(bulletPos, rad, roomBoxes[0].getSpecificBox(j)->getOBB(n));
+				t.w = rad - t.w; //penetration depth instead of collision distance 
+				if (t.w + FLT_EPSILON > 0 - FLT_EPSILON && t.w - FLT_EPSILON < rad + FLT_EPSILON)
 				{
-					t = getSpherevOBBNorms(bulletPos, rad, roomBoxes[0].getSpecificBox(j)->getOBB(n));
-					t.w = rad - t.w; //penetration depth instead of collision distance 
-					if (t.w + FLT_EPSILON > 0 - FLT_EPSILON && t.w - FLT_EPSILON < rad + FLT_EPSILON)
-					{
-						t = vec4(normalize(vec3(t)), t.w);
-						return t;
-					}
+					t = vec4(normalize(vec3(t)), t.w);
+					return t;
 				}
 			}
 		}
-	
+	}
+
+	AABBSingle* roomBox;
 
 	for (unsigned int i = 1; i < roomBoxes.size(); i++)
 	{
@@ -736,49 +726,39 @@ vec4 Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel, vec3 bulletD
 		{
 			roomBox = roomBoxes[i - 1].getAABB();
 			bool passed = false;
-			if (box.max.x > roomBox.min.x && box.min.x < roomBox.max.x)//x
-				if (box.max.y > roomBox.min.y && box.min.y < roomBox.max.y)//y
-					if (box.max.z > roomBox.min.z && box.min.z < roomBox.max.z)//y
+			if (box.max.x > roomBox->min.x && box.min.x < roomBox->max.x)//x
+				if (box.max.y > roomBox->min.y && box.min.y < roomBox->max.y)//y
+					if (box.max.z > roomBox->min.z && box.min.z < roomBox->max.z)//y
 						passed = true;
 
 			if (passed)
 			{
-					//each chunk
-					vec4 t = vec4(0);
-					//each abb
-					box.max = bulletPos + vec3(rad, rad, rad);
-					box.min = bulletPos - vec3(rad, rad, rad);
-					bulletBox.setAABB(box);
-					bulletBox.setPos(bulletPos);
+				//each chunk
+				vec4 t = vec4(0);
+				//each abb
+				//if (checkAABBvAABBCollision(bulletBox.getAABB(), &roomBox))
 
-					roomBox.pos = roomBoxes[i].getAABB().pos;
-					roomBox.max = roomBoxes[i].getAABB().max;
-					roomBox.min = roomBoxes[i].getAABB().min;
-					//if (checkAABBvAABBCollision(bulletBox.getAABB(), &roomBox))
+				for (unsigned int j = 0; j < roomBoxes[i].getRoomBoxes()->size(); j++)
+				{
+					//do or do not, there is a try again at half the position
+
+					if (checkAABBvAABBCollision(box, roomBoxes[i].getSpecificBox(j)->getAABB()))
 					{
-						for (unsigned int j = 0; j < roomBoxes[i].getRoomBoxes()->size(); j++)
+						//printf("%d %d \n", i, j); // test for abbs so they register
+
+						//for each obb contained in that abb
+						int size = roomBoxes[i].getSpecificBox(j)->getOBBSize();
+						for (int n = 0; n < size; n++)
 						{
-							//do or do not, there is a try again at half the position
-
-							if (checkAABBvAABBCollision(box, roomBoxes[i].getSpecificBox(j)->getAABB()))
+							t = getSpherevOBBNorms(bulletPos, rad, roomBoxes[i].getSpecificBox(j)->getOBB(n));
+							t.w = rad - t.w; //penetration depth instead of collision distance 
+							if (t.w + FLT_EPSILON > 0 - FLT_EPSILON && t.w - FLT_EPSILON < rad + FLT_EPSILON)
 							{
-								//printf("%d %d \n", i, j); // test for abbs so they register
-
-								//for each obb contained in that abb
-								int size = roomBoxes[i].getSpecificBox(j)->getOBBSize();
-								for (int n = 0; n < size; n++)
-								{
-									t = getSpherevOBBNorms(bulletPos, rad, roomBoxes[i].getSpecificBox(j)->getOBB(n));
-									t.w = rad - t.w; //penetration depth instead of collision distance 
-									if (t.w + FLT_EPSILON > 0 - FLT_EPSILON && t.w - FLT_EPSILON < rad + FLT_EPSILON)
-									{
-										t = vec4(normalize(vec3(t)), t.w);
-										return t;
-									}
-								}
+								t = vec4(normalize(vec3(t)), t.w);
+								return t;
 							}
 						}
-					
+					}
 				}
 			}
 		}

@@ -18,7 +18,7 @@ public:
 	RoomMesh(std::vector<WorldMesh> roomBoxes);
 	~RoomMesh();
 
-	AABBSingle getAABB() { return aabb; };
+	AABBSingle* getAABB() { return &aabb; };
 	void setAABB(AABBSingle aabb);
 
 	void setRoomID(int roomID);
