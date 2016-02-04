@@ -693,13 +693,17 @@ vec4 Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel, vec3 bulletD
 
 	//std::thread bthreads[4];
 	AABBSingle roomBox;
-
+	box.max = bulletPos + vec3(rad, rad, rad);
+	box.min = bulletPos - vec3(rad, rad, rad);
+	bulletBox.setAABB(box);
+	bulletBox.setPos(bulletPos);
 	for (unsigned int j = 0; j < roomBoxes[0].getRoomBoxes()->size(); j++)
 	{
 
 			box.max = bulletPos + vec3(rad, rad, rad);
 			box.min = bulletPos - vec3(rad, rad, rad);
 			bulletBox.setAABB(box);
+			bulletBox.setPos(bulletPos);
 			//each chunk
 			vec4 t = vec4(0);
 
@@ -725,7 +729,7 @@ vec4 Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel, vec3 bulletD
 		}
 	
 
-	for (unsigned int i = 0; i < roomBoxes.size(); i++)
+	for (unsigned int i = 1; i < roomBoxes.size(); i++)
 	{
 		//culling player intersection tests vs room aabbs
 		if (i > 0)
@@ -742,6 +746,10 @@ vec4 Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel, vec3 bulletD
 					//each chunk
 					vec4 t = vec4(0);
 					//each abb
+					box.max = bulletPos + vec3(rad, rad, rad);
+					box.min = bulletPos - vec3(rad, rad, rad);
+					bulletBox.setAABB(box);
+					bulletBox.setPos(bulletPos);
 
 					roomBox.pos = roomBoxes[i].getAABB().pos;
 					roomBox.max = roomBoxes[i].getAABB().max;
@@ -757,10 +765,10 @@ vec4 Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel, vec3 bulletD
 								//printf("%d %d \n", i, j); // test for abbs so they register
 
 								//for each obb contained in that abb
-								int size = roomBoxes[0].getSpecificBox(j)->getOBBSize();
+								int size = roomBoxes[i].getSpecificBox(j)->getOBBSize();
 								for (int n = 0; n < size; n++)
 								{
-									t = getSpherevOBBNorms(bulletPos, rad, roomBoxes[0].getSpecificBox(j)->getOBB(n));
+									t = getSpherevOBBNorms(bulletPos, rad, roomBoxes[i].getSpecificBox(j)->getOBB(n));
 									t.w = rad - t.w; //penetration depth instead of collision distance 
 									if (t.w + FLT_EPSILON > 0 - FLT_EPSILON && t.w - FLT_EPSILON < rad + FLT_EPSILON)
 									{
