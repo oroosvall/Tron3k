@@ -521,8 +521,6 @@ void Core::upClient(float dt)
 		break;
 	case 1: //get full server info & map check
 		top->network_IN(dt);
-		game->getPlayer(game->GetLocalPlayerId())->setLockedControls(true);
-		showTeamSelect();
 		if (top->firstPackageRecieved())
 		{
 			//can i load?
@@ -530,6 +528,8 @@ void Core::upClient(float dt)
 			//top->frame_name_change(top->getConId(), _name);
 			Player* me = game->getPlayer(top->getConId());
 			me->setName(_name);
+			game->getPlayer(game->GetLocalPlayerId())->setLockedControls(true);
+			showTeamSelect();
 			subState++;
 		}
 		break;
