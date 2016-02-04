@@ -139,8 +139,6 @@ void Game::update(float dt)
 	if(gameState != SERVER)
 		console->setInChatMode(playerList[localPlayerId]->getLockedControls());
 
-
-	GAMEMODE_MSG gameMsg = gamemode->update(dt);
 	if (gamemode->getType() == GAMEMODE_TYPE::KOTH && gameState == Gamestate::SERVER)
 	{
 		KingOfTheHill* k = (KingOfTheHill*)gamemode;
@@ -155,6 +153,8 @@ void Game::update(float dt)
 			}
 		}
 	}
+
+	GAMEMODE_MSG gameMsg = gamemode->update(dt);
 
 	for (int c = 0; c < max_con; c++)
 	{

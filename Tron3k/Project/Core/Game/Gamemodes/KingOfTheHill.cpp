@@ -421,8 +421,6 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 		}
 		else if (state == ROUND)
 		{
-			int myConID = gamePtr->GetLocalPlayerId();
-			std::vector<int>* myTeam = gamePtr->getTeamConIds(gamePtr->getPlayer(myConID)->getTeam());
 			bool found = false;
 			for (int c = 0; c < teamOnePlayers.size(); c++)
 			{
