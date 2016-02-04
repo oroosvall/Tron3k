@@ -89,6 +89,7 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->soundList[SOUNDS::announcerYouLose].loadFromFile("GameFiles/Sound/announcerYouLose.ogg");
 		singleton->soundList[SOUNDS::announcerYouWin].loadFromFile("GameFiles/Sound/announcerYouWin.ogg");
 		singleton->soundList[SOUNDS::soundEffectPunisherReload].loadFromFile("GameFiles/Sound/soundEffectPunisherReload.ogg");
+		singleton->soundList[SOUNDS::announcerCleanup].loadFromFile("GameFiles/Sound/announcerCleanup.ogg");
 
 		initialized = true;
 	}

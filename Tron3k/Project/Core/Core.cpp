@@ -932,6 +932,12 @@ void Core::roamHandleCmds(std::string com)
 
 			game->spectateID = -1;
 		}
+
+		else if (token == "/cleanup")
+		{
+			GetSound()->playUserGeneratedSound(SOUNDS::announcerCleanup);
+		}
+
 		else if (token == "/role")
 		{
 			ss >> token;
@@ -1049,6 +1055,11 @@ void Core::clientHandleCmds(std::string com)
 					console.printMsg(print, "", ' ');
 				}
 			}
+		}
+
+		else if (token == "/cleanup")
+		{
+			GetSound()->playUserGeneratedSound(SOUNDS::announcerCleanup);
 		}
 		else if (token == "/role")
 		{

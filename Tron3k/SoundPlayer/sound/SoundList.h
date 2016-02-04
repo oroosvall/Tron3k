@@ -59,6 +59,7 @@ enum SOUNDS
 	announcerRound3,
 	announcerYouLose,
 	announcerYouWin,
+	announcerCleanup,
 	soundEffectCaptureScored,
 	soundEffectBruteDash,
 	soundEffectThermiteGrenade,
