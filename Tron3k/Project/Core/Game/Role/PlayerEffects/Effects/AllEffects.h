@@ -6,5 +6,6 @@
 #include "Explosion.h"
 #include "ThunderDomeEffect.h"
 #include "ThermiteCloud.h"
+#include "HealthPack.h"
 
 #endif

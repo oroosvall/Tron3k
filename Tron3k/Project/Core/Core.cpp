@@ -628,7 +628,7 @@ void Core::upServer(float dt)
 			return;
 		}
 
-		//atempting mapload
+		//attempting mapload
 		if (game != nullptr)
 			delete game;
 		game = new Game();

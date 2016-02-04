@@ -312,6 +312,9 @@
     <ClCompile Include="Core\ui\InputBox.cpp">
       <Filter>Source Files\Core\Ui\uiClasses\Text</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\HealthPack.cpp">
+      <Filter>Source Files\Core\Game\Role\PlayerEffects\Effects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Input.h">
@@ -562,6 +565,9 @@
     </ClInclude>
     <ClInclude Include="Core\ui\InputBox.h">
       <Filter>Source Files\Core\Ui\uiClasses\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\HealthPack.h">
+      <Filter>Source Files\Core\Game\Role\PlayerEffects\Effects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

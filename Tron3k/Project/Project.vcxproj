@@ -29,6 +29,7 @@
     <ClCompile Include="Core\Game\Role\Consumable\Consumable.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effect.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\Explosion.cpp" />
+    <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\HealthPack.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\LightwallEffect.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\ThermiteCloud.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\ThunderDomeEffect.cpp" />
@@ -104,6 +105,7 @@
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effect.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\AllEffects.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\Explosion.h" />
+    <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\HealthPack.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\LightwallEffect.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\ThermiteCloud.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\ThunderDomeEffect.h" />

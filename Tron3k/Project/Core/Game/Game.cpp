@@ -1283,6 +1283,8 @@ void Game::addEffectToList(int conID, int teamId, int effectId, EFFECT_TYPE et, 
 		break;
 	case EFFECT_TYPE::THERMITE_CLOUD:
 		e = new ThermiteCloud();
+	case EFFECT_TYPE::HEALTHPACK:
+		e = new HealthPack();
 		break;
 	}
 	e->init(conID, effectId, pos);
@@ -1322,6 +1324,12 @@ void Game::addEffectToPhysics(Effect* effect)
 		eBox.push_back(effect->getInterestingVariable());
 		physics->receiveEffectBox(eBox, EFFECT_TYPE::THERMITE_CLOUD, pid, eid);
 		break;
+	case EFFECT_TYPE::HEALTHPACK:
+		eBox.push_back(effect->getPos().x);
+		eBox.push_back(effect->getPos().y);
+		eBox.push_back(effect->getPos().z);
+		eBox.push_back(effect->getInterestingVariable());
+		physics->receiveEffectBox(eBox, EFFECT_TYPE::HEALTHPACK, pid, eid);
 	}
 }
 
@@ -1387,6 +1395,7 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 			console->printMsg(p->getName() + " was fragged by " + playerList[hi.bulletPID]->getName() + "!", "System", 'S');
 			playerList[hi.bulletPID]->addKill();
 			p->addDeath();
+			addEffectToList(-1, p->getTeam(), effects[EFFECT_TYPE::HEALTHPACK].size(), EFFECT_TYPE::HEALTHPACK, p->getPos(), 0, 0.5f);
 		}
 
 		removeBullet(hi.bt, bulletPosInArray);
@@ -1438,6 +1447,11 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 		case EFFECT_TYPE::THERMITE_CLOUD:
 			break;
 		case EFFECT_TYPE::BATTERY_SLOW:
+			break;
+		case EFFECT_TYPE::HEALTHPACK:
+			p->healing(25);
+			if (theEffect != nullptr)
+				removeEffect(EFFECT_TYPE::HEALTHPACK, effectPosInArray);
 			break;
 		default:
 			break;
