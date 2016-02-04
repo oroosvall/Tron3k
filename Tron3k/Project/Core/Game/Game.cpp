@@ -136,10 +136,10 @@ vector<int>* Game::getTeamConIds(int team)
 void Game::update(float dt)
 {
 	//some things need to be done before movement, some after
-	if (GetSound()->getVolumeMusic() > 0 &&  GetSound()->getFading() && GetSoundActivated())
-	{
-		GetSound()->setVolumeMusic(GetSound()->getVolumeMusic() - 1);
-	}
+	//if (GetSound()->getVolumeMusic() > 0 &&  GetSound()->getFading() && GetSoundActivated())
+	//{
+	//	GetSound()->setVolumeMusic(GetSound()->getVolumeMusic() - 1);
+	//}
 
 	if(gameState != SERVER)
 		console->setInChatMode(playerList[localPlayerId]->getLockedControls());
