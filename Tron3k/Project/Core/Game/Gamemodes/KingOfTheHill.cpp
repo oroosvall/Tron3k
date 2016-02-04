@@ -447,6 +447,21 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 		}
 		else if (state == ROUND)
 		{
+			if (round == 1 && GetSoundActivated())
+			{
+				GetSound()->playUserGeneratedSound(SOUNDS::announcerRound1);
+			}
+
+			else if (round == 2 && GetSoundActivated())
+			{
+				GetSound()->playUserGeneratedSound(SOUNDS::announcerRound2);
+			}
+
+			else if (round == 3 && GetSoundActivated())
+			{
+				GetSound()->playUserGeneratedSound(SOUNDS::announcerRound3);
+			}
+
 			for (int c = 0; c < teamOnePlayers.size(); c++)
 			{
 				gamePtr->allowPlayerRespawn(teamOnePlayers[c], c);
@@ -467,6 +482,7 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 		}
 		else if (state == ENDROUND)
 		{
+			round++;
 			slowdownTime = true;
 			if (serverMsg == GAMEMODE_MSG::ROUND_WIN_TEAM1)
 			{
