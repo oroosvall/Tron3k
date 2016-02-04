@@ -27,7 +27,8 @@ protected:
 public:
 	virtual ~Bullet();
 
-	int getTeamId() { return teamId; };
+	int getTeam() { return teamId; };
+
 	void getId(int &player, int &bullet) { player = playerId; bullet = bulletId; };
 
 	glm::vec3 getPos() { return pos; };

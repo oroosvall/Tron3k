@@ -11,6 +11,7 @@ class Effect
 protected:
 	glm::vec3 pos;
 
+	int teamId;
 	int playerId;
 	int effectId;
 	EFFECT_TYPE type;
@@ -22,6 +23,10 @@ public:
 
 	virtual void init(int pid, int eid, glm::vec3 position) = 0;
 	void getId(int &pid, int &eid) { pid = playerId; eid = effectId; };
+
+	int getTeam() { return teamId; };
+	void setTeam(int team) { teamId = team; };
+
 	virtual int update(float dt) = 0;
 
 	virtual int getDamage() { return 0; };

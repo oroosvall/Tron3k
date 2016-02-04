@@ -157,12 +157,12 @@ private:
 	void loadRoles();
 	void initPhysics();
 
-	void addBulletToList(int conID, int bulletId, BULLET_TYPE bt, glm::vec3 pos, glm::vec3 dir);
+	void addBulletToList(int conID, int teamId, int bulletId, BULLET_TYPE bt, glm::vec3 pos, glm::vec3 dir);
 	Bullet* getSpecificBullet(int PID, int BID, BULLET_TYPE bt, int &posInBulletArray);
 	void removeBullet(BULLET_TYPE bt, int posInArray);
 	void bounceBullet(BulletHitWorldInfo hwi, Bullet* theBullet);
 
-	void addEffectToList(int conID, int effectId, EFFECT_TYPE et, glm::vec3 pos, int dmg, float interestingVariable);
+	void addEffectToList(int conID, int teamId, int effectId, EFFECT_TYPE et, glm::vec3 pos, int dmg, float interestingVariable);
 	Effect* getSpecificEffect(int PID, int SID, EFFECT_TYPE et, int &posInEffectArray);
 	void removeEffect(EFFECT_TYPE et, int posInArray);
 	void addEffectToPhysics(Effect* effect);
@@ -260,11 +260,11 @@ public:
 
 	bool fireEventReady() { return shotsFired; };
 	void getLatestWeaponFired(int localPlayer, WEAPON_TYPE &wt, int &bulletId);
-	void handleWeaponFire(int conID, int bulletId, WEAPON_TYPE weapontype, glm::vec3 pos, glm::vec3 dir);
+	void handleWeaponFire(int conID, int teamId, int bulletId, WEAPON_TYPE weapontype, glm::vec3 pos, glm::vec3 dir);
 
 	bool consumableReady() { return consumableUsed; };
 	CONSUMABLE_TYPE getConsumableUsed(int localPlayer);
-	void handleConsumableUse(int conID, CONSUMABLE_TYPE ct, glm::vec3 pos, glm::vec3 dir);
+	void handleConsumableUse(int conID, int teamId, CONSUMABLE_TYPE ct, glm::vec3 pos, glm::vec3 dir);
 
 	bool weaponSwitchReady() { return wpnSwitched; };
 	WEAPON_TYPE getWpnSwitch(int &swaploc) { wpnSwitched = false; swaploc = wpnSwapLocation; return weaponSwitchedTo; };
@@ -275,7 +275,7 @@ public:
 
 	SPECIAL_TYPE getMobilityAbilityUsed(int localPlayer, int &sid);
 	SPECIAL_TYPE getSpecialAbilityUsed(int localPlayer, int &sid); //sid is SpecialId, really only used for Lightwalls. I'm so, so sorry
-	void handleSpecialAbilityUse(int conID, int specialId, SPECIAL_TYPE st, glm::vec3 pos, glm::vec3 dir);
+	void handleSpecialAbilityUse(int conID, int teamId, int specialId, SPECIAL_TYPE st, glm::vec3 pos, glm::vec3 dir);
 
 	std::vector<BulletHitPlayerInfo> getAllHitPlayerInfo() { return allBulletHitsOnPlayers; };
 	void clearBulletOnPlayerCollisions() { allBulletHitsOnPlayers.clear();};

@@ -343,23 +343,23 @@ public:
 	}
 
 	//Frame package FROM CLIENT
-	virtual void frame_fire(WEAPON_TYPE wt, int conID, int bulletId, glm::vec3 pos, glm::vec3 dir) 
+	virtual void frame_fire(WEAPON_TYPE wt, int conID, int bulletId, glm::vec3 pos, glm::vec3 dir, int team) 
 	{ 
-		*package << Uint8(NET_FRAME::FIRE) << Uint8(conID) << Uint8(bulletId) << Uint8(wt) <<
+		*package << Uint8(NET_FRAME::FIRE) << Uint8(conID) << Uint8(team) << Uint8(bulletId) << Uint8(wt) <<
 			pos.x << pos.y << pos.z <<
 			dir.x << dir.y << dir.z;
 	};
 
-	virtual void frame_consumable(CONSUMABLE_TYPE ct, int conID, glm::vec3 pos, glm::vec3 dir)
+	virtual void frame_consumable(CONSUMABLE_TYPE ct, int conID, glm::vec3 pos, glm::vec3 dir, int team)
 	{
-		*package << Uint8(NET_FRAME::CONSUMABLE) << Uint8(conID) << Uint8(ct) <<
+		*package << Uint8(NET_FRAME::CONSUMABLE) << Uint8(conID) << Uint8(team) << Uint8(ct) <<
 			pos.x << pos.y << pos.z <<
 			dir.x << dir.y << dir.z;
 	};
 
-	virtual void frame_special_use(SPECIAL_TYPE st, int conID, int specialId, glm::vec3 pos, glm::vec3 dir)
+	virtual void frame_special_use(SPECIAL_TYPE st, int conID, int specialId, glm::vec3 pos, glm::vec3 dir, int team)
 	{
-		*package << Uint8(NET_FRAME::SPECIAL) << Uint8(conID) << Uint8(specialId) << Uint8(st) <<
+		*package << Uint8(NET_FRAME::SPECIAL) << Uint8(conID) << Uint8(team) << Uint8(specialId) << Uint8(st) <<
 			pos.x << pos.y << pos.z <<
 			dir.x << dir.y << dir.z;
 	}
@@ -391,39 +391,42 @@ public:
 	virtual void in_frame_fire(Packet* rec)
 	{
 		Uint8 conID;
+		Uint8 team;
 		Uint8 bulletId;
 		Uint8 weapontype;
 		glm::vec3 pos;
 		glm::vec3 dir;
-		*rec >> conID >> bulletId >> weapontype;
+		*rec >> conID >> team >> bulletId >> weapontype;
 		*rec >> pos.x >> pos.y >> pos.z;
 		*rec >> dir.x >> dir.y >> dir.z;
-		gamePtr->handleWeaponFire(conID, bulletId, WEAPON_TYPE(weapontype), pos, dir);
+		gamePtr->handleWeaponFire(conID, team, bulletId, WEAPON_TYPE(weapontype), pos, dir);
 	}
 
 	virtual void in_frame_consumable(Packet* rec)
 	{
 		Uint8 conID;
+		Uint8 team;
 		Uint8 consumabletype;
 		glm::vec3 pos;
 		glm::vec3 dir;
-		*rec >> conID >> consumabletype;
+		*rec >> conID >> team >> consumabletype;
 		*rec >> pos.x >> pos.y >> pos.z;
 		*rec >> dir.x >> dir.y >> dir.z;
-		gamePtr->handleConsumableUse(conID, CONSUMABLE_TYPE(consumabletype), pos, dir);
+		gamePtr->handleConsumableUse(conID, team, CONSUMABLE_TYPE(consumabletype), pos, dir);
 	}
 
 	virtual void in_frame_special_use(Packet* rec)
 	{
 		Uint8 conID;
+		Uint8 team;
 		Uint8 sID;
 		Uint8 specialtype;
 		glm::vec3 pos;
 		glm::vec3 dir;
-		*rec >> conID >> sID >> specialtype;
+		*rec >> conID >> team >> sID >> specialtype;
 		*rec >> pos.x >> pos.y >> pos.z;
 		*rec >> dir.x >> dir.y >> dir.z;
-		gamePtr->handleSpecialAbilityUse(conID, sID, SPECIAL_TYPE(specialtype), pos, dir);
+		gamePtr->handleSpecialAbilityUse(conID, team, sID, SPECIAL_TYPE(specialtype), pos, dir);
 	}
 
 	virtual void in_frame_weapon_switch(Packet* rec)

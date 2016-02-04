@@ -512,20 +512,20 @@ void Core::upClient(float dt)
 				WEAPON_TYPE wt;
 				int bID;
 				game->getLatestWeaponFired(top->getConId(), wt, bID);
-				top->frame_fire(wt, top->getConId(), bID, local->getPos(), local->getDir());
+				top->frame_fire(wt, top->getConId(), bID, local->getPos(), local->getDir(), local->getTeam());
 			}
 
 			if (game->consumableReady())
 			{
 				CONSUMABLE_TYPE ct = game->getConsumableUsed(top->getConId());
-				top->frame_consumable(ct, top->getConId(), local->getPos(), local->getDir());
+				top->frame_consumable(ct, top->getConId(), local->getPos(), local->getDir(), local->getTeam());
 			}
 
 			if (game->specialActivationReady())
 			{
 				int sid = -1;
 				SPECIAL_TYPE st = game->getSpecialAbilityUsed(top->getConId(), sid);
-				top->frame_special_use(st, top->getConId(), sid, local->getPos(), local->getDir());
+				top->frame_special_use(st, top->getConId(), sid, local->getPos(), local->getDir(), local->getTeam());
 			}
 
 			//send animstates
@@ -1370,10 +1370,10 @@ void Core::renderWorld(float dt)
 				std::vector<Bullet*> bullets = game->getBullets(BULLET_TYPE(c));
 				for (unsigned int i = 0; i < bullets.size(); i++)
 				{
-					if (bullets[i]->getTeamId() == 1)
+					if (bullets[i]->getTeam() == 1)
 						renderPipe->renderBullet(c, bullets[i]->getWorldMat(), &TEAMONECOLOR.x, 0.0f);
 
-					else if (bullets[i]->getTeamId() == 2)
+					else if (bullets[i]->getTeam() == 2)
 						renderPipe->renderBullet(c, bullets[i]->getWorldMat(), &TEAMTWOCOLOR.x, 0.0f);
 				}
 			}
@@ -1385,10 +1385,10 @@ void Core::renderWorld(float dt)
 				std::vector<Bullet*> bullets = game->getBullets(BULLET_TYPE(c));
 				for (unsigned int i = 0; i < bullets.size(); i++)
 				{
-					if (bullets[i]->getTeamId() == 1)
+					if (bullets[i]->getTeam() == 1)
 						renderPipe->renderBullet(c, bullets[i]->getWorldMat(), &TEAMTWOCOLOR.x, 0.0f);
 
-					else if (bullets[i]->getTeamId() == 2)
+					else if (bullets[i]->getTeam() == 2)
 						renderPipe->renderBullet(c, bullets[i]->getWorldMat(), &TEAMTWOCOLOR.x, 0.0f);
 				}
 			}
@@ -1400,10 +1400,10 @@ void Core::renderWorld(float dt)
 				std::vector<Bullet*> bullets = game->getBullets(BULLET_TYPE(c));
 				for (unsigned int i = 0; i < bullets.size(); i++)
 				{
-					if (bullets[i]->getTeamId() == 1)
+					if (bullets[i]->getTeam() == 1)
 						renderPipe->renderBullet(c, bullets[i]->getWorldMat(), &TEAMONECOLOR.x, 0.0f);
 
-					else if (bullets[i]->getTeamId() == 2)
+					else if (bullets[i]->getTeam() == 2)
 						renderPipe->renderBullet(c, bullets[i]->getWorldMat(), &TEAMONECOLOR.x, 0.0f);
 				}
 			}
@@ -1431,7 +1431,7 @@ void Core::renderWorld(float dt)
 				
 				int pid, eid;
 				eff[i]->getId(pid, eid);
-				int team = game->getPlayer(pid)->getTeam();
+				int team = eff[i]->getTeam();
 
 				if (hackedTeam == -1)
 				{
