@@ -128,6 +128,7 @@ void Client::in_new_connection(Packet* rec, Uint8 _conID)
 			*rec >> hp;
 			gamePtr->createPlayer(temp, c, hp, role);
 			delete temp;
+			gamePtr->addPlayerToTeam(c, team);
 		}
 	}
 
