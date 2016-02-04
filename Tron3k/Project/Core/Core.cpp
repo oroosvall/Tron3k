@@ -210,7 +210,12 @@ void Core::upStart(float dt)
 		console.printMsg("[/4] Client_Record", "System", 'S');
 		console.printMsg("[/5] Client_Playback", "System", 'S');
 
-		loadSettings();
+		if (!settingsLoaded)
+		{
+			loadSettings();
+			settingsLoaded = true;
+		}
+		
 		subState++;
 		break;
 

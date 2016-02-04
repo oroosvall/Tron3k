@@ -26,6 +26,7 @@
 class Core
 {
 private:
+	bool settingsLoaded = false;
 	int uitmpcounter;
 	float slowmode = 1.0f;
 	float slowdownFactor = 0.5f;
