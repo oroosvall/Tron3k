@@ -89,7 +89,7 @@ public:
 	void renderThunderDome();
 	void renderMisc(int renderID, GLuint shader, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation);
 
-	void renderPlayer(AnimManager::animState, glm::mat4 world, GLuint uniformKeyMatrixLocation, bool first, GLuint shader, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation);
+	void renderPlayer(AnimManager::animState, glm::mat4 world, GLuint uniformKeyMatrixLocation, bool first, bool primary, GLuint shader, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation);
 
 	int getPortalID(glm::vec3* oldpos, glm::vec3* newpos, int in_chunk) { return testMap.portalintersection(oldpos, newpos, in_chunk); }
 

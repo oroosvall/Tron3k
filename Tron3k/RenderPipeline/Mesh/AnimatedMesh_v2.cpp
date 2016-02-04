@@ -17,7 +17,6 @@ void PlayerMesh::load(string fileName, std::string _character)
 
 	if (file.is_open())
 	{
-
 		CharacterHeaderV2 charHdr;
 		file.read((char*)&charHdr, sizeof(CharacterHeaderV2));
 
@@ -206,6 +205,8 @@ void AnimatedMeshV2::release()
 {
 	third.release();
 	first.release();
+	if (hasSecondary)
+		secondary.release();
 
 	glDeleteBuffers(1, &matricesBuffer);
 
@@ -230,6 +231,12 @@ void AnimatedMeshV2::load(std::string character)
 
 	third.load(file + "_third.bin", character);
 	first.load(file + "_first.bin", character);
+	if (character == "brute")
+	{
+		secondary.load(file + "_secondary.bin", character);
+		hasSecondary = true;
+	}
+
 	glGenBuffers(1, &matricesBuffer);
 	glBindBuffer(GL_UNIFORM_BUFFER, matricesBuffer);
 	glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4) * animations[0].header.jointCount, (void*)1, GL_STATIC_DRAW);
@@ -300,7 +307,7 @@ int* AnimatedMeshV2::loadAnimations(std::string character)
 	return frames;
 }
 
-void AnimatedMeshV2::draw(GLuint uniformKeyMatrixLocation,int animationID, int keyFrame, bool _first, GLuint shader, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation)
+void AnimatedMeshV2::draw(GLuint uniformKeyMatrixLocation,int animationID, int keyFrame, bool _first, bool _primary, GLuint shader, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation)
 {
 	glBindBuffer(GL_UNIFORM_BUFFER, matricesBuffer);
 	glBindBufferBase(GL_UNIFORM_BUFFER, uniformKeyMatrixLocation, matricesBuffer);
@@ -308,8 +315,13 @@ void AnimatedMeshV2::draw(GLuint uniformKeyMatrixLocation,int animationID, int k
 	if (animations[animationID].header.keyCount > 0)
 	{
 		glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4)* animations[animationID].header.jointCount, animations[animationID].keyFrames[keyFrame].jointTransform, GL_STATIC_DRAW);
-		if(_first)
-			first.render(shader, textureLocation, normalLocation, glowSpecLocation);	
+		if (_first)
+		{
+			if(_primary)
+				first.render(shader, textureLocation, normalLocation, glowSpecLocation);
+			else
+				secondary.render(shader, textureLocation, normalLocation, glowSpecLocation);
+		}
 		else
 			third.render(shader, textureLocation, normalLocation, glowSpecLocation);
 

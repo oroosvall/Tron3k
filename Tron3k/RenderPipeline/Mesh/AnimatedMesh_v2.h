@@ -39,6 +39,8 @@ class AnimatedMeshV2
 private:
 
 	PlayerMesh first;
+	PlayerMesh secondary;
+	bool hasSecondary = false;
 	PlayerMesh third;
 
 	GLuint matricesBuffer;
@@ -57,7 +59,7 @@ public:
 	void load(std::string fileName);
 	int* loadAnimations(std::string character);
 
-	void draw(GLuint uniformKeyMatrixLocation, int animationID, int keyFrame, bool first, GLuint shader, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation);
+	void draw(GLuint uniformKeyMatrixLocation, int animationID, int keyFrame, bool first, bool primary, GLuint shader, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation);
 
 };
 

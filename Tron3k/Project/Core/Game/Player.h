@@ -74,7 +74,7 @@ private:
 	bool animGroundedLast = false;
 	float animAirTimer = 0.0f;
 	int animRole = 0;
-	int animPrimary = true;
+	bool animPrimary = true;
 	void movementAnimationChecks(float dt);
 	
 	void peakAnimsUpdate();
@@ -188,6 +188,7 @@ public:
 	glm::mat4 getFPSmat();
 
 	void movmentSpecialAnimUse(int react = 0);
+	bool getAnimPrimary();
 	bool searchModifier(MODIFIER_TYPE search);
 	Modifier* searchModifierGet(MODIFIER_TYPE search);
 

@@ -741,12 +741,13 @@ void RenderPipeline::renderBullet(int bid, void* world, float* dgColor, float sg
 	contMan.renderBullet(bid);
 }
 
-void RenderPipeline::renderAnimation(int playerID, int roleID, void* world, AnimationState animState, float* dgColor, float sgInten, bool first, int roomID)
+void RenderPipeline::renderAnimation(int playerID, int roleID, void* world, AnimationState animState, float* dgColor, float sgInten, bool first, bool primary, int roomID)
 {
 	anims.updateAnimStates(playerID, roleID, animState, delta, first);
 
 	if (contMan.renderedChunks[roomID] == true || contMan.f_portal_culling == false)
 	{
+
 		glUseProgram(animationShader);
 
 		//Texture for the glow
@@ -763,9 +764,8 @@ void RenderPipeline::renderAnimation(int playerID, int roleID, void* world, Anim
 		glProgramUniformMatrix4fv(animationShader, worldMat[1], 1, GL_FALSE, (GLfloat*)world);
 
 	if (anims.animStates[playerID].state != AnimationState::none && anims.animStates[playerID].frameEnd > 0)
-		contMan.renderPlayer(anims.animStates[playerID], *(glm::mat4*)world, uniformKeyMatrixLocation, first, animationShader, uniformTextureLocation[1], uniformNormalLocation[1], uniformGlowSpecLocation[1]);
+		contMan.renderPlayer(anims.animStates[playerID], *(glm::mat4*)world, uniformKeyMatrixLocation, first, primary, animationShader, uniformTextureLocation[1], uniformNormalLocation[1], uniformGlowSpecLocation[1]);
 	}
-	
 }
 
 bool RenderPipeline::setSetting(PIPELINE_SETTINGS type, PipelineValues value)

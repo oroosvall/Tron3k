@@ -1360,9 +1360,9 @@ void Core::renderWorld(float dt)
 					if (!force3rd && p->isLocal() && !game->freecam || game->spectateID == i)
 					{
 						if (p->isLocal())   //use current anim
-							renderPipe->renderAnimation(i, p->getRole()->getRole(), &p->getFPSmat(), p->getAnimState_f_c(), &dgColor.x, hpval, true, cam->roomID);
+							renderPipe->renderAnimation(i, p->getRole()->getRole(), &p->getFPSmat(), p->getAnimState_f_c(), &dgColor.x, hpval, true, p->getAnimPrimary(), cam->roomID);
 						else			   //use peak anim
-							renderPipe->renderAnimation(i, p->getRole()->getRole(), &p->getFPSmat(), p->getAnimState_f_p(), &dgColor.x, hpval, true, cam->roomID);
+							renderPipe->renderAnimation(i, p->getRole()->getRole(), &p->getFPSmat(), p->getAnimState_f_p(), &dgColor.x, hpval, true, p->getAnimPrimary(), cam->roomID);
 					}
 					else
 					{
@@ -1371,9 +1371,9 @@ void Core::renderWorld(float dt)
 							playermat[0][1].w -= 1.55f;
 
 						if (p->isLocal()) //use current anim
-							renderPipe->renderAnimation(i, p->getRole()->getRole(), playermat, p->getAnimState_t_c(), &dgColor.x, hpval, false, p->roomID);
+							renderPipe->renderAnimation(i, p->getRole()->getRole(), playermat, p->getAnimState_t_c(), &dgColor.x, hpval, false, false, p->roomID);
 						else              //use peak anim
-							renderPipe->renderAnimation(i, p->getRole()->getRole(), playermat, p->getAnimState_t_p(), &dgColor.x, hpval, false, p->roomID);
+							renderPipe->renderAnimation(i, p->getRole()->getRole(), playermat, p->getAnimState_t_p(), &dgColor.x, hpval, false, false, p->roomID);
 					}
 				}
 			}
