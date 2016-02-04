@@ -142,6 +142,7 @@ void Game::update(float dt)
 	if (gamemode->getType() == GAMEMODE_TYPE::KOTH && gameState == Gamestate::SERVER)
 	{
 		KingOfTheHill* k = (KingOfTheHill*)gamemode;
+		k->clearPlayersOnCapPoint();
 		for (int c = 0; c < 20; c++)
 		{
 			if (playerList[c] != nullptr)

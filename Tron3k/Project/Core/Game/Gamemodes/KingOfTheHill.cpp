@@ -163,7 +163,6 @@ GAMEMODE_MSG KingOfTheHill::roundScoring()
 
 GAMEMODE_MSG KingOfTheHill::update(float dt)
 {
-	clearPlayersOnCapPoint();
 	GAMEMODE_MSG msg = lastMsg;
 
 	switch (state)
