@@ -107,6 +107,7 @@ public:
 	void init(std::string name, glm::vec3 pos, bool isLocal = false);
 
 	bool getLockedControls(){ return lockControls; };
+	void setLockedControls(bool lockControls) { this->lockControls = lockControls; };
 
 	void footstepsLoopReset(float dt);
 

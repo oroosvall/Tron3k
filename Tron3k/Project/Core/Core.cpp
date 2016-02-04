@@ -19,7 +19,7 @@ void Core::init()
 	win = nullptr;
 	renderPipe = nullptr;
 
-	cursorVisible = true;
+	cursorVisible = false;
 	recreate = false;
 	fullscreen = false;
 	winX = winY = 800;
@@ -263,6 +263,8 @@ void Core::upMenu(float dt)
 			uiManager->setFirstMenuSet(false);
 			uiManager->setMenu(1);
 			subState = 0;
+
+			cursorVisible = false;
 			break;
 		case 1: //Multiplayer -> multiplayer window
 			uiManager->setMenu(1);
@@ -296,6 +298,7 @@ void Core::upMenu(float dt)
 			client_record = false;
 			client_playback = false;
 			subState = 0; 
+			cursorVisible = false;
 			break;
 		}
 		case 7: //Back
@@ -343,6 +346,8 @@ void Core::upRoam(float dt)
 		game->createPlayer(p, 0, 100, ROLES::TRAPPER, true);
 		game->freecam = true;
 		delete p;
+
+		game->getPlayer(game->GetLocalPlayerId())->setLockedControls(true);
 		subState++;
 		break;
 	}
@@ -493,6 +498,7 @@ void Core::upClient(float dt)
 				top->setGamePtr(game);
 				subState++;
 
+				game->getPlayer(game->GetLocalPlayerId())->setLockedControls(true);
 				showTeamSelect();
 
 				return; //On sucsess
@@ -971,6 +977,9 @@ void Core::roamHandleCmds(std::string com)
 			
 				uiManager->setFirstMenuSet(false);
 				uiManager->setMenu(0);
+
+				game->getPlayer(game->GetLocalPlayerId())->setLockedControls(false);
+				cursorVisible = true;
 			}
 			else 
 				console.printMsg("Invalid role. Use /role <1-5>", "System", 'S');
@@ -1093,6 +1102,9 @@ void Core::clientHandleCmds(std::string com)
 				uiManager->setOpenedGuiBool(true);
 				uiManager->setFirstMenuSet(false);
 				uiManager->setMenu(0);
+
+				game->getPlayer(game->GetLocalPlayerId())->setLockedControls(false);
+				cursorVisible = true;
 			}
 			else
 				console.printMsg("Invalid role. Use /role <1-5>", "System", 'S');
@@ -1694,6 +1706,8 @@ void Core::inGameUIUpdate() //Ingame ui update
 			break;
 		case 40: //Continue
 			uiManager->backToGui();
+			game->getPlayer(game->GetLocalPlayerId())->setLockedControls(true);
+			cursorVisible = false;
 			break;
 		case 41: //Settings
 			break;
