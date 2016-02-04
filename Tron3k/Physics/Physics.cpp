@@ -534,8 +534,8 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos)
 	AABBSingle box = playerBox.getAABB();
 	float rad = playerBox.getSphere().radius;
 	float abbrad = rad + 0.01f;
-	box.max = playerPos + vec3(abbrad, abbrad, abbrad);
-	box.min = playerPos - vec3(abbrad, abbrad, abbrad);
+	//box.max = playerPos + vec3(abbrad, abbrad, abbrad);
+	//box.min = playerPos - vec3(abbrad, abbrad, abbrad);
 	
 	
 
@@ -1170,7 +1170,7 @@ void Physics::receivePlayerRad(float rad)
 	sphere.radius = rad;
 	playerBox.setSphere(sphere);
 
-	playerBox.setWorldSize(vec3(rad, rad, rad));
+	playerBox.setWorldSize(vec3(rad + 0.1f, rad + 0.1f, rad + 0.1f));
 }
 
 void Physics::receiveRoomBoxes(void* _roomboxes)
