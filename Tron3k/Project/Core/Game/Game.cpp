@@ -231,16 +231,14 @@ void Game::update(float dt)
 		checkBulletVEffectCollision(dt);
 		checkPlayerVCapCollision();
 	}
-
-	if (gameState == Gamestate::CLIENT)
+	else if (gameState == Gamestate::CLIENT)
 	{
 		checkPvPCollision();
 		checkPlayerVWorldCollision(dt);
 		checkPlayerVEffectCollision();
 		checkFootsteps(dt);
 	}
-
-	if (gameState == Gamestate::SERVER)
+	else if (gameState == Gamestate::SERVER)
 	{
 		checkBulletVWorldCollision(dt);
 		checkPlayerVBulletCollision();

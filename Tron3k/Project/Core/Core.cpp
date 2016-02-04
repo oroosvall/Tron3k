@@ -516,6 +516,14 @@ void Core::upClient(float dt)
 			//Fetch current player position
 			//Add to topology packet
 			Player* local = game->getPlayer(top->getConId());
+
+			if (game->specialActivationReady())
+			{
+				int sid = -1;
+				SPECIAL_TYPE st = game->getSpecialAbilityUsed(top->getConId(), sid);
+				top->frame_special_use(st, top->getConId(), sid, local->getPos(), local->getDir(), local->getTeam());
+			}
+
 			top->frame_pos(top->getConId(), local->getPos(), local->getDir(), local->getVelocity(), local->roomID);
 		
 			if (game->weaponSwitchReady())
@@ -537,13 +545,6 @@ void Core::upClient(float dt)
 			{
 				CONSUMABLE_TYPE ct = game->getConsumableUsed(top->getConId());
 				top->frame_consumable(ct, top->getConId(), local->getPos(), local->getDir(), local->getTeam());
-			}
-
-			if (game->specialActivationReady())
-			{
-				int sid = -1;
-				SPECIAL_TYPE st = game->getSpecialAbilityUsed(top->getConId(), sid);
-				top->frame_special_use(st, top->getConId(), sid, local->getPos(), local->getDir(), local->getTeam());
 			}
 
 			//send animstates

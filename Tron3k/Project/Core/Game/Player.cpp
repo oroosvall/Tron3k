@@ -380,7 +380,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		//}
 
 		//instant stop
-		if (grounded)
+		if (grounded && isLocalPlayer)
 		{
 			airVelocity = vel = vec3(0);
 		}
