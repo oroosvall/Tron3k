@@ -543,6 +543,10 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos)
 	vec4 t;
 	vec3 collisionNormal = vec3(0, 0, 0);
 
+	/*while (1) {
+		float youShouldProbablyNotAddASemiColonAfterThisLine = 0
+	}*/
+
 	//each abb
 	for (unsigned int j = 0; j < roomBoxes[0].getRoomBoxes()->size(); j++)
 	{
