@@ -39,6 +39,12 @@ bool Physics::release()
 
 bool Physics::checkAABBvAABBCollision(AABBSingle mesh1, AABBSingle mesh2)
 {
+	mesh1.max += FLT_EPSILON;
+	mesh1.min -= FLT_EPSILON;
+
+	mesh2.max += FLT_EPSILON;
+	mesh2.min -= FLT_EPSILON;
+
 	if (mesh1.max.x > mesh2.min.x && mesh1.min.x < mesh2.max.x)//x
 		if (mesh1.max.y > mesh2.min.y && mesh1.min.y < mesh2.max.y)//y
 			if (mesh1.max.z > mesh2.min.z && mesh1.min.z < mesh2.max.z)//z
@@ -523,14 +529,15 @@ vec3 Physics::checkPlayerVBulletCollision(vec3 playerPos, vec3 bulletPos, vec3 s
 
 std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos)
 {
+	playerBox.setPos(playerPos);
+	playerBox.setWorldSize();
 	AABBSingle box = playerBox.getAABB();
 	float rad = playerBox.getSphere().radius;
 	float abbrad = rad + 0.01f;
-	box.max += vec3(abbrad, abbrad, abbrad);
-	box.min -= vec3(abbrad, abbrad, abbrad);
+	box.max = playerPos + vec3(abbrad, abbrad, abbrad);
+	box.min = playerPos - vec3(abbrad, abbrad, abbrad);
 	
-	playerBox.setPos(playerPos);
-	playerBox.setWorldSize();
+	
 
 	std::vector<vec4> cNorms;
 	vec4 t;
@@ -551,6 +558,7 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos)
 				if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 				{
 					t = vec4(normalize(vec3(t)), t.w);
+
 					cNorms.push_back(t);
 				}
 			}
@@ -585,6 +593,7 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos)
 						if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 						{
 							t = vec4(normalize(vec3(t)), t.w);
+
 							cNorms.push_back(t);
 						}
 					}
@@ -592,6 +601,8 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos)
 			}
 		}
 	}
+	if (cNorms.size() > 1)
+		int x = 0;
 	return cNorms;
 }
 

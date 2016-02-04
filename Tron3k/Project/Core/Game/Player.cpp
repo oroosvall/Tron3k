@@ -194,6 +194,12 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 		
 		pos += posadjust;
 
+		if (posadjust.y < 0.001f)
+		{
+			vel.y -= posadjust.y;
+			pos.y -= posadjust.y;
+		}
+
 		if (ceiling && vel.y > 0)
 			vel.y = 0;
 	}

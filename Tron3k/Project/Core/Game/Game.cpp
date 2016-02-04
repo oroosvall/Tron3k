@@ -1505,7 +1505,7 @@ void Game::bounceBullet(BulletHitWorldInfo hwi, Bullet* theBullet)
 void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 {
 	//hit info and bullet rad (assumed 0.6 for all)
-	decalAdd(hi, 0.55f);
+	decalAdd(hi, 0.45f);
 
 	int arraypos = -1;
 	Bullet* b = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, arraypos);
