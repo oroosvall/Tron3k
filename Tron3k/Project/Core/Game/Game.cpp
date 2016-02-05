@@ -1435,7 +1435,12 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 	glm::vec3 pos = playerList[hi.playerHit]->getPos();
 	if (gameState != Gamestate::SERVER)
 		if (GetSoundActivated())
-			GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHit, pos.x, pos.y, pos.z);
+		{
+			if (hi.et == EFFECT_TYPE::HEALTHPACK)
+				GetSound()->playExternalSound(SOUNDS::soundEffectHP, pos.x, pos.y, pos.z);
+			else
+				GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHit, pos.x, pos.y, pos.z);
+		}
 	Player* p = playerList[hi.playerHit];
 	int effectPosInArray = -1;
 	Effect* theEffect = getSpecificEffect(hi.effectPID, hi.effectID, hi.et, effectPosInArray);
@@ -1480,10 +1485,6 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 		p->healing(25);
 		if (theEffect != nullptr)
 			removeEffect(EFFECT_TYPE::HEALTHPACK, effectPosInArray);
-		if (GetSoundActivated())
-		{
-			GetSound()->playExternalSound(SOUNDS::soundEffectHP, pos.x, pos.y, pos.z);
-		}
 		break;
 	default:
 		break;		
