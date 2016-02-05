@@ -80,6 +80,8 @@ public:
 
 	virtual void renderDecals(void* data, int size) = 0;
 
+	virtual void renderCapturePoint(int capPointID) = 0;
+
 	virtual void forceReset() = 0;
 
 	virtual void setChatHistoryText(std::string text) = 0;
@@ -120,6 +122,8 @@ public:
 	virtual int startExecTimer(std::string name) = 0;
 	virtual void stopExecTimer(int id) = 0;
 	virtual bool* getRenderedChunks(int& get_size) = 0;
+
+	virtual void startTakeDamageEffect(int maxDisplace, float time) = 0;
 
 };
 

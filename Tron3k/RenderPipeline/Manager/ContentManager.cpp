@@ -326,18 +326,13 @@ void ContentManager::renderMisc(int renderID, GLuint shader, GLuint textureLocat
 		glEnable(GL_DEPTH_TEST);
 		//glDisable(GL_BLEND);
 	}
-	else if (renderID == -2) //bullet
-	{
-		//glActiveTexture(GL_TEXTURE0);
-		//glBindTexture(GL_TEXTURE_2D, textures[10].textureID);
-		//
-		//glActiveTexture(GL_TEXTURE0 + 1);
-		//glBindTexture(GL_TEXTURE_2D, textures[8].textureID);
-		//
-		//glActiveTexture(GL_TEXTURE0 + 2);
-		//glBindTexture(GL_TEXTURE_2D, textures[11].textureID);
-		
-	}
+}
+
+void ContentManager::renderCapturePoint(int id, GLuint shader, GLuint shaderLocation, GLuint diffuseLocation, GLuint normalLocation, GLuint glowLocation)
+{
+
+	testMap.renderCapturePoint(shader, shaderLocation, diffuseLocation, normalLocation, glowLocation, id);
+
 }
 
 void ContentManager::renderBullet(int bid)

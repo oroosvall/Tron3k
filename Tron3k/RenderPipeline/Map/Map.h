@@ -83,7 +83,7 @@ public:
 
 	void renderChunk(GLuint shader, GLuint shaderLocation, GLuint diffuseLocation, GLuint normalLocation, GLuint glowLocation, int chunkID);
 
-	void renderCapturePoint(GLuint shader, GLuint shaderLocation, int spawnPointID);
+	void renderCapturePoint(GLuint shader, GLuint shaderLocation, GLuint diffuseLocation, GLuint normalLocation, GLuint glowLocation, int capturePointID);
 
 	void renderCapAbb();
 

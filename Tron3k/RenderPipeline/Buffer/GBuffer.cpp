@@ -11,6 +11,8 @@ Gbuffer::Gbuffer()
 
 void Gbuffer::init(int x, int y, int nrTex, bool depth)
 {
+	xres = x;
+	yres = y;
 
 	if (renderQuad == 0)
 	{
@@ -85,11 +87,7 @@ void Gbuffer::init(int x, int y, int nrTex, bool depth)
 	uBlitLightPixelX  = glGetUniformLocation(*shaderPtr, "pixeluvX");
 	uBlitLightPixelY = glGetUniformLocation(*shaderPtr, "pixeluvY");
 
-	float uvPixelX = 2.0f / float(x);
-	float uvPixelY = 2.0f / float(y);
-
-	glProgramUniform1f(*shaderPtr, uBlitLightPixelX, uvPixelX);
-	glProgramUniform1f(*shaderPtr, uBlitLightPixelY, uvPixelY);
+	setGlowSamplingDist(2.0f);
 
 	if (depth)
 	{
@@ -162,6 +160,12 @@ Gbuffer::~Gbuffer()
 	delete portal_shaderPtr;
 
 	RenderTarget::releaseStatic();
+}
+
+void Gbuffer::setGlowSamplingDist(float dist)
+{
+	glProgramUniform1f(*shaderPtr, uBlitLightPixelX, dist / float(xres));
+	glProgramUniform1f(*shaderPtr, uBlitLightPixelY, dist / float(yres));
 }
 
 void Gbuffer::resize(int x, int y)
