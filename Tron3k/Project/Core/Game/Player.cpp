@@ -167,7 +167,7 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 		{
 			//push pos away and lower velocity using pendepth
 			vec3 pendepth = vec3(collisionNormals[k]) * collisionNormals[k].w;
-			if (collisionNormals[k].y < 0)
+			if (collisionNormals[k].y < -0.6f)
 				ceiling = true;
 
 			//ramp factor and grounded
@@ -220,7 +220,7 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 		// this is for air only since grounded will set the vel to 0 later
 		// the dt * 0.5 is supposed to remove almost all velocity in that dir
 		// while + posajust w/o  /dt  will remove it slower
-		posadjust = posadjust;
+		posadjust = posadjust * 0.99f;
 		vel += posadjust;// / dt * 0.5f;
 
 		if (ceiling)
