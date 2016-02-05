@@ -884,7 +884,7 @@ void Player::hitByEffect(Effect* e, int newHPtotal)
 			role.takeDamage(dmg);
 		}
 		else
-			role.takeDamage(20);
+			role.takeDamage(20); //TEMPORARY SOLUTION, MUST FIND ORIGIN OF PROBLEM
 	}
 	else //Hello I'm the client. I accept my new HP.
 	{

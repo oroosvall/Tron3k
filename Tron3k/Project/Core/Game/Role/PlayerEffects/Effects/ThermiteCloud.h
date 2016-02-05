@@ -19,6 +19,6 @@ public:
 	int update(float dt);
 
 	int getDamage() { return damage; }; //WOOO DAMAGE YO
-	float explotionRenderRad();
+	float explosionRenderRad();
 };
 #endif
