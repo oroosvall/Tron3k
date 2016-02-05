@@ -1479,7 +1479,18 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 	{
 		console->printMsg(p->getName() + " was fragged by " + playerList[hi.effectPID]->getName() + "!", "System", 'S');
 		playerList[hi.effectPID]->addKill();
+		playerList[hi.effectPID]->IncreaseFrags();
 		p->addDeath();
+
+		if (playerList[hi.effectPID]->GetConsecutiveFrags() == 3 && !playerList[hi.effectPID]->killingSpreeDone)
+		{
+			console->printMsg(playerList[hi.effectPID]->getName() + "is on a killing spree!", "System", 'S');
+			if (GetSoundActivated() && hi.effectPID == localPlayerId)
+			{
+				GetSound()->playUserGeneratedSound(SOUNDS::announcerKillingSpree);
+			}
+			playerList[hi.effectPID]->killingSpreeDone = true;
+		}
 	}
 
 	int newHP = p->getHP();

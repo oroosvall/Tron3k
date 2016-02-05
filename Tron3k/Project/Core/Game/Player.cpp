@@ -662,6 +662,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			msg = DEATH;
 			respawnTimer = respawnTime;
 			vel = glm::vec3(0, 0, 0);
+			this->ZeroFrags();
 
 			if (GetSoundActivated())
 			{
@@ -1240,4 +1241,20 @@ void Player::chooseRole(int r)
 	{
 		addModifier(MODIFIER_TYPE::TRAPPERSHAREAMMO);
 	}
+}
+
+void Player::IncreaseFrags()
+{
+	this->consecutiveFrags++;
+}
+
+void Player::ZeroFrags()
+{
+	this->consecutiveFrags = 0;
+	this->killingSpreeDone = false;
+}
+
+int Player::GetConsecutiveFrags()
+{
+	return this->consecutiveFrags;
 }

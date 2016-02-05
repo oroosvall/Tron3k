@@ -101,6 +101,7 @@ private:
 
 	int kills;
 	int deaths;
+	int consecutiveFrags;
 public:
 	Player();
 	~Player();
@@ -114,6 +115,10 @@ public:
 	bool getFootsteps();
 	void setFootstepsCountdown();
 	void setFootstepsLoop(bool);
+	int GetConsecutiveFrags();
+	void IncreaseFrags();
+	void ZeroFrags();
+	bool killingSpreeDone = false;
 
 	PLAYERMSG update(float dt, bool freecam, bool spectatingThisPlayer, bool spectating);
 	void movementUpdates(float dt, bool freecam, bool spectatingThisPlayer, bool spectating);
