@@ -1480,6 +1480,7 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 			console->printMsg(p->getName() + " was fragged by a quitter!", "System", 'S');
 		playerList[hi.effectPID]->addKill();
 		playerList[hi.effectPID]->IncreaseFrags();
+		p->ZeroFrags();
 		p->addDeath();
 
 		if (playerList[hi.effectPID]->GetConsecutiveFrags() == 3 && !playerList[hi.effectPID]->killingSpreeDone)
