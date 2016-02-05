@@ -1430,10 +1430,19 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 					console->printMsg(playerList[hi.bulletPID]->getName() + " is on a killing spree!", "System", 'S');
 					if (GetSoundActivated() && hi.bulletPID == localPlayerId)
 					{
-						playerList[hi.bulletPID]->killingSpreeDone = true;
 						GetSound()->playUserGeneratedSound(SOUNDS::announcerKillingSpree);
 					}
 					playerList[hi.bulletPID]->killingSpreeDone = true;
+				}
+
+				else if (playerList[hi.bulletPID]->GetConsecutiveFrags() == 5 && !playerList[hi.bulletPID]->impressiveDone)
+				{
+					console->printMsg("Impressive, " + playerList[hi.bulletPID]->getName(), "System", 'S');
+					if (GetSoundActivated() && hi.bulletPID == localPlayerId)
+					{
+						GetSound()->playUserGeneratedSound(SOUNDS::announcerImpressive);
+					}
+					playerList[hi.bulletPID]->impressiveDone = true;
 				}
 				addEffectToList(-1, p->getTeam(), effects[EFFECT_TYPE::HEALTHPACK].size(), EFFECT_TYPE::HEALTHPACK, p->getPos(), 0, 0.5f);
 			}
@@ -1532,6 +1541,16 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 					GetSound()->playUserGeneratedSound(SOUNDS::announcerKillingSpree);
 				}
 				playerList[hi.effectPID]->killingSpreeDone = true;
+			}
+
+			else if (playerList[hi.effectPID]->GetConsecutiveFrags() == 5 && !playerList[hi.effectPID]->impressiveDone)
+			{
+				console->printMsg("Impressive, " + playerList[hi.effectPID]->getName(), "System", 'S');
+				if (GetSoundActivated() && hi.effectPID == localPlayerId)
+				{
+					GetSound()->playUserGeneratedSound(SOUNDS::announcerImpressive);
+				}
+				playerList[hi.effectPID]->impressiveDone = true;
 			}
 			addEffectToList(-1, p->getTeam(), effects[EFFECT_TYPE::HEALTHPACK].size(), EFFECT_TYPE::HEALTHPACK, p->getPos(), 0, 0.5f);
 		}

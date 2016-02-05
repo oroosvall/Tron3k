@@ -1255,6 +1255,7 @@ void Player::ZeroFrags()
 {
 	this->consecutiveFrags = 0;
 	this->killingSpreeDone = false;
+	this->impressiveDone = false;
 }
 
 int Player::GetConsecutiveFrags()

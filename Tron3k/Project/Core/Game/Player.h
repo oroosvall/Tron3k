@@ -126,6 +126,7 @@ public:
 	void IncreaseFrags();
 	void ZeroFrags();
 	bool killingSpreeDone = false;
+	bool impressiveDone = false;
 
 	PLAYERMSG update(float dt, bool freecam, bool spectatingThisPlayer, bool spectating);
 	void movementUpdates(float dt, bool freecam, bool spectatingThisPlayer, bool spectating);
