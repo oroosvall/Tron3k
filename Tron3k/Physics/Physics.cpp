@@ -562,7 +562,8 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos)
 				if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 				{
 					t = vec4(normalize(vec3(t)), t.w);
-
+					if (t.y > 0.98f)
+						t.y = 1;
 					cNorms.push_back(t);
 				}
 			}
@@ -597,7 +598,8 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos)
 						if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 						{
 							t = vec4(normalize(vec3(t)), t.w);
-
+							if (t.y > 0.98f)
+								t.y = 1;
 							cNorms.push_back(t);
 						}
 					}
