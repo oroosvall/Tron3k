@@ -152,6 +152,8 @@ private:
 	Physics* physics;
 	int localPlayerId = -1;
 
+	int musicVolumeForMenu = 30;
+
 	void checkFootsteps(float dt);
 
 	void loadRoles();

@@ -117,8 +117,8 @@ float SoundPlayer::getVolumeMusic()
 
 void SoundPlayer::stopMusic()
 {
-	//fading = true;
-	musicPlayer.stop();
+	fading = true;
+	//musicPlayer.stop();
 }
 
 int SoundPlayer::playJump(int role, float x, float y, float z)
@@ -277,7 +277,6 @@ bool SoundPlayer::getInitialized()
 void SoundPlayer::setVolumeMusic(float volume)
 {
 	musicPlayer.setVolume(volume);
-	cout << volume << endl;
 }
 
 void SoundPlayer::setVolumeSound(float volume)
