@@ -17,7 +17,8 @@ class UIElements
 public:
 	virtual ~UIElements() {};
 
-	virtual void render(int id) = 0;
+	virtual void renderQuad(int id) = 0;
+	virtual void renderText(int id) = 0;
 
 	virtual void setWorldMatrix(float x, float y, int id) = 0;
 

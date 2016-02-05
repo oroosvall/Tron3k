@@ -25,7 +25,8 @@ public:
 	StaticTextureBoxes(glm::vec2 center, int* textureId1, int nrOfTextures, IRenderPipeline* uiRender, std::vector<glm::vec2> textRes);
 	virtual ~StaticTextureBoxes();
 
-	virtual void render(int id);
+	virtual void renderQuad(int id);
+	virtual void renderText(int id);
 
 	virtual void setWorldMatrix(float x, float y, int id);
 

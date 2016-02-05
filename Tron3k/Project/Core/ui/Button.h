@@ -35,7 +35,8 @@ public:
 	Button(glm::vec2 center, int textureId1, int textureId2, int uniqueKey, int hoverKey, IRenderPipeline* uiRender, glm::vec2 textRes1, glm::vec2 textRes2);
 	virtual ~Button();
 
-	virtual void render(int id);
+	virtual void renderQuad(int id);
+	virtual void renderText(int id);
 
 	virtual void setWorldMatrix(float x, float y, int id);
 

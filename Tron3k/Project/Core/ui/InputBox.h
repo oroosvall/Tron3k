@@ -39,7 +39,8 @@ public:
 	InputBox(glm::vec2 center, int textureId1, int uniqueKey, IRenderPipeline* uiRender, glm::vec2 textRes, int winX, int winY, glm::vec3 offSetsTextSize);
 	virtual ~InputBox();
 
-	virtual void render(int id);
+	virtual void renderQuad(int id);
+	virtual void renderText(int id);
 
 	virtual void setWorldMatrix(float x, float y, int id);
 

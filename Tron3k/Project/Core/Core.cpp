@@ -51,6 +51,10 @@ void Core::init()
 	renderMenu = true;
 	menuIpKeyListener = false;
 	menuNameKeyListener = false;
+	escWindow = false;
+
+	nameNrOfKeys = 0;
+	ipNrOfKeys = 0;
 }
 
 Core::~Core()
@@ -247,7 +251,6 @@ void Core::upStart(float dt)
 
 void Core::upMenu(float dt)
 {
-
 	renderUI = true;
 
 	double x = (0.0);
@@ -284,25 +287,47 @@ void Core::upMenu(float dt)
 			glfwHideWindow(win);
 			break;
 		case 4: //Client -> connect window
-			//Block the input to command window
-			//Set so your own function listens after key input.
-
+		{
 			uiManager->setMenu(2);
+
+			string addr = _addrs.toString();
+			clientHandleCmds("/ip " + addr);
+			nameNrOfKeys = _name.size();
+			ipNrOfKeys = addr.size();
+
+			uiManager->setText(addr, 7); //Ip
+			uiManager->setText(_name, 8); //Name
 			break;
+		}
 		case 5: //Server -> starts a server
 			current = SERVER;
 			subState = 0;
+			
 			uiManager->removeAllMenus();
+			
+			renderPipe->clearColor();
 			renderPipe->clearBothBuffers();
+			//uiManager->setMenu(6);
 			glfwSwapBuffers(win);
 			renderPipe->clearBothBuffers();
+			
 			renderMenu = false;
 			renderUI = false;
 			break;
 		case 6: //Connect
 		{
-			nrOfKeys = 0;
-			//default ip at the moment
+			menuIpKeyListener = false;
+			std::string ip = "/ip ";
+			ip += uiManager->getText(7); //From ip object
+			startHandleCmds(ip);
+
+			menuNameKeyListener = false;
+			std::string name = "/name ";
+			name += uiManager->getText(8); //From ip object
+			startHandleCmds(name);
+
+			nameNrOfKeys = 0;
+			ipNrOfKeys = 0;
 			current = Gamestate::CLIENT; //Start the game as a client
 			client_record = false;
 			client_playback = false;
@@ -310,7 +335,8 @@ void Core::upMenu(float dt)
 			break;
 		}
 		case 7: //Back
-			nrOfKeys = 0;
+			nameNrOfKeys = 0;
+			ipNrOfKeys = 0;
 			uiManager->setMenu(-1); //Last menu
 			break;
 		case 10: //Ip input
@@ -1024,7 +1050,9 @@ void Core::roamHandleCmds(std::string com)
 				renderPipe->setRenderFlag(RENDER_DEBUG_TEXT);
 		}
 		else if (token == "/disconnect")
+		{
 			disconnect();
+		}
 	}
 }
 
@@ -1115,7 +1143,9 @@ void Core::clientHandleCmds(std::string com)
 				console.printMsg("Invalid role. Use /role <1-5>", "System", 'S');
 		}
 		else if (token == "/disconnect")
+		{
 			disconnect();
+		}
 		else if (token == "/free")
 		{
 			if (game->freecam)
@@ -1755,20 +1785,18 @@ void Core::inGameUIUpdate() //Ingame ui update
 		case 41: //Settings
 			break;
 		case 42: //Quit
-			current = MENU;
 			if (current == ROAM)
 				roamHandleCmds("/disconnect");
 			else
 				clientHandleCmds("/disconnect");
-			uiManager->setOpenedGuiBool(false);
-			uiManager->LoadNextSet(0, winX, winY);
 			break;
 		default:
 			break;
 		}
 	}
-	else
+	else if(escWindow)
 		uiManager->hoverCheck(glm::vec2((float)tX, (float)tY));
+	else{}
 }
 
 void Core::handleCulling()
@@ -2055,6 +2083,13 @@ void Core::disconnect()
 	//}
 	current = Gamestate::START;
 	subState = 0;
+
+	current = START;
+	uiManager->setOpenedGuiBool(false);
+	uiManager->setFirstMenuSet(false);
+	cursorInvisible = false;
+	uiManager->LoadNextSet(0, winX, winY);
+	uiManager->setMenu(0);
 }
 
 void Core::showTeamSelect()
@@ -2081,28 +2116,21 @@ void Core::menuIpKeyInputUpdate()
 	{
 		if (i->justPressed(validKeyboardInputs[c]))
 		{
-			if (nrOfKeys < 15)
+			if (ipNrOfKeys < 15)
 			{
 				char ch = i->keyToChar(validKeyboardInputs[c]);
 				std::string fromChar = "";
 				fromChar += ch;
 
 				uiManager->setText(fromChar, 7); //Set ip object
-				nrOfKeys++;
+				ipNrOfKeys++;
 			}
 		}
 	}
 	if (i->justPressed(GLFW_KEY_BACKSPACE))
 	{
 		uiManager->removeLastInput(7); //remove from ip object
-		nrOfKeys--;
-	}
-	if (i->justPressed(GLFW_KEY_ENTER))
-	{
-		menuIpKeyListener = false;
-		std::string ip = "/ip ";
-		ip += uiManager->getText(7); //From ip object
-		startHandleCmds(ip);
+		ipNrOfKeys--;
 	}
 }
 
@@ -2113,7 +2141,7 @@ void Core::menuNameKeyInputUpdate()
 	{
 		if (i->justPressed(validKeyboardInputs2[c]))
 		{
-			if (nrOfKeys < 12)
+			if (nameNrOfKeys < 12)
 			{
 				char ch = i->keyToChar(validKeyboardInputs2[c]);
 				std::string fromChar = "";
@@ -2121,20 +2149,13 @@ void Core::menuNameKeyInputUpdate()
 
 				uiManager->setText(fromChar, 8); //Set ip object
 
-				nrOfKeys++;
+				nameNrOfKeys++;
 			}
 		}
 	}
 	if (i->justPressed(GLFW_KEY_BACKSPACE))
 	{
 		uiManager->removeLastInput(8); //remove from ip object
-		nrOfKeys--;
-	}
-	if (i->justPressed(GLFW_KEY_ENTER))
-	{
-		menuNameKeyListener = false;
-		std::string name = "/name ";
-		name += uiManager->getText(8); //From ip object
-		startHandleCmds(name);
+		nameNrOfKeys--;
 	}
 }

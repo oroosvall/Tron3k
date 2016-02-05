@@ -78,10 +78,13 @@ void UIManager::init(Console* console, int winX, int winY)
 	//Ip input
 	texturePaths.push_back("GameFiles/Textures/UITextures/ip_field.png"); //15
 	//Port input
-	texturePaths.push_back("GameFiles/Textures/UITextures/port_field.png"); //16
+	texturePaths.push_back("GameFiles/Textures/UITextures/name_field.png"); //16
 
 	//Title
 	texturePaths.push_back("GameFiles/Textures/UITextures/title.png"); //17
+
+	//Server
+	texturePaths.push_back("GameFiles/Textures/UITextures/server.png"); //18
 
 	loadInTexture();
 
@@ -170,10 +173,8 @@ void UIManager::loadInTexture()
 
 void UIManager::menuRender()
 {
-	renderPipe->ui_initRender();
-	
 	renderPipe->disableDepthTest();
-	menus[currentMenu[0]].render(uiTextureIds);
+	menus[currentMenu[0]].renderMenu();
 	renderPipe->enableDepthTest();
 }
 
@@ -183,7 +184,7 @@ void UIManager::inGameRender()
 
 	renderPipe->disableDepthTest();
 	for (int i = 0; i < nrOfCurretMenus; i++)
-		menus[currentMenu[i]].render(uiTextureIds);
+		menus[currentMenu[i]].renderIngame();
 	renderPipe->enableDepthTest();
 }
 

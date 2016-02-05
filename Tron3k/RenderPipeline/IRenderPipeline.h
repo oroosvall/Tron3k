@@ -118,6 +118,7 @@ public:
 	virtual void enableDepthTest() = 0;
 	virtual void disableDepthTest() = 0;
 	virtual void clearBothBuffers() = 0;
+	virtual void clearColor() = 0;
 
 	virtual int startExecTimer(std::string name) = 0;
 	virtual void stopExecTimer(int id) = 0;

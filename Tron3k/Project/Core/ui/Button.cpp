@@ -58,7 +58,12 @@ Button::Button(glm::vec2 center, int textureId1, int textureId2, int uniqueKey, 
 
 Button::~Button() {}
 
-void Button::render(int id)
+void Button::renderText(int id)
+{
+
+}
+
+void Button::renderQuad(int id)
 {
 	uiRender->ui_renderQuad((float*)&worldMatrix[0][0], (float*)&pivot.x, textureIdInUse, 1.0f, id);
 }

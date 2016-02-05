@@ -30,6 +30,7 @@ private:
 	//Lists
 	std::vector<glm::vec2>* textureRes;
 	std::vector<UIElements*> UiObjects;
+	std::vector<int> textObjRenderId;
 	int* textureIdList;
 
 	//Counters
@@ -59,7 +60,8 @@ public:
 	//Start
 	void init(std::string fileName, Console* console, IRenderPipeline* uiRender, std::vector<glm::vec2>* textureRes, int winX, int winY);
 	
-	void render(std::vector<GLuint> uiTextureIds);
+	void renderMenu();
+	void renderIngame();
 
 	void clean();
 

@@ -16,10 +16,24 @@ UI::~UI()
 	clean();
 }
 
-void UI::render(std::vector<GLuint> uiTextureIds)
+void UI::renderMenu()
 {
+	uiRender->ui_initRender();
 	for (int i = 0; i < UiObjects.size(); i++)
-		UiObjects[i]->render(i);
+		UiObjects[i]->renderQuad(i);
+
+	for (int i = 0; i < textObjRenderId.size(); i++)
+		UiObjects[textObjRenderId[i]]->renderText(i);
+}
+
+void UI::renderIngame()
+{
+	uiRender->ui_InGameRenderInit();
+	for (int i = 0; i < UiObjects.size(); i++)
+		UiObjects[i]->renderQuad(i);
+
+	for (int i = 0; i < textObjRenderId.size(); i++)
+		UiObjects[textObjRenderId[i]]->renderText(i);
 }
 
 void UI::init(std::string fileName, Console* console, IRenderPipeline* uiRender, std::vector<glm::vec2>* textureRes, int winX, int winY)
@@ -154,6 +168,7 @@ bool UI::loadUI(std::string fileName, int winX, int winY)
 			else if(classId == 4) //InputBox
 			{
 				UiObjects.push_back(new InputBox(xy, textureId1, uniqueKey, uiRender, textureRes[0][textureId1], winX, winY, offsetTextSize));
+				textObjRenderId.push_back(counter);
 				textureIdList[counter] = textureId1;
 				result = true;
 
@@ -173,7 +188,7 @@ bool UI::loadUI(std::string fileName, int winX, int winY)
 					textIdList[6] = counter;
 				else if (textId == "ip")
 					textIdList[7] = counter;
-				else if (textId == "port")
+				else if (textId == "name")
 					textIdList[8] = counter;
 				counter++;
 			}
