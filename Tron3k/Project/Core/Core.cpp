@@ -1379,11 +1379,12 @@ void Core::renderWorld(float dt)
 
 		SpotLight light;
 		//world ambient temp
-		light.Position = vec3(0, 400, 0);
-		light.Direction = vec3(0.0f);//p->getDir();
-		light.Color = vec3(1,1,1);
-		light.DiffuseIntensity = 0.0f;
-		light.AmbientIntensity = 0.3f;
+
+		light.Position = vec3(131, 45, 0);
+		light.Direction = normalize(vec3(-0.16f, -0.36f, 0.91f));//p->getDir();
+		light.Color = vec3(0.7f, 0.7f , 1.0f);
+		light.DiffuseIntensity = 0.3f;
+		light.AmbientIntensity = 0.01f;
 		renderPipe->addLight(&light, 0);
 		light.AmbientIntensity = 0.0f;
 

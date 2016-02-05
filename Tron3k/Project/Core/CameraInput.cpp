@@ -152,16 +152,26 @@ CameraInput* CameraInput::getCam()
 
 glm::mat4 CameraInput::getSkyboxMat()
 {
-	glm::mat4 ret;
-	//pos
-	ret[0].w = pos.x;
-	ret[1].w = pos.y;
-	ret[2].w = pos.z;
+	
 
+	glm::mat4 ret;
 	//scale of skybox
 	ret[0].x = 550;
 	ret[1].y = 550;
 	ret[2].z = 550;
+
+	glm::mat4 rot = mat4(cos(-1.74533), 0.0f, -sin(-1.74533), 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		sin(-1.74533), 0.0f, cos(-1.74533), 0.0f,
+		0.0f, 0.0f, 0.0f, 0.0f);
+
+	ret *= rot;
+
+	ret[0].w = pos.x;
+	ret[1].w = pos.y;
+	ret[2].w = pos.z;
+
+	
 	return ret;
 }
 

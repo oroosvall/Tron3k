@@ -42,8 +42,7 @@ float gMatSpecularIntensity = 0.4;
 out vec4 fragment_color;
 					
 vec4 CalcLightInternal(SpotLight l, vec3 LightDirection, vec3 Normal)                   
-{                                                                                           
-	              
+{                                                                                                 
 	float DiffuseFactor = dot(Normal, -LightDirection);                                     
                                                                                            
 	vec4 DiffuseColor  = vec4(0, 0, 0, 0);                                            
@@ -122,9 +121,11 @@ void main()
 		float len = length(Position0.xyz - eyepos);
 		if(len < 500)
 		{
-			vec4 ambientForce = vec4(0);
+			//light 0
+			fragment_color = CalcLightInternal(lights[0], lights[0].Direction, Normal0.xyz);
+			vec4 ambientForce = vec4(lights[0].Color, 1) * lights[0].AmbientIntensity;
 			
-			for(int n = 0; n < NumSpotLights; n++)
+			for(int n = 1; n < NumSpotLights; n++)
 			{
 				if(lights[n].Direction.x == 0.0f && lights[n].Direction.y == 0.0f && lights[n].Direction.y == 0.0f)
 					fragment_color += CalcPointLight(lights[n], Normal0.xyz) * 0.2f;
