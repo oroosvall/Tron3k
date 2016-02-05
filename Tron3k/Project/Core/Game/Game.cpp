@@ -1384,7 +1384,7 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 			{
 				if (hi.bt == BULLET_TYPE::HACKING_DART & p->isLocal())
 				{
-					GetSound()->playExternalSound(SOUNDS::hackedSound, pos.x, pos.y, pos.z);
+					GetSound()->playUserGeneratedSound(SOUNDS::hackedSound);
 				}
 				else
 				{
@@ -1406,7 +1406,19 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 			else
 				console->printMsg(p->getName() + " was fragged by a quitter!", "System", 'S');
 			playerList[hi.bulletPID]->addKill();
+			playerList[hi.bulletPID]->IncreaseFrags();
+			p->ZeroFrags();
 			p->addDeath();
+
+			if (playerList[hi.bulletPID]->GetConsecutiveFrags() == 3 && !playerList[hi.bulletPID]->killingSpreeDone)
+			{
+				console->printMsg(playerList[hi.bulletPID]->getName() + "is on a killing spree!", "System", 'S');
+				if (GetSoundActivated() && hi.bulletPID == localPlayerId)
+				{
+					GetSound()->playUserGeneratedSound(SOUNDS::announcerKillingSpree);
+				}
+				playerList[hi.bulletPID]->killingSpreeDone = true;
+			}
 			addEffectToList(-1, p->getTeam(), effects[EFFECT_TYPE::HEALTHPACK].size(), EFFECT_TYPE::HEALTHPACK, p->getPos(), 0, 0.5f);
 		}
 
