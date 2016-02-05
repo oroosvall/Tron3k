@@ -6,6 +6,8 @@
 
 #include <map>
 
+#include <sstream>
+
 using std::cout;
 using std::endl;
 
@@ -380,6 +382,9 @@ void reportGPULeaks()
 		if (genBufferChecks[i].free == false)
 		{
 			cout << "glGenBuffers: " << genBufferChecks[i].bufferID << "\n" << genBufferChecks[i].file << " : " << genBufferChecks[i].line << endl;
+			std::stringstream bla;
+			bla << "glGenBuffers: " << genBufferChecks[i].bufferID << "\n" << genBufferChecks[i].file << " : " << genBufferChecks[i].line << endl;
+			OutputDebugStringA(bla.str().c_str());
 			found = true;
 		}
 	}
@@ -389,6 +394,9 @@ void reportGPULeaks()
 		if (genVertexArrayChecks[i].free == false)
 		{
 			cout << "glGenVertexArrays: " << genVertexArrayChecks[i].bufferID << "\n" << genVertexArrayChecks[i].file << " : " << genVertexArrayChecks[i].line << endl;
+			std::stringstream bla;
+			bla << "glGenVertexArrays: " << genVertexArrayChecks[i].bufferID << "\n" << genVertexArrayChecks[i].file << " : " << genVertexArrayChecks[i].line << endl;
+			OutputDebugStringA(bla.str().c_str());
 			found = true;
 		}
 	}
@@ -398,6 +406,9 @@ void reportGPULeaks()
 		if (genTextureCheck[i].free == false)
 		{
 			cout << "glGenTextures: " << genTextureCheck[i].bufferID << "\n" << genTextureCheck[i].file << " : " << genTextureCheck[i].line << endl;
+			std::stringstream bla;
+			bla << "glGenTextures: " << genTextureCheck[i].bufferID << "\n" << genTextureCheck[i].file << " : " << genTextureCheck[i].line << endl;
+			OutputDebugStringA(bla.str().c_str());
 			found = true;
 		}
 	}
