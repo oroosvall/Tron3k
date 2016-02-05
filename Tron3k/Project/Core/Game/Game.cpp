@@ -1439,10 +1439,12 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 			}
 			removeBullet(hi.bt, bulletPosInArray);
 		}
+		else
+			return p->getHP();
 		int newHP = p->getHP();
 		return newHP;
 	}
-	return p->getHP();
+	return 0;
 }
 
 int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
@@ -1537,7 +1539,7 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 		int newHP = p->getHP();
 		return newHP;
 	}
-	return p->getHP();
+	return 0;
 }
 
 void Game::bounceBullet(BulletHitWorldInfo hwi, Bullet* theBullet)
