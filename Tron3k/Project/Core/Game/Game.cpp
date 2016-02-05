@@ -1431,12 +1431,14 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 		theEffect->setPos(hi.hitPos);
 		updateEffectBox(theEffect);
 	}
+
+	p->hitByEffect(theEffect, hi.newHPtotal);
 	
-	if (gameState != Gamestate::SERVER)
+	switch (hi.et)
 	{
-		switch (hi.et)
-		{
-		case EFFECT_TYPE::EXPLOSION:
+	case EFFECT_TYPE::EXPLOSION:
+	{
+		if (gameState != Gamestate::SERVER)
 		{
 			vec3 normalFromExplosion = normalize(hi.playerPos - hi.hitPos);
 			vec3 newVel = vec3(0);
@@ -1455,29 +1457,27 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 
 			p->setVelocity(newVel);
 		}
+	}
+	break;
+	case EFFECT_TYPE::THERMITE_CLOUD:
 		break;
-		case EFFECT_TYPE::THERMITE_CLOUD:
-			break;
-		case EFFECT_TYPE::BATTERY_SLOW:
-			break;
-		case EFFECT_TYPE::HEALTHPACK:
-			if (GetSoundActivated())
-				GetSound()->playUserGeneratedSound(SOUNDS::soundEffectHP);
-
-			p->healing(25);
-			if (theEffect != nullptr)
-				removeEffect(EFFECT_TYPE::HEALTHPACK, effectPosInArray);
-			break;
-		default:
-			break;
-		}
-		
+	case EFFECT_TYPE::BATTERY_SLOW:
+		break;
+	case EFFECT_TYPE::HEALTHPACK:
+		p->healing(25);
+		if (theEffect != nullptr)
+			removeEffect(EFFECT_TYPE::HEALTHPACK, effectPosInArray);
+		break;
+	default:
+		break;		
 	}
 
-	p->hitByEffect(theEffect, hi.newHPtotal);
 	if (p->getHP() == 0)
 	{
-		console->printMsg(p->getName() + " was fragged by " + playerList[hi.effectPID]->getName() + "!", "System", 'S');
+		if (playerList[hi.effectPID] != nullptr)
+			console->printMsg(p->getName() + " was fragged by " + playerList[hi.effectPID]->getName() + "!", "System", 'S');
+		else
+			console->printMsg(p->getName() + " was fragged by a quitter!", "System", 'S');
 		playerList[hi.effectPID]->addKill();
 		playerList[hi.effectPID]->IncreaseFrags();
 		p->addDeath();
@@ -1491,6 +1491,7 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 			}
 			playerList[hi.effectPID]->killingSpreeDone = true;
 		}
+		addEffectToList(-1, p->getTeam(), effects[EFFECT_TYPE::HEALTHPACK].size(), EFFECT_TYPE::HEALTHPACK, p->getPos(), 0, 0.5f);
 	}
 
 	int newHP = p->getHP();

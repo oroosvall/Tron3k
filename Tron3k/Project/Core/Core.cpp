@@ -1106,14 +1106,6 @@ void Core::clientHandleCmds(std::string com)
 			{
 				int role = stoi(token);
 				top->command_role_change(top->getConId(), role);
-
-				uiManager->setOpenedGuiBool(true);
-				uiManager->setFirstMenuSet(false);
-				uiManager->setMenu(0);
-
-				game->getPlayer(game->GetLocalPlayerId())->setLockedControls(false);
-				cursorInvisible = true;
-				game->setCursorInvisible(cursorInvisible);
 			}
 			else
 				console.printMsg("Invalid role. Use /role <1-5>", "System", 'S');

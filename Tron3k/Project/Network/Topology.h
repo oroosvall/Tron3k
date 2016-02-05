@@ -665,6 +665,16 @@ public:
 			branch(out, -1);
 			delete out;
 		}
+
+		if (p_conID == getConId())
+		{
+			uiPtr->setOpenedGuiBool(true);
+			uiPtr->setFirstMenuSet(false);
+			uiPtr->setMenu(0);
+
+			gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->setLockedControls(false);
+			gamePtr->setCursorInvisible(true);
+		}
 	}
 
 	virtual void in_command_respawn(Packet* rec, Uint8 conid)
