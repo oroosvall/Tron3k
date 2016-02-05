@@ -1949,3 +1949,13 @@ void Game::clearAllPlayerKD()
 			playerList[c]->clearKD();
 	}
 }
+
+void Game::setCursorInvisible(bool invisible)
+{
+	cursorInvisible = invisible;
+}
+
+bool Game::getCursorInvisible()
+{
+	return cursorInvisible;
+}

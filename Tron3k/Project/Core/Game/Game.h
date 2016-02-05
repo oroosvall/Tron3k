@@ -152,6 +152,8 @@ private:
 	Physics* physics;
 	int localPlayerId = -1;
 
+	bool cursorInvisible;
+
 	void checkFootsteps(float dt);
 
 	void loadRoles();
@@ -324,6 +326,9 @@ public:
 	float lastDT = 0;
 
 	void clearAllPlayerKD();
+
+	void setCursorInvisible(bool invisible);
+	bool getCursorInvisible();
 };
 
 #endif
