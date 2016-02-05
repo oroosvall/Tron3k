@@ -1126,7 +1126,7 @@ void Game::handleWeaponFire(int conID, int teamId, int bulletId, WEAPON_TYPE wea
 		{
 			float xoff = glm::sin(k);
 			float yoff = glm::cos(k);
-			float r = (rand() % 100) / 3000.0f;
+			float r = (rand() % 100) / 4000.0f;
 			rightV *= xoff*r;
 			upV *= yoff*r;
 			glm::vec3 ndir = dir + upV + rightV;
@@ -1415,7 +1415,7 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 			Bullet* theBullet = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, bulletPosInArray);
 
 			p->hitByBullet(theBullet, hi.bt, hi.newHPtotal);
-			if (p->getHP() == 0)
+			if (p->getHP() == 0 && p->isAlive())
 			{
 				p->IdiedThisFrame();
 				if (playerList[hi.bulletPID] != nullptr)
@@ -1522,7 +1522,7 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 			break;
 		}
 
-		if (p->getHP() == 0)
+		if (p->getHP() == 0 && p->isAlive())
 		{
 			p->IdiedThisFrame();
 			if (playerList[hi.effectPID] != nullptr)
@@ -1873,7 +1873,7 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 			if (GetSoundActivated())
 				GetSound()->playExternalSound(SOUNDS::soundEffectClusterGrenade, parent->getPos().x, parent->getPos().y, parent->getPos().z);
 
-			addEffectToList(PID, parent->getTeam(), BID, EFFECT_TYPE::EXPLOSION, parent->getPos(), 5, 2.5f);
+			addEffectToList(PID, parent->getTeam(), BID, EFFECT_TYPE::EXPLOSION, parent->getPos(), 10, 2.5f);
 			break;
 		}
 		}
