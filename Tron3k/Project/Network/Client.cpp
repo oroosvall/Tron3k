@@ -14,11 +14,12 @@ Client::~Client()
 		delete package;
 }
 
-void Client::init(Console* console, int port, IpAddress addrs, bool record, bool playback)
+void Client::init(Console* console, UIManager* ui, int port, IpAddress addrs, bool record, bool playback)
 {
 	address = addrs;
 	PORT = port;
 	consolePtr = console;
+	uiPtr = ui;
 
 	package = new Packet();
 	*package << Uint8(NET_INDEX::FRAME);

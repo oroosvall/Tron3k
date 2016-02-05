@@ -159,10 +159,11 @@ Server::~Server()
 		delete package;
 }
 
-void Server::init(Console* console, int port, IpAddress addrs, bool record, bool playback)
+void Server::init(Console* console, UIManager* ui, int port, IpAddress addrs, bool record, bool playback)
 {
 	PORT = port;
 	consolePtr = console;
+	uiPtr = ui;
 
 	package = new Packet();
 	*package << Uint8(NET_INDEX::FRAME);
