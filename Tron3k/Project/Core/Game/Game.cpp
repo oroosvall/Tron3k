@@ -1461,6 +1461,9 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 		case EFFECT_TYPE::BATTERY_SLOW:
 			break;
 		case EFFECT_TYPE::HEALTHPACK:
+			if (GetSoundActivated())
+				GetSound()->playUserGeneratedSound(SOUNDS::soundEffectHP);
+
 			p->healing(25);
 			if (theEffect != nullptr)
 				removeEffect(EFFECT_TYPE::HEALTHPACK, effectPosInArray);
