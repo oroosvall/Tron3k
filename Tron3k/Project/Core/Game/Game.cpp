@@ -1441,8 +1441,13 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 	{
 		glm::vec3 pos = playerList[hi.playerHit]->getPos();
 		if (gameState != Gamestate::SERVER)
-			if (GetSoundActivated())
+		if (GetSoundActivated())
+		{
+			if (hi.et == EFFECT_TYPE::HEALTHPACK)
+				GetSound()->playExternalSound(SOUNDS::soundEffectHP, pos.x, pos.y, pos.z);
+			else
 				GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHit, pos.x, pos.y, pos.z);
+		}
 		int effectPosInArray = -1;
 		Effect* theEffect = getSpecificEffect(hi.effectPID, hi.effectID, hi.et, effectPosInArray);
 		if (theEffect != nullptr)
@@ -1478,6 +1483,7 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 			}
 		}
 		break;
+<<<<<<< HEAD
 		case EFFECT_TYPE::THERMITE_CLOUD:
 			break;
 		case EFFECT_TYPE::BATTERY_SLOW:
@@ -1494,6 +1500,18 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 		default:
 			break;
 		}
+=======
+	case EFFECT_TYPE::BATTERY_SLOW:
+		break;
+	case EFFECT_TYPE::HEALTHPACK:
+		p->healing(25);
+		if (theEffect != nullptr)
+			removeEffect(EFFECT_TYPE::HEALTHPACK, effectPosInArray);
+		break;
+	default:
+		break;		
+	}
+>>>>>>> origin/master
 
 		if (p->getHP() == 0)
 		{
