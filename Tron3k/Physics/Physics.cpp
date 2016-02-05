@@ -729,16 +729,10 @@ vec4 Physics::checkPlayerVEffectCollision(glm::vec3 playerPos, unsigned int eTyp
 {
 	glm::vec4 collided;
 
-	AABBSingle box;
-	float rad = playerBox.getSphere().radius;
-	box.max = playerPos + vec3(rad, rad, rad);
-	box.min = playerPos - vec3(rad, rad, rad);
-	playerBox.setAABB(box);
-	Sphere sphere;
-	sphere.pos = playerPos;
-	sphere.radius = rad;
-	playerBox.setSphere(sphere);
 	playerBox.setPos(playerPos);
+	playerBox.setWorldSize();
+	AABBSingle box = playerBox.getAABB();
+	Sphere sphere = playerBox.getSphere();
 
 
 	//THIS ALL NEEDS TO CHANGE
@@ -747,18 +741,18 @@ vec4 Physics::checkPlayerVEffectCollision(glm::vec3 playerPos, unsigned int eTyp
 	{
 		if (effectBoxes[i]->getEID() == eid && effectBoxes[i]->getEType() == eType)
 		{
-			if (checkAABBvAABBCollision(playerBox.getAABB(), effectBoxes[i]->getAABB()))
+			if (checkAABBvAABBCollision(box, effectBoxes[i]->getAABB()))
 			{
 
 				if (effectBoxes[i]->getEType() == eType)
 				{
 					if (effectBoxes[i]->getEType() == 0)//Lightwall, aka OBB
 					{
-						collided = checkSpherevOBBlwCollision(playerBox.getSphere(), effectBoxes[i]->getOBB());
+						collided = checkSpherevOBBlwCollision(sphere, effectBoxes[i]->getOBB());
 					}
 					else if (effectBoxes[i]->getEType() == 1)//ThunderDome aka sphere
 					{
-						collided = checkSpherevSpheretdCollision(playerBox.getSphere(), effectBoxes[i]->getSphere());
+						collided = checkSpherevSpheretdCollision(sphere, effectBoxes[i]->getSphere());
 					}
 					else if (effectBoxes[i]->getEType() > 9)//False box, no collision
 					{
@@ -766,7 +760,7 @@ vec4 Physics::checkPlayerVEffectCollision(glm::vec3 playerPos, unsigned int eTyp
 					}
 					else //evrything else is a sphere, if not, not my goddamn problem
 					{
-						collided = checkSpherevSphereCollision(playerBox.getSphere(), effectBoxes[i]->getSphere());
+						collided = checkSpherevSphereCollision(sphere, effectBoxes[i]->getSphere());
 					}
 				}
 			}
@@ -1003,14 +997,14 @@ void Physics::receiveEffectBox(std::vector<float> eBox, unsigned int etype, int 
 
 		vec3 n = normalize(cross(up, fwd));
 
-		obbl.corners[0] = glm::vec4(pos1.x - 0.2f * n.x, pos.y - eBox[3], pos1.z + 0.2f * n.z, 1.0f);
-		obbl.corners[1] = glm::vec4(pos1.x + 0.2f * n.x, pos.y - eBox[3], pos1.z + 0.2f * n.z, 1.0f);
-		obbl.corners[2] = glm::vec4(pos1.x - 0.2f * n.x, pos.y + eBox[3], pos1.z + 0.2f * n.z, 1.0f);
-		obbl.corners[3] = glm::vec4(pos1.x + 0.2f * n.x, pos.y + eBox[3], pos1.z + 0.2f * n.z, 1.0f);
-		obbl.corners[4] = glm::vec4(pos2.x - 0.2f * n.x, pos.y + eBox[3], pos2.z - 0.2f * n.z, 1.0f);
-		obbl.corners[5] = glm::vec4(pos2.x + 0.2f * n.x, pos.y + eBox[3], pos2.z - 0.2f * n.z, 1.0f);
-		obbl.corners[6] = glm::vec4(pos2.x - 0.2f * n.x, pos.y - eBox[3], pos2.z - 0.2f * n.z, 1.0f);
-		obbl.corners[7] = glm::vec4(pos2.x + 0.2f * n.x, pos.y - eBox[3], pos2.z - 0.2f * n.z, 1.0f);
+		obbl.corners[0] = glm::vec4(pos1.x - 0.25f * n.x, pos.y - eBox[3], pos1.z + 0.25f * n.z, 1.0f);
+		obbl.corners[1] = glm::vec4(pos1.x + 0.25f * n.x, pos.y - eBox[3], pos1.z + 0.25f * n.z, 1.0f);
+		obbl.corners[2] = glm::vec4(pos1.x - 0.25f * n.x, pos.y + eBox[3], pos1.z + 0.25f * n.z, 1.0f);
+		obbl.corners[3] = glm::vec4(pos1.x + 0.25f * n.x, pos.y + eBox[3], pos1.z + 0.25f * n.z, 1.0f);
+		obbl.corners[4] = glm::vec4(pos2.x - 0.25f * n.x, pos.y + eBox[3], pos2.z - 0.25f * n.z, 1.0f);
+		obbl.corners[5] = glm::vec4(pos2.x + 0.25f * n.x, pos.y + eBox[3], pos2.z - 0.25f * n.z, 1.0f);
+		obbl.corners[6] = glm::vec4(pos2.x - 0.25f * n.x, pos.y - eBox[3], pos2.z - 0.25f * n.z, 1.0f);
+		obbl.corners[7] = glm::vec4(pos2.x + 0.25f * n.x, pos.y - eBox[3], pos2.z - 0.25f * n.z, 1.0f);
 
 		/*float angle;
 
