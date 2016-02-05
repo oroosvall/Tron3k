@@ -1483,24 +1483,6 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 			}
 		}
 		break;
-<<<<<<< HEAD
-		case EFFECT_TYPE::THERMITE_CLOUD:
-			break;
-		case EFFECT_TYPE::BATTERY_SLOW:
-			break;
-		case EFFECT_TYPE::HEALTHPACK:
-			p->healing(25);
-			if (theEffect != nullptr)
-				removeEffect(EFFECT_TYPE::HEALTHPACK, effectPosInArray);
-			if (GetSoundActivated())
-			{
-				GetSound()->playExternalSound(SOUNDS::soundEffectHP, pos.x, pos.y, pos.z);
-			}
-			break;
-		default:
-			break;
-		}
-=======
 	case EFFECT_TYPE::BATTERY_SLOW:
 		break;
 	case EFFECT_TYPE::HEALTHPACK:
@@ -1511,7 +1493,6 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 	default:
 		break;		
 	}
->>>>>>> origin/master
 
 		if (p->getHP() == 0)
 		{
