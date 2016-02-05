@@ -1305,6 +1305,7 @@ void Game::addEffectToList(int conID, int teamId, int effectId, EFFECT_TYPE et, 
 		break;
 	case EFFECT_TYPE::THERMITE_CLOUD:
 		e = new ThermiteCloud();
+		break;
 	case EFFECT_TYPE::HEALTHPACK:
 		e = new HealthPack();
 		break;
