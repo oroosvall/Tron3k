@@ -10,11 +10,25 @@ Melee::~Melee()
 
 }
 
+bool Melee::shoot()
+{
+	bool ableToShoot = false;
+
+	if (firingSpeedCurrentDelay < FLT_EPSILON)
+	{
+		firingSpeedCurrentDelay = firingSpeed;
+		ableToShoot = true;
+	}
+	
+
+	return ableToShoot;
+}
+
 void Melee::init()
 {
 	weaponType = WEAPON_TYPE::MELEE;
 
-	maxClipSize = INT_MAX;
+	maxClipSize = 1;
 	currentClipAmmo = maxClipSize;
 
 	currentBulletId = 0;
@@ -29,6 +43,5 @@ void Melee::init()
 int Melee::update(float deltaTime)
 {
 	countDownFiringSpeed(deltaTime);
-	countDownReloadTimer(deltaTime);
 	return 0;
 }
