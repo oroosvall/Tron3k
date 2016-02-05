@@ -622,8 +622,6 @@ void Game::checkPlayerVEffectCollision()
 								collNormals = physics->checkPlayerVEffectCollision(playerList[j]->getPos(), t, eid);
 								if (collNormals != vec4(0, 0, 0, 0))
 								{
-									if (t == EFFECT_TYPE::HEALTHPACK)
-										int debug = 1;
 									effects[t][i]->thisPlayerHit(j);
 									EffectHitPlayerInfo hi;
 									hi.playerHit = j;
@@ -1433,6 +1431,8 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 		theEffect->setPos(hi.hitPos);
 		updateEffectBox(theEffect);
 	}
+
+	p->hitByEffect(theEffect, hi.newHPtotal);
 	
 	switch (hi.et)
 	{
@@ -1472,7 +1472,6 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 		break;		
 	}
 
-	p->hitByEffect(theEffect, hi.newHPtotal);
 	if (p->getHP() == 0)
 	{
 		if (playerList[hi.effectPID] != nullptr)
