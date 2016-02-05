@@ -606,7 +606,7 @@ public:
 		}
 		//Adds player to the game in chosen team. Both clients and server
 		gamePtr->addPlayerToTeam(p_conID, team);
-		if (conID == getConId())
+		if (p_conID == getConId())
 		{
 			uiPtr->setFirstMenuSet(false);
 			uiPtr->setMenu(2);
