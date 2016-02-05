@@ -1,6 +1,7 @@
 #ifndef TOPOLOGY_H
 #define TOPOLOGY_H
 
+#include "../Core/ui/UIManager.h"
 #include "Connection.h"
 #include "../Core/Game/Game.h"
 #include "../Core/Console.h"
@@ -28,6 +29,7 @@ protected:
 
 	Game* gamePtr;
 	Console* consolePtr;
+	UIManager* uiPtr;
 
 	virtual void disconnected(Uint8 _conID) {};
 public:
@@ -38,7 +40,7 @@ public:
 	//--------
 
 	Topology() {};
-	virtual void init(Console* console, int port, IpAddress addrs, bool record = false, bool playback = false) = 0;
+	virtual void init(Console* console, UIManager* ui, int port, IpAddress addrs, bool record = false, bool playback = false) = 0;
 	~Topology()
 	{
 		if (package)
@@ -558,8 +560,8 @@ public:
 				*/
 			//}
 
-			//Check with the game mode
-			if (gamePtr->getPlayersOnTeam(team) + 1 < gamePtr->getMaxTeamSize())
+			
+			if (gamePtr->getPlayersOnTeam(team) < gamePtr->getMaxTeamSize())
 			{
 
 			}
@@ -572,7 +574,7 @@ public:
 				return;
 			}
 			Gamemode* gm = gamePtr->getGameMode();
-			if (!gm->allowTeamChange())
+			if (!gm->allowTeamChange()) //Check with the game mode
 			{
 				Packet* out = new Packet();
 				*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::TEAM_CHANGE) << p_conID << Uint8(9);
@@ -604,6 +606,11 @@ public:
 		}
 		//Adds player to the game in chosen team. Both clients and server
 		gamePtr->addPlayerToTeam(p_conID, team);
+		if (p_conID == getConId())
+		{
+			uiPtr->setFirstMenuSet(false);
+			uiPtr->setMenu(2);
+		}
 	}
 
 	virtual void in_command_role_change(Packet* rec, Uint8 conID)

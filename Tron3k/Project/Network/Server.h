@@ -12,7 +12,7 @@ private:
 
 	void disconnected(Uint8 _conID);
 public:
-	void init(Console* console, int port, IpAddress addrs, bool record = false, bool playback = false);
+	void init(Console* console, UIManager* ui, int port, IpAddress addrs, bool record = false, bool playback = false);
 	~Server();
 
 	//Core->Topology com

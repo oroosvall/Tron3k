@@ -165,30 +165,30 @@ void Core::update(float dt)
 				CameraInput::getCam()->setPlaybackSpeed(1.0f);
 		}
 	}
-	//if (game)
-	//{
-	//	if (console.getInChatMode() == false)
-	//	{
-	//		if (i->justPressed(GLFW_KEY_7))
-	//		{
-	//			playbackSpeed *= 2.0f;
-	//			if (playbackSpeed > 16.0f)
-	//				playbackSpeed = 16.0f;
-	//			CameraInput* cam = CameraInput::getCam();
-	//			cam->setPlaybackSpeed(playbackSpeed);
-	//		}
-	//		if (i->justPressed(GLFW_KEY_6))
-	//		{
-	//			playbackSpeed *= 0.5f;
-	//			if (playbackSpeed < 0.03125f)
-	//				playbackSpeed = 0.03125f;
-	//			CameraInput* cam = CameraInput::getCam();
-	//			cam->setPlaybackSpeed(playbackSpeed);
-	//		}
-	//	}
-	//}
+	if (game)
+	{
+		if (console.getInChatMode() == false)
+		{
+			if (i->justPressed(GLFW_KEY_7))
+			{
+				playbackSpeed *= 2.0f;
+				if (playbackSpeed > 16.0f)
+					playbackSpeed = 16.0f;
+				CameraInput* cam = CameraInput::getCam();
+				cam->setPlaybackSpeed(playbackSpeed);
+			}
+			if (i->justPressed(GLFW_KEY_6))
+			{
+				playbackSpeed *= 0.5f;
+				if (playbackSpeed < 0.03125f)
+					playbackSpeed = 0.03125f;
+				CameraInput* cam = CameraInput::getCam();
+				cam->setPlaybackSpeed(playbackSpeed);
+			}
+		}
+	}
 
-	//dt *= playbackSpeed;
+	dt *= playbackSpeed;
 
 	switch (current)
 	{
@@ -479,7 +479,7 @@ void Core::upClient(float dt)
 		if (top)
 			delete top;
 		top = new Client();
-		top->init(&console, _port, _addrs, client_record, client_playback);
+		top->init(&console, uiManager, _port, _addrs, client_record, client_playback);
 
 		//attempt to connect
 		for (int n = 0; n < 3; n++)
@@ -645,7 +645,7 @@ void Core::upServer(float dt)
 		if (top)
 			delete top;
 		top = new Server();
-		top->init(&console, _port, _addrs);
+		top->init(&console, uiManager, _port, _addrs);
 		_name = "Server";
 
 		//bind port
@@ -1077,12 +1077,9 @@ void Core::clientHandleCmds(std::string com)
 				int team = stoi(token);
 				top->command_team_change(top->getConId(), team);
 				console.printMsg("Change team request sent to server", "System", 'S');
-
-				uiManager->setFirstMenuSet(false);
-				uiManager->setMenu(2);
 			}
 			else
-				console.printMsg("Invalid team. Use /team <1/2/3>", "System", 'S');
+				console.printMsg("Invalid team. Use /team <0/1/2>", "System", 'S');
 		}
 		else if (token == "/players")
 		{

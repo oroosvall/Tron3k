@@ -138,7 +138,7 @@ private:
 	std::vector<int> teamOne;
 	std::vector<int> teamTwo;
 
-	int maxTeamSize = 5;
+	int maxTeamSize = 1;
 	int maxSpec = 5;
 	void removeConIDfromTeams(int conID);
 
@@ -153,6 +153,8 @@ private:
 	int localPlayerId = -1;
 
 	bool cursorInvisible;
+
+	int musicVolumeForMenu = 30;
 
 	void checkFootsteps(float dt);
 

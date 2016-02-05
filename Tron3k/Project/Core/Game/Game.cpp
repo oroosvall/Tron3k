@@ -136,10 +136,11 @@ vector<int>* Game::getTeamConIds(int team)
 void Game::update(float dt)
 {
 	//some things need to be done before movement, some after
-	//if (GetSound()->getVolumeMusic() > 0 &&  GetSound()->getFading() && GetSoundActivated())
-	//{
-	//	GetSound()->setVolumeMusic(GetSound()->getVolumeMusic() - 1);
-	//}
+	if (musicVolumeForMenu > 0 &&  GetSound()->getFading() && GetSoundActivated())
+	{
+		musicVolumeForMenu--;
+		GetSound()->setVolumeMusic(musicVolumeForMenu);
+	}
 
 	if(gameState != SERVER)
 		console->setInChatMode(playerList[localPlayerId]->getLockedControls());
@@ -575,6 +576,7 @@ void Game::checkPlayerVEffectCollision()
 			if (((LightwallEffect*)effects[EFFECT_TYPE::LIGHT_WALL][c])->getCollidable() || localPlayerId != pid)
 			{
 				collNormalWalls = physics->checkPlayerVEffectCollision(local->getPos(), EFFECT_TYPE::LIGHT_WALL, eid);
+				if(collNormalWalls != vec4(0,0,0,0))
 				playerList[localPlayerId]->addCollisionNormal(collNormalWalls);
 			}
 
@@ -585,6 +587,7 @@ void Game::checkPlayerVEffectCollision()
 			int eid = -1, pid = -1;
 			effects[EFFECT_TYPE::THUNDER_DOME][c]->getId(pid, eid);
 			collNormalDomes = physics->checkPlayerVEffectCollision(local->getPos(), EFFECT_TYPE::THUNDER_DOME, eid);
+			if (collNormalDomes != vec4(0, 0, 0, 0))
 			playerList[localPlayerId]->addCollisionNormal(collNormalDomes);
 			//this is to be changed, we need to calculate a proper normal for the dome
 
@@ -1392,12 +1395,16 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 				
 
 		int bulletPosInArray = -1;
+
 		Bullet* theBullet = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, bulletPosInArray);
-		if (theBullet != nullptr)
-			p->hitByBullet(theBullet, hi.newHPtotal);
+
+		p->hitByBullet(theBullet, hi.bt, hi.newHPtotal);
 		if (p->getHP() == 0)
 		{
-			console->printMsg(p->getName() + " was fragged by " + playerList[hi.bulletPID]->getName() + "!", "System", 'S');
+			if (playerList[hi.bulletPID] != nullptr)
+				console->printMsg(p->getName() + " was fragged by " + playerList[hi.bulletPID]->getName() + "!", "System", 'S');
+			else
+				console->printMsg(p->getName() + " was fragged by a quitter!", "System", 'S');
 			playerList[hi.bulletPID]->addKill();
 			p->addDeath();
 			addEffectToList(-1, p->getTeam(), effects[EFFECT_TYPE::HEALTHPACK].size(), EFFECT_TYPE::HEALTHPACK, p->getPos(), 0, 0.5f);

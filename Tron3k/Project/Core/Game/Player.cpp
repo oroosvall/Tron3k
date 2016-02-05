@@ -160,6 +160,9 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 
 		bool ceiling = false;
 		grounded = false;
+		int xDivs = 0;
+		int yDivs = 0;
+		int zDivs = 0;
 		for (int k = 0; k < collisionNormalSize; k++)
 		{
 			//push pos away and lower velocity using pendepth
@@ -175,18 +178,45 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 			}
 
 			// abslut value, if two collisions from the same angle they should not move us twice the distance
-			if (abs(posadjust.x) < abs(pendepth.x))
-				posadjust.x = pendepth.x;
-			if (posadjust.y * posadjust.y < pendepth.y * pendepth.y)
-				posadjust.y = pendepth.y;
+			
+			if (pendepth.x > 0.0f || pendepth.x < 0.0f)//abs(posadjust.x) < abs(pendepth.x))
+			{
+				posadjust.x += pendepth.x;
+				xDivs++;
+			}
+			if (pendepth.y > 0.0f || pendepth.y < 0.0f)
+			{
+				posadjust.y += pendepth.y;
+				yDivs++;
+			}
+			if (pendepth.z > 0.0f || pendepth.z < 0.0f)
+			{
+				posadjust.z += pendepth.z;
+				zDivs++;
+			}/*
+			if ((posadjust.y * posadjust.y) / k < pendepth.y * pendepth.y)
+				posadjust.y += pendepth.y;
 			if (abs(posadjust.z) < abs(pendepth.z))
-				posadjust.z = pendepth.z;
+				posadjust.z += pendepth.z;
+			*/
+			//posadjust += pendepth;
 		}
 
+		if (xDivs > 2)
+			posadjust.x /= xDivs;
+		if (yDivs > 2)
+			posadjust.y /= yDivs;
+		if (zDivs > 2)
+			posadjust.z /= zDivs;
+		/*posadjust = normalize(posadjust);// /= collisionNormalSize;
+		for (int k = 0; k < collisionNormalSize; k++)
+		{
+			posadjust *= collisionNormals[k].w;
+		}*/
 		// this is for air only since grounded will set the vel to 0 later
 		// the dt * 0.5 is supposed to remove almost all velocity in that dir
 		// while + posajust w/o  /dt  will remove it slower
-		posadjust = posadjust;// *0.99f;
+		posadjust = posadjust *0.99f;
 		vel += posadjust;// / dt * 0.5f;
 
 		if (ceiling)
@@ -806,31 +836,28 @@ void Player::shoot()
 	//Add a bullet recoil factor that is multiplied by a random number and smooth it out
 }
 
-void Player::hitByBullet(Bullet* b, int newHPtotal)
+void Player::hitByBullet(Bullet* b, BULLET_TYPE bt, int newHPtotal)
 {
 	/*
 	This is where we will extract additional modifiers from the Bullet, when applicable.
 	*/
-	if (b != nullptr)
+	if (newHPtotal == -1) //We are actually taking damage on the server now
 	{
-		if (newHPtotal == -1) //We are actually taking damage on the server now
+		if (!isDead)
 		{
-			if (!isDead)
-			{
-				int dmg = b->getDamage();
-				role.takeDamage(dmg);
-			}
+			int dmg = b->getDamage();
+			role.takeDamage(dmg);
 		}
-		else //We are on a client, and thus are only interested on our HP on the server
-		{
-			if (!isDead)
-				role.setHealth(newHPtotal);
-		}
+	}
+	else //We are on a client, and thus are only interested on our HP on the server
+	{
+		if (!isDead)
+			role.setHealth(newHPtotal);
+	}
 
-		if (b->getType() == BULLET_TYPE::HACKING_DART)
-		{
-			addModifier(MODIFIER_TYPE::HACKINGDARTMODIFIER);
-		}
+	if (bt == BULLET_TYPE::HACKING_DART)
+	{
+		addModifier(MODIFIER_TYPE::HACKINGDARTMODIFIER);
 	}
 }
 
