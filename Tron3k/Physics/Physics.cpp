@@ -404,7 +404,7 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb)
 
 		// if a valid intersection found
 		//plane intersection will always be closer than all other intersections on the obb
-		if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON)
+		if (t.w > 0)
 		{
 			return t;
 		}
@@ -416,6 +416,7 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb)
 	for (int n = 0; n < 12; n++)
 	{
 		t = obb->lines[n].sphere_intersects(pos, rad);
+		
 		if (obb->lines[n].line.y < -FLT_EPSILON || obb->lines[n].line.y > FLT_EPSILON)
 		{
 			if (t.w >= 0 - FLT_EPSILON)
@@ -438,8 +439,6 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb)
 				}
 		}
 	}
-
-
 	//if we found a line intersection it will always be closer
 	//than all the corner intersections
 	if (closest.w < FLT_MAX)
