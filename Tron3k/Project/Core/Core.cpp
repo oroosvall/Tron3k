@@ -1712,8 +1712,8 @@ void Core::inGameUIUpdate() //Ingame ui update
 	double y = (0.0);
 	//Get mouse position
 	i->getCursor(x, y);
-	double tX = (x / (double)winX) * 2 - 1.0; // (x/ResolutionX) * 2 - 1
-	double tY = (-y / (double)winY) * 2 + 1.0; // (y/ResolutionY) * 2 - 1
+	double tX = (x / (double)winX) * 2 - 1.0;
+	double tY = (-y / (double)winY) * 2 + 1.0;
 	
 	//uiManager->setText(getHp in string, 0); //HP
 	//uiManager->setText(getAmmo in string, 1); //Ammo
@@ -1726,7 +1726,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 	uiManager->inGameRender();
 
 	//***********************************************************//
-	//Lägg in så hover körs endast om esc rutan är igång.
+	//    Lägg in så hover körs endast om esc rutan är igång.    //
 	//***********************************************************//
 
 	if (i->justPressed(GLFW_MOUSE_BUTTON_LEFT))
