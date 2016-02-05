@@ -141,8 +141,8 @@ void InputBox::setText(std::string text)
 {
 	menuInputText += text;
 	outPutLength++;
-	ingameText = text;
-	uiRender->setTextObjectText(this->text, menuInputText);
+	ingameText = text; 
+	uiRender->setTextObjectText(this->text, menuInputText); //Den ska använda ingameText när det gäller ingame saker.
 }
 std::string InputBox::getText()
 {
