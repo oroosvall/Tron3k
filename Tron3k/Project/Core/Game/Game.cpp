@@ -1401,7 +1401,7 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 			Bullet* theBullet = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, bulletPosInArray);
 
 			p->hitByBullet(theBullet, hi.bt, hi.newHPtotal);
-			if (p->getHP() == 0 && !p->didIDieThisFrame()) //Not working
+			if (p->getHP() == 0)
 			{
 				p->IdiedThisFrame();
 				if (playerList[hi.bulletPID] != nullptr)
