@@ -203,7 +203,7 @@ public:
 
 	int roomID;
 
-	void clearKD() { kills = 0; deaths = 0; };
+	void clearKD() { kills = 0; deaths = 0; this->ZeroFrags(); };
 	int getKills() { return kills; };
 	int getDeaths() { return deaths; };
 	void addKill() { kills++; };
