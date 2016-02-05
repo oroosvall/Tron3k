@@ -155,7 +155,6 @@ public:
 
 	bool isLocal() { return isLocalPlayer; };
 	bool isAlive() { return !isDead; };
-	void kill() { isDead = true; };
 
 	Weapon* getPlayerCurrentWeapon();
 	void switchWpn(WEAPON_TYPE ws, int swapLoc);
