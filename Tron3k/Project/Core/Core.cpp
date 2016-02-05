@@ -114,7 +114,7 @@ void Core::update(float dt)
 	}
 
 	glfwPollEvents();
-	
+
 	bool otherListeners = true;
 	if ((menuNameKeyListener || menuIpKeyListener) == true)
 		otherListeners = false;
@@ -131,7 +131,7 @@ void Core::update(float dt)
 		if (cursorBlink > 0.5f)
 		{
 			renderPipe->setChatTypeMessage(console.pollLatest() + "|");
-			if(cursorBlink > 1.0f)
+			if (cursorBlink > 1.0f)
 				cursorBlink = 0.0f;
 		}
 		else
@@ -1035,6 +1035,7 @@ void Core::roamHandleCmds(std::string com)
 				console.printMsg("/rs  abb		RENDER_ABB ", "", ' ');
 				console.printMsg("/rs  obb		RENDER_OBB ", "", ' ');
 				console.printMsg("/rs  debug	RENDER_DEBUG_TEXT ", "", ' ');
+				console.printMsg("/rs  gui		RENDER_GUI ", "", ' ');
 			}
 			else if (token == "portal")
 				renderPipe->setRenderFlag(PORTAL_CULLING);
@@ -1048,6 +1049,8 @@ void Core::roamHandleCmds(std::string com)
 				renderPipe->setRenderFlag(RENDER_OBB);
 			else if(token == "debug")
 				renderPipe->setRenderFlag(RENDER_DEBUG_TEXT);
+			else if (token == "gui")
+				renderPipe->setRenderFlag(RENDER_GUI);
 		}
 		else if (token == "/disconnect")
 		{
@@ -1199,6 +1202,7 @@ void Core::clientHandleCmds(std::string com)
 				console.printMsg("/rs  abb		RENDER_ABB ", "", ' ');
 				console.printMsg("/rs  obb		RENDER_OBB ", "", ' ');
 				console.printMsg("/rs  debug	RENDER_DEBUG_TEXT ", "", ' ');
+				console.printMsg("/rs  gui		RENDER_GUI ", "", ' ');
 			}
 			else if (token == "portal")
 				renderPipe->setRenderFlag(PORTAL_CULLING);
@@ -1212,6 +1216,8 @@ void Core::clientHandleCmds(std::string com)
 				renderPipe->setRenderFlag(RENDER_OBB);
 			else if (token == "debug")
 				renderPipe->setRenderFlag(RENDER_DEBUG_TEXT);
+			else if (token == "gui")
+				renderPipe->setRenderFlag(RENDER_GUI);
 		}
 	}
 }
@@ -1458,13 +1464,7 @@ void Core::renderWorld(float dt)
 					}
 
 					//Take damage effect
-					if (game->spectateID == i)
-					{
-						if (lastHP_blurreffect > p->getHP())
-							renderPipe->startTakeDamageEffect(6, 0.6f);
-						lastHP_blurreffect = p->getHP();
-					}
-					else
+					if (game->spectateID == -1)
 					{
 						if (p->isLocal())
 						{
@@ -1473,6 +1473,13 @@ void Core::renderWorld(float dt)
 							lastHP_blurreffect = p->getHP();
 						}
 					}
+					else if (game->spectateID == i)
+					{
+						if (lastHP_blurreffect > p->getHP())
+							renderPipe->startTakeDamageEffect(6, 0.6f);
+						lastHP_blurreffect = p->getHP();
+					}
+				
 
 					//static intense based on health
 					float hpval = float(p->getHP()) / 130.0f;

@@ -11,6 +11,7 @@ void ContentManager::init()
 	f_render_chunks = true;
 	f_render_abb = false;
 	f_render_obb = false;
+	f_render_gui = true;
 
 	tm.init();
 
