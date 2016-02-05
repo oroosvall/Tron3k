@@ -726,10 +726,6 @@ void Game::checkPlayerVWorldCollision(float dt)
 		//if we collided with something
 		if (cNorms.size() > 0)
 		{
-			if (cNorms.size() > 2)
-				int debug = 3;
-			if (cNorms.size() > 3)
-				int debuf = 4;
 			playerList[localPlayerId]->setCollisionInfo(cNorms);
 
 			//Rest is handled by player

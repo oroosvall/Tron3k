@@ -152,10 +152,6 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 	int * collS = &collisionNormalSize;
 	if (collisionNormalSize > 0)
 	{
-		if (collisionNormalSize > 1)
-			int nigger = 2;
-		if (collisionNormalSize > 2)
-			int fuck = 1;
 		collided = true;
 
 		bool ceiling = false;
