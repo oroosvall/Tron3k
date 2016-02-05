@@ -138,7 +138,7 @@ public:
 	void setAnimState_t_p(AnimationState set) { anim_third_framePeak = set; };
 
 	std::string getName() { return name; };
-	glm::vec3 getPos() { return pos; };
+	glm::vec3 getPos() { if (length(pos) > 0.0f) return pos; return vec3(0.0f); };
 	void setPos(glm::vec3 pos) 
 	{ 
 		this->pos = pos;
