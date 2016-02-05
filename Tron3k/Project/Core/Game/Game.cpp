@@ -1390,7 +1390,7 @@ Bullet* Game::getSpecificBullet(int PID, int BID, BULLET_TYPE bt, int &posInBull
 int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 {
 	Player* p = playerList[hi.playerHit];
-	if (p->didIDieThisFrame())
+	if (!p->didIDieThisFrame())
 	{
 		if (hi.bt != BULLET_TYPE::CLUSTERLING)	//Any bullets that should not detonate on contact
 		{
@@ -1448,7 +1448,7 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 {
 	Player* p = playerList[hi.playerHit];
-	if (p->didIDieThisFrame())
+	if (!p->didIDieThisFrame())
 	{
 		glm::vec3 pos = playerList[hi.playerHit]->getPos();
 		if (gameState != Gamestate::SERVER)
