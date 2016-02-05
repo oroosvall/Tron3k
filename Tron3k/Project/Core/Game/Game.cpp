@@ -136,7 +136,7 @@ vector<int>* Game::getTeamConIds(int team)
 void Game::update(float dt)
 {
 	//some things need to be done before movement, some after
-	if (musicVolumeForMenu > 0 &&  GetSound()->getFading() && GetSoundActivated())
+	if (GetSoundActivated() && musicVolumeForMenu > 0 &&  GetSound()->getFading())
 	{
 		musicVolumeForMenu--;
 		GetSound()->setVolumeMusic(musicVolumeForMenu);
@@ -1469,8 +1469,7 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 			removeEffect(EFFECT_TYPE::HEALTHPACK, effectPosInArray);
 		break;
 	default:
-		break;
-		
+		break;		
 	}
 
 	p->hitByEffect(theEffect, hi.newHPtotal);
@@ -1961,4 +1960,14 @@ void Game::clearAllPlayerKD()
 		if (playerList[c] != nullptr)
 			playerList[c]->clearKD();
 	}
+}
+
+void Game::setCursorInvisible(bool invisible)
+{
+	cursorInvisible = invisible;
+}
+
+bool Game::getCursorInvisible()
+{
+	return cursorInvisible;
 }

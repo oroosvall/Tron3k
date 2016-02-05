@@ -501,8 +501,10 @@ vec4 Physics::getSpherevOBBlwNorms(vec3 pos, float rad, OBB* obb)
 vec3 Physics::checkPlayerVPlayerCollision(vec3 playerPos1, vec3 playerPos2)
 {
 	playerBox.setPos(playerPos1);
+	playerBox.setPlayerSize();
 	PlayerMesh p2;
 	p2.setPos(playerPos2);
+	p2.setPlayerSize(playerBox.getPlayerSize());
 	//p2.setSize(playerBox.getSize());
 
 	bool ret = checkAABBvAABBCollision(playerBox.getAABB(), p2.getAABB());
@@ -777,18 +779,14 @@ vec4 Physics::checkPlayerVEffectCollision(glm::vec3 playerPos, unsigned int eTyp
 
 bool Physics::checkPlayerVCaptureCollision(vec3 playerPos, int capID)
 {
+	playerBox.setPos(playerPos);
+	playerBox.setWorldSize();
+	AABBSingle box = playerBox.getAABB();
+
 	for (int i = 0; i < captureBoxes.size(); i++)
 	{
 		if (captureBoxes[i].getCapID() == capID)
 		{
-			AABBSingle box;
-			box.pos = playerPos;
-			box.max = playerPos + playerBox.getSphere().radius;
-			box.min = playerPos - playerBox.getSphere().radius;
-			playerBox.setAABB(box);
-
-			playerBox.setPos(playerPos);
-
 			if (checkAABBvAABBCollision(playerBox.getAABB(), captureBoxes[i].getAABB()))
 			{
 				int size = captureBoxes[i].getSubAABBs().size();
@@ -807,21 +805,17 @@ glm::vec4 Physics::checkBulletVEffectCollision(glm::vec3 bulletPos, vec3 bulletV
 {
 	glm::vec4 collided;
 
-	AABBSingle box;
+	
 	vec3 bPos = bulletPos - (bulletVel * bulletDir * dt);
-	float rad = bulletBox.getSphere().radius;
-	box.max = bPos + vec3(rad, rad, rad);
-	box.min = bPos - vec3(rad, rad, rad);
-	bulletBox.setAABB(box);
-	Sphere sphere;
-	sphere.pos = bPos;
-	sphere.radius = rad;
-	bulletBox.setSphere(sphere);
-
 	bulletBox.setPos(bPos);
+
+	AABBSingle box = bulletBox.getAABB();
+	Sphere sphere = bulletBox.getSphere();
+
 	vec4 t;
 	vec3 collisionNormal = vec3(0, 0, 0);
 
+	float rad = sphere.radius;
 	float dtbyI = 0.0f;
 	vec3 deltaDir = vec3(0);
 	vec3 dirTimesVel = vec3(0);
@@ -834,30 +828,26 @@ glm::vec4 Physics::checkBulletVEffectCollision(glm::vec3 bulletPos, vec3 bulletV
 	for (int k = 0; k < 4; k++)
 	{
 		bPos += dirTimesVel;
-		box.max = bPos + vec3(rad, rad, rad);
-		box.min = bPos - vec3(rad, rad, rad);
-		bulletBox.setAABB(box);
-		sphere.pos = bPos;
-		sphere.radius = rad;
-		bulletBox.setSphere(sphere);
 		bulletBox.setPos(bPos);
+		box = bulletBox.getAABB();
+		sphere = bulletBox.getSphere();
 
 		for (int i = 0; i < effectBoxes.size(); i++)
 		{
 			if (effectBoxes[i]->getEID() == eid && effectBoxes[i]->getEType() == eType)
 			{
-				if (checkAABBvAABBCollision(bulletBox.getAABB(), effectBoxes[i]->getAABB()))
+				if (checkAABBvAABBCollision(box, effectBoxes[i]->getAABB()))
 				{
 
 					if (effectBoxes[i]->getEType() == eType)
 					{
 						if (effectBoxes[i]->getEType() == 0)//Lightwall, aka OBB
 						{
-							collided = checkSpherevOBBlwCollision(bulletBox.getSphere(), effectBoxes[i]->getOBB());
+							collided = checkSpherevOBBlwCollision(sphere, effectBoxes[i]->getOBB());
 						}
 						else if (effectBoxes[i]->getEType() == 1)//ThunderDome aka sphere
 						{
-							collided = checkSpherevSpheretdCollision(bulletBox.getSphere(), effectBoxes[i]->getSphere());
+							collided = checkSpherevSpheretdCollision(sphere, effectBoxes[i]->getSphere());
 						}
 						else if (effectBoxes[i]->getEType() > 8)//False box, no collision
 						{
@@ -865,7 +855,7 @@ glm::vec4 Physics::checkBulletVEffectCollision(glm::vec3 bulletPos, vec3 bulletV
 						}
 						else //evrything else is a sphere, if not, not my goddamn problem
 						{
-							collided = checkSpherevSphereCollision(bulletBox.getSphere(), effectBoxes[i]->getSphere());
+							collided = checkSpherevSphereCollision(sphere, effectBoxes[i]->getSphere());
 						}
 
 						if (eType == 0)

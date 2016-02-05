@@ -16,10 +16,11 @@ void Core::init()
 
 	//glfwWindowHint(GLFW_DECORATED, false); borderless toggle
 
+	cursorInvisible = false;
+
 	win = nullptr;
 	renderPipe = nullptr;
 
-	cursorVisible = false;
 	recreate = false;
 	fullscreen = false;
 	winX = winY = 800;
@@ -98,9 +99,9 @@ void Core::update(float dt)
 
 	bool chatMode = console.getInChatMode();
 
-	if (cursorVisible != chatMode)
+	if (cursorInvisible != chatMode)
 	{
-		cursorVisible = chatMode;
+		cursorInvisible = chatMode;
 		if (chatMode)
 			glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 		else
@@ -121,7 +122,7 @@ void Core::update(float dt)
 	else
 		menuNameKeyInputUpdate(); //Updates to check input for the name window
 
-	if (cursorVisible && renderPipe)
+	if (cursorInvisible && renderPipe)
 	{
 		if (cursorBlink > 0.5f)
 		{
@@ -164,30 +165,30 @@ void Core::update(float dt)
 				CameraInput::getCam()->setPlaybackSpeed(1.0f);
 		}
 	}
-	if (game)
-	{
-		if (console.getInChatMode() == false)
-		{
-			if (i->justPressed(GLFW_KEY_7))
-			{
-				playbackSpeed *= 2.0f;
-				if (playbackSpeed > 16.0f)
-					playbackSpeed = 16.0f;
-				CameraInput* cam = CameraInput::getCam();
-				cam->setPlaybackSpeed(playbackSpeed);
-			}
-			if (i->justPressed(GLFW_KEY_6))
-			{
-				playbackSpeed *= 0.5f;
-				if (playbackSpeed < 0.03125f)
-					playbackSpeed = 0.03125f;
-				CameraInput* cam = CameraInput::getCam();
-				cam->setPlaybackSpeed(playbackSpeed);
-			}
-		}
-	}
-
-	dt *= playbackSpeed;
+	//if (game)
+	//{
+	//	if (console.getInChatMode() == false)
+	//	{
+	//		if (i->justPressed(GLFW_KEY_7))
+	//		{
+	//			playbackSpeed *= 2.0f;
+	//			if (playbackSpeed > 16.0f)
+	//				playbackSpeed = 16.0f;
+	//			CameraInput* cam = CameraInput::getCam();
+	//			cam->setPlaybackSpeed(playbackSpeed);
+	//		}
+	//		if (i->justPressed(GLFW_KEY_6))
+	//		{
+	//			playbackSpeed *= 0.5f;
+	//			if (playbackSpeed < 0.03125f)
+	//				playbackSpeed = 0.03125f;
+	//			CameraInput* cam = CameraInput::getCam();
+	//			cam->setPlaybackSpeed(playbackSpeed);
+	//		}
+	//	}
+	//}
+	//
+	//dt *= playbackSpeed;
 
 	switch (current)
 	{
@@ -272,7 +273,7 @@ void Core::upMenu(float dt)
 			uiManager->setMenu(1);
 			subState = 0;
 
-			cursorVisible = false;
+			cursorInvisible = false;
 			break;
 		case 1: //Multiplayer -> multiplayer window
 			uiManager->setMenu(1);
@@ -306,7 +307,6 @@ void Core::upMenu(float dt)
 			client_record = false;
 			client_playback = false;
 			subState = 0; 
-			cursorVisible = false;
 			break;
 		}
 		case 7: //Back
@@ -530,6 +530,7 @@ void Core::upClient(float dt)
 			me->setName(_name);
 			game->getPlayer(game->GetLocalPlayerId())->setLockedControls(true);
 			showTeamSelect();
+			game->setCursorInvisible(false);
 			subState++;
 		}
 		break;
@@ -987,7 +988,9 @@ void Core::roamHandleCmds(std::string com)
 				uiManager->setMenu(0);
 
 				game->getPlayer(game->GetLocalPlayerId())->setLockedControls(false);
-				cursorVisible = true;
+				cursorInvisible = true;
+				if (game != nullptr)
+					game->setCursorInvisible(cursorInvisible);
 			}
 			else 
 				console.printMsg("Invalid role. Use /role <1-5>", "System", 'S');
@@ -1103,13 +1106,6 @@ void Core::clientHandleCmds(std::string com)
 			{
 				int role = stoi(token);
 				top->command_role_change(top->getConId(), role);
-
-				uiManager->setOpenedGuiBool(true);
-				uiManager->setFirstMenuSet(false);
-				uiManager->setMenu(0);
-
-				game->getPlayer(game->GetLocalPlayerId())->setLockedControls(false);
-				cursorVisible = true;
 			}
 			else
 				console.printMsg("Invalid role. Use /role <1-5>", "System", 'S');
@@ -1435,6 +1431,7 @@ void Core::renderWorld(float dt)
 					light.Direction = vec3(0.0f);//p->getDir();
 					light.Color = dgColor;
 					light.DiffuseIntensity = 0.2f;
+					light.AmbientIntensity = 0.0f;
 					renderPipe->addLight(&light, p->roomID);
 
 					//If first person render
@@ -1723,7 +1720,8 @@ void Core::inGameUIUpdate() //Ingame ui update
 		case 40: //Continue
 			uiManager->backToGui();
 			game->getPlayer(game->GetLocalPlayerId())->setLockedControls(true);
-			cursorVisible = false;
+			cursorInvisible = false;
+			game->setCursorInvisible(cursorInvisible);
 			break;
 		case 41: //Settings
 			break;

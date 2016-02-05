@@ -152,6 +152,8 @@ private:
 	Physics* physics;
 	int localPlayerId = -1;
 
+	bool cursorInvisible;
+
 	int musicVolumeForMenu = 30;
 
 	void checkFootsteps(float dt);
@@ -326,6 +328,9 @@ public:
 	float lastDT = 0;
 
 	void clearAllPlayerKD();
+
+	void setCursorInvisible(bool invisible);
+	bool getCursorInvisible();
 };
 
 #endif

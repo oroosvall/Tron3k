@@ -80,6 +80,9 @@ void UIManager::init(Console* console, int winX, int winY)
 	//Port input
 	texturePaths.push_back("GameFiles/Textures/UITextures/port_field.png"); //16
 
+	//Title
+	texturePaths.push_back("GameFiles/Textures/UITextures/title.png"); //17
+
 	loadInTexture();
 
 	//Open tthe first groups file

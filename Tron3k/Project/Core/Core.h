@@ -49,9 +49,10 @@ private:
 	int* namePlates;
 	float cursorBlink;
 
+	int cursorInvisible;
+
 	// window
 	GLFWwindow* win;
-	bool cursorVisible;
 	bool recreate;
 	bool fullscreen;
 	bool serverRender;
