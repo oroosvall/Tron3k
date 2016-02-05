@@ -2145,6 +2145,8 @@ void Core::menuNameKeyInputUpdate()
 			if (nameNrOfKeys < 12)
 			{
 				char ch = i->keyToChar(validKeyboardInputs2[c]);
+				if (!i->getKeyInfo(GLFW_KEY_LEFT_SHIFT))
+					ch = tolower(ch);
 				std::string fromChar = "";
 				fromChar += ch;
 
