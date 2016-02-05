@@ -1395,12 +1395,16 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 				
 
 		int bulletPosInArray = -1;
+
 		Bullet* theBullet = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, bulletPosInArray);
-		if (theBullet != nullptr)
-			p->hitByBullet(theBullet, hi.newHPtotal);
+
+		p->hitByBullet(theBullet, hi.bt, hi.newHPtotal);
 		if (p->getHP() == 0)
 		{
-			console->printMsg(p->getName() + " was fragged by " + playerList[hi.bulletPID]->getName() + "!", "System", 'S');
+			if (playerList[hi.bulletPID] != nullptr)
+				console->printMsg(p->getName() + " was fragged by " + playerList[hi.bulletPID]->getName() + "!", "System", 'S');
+			else
+				console->printMsg(p->getName() + " was fragged by a quitter!", "System", 'S');
 			playerList[hi.bulletPID]->addKill();
 			p->addDeath();
 			addEffectToList(-1, p->getTeam(), effects[EFFECT_TYPE::HEALTHPACK].size(), EFFECT_TYPE::HEALTHPACK, p->getPos(), 0, 0.5f);

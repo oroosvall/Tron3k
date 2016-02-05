@@ -836,31 +836,28 @@ void Player::shoot()
 	//Add a bullet recoil factor that is multiplied by a random number and smooth it out
 }
 
-void Player::hitByBullet(Bullet* b, int newHPtotal)
+void Player::hitByBullet(Bullet* b, BULLET_TYPE bt, int newHPtotal)
 {
 	/*
 	This is where we will extract additional modifiers from the Bullet, when applicable.
 	*/
-	if (b != nullptr)
+	if (newHPtotal == -1) //We are actually taking damage on the server now
 	{
-		if (newHPtotal == -1) //We are actually taking damage on the server now
+		if (!isDead)
 		{
-			if (!isDead)
-			{
-				int dmg = b->getDamage();
-				role.takeDamage(dmg);
-			}
+			int dmg = b->getDamage();
+			role.takeDamage(dmg);
 		}
-		else //We are on a client, and thus are only interested on our HP on the server
-		{
-			if (!isDead)
-				role.setHealth(newHPtotal);
-		}
+	}
+	else //We are on a client, and thus are only interested on our HP on the server
+	{
+		if (!isDead)
+			role.setHealth(newHPtotal);
+	}
 
-		if (b->getType() == BULLET_TYPE::HACKING_DART)
-		{
-			addModifier(MODIFIER_TYPE::HACKINGDARTMODIFIER);
-		}
+	if (bt == BULLET_TYPE::HACKING_DART)
+	{
+		addModifier(MODIFIER_TYPE::HACKINGDARTMODIFIER);
 	}
 }
 
