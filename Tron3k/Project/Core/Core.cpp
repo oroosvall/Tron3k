@@ -1480,7 +1480,6 @@ void Core::renderWorld(float dt)
 						lastHP_blurreffect = p->getHP();
 					}
 				
-
 					//static intense based on health
 					float hpval = float(p->getHP()) / 130.0f;
 
@@ -1498,7 +1497,7 @@ void Core::renderWorld(float dt)
 					{
 						if (p->isLocal())   //use current anim
 							renderPipe->renderAnimation(i, p->getRole()->getRole(), &p->getFPSmat(), p->getAnimState_f_c(), &dgColor.x, hpval, true, p->getAnimPrimary(), cam->roomID);
-						else			   //use peak anim
+						else //use peak anim
 							renderPipe->renderAnimation(i, p->getRole()->getRole(), &p->getFPSmat(), p->getAnimState_f_p(), &dgColor.x, hpval, true, p->getAnimPrimary(), cam->roomID);
 					}
 					else
@@ -1667,6 +1666,7 @@ void Core::renderWorld(float dt)
 
 		renderPipe->disableDepthTest();
 
+		//name rendering
 		if (current != SERVER)
 		{
 			for (int c = 0; c < 20; c++)

@@ -711,8 +711,44 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		if (spectatingThisPlayer == true)
 		{
 			cam->setCam(pos, dir);
-
 			cam->roomID = roomID;
+
+			animRole = role.getRole();
+			animPrimary = false;
+			if (role.getWeaponNRequiped() == 0) // if primary
+				animPrimary = true;
+
+			if (animRole == ROLES::BRUTE && animSwapActive == false)
+			{
+				//init swap 1st to second
+				if (anim_first_framePeak == AnimationState::first_secondary_switch)
+				{
+					animSwapTime_OUT = 0.53f;
+					animSwapActive = true;
+				}
+				//init swap 2nd to first
+				else if (anim_first_framePeak == AnimationState::first_secondary_switch)
+				{
+					animSwapTime_OUT = 0.34f;
+					animSwapActive = true;
+				}
+			}
+
+			if (animSwapActive && animSwapTime_OUT > 0)
+			{
+				animPrimary = !animPrimary;
+				animSwapTime_OUT -= dt;
+				if (animSwapTime_OUT < 0.001f) // out swap timeout
+				{
+					if (animPrimary)
+						animOverideIfPriority(anim_first_current, AnimationState::first_secondary_switch_IN);
+					else
+						animOverideIfPriority(anim_first_current, AnimationState::first_primary_switch_IN);
+
+					animPrimary = !animPrimary;
+					animSwapActive = false;
+				}
+			}
 
 			if (GetSoundActivated())
 			{
