@@ -155,12 +155,12 @@ void Map::renderChunk(GLuint shader, GLuint shaderLocation, GLuint diffuseLocati
 		if (mat.normalMapIndex != -1)
 			tm->bindTexture(tex[mat.normalMapIndex].textureID, shader, normalLocation, NORMAL_FB);
 		else
-			tm->bindDefault(shader, normalLocation, DIFFUSE_FB);
+			tm->bindDefault(shader, normalLocation, NORMAL_FB);
 		
 		if (mat.specularMapIndex != -1)
 			tm->bindTexture(tex[mat.specularMapIndex].textureID, shader, glowLocation, GLOW_FB);
 		else
-			tm->bindDefault(shader, glowLocation, DIFFUSE_FB);
+			tm->bindDefault(shader, glowLocation, GLOW_FB);
 
 		//glActiveTexture(GL_TEXTURE0);
 		//if(mat.textureMapIndex != -1)
@@ -197,10 +197,14 @@ void Map::renderChunk(GLuint shader, GLuint shaderLocation, GLuint diffuseLocati
 
 }
 
-void Map::renderCapturePoint(GLuint shader, GLuint shaderLocation, int capturePointID)
+void Map::renderCapturePoint(GLuint shader,GLuint shaderLocation, GLuint diffuseLocation, GLuint normalLocation, GLuint glowLocation, int capturePointID)
 {
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, blank_diffuse);
+	tm->bindDefault(shader, diffuseLocation, DIFFUSE_FB);
+
+	tm->bindDefault(shader, normalLocation, NORMAL_FB);
+
+	tm->bindDefault(shader, glowLocation, GLOW_FB);
+	
 	glBindVertexArray(capturePoints[capturePointID].meshes[0].vertexArray);
 	glBindBuffer(GL_ARRAY_BUFFER, capturePoints[capturePointID].meshes[0].vertexBuffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, capturePoints[capturePointID].meshes[0].indexBuffer);

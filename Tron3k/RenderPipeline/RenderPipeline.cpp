@@ -377,6 +377,8 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 
 	contMan.update(dt);
 
+	updateTakeDamageEffect(dt);
+
 	gBuffer->eyePosLast = gBuffer->eyePos;
 	gBuffer->eyePos.x = x;
 	gBuffer->eyePos.y = y;
@@ -755,6 +757,12 @@ void RenderPipeline::renderBullet(int bid, void* world, float* dgColor, float sg
 	contMan.renderBullet(bid);
 }
 
+void RenderPipeline::renderCapturePoint(int capPointID)
+{
+	glUseProgram(regularShader);
+	contMan.renderCapturePoint(capPointID, regularShader, worldMat[0], uniformTextureLocation[0], uniformNormalLocation[0], uniformGlowSpecLocation[0]);
+}
+
 void RenderPipeline::renderAnimation(int playerID, int roleID, void* world, AnimationState animState, float* dgColor, float sgInten, bool first, bool primary, int roomID)
 {
 	anims.updateAnimStates(playerID, roleID, animState, delta, first);
@@ -1099,4 +1107,26 @@ void RenderPipeline::renderTextObjectWorldPos(int id, glm::mat4 world)
 
 	textObjects[id]->draw();
 
+}
+
+void RenderPipeline::startTakeDamageEffect(int maxDisplace, float time)
+{
+	takeDamage_startDispalce = maxDisplace;
+	takeDamage_timer = time;
+	takeDamage_timerStartValue = takeDamage_timer;
+}
+
+void RenderPipeline::updateTakeDamageEffect(float dt)
+{
+	if (takeDamage_timer > 0)
+	{
+		takeDamage_timer -= dt;
+		if (takeDamage_timer > 0)
+		{
+			float precent = (takeDamage_timer / takeDamage_timerStartValue);
+			gBuffer->setGlowSamplingDist(precent * takeDamage_startDispalce + 2);
+		}
+		else //timeout
+			gBuffer->setGlowSamplingDist(2.0f);
+	}
 }
