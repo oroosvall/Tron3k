@@ -1400,7 +1400,7 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 			{
 				if (GetSoundActivated())
 				{
-					if (hi.bt == BULLET_TYPE::HACKING_DART & p->isLocal())
+					if (hi.bt == BULLET_TYPE::HACKING_DART && p->isLocal())
 					{
 						GetSound()->playUserGeneratedSound(SOUNDS::hackedSound);
 					}
