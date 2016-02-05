@@ -283,10 +283,14 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			for (int c = 0; c < teamOnePlayers.size() && allDead; c++)
 			{
 				pID = teamOnePlayers[c];
-				pIsAlive = gamePtr->getPlayer(pID)->isAlive();
-				if (pIsAlive)
+				Player* p = gamePtr->getPlayer(pID);
+				if (p != nullptr)
 				{
-					allDead = false;
+					pIsAlive = p->isAlive();
+					if (pIsAlive)
+					{
+						allDead = false;
+					}
 				}
 			}
 			if (allDead)
@@ -304,10 +308,14 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			for (int c = 0; c < teamTwoPlayers.size() && allDead; c++)
 			{
 				pID = teamTwoPlayers[c];
-				pIsAlive = gamePtr->getPlayer(pID)->isAlive();
-				if (pIsAlive)
+				Player* p = gamePtr->getPlayer(pID);
+				if (p != nullptr)
 				{
-					allDead = false;
+					pIsAlive = p->isAlive();
+					if (pIsAlive)
+					{
+						allDead = false;
+					}
 				}
 			}
 			if (allDead)
