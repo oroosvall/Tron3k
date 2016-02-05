@@ -216,7 +216,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 
 		//WARMUP is the pre-game, before the first round has begun. Once the game starts, we don't go here
 	case WARMUP:
-		if (consolePtr->getCommand() == "/start")
+		if (gamePtr->nrOfPlayersReady() >= playersReadyNeeded)
 		{
 			timer = 15.0f; //20 seconds in the pre-round
 			state = PREROUND;

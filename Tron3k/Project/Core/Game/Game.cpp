@@ -124,6 +124,20 @@ void Game::initPhysics()
 	}
 }
 
+int Game::nrOfPlayersReady()
+{
+	int ready = 0;
+	for (int c = 0; c < max_con; c++)
+	{
+		if (playerList[c] != nullptr)
+		{
+			if (playerList[c]->isReady())
+				ready++;
+		}
+	}
+	return ready;
+}
+
 vector<int>* Game::getTeamConIds(int team)
 {
 	if (team == 1)

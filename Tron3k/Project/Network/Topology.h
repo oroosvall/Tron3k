@@ -89,6 +89,7 @@ public:
 		case NET_COMMAND::TEAM_CHANGE: in_command_team_change(rec, conID); break;
 		case NET_COMMAND::RESPAWN: in_command_respawn(rec, conID); break;
 		case NET_COMMAND::ROLESWITCH: in_command_role_change(rec, conID); break;
+		case NET_COMMAND::READY: in_command_gamemode_ready(rec, conID); break;
 		}
 	}
 
@@ -498,6 +499,14 @@ public:
 	}
 
 	//COMMANDS  From Client  --->  Server  - if ok -> Clients
+	virtual void command_gamemode_ready(Uint8 conid)
+	{
+		Packet* out = new Packet();
+		*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::READY) << conid << Uint8(0);
+		con->send(out);
+		delete out;
+	}
+
 	virtual void command_team_change(Uint8 conid, Uint8 team)
 	{
 		Packet* out = new Packet();
@@ -517,9 +526,36 @@ public:
 	virtual void command_respawn(Uint8 conid)
 	{
 		Packet* out = new Packet();
-		*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::RESPAWN) << conid << (Uint8)0;
+		*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::RESPAWN) << conid << Uint8(0);
 		con->send(out);
 		delete out;
+	}
+
+	virtual void in_command_gamemode_ready(Packet* rec, Uint8 conID)
+	{
+		Uint8 p_conID;
+		Uint8 ready;
+		*rec >> p_conID >> ready;
+
+		Player* p = gamePtr->getPlayer(p_conID);
+		if (p != nullptr)
+		{
+			if (p->getRole()->getRole() != ROLES::NROFROLES && p->getTeam() != 0)
+			{
+				if (!p->isReady())
+				{
+					if (ready == 0) //We are the server, here to register that someone's readying up
+					{
+						Packet* out = new Packet();
+						*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::READY) << p_conID << Uint8(1);
+						branch(out, -1);
+						delete out;
+					}
+					gamePtr->getPlayer(p_conID)->setReady();
+					consolePtr->printMsg(gamePtr->getPlayer(p_conID)->getName() + " is ready!", "System", 'S');
+				}
+			}	
+		}
 	}
 
 	virtual void in_command_team_change(Packet* rec, Uint8 conID)

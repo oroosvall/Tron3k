@@ -1052,6 +1052,10 @@ void Core::clientHandleCmds(std::string com)
 			console.printMsg("/spec # (spectate player id)", "", ' ');
 			console.printMsg("/rs  show render settings", "", ' ');
 		}
+		if (token == "/ready")
+		{
+			top->command_gamemode_ready(top->getConId());
+		}
 		else if (token == "/name")
 		{
 			ss >> token;

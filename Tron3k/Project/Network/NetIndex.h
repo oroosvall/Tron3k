@@ -43,7 +43,8 @@ enum NET_COMMAND
 {
 	TEAM_CHANGE =	int('T'), //request teamchange
 	RESPAWN =		int('R'), //Request respawn
-	ROLESWITCH =	int('C')
+	ROLESWITCH =	int('C'),
+	READY =			int('G')
 };
 
 enum NET_MESSAGE
