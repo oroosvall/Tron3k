@@ -1375,146 +1375,154 @@ Bullet* Game::getSpecificBullet(int PID, int BID, BULLET_TYPE bt, int &posInBull
 
 int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 {
-	glm::vec3 pos = playerList[hi.playerHit]->getPos();
 	Player* p = playerList[hi.playerHit];
-	if (hi.bt != BULLET_TYPE::CLUSTERLING)	//Any bullets that should not detonate on contact
+	if (p->didIDieThisFrame())
 	{
-		if (gameState != Gamestate::SERVER)
-			if (GetSoundActivated())
-			{
-				if (hi.bt == BULLET_TYPE::HACKING_DART & p->isLocal())
-				{
-					GetSound()->playUserGeneratedSound(SOUNDS::hackedSound);
-				}
-				else
-				{
-					GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHit, pos.x, pos.y, pos.z);
-				}
-
-			}
-				
-
-		int bulletPosInArray = -1;
-
-		Bullet* theBullet = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, bulletPosInArray);
-
-		p->hitByBullet(theBullet, hi.bt, hi.newHPtotal);
-		if (p->getHP() == 0 && p->didIDieThisFrame())
+		glm::vec3 pos = playerList[hi.playerHit]->getPos();
+		if (hi.bt != BULLET_TYPE::CLUSTERLING)	//Any bullets that should not detonate on contact
 		{
-			p->IdiedThisFrame();
-			if (playerList[hi.bulletPID] != nullptr)
-				console->printMsg(p->getName() + " was fragged by " + playerList[hi.bulletPID]->getName() + "!", "System", 'S');
-			else
-				console->printMsg(p->getName() + " was fragged by a quitter!", "System", 'S');
-			playerList[hi.bulletPID]->addKill();
-			playerList[hi.bulletPID]->IncreaseFrags();
-			p->ZeroFrags();
-			p->addDeath();
-
-			if (playerList[hi.bulletPID]->GetConsecutiveFrags() == 3 && !playerList[hi.bulletPID]->killingSpreeDone)
-			{
-				console->printMsg(playerList[hi.bulletPID]->getName() + "is on a killing spree!", "System", 'S');
-				if (GetSoundActivated() && hi.bulletPID == localPlayerId)
+			if (gameState != Gamestate::SERVER)
+				if (GetSoundActivated())
 				{
-					GetSound()->playUserGeneratedSound(SOUNDS::announcerKillingSpree);
+					if (hi.bt == BULLET_TYPE::HACKING_DART & p->isLocal())
+					{
+						GetSound()->playUserGeneratedSound(SOUNDS::hackedSound);
+					}
+					else
+					{
+						GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHit, pos.x, pos.y, pos.z);
+					}
+
 				}
-				playerList[hi.bulletPID]->killingSpreeDone = true;
+
+
+			int bulletPosInArray = -1;
+
+			Bullet* theBullet = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, bulletPosInArray);
+
+			p->hitByBullet(theBullet, hi.bt, hi.newHPtotal);
+			if (p->getHP() == 0 && !p->didIDieThisFrame()) //Not working
+			{
+				p->IdiedThisFrame();
+				if (playerList[hi.bulletPID] != nullptr)
+					console->printMsg(p->getName() + " was fragged by " + playerList[hi.bulletPID]->getName() + "!", "System", 'S');
+				else
+					console->printMsg(p->getName() + " was fragged by a quitter!", "System", 'S');
+				playerList[hi.bulletPID]->addKill();
+				playerList[hi.bulletPID]->IncreaseFrags();
+				p->ZeroFrags();
+				p->addDeath();
+
+				if (playerList[hi.bulletPID]->GetConsecutiveFrags() == 3 && !playerList[hi.bulletPID]->killingSpreeDone)
+				{
+					console->printMsg(playerList[hi.bulletPID]->getName() + "is on a killing spree!", "System", 'S');
+					if (GetSoundActivated() && hi.bulletPID == localPlayerId)
+					{
+						GetSound()->playUserGeneratedSound(SOUNDS::announcerKillingSpree);
+					}
+					playerList[hi.bulletPID]->killingSpreeDone = true;
+				}
+				addEffectToList(-1, p->getTeam(), effects[EFFECT_TYPE::HEALTHPACK].size(), EFFECT_TYPE::HEALTHPACK, p->getPos(), 0, 0.5f);
 			}
-			addEffectToList(-1, p->getTeam(), effects[EFFECT_TYPE::HEALTHPACK].size(), EFFECT_TYPE::HEALTHPACK, p->getPos(), 0, 0.5f);
+
+			removeBullet(hi.bt, bulletPosInArray);
+
 		}
-
-		removeBullet(hi.bt, bulletPosInArray);
-
+		int newHP = p->getHP();
+		return newHP;
 	}
-	int newHP = p->getHP();
-	return newHP;
+	return 0;
 }
 
 int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 {
-	glm::vec3 pos = playerList[hi.playerHit]->getPos();
-	if (gameState != Gamestate::SERVER)
-		if (GetSoundActivated())
-			GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHit, pos.x, pos.y, pos.z);
 	Player* p = playerList[hi.playerHit];
-	int effectPosInArray = -1;
-	Effect* theEffect = getSpecificEffect(hi.effectPID, hi.effectID, hi.et, effectPosInArray);
-	if (theEffect != nullptr)
+	if (!p->didIDieThisFrame())
 	{
-		theEffect->setPos(hi.hitPos);
-		updateEffectBox(theEffect);
-	}
-
-	p->hitByEffect(theEffect, hi.newHPtotal);
-	
-	switch (hi.et)
-	{
-	case EFFECT_TYPE::EXPLOSION:
-	{
+		glm::vec3 pos = playerList[hi.playerHit]->getPos();
 		if (gameState != Gamestate::SERVER)
-		{
-			vec3 normalFromExplosion = normalize(hi.playerPos - hi.hitPos);
-			vec3 newVel = vec3(0);
-			if (theEffect != nullptr)
-				newVel = normalFromExplosion*theEffect->getInterestingVariable() / 3.0f;
-			else
-				newVel = normalFromExplosion / 3.0f; //If, by any chance, the effect got removed before this occured, we use a default explosion value of 1.0
-			if (p->getGrounded())
-			{
-				p->setGrounded(false);
-				if (theEffect != nullptr)
-					newVel.y = theEffect->getInterestingVariable()*1.5f; //3.0f and 1.5f are arbitrary values
-				else
-					newVel.y = 1.5f;
-			}
-
-			p->setVelocity(newVel);
-		}
-	}
-	break;
-	case EFFECT_TYPE::THERMITE_CLOUD:
-		break;
-	case EFFECT_TYPE::BATTERY_SLOW:
-		break;
-	case EFFECT_TYPE::HEALTHPACK:
-		p->healing(25);
+			if (GetSoundActivated())
+				GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHit, pos.x, pos.y, pos.z);
+		int effectPosInArray = -1;
+		Effect* theEffect = getSpecificEffect(hi.effectPID, hi.effectID, hi.et, effectPosInArray);
 		if (theEffect != nullptr)
-			removeEffect(EFFECT_TYPE::HEALTHPACK, effectPosInArray);
-		if (GetSoundActivated())
 		{
-			GetSound()->playExternalSound(SOUNDS::soundEffectHP, pos.x, pos.y, pos.z);
+			theEffect->setPos(hi.hitPos);
+			updateEffectBox(theEffect);
+		}
+
+		p->hitByEffect(theEffect, hi.newHPtotal);
+
+		switch (hi.et)
+		{
+		case EFFECT_TYPE::EXPLOSION:
+		{
+			if (gameState != Gamestate::SERVER)
+			{
+				vec3 normalFromExplosion = normalize(hi.playerPos - hi.hitPos);
+				vec3 newVel = vec3(0);
+				if (theEffect != nullptr)
+					newVel = normalFromExplosion*theEffect->getInterestingVariable() / 3.0f;
+				else
+					newVel = normalFromExplosion / 3.0f; //If, by any chance, the effect got removed before this occured, we use a default explosion value of 1.0
+				if (p->getGrounded())
+				{
+					p->setGrounded(false);
+					if (theEffect != nullptr)
+						newVel.y = theEffect->getInterestingVariable()*1.5f; //3.0f and 1.5f are arbitrary values
+					else
+						newVel.y = 1.5f;
+				}
+
+				p->setVelocity(newVel);
+			}
 		}
 		break;
-	default:
-		break;		
-	}
-
-	if (p->getHP() == 0 && p->didIDieThisFrame())
-	{
-		p->IdiedThisFrame();
-		if (playerList[hi.effectPID] != nullptr)
-			console->printMsg(p->getName() + " was fragged by " + playerList[hi.effectPID]->getName() + "!", "System", 'S');
-		else
-			console->printMsg(p->getName() + " was fragged by a quitter!", "System", 'S');
-		playerList[hi.effectPID]->addKill();
-		playerList[hi.effectPID]->IncreaseFrags();
-		p->ZeroFrags();
-		p->addDeath();
-
-		if (playerList[hi.effectPID]->GetConsecutiveFrags() == 3 && !playerList[hi.effectPID]->killingSpreeDone)
-		{
-			console->printMsg(playerList[hi.effectPID]->getName() + "is on a killing spree!", "System", 'S');
-			if (GetSoundActivated() && hi.effectPID == localPlayerId)
+		case EFFECT_TYPE::THERMITE_CLOUD:
+			break;
+		case EFFECT_TYPE::BATTERY_SLOW:
+			break;
+		case EFFECT_TYPE::HEALTHPACK:
+			p->healing(25);
+			if (theEffect != nullptr)
+				removeEffect(EFFECT_TYPE::HEALTHPACK, effectPosInArray);
+			if (GetSoundActivated())
 			{
-				GetSound()->playUserGeneratedSound(SOUNDS::announcerKillingSpree);
+				GetSound()->playExternalSound(SOUNDS::soundEffectHP, pos.x, pos.y, pos.z);
 			}
-			playerList[hi.effectPID]->killingSpreeDone = true;
+			break;
+		default:
+			break;
 		}
-		addEffectToList(-1, p->getTeam(), effects[EFFECT_TYPE::HEALTHPACK].size(), EFFECT_TYPE::HEALTHPACK, p->getPos(), 0, 0.5f);
-	}
 
-	int newHP = p->getHP();
-	return newHP;
+		if (p->getHP() == 0)
+		{
+			p->IdiedThisFrame();
+			if (playerList[hi.effectPID] != nullptr)
+				console->printMsg(p->getName() + " was fragged by " + playerList[hi.effectPID]->getName() + "!", "System", 'S');
+			else
+				console->printMsg(p->getName() + " was fragged by a quitter!", "System", 'S');
+			playerList[hi.effectPID]->addKill();
+			playerList[hi.effectPID]->IncreaseFrags();
+			p->ZeroFrags();
+			p->addDeath();
+
+			if (playerList[hi.effectPID]->GetConsecutiveFrags() == 3 && !playerList[hi.effectPID]->killingSpreeDone)
+			{
+				console->printMsg(playerList[hi.effectPID]->getName() + "is on a killing spree!", "System", 'S');
+				if (GetSoundActivated() && hi.effectPID == localPlayerId)
+				{
+					GetSound()->playUserGeneratedSound(SOUNDS::announcerKillingSpree);
+				}
+				playerList[hi.effectPID]->killingSpreeDone = true;
+			}
+			addEffectToList(-1, p->getTeam(), effects[EFFECT_TYPE::HEALTHPACK].size(), EFFECT_TYPE::HEALTHPACK, p->getPos(), 0, 0.5f);
+		}
+
+		int newHP = p->getHP();
+		return newHP;
+	}
+	return 0;
 }
 
 void Game::bounceBullet(BulletHitWorldInfo hwi, Bullet* theBullet)
