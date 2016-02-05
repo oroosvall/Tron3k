@@ -49,7 +49,7 @@ private:
 	int* namePlates;
 	float cursorBlink;
 
-	int cursorInvisible;
+	bool cursorInvisible;
 
 	// window
 	GLFWwindow* win;

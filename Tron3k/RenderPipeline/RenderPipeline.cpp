@@ -755,6 +755,12 @@ void RenderPipeline::renderBullet(int bid, void* world, float* dgColor, float sg
 	contMan.renderBullet(bid);
 }
 
+void RenderPipeline::renderCapturePoint(int capPointID)
+{
+	glUseProgram(regularShader);
+	contMan.renderCapturePoint(capPointID, regularShader, worldMat[0], uniformTextureLocation[0], uniformNormalLocation[0], uniformGlowSpecLocation[0]);
+}
+
 void RenderPipeline::renderAnimation(int playerID, int roleID, void* world, AnimationState animState, float* dgColor, float sgInten, bool first, bool primary, int roomID)
 {
 	anims.updateAnimStates(playerID, roleID, animState, delta, first);

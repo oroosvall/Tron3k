@@ -162,6 +162,8 @@ public:
 
 	virtual void renderDecals(void* data, int size);
 
+	virtual void renderCapturePoint(int capPointID);
+
 	virtual void forceReset() {};
 
 	virtual void setChatHistoryText(std::string text);
