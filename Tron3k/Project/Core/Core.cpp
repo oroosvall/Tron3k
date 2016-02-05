@@ -1370,14 +1370,14 @@ void Core::renderWorld(float dt)
 		//Culling
 		handleCulling();
 
-		//find out if we are hacked, or the player we are spectating is hacked
+		//find out if we are hacked, or the player we are spectating is hacked 
 		int hackedTeam = -1;
 		if (current != ROAM)	//hacking disabled in roam
 		{
 			if (game->spectateID == -1)		//We are not spectating
 			{
 				if (top->is_client()) //server doenst have its own player
-					if(game->getPlayer(top->getConId())->searchModifier(MODIFIER_TYPE::HACKINGDARTMODIFIER))
+					if (game->getPlayer(top->getConId())->searchModifier(MODIFIER_TYPE::HACKINGDARTMODIFIER))
 						hackedTeam = game->getPlayer(top->getConId())->getTeam(); //if we are hacked
 			}
 			else
@@ -1419,6 +1419,23 @@ void Core::renderWorld(float dt)
 
 							else if (p->getTeam() == 2)  // team 2 color
 								dgColor = TEAMTWOCOLOR;
+						}
+					}
+
+					//Take damage effect
+					if (game->spectateID == i)
+					{
+						if (lastHP_blurreffect > p->getHP())
+							renderPipe->startTakeDamageEffect(6, 0.6f);
+						lastHP_blurreffect = p->getHP();
+					}
+					else
+					{
+						if (p->isLocal())
+						{
+							if (lastHP_blurreffect > p->getHP())
+								renderPipe->startTakeDamageEffect(6, 0.6f);
+							lastHP_blurreffect = p->getHP();
 						}
 					}
 
@@ -1608,40 +1625,42 @@ void Core::renderWorld(float dt)
 
 		renderPipe->disableDepthTest();
 
-		for (int c = 0; c < 20; c++)
+		if (current != SERVER)
 		{
-			Player* p = game->getPlayer(c);
-			int local = game->GetLocalPlayerId();
-			Player* lP = game->getPlayer(local);
-			if (p != nullptr && p->getTeam() == lP->getTeam())
+			for (int c = 0; c < 20; c++)
 			{
-				mat4 bacon;
-				vec3 pPos = p->getPos();
-
-				vec3 dir = normalize(camPos - pPos);
-
-				float rotXZ = -(atan2(dir.x, dir.z) - atan2(0, 1));
-
-				mat4 rotH = mat4(cos(rotXZ), 0.0f, -sin(rotXZ), 0.0f,
-					0.0f, 1.0f, 0.0f, 0.0f,
-					sin(rotXZ), 0.0f, cos(rotXZ), 0.0f,
-					0.0f, 0.0f, 0.0f , 0.0f);
-				bacon = rotH * bacon;
-
-				bacon[0].w = pPos.x;
-				bacon[1].w = pPos.y;
-				bacon[2].w = pPos.z;
-
-				if (p->nameChanged)
+				Player* p = game->getPlayer(c);
+				int local = game->GetLocalPlayerId();
+				Player* lP = game->getPlayer(local);
+				if (p != nullptr  && lP != nullptr && p->getTeam() == lP->getTeam())
 				{
-					renderPipe->setTextObjectText(namePlates[c], p->getName());
-					p->nameChanged = false;
-				}
-				renderPipe->renderTextObjectWorldPos(namePlates[c], bacon);
-			}
-		}
+					mat4 bacon;
+					vec3 pPos = p->getPos();
 
-		renderPipe->enableDepthTest();
+					vec3 dir = normalize(camPos - pPos);
+
+					float rotXZ = -(atan2(dir.x, dir.z) - atan2(0, 1));
+
+					mat4 rotH = mat4(cos(rotXZ), 0.0f, -sin(rotXZ), 0.0f,
+						0.0f, 1.0f, 0.0f, 0.0f,
+						sin(rotXZ), 0.0f, cos(rotXZ), 0.0f,
+						0.0f, 0.0f, 0.0f, 0.0f);
+					bacon = rotH * bacon;
+
+					bacon[0].w = pPos.x;
+					bacon[1].w = pPos.y;
+					bacon[2].w = pPos.z;
+
+					if (p->nameChanged)
+					{
+						renderPipe->setTextObjectText(namePlates[c], p->getName());
+						p->nameChanged = false;
+					}
+					renderPipe->renderTextObjectWorldPos(namePlates[c], bacon);
+				}
+			}
+			renderPipe->enableDepthTest();
+		}
 
 		//viewing 3rd person anims in roam
 		if (i->getKeyInfo(GLFW_KEY_P))

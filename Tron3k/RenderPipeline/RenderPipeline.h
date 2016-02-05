@@ -128,6 +128,11 @@ private:
 
 	vector<Text*> textObjects;
 
+	//take damage effect
+	float takeDamage_startDispalce;
+	float takeDamage_timer;
+	float takeDamage_timerStartValue;
+
 public:
 
 	RenderPipeline() {};
@@ -203,6 +208,9 @@ public:
 	virtual int startExecTimer(std::string name);
 	virtual void stopExecTimer(int id);
 	virtual bool* getRenderedChunks(int& get_size);
+
+	virtual void startTakeDamageEffect(int maxDisplace, float time);
+	virtual void updateTakeDamageEffect(float dt);
 };
 
 

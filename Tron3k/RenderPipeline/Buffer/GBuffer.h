@@ -28,6 +28,11 @@ public:
 	void clearBuffers();
 	void pushLights(SpotLight* light, int nrLight);
 
+	void setGlowSamplingDist(float Dist);
+	float xres;
+	float yres;
+
+
 	GLuint* shaderPtr;
 	GLuint* portal_shaderPtr;
 

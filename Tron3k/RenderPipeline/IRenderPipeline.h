@@ -123,6 +123,8 @@ public:
 	virtual void stopExecTimer(int id) = 0;
 	virtual bool* getRenderedChunks(int& get_size) = 0;
 
+	virtual void startTakeDamageEffect(int maxDisplace, float time) = 0;
+
 };
 
 extern "C" ENGINE_API IRenderPipeline* CreatePipeline();

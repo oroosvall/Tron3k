@@ -377,6 +377,8 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 
 	contMan.update(dt);
 
+	updateTakeDamageEffect(dt);
+
 	gBuffer->eyePosLast = gBuffer->eyePos;
 	gBuffer->eyePos.x = x;
 	gBuffer->eyePos.y = y;
@@ -1105,4 +1107,26 @@ void RenderPipeline::renderTextObjectWorldPos(int id, glm::mat4 world)
 
 	textObjects[id]->draw();
 
+}
+
+void RenderPipeline::startTakeDamageEffect(int maxDisplace, float time)
+{
+	takeDamage_startDispalce = maxDisplace;
+	takeDamage_timer = time;
+	takeDamage_timerStartValue = takeDamage_timer;
+}
+
+void RenderPipeline::updateTakeDamageEffect(float dt)
+{
+	if (takeDamage_timer > 0)
+	{
+		takeDamage_timer -= dt;
+		if (takeDamage_timer > 0)
+		{
+			float precent = (takeDamage_timer / takeDamage_timerStartValue);
+			gBuffer->setGlowSamplingDist(precent * takeDamage_startDispalce + 2);
+		}
+		else //timeout
+			gBuffer->setGlowSamplingDist(2.0f);
+	}
 }
