@@ -849,8 +849,13 @@ void Player::hitByBullet(Bullet* b, BULLET_TYPE bt, int newHPtotal)
 	{
 		if (!isDead)
 		{
-			int dmg = b->getDamage();
-			role.takeDamage(dmg);
+			if (b != nullptr)
+			{
+				int dmg = b->getDamage();
+				role.takeDamage(dmg);
+			}
+			else
+				role.takeDamage(20);
 		}
 	}
 	else //We are on a client, and thus are only interested on our HP on the server
@@ -873,8 +878,13 @@ void Player::hitByEffect(Effect* e, int newHPtotal)
 
 	if (newHPtotal == -1) //This is the server, dealing damage to the player
 	{
-		int dmg = e->getDamage();
-		role.takeDamage(dmg);
+		if (e != nullptr)
+		{
+			int dmg = e->getDamage();
+			role.takeDamage(dmg);
+		}
+		else
+			role.takeDamage(20);
 	}
 	else //Hello I'm the client. I accept my new HP.
 	{
