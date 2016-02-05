@@ -1415,7 +1415,7 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 
 				if (playerList[hi.bulletPID]->GetConsecutiveFrags() == 3 && !playerList[hi.bulletPID]->killingSpreeDone)
 				{
-					console->printMsg(playerList[hi.bulletPID]->getName() + "is on a killing spree!", "System", 'S');
+					console->printMsg(playerList[hi.bulletPID]->getName() + " is on a killing spree!", "System", 'S');
 					if (GetSoundActivated() && hi.bulletPID == localPlayerId)
 					{
 						GetSound()->playUserGeneratedSound(SOUNDS::announcerKillingSpree);
@@ -1508,7 +1508,7 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 
 			if (playerList[hi.effectPID]->GetConsecutiveFrags() == 3 && !playerList[hi.effectPID]->killingSpreeDone)
 			{
-				console->printMsg(playerList[hi.effectPID]->getName() + "is on a killing spree!", "System", 'S');
+				console->printMsg(playerList[hi.effectPID]->getName() + " is on a killing spree!", "System", 'S');
 				if (GetSoundActivated() && hi.effectPID == localPlayerId)
 				{
 					GetSound()->playUserGeneratedSound(SOUNDS::announcerKillingSpree);
