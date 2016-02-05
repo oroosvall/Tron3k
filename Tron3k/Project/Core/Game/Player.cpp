@@ -77,7 +77,7 @@ void Player::setExplodingInfo(std::vector<glm::vec4> expDirs)
 	}
 }
 
-void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingThis)
+void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool spectating)
 {
 	if (!this->getFootsteps())
 	{
@@ -94,8 +94,8 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 
 	if (GetSoundActivated())
 	{
-		GetSound()->setLocalPlayerPos(pos);
-		GetSound()->setLocalPlayerDir(this->getDir());
+		GetSound()->setLocalPlayerPos(cam->getPos());
+		GetSound()->setLocalPlayerDir(cam->getDir());
 	}
 
 	if ((vel.x != 0 || vel.z != 0) && this->grounded)
@@ -686,7 +686,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		movementAnimationChecks(dt);
 
 		modifiersSetData(dt);	//Dont Remove Again Please!
-		movePlayer(dt, olddir, freecam, spectatingThisPlayer); //This moves the player regardless of what we might end up colliding with
+		movePlayer(dt, olddir, freecam, spectating); //This moves the player regardless of what we might end up colliding with
 
 
 		clearCollisionNormals(); //Doesn't actually clear the array, just manually sets size to 0. This is to speed things up a little.
@@ -748,12 +748,6 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					animPrimary = !animPrimary;
 					animSwapActive = false;
 				}
-			}
-
-			if (GetSoundActivated())
-			{
-				GetSound()->setLocalPlayerPos(cam->getPos());
-				GetSound()->setLocalPlayerDir(cam->getDir());
 			}
 		}
 
