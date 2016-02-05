@@ -36,6 +36,7 @@ private:
 	bool noclip = false;
 
 	bool justRespawned = false; // used for culling
+	bool diedThisFrame = false; // used for K/D and messages
 
 	bool footstepsLoop = false;
 	float footstepsCountdown = 0;
@@ -127,6 +128,8 @@ public:
 	void setGoalPos(glm::vec3 newPos);
 	void setGoalDir(glm::vec3 newDir);
 
+	void IdiedThisFrame() { diedThisFrame = true; };
+	bool didIDieThisFrame() { return diedThisFrame; };
 
 	void setCollisionInfo(std::vector<glm::vec4> collNormals);
 	glm::vec4* getCollisionNormalsForFrame(int &size) { size = collisionNormalSize; return collisionNormals; };

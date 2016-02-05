@@ -365,6 +365,7 @@ bool Player::removeSpecificModifier(MODIFIER_TYPE mt)
 
 PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool spectating)
 {
+	diedThisFrame = false;
 	PLAYERMSG msg = NONE;
 
 	if (grounded)

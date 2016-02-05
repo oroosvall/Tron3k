@@ -1484,8 +1484,9 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 		break;		
 	}
 
-	if (p->getHP() == 0)
+	if (p->getHP() == 0 && p->didIDieThisFrame())
 	{
+		p->IdiedThisFrame();
 		if (playerList[hi.effectPID] != nullptr)
 			console->printMsg(p->getName() + " was fragged by " + playerList[hi.effectPID]->getName() + "!", "System", 'S');
 		else
