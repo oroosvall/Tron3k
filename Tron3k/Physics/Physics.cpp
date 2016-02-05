@@ -836,18 +836,18 @@ glm::vec4 Physics::checkBulletVEffectCollision(glm::vec3 bulletPos, vec3 bulletV
 		{
 			if (effectBoxes[i]->getEID() == eid && effectBoxes[i]->getEType() == eType)
 			{
-				if (checkAABBvAABBCollision(bulletBox.getAABB(), effectBoxes[i]->getAABB()))
+				if (checkAABBvAABBCollision(box, effectBoxes[i]->getAABB()))
 				{
 
 					if (effectBoxes[i]->getEType() == eType)
 					{
 						if (effectBoxes[i]->getEType() == 0)//Lightwall, aka OBB
 						{
-							collided = checkSpherevOBBlwCollision(bulletBox.getSphere(), effectBoxes[i]->getOBB());
+							collided = checkSpherevOBBlwCollision(sphere, effectBoxes[i]->getOBB());
 						}
 						else if (effectBoxes[i]->getEType() == 1)//ThunderDome aka sphere
 						{
-							collided = checkSpherevSpheretdCollision(bulletBox.getSphere(), effectBoxes[i]->getSphere());
+							collided = checkSpherevSpheretdCollision(sphere, effectBoxes[i]->getSphere());
 						}
 						else if (effectBoxes[i]->getEType() > 8)//False box, no collision
 						{
@@ -855,7 +855,7 @@ glm::vec4 Physics::checkBulletVEffectCollision(glm::vec3 bulletPos, vec3 bulletV
 						}
 						else //evrything else is a sphere, if not, not my goddamn problem
 						{
-							collided = checkSpherevSphereCollision(bulletBox.getSphere(), effectBoxes[i]->getSphere());
+							collided = checkSpherevSphereCollision(sphere, effectBoxes[i]->getSphere());
 						}
 
 						if (eType == 0)
