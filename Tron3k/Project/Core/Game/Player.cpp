@@ -662,7 +662,6 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			msg = DEATH;
 			respawnTimer = respawnTime;
 			vel = glm::vec3(0, 0, 0);
-			this->ZeroFrags();
 
 			if (GetSoundActivated())
 			{
