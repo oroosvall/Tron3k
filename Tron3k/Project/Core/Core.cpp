@@ -1674,6 +1674,8 @@ void Core::renderWorld(float dt)
 				Player* p = game->getPlayer(c);
 				int local = game->GetLocalPlayerId();
 				Player* lP = game->getPlayer(local);
+				if ((HackingDartModifier*)lP->searchModifierGet(HACKINGDARTMODIFIER))
+					continue;
 				if (p != nullptr  && lP != nullptr && p->getTeam() == lP->getTeam())
 				{
 					mat4 bacon;
