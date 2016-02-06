@@ -41,6 +41,7 @@ GLuint textureBindMap[5];
 
 GLuint bufferBindMap[5];
 
+int memoryLimit = 256 * 1024 * 1024; // 256 MB limit :)
 
 void glGenBuffers_D(GLsizei n, GLuint* id, char* file, int line)
 {
@@ -262,7 +263,17 @@ void glTexImage2D_D(GLenum target, GLint level, GLint internalFormat, GLsizei wi
 		oldSize = oldW * oldH * internalComponentSize;
 
 	}
-	glTexImage2D(target, level, internalFormat, width, height, border, format, type, data);
+
+	int asumedSize = width * height * 4;
+
+	// check if we can allocate that memory, if not I'll give you a 1x1 RED pixel only, now take care of the resources
+	if(asumedSize + memusage < memoryLimit)
+		glTexImage2D(target, level, internalFormat, width, height, border, format, type, data);
+	else
+	{
+		glTexImage2D(target, level, GL_R8, 1, 1, border, GL_RGBA, type, data);
+		printf("Failed to allocate texture, Out of memory!");
+	}
 
 	glGetTexLevelParameteriv(target, level, GL_TEXTURE_COMPRESSED, (GLint*)&compressed);
 	if (compressed)
@@ -331,9 +342,14 @@ void glCompressedTexImage2D_D(GLenum target, GLint level, GLenum internalformat,
 		oldSize = oldW * oldH * internalComponentSize;
 
 	}
-
-	glCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, data);
-	memusage += imageSize;
+	// check if we can allocate that memory, if not I'll give you a 1x1 RED pixel only, now take care of the resources
+	if(imageSize + memusage < memoryLimit)
+		glCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, data);
+	else
+	{
+		glTexImage2D(target, level, GL_R8, 1, 1, border, GL_RGBA, GL_BYTE, data);
+		printf("Failed to allocate texture, Out of memory!");
+	}
 
 	glGetTexLevelParameteriv(target, level, GL_TEXTURE_COMPRESSED, (GLint*)&compressed);
 	if (compressed)

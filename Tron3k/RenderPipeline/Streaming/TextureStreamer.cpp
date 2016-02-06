@@ -107,7 +107,7 @@ GLuint uploadStreamedData(unsigned int &texturePos)
 			{
 				glBindTexture(GL_TEXTURE_2D, texID);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 1);
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, it->second.x, it->second.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, it->second.data);
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA, it->second.x, it->second.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, it->second.data);
 
 
 			}
