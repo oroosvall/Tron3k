@@ -718,10 +718,12 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			if (role.getWeaponNRequiped() == 0) // if primary
 				animPrimary = true;
 
+			//special case when spectating a brute and he swaps weapons
+
 			if (animRole == ROLES::BRUTE && animSwapActive == false)
 			{
 				//init swap 1st to second
-				if (anim_first_framePeak == AnimationState::first_secondary_switch)
+				if (anim_first_framePeak == AnimationState::first_primary_switch)
 				{
 					animSwapTime_OUT = 0.53f;
 					animSwapActive = true;
@@ -748,8 +750,8 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					animPrimary = !animPrimary;
 					animSwapActive = false;
 				}
-			}
-		}
+			} // spec brute animswap end
+		} // spectating this end
 
 		if (role.getHealth() == 0)
 		{
@@ -806,7 +808,7 @@ void Player::movementUpdates(float dt, bool freecam, bool spectatingThisPlayer, 
 
 	if (freecam == false && isLocalPlayer == false && spectatingThisPlayer == false)
 	{
-		worldMat[1].w -= 1.55f; // move down if 3rd person render
+		worldMat[1].w -= 1.45f; // move down if 3rd person render
 	}
 }
 
@@ -1194,14 +1196,20 @@ void Player::movementAnimationChecks(float dt)
 		if (grounded) //landed
 		{
 			animOverideIfPriority(anim_third_current, AnimationState::third_primary_jump_end);
+			if (animPrimary == false)
+				if (animRole == ROLES::MANIPULATOR || animRole == ROLES::BRUTE)
+					animOverideIfPriority(anim_third_current, AnimationState::third_secondary_jump_end);
+
 			if (GetSoundActivated())
 				GetSound()->playLand(getRole()->getRole(), pos.x, pos.y, pos.z);
 		}
-
 		else // jump begin
+		{
 			animOverideIfPriority(anim_third_current, AnimationState::third_primary_jump_begin);
-		
-		
+			if (animPrimary == false)
+				if (animRole == ROLES::MANIPULATOR || animRole == ROLES::BRUTE)
+					animOverideIfPriority(anim_third_current, AnimationState::third_secondary_jump_begin);
+		}	
 	}
 	animGroundedLast = grounded;
 
@@ -1253,9 +1261,10 @@ void Player::movementAnimationChecks(float dt)
 				}		
 			}
 		}
+		lastanimSwapActive = animSwapActive;
 	}
 
-	lastanimSwapActive = animSwapActive;
+	
 
 	//death checks
 	if (isDead != animLastDead)

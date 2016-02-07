@@ -1390,7 +1390,7 @@ void Core::renderWorld(float dt)
 		light.Direction = normalize(vec3(-0.16f, -0.36f, 0.91f));//p->getDir();
 		light.Color = vec3(0.7f, 0.7f , 1.0f);
 		light.DiffuseIntensity = 0.3f;
-		light.AmbientIntensity = 0.01f;
+		light.AmbientIntensity = 0.1f;
 		renderPipe->addLight(&light, 0);
 		light.AmbientIntensity = 0.0f;
 
@@ -1504,7 +1504,7 @@ void Core::renderWorld(float dt)
 					{
 						glm::mat4* playermat = p->getWorldMat();
 						if (force3rd)
-							playermat[0][1].w -= 1.55f;
+							playermat[0][1].w -= 1.45f;
 
 						if (p->isLocal()) //use current anim
 							renderPipe->renderAnimation(i, p->getRole()->getRole(), playermat, p->getAnimState_t_c(), &dgColor.x, hpval, false, false, p->roomID);
