@@ -1445,7 +1445,7 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 					}
 					playerList[hi.bulletPID]->impressiveDone = true;
 				}
-				addEffectToList(-1, p->getTeam(), effects[EFFECT_TYPE::HEALTHPACK].size(), EFFECT_TYPE::HEALTHPACK, p->getPos(), 0, 0.5f);
+				addEffectToList(-1, p->getTeam(), hi.playerHit, EFFECT_TYPE::HEALTHPACK, p->getPos(), 0, 0.5f);
 			}
 			removeBullet(hi.bt, bulletPosInArray);
 		}
@@ -1553,7 +1553,7 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 				}
 				playerList[hi.effectPID]->impressiveDone = true;
 			}
-			addEffectToList(-1, p->getTeam(), effects[EFFECT_TYPE::HEALTHPACK].size(), EFFECT_TYPE::HEALTHPACK, p->getPos(), 0, 0.5f);
+			addEffectToList(-1, p->getTeam(), hi.playerHit, EFFECT_TYPE::HEALTHPACK, p->getPos(), 0, 0.5f);
 		}
 
 		int newHP = p->getHP();
