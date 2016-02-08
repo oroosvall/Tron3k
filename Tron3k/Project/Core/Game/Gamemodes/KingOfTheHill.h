@@ -67,7 +67,7 @@ public:
 
 	bool playerRespawn(int conId); //Checks if a given player is allowed to respawn
 
-	void setGamemodeData(int respawn1, int respawn2, int onCap1, int onCap2, KOTHSTATE state, GAMEMODE_MSG serverMsg); //Used to keep clients updated over network
+	void setGamemodeData(int respawn1, int respawn2, int onCap1, int onCap2, int capPoint, KOTHSTATE state, GAMEMODE_MSG serverMsg); //Used to keep clients updated over network
 
 	int getCapturePoint() { return capturePoint; }; //Returns currently active cap point
 	int getCapturePointOwner();

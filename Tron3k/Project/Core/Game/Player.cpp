@@ -791,8 +791,6 @@ void Player::movementUpdates(float dt, bool freecam, bool spectatingThisPlayer, 
 		}
 	}
 
-	
-
 	worldMat[0].w = pos.x;
 	worldMat[1].w = pos.y; //head offset. player objects have their origo at their feet
 	worldMat[2].w = pos.z;
