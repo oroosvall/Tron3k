@@ -653,6 +653,9 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			role.setHealth(0);
 		}
 
+		//if (i->justPressed(GLFW_KEY_O))
+		//	role.setHealth(0);
+
 		if (role.getHealth() <= 0 && !isDead && role.getRole() != ROLES::NROFROLES)
 		{
 			isDead = true;

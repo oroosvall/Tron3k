@@ -1410,7 +1410,7 @@ void Core::renderWorld(float dt)
 		bool force3rd = false;
 		if (i->getKeyInfo(GLFW_KEY_P))
 		{
-			cam->setCam(vec3(-6, 1.5f, 14), vec3(0, 0, 1));
+			cam->setCam(vec3(-6, 1.5f, 33), vec3(0, 0, -1));
 			force3rd = true;
 		}
 
@@ -1558,7 +1558,12 @@ void Core::renderWorld(float dt)
 					{
 						glm::mat4* playermat = p->getWorldMat();
 						if (force3rd)
-							playermat[0][1].w -= 1.45f;
+						{
+							*playermat = glm::mat4();
+							playermat[0][0].w = p->getPos().x;
+							playermat[0][1].w = p->getPos().y - 0.45;
+							playermat[0][2].w = p->getPos().z;
+						}
 
 						if (p->isLocal()) //use current anim
 							renderPipe->renderAnimation(i, p->getRole()->getRole(), playermat, p->getAnimState_t_c(), &dgColor.x, hpval, false, false, p->roomID);
