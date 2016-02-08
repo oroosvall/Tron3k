@@ -83,6 +83,7 @@ public:
 	GLuint youarehereTexture;
 	float youareherescaleX;
 	float youareherescaleY;
+	GLuint teamishereTexture;
 	vec2 mapBotcord;
 	vec2 mapTopcord;
 

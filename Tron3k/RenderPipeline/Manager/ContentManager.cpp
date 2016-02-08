@@ -21,6 +21,7 @@ void ContentManager::init()
 
 	decalTexture = loadTexture("GameFiles/Textures/decal.png");
 	int xx, yy;
+	teamishereTexture = loadTexture("GameFiles/Textures/minimap/teamishere.png");
 	youarehereTexture = loadTexture("GameFiles/Textures/minimap/youarehere.png", true, (int*)&xx, (int*)&yy);
 	youareherescaleX = float(xx) / 1920;
 	youareherescaleY = float(yy) / 1080;
@@ -28,7 +29,7 @@ void ContentManager::init()
 	minimapscaleX = float(xx) / 1920;
 	minimapScaleY = float(yy) / 1080;
 	mapBotcord = vec2(-185, 163);
-	mapTopcord = vec2(163, -38);
+	mapTopcord = vec2(165, -38);
 
 	skyTexture = 0;
 	lightWallTex = 0;
@@ -135,6 +136,7 @@ void ContentManager::release()
 
 	glDeleteTextures(1, &miniMapTexture);
 	glDeleteTextures(1, &youarehereTexture);
+	glDeleteTextures(1, &teamishereTexture);
 
 	testMap.release();
 

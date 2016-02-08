@@ -1744,8 +1744,33 @@ void Core::renderWorld(float dt)
 		if (i->getKeyInfo(GLFW_KEY_F))
 			if (game->getPlayer(game->GetLocalPlayerId())->getLockedControls() == false)
 			{
-				float dummy;
-				renderPipe->renderMinimap(&camPos.x, &camDir.x, &dummy, 0, 0);
+				Player* p = game->getPlayer(game->GetLocalPlayerId());
+				Player* p2;
+				int memb = 0;
+				if (p)
+				{
+					vector<int>* members = game->getTeamConIds(p->getTeam());
+					int membersize = members->size();
+
+					vec3* data = new vec3[membersize * 2 ];
+					for (int n = 0; n < membersize; n++)
+					{
+						p2 = game->getPlayer(members[0][n]);
+						if (p2->isAlive())
+						{
+							data[n * 2] = p2->getPos();
+							data[n * 2 + 1] = p2->getDir();
+						}
+						else
+						{
+							n--;
+							membersize--;
+						}
+					}
+
+					renderPipe->renderMinimap(&camPos.x, &camDir.x, &data[0].x, membersize, 0);
+					delete[] data;
+				}
 			}
 
 		renderPipe->disableBlend();

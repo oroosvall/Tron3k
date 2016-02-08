@@ -1223,4 +1223,47 @@ void RenderPipeline::renderMinimap(float* yourPos, float* yourdir, float* teamma
 	
 	glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, &minimapRenderMat[0][0]);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+
+	//set teammates texture
+	asd.lastTextureSlot = GL_TEXTURE0;
+	asd.state = TEXTURE_LOADED;
+	asd.textureID = contMan.teamishereTexture;
+	TextureManager::gTm->bind(asd, uiShader, ui_Texture);
+
+	vec3* teamMateData = (vec3*)teammates;
+
+	// render teammate indicators 
+	for (int n = 0; n < nrOfTeammates; n++)
+	{
+		minimapRenderMat = mat4();
+		//scale, rotate, translate
+
+		//scale
+		minimapRenderMat[0].x = contMan.youareherescaleX;
+		minimapRenderMat[1].y = contMan.youareherescaleX;
+
+		vec3 dirrr = teamMateData[n * 2 + 1];
+
+		//rotate
+		float rotXZ = -(atan2(dirrr[0], dirrr[2]) - atan2(0, 1));
+
+		minimapRenderMat = glm::rotate(minimapRenderMat, rotXZ, vec3(0, 0, 1));
+
+		vec3 poss = teamMateData[n * 2];
+
+		////translate
+		float xpos = (poss[0] - contMan.mapBotcord.x) / (contMan.mapTopcord.x - contMan.mapBotcord.x);
+		float ypos = (poss[2] - contMan.mapBotcord.y) / (contMan.mapTopcord.y - contMan.mapBotcord.y);
+
+		//to screenspace
+		xpos = (xpos * 2) - 1;
+		ypos = (ypos * 2) - 1;
+
+		minimapRenderMat[0].w = xpos;
+		minimapRenderMat[1].w = ypos;
+
+		glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, &minimapRenderMat[0][0]);
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	}
 }
