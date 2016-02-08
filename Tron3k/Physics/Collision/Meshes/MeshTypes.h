@@ -152,19 +152,24 @@ struct PLANE
 	//return collision normal, w holds intersection depth
 	glm::vec4 intersects(glm::vec3 origin, glm::vec3 dir, float len)
 	{
-		float denom = dot(n, dir);
+		
+		
+		vec3 nNorm = normalize(n);
+		vec3 dirNorm = normalize(dir);
+		float denom = dot(nNorm, dirNorm);
 
 		float d2 = glm::length(denom);
-		if (d2 > FLT_EPSILON)
+		float t = 0;
+		if (d2 >= FLT_EPSILON)
 		{
 			glm::vec3 d = p[0] - origin;
 			glm::vec3 dn = normalize(d);
-			float t = dot(dn, n);
+			t = dot(dn, nNorm);
 			t /= denom;
 
-			if (t >= 0) //if we traveled away from the portal
+			if (t + FLT_EPSILON >= 0 - FLT_EPSILON) //if we traveled away from the portal
 			{
-				t = dot(d, n);
+				t = dot(d, nNorm);
 				t /= denom;
 				if (len + FLT_EPSILON >= t - FLT_EPSILON) //if we traveled far enough to cross the plane
 				{
@@ -179,7 +184,7 @@ struct PLANE
 					float test1 = dot(v1, v5);
 					float test2 = dot(v3, v6);
 
-					if (test1 > FLT_EPSILON && test2 > FLT_EPSILON)
+					if (test1 + FLT_EPSILON >= 0 - FLT_EPSILON && test2 + FLT_EPSILON >= 0 - FLT_EPSILON)
 					{
 						// Y check
 						v5 = normalize(inter - p[1]);
@@ -187,11 +192,12 @@ struct PLANE
 						test1 = dot(v2, v5);
 						test2 = dot(v4, v6);
 
-						if (test1 > FLT_EPSILON && test2 > FLT_EPSILON)
+						if (test1 + FLT_EPSILON >= 0 - FLT_EPSILON && test2 + FLT_EPSILON >= 0 - FLT_EPSILON)
 						{
 							//printf("%f \n", t);
-
-							return glm::vec4(n, t);
+							if (t < 0)
+								t = 0;
+							return glm::vec4(nNorm, t);
 						}
 					}
 				}

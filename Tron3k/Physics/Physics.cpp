@@ -213,7 +213,7 @@ glm::vec4 Physics::checkSpherevOBBlwCollision(Sphere mesh1, OBB mesh2) //mesh 1 
 }
 //--------------//--------------//
 
-vec3 Physics::checkLinevPlaneCollision(vec3 l1, vec3 l2, vec3 p1, vec3 p2, vec3 p3)
+vec3 Physics::checkLinevPlaneCollision(vec3 l1, vec3 l2, vec3 p1, vec3 p2, vec3 p3, vec3 n)
 {
 	vec3 p = vec3(0, 0, 0);
 
@@ -228,9 +228,9 @@ vec3 Physics::checkLinevPlaneCollision(vec3 l1, vec3 l2, vec3 p1, vec3 p2, vec3 
 
 	//the equation for the plane is now p + d
 
-	if (dot(l3, p) == 0.0f)
+	if (dot(l3, n) <= 0.0f + FLT_EPSILON && dot(l3, n) >= 0.0f - FLT_EPSILON)
 	{
-		x = (dot(p2 - l1, p) / FLT_EPSILON);
+		x = (dot(p2 - l1, n) / FLT_EPSILON);
 
 		if (length(l3 * x) - FLT_EPSILON <= length(l) + FLT_EPSILON && x + FLT_EPSILON >= 0 - FLT_EPSILON)
 			return l1 + (l3 * x);
@@ -242,7 +242,7 @@ vec3 Physics::checkLinevPlaneCollision(vec3 l1, vec3 l2, vec3 p1, vec3 p2, vec3 
 	}
 
 
-	x = (dot(p2 - l1, p) / (dot(l3, p)));
+	x = (dot(p2 - l1, n) / (dot(l3, n)));
 
 	if (length(l3 * x) - FLT_EPSILON <= length(l) + FLT_EPSILON && x + FLT_EPSILON >= 0 - FLT_EPSILON)
 		return l1 + (l3 * x);
@@ -421,7 +421,7 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb)
 
 		// if a valid intersection found
 		//plane intersection will always be closer than all other intersections on the obb
-		if (t.w > 0)
+		if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON * 10)
 		{
 			return t;
 		}
@@ -700,7 +700,7 @@ vec4 Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel, vec3 bulletD
 				vec3 collidedVec = vec3(0);
 				for (int p = 0; p < 6; p++)
 				{
-					vec3 lvP = checkLinevPlaneCollision(origPos, bulletPos, theOBB->planes[p].p[0], theOBB->planes[p].p[1], theOBB->planes[p].p[2]);
+					vec3 lvP = checkLinevPlaneCollision(origPos, bulletPos, theOBB->planes[p].p[0], theOBB->planes[p].p[1], theOBB->planes[p].p[2], theOBB->planes[p].n);
 
 					if (length(lvP) > 0.001f)
 						if (dot(lvP - theOBB->planes[p].p[0], theOBB->planes[p].n) < 0.001f)
@@ -711,10 +711,10 @@ vec4 Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel, vec3 bulletD
 							//collidedWithPlane = true;
 
 							collidedVec = lvP;// -(rad * normalize(bulletDir) * 0.99f); //moves the bullet back in it's direction, by the size of the radii
-							if (length(bPos - origPos) > length(collidedVec - origPos)) //if collidedVec is closer to our original position
-								bPos = collidedVec;
-							else
-								collidedVec = bPos;
+							//if (length(bPos - origPos) > length(collidedVec - origPos)) //if collidedVec is closer to our original position
+							bPos = collidedVec;
+							//else
+								//collidedVec = bPos;
 							collidedWithPlane = true;
 
 						}
@@ -727,21 +727,44 @@ vec4 Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel, vec3 bulletD
 				if (collidedWithPlane)
 				{
 					//WE HAVE COLLISION
-					int x = 0;
-				}
-				t = getSpherevOBBNorms(bPos, rad, theOBB);
 
-				t.w = rad - t.w; //penetration depth instead of collision distance 
-				if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
-				{
-					if (collidedWithPlane)
-						int x = 0;
-					t = vec4(normalize(vec3(t)), t.w);
-					return t;
-				}
-				else if (collidedWithPlane)
-				{
+					t = getSpherevOBBNorms(bPos, rad, theOBB);
+
+					t.w = rad - t.w; //penetration depth instead of collision distance 
+					if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
+					{
+						if (collidedWithPlane)
+							int x = 0;
+						t = vec4(normalize(vec3(t)), t.w);
+						return t;
+					}
+					t = getSpherevOBBNorms(bPos, rad, theOBB);
 					t = getSpherevOBBNorms(collidedVec, rad, theOBB);
+					t.w = rad - t.w;
+					if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
+					{
+						if (collidedWithPlane)
+							int x = 0;
+						t = vec4(normalize(vec3(t)), t.w);
+						return t;
+					}
+
+
+					//When we get here, we have collided, but for some reason the bullet doesn't know it
+					int x = 0;
+
+					t = getSpherevOBBNorms(bulletPos, rad, theOBB);
+
+					t.w = rad - t.w; //penetration depth instead of collision distance 
+					if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
+					{
+						if (collidedWithPlane)
+							int x = 0;
+						t = vec4(normalize(vec3(t)), t.w);
+						return t;
+					}
+					t = getSpherevOBBNorms(origPos, rad, theOBB);
+					t.w = rad - t.w;
 					if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 					{
 						if (collidedWithPlane)
@@ -750,10 +773,7 @@ vec4 Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel, vec3 bulletD
 						return t;
 					}
 				}
-				if (collidedWithPlane)
-				{
-					int x = 0;//if we get here, we collided with plane, but the actual collision check missed, for some reason
-				}
+
 			}
 		}
 	}
@@ -794,7 +814,7 @@ vec4 Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel, vec3 bulletD
 							bool collidedWithPlane = false;
 							for (int p = 0; p < 6; p++)
 							{
-								vec3 lvP = checkLinevPlaneCollision(bPos, bulletPos, theOBB->planes[p].p[0], theOBB->planes[p].p[1], theOBB->planes[p].p[2]);
+								vec3 lvP = checkLinevPlaneCollision(bPos, bulletPos, theOBB->planes[p].p[0], theOBB->planes[p].p[1], theOBB->planes[p].p[2], theOBB->planes[p].n);
 
 								if (length(lvP) > 0.00001f)
 									if (dot(lvP - theOBB->planes[p].p[0], theOBB->planes[p].n) < 0.00001f)
