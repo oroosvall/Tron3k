@@ -671,6 +671,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			{
 				respawnTimer = 0.0f;
 				msg = PLAYERRESPAWN;
+				GetSound()->playUserGeneratedSound(SOUNDS::soundEffectRespawn);
 			}
 		}
 
