@@ -816,6 +816,15 @@ int Player::getAmmo()
 	return 0;
 }
 
+int Player::getMaxAmmo()
+{
+	if (role.getRole() != ROLES::NROFROLES)
+	{
+		return role.getMaxAmmo();
+	}
+	return 0;
+}
+
 void Player::rotatePlayer(vec3 olddir, vec3 newdir)
 {
 	float angle = atan2(newdir.x, newdir.z) - atan2(olddir.x, olddir.z);

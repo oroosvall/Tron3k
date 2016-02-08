@@ -141,6 +141,7 @@ private:
 	{
 		int HP;
 		int ammo;
+		int maxAmmo;
 		int teamOneTokens;
 		int teamTwoTokens;
 		int teamOneRoundWins;

@@ -43,5 +43,6 @@ class Weapon
 		bool getIfShooting() { return firingSpeedCurrentDelay > 0; };
 
 		int getAmmo() { return currentClipAmmo; };
+		int getMaxAmmo() { return maxClipSize; };
 };
 #endif

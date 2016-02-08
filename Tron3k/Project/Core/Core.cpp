@@ -1793,9 +1793,13 @@ void Core::inGameUIUpdate() //Ingame ui update
 	}
 	if (local->getAmmo() != HUD.ammo)
 	{
+		if(local->getMaxAmmo() != HUD.maxAmmo)
+			HUD.maxAmmo = local->getMaxAmmo();
+
 		HUD.ammo = local->getAmmo();
+		std::string nText = std::to_string(HUD.ammo) + "/" + std::to_string(HUD.maxAmmo);
 		uiManager->clearText(1);
-		uiManager->setText(std::to_string(HUD.ammo), 1);
+		uiManager->setText(nText, 1);
 	}
 	if (koth->getRespawnTokens(1) != HUD.teamOneTokens)
 	{
