@@ -179,11 +179,11 @@ bool UI::loadUI(std::string fileName, int winX, int winY)
 
 				if (textId == "hpBar")
 					textIdList[0] = counter;
-				else if (textId == "ammoBar")
+				else if (textId == "ammo")
 					textIdList[1] = counter;
-				else if (textId == "ticket1Bar")
+				else if (textId == "tickeBar1")
 					textIdList[2] = counter;
-				else if (textId == "ticket2Bar")
+				else if (textId == "ticketBar2")
 					textIdList[3] = counter;
 				else if (textId == "wins1")
 					textIdList[4] = counter;
