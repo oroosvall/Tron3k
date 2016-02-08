@@ -711,6 +711,30 @@ public:
 
 			gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->setLockedControls(false);
 			gamePtr->setCursorInvisible(true);
+
+			if (isClient)
+			{
+				Player* local = gamePtr->getPlayer(gamePtr->GetLocalPlayerId());
+				KingOfTheHill* koth = (KingOfTheHill*)gamePtr->getGameMode();
+
+				uiPtr->clearText(0);
+				uiPtr->clearText(1);
+				uiPtr->clearText(2);
+				uiPtr->clearText(3);
+				uiPtr->clearText(4);
+				uiPtr->clearText(5);
+				uiPtr->clearText(6);
+
+				uiPtr->setText(std::to_string(local->getHP()), 0); //hp
+
+				std::string nText = std::to_string(local->getAmmo()) + "/" + std::to_string(local->getMaxAmmo());
+				uiPtr->setText(nText, 1); //ammo
+				uiPtr->setText(std::to_string(koth->getRespawnTokens(1)), 2); //tickets
+				uiPtr->setText(std::to_string(koth->getRespawnTokens(1)), 3); //tickets2
+				uiPtr->setText(std::to_string(koth->getRoundWins(1)), 4); //wins1
+				uiPtr->setText(std::to_string(koth->getRoundWins(2)), 5); //wins2
+				uiPtr->setText(std::to_string(int(koth->getTimer())), 6); //time
+			}
 		}
 	}
 

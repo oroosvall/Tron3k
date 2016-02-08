@@ -42,14 +42,14 @@ void UI::init(std::string fileName, Console* console, IRenderPipeline* uiRender,
 	this->uiRender = uiRender;
 	this->console = console;
 
-	bool result = loadUI(fileName, winX, winY);
-	if (!result)
-		console->printMsg("Error: LoadUI in UI was unsucessfull","System",'S');
-
 	for (int i = 0; i < 9; i++)
 	{
 		textIdList[0] = -1;
 	}
+
+	bool result = loadUI(fileName, winX, winY);
+	if (!result)
+		console->printMsg("Error: LoadUI in UI was unsucessfull","System",'S');
 }
 
 //Needs to be modified
@@ -181,7 +181,7 @@ bool UI::loadUI(std::string fileName, int winX, int winY)
 					textIdList[0] = counter;
 				else if (textId == "ammo")
 					textIdList[1] = counter;
-				else if (textId == "tickeBar1")
+				else if (textId == "ticketBar1")
 					textIdList[2] = counter;
 				else if (textId == "ticketBar2")
 					textIdList[3] = counter;

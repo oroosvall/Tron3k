@@ -1031,6 +1031,27 @@ void Core::roamHandleCmds(std::string com)
 				cursorInvisible = true;
 				if (game != nullptr)
 					game->setCursorInvisible(cursorInvisible);
+
+				Player* local = game->getPlayer(game->GetLocalPlayerId());
+				KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
+
+				uiManager->clearText(0);
+				uiManager->clearText(1);
+				uiManager->clearText(2);
+				uiManager->clearText(3);
+				uiManager->clearText(4);
+				uiManager->clearText(5);
+				uiManager->clearText(6);
+
+				uiManager->setText(std::to_string(local->getHP()), 0); //hp
+
+				std::string nText = std::to_string(local->getAmmo()) + "/" + std::to_string(local->getMaxAmmo());
+				uiManager->setText(nText, 1); //ammo
+				uiManager->setText(std::to_string(koth->getRespawnTokens(1)), 2); //tickets
+				uiManager->setText(std::to_string(koth->getRespawnTokens(1)), 3); //tickets2
+				uiManager->setText(std::to_string(koth->getRoundWins(1)), 4); //wins1
+				uiManager->setText(std::to_string(koth->getRoundWins(2)), 5); //wins2
+				uiManager->setText(std::to_string(int(koth->getTimer())), 6); //time
 			}
 			else 
 				console.printMsg("Invalid role. Use /role <1-5>", "System", 'S');
