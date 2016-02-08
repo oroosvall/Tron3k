@@ -1151,3 +1151,34 @@ void RenderPipeline::updateTakeDamageEffect(float dt)
 			gBuffer->setGlowSamplingDist(2.0f);
 	}
 }
+
+void RenderPipeline::renderMinimap()
+{
+	//float* yourPos, float* teammates, int nrOfTeammates, int team
+
+	glUseProgram(uiShader);
+	//uniformlocation set texture 0  it defaults to 0 so not needed
+	uiQuad.BindVertData();
+	glActiveTexture(GL_TEXTURE0);
+	
+	TextureInfo asd;
+	asd.lastTextureSlot = GL_TEXTURE0;
+	asd.state = TEXTURE_LOADED;
+	asd.textureID = contMan.miniMapTexture;
+	TextureManager::gTm->bind(asd, uiShader, ui_Texture);
+
+	//pos
+	minimapRenderMat[0].w = 0;
+	minimapRenderMat[1].w = 0;
+	minimapRenderMat[2].w = 0;
+	//scale
+	minimapRenderMat[0].x = contMan.minimapscaleX;
+	minimapRenderMat[1].y = contMan.minimapScaleY;
+	minimapRenderMat[2].z = 1;
+	minimapRenderMat[3].w = 1;
+
+	vec3 piv(0);
+	glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, &minimapRenderMat[0][0]);
+	glProgramUniform3fv(uiShader, uniformPivotLocation, 1, &piv[0]);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+}

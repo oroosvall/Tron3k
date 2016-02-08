@@ -1731,6 +1731,12 @@ void Core::renderWorld(float dt)
 
 		if (renderUI) //Temp
 			inGameUIUpdate();
+
+		if (i->getKeyInfo(GLFW_KEY_F))
+			if (game->getPlayer(game->GetLocalPlayerId())->getLockedControls() == false)
+			{
+				renderPipe->renderMinimap();
+			}
 	}
 }
 

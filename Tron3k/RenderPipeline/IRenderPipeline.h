@@ -127,6 +127,7 @@ public:
 	virtual bool* getRenderedChunks(int& get_size) = 0;
 
 	virtual void startTakeDamageEffect(int maxDisplace, float time) = 0;
+	virtual void renderMinimap() = 0;
 
 };
 

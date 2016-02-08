@@ -133,6 +133,8 @@ private:
 	float takeDamage_timer;
 	float takeDamage_timerStartValue;
 
+	mat4 minimapRenderMat;
+
 public:
 
 	RenderPipeline() {};
@@ -214,6 +216,7 @@ public:
 
 	virtual void startTakeDamageEffect(int maxDisplace, float time);
 	virtual void updateTakeDamageEffect(float dt);
+	virtual void renderMinimap();
 };
 
 
