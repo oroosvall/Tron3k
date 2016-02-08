@@ -192,10 +192,11 @@ struct PLANE
 						test1 = dot(v2, v5);
 						test2 = dot(v4, v6);
 
-						if (test1 >= 0 && test2 >= 0)
+						if (test1 + FLT_EPSILON >= 0 - FLT_EPSILON && test2 + FLT_EPSILON >= 0 - FLT_EPSILON)
 						{
 							//printf("%f \n", t);
-
+							if (t < 0)
+								t = 0;
 							return glm::vec4(nNorm, t);
 						}
 					}

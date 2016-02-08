@@ -421,7 +421,7 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb)
 
 		// if a valid intersection found
 		//plane intersection will always be closer than all other intersections on the obb
-		if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON * 5)
+		if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON * 10)
 		{
 			return t;
 		}
