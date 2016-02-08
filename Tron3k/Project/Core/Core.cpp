@@ -1737,10 +1737,7 @@ void Core::renderWorld(float dt)
 			renderPipe->enableDepthTest();
 		}
 
-		//viewing 3rd person anims in roam
-		if (i->getKeyInfo(GLFW_KEY_P))
-			cam->setCam(camPos, camDir);
-
+		renderPipe->enableBlend();
 		if (renderUI) //Temp
 			inGameUIUpdate();
 
@@ -1749,6 +1746,12 @@ void Core::renderWorld(float dt)
 			{
 				renderPipe->renderMinimap();
 			}
+
+		renderPipe->disableBlend();
+
+		//viewing 3rd person anims in roam
+		if (i->getKeyInfo(GLFW_KEY_P))
+			cam->setCam(camPos, camDir);
 	}
 }
 

@@ -983,6 +983,7 @@ void RenderPipeline::ui_initRender()
 
 void RenderPipeline::ui_InGameRenderInit()
 {
+	glEnable(GL_BLEND);
 	glUseProgram(uiShader);
 	//uniformlocation set texture 0  it defaults to 0 so not needed
 
@@ -1029,6 +1030,16 @@ void RenderPipeline::enableDepthTest()
 void RenderPipeline::disableDepthTest()
 {
 	glDisable(GL_DEPTH_TEST);
+}
+
+void RenderPipeline::enableBlend()
+{
+	glEnable(GL_BLEND);
+}
+
+void RenderPipeline::disableBlend()
+{
+	glDisable(GL_BLEND);
 }
 
 void RenderPipeline::clearBothBuffers()

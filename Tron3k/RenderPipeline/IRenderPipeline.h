@@ -119,6 +119,8 @@ public:
 
 	virtual void enableDepthTest() = 0;
 	virtual void disableDepthTest() = 0;
+	virtual void enableBlend() = 0;
+	virtual void disableBlend() = 0;
 	virtual void clearBothBuffers() = 0;
 	virtual void clearColor() = 0;
 

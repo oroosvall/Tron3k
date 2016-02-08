@@ -207,6 +207,8 @@ public:
 
 	virtual void enableDepthTest();
 	virtual void disableDepthTest();
+	virtual void enableBlend();
+	virtual void disableBlend();
 	virtual void clearBothBuffers();
 	virtual void clearColor();
 
