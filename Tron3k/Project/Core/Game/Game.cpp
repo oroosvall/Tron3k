@@ -1596,7 +1596,7 @@ void Game::bounceBullet(BulletHitWorldInfo hwi, Bullet* theBullet)
 void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 {
 	//hit info and bullet rad (assumed 0.6 for all)
-	decalAdd(hi, 0.45f);
+	decalAdd(hi, 0.2f);
 
 	int arraypos = -1;
 	Bullet* b = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, arraypos);
@@ -2007,7 +2007,7 @@ void Game::decalAdd(BulletHitWorldInfo info, float rad)
 	if (p == nullptr)
 		return;
 
-	decals_gameInfo[decalCounter].lifeLeft = decals_gameInfo[decalCounter].lifeTime = 5;
+	decals_gameInfo[decalCounter].lifeLeft = decals_gameInfo[decalCounter].lifeTime = 2000;
 
 	decals_renderInfo[decalCounter].inten = 1.0f;
 	decals_renderInfo[decalCounter].normal = vec3(info.collisionNormal);
