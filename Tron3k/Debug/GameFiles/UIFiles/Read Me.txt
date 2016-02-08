@@ -11,7 +11,7 @@ UniqueKey	  //A value that says what will happen when its clicked on. If the but
 hoverKey	  //1 if it should change texture when hovered over and 0 if not. Only works for Button objects so put it at 0 for everything else.
 
 StaticTextureBox: //Here is what the staticTextureBox needs
-x y		  //x and y for the center of the button
+x y		  //x and y for the center of the box.
 class id	  //Says which class the button needs to be.
 number of textures //Only needed if the class id is 1
 texture		   //As many textures as the row above says
@@ -20,6 +20,7 @@ texture		   //As many textures as the row above says
 .
 
 InputBox: //Here is what the inputBox needs
+x y		       //x and y for the center of the box.
 class id	       //Says which class the button needs to be.
 texture1	       //First texture and also the texture it shall begin with.
 textId		       //Class 4 only

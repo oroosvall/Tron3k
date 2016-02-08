@@ -14,9 +14,9 @@ void TextureManager::init()
 
 	textureUnitCounter = 0;
 
-	defaultDiffuse =	loadTexture("GameFiles/Textures/blank_d.dds");
-	defaultNormal =		loadTexture("GameFiles/Textures/blank_n.dds");
-	defaultGlow =		loadTexture("GameFiles/Textures/blank_g.dds");
+	defaultDiffuse =	loadTexture("GameFiles/Textures/Trapper/PulseRifle_Texture.dds");
+	defaultNormal =		loadTexture("GameFiles/Textures/Trapper/PulseRifle_Normal.dds");
+	defaultGlow =		loadTexture("GameFiles/Textures/Trapper/PulseRifle_Specular.dds");
 
 	defaultDiffuseSlot = GL_TEXTURE0;
 	defaultNormalSlot = GL_TEXTURE0;

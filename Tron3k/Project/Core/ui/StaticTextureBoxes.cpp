@@ -54,7 +54,12 @@ StaticTextureBoxes::~StaticTextureBoxes()
 		delete[] textureIndexList;
 }
 
-void StaticTextureBoxes::render(int id)
+void StaticTextureBoxes::renderText(int id)
+{
+
+}
+
+void StaticTextureBoxes::renderQuad(int id)
 {
 	uiRender->ui_renderQuad((float*)&worldMatrix[0][0], (float*)&pivot.x, textureInUse, 1.0f, id);
 }

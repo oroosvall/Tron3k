@@ -216,7 +216,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 
 		//WARMUP is the pre-game, before the first round has begun. Once the game starts, we don't go here
 	case WARMUP:
-		if (consolePtr->getCommand() == "/start")
+		if (gamePtr->nrOfPlayersReady() >= playersReadyNeeded)
 		{
 			timer = 15.0f; //20 seconds in the pre-round
 			state = PREROUND;
@@ -241,11 +241,11 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			timer = 0.0f;
 			for (int c = 0; c < teamOnePlayers.size(); c++)
 			{
-				gamePtr->allowPlayerRespawn(teamOnePlayers[c], c);
+				gamePtr->allowPlayerRespawn(teamOnePlayers[c], c%5);
 			}
 			for (int c = 0; c < teamTwoPlayers.size(); c++)
 			{
-				gamePtr->allowPlayerRespawn(teamTwoPlayers[c], c);
+				gamePtr->allowPlayerRespawn(teamTwoPlayers[c], c%5);
 			}
 			gamePtr->clearAllPlayerKD();
 			teamOneSpawnTokens = teamTwoSpawnTokens = tokensPerTeam;
@@ -283,10 +283,14 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			for (int c = 0; c < teamOnePlayers.size() && allDead; c++)
 			{
 				pID = teamOnePlayers[c];
-				pIsAlive = gamePtr->getPlayer(pID)->isAlive();
-				if (pIsAlive)
+				Player* p = gamePtr->getPlayer(pID);
+				if (p != nullptr)
 				{
-					allDead = false;
+					pIsAlive = p->isAlive();
+					if (pIsAlive)
+					{
+						allDead = false;
+					}
 				}
 			}
 			if (allDead)
@@ -304,10 +308,14 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			for (int c = 0; c < teamTwoPlayers.size() && allDead; c++)
 			{
 				pID = teamTwoPlayers[c];
-				pIsAlive = gamePtr->getPlayer(pID)->isAlive();
-				if (pIsAlive)
+				Player* p = gamePtr->getPlayer(pID);
+				if (p != nullptr)
 				{
-					allDead = false;
+					pIsAlive = p->isAlive();
+					if (pIsAlive)
+					{
+						allDead = false;
+					}
 				}
 			}
 			if (allDead)
@@ -473,11 +481,11 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 
 			for (int c = 0; c < teamOnePlayers.size(); c++)
 			{
-				gamePtr->allowPlayerRespawn(teamOnePlayers[c], c);
+				gamePtr->allowPlayerRespawn(teamOnePlayers[c], c%5);
 			}
 			for (int c = 0; c < teamTwoPlayers.size(); c++)
 			{
-				gamePtr->allowPlayerRespawn(teamTwoPlayers[c], c);
+				gamePtr->allowPlayerRespawn(teamTwoPlayers[c], c%5);
 			}
 			gamePtr->clearAllPlayerKD();
 		}

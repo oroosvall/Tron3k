@@ -51,6 +51,10 @@ void Core::init()
 	renderMenu = true;
 	menuIpKeyListener = false;
 	menuNameKeyListener = false;
+	escWindow = false;
+
+	nameNrOfKeys = 0;
+	ipNrOfKeys = 0;
 }
 
 Core::~Core()
@@ -110,7 +114,7 @@ void Core::update(float dt)
 	}
 
 	glfwPollEvents();
-	
+
 	bool otherListeners = true;
 	if ((menuNameKeyListener || menuIpKeyListener) == true)
 		otherListeners = false;
@@ -127,7 +131,7 @@ void Core::update(float dt)
 		if (cursorBlink > 0.5f)
 		{
 			renderPipe->setChatTypeMessage(console.pollLatest() + "|");
-			if(cursorBlink > 1.0f)
+			if (cursorBlink > 1.0f)
 				cursorBlink = 0.0f;
 		}
 		else
@@ -247,7 +251,6 @@ void Core::upStart(float dt)
 
 void Core::upMenu(float dt)
 {
-
 	renderUI = true;
 
 	double x = (0.0);
@@ -284,25 +287,47 @@ void Core::upMenu(float dt)
 			glfwHideWindow(win);
 			break;
 		case 4: //Client -> connect window
-			//Block the input to command window
-			//Set so your own function listens after key input.
-
+		{
 			uiManager->setMenu(2);
+
+			string addr = _addrs.toString();
+			clientHandleCmds("/ip " + addr);
+			nameNrOfKeys = _name.size();
+			ipNrOfKeys = addr.size();
+
+			uiManager->setText(addr, 7); //Ip
+			uiManager->setText(_name, 8); //Name
 			break;
+		}
 		case 5: //Server -> starts a server
 			current = SERVER;
 			subState = 0;
+			
 			uiManager->removeAllMenus();
+			
+			renderPipe->clearColor();
 			renderPipe->clearBothBuffers();
+			//uiManager->setMenu(6);
 			glfwSwapBuffers(win);
 			renderPipe->clearBothBuffers();
+			
 			renderMenu = false;
 			renderUI = false;
 			break;
 		case 6: //Connect
 		{
-			nrOfKeys = 0;
-			//default ip at the moment
+			menuIpKeyListener = false;
+			std::string ip = "/ip ";
+			ip += uiManager->getText(7); //From ip object
+			startHandleCmds(ip);
+
+			menuNameKeyListener = false;
+			std::string name = "/name ";
+			name += uiManager->getText(8); //From ip object
+			startHandleCmds(name);
+
+			nameNrOfKeys = 0;
+			ipNrOfKeys = 0;
 			current = Gamestate::CLIENT; //Start the game as a client
 			client_record = false;
 			client_playback = false;
@@ -310,7 +335,8 @@ void Core::upMenu(float dt)
 			break;
 		}
 		case 7: //Back
-			nrOfKeys = 0;
+			nameNrOfKeys = 0;
+			ipNrOfKeys = 0;
 			uiManager->setMenu(-1); //Last menu
 			break;
 		case 10: //Ip input
@@ -1009,6 +1035,7 @@ void Core::roamHandleCmds(std::string com)
 				console.printMsg("/rs  abb		RENDER_ABB ", "", ' ');
 				console.printMsg("/rs  obb		RENDER_OBB ", "", ' ');
 				console.printMsg("/rs  debug	RENDER_DEBUG_TEXT ", "", ' ');
+				console.printMsg("/rs  gui		RENDER_GUI ", "", ' ');
 			}
 			else if (token == "portal")
 				renderPipe->setRenderFlag(PORTAL_CULLING);
@@ -1022,9 +1049,13 @@ void Core::roamHandleCmds(std::string com)
 				renderPipe->setRenderFlag(RENDER_OBB);
 			else if(token == "debug")
 				renderPipe->setRenderFlag(RENDER_DEBUG_TEXT);
+			else if (token == "gui")
+				renderPipe->setRenderFlag(RENDER_GUI);
 		}
 		else if (token == "/disconnect")
+		{
 			disconnect();
+		}
 	}
 }
 
@@ -1051,6 +1082,10 @@ void Core::clientHandleCmds(std::string com)
 			console.printMsg("/free (turns freecam on/off)", "", ' ');
 			console.printMsg("/spec # (spectate player id)", "", ' ');
 			console.printMsg("/rs  show render settings", "", ' ');
+		}
+		if (token == "/ready")
+		{
+			top->command_gamemode_ready(top->getConId());
 		}
 		else if (token == "/name")
 		{
@@ -1111,7 +1146,9 @@ void Core::clientHandleCmds(std::string com)
 				console.printMsg("Invalid role. Use /role <1-5>", "System", 'S');
 		}
 		else if (token == "/disconnect")
+		{
 			disconnect();
+		}
 		else if (token == "/free")
 		{
 			if (game->freecam)
@@ -1165,6 +1202,7 @@ void Core::clientHandleCmds(std::string com)
 				console.printMsg("/rs  abb		RENDER_ABB ", "", ' ');
 				console.printMsg("/rs  obb		RENDER_OBB ", "", ' ');
 				console.printMsg("/rs  debug	RENDER_DEBUG_TEXT ", "", ' ');
+				console.printMsg("/rs  gui		RENDER_GUI ", "", ' ');
 			}
 			else if (token == "portal")
 				renderPipe->setRenderFlag(PORTAL_CULLING);
@@ -1178,6 +1216,8 @@ void Core::clientHandleCmds(std::string com)
 				renderPipe->setRenderFlag(RENDER_OBB);
 			else if (token == "debug")
 				renderPipe->setRenderFlag(RENDER_DEBUG_TEXT);
+			else if (token == "gui")
+				renderPipe->setRenderFlag(RENDER_GUI);
 		}
 	}
 }
@@ -1345,11 +1385,12 @@ void Core::renderWorld(float dt)
 
 		SpotLight light;
 		//world ambient temp
-		light.Position = vec3(0, 400, 0);
-		light.Direction = vec3(0.0f);//p->getDir();
-		light.Color = vec3(1,1,1);
-		light.DiffuseIntensity = 0.0f;
-		light.AmbientIntensity = 0.3f;
+
+		light.Position = vec3(131, 45, 0);
+		light.Direction = normalize(vec3(-0.16f, -0.36f, 0.91f));//p->getDir();
+		light.Color = vec3(0.7f, 0.7f , 1.0f);
+		light.DiffuseIntensity = 0.3f;
+		light.AmbientIntensity = 0.1f;
 		renderPipe->addLight(&light, 0);
 		light.AmbientIntensity = 0.0f;
 
@@ -1423,13 +1464,7 @@ void Core::renderWorld(float dt)
 					}
 
 					//Take damage effect
-					if (game->spectateID == i)
-					{
-						if (lastHP_blurreffect > p->getHP())
-							renderPipe->startTakeDamageEffect(6, 0.6f);
-						lastHP_blurreffect = p->getHP();
-					}
-					else
+					if (game->spectateID == -1)
 					{
 						if (p->isLocal())
 						{
@@ -1438,7 +1473,13 @@ void Core::renderWorld(float dt)
 							lastHP_blurreffect = p->getHP();
 						}
 					}
-
+					else if (game->spectateID == i)
+					{
+						if (lastHP_blurreffect > p->getHP())
+							renderPipe->startTakeDamageEffect(6, 0.6f);
+						lastHP_blurreffect = p->getHP();
+					}
+				
 					//static intense based on health
 					float hpval = float(p->getHP()) / 130.0f;
 
@@ -1456,14 +1497,14 @@ void Core::renderWorld(float dt)
 					{
 						if (p->isLocal())   //use current anim
 							renderPipe->renderAnimation(i, p->getRole()->getRole(), &p->getFPSmat(), p->getAnimState_f_c(), &dgColor.x, hpval, true, p->getAnimPrimary(), cam->roomID);
-						else			   //use peak anim
+						else //use peak anim
 							renderPipe->renderAnimation(i, p->getRole()->getRole(), &p->getFPSmat(), p->getAnimState_f_p(), &dgColor.x, hpval, true, p->getAnimPrimary(), cam->roomID);
 					}
 					else
 					{
 						glm::mat4* playermat = p->getWorldMat();
 						if (force3rd)
-							playermat[0][1].w -= 1.55f;
+							playermat[0][1].w -= 1.45f;
 
 						if (p->isLocal()) //use current anim
 							renderPipe->renderAnimation(i, p->getRole()->getRole(), playermat, p->getAnimState_t_c(), &dgColor.x, hpval, false, false, p->roomID);
@@ -1588,7 +1629,7 @@ void Core::renderWorld(float dt)
 				{
 					ThermiteCloud* asd = (ThermiteCloud*)eff[i];
 					vec3 pos = asd->getPos();
-					renderPipe->renderExploEffect(&pos.x, asd->explotionRenderRad(), 0, &dgColor.x);
+					renderPipe->renderExploEffect(&pos.x, asd->explosionRenderRad(), 0, &dgColor.x);
 				}
 					break;
 				case ZEROFRICTION:
@@ -1625,6 +1666,7 @@ void Core::renderWorld(float dt)
 
 		renderPipe->disableDepthTest();
 
+		//name rendering
 		if (current != SERVER)
 		{
 			for (int c = 0; c < 20; c++)
@@ -1632,6 +1674,8 @@ void Core::renderWorld(float dt)
 				Player* p = game->getPlayer(c);
 				int local = game->GetLocalPlayerId();
 				Player* lP = game->getPlayer(local);
+				if ((HackingDartModifier*)lP->searchModifierGet(HACKINGDARTMODIFIER))
+					continue;
 				if (p != nullptr  && lP != nullptr && p->getTeam() == lP->getTeam())
 				{
 					mat4 bacon;
@@ -1677,8 +1721,8 @@ void Core::inGameUIUpdate() //Ingame ui update
 	double y = (0.0);
 	//Get mouse position
 	i->getCursor(x, y);
-	double tX = (x / (double)winX) * 2 - 1.0; // (x/ResolutionX) * 2 - 1
-	double tY = (-y / (double)winY) * 2 + 1.0; // (y/ResolutionY) * 2 - 1
+	double tX = (x / (double)winX) * 2 - 1.0;
+	double tY = (-y / (double)winY) * 2 + 1.0;
 	
 	//uiManager->setText(getHp in string, 0); //HP
 	//uiManager->setText(getAmmo in string, 1); //Ammo
@@ -1691,7 +1735,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 	uiManager->inGameRender();
 
 	//***********************************************************//
-	//Lägg in så hover körs endast om esc rutan är igång.
+	//    Lägg in så hover körs endast om esc rutan är igång.    //
 	//***********************************************************//
 
 	if (i->justPressed(GLFW_MOUSE_BUTTON_LEFT))
@@ -1751,20 +1795,18 @@ void Core::inGameUIUpdate() //Ingame ui update
 		case 41: //Settings
 			break;
 		case 42: //Quit
-			current = MENU;
 			if (current == ROAM)
 				roamHandleCmds("/disconnect");
 			else
 				clientHandleCmds("/disconnect");
-			uiManager->setOpenedGuiBool(false);
-			uiManager->LoadNextSet(0, winX, winY);
 			break;
 		default:
 			break;
 		}
 	}
-	else
+	else if(escWindow)
 		uiManager->hoverCheck(glm::vec2((float)tX, (float)tY));
+	else{}
 }
 
 void Core::handleCulling()
@@ -2051,6 +2093,13 @@ void Core::disconnect()
 	//}
 	current = Gamestate::START;
 	subState = 0;
+
+	current = START;
+	uiManager->setOpenedGuiBool(false);
+	uiManager->setFirstMenuSet(false);
+	cursorInvisible = false;
+	uiManager->LoadNextSet(0, winX, winY);
+	uiManager->setMenu(0);
 }
 
 void Core::showTeamSelect()
@@ -2077,28 +2126,21 @@ void Core::menuIpKeyInputUpdate()
 	{
 		if (i->justPressed(validKeyboardInputs[c]))
 		{
-			if (nrOfKeys < 15)
+			if (ipNrOfKeys < 15)
 			{
 				char ch = i->keyToChar(validKeyboardInputs[c]);
 				std::string fromChar = "";
 				fromChar += ch;
 
 				uiManager->setText(fromChar, 7); //Set ip object
-				nrOfKeys++;
+				ipNrOfKeys++;
 			}
 		}
 	}
 	if (i->justPressed(GLFW_KEY_BACKSPACE))
 	{
 		uiManager->removeLastInput(7); //remove from ip object
-		nrOfKeys--;
-	}
-	if (i->justPressed(GLFW_KEY_ENTER))
-	{
-		menuIpKeyListener = false;
-		std::string ip = "/ip ";
-		ip += uiManager->getText(7); //From ip object
-		startHandleCmds(ip);
+		ipNrOfKeys--;
 	}
 }
 
@@ -2109,28 +2151,23 @@ void Core::menuNameKeyInputUpdate()
 	{
 		if (i->justPressed(validKeyboardInputs2[c]))
 		{
-			if (nrOfKeys < 12)
+			if (nameNrOfKeys < 12)
 			{
 				char ch = i->keyToChar(validKeyboardInputs2[c]);
+				if (!i->getKeyInfo(GLFW_KEY_LEFT_SHIFT))
+					ch = tolower(ch);
 				std::string fromChar = "";
 				fromChar += ch;
 
 				uiManager->setText(fromChar, 8); //Set ip object
 
-				nrOfKeys++;
+				nameNrOfKeys++;
 			}
 		}
 	}
 	if (i->justPressed(GLFW_KEY_BACKSPACE))
 	{
 		uiManager->removeLastInput(8); //remove from ip object
-		nrOfKeys--;
-	}
-	if (i->justPressed(GLFW_KEY_ENTER))
-	{
-		menuNameKeyListener = false;
-		std::string name = "/name ";
-		name += uiManager->getText(8); //From ip object
-		startHandleCmds(name);
+		nameNrOfKeys--;
 	}
 }

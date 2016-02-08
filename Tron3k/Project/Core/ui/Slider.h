@@ -29,7 +29,8 @@ public:
 	Slider(glm::vec2 center, int textureId1, int textureId2, int uniqueKey, int objId1, int objId2, IRenderPipeline* uiRender, glm::vec2 textRes, glm::vec2 textRes2);
 	virtual ~Slider();
 
-	virtual void render(int id);
+	virtual void renderQuad(int id);
+	virtual void renderText(int id);
 
 	virtual void setWorldMatrix(float x, float y, int id);
 

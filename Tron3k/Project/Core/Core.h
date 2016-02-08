@@ -120,7 +120,10 @@ private:
 	bool renderMenu;
 	bool menuIpKeyListener;
 	bool menuNameKeyListener;
-	int nrOfKeys;
+	int nameNrOfKeys;
+	int ipNrOfKeys;
+
+	bool escWindow;
 
 	//Menu input
 	void menuIpKeyInputUpdate();

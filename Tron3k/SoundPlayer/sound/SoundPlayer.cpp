@@ -231,7 +231,7 @@ int SoundPlayer::playMapSounds()
 			mapSounds[7].setAttenuation(3);
 			mapSounds[7].setMinDistance(9.0f);
 
-			for (int i = 0; i < MAXSOUNDS; i++)
+			for (int i = 0; i < 8; i++)
 			{
 				mapSounds[i].setLoop(true);
 				mapSounds[i].play();

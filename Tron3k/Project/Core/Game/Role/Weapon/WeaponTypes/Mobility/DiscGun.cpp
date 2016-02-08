@@ -19,7 +19,7 @@ void DiscGun::init()
 
 	currentBulletId = 0;
 
-	firingSpeed = 0.8f;
+	firingSpeed = 0.6f;
 	firingSpeedCurrentDelay = 0;
 
 	reloadTime = 2.0f;

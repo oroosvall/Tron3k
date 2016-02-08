@@ -33,7 +33,8 @@ enum RENDER_FLAGS
 	RENDER_CHUNK,
 	RENDER_ABB,
 	RENDER_OBB,
-	RENDER_DEBUG_TEXT
+	RENDER_DEBUG_TEXT,
+	RENDER_GUI
 };
 
 struct PipelineValues
@@ -118,6 +119,7 @@ public:
 	virtual void enableDepthTest() = 0;
 	virtual void disableDepthTest() = 0;
 	virtual void clearBothBuffers() = 0;
+	virtual void clearColor() = 0;
 
 	virtual int startExecTimer(std::string name) = 0;
 	virtual void stopExecTimer(int id) = 0;

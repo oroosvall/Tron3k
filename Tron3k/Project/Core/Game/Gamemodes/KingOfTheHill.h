@@ -25,6 +25,7 @@ private:
 	KOTHSTATE serverState; //State of the server, if we're a client
 	GAMEMODE_MSG lastMsg;
 
+	int playersReadyNeeded = 4;
 	std::vector<int> teamOnePlayers;
 	std::vector<int> teamTwoPlayers;
 

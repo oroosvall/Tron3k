@@ -1,4 +1,5 @@
-3
+4
 GameFiles/UIFiles/MainMenu.txt
 GameFiles/UIFiles/Multiplayer.txt
 GameFiles/UIFiles/Connect.txt
+GameFiles/UIFiles/Server.txt

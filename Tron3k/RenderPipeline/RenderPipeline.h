@@ -204,6 +204,7 @@ public:
 	virtual void enableDepthTest();
 	virtual void disableDepthTest();
 	virtual void clearBothBuffers();
+	virtual void clearColor();
 
 	virtual int startExecTimer(std::string name);
 	virtual void stopExecTimer(int id);

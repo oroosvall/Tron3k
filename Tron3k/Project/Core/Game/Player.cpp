@@ -77,7 +77,7 @@ void Player::setExplodingInfo(std::vector<glm::vec4> expDirs)
 	}
 }
 
-void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingThis)
+void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool spectating)
 {
 	if (!this->getFootsteps())
 	{
@@ -94,8 +94,8 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingTh
 
 	if (GetSoundActivated())
 	{
-		GetSound()->setLocalPlayerPos(pos);
-		GetSound()->setLocalPlayerDir(this->getDir());
+		GetSound()->setLocalPlayerPos(cam->getPos());
+		GetSound()->setLocalPlayerDir(cam->getDir());
 	}
 
 	if ((vel.x != 0 || vel.z != 0) && this->grounded)
@@ -152,10 +152,6 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 	int * collS = &collisionNormalSize;
 	if (collisionNormalSize > 0)
 	{
-		if (collisionNormalSize > 1)
-			int nigger = 2;
-		if (collisionNormalSize > 2)
-			int fuck = 1;
 		collided = true;
 
 		bool ceiling = false;
@@ -167,7 +163,7 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 		{
 			//push pos away and lower velocity using pendepth
 			vec3 pendepth = vec3(collisionNormals[k]) * collisionNormals[k].w;
-			if (collisionNormals[k].y < 0)
+			if (collisionNormals[k].y < -0.6f)
 				ceiling = true;
 
 			//ramp factor and grounded
@@ -220,7 +216,7 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 		// this is for air only since grounded will set the vel to 0 later
 		// the dt * 0.5 is supposed to remove almost all velocity in that dir
 		// while + posajust w/o  /dt  will remove it slower
-		posadjust = posadjust;
+		posadjust = posadjust * 0.99f;
 		vel += posadjust;// / dt * 0.5f;
 
 		if (ceiling)
@@ -690,7 +686,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		movementAnimationChecks(dt);
 
 		modifiersSetData(dt);	//Dont Remove Again Please!
-		movePlayer(dt, olddir, freecam, spectatingThisPlayer); //This moves the player regardless of what we might end up colliding with
+		movePlayer(dt, olddir, freecam, spectating); //This moves the player regardless of what we might end up colliding with
 
 
 		clearCollisionNormals(); //Doesn't actually clear the array, just manually sets size to 0. This is to speed things up a little.
@@ -715,15 +711,47 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		if (spectatingThisPlayer == true)
 		{
 			cam->setCam(pos, dir);
-
 			cam->roomID = roomID;
 
-			if (GetSoundActivated())
+			animRole = role.getRole();
+			animPrimary = false;
+			if (role.getWeaponNRequiped() == 0) // if primary
+				animPrimary = true;
+
+			//special case when spectating a brute and he swaps weapons
+
+			if (animRole == ROLES::BRUTE && animSwapActive == false)
 			{
-				GetSound()->setLocalPlayerPos(cam->getPos());
-				GetSound()->setLocalPlayerDir(cam->getDir());
+				//init swap 1st to second
+				if (anim_first_framePeak == AnimationState::first_primary_switch)
+				{
+					animSwapTime_OUT = 0.53f;
+					animSwapActive = true;
+				}
+				//init swap 2nd to first
+				else if (anim_first_framePeak == AnimationState::first_secondary_switch)
+				{
+					animSwapTime_OUT = 0.34f;
+					animSwapActive = true;
+				}
 			}
-		}
+
+			if (animSwapActive && animSwapTime_OUT > 0)
+			{
+				animPrimary = !animPrimary;
+				animSwapTime_OUT -= dt;
+				if (animSwapTime_OUT < 0.001f) // out swap timeout
+				{
+					if (animPrimary)
+						animOverideIfPriority(anim_first_current, AnimationState::first_secondary_switch_IN);
+					else
+						animOverideIfPriority(anim_first_current, AnimationState::first_primary_switch_IN);
+
+					animPrimary = !animPrimary;
+					animSwapActive = false;
+				}
+			} // spec brute animswap end
+		} // spectating this end
 
 		if (role.getHealth() == 0)
 		{
@@ -780,7 +808,7 @@ void Player::movementUpdates(float dt, bool freecam, bool spectatingThisPlayer, 
 
 	if (freecam == false && isLocalPlayer == false && spectatingThisPlayer == false)
 	{
-		worldMat[1].w -= 1.55f; // move down if 3rd person render
+		worldMat[1].w -= 1.45f; // move down if 3rd person render
 	}
 }
 
@@ -853,8 +881,13 @@ void Player::hitByBullet(Bullet* b, BULLET_TYPE bt, int newHPtotal)
 	{
 		if (!isDead)
 		{
-			int dmg = b->getDamage();
-			role.takeDamage(dmg);
+			if (b != nullptr)
+			{
+				int dmg = b->getDamage();
+				role.takeDamage(dmg);
+			}
+			else
+				role.takeDamage(20);
 		}
 	}
 	else //We are on a client, and thus are only interested on our HP on the server
@@ -877,8 +910,13 @@ void Player::hitByEffect(Effect* e, int newHPtotal)
 
 	if (newHPtotal == -1) //This is the server, dealing damage to the player
 	{
-		int dmg = e->getDamage();
-		role.takeDamage(dmg);
+		if (e != nullptr)
+		{
+			int dmg = e->getDamage();
+			role.takeDamage(dmg);
+		}
+		else
+			role.takeDamage(20); //TEMPORARY SOLUTION, MUST FIND ORIGIN OF PROBLEM
 	}
 	else //Hello I'm the client. I accept my new HP.
 	{
@@ -1158,14 +1196,20 @@ void Player::movementAnimationChecks(float dt)
 		if (grounded) //landed
 		{
 			animOverideIfPriority(anim_third_current, AnimationState::third_primary_jump_end);
+			if (animPrimary == false)
+				if (animRole == ROLES::MANIPULATOR || animRole == ROLES::BRUTE)
+					animOverideIfPriority(anim_third_current, AnimationState::third_secondary_jump_end);
+
 			if (GetSoundActivated())
 				GetSound()->playLand(getRole()->getRole(), pos.x, pos.y, pos.z);
 		}
-
 		else // jump begin
+		{
 			animOverideIfPriority(anim_third_current, AnimationState::third_primary_jump_begin);
-		
-		
+			if (animPrimary == false)
+				if (animRole == ROLES::MANIPULATOR || animRole == ROLES::BRUTE)
+					animOverideIfPriority(anim_third_current, AnimationState::third_secondary_jump_begin);
+		}	
 	}
 	animGroundedLast = grounded;
 
@@ -1217,9 +1261,10 @@ void Player::movementAnimationChecks(float dt)
 				}		
 			}
 		}
+		lastanimSwapActive = animSwapActive;
 	}
 
-	lastanimSwapActive = animSwapActive;
+	
 
 	//death checks
 	if (isDead != animLastDead)
@@ -1259,6 +1304,7 @@ void Player::ZeroFrags()
 {
 	this->consecutiveFrags = 0;
 	this->killingSpreeDone = false;
+	this->impressiveDone = false;
 }
 
 int Player::GetConsecutiveFrags()

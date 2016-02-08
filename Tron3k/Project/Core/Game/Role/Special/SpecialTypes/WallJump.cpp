@@ -42,7 +42,7 @@ bool WallJump::allowedToActivate(Player* p)
 
 void WallJump::init()
 {
-	this->activationCost = 25;
+	this->activationCost = 20;
 	specialType = SPECIAL_TYPE::WALLJUMP;
 	key = GLFW_KEY_SPACE;
 }

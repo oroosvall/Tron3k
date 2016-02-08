@@ -894,6 +894,7 @@ void RenderPipeline::setRenderFlag(RENDER_FLAGS flag)
 		case RENDER_ABB:		contMan.f_render_abb = !contMan.f_render_abb;				break;
 		case RENDER_OBB:		contMan.f_render_obb = !contMan.f_render_obb;				break;
 		case RENDER_DEBUG_TEXT:	renderDebugText = !renderDebugText; debugText->setText(""); break;
+		case RENDER_GUI:		contMan.f_render_gui = !contMan.f_render_gui;				break;
 	}
 }
 
@@ -992,19 +993,22 @@ void RenderPipeline::ui_loadTexture(unsigned int* texid, char* filepath, int* xr
 
 void RenderPipeline::ui_renderQuad(float* mat, float* pivot, GLuint textureID, float transp, int i)
 {
-	glm::mat4* world = (glm::mat4*)mat;
+	if (contMan.f_render_gui)
+	{
+		glm::mat4* world = (glm::mat4*)mat;
 
-	//glActiveTexture(GL_TEXTURE0);
+		//glActiveTexture(GL_TEXTURE0);
 
-	TextureInfo temp;
-	temp.state = TEXTURE_LOADED;
-	temp.lastTextureSlot = GL_TEXTURE0;
-	temp.textureID = textureID;
-	TextureManager::gTm->bind(temp, uiShader, ui_Texture);
-	glBindTexture(GL_TEXTURE_2D, textureID);
-	glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, mat);
-	glProgramUniform3fv(uiShader, uniformPivotLocation, 1, pivot);
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		TextureInfo temp;
+		temp.state = TEXTURE_LOADED;
+		temp.lastTextureSlot = GL_TEXTURE0;
+		temp.textureID = textureID;
+		TextureManager::gTm->bind(temp, uiShader, ui_Texture);
+		glBindTexture(GL_TEXTURE_2D, textureID);
+		glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, mat);
+		glProgramUniform3fv(uiShader, uniformPivotLocation, 1, pivot);
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	}
 }
 
 void RenderPipeline::ui_textureRelease(vector<unsigned int> texids)
@@ -1027,6 +1031,11 @@ void RenderPipeline::disableDepthTest()
 void RenderPipeline::clearBothBuffers()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void RenderPipeline::clearColor()
+{
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
 int RenderPipeline::startExecTimer(std::string name)

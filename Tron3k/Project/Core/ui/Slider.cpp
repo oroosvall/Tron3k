@@ -72,7 +72,12 @@ void Slider::createAdditionalPoint()
 
 }
 
-void Slider::render(int id)
+void Slider::renderText(int id)
+{
+
+}
+
+void Slider::renderQuad(int id)
 {
 	for(int i = 0; i < 2; i++)
 		uiRender->ui_renderQuad((float*)&worldMatrix[i][0][0], (float*)&pivot.x, textureIndexList[i], 1.0f, id);

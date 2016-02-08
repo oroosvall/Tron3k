@@ -12,7 +12,7 @@
 #include<vector>
 #include"SoundList.h"
 
-int const MAXSOUNDS = 80;
+int const MAXSOUNDS = 200;
 
 using namespace std;
 
@@ -33,7 +33,7 @@ private:
 	float footstepsCountdown = 0;
 
 	sf::Sound sounds[MAXSOUNDS];
-	sf::Sound mapSounds[MAXSOUNDS];
+	sf::Sound mapSounds[8];
 	sf::Sound destroyerSteps;
 	sf::Sound destroyerStop;
 	sf::Sound destroyerStart;

@@ -68,11 +68,14 @@ InputBox::~InputBox()
 	uiRender->removeTextObject(text);
 }
 
-void InputBox::render(int id)
+void InputBox::renderText(int id)
+{
+	uiRender->renderTextObject(text);
+}
+
+void InputBox::renderQuad(int id)
 {
 	uiRender->ui_renderQuad((float*)&worldMatrix[0][0], (float*)&pivot.x, textureId, 1.0f, id);
-	uiRender->renderTextObject(text);
-
 }
 
 void InputBox::setWorldMatrix(float x, float y, int id)
@@ -140,7 +143,7 @@ void InputBox::setWindowResolution(int winX, int winY)
 void InputBox::setText(std::string text)
 {
 	menuInputText += text;
-	outPutLength++;
+	outPutLength += text.size();
 	ingameText = text; 
 	uiRender->setTextObjectText(this->text, menuInputText); //Den ska använda ingameText när det gäller ingame saker.
 }

@@ -35,6 +35,8 @@ private:
 	bool lockControls = false;
 	bool noclip = false;
 
+	bool ready = false; //Ready to start a game mode
+
 	bool justRespawned = false; // used for culling
 	bool diedThisFrame = false; // used for K/D and messages
 
@@ -111,6 +113,10 @@ public:
 	bool getLockedControls(){ return lockControls; };
 	void setLockedControls(bool lockControls) { this->lockControls = lockControls; };
 
+	bool isReady() { return ready; };
+	void setReady() { ready = true; };
+	void unReady() { ready = false; };
+
 	void footstepsLoopReset(float dt);
 
 	bool getFootsteps();
@@ -120,6 +126,7 @@ public:
 	void IncreaseFrags();
 	void ZeroFrags();
 	bool killingSpreeDone = false;
+	bool impressiveDone = false;
 
 	PLAYERMSG update(float dt, bool freecam, bool spectatingThisPlayer, bool spectating);
 	void movementUpdates(float dt, bool freecam, bool spectatingThisPlayer, bool spectating);

@@ -29,7 +29,7 @@ int ThermiteCloud::update(float dt)
 	return 0;
 }
 
-float ThermiteCloud::explotionRenderRad()
+float ThermiteCloud::explosionRenderRad()
 {
 	return  10 * exploRadius;
 }

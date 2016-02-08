@@ -138,7 +138,7 @@ private:
 	std::vector<int> teamOne;
 	std::vector<int> teamTwo;
 
-	int maxTeamSize = 1;
+	int maxTeamSize = 5;
 	int maxSpec = 5;
 	void removeConIDfromTeams(int conID);
 
@@ -225,6 +225,8 @@ public:
 	Game();
 	void release();
 	void init(int max_connections, int state, Console* con);
+
+	int nrOfPlayersReady();
 
 	Gamemode* getGameMode() { return gamemode; };
 	int GetGameState();
