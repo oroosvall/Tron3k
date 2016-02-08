@@ -341,24 +341,33 @@ void AnimatedMeshV2::draw(GLuint uniformKeyMatrixLocation, int animationID, int 
 
 			glm::quat firstQuat = glm::quat_cast(m1);
 			glm::quat secondQuat = glm::quat_cast(m2);
-			glm::quat finalQuat = glm::slerp(firstQuat, secondQuat, delta);
 			
-			glm::mat4 inter = glm::mat4_cast(finalQuat);
+			if (glm::dot(firstQuat, secondQuat) < -1.0f)
+			{
+				glm::quat finalQuat = glm::slerp(firstQuat, secondQuat, delta);
 
-			vec4 p1 = vec4(m1[0].w, m1[1].w, m1[2].w, m1[3].w);
-			vec4 p2 = vec4(m2[0].w, m2[1].w, m2[2].w, m2[3].w);
+				glm::mat4 inter = glm::mat4_cast(finalQuat);
 
-			vec4 final = (float)(1.0 - delta)*p1 + p2*delta;
+				vec4 p1 = vec4(m1[0].w, m1[1].w, m1[2].w, m1[3].w);
+				vec4 p2 = vec4(m2[0].w, m2[1].w, m2[2].w, m2[3].w);
 
-			inter[0].w = final.x;
-			inter[1].w = final.y;
-			inter[2].w = final.z;
-			inter[3].w = final.w;
+				vec4 final = (float)(1.0 - delta)*p1 + p2*delta;
 
-			//inter = glm::transpose(inter);
+				inter[0].w = final.x;
+				inter[1].w = final.y;
+				inter[2].w = final.z;
+				inter[3].w = final.w;
 
-			glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4) * i, sizeof(glm::mat4), &inter);
-			//glBufferSubData(GL_UNIFORM_BUFFER, )
+				//inter = glm::transpose(inter);
+
+				glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4) * i, sizeof(glm::mat4), &inter);
+				//glBufferSubData(GL_UNIFORM_BUFFER, )
+			}
+			else
+			{
+				glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4) * i, sizeof(glm::mat4), &m1);
+			}
+			
 
 		}
 
