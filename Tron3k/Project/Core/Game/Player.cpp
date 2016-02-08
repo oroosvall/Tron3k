@@ -145,9 +145,6 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 	bool ceiling = false;
 	vec3 posadjust = vec3(0);
 
-	
-	
-
 	//if we collided with something
 	int * collS = &collisionNormalSize;
 	if (collisionNormalSize > 0)
@@ -174,7 +171,7 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 			}
 
 			// abslut value, if two collisions from the same angle they should not move us twice the distance
-			
+
 			if (pendepth.x > 0.0f || pendepth.x < 0.0f)//abs(posadjust.x) < abs(pendepth.x))
 			{
 				posadjust.x += pendepth.x;
@@ -224,7 +221,7 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 			posadjust.y = 0;
 			grounded = false;
 		}
-		
+
 		pos += posadjust;
 
 		if (posadjust.y < 0.001f && posadjust.y > -0.001f)
@@ -241,12 +238,6 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 		collided = false;
 		airVelocity = vel;
 		grounded = false;
-	}
-
-	if (freecam == false || specingThis == true)
-	{
-		cam->setCam(pos);
-		rotatePlayer(oldDir, dir);
 	}
 }
 
@@ -710,7 +701,6 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 		if (spectatingThisPlayer == true)
 		{
-			cam->setCam(pos, dir);
 			cam->roomID = roomID;
 
 			animRole = role.getRole();
@@ -781,9 +771,12 @@ void Player::movementUpdates(float dt, bool freecam, bool spectatingThisPlayer, 
 		if (currentTeam != 0)
 		{
 			movePlayerCollided(dt, olddir, freecam, spectatingThisPlayer);
-			if (!freecam)
+			if (!freecam || spectating == true)
+			{
 				cam->setCam(pos, dir);
-
+				rotatePlayer(oldDir, dir);
+			}
+				
 			float lastHeight = pos.y;
 
 			if (freecam && spectating == false)
