@@ -2007,7 +2007,7 @@ void Game::decalAdd(BulletHitWorldInfo info, float rad)
 	if (p == nullptr)
 		return;
 
-	decals_gameInfo[decalCounter].lifeLeft = decals_gameInfo[decalCounter].lifeTime = 2000;
+	decals_gameInfo[decalCounter].lifeLeft = decals_gameInfo[decalCounter].lifeTime = 5;
 
 	decals_renderInfo[decalCounter].inten = 1.0f;
 	decals_renderInfo[decalCounter].normal = vec3(info.collisionNormal);
