@@ -1763,36 +1763,43 @@ void Core::inGameUIUpdate() //Ingame ui update
 	if (local->getHP() != HUD.HP)
 	{
 		HUD.HP = local->getHP();
+		uiManager->clearText(0);
 		uiManager->setText(std::to_string(HUD.HP), 0);
 	}
 	if (local->getAmmo() != HUD.ammo)
 	{
 		HUD.ammo = local->getAmmo();
+		uiManager->clearText(1);
 		uiManager->setText(std::to_string(HUD.ammo), 1);
 	}
 	if (koth->getRespawnTokens(1) != HUD.teamOneTokens)
 	{
 		HUD.teamOneTokens = local->getHP();
+		uiManager->clearText(2);
 		uiManager->setText(std::to_string(HUD.teamOneTokens), 2);
 	}
 	if (koth->getRespawnTokens(2) != HUD.teamTwoTokens)
 	{
 		HUD.teamTwoTokens = local->getHP();
+		uiManager->clearText(3);
 		uiManager->setText(std::to_string(HUD.teamTwoTokens), 3);
 	}
 	if (koth->getRoundWins(1) != HUD.teamOneRoundWins)
 	{
 		HUD.teamOneRoundWins = local->getHP();
+		uiManager->clearText(4);
 		uiManager->setText(std::to_string(HUD.teamOneRoundWins), 4);
 	}
 	if (koth->getRoundWins(2) != HUD.teamTwoRoundWins)
 	{
 		HUD.teamTwoRoundWins = local->getHP();
+		uiManager->clearText(5);
 		uiManager->setText(std::to_string(HUD.teamTwoRoundWins), 5);
 	}
 	if (int(koth->getTimer()) != HUD.time)
 	{
 		HUD.time = local->getHP();
+		uiManager->clearText(6);
 		uiManager->setText(std::to_string(HUD.time), 6);
 	}
 

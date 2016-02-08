@@ -305,16 +305,18 @@ void UI::setText(std::string text, int id)
 }
 std::string UI::getText(int id)
 {
-	if (textIdList[id] != -1)
+	if (textIdList[id] > -1)
 		return UiObjects[textIdList[id]]->getText();
 	return "";
 }
 void UI::removeLastInput(int id)
 {
-	UiObjects[textIdList[id]]->removeLastInput();
+	if (textIdList[id] > -1)
+		UiObjects[textIdList[id]]->removeLastInput();
 }
 
-void UI::cleanText(int id)
+void UI::clearText(int id)
 {
-	UiObjects[textIdList[id]]->cleanText();
+	if (textIdList[id] > -1)
+		UiObjects[textIdList[id]]->cleanText();
 }

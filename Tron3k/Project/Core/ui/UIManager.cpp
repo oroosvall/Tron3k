@@ -243,8 +243,8 @@ void UIManager::setMenu(int menuId)
 			{
 				if (currentMenu[0] == 2)
 				{
-					menus[currentMenu[0]].cleanText(7);
-					menus[currentMenu[0]].cleanText(8);
+					menus[currentMenu[0]].clearText(7);
+					menus[currentMenu[0]].clearText(8);
 				}
 				nrOfOpenedMenus--;
 				currentMenu[0] = openedMenus[nrOfOpenedMenus];
@@ -381,4 +381,9 @@ void UIManager::removeLastInput(int id)
 {
 	if (currentMenu[nrOfCurretMenus - 1] > -1)
 		menus[currentMenu[nrOfCurretMenus - 1]].removeLastInput(id);
+}
+void UIManager::clearText(int id)
+{
+	if (currentMenu[nrOfCurretMenus - 1] > -1)
+		menus[currentMenu[nrOfCurretMenus - 1]].clearText(id);
 }
