@@ -672,7 +672,7 @@ void* Physics::checkBulletvWorldInternal(AABBSingle bulletBox, float rad, int in
 	*/
 }
 
-vec4 Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel, vec3 bulletDir, float dt)
+vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bulletDir, float dt)
 {
 	bulletBox.setPos(bulletPos);
 	vec4 t = vec4(0);
@@ -736,22 +736,24 @@ vec4 Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel, vec3 bulletD
 						if (collidedWithPlane)
 							int x = 0;
 						t = vec4(normalize(vec3(t)), t.w);
+						bulletPos = bPos;
 						return t;
 					}
+					bPos = bPos - (rad * normalize(bulletDir) * 0.99f);
 					t = getSpherevOBBNorms(bPos, rad, theOBB);
-					t = getSpherevOBBNorms(collidedVec, rad, theOBB);
+					//t = getSpherevOBBNorms(collidedVec, rad, theOBB);
 					t.w = rad - t.w;
 					if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 					{
 						if (collidedWithPlane)
 							int x = 0;
 						t = vec4(normalize(vec3(t)), t.w);
+						bulletPos = bPos;
 						return t;
 					}
 
 
 					//When we get here, we have collided, but for some reason the bullet doesn't know it
-					int x = 0;
 
 					t = getSpherevOBBNorms(bulletPos, rad, theOBB);
 
@@ -770,8 +772,10 @@ vec4 Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel, vec3 bulletD
 						if (collidedWithPlane)
 							int x = 0;
 						t = vec4(normalize(vec3(t)), t.w);
+						bulletPos = origPos;
 						return t;
 					}
+					int x = 0;
 				}
 
 			}
@@ -1008,7 +1012,7 @@ vec3 Physics::normalize(vec3 vec3)
 {
 	float len = abs(vec3.x) + abs(vec3.y) + abs(vec3.z);
 
-	if (len > FLT_EPSILON)
+	if (len > 0)
 	{
 		vec3.x = vec3.x / len;
 		vec3.y = vec3.y / len;

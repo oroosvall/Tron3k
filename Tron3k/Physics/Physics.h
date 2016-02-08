@@ -114,7 +114,7 @@ public:
 	virtual glm::vec3 checkPlayerVPlayerCollision(glm::vec3 playerPos1, glm::vec3 playerPos2);
 	virtual glm::vec3 checkPlayerVBulletCollision(glm::vec3 playerPos, glm::vec3 bulletPos, vec3 size);
 	virtual std::vector<glm::vec4> PlayerVWorldCollision(glm::vec3 playerPos);
-	virtual glm::vec4 BulletVWorldCollision(glm::vec3 bulletPos, vec3 bulletVel, vec3 bulletDir, float dt);
+	virtual glm::vec4 BulletVWorldCollision(glm::vec3 &bulletPos, vec3 bulletVel, vec3 bulletDir, float dt);
 	virtual glm::vec4 checkPlayerVEffectCollision(glm::vec3 playerPos, unsigned int eType, int eid);
 	virtual glm::vec4 checkBulletVEffectCollision(glm::vec3 bulletPos, vec3 bulletVel, vec3 bulletDir, unsigned int eType, int eid, float dt);
 	virtual bool checkPlayerVCaptureCollision(vec3 playerPos, int capID);

@@ -761,11 +761,12 @@ void Game::checkBulletVWorldCollision(float dt)
 			{
 				int pid = -1, bid = -1;
 				bullets[b][j]->getId(pid, bid);
-				collides = physics->BulletVWorldCollision(bullets[b][j]->getPos(), bullets[b][j]->getVel(), bullets[b][j]->getDir(), dt);
+				vec3 bPos = bullets[b][j]->getPos();
+				collides = physics->BulletVWorldCollision(bPos, bullets[b][j]->getVel(), bullets[b][j]->getDir(), dt);
 				if (collides.w > -1 || collides.w < -1)
 				{
 					BulletHitWorldInfo hi;
-					hi.bt = BULLET_TYPE(b); hi.hitPos = bullets[b][j]->getPos(); hi.hitDir = bullets[b][j]->getDir();
+					hi.bt = BULLET_TYPE(b); hi.hitPos = bPos; hi.hitDir = bullets[b][j]->getDir();
 					bullets[b][j]->getId(hi.bulletPID, hi.bulletBID);
 					hi.collisionNormal = collides;
 					allBulletHitsOnWorld.push_back(hi);
@@ -1600,7 +1601,7 @@ void Game::bounceBullet(BulletHitWorldInfo hwi, Bullet* theBullet)
 void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 {
 	//hit info and bullet rad (assumed 0.6 for all)
-	decalAdd(hi, -0.45f);
+	decalAdd(hi, 0);
 
 	int arraypos = -1;
 	Bullet* b = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, arraypos);
