@@ -28,7 +28,7 @@ void ContentManager::init()
 	miniMapTexture = loadTexture("GameFiles/Textures/minimap/miniMap.png", true, (int*)&xx, (int*)&yy);
 	minimapscaleX = float(xx) / 1920;
 	minimapScaleY = float(yy) / 1080;
-	mapBotcord = vec2(-185, 163);
+	mapBotcord = vec2(-185, 160);
 	mapTopcord = vec2(165, -38);
 
 	skyTexture = 0;
