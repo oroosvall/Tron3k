@@ -91,6 +91,7 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->soundList[SOUNDS::soundEffectPunisherReload].loadFromFile("GameFiles/Sound/soundEffectPunisherReload.ogg");
 		singleton->soundList[SOUNDS::announcerCleanup].loadFromFile("GameFiles/Sound/announcerCleanup.ogg");
 		singleton->soundList[SOUNDS::soundEffectHP].loadFromFile("GameFiles/Sound/soundEffectHP.ogg");
+		singleton->soundList[SOUNDS::soundEffectRespawn].loadFromFile("GameFiles/Sound/soundEffectRespawn.ogg");
 
 		initialized = true;
 	}
