@@ -95,6 +95,7 @@ public:
 	virtual void renderTextObject(int id) = 0;
 	virtual void renderTextObjectWorldPos(int id, glm::mat4 world) = 0;
 
+	virtual void setCapRoomColor(int capPoint, glm::vec3 color, float intensity) = 0;
 
 	virtual void setGBufferWin(unsigned int WindowWidth, unsigned int WindowHeight) = 0;
 
@@ -118,6 +119,8 @@ public:
 
 	virtual void enableDepthTest() = 0;
 	virtual void disableDepthTest() = 0;
+	virtual void enableBlend() = 0;
+	virtual void disableBlend() = 0;
 	virtual void clearBothBuffers() = 0;
 	virtual void clearColor() = 0;
 
@@ -126,6 +129,7 @@ public:
 	virtual bool* getRenderedChunks(int& get_size) = 0;
 
 	virtual void startTakeDamageEffect(int maxDisplace, float time) = 0;
+	virtual void renderMinimap(float* yourPos, float* yourdir, float* teammates, int nrOfTeammates, int team) = 0;
 
 };
 

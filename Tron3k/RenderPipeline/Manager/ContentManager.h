@@ -77,6 +77,16 @@ public:
 	bool f_render_obb;
 	bool f_render_gui;
 
+	GLuint miniMapTexture;
+	float minimapscaleX;
+	float minimapScaleY;
+	GLuint youarehereTexture;
+	float youareherescaleX;
+	float youareherescaleY;
+	GLuint teamishereTexture;
+	vec2 mapBotcord;
+	vec2 mapTopcord;
+
 	~ContentManager();
 	void init();
 

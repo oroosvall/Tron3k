@@ -211,10 +211,11 @@ public:
 			Uint8 teamTwoTokens;
 			Uint8 teamOneOnCapP;
 			Uint8 teamTwoOnCapP;
+			Uint8 capPoint;
 			Uint8 state;
 			Uint8 lastMsg;
-			*rec >> teamOneTokens >> teamTwoTokens >> teamOneOnCapP >> teamTwoOnCapP >> state >> lastMsg;
-			koth->setGamemodeData(teamOneTokens, teamTwoTokens, teamOneOnCapP, teamTwoOnCapP, (KOTHSTATE)state, (GAMEMODE_MSG)lastMsg);
+			*rec >> teamOneTokens >> teamTwoTokens >> teamOneOnCapP >> teamTwoOnCapP >> capPoint >> state >> lastMsg;
+			koth->setGamemodeData(teamOneTokens, teamTwoTokens, teamOneOnCapP, teamTwoOnCapP, capPoint, (KOTHSTATE)state, (GAMEMODE_MSG)lastMsg);
 		}
 	}
 

@@ -14,7 +14,7 @@ GrenadeShot::~GrenadeShot()
 int GrenadeShot::update(float dt)
 {
 	pos += dir * vel * dt;
-	dir.y -= 0.5f * dt;
+	dir.y -= 0.9f * dt;
 
 	updateWorldMat();
 

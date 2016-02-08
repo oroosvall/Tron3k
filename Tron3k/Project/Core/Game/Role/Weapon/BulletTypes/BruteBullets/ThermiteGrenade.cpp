@@ -5,7 +5,7 @@ ThermiteGrenade::ThermiteGrenade(glm::vec3 position, glm::vec3 direction, int pI
 {
 	initValues(position, direction, pID, bID, tID);
 	ttl = 3;
-	vel = glm::vec3(25.0f);
+	vel = glm::vec3(30.0f);
 	damage = 10;
 }
 
@@ -13,7 +13,7 @@ int ThermiteGrenade::update(float dt)
 {
 	pos += dir * vel * dt;
 
-	dir.y -= 1.5f * dt;
+	dir.y -= 1.2f * dt;
 
 	updateWorldMat();
 

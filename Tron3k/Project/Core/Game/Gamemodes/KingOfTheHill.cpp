@@ -250,6 +250,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			gamePtr->clearAllPlayerKD();
 			teamOneSpawnTokens = teamTwoSpawnTokens = tokensPerTeam;
 			state = ROUND;
+			capturePoint = rand() % 2;
 		}
 		else
 		{
@@ -370,6 +371,15 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 	return msg;
 }
 
+int KingOfTheHill::getRoundWins(int team)
+{
+	if (team == 1)
+		return teamOneScore;
+	else if (team == 2)
+		return teamTwoScore;
+	return -1;
+}
+
 int KingOfTheHill::getRespawnTokens(int team)
 {
 	if (team == 1)
@@ -427,7 +437,7 @@ bool KingOfTheHill::playerRespawn(int conId)
 	return false;
 }
 
-void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int onCap2, KOTHSTATE state, GAMEMODE_MSG serverMsg)
+void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int onCap2, int capPoint, KOTHSTATE state, GAMEMODE_MSG serverMsg)
 {
 	if (respawn1 == 5 && teamOneSpawnTokens !=5 && GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
 	{
@@ -443,6 +453,7 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 	teamTwoSpawnTokens = respawn2;
 	teamOnePlayersAtPoint = onCap1;
 	teamTwoPlayersAtPoint = onCap2;
+	capturePoint = capPoint;
 	if (serverState != state)
 	{
 		if (state == PREROUND)
@@ -563,6 +574,22 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 	}
 	lastMsg = serverMsg;
 	serverState = state;
+}
+
+int KingOfTheHill::getCapturePointOwner()
+{
+	if (teamOnePlayersAtPoint > teamTwoPlayersAtPoint)
+	{
+		lastTeamOnPoint = 1;
+		return 1;
+	}
+	else if (teamOnePlayersAtPoint < teamTwoPlayersAtPoint)
+	{
+		lastTeamOnPoint = 2;
+		return 2;
+	}
+	else if (teamOnePlayersAtPoint == teamTwoPlayersAtPoint)
+		return lastTeamOnPoint;
 }
 
 int KingOfTheHill::getPlayersOnPoint(int team)

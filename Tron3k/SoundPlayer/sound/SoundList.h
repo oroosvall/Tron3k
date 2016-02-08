@@ -68,6 +68,7 @@ enum SOUNDS
 	soundEffectDestroyerStop,
 	soundEffectDestroyerSteps,
 	soundEffectHP,
+	soundEffectRespawn,
 	nrOfSounds //leave last
 };
 

@@ -759,7 +759,10 @@ void RenderPipeline::renderBullet(int bid, void* world, float* dgColor, float sg
 
 void RenderPipeline::renderCapturePoint(int capPointID)
 {
+	glDisable(GL_BLEND);
 	glUseProgram(regularShader);
+	glProgramUniform1f(regularShader, uniformStaticGlowIntensityLocation[0], 1.0f);
+	glProgramUniform3fv(regularShader, uniformDynamicGlowColorLocation[0], 1, (GLfloat*)contMan.testMap.getCapPointColor(capPointID));
 	contMan.renderCapturePoint(capPointID, regularShader, worldMat[0], uniformTextureLocation[0], uniformNormalLocation[0], uniformGlowSpecLocation[0]);
 }
 
@@ -980,6 +983,7 @@ void RenderPipeline::ui_initRender()
 
 void RenderPipeline::ui_InGameRenderInit()
 {
+	glEnable(GL_BLEND);
 	glUseProgram(uiShader);
 	//uniformlocation set texture 0  it defaults to 0 so not needed
 
@@ -1026,6 +1030,16 @@ void RenderPipeline::enableDepthTest()
 void RenderPipeline::disableDepthTest()
 {
 	glDisable(GL_DEPTH_TEST);
+}
+
+void RenderPipeline::enableBlend()
+{
+	glEnable(GL_BLEND);
+}
+
+void RenderPipeline::disableBlend()
+{
+	glDisable(GL_BLEND);
 }
 
 void RenderPipeline::clearBothBuffers()
@@ -1118,6 +1132,15 @@ void RenderPipeline::renderTextObjectWorldPos(int id, glm::mat4 world)
 
 }
 
+void RenderPipeline::setCapRoomColor(int capPoint, vec3 color, float intensity)
+{
+	int roomID = contMan.testMap.getCapPointRoomID(capPoint);
+	contMan.testMap.setCapPointColor(capPoint, color);
+	//contMan.testMap.chunks[8].color = { color[0], color[1], color[2] };
+	//contMan.testMap.chunks[8].staticIntes = intensity;
+
+}
+
 void RenderPipeline::startTakeDamageEffect(int maxDisplace, float time)
 {
 	takeDamage_startDispalce = maxDisplace;
@@ -1137,5 +1160,110 @@ void RenderPipeline::updateTakeDamageEffect(float dt)
 		}
 		else //timeout
 			gBuffer->setGlowSamplingDist(2.0f);
+	}
+}
+
+void RenderPipeline::renderMinimap(float* yourPos, float* yourdir, float* teammates, int nrOfTeammates, int team)
+{
+	//init render
+	glUseProgram(uiShader);
+	//uniformlocation set texture 0  it defaults to 0 so not needed
+	uiQuad.BindVertData();
+	glActiveTexture(GL_TEXTURE0);
+	
+	TextureInfo asd;
+	asd.lastTextureSlot = GL_TEXTURE0;
+	asd.state = TEXTURE_LOADED;
+	asd.textureID = contMan.miniMapTexture;
+	TextureManager::gTm->bind(asd, uiShader, ui_Texture);
+
+	minimapRenderMat = mat4();
+	//pos
+	minimapRenderMat[0].w = 0;
+	minimapRenderMat[1].w = 0;
+	minimapRenderMat[2].w = 0;
+	//scale
+	minimapRenderMat[0].x = contMan.minimapscaleX;
+	minimapRenderMat[1].y = contMan.minimapScaleY;
+
+	vec3 piv(0);
+	glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, &minimapRenderMat[0][0]);
+	glProgramUniform3fv(uiShader, uniformPivotLocation, 1, &piv[0]);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+	//render player markers
+
+	asd.lastTextureSlot = GL_TEXTURE0;
+	asd.state = TEXTURE_LOADED;
+	asd.textureID = contMan.youarehereTexture;
+	TextureManager::gTm->bind(asd, uiShader, ui_Texture);
+
+	minimapRenderMat = mat4();
+
+	//scale, rotate, translate
+
+	//scale
+	minimapRenderMat[0].x = contMan.youareherescaleX;
+	minimapRenderMat[1].y = contMan.youareherescaleX;
+
+	//rotate
+	float rotXZ = -(atan2(yourdir[0], yourdir[2]) - atan2(0, 1));
+
+	minimapRenderMat = glm::rotate(minimapRenderMat, rotXZ , vec3(0, 0, 1));
+
+	////translate
+	float xpos = (yourPos[0] - contMan.mapBotcord.x) / (contMan.mapTopcord.x - contMan.mapBotcord.x);
+	float ypos = (yourPos[2] - contMan.mapBotcord.y) / (contMan.mapTopcord.y - contMan.mapBotcord.y);
+	//to screenspace
+	xpos = (xpos * 2) - 1;
+	ypos = (ypos * 2) - 1;
+	
+	minimapRenderMat[0].w = xpos;
+	minimapRenderMat[1].w = ypos;
+	
+	glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, &minimapRenderMat[0][0]);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+
+	//set teammates texture
+	asd.lastTextureSlot = GL_TEXTURE0;
+	asd.state = TEXTURE_LOADED;
+	asd.textureID = contMan.teamishereTexture;
+	TextureManager::gTm->bind(asd, uiShader, ui_Texture);
+
+	vec3* teamMateData = (vec3*)teammates;
+
+	// render teammate indicators 
+	for (int n = 0; n < nrOfTeammates; n++)
+	{
+		minimapRenderMat = mat4();
+		//scale, rotate, translate
+
+		//scale
+		minimapRenderMat[0].x = contMan.youareherescaleX;
+		minimapRenderMat[1].y = contMan.youareherescaleX;
+
+		vec3 dirrr = teamMateData[n * 2 + 1];
+
+		//rotate
+		float rotXZ = -(atan2(dirrr[0], dirrr[2]) - atan2(0, 1));
+
+		minimapRenderMat = glm::rotate(minimapRenderMat, rotXZ, vec3(0, 0, 1));
+
+		vec3 poss = teamMateData[n * 2];
+
+		////translate
+		float xpos = (poss[0] - contMan.mapBotcord.x) / (contMan.mapTopcord.x - contMan.mapBotcord.x);
+		float ypos = (poss[2] - contMan.mapBotcord.y) / (contMan.mapTopcord.y - contMan.mapBotcord.y);
+
+		//to screenspace
+		xpos = (xpos * 2) - 1;
+		ypos = (ypos * 2) - 1;
+
+		minimapRenderMat[0].w = xpos;
+		minimapRenderMat[1].w = ypos;
+
+		glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, &minimapRenderMat[0][0]);
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	}
 }

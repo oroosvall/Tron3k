@@ -97,6 +97,15 @@ Core::~Core()
 
 void Core::update(float dt)
 {
+	if (shitBool && justAFrameCounterActivated)
+	{
+		justAFrameCounter++;
+	}
+	if (shitBool && justAFrameCounter > 5)
+	{
+		game->getPlayer(game->GetLocalPlayerId())->setLockedControls(false);
+		shitBool = false;
+	}
 	cursorBlink += dt;
 	if (recreate)
 		createWindow(winX, winY, fullscreen);
@@ -217,6 +226,8 @@ void Core::update(float dt)
 	int swapTime = renderPipe->startExecTimer("Swap");
 	glfwSwapBuffers(win);
 	renderPipe->stopExecTimer(swapTime);
+	
+	
 }
 
 void Core::upStart(float dt)
@@ -377,7 +388,7 @@ void Core::upRoam(float dt)
 		sendCapPointBoxes();
 		sendRoomBoxes();
 		Player* p = new Player();
-		p->init(_name, glm::vec3(0, 0, 0));
+		p->init(_name, glm::vec3(0, 30, 0));
 		game->createPlayer(p, 0, 100, ROLES::TRAPPER, true);
 		game->freecam = true;
 		delete p;
@@ -1003,7 +1014,7 @@ void Core::roamHandleCmds(std::string com)
 		else if (token == "/role")
 		{
 			ss >> token;
-			if (token != "/role" || token == "1" || token == "2" || token == "3" || token == "4"|| token == "5")
+			if (token != "/role" || token == "1" || token == "3" || token == "4")
 			{
 				int role = stoi(token);
 				game->getPlayer(0)->chooseRole(role - 1);
@@ -1013,7 +1024,10 @@ void Core::roamHandleCmds(std::string com)
 				uiManager->setFirstMenuSet(false);
 				uiManager->setMenu(0);
 
-				game->getPlayer(game->GetLocalPlayerId())->setLockedControls(false);
+				justAFrameCounterActivated = true;
+				shitBool = true;
+
+				
 				cursorInvisible = true;
 				if (game != nullptr)
 					game->setCursorInvisible(cursorInvisible);
@@ -1137,13 +1151,13 @@ void Core::clientHandleCmds(std::string com)
 		else if (token == "/role")
 		{
 			ss >> token;
-			if (token == "1" || token == "2" || token == "3" || token == "4" || token == "5")
+			if (token == "1" || token == "3" || token == "4")
 			{
 				int role = stoi(token);
 				top->command_role_change(top->getConId(), role);
 			}
 			else
-				console.printMsg("Invalid role. Use /role <1-5>", "System", 'S');
+				console.printMsg("Invalid role. Use /role <1, 3, 4>", "System", 'S');
 		}
 		else if (token == "/disconnect")
 		{
@@ -1408,6 +1422,24 @@ void Core::renderWorld(float dt)
 		//color = { 0, 0.7, 0 };
 		renderPipe->setChunkColorAndInten(3, &dgColor[0], 0);
 
+		int cap = ((KingOfTheHill*)game->getGameMode())->getCapturePoint();
+		
+		int capOwner = ((KingOfTheHill*)game->getGameMode())->getCapturePointOwner();
+
+		if (capOwner == 0)
+		{
+			renderPipe->setCapRoomColor(cap, vec3(1.0f, 1.0f, 1.0f), 1.0f);
+		}
+		else if (capOwner == 1)
+		{
+			renderPipe->setCapRoomColor(cap, TEAMONECOLOR, 1.0f);
+		}
+		else if (capOwner == 2)
+		{
+			renderPipe->setCapRoomColor(cap, TEAMTWOCOLOR, 1.0f);
+		}
+
+
 		//Culling
 		handleCulling();
 
@@ -1449,15 +1481,16 @@ void Core::renderWorld(float dt)
 				if (p->getTeam() != 0) //Don't render spectators!
 				{
 					if (p->getHP() <= 0 || p->isAlive() == false)  // set red
+					{
 						dgColor = vec3(1, 0, 0);
-
+						hackedTeam = -1;
+					}
 					else
 					{
 						if (hackedTeam == -1)
 						{
 							if (p->getTeam() == 1)  //team 1 color
 								dgColor = TEAMONECOLOR;
-
 							else if (p->getTeam() == 2)  // team 2 color
 								dgColor = TEAMTWOCOLOR;
 						}
@@ -1564,6 +1597,10 @@ void Core::renderWorld(float dt)
 			}
 		} // render bullets end
 
+		// capturePoint
+		KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
+		renderPipe->renderCapturePoint(koth->getCapturePoint());
+
 		// render chunks
 		renderPipe->render();
 
@@ -1651,12 +1688,6 @@ void Core::renderWorld(float dt)
 			}
 		}
 
-		// capturePoint
-
-		KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
-
-		renderPipe->renderCapturePoint(koth->getCapturePoint());
-
 		// render Decals
 		renderPipe->renderDecals(game->getAllDecalRenderInfo(), game->getNrOfDecals());
 
@@ -1706,37 +1737,111 @@ void Core::renderWorld(float dt)
 			renderPipe->enableDepthTest();
 		}
 
+		renderPipe->enableBlend();
+		if (renderUI) //Temp
+			inGameUIUpdate();
+
+		if (i->getKeyInfo(GLFW_KEY_F))
+			if (game->getPlayer(game->GetLocalPlayerId())->getLockedControls() == false)
+			{
+				Player* p = game->getPlayer(game->GetLocalPlayerId());
+				Player* p2;
+				int memb = 0;
+				if (p)
+				{
+					vector<int>* members = game->getTeamConIds(p->getTeam());
+					int membersize = members->size();
+
+					vec3* data = new vec3[membersize * 2 ];
+					int counter = 0;
+					for (int n = 0; n < membersize; n++)
+					{
+						p2 = game->getPlayer(members[0][counter]);
+						if (p2->isAlive())
+						{
+							data[n * 2] = p2->getPos();
+							data[n * 2 + 1] = p2->getDir();
+						}
+						else
+						{
+							n--;
+							membersize--;
+						}
+						counter++;
+					}
+
+					renderPipe->renderMinimap(&camPos.x, &camDir.x, &data[0].x, membersize, 0);
+					delete[] data;
+				}
+			}
+
+		renderPipe->disableBlend();
+
 		//viewing 3rd person anims in roam
 		if (i->getKeyInfo(GLFW_KEY_P))
 			cam->setCam(camPos, camDir);
-
-		if (renderUI) //Temp
-			inGameUIUpdate();
 	}
 }
 
 void Core::inGameUIUpdate() //Ingame ui update
 {
+	Player* local = game->getPlayer(game->GetLocalPlayerId());
+	KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
+	if (local->getHP() != HUD.HP)
+	{
+		HUD.HP = local->getHP();
+		uiManager->clearText(0);
+		uiManager->setText(std::to_string(HUD.HP), 0);
+	}
+	if (local->getAmmo() != HUD.ammo)
+	{
+		if(local->getMaxAmmo() != HUD.maxAmmo)
+			HUD.maxAmmo = local->getMaxAmmo();
+
+		HUD.ammo = local->getAmmo();
+		std::string nText = std::to_string(HUD.ammo) + "/" + std::to_string(HUD.maxAmmo);
+		uiManager->clearText(1);
+		uiManager->setText(nText, 1);
+	}
+	if (koth->getRespawnTokens(1) != HUD.teamOneTokens)
+	{
+		HUD.teamOneTokens = local->getHP();
+		uiManager->clearText(2);
+		uiManager->setText(std::to_string(HUD.teamOneTokens), 2);
+	}
+	if (koth->getRespawnTokens(2) != HUD.teamTwoTokens)
+	{
+		HUD.teamTwoTokens = local->getHP();
+		uiManager->clearText(3);
+		uiManager->setText(std::to_string(HUD.teamTwoTokens), 3);
+	}
+	if (koth->getRoundWins(1) != HUD.teamOneRoundWins)
+	{
+		HUD.teamOneRoundWins = local->getHP();
+		uiManager->clearText(4);
+		uiManager->setText(std::to_string(HUD.teamOneRoundWins), 4);
+	}
+	if (koth->getRoundWins(2) != HUD.teamTwoRoundWins)
+	{
+		HUD.teamTwoRoundWins = local->getHP();
+		uiManager->clearText(5);
+		uiManager->setText(std::to_string(HUD.teamTwoRoundWins), 5);
+	}
+	if (int(koth->getTimer()) != HUD.time)
+	{
+		HUD.time = local->getHP();
+		uiManager->clearText(6);
+		uiManager->setText(std::to_string(HUD.time), 6);
+	}
+
+	uiManager->inGameRender();
+
 	double x = (0.0);
 	double y = (0.0);
 	//Get mouse position
 	i->getCursor(x, y);
 	double tX = (x / (double)winX) * 2 - 1.0;
 	double tY = (-y / (double)winY) * 2 + 1.0;
-	
-	//uiManager->setText(getHp in string, 0); //HP
-	//uiManager->setText(getAmmo in string, 1); //Ammo
-	//uiManager->setText(getTickets1 in string, 2); //tickets team 1
-	//uiManager->setText(getTickets2 in string, 3); //tickets team 2
-	//uiManager->setText(getWins1 in string, 4); //rounds won team 1
-	//uiManager->setText(getwins2 in string, 5); //rounds won team 2
-	//uiManager->setText(getTime in string, 6); //time
-
-	uiManager->inGameRender();
-
-	//***********************************************************//
-	//    Lägg in så hover körs endast om esc rutan är igång.    //
-	//***********************************************************//
 
 	if (i->justPressed(GLFW_MOUSE_BUTTON_LEFT))
 	{
@@ -1788,7 +1893,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 			break;
 		case 40: //Continue
 			uiManager->backToGui();
-			game->getPlayer(game->GetLocalPlayerId())->setLockedControls(true);
+			game->getPlayer(game->GetLocalPlayerId())->setLockedControls(false);
 			cursorInvisible = false;
 			game->setCursorInvisible(cursorInvisible);
 			break;

@@ -45,6 +45,11 @@ void UI::init(std::string fileName, Console* console, IRenderPipeline* uiRender,
 	bool result = loadUI(fileName, winX, winY);
 	if (!result)
 		console->printMsg("Error: LoadUI in UI was unsucessfull","System",'S');
+
+	for (int i = 0; i < 9; i++)
+	{
+		textIdList[0] = -1;
+	}
 }
 
 //Needs to be modified
@@ -174,11 +179,11 @@ bool UI::loadUI(std::string fileName, int winX, int winY)
 
 				if (textId == "hpBar")
 					textIdList[0] = counter;
-				else if (textId == "ammoBar")
+				else if (textId == "ammo")
 					textIdList[1] = counter;
-				else if (textId == "ticket1Bar")
+				else if (textId == "tickeBar1")
 					textIdList[2] = counter;
-				else if (textId == "ticket2Bar")
+				else if (textId == "ticketBar2")
 					textIdList[3] = counter;
 				else if (textId == "wins1")
 					textIdList[4] = counter;
@@ -244,9 +249,6 @@ int UI::mouseCollission(glm::vec2 pos)
 		hit = UiObjects[i]->checkCollision(pos);
 	}
 	
-	//if (hit != -1)
-	//	result = collisionEvent(hit);
-	
 	return hit;
 }
 
@@ -256,34 +258,11 @@ void UI::mouseHover(glm::vec2 pos)
 		UiObjects[i]->hoverCheck(pos);
 }
 
-int UI::collisionEvent(int UniqueKey) //Every button in every menu have a unique key
-{
-	int result = -1;
-
-	//Texture change is suppose to be changed to tex 1
-	switch (UniqueKey)
-	{
-	case(4) : //IP
-		//Här ska det sättas så man kan skriva in en IP
-		break;
-	//case(0) : //Roam 0
-	//case(1) : //Play 1
-	//case(2) : //Settings 2
-	//case(3) : //Exit 3
-	//case(5) : //Connect 5
-	//case(6) : //Back 6
-	default: //Everthing that needs to go back to UIManager is defaulted with returning their unique key.
-		result = UniqueKey;
-		break;
-	}
-
-	return result;
-}
-
 
 void UI::changeTex(int objId, int whichTex)
 {
-	UiObjects[objId]->changeTexUsed(whichTex);
+	if(objId < UiObjects.size())
+		UiObjects[objId]->changeTexUsed(whichTex);
 }
 
 //Empty
@@ -321,18 +300,23 @@ void UI::setWindowResolution(int winX, int winY)
 
 void UI::setText(std::string text, int id)
 {
-	UiObjects[textIdList[id]]->setText(text);
+	if(textIdList[id] > -1)
+		UiObjects[textIdList[id]]->setText(text);
 }
 std::string UI::getText(int id)
 {
-	return UiObjects[textIdList[id]]->getText();
+	if (textIdList[id] > -1)
+		return UiObjects[textIdList[id]]->getText();
+	return "";
 }
 void UI::removeLastInput(int id)
 {
-	UiObjects[textIdList[id]]->removeLastInput();
+	if (textIdList[id] > -1)
+		UiObjects[textIdList[id]]->removeLastInput();
 }
 
-void UI::cleanText(int id)
+void UI::clearText(int id)
 {
-	UiObjects[textIdList[id]]->cleanText();
+	if (textIdList[id] > -1)
+		UiObjects[textIdList[id]]->cleanText();
 }

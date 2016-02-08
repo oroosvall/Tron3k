@@ -41,5 +41,8 @@ class Weapon
 		
 		bool getIfReloading() { return rldTimer > 0; };
 		bool getIfShooting() { return firingSpeedCurrentDelay > 0; };
+
+		int getAmmo() { return currentClipAmmo; };
+		int getMaxAmmo() { return maxClipSize; };
 };
 #endif

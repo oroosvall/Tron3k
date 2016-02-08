@@ -163,6 +163,9 @@ public:
 	int getHP() { return role.getHealth(); };
 	void setHP(int HPfromServer) { role.setHealth(HPfromServer); if (role.getHealth() > 0) isDead = false; }; //Used by client
 
+	int getAmmo();
+	int getMaxAmmo();
+
 	bool isLocal() { return isLocalPlayer; };
 	bool isAlive() { return !isDead; };
 

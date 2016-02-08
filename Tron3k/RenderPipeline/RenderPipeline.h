@@ -133,6 +133,8 @@ private:
 	float takeDamage_timer;
 	float takeDamage_timerStartValue;
 
+	mat4 minimapRenderMat;
+
 public:
 
 	RenderPipeline() {};
@@ -181,6 +183,8 @@ public:
 	virtual void renderTextObject(int id);
 	virtual void renderTextObjectWorldPos(int id, glm::mat4 world);
 
+	virtual void setCapRoomColor(int capPoint, vec3 color, float intensity);
+
 	virtual void setGBufferWin(unsigned int WindowWidth, unsigned int WindowHeight);
 
 	virtual void* getChunkCollisionVectorAsPoint(int chunkID);
@@ -203,6 +207,8 @@ public:
 
 	virtual void enableDepthTest();
 	virtual void disableDepthTest();
+	virtual void enableBlend();
+	virtual void disableBlend();
 	virtual void clearBothBuffers();
 	virtual void clearColor();
 
@@ -212,6 +218,7 @@ public:
 
 	virtual void startTakeDamageEffect(int maxDisplace, float time);
 	virtual void updateTakeDamageEffect(float dt);
+	virtual void renderMinimap(float* yourPos, float* yourdir, float* teammates, int nrOfTeammates, int team);
 };
 
 

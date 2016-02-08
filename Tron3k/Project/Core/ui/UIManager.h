@@ -82,6 +82,7 @@ public:
 	void setText(std::string text, int id);
 	std::string getText(int id);
 	void removeLastInput(int id);
+	void clearText(int id);
 };
 
 #endif

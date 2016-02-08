@@ -19,10 +19,17 @@ void ContentManager::init()
 	//blank_normal =		loadTexture("GameFiles/Textures/blank_n.dds");
 	//blank_glow =		loadTexture("GameFiles/Textures/blank_g.dds");
 
-	//skyTexture = loadTexture("GameFiles/Textures/skybox.dds");
 	decalTexture = loadTexture("GameFiles/Textures/decal.png");
-
-	//lightWallTex = loadTexture("GameFiles/Textures/Blob.png");
+	int xx, yy;
+	teamishereTexture = loadTexture("GameFiles/Textures/minimap/teamishere.png");
+	youarehereTexture = loadTexture("GameFiles/Textures/minimap/youarehere.png", true, (int*)&xx, (int*)&yy);
+	youareherescaleX = float(xx) / 1920;
+	youareherescaleY = float(yy) / 1080;
+	miniMapTexture = loadTexture("GameFiles/Textures/minimap/miniMap.png", true, (int*)&xx, (int*)&yy);
+	minimapscaleX = float(xx) / 1920;
+	minimapScaleY = float(yy) / 1080;
+	mapBotcord = vec2(-185, 160);
+	mapTopcord = vec2(165, -38);
 
 	skyTexture = 0;
 	lightWallTex = 0;
@@ -126,6 +133,10 @@ void ContentManager::release()
 
 	glDeleteTextures(1, &lightWallTex);
 	glDeleteTextures(1, &decalTexture);
+
+	glDeleteTextures(1, &miniMapTexture);
+	glDeleteTextures(1, &youarehereTexture);
+	glDeleteTextures(1, &teamishereTexture);
 
 	testMap.release();
 

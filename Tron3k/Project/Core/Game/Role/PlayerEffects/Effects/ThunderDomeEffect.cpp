@@ -29,5 +29,5 @@ float ThunderDomeEffect::explotionRenderRad()
 	if (lifeTime < startLifeTime * 0.9f)
 		return domeRadius;
 	
-	return domeRadius * (1 - (lifeTime - 9.0f / 1.0f));
+	return domeRadius * 0.1 + lifeTime;
 }

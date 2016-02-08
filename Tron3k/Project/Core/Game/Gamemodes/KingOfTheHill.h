@@ -25,7 +25,7 @@ private:
 	KOTHSTATE serverState; //State of the server, if we're a client
 	GAMEMODE_MSG lastMsg;
 
-	int playersReadyNeeded = 4;
+	int playersReadyNeeded = 2;
 	std::vector<int> teamOnePlayers;
 	std::vector<int> teamTwoPlayers;
 
@@ -33,6 +33,7 @@ private:
 	int teamOnePlayersAtPoint;
 	int teamTwoPlayersAtPoint; //Number of people of each team currently in the capture point area
 	int round = 1;
+	int lastTeamOnPoint = 0;
 
 	int teamOneScore;
 	int teamTwoScore;
@@ -62,12 +63,14 @@ public:
 	GAMEMODE_MSG update(float dt);
 
 	int getRespawnTokens(int team);
+	int getRoundWins(int team);
 
 	bool playerRespawn(int conId); //Checks if a given player is allowed to respawn
 
-	void setGamemodeData(int respawn1, int respawn2, int onCap1, int onCap2, KOTHSTATE state, GAMEMODE_MSG serverMsg); //Used to keep clients updated over network
+	void setGamemodeData(int respawn1, int respawn2, int onCap1, int onCap2, int capPoint, KOTHSTATE state, GAMEMODE_MSG serverMsg); //Used to keep clients updated over network
 
 	int getCapturePoint() { return capturePoint; }; //Returns currently active cap point
+	int getCapturePointOwner();
 	int getPlayersOnPoint(int team); //Number of people on the point this frame (must be run after collision has been run that frame)
 	void playerOnCapPointThisFrame(int team); //When Game detects a player within the cap zone, it signals with this
 

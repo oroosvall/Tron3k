@@ -123,6 +123,10 @@ private:
 	int nameNrOfKeys;
 	int ipNrOfKeys;
 
+	bool shitBool = false;
+	bool justAFrameCounterActivated = false;
+	int justAFrameCounter = 0;
+
 	bool escWindow;
 
 	//Menu input
@@ -132,6 +136,18 @@ private:
 	const int validKeyboardInputs2[VALIDKEYSNAME] = { GLFW_KEY_Q, GLFW_KEY_W, GLFW_KEY_E, GLFW_KEY_R, GLFW_KEY_T, GLFW_KEY_Y, GLFW_KEY_U, GLFW_KEY_I, GLFW_KEY_O, GLFW_KEY_P,
 		GLFW_KEY_A, GLFW_KEY_S, GLFW_KEY_D, GLFW_KEY_F, GLFW_KEY_G, GLFW_KEY_H, GLFW_KEY_J, GLFW_KEY_K, GLFW_KEY_L,
 		GLFW_KEY_Z, GLFW_KEY_X, GLFW_KEY_C, GLFW_KEY_V, GLFW_KEY_B, GLFW_KEY_N, GLFW_KEY_M, GLFW_KEY_COMMA, GLFW_KEY_PERIOD, GLFW_KEY_SPACE};
+
+	struct HUDvalues
+	{
+		int HP;
+		int ammo;
+		int maxAmmo;
+		int teamOneTokens;
+		int teamTwoTokens;
+		int teamOneRoundWins;
+		int teamTwoRoundWins;
+		int time;
+	}HUD;
 
 	//for take damage blur effect on player or spectated player
 	int lastHP_blurreffect = 0;

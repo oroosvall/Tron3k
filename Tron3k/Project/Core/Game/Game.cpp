@@ -289,6 +289,8 @@ void Game::update(float dt)
 			//TODO: Send collision results to player
 		}
 	}
+
+	
 }
 
 void Game::playerUpdate(int conid, float dt)
@@ -986,6 +988,7 @@ void Game::getLatestWeaponFired(int localPlayer, WEAPON_TYPE &wt, int &bulletId)
 
 void Game::addBulletToList(int conID, int teamId, int bulletId, BULLET_TYPE bt, glm::vec3 pos, glm::vec3 dir)
 {
+	
 	Bullet* b = nullptr;
 	Player* p = playerList[conID];
 	glm::vec3 rightV = normalize(cross(dir, vec3(0, 1, 0)));
@@ -996,7 +999,7 @@ void Game::addBulletToList(int conID, int teamId, int bulletId, BULLET_TYPE bt, 
 	case BULLET_TYPE::PULSE_SHOT:
 		rightV *= 0.2;
 		upV *= -0.13f;
-		dirMod *= 0.3f;
+		dirMod *= 0.6f;
 		pos += upV + rightV + dirMod;
 		b = new PulseShot(pos, dir, conID, bulletId, teamId);
 		break;
@@ -1015,7 +1018,7 @@ void Game::addBulletToList(int conID, int teamId, int bulletId, BULLET_TYPE bt, 
 		break;
 	case BULLET_TYPE::SHOTGUN_PELLET:
 		rightV *= 0.4;
-		upV *= -0.4f;
+		upV *= -0.3f;
 		dirMod *= 0.5f;
 		pos += upV + rightV + dirMod;
 		b = new ShotgunPellet(pos, dir, conID, bulletId, teamId);
@@ -1067,6 +1070,7 @@ void Game::addBulletToList(int conID, int teamId, int bulletId, BULLET_TYPE bt, 
 
 void Game::handleWeaponFire(int conID, int teamId, int bulletId, WEAPON_TYPE weapontype, glm::vec3 pos, glm::vec3 dir)
 {
+
 	switch (weapontype)
 	{
 	case WEAPON_TYPE::PULSE_RIFLE:
@@ -1596,7 +1600,7 @@ void Game::bounceBullet(BulletHitWorldInfo hwi, Bullet* theBullet)
 void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 {
 	//hit info and bullet rad (assumed 0.6 for all)
-	decalAdd(hi, 0.2f);
+	decalAdd(hi, -0.45f);
 
 	int arraypos = -1;
 	Bullet* b = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, arraypos);
@@ -1873,7 +1877,7 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 			if (GetSoundActivated())
 				GetSound()->playExternalSound(SOUNDS::soundEffectClusterGrenade, parent->getPos().x, parent->getPos().y, parent->getPos().z);
 
-			addEffectToList(PID, parent->getTeam(), BID, EFFECT_TYPE::EXPLOSION, parent->getPos(), 10, 2.5f);
+			addEffectToList(PID, parent->getTeam(), BID, EFFECT_TYPE::EXPLOSION, parent->getPos(), 10, 3.5f);
 			break;
 		}
 		}
@@ -2012,7 +2016,7 @@ void Game::decalAdd(BulletHitWorldInfo info, float rad)
 	decals_renderInfo[decalCounter].inten = 1.0f;
 	decals_renderInfo[decalCounter].normal = vec3(info.collisionNormal);
 	//for correct; pos = pos - collision.normal * (Bulletrad - pendepth)
-	decals_renderInfo[decalCounter].pos = info.hitPos -vec3(info.collisionNormal) * (rad - info.collisionNormal.w);
+	decals_renderInfo[decalCounter].pos = info.hitPos -vec3(info.collisionNormal) * (rad -info.collisionNormal.w);
 	
 	if (p->getTeam() == 1)
 		decals_renderInfo[decalCounter].color = TEAMONECOLOR;

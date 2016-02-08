@@ -94,7 +94,7 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool spectatin
 
 	if (GetSoundActivated())
 	{
-		GetSound()->setLocalPlayerPos(cam->getPos());
+		GetSound()->setLocalPlayerPos(pos);
 		GetSound()->setLocalPlayerDir(cam->getDir());
 	}
 
@@ -115,7 +115,7 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool spectatin
 			GetSound()->destroyerPaused = false;
 		}
 		
-		/*else if (this->role.getRole() == 3 && GetSoundActivated() && GetSound()->brutePaused == true)
+	/*	else if (this->role.getRole() == 3 && GetSoundActivated() && GetSound()->brutePaused == true)
 		{
 			GetSound()->playFootsteps(this->role.getRole(), pos.x, pos.y, pos.z);
 			GetSound()->brutePaused = false;
@@ -129,10 +129,12 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool spectatin
 			GetSound()->stopDestroyer(pos.x, pos.y, pos.z);
 		}
 
-		/*else if (this->role.getRole() == 3 && GetSoundActivated() && GetSound()->brutePaused == false)
+		else if (this->role.getRole() == 3 && GetSoundActivated() && GetSound()->brutePaused == false)
 		{
-			GetSound()->stopBrute();
-		}*/
+			GetSound()->setBruteLoopFalse();
+			GetSound()->brutePaused = true;
+
+		}
 	}
 }
 
@@ -144,9 +146,6 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 	//Collision handling here, after movement
 	bool ceiling = false;
 	vec3 posadjust = vec3(0);
-
-	
-	
 
 	//if we collided with something
 	int * collS = &collisionNormalSize;
@@ -174,7 +173,7 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 			}
 
 			// abslut value, if two collisions from the same angle they should not move us twice the distance
-			
+
 			if (pendepth.x > 0.0f || pendepth.x < 0.0f)//abs(posadjust.x) < abs(pendepth.x))
 			{
 				posadjust.x += pendepth.x;
@@ -224,7 +223,7 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 			posadjust.y = 0;
 			grounded = false;
 		}
-		
+
 		pos += posadjust;
 
 		if (posadjust.y < 0.001f && posadjust.y > -0.001f)
@@ -241,12 +240,6 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 		collided = false;
 		airVelocity = vel;
 		grounded = false;
-	}
-
-	if (freecam == false || specingThis == true)
-	{
-		cam->setCam(pos);
-		rotatePlayer(oldDir, dir);
 	}
 }
 
@@ -680,6 +673,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			{
 				respawnTimer = 0.0f;
 				msg = PLAYERRESPAWN;
+				GetSound()->playUserGeneratedSound(SOUNDS::soundEffectRespawn);
 			}
 		}
 
@@ -710,7 +704,6 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 		if (spectatingThisPlayer == true)
 		{
-			cam->setCam(pos, dir);
 			cam->roomID = roomID;
 
 			animRole = role.getRole();
@@ -761,6 +754,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		}
 		modifiersSetData(dt);
 	}
+
 	
 	return msg;
 }
@@ -781,9 +775,12 @@ void Player::movementUpdates(float dt, bool freecam, bool spectatingThisPlayer, 
 		if (currentTeam != 0)
 		{
 			movePlayerCollided(dt, olddir, freecam, spectatingThisPlayer);
-			if (!freecam)
+			if (!freecam || spectating == true)
+			{
 				cam->setCam(pos, dir);
-
+				rotatePlayer(oldDir, dir);
+			}
+				
 			float lastHeight = pos.y;
 
 			if (freecam && spectating == false)
@@ -810,6 +807,24 @@ void Player::movementUpdates(float dt, bool freecam, bool spectatingThisPlayer, 
 	{
 		worldMat[1].w -= 1.45f; // move down if 3rd person render
 	}
+}
+
+int Player::getAmmo()
+{
+	if (role.getRole() != ROLES::NROFROLES)
+	{
+		return role.getAmmo();
+	}
+	return 0;
+}
+
+int Player::getMaxAmmo()
+{
+	if (role.getRole() != ROLES::NROFROLES)
+	{
+		return role.getMaxAmmo();
+	}
+	return 0;
 }
 
 void Player::rotatePlayer(vec3 olddir, vec3 newdir)
@@ -1067,15 +1082,15 @@ glm::mat4 Player::getFPSmat()
 	case BRUTE:
 		if (animPrimary)
 		{
-			yOffset = -0.2f;
-			xOffset = -0.45f;
-			zOffset = 0.20f;
+			yOffset = -0.14f;
+			xOffset = -0.47f;
+			zOffset = 0.12f;
 		}
 		else
 		{
-			yOffset = 0.35f;
+			yOffset = 0.32f;
 			xOffset = 0.45f;
-			zOffset = 0.40f;
+			zOffset = 0.28f;
 		}
 		break;
 	case MANIPULATOR:
@@ -1201,7 +1216,10 @@ void Player::movementAnimationChecks(float dt)
 					animOverideIfPriority(anim_third_current, AnimationState::third_secondary_jump_end);
 
 			if (GetSoundActivated())
+			{
 				GetSound()->playLand(getRole()->getRole(), pos.x, pos.y, pos.z);
+			}
+				
 		}
 		else // jump begin
 		{

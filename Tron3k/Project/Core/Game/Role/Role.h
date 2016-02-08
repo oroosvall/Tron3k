@@ -73,6 +73,9 @@ public:
 	void takeDamage(int dmg); //Used by server
 	void heal(int h); //Used by server
 
+	int getAmmo() { return weapons[currentWpn]->getAmmo(); };
+	int getMaxAmmo() { return weapons[currentWpn]->getMaxAmmo(); };
+
 	int getHealth() { return health; };
 	float getJumpHeight() { return jumpHeight; };
 	void returnToLife();

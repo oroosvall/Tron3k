@@ -25,6 +25,8 @@ struct CapturePoint
 
 	glm::mat4* mats;
 
+	glm::vec3 color;
+
 	int meshCount;
 	int aabbCount;
 
@@ -95,6 +97,10 @@ public:
 	void* getCapAsPointer(int& count);
 	void* getRoomBoxes() { return chunkAABB; };
 	
+	int getCapPointRoomID(int capPoint);
+	void setCapPointColor(int capID, glm::vec3 color);
+
+	void* getCapPointColor(int cap);
 
 	void deleteSpawnposData();
 };
