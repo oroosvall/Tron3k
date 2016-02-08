@@ -1753,9 +1753,10 @@ void Core::renderWorld(float dt)
 					int membersize = members->size();
 
 					vec3* data = new vec3[membersize * 2 ];
+					int counter = 0;
 					for (int n = 0; n < membersize; n++)
 					{
-						p2 = game->getPlayer(members[0][n]);
+						p2 = game->getPlayer(members[0][counter]);
 						if (p2->isAlive())
 						{
 							data[n * 2] = p2->getPos();
@@ -1766,6 +1767,7 @@ void Core::renderWorld(float dt)
 							n--;
 							membersize--;
 						}
+						counter++;
 					}
 
 					renderPipe->renderMinimap(&camPos.x, &camDir.x, &data[0].x, membersize, 0);
