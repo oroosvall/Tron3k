@@ -9,9 +9,9 @@ BulletMesh::BulletMesh()
 	aabb.max = vec3(1, 1, 1);
 	aabb.min = vec3(-1, -1, -1);
 
-	sphere.radius = 0.5f;
+	sphere.radius = 0.2f;
 
-	worldSize = vec3(0.5f, 0.5f, 0.5f);
+	worldSize = vec3(0.2f, 0.2f, 0.2f);
 }
 
 BulletMesh::BulletMesh(vec3 pos)
@@ -23,9 +23,9 @@ BulletMesh::BulletMesh(vec3 pos)
 	aabb.max = pos + vec3(1, 1, 1);
 	aabb.min = pos + vec3(-1, -1, -1);
 
-	sphere.radius = 0.5f;
+	sphere.radius = 0.2f;
 
-	worldSize = vec3(0.5f, 0.5f, 0.5f);
+	worldSize = vec3(0.2f, 0.2f, 0.2f);
 }
 
 BulletMesh::BulletMesh(vec3 pos, AABBSingle aabb, Sphere sphere)

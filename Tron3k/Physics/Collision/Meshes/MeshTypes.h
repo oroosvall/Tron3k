@@ -162,7 +162,7 @@ struct PLANE
 			float t = dot(dn, n);
 			t /= denom;
 
-			if (t > 0) //if we traveled away from the portal
+			if (t >= 0) //if we traveled away from the portal
 			{
 				t = dot(d, n);
 				t /= denom;

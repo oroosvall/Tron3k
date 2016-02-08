@@ -229,14 +229,28 @@ vec3 Physics::checkLinevPlaneCollision(vec3 l1, vec3 l2, vec3 p1, vec3 p2, vec3 
 	//the equation for the plane is now p + d
 
 	if (dot(l3, p) == 0.0f)
-		return vec3(-1);
+	{
+		x = (dot(p2 - l1, p) / FLT_EPSILON);
+
+		if (length(l3 * x) - FLT_EPSILON <= length(l) + FLT_EPSILON && x + FLT_EPSILON >= 0 - FLT_EPSILON)
+			return l1 + (l3 * x);
+
+		if (x + FLT_EPSILON >= 0 - FLT_EPSILON && x - FLT_EPSILON <= length(l) + FLT_EPSILON)
+			return l1 + (l3 * x);
+
+		return vec3(0);
+	}
+
 
 	x = (dot(p2 - l1, p) / (dot(l3, p)));
 
-	if (x >= 0 && x <= length(l))
+	if (length(l3 * x) - FLT_EPSILON <= length(l) + FLT_EPSILON && x + FLT_EPSILON >= 0 - FLT_EPSILON)
 		return l1 + (l3 * x);
 
-	return vec3(0, 0, 0);
+	if (x + FLT_EPSILON >= 0 - FLT_EPSILON && x - FLT_EPSILON <= length(l) + FLT_EPSILON)
+		return l1 + (l3 * x);
+
+	return vec3(0);
 
 }
 
@@ -665,7 +679,8 @@ vec4 Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel, vec3 bulletD
 	AABBSingle box = bulletBox.getAABB();
 	float rad = bulletBox.getSphere().radius;
 
-	vec3 bPos = bulletPos - (bulletVel * bulletDir * dt);
+	vec3 origPos = bulletPos - (bulletVel * bulletDir * dt);
+	vec3 bPos = bulletPos;// -(bulletVel * bulletDir * dt);
 
 	for (unsigned int j = 0; j < roomBoxes[0].getRoomBoxes()->size(); j++)
 	{
@@ -679,29 +694,65 @@ vec4 Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel, vec3 bulletD
 			for (int n = 0; n < size; n++)
 			{
 				OBB* theOBB = roomBoxes[0].getSpecificBox(j)->getOBB(n);
-				t = getSpherevOBBNorms(bulletPos, rad, theOBB);
 
+
+				bool collidedWithPlane = false;
+				vec3 collidedVec = vec3(0);
 				for (int p = 0; p < 6; p++)
 				{
-					vec3 lvP = checkLinevPlaneCollision(bPos, bulletPos, theOBB->planes[p].p[0], theOBB->planes[p].p[1], theOBB->planes[p].p[2]);
+					vec3 lvP = checkLinevPlaneCollision(origPos, bulletPos, theOBB->planes[p].p[0], theOBB->planes[p].p[1], theOBB->planes[p].p[2]);
 
 					if (length(lvP) > 0.001f)
 						if (dot(lvP - theOBB->planes[p].p[0], theOBB->planes[p].n) < 0.001f)
 						{
 							//This is where the bullet line intersects the plane
 							//TODO: Extend check by bullet Radii. Move it back so we tangent the point with the radii
+							//bPos = lvP - bulletBox.getSphere().radius * bulletDir * 0.99f; //moves the bullet back in it's direction, by the size of the radii
+							//collidedWithPlane = true;
+
+							collidedVec = lvP;// -(rad * normalize(bulletDir) * 0.99f); //moves the bullet back in it's direction, by the size of the radii
+							if (length(bPos - origPos) > length(collidedVec - origPos)) //if collidedVec is closer to our original position
+								bPos = collidedVec;
+							else
+								collidedVec = bPos;
+							collidedWithPlane = true;
+
 						}
 				}
 				//TODO:
 				/*
 				make sure we only test the line segment between bPos and ublletPos
 				*/
-				t.w = rad - t.w; //penetration depth instead of collision distance 
-				if (t.w + FLT_EPSILON > 0 - FLT_EPSILON && t.w - FLT_EPSILON < rad + FLT_EPSILON)
-				{
 
+				if (collidedWithPlane)
+				{
+					//WE HAVE COLLISION
+					int x = 0;
+				}
+				t = getSpherevOBBNorms(bPos, rad, theOBB);
+
+				t.w = rad - t.w; //penetration depth instead of collision distance 
+				if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
+				{
+					if (collidedWithPlane)
+						int x = 0;
 					t = vec4(normalize(vec3(t)), t.w);
 					return t;
+				}
+				else if (collidedWithPlane)
+				{
+					t = getSpherevOBBNorms(collidedVec, rad, theOBB);
+					if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
+					{
+						if (collidedWithPlane)
+							int x = 0;
+						t = vec4(normalize(vec3(t)), t.w);
+						return t;
+					}
+				}
+				if (collidedWithPlane)
+				{
+					int x = 0;//if we get here, we collided with plane, but the actual collision check missed, for some reason
 				}
 			}
 		}
@@ -729,11 +780,42 @@ vec4 Physics::BulletVWorldCollision(vec3 bulletPos, vec3 bulletVel, vec3 bulletD
 				{
 					if (checkAABBvAABBCollision(box, roomBoxes[i].getSpecificBox(j)->getAABB()))
 					{
+
+
 						//for each obb contained in that abb
 						int size = roomBoxes[i].getSpecificBox(j)->getOBBSize();
 						for (int n = 0; n < size; n++)
 						{
-							t = getSpherevOBBNorms(bulletPos, rad, roomBoxes[i].getSpecificBox(j)->getOBB(n));
+
+							OBB* theOBB = roomBoxes[i].getSpecificBox(j)->getOBB(n);
+
+
+							vec3 collidedVec = vec3(0);
+							bool collidedWithPlane = false;
+							for (int p = 0; p < 6; p++)
+							{
+								vec3 lvP = checkLinevPlaneCollision(bPos, bulletPos, theOBB->planes[p].p[0], theOBB->planes[p].p[1], theOBB->planes[p].p[2]);
+
+								if (length(lvP) > 0.00001f)
+									if (dot(lvP - theOBB->planes[p].p[0], theOBB->planes[p].n) < 0.00001f)
+									{
+										//This is where the bullet line intersects the plane
+										//TODO: Extend check by bullet Radii. Move it back so we tangent the point with the radii
+										collidedVec = lvP;// -bulletBox.getSphere().radius * bulletDir * 0.99f; //moves the bullet back in it's direction, by the size of the radii
+										if (length(bulletPos - bPos) < length(bulletPos - collidedVec))
+											bPos = collidedVec;
+										collidedWithPlane = true;
+									}
+							}
+							//TODO:
+							/*
+							make sure we only test the line segment between bPos and ublletPos
+							*/
+							if (collidedWithPlane)
+								t = getSpherevOBBNorms(bPos, rad, theOBB);
+							else
+								t = getSpherevOBBNorms(bulletPos, rad, theOBB);
+							//t = getSpherevOBBNorms(bulletPos, rad, roomBoxes[i].getSpecificBox(j)->getOBB(n));
 							t.w = rad - t.w; //penetration depth instead of collision distance 
 							if (t.w + FLT_EPSILON > 0 - FLT_EPSILON && t.w - FLT_EPSILON < rad + FLT_EPSILON)
 							{
