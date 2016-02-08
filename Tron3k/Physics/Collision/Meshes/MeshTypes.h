@@ -155,14 +155,14 @@ struct PLANE
 		float denom = dot(n, dir);
 
 		float d2 = glm::length(denom);
-		if (d2 > FLT_EPSILON)
+		if (d2 >= FLT_EPSILON)
 		{
 			glm::vec3 d = p[0] - origin;
 			glm::vec3 dn = normalize(d);
 			float t = dot(dn, n);
 			t /= denom;
 
-			if (t >= 0) //if we traveled away from the portal
+			if (t + FLT_EPSILON >= 0 - FLT_EPSILON) //if we traveled away from the portal
 			{
 				t = dot(d, n);
 				t /= denom;
@@ -179,7 +179,7 @@ struct PLANE
 					float test1 = dot(v1, v5);
 					float test2 = dot(v3, v6);
 
-					if (test1 > FLT_EPSILON && test2 > FLT_EPSILON)
+					if (test1 >= FLT_EPSILON && test2 >= FLT_EPSILON)
 					{
 						// Y check
 						v5 = normalize(inter - p[1]);
@@ -187,7 +187,7 @@ struct PLANE
 						test1 = dot(v2, v5);
 						test2 = dot(v4, v6);
 
-						if (test1 > FLT_EPSILON && test2 > FLT_EPSILON)
+						if (test1 >= FLT_EPSILON && test2 >= FLT_EPSILON)
 						{
 							//printf("%f \n", t);
 
