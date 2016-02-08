@@ -178,38 +178,38 @@ void Core::update(float dt)
 				CameraInput::getCam()->setPlaybackSpeed(1.0f);
 		}
 	}
-	//if (game)
-	//{
-	//	if (console.getInChatMode() == false)
-	//	{
-	//		if (i->justPressed(GLFW_KEY_7))
-	//		{
-	//			playbackSpeed *= 2.0f;
-	//			if (playbackSpeed > 16.0f)
-	//				playbackSpeed = 16.0f;
-	//			CameraInput* cam = CameraInput::getCam();
-	//			cam->setPlaybackSpeed(playbackSpeed);
-	//		}
-	//		if (i->justPressed(GLFW_KEY_6))
-	//		{
-	//			playbackSpeed *= 0.5f;
-	//			if (playbackSpeed < 0.03125f)
-	//				playbackSpeed = 0.03125f;
-	//			CameraInput* cam = CameraInput::getCam();
-	//			cam->setPlaybackSpeed(playbackSpeed);
-	//		}
-	//		if (i->justPressed(GLFW_KEY_0))
-	//		{
-	//			playbackSpeed = 0.0f;
-	//		}
-	//		if (i->justPressed(GLFW_KEY_9))
-	//		{
-	//			playbackSpeed = 1.0f;
-	//		}
-	//	}
-	//}
-	//
-	//dt *= playbackSpeed;
+	if (game)
+	{
+		if (console.getInChatMode() == false)
+		{
+			if (i->justPressed(GLFW_KEY_7))
+			{
+				playbackSpeed *= 2.0f;
+				if (playbackSpeed > 16.0f)
+					playbackSpeed = 16.0f;
+				CameraInput* cam = CameraInput::getCam();
+				cam->setPlaybackSpeed(playbackSpeed);
+			}
+			if (i->justPressed(GLFW_KEY_6))
+			{
+				playbackSpeed *= 0.5f;
+				if (playbackSpeed < 0.03125f)
+					playbackSpeed = 0.03125f;
+				CameraInput* cam = CameraInput::getCam();
+				cam->setPlaybackSpeed(playbackSpeed);
+			}
+			if (i->justPressed(GLFW_KEY_0))
+			{
+				playbackSpeed = 0.0f;
+			}
+			if (i->justPressed(GLFW_KEY_9))
+			{
+				playbackSpeed = 1.0f;
+			}
+		}
+	}
+	
+	dt *= playbackSpeed;
 
 	switch (current)
 	{

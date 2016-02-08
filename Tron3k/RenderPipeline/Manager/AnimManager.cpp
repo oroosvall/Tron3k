@@ -24,15 +24,27 @@ void AnimManager::updateAnimStates(int playerID, int role, AnimationState curren
 	{
 		setAnim(animStates[playerID], current, firstPerson);
 		animStates[playerID].timeout = false;
+		animStates[playerID].t = 0.0f;
 	}
 	else
 	{
 		animStates[playerID].timepass += dt;
 		animStates[playerID].t += dt;
+
 		if (animStates[playerID].t > animStates[playerID].speed)
-			animStates[playerID].t = 0.0f;
+		{
+			float d = animStates[playerID].t - animStates[playerID].speed;
+			animStates[playerID].t = d;
+		}
 
 		int rank = getAnimRank(animStates[playerID].state);
+
+		float end = animStates[playerID].timeLength;
+
+		if (rank == 1)
+		{
+			end -= animStates[playerID].speed;
+		}
 
 		//If the animation ended
 		if (animStates[playerID].timepass > animStates[playerID].timeLength)
@@ -52,6 +64,7 @@ void AnimManager::updateAnimStates(int playerID, int role, AnimationState curren
 			else if (rank == 2)
 			{
 				animStates[playerID].timepass = animStates[playerID].timeLength;
+				animStates[playerID].t = 0.0f;
 			}
 		}
 
@@ -64,13 +77,20 @@ void AnimManager::updateAnimStates(int playerID, int role, AnimationState curren
 		{
 			animStates[playerID].frame = animStates[playerID].frameEnd * index;
 			if (animStates[playerID].frame >= animStates[playerID].frameEnd)
-				if(rank != 2)
+				if (rank != 2)
+				{
 					animStates[playerID].frame = 0;
+				}
 				else
-					animStates[playerID].frame = animStates[playerID].frameEnd-1;
+				{
+					animStates[playerID].frame = animStates[playerID].frameEnd - 1;
+				}
 		}
+
 		if (animStates[playerID].timeout)
-			animStates[playerID].frame = animStates[playerID].frameEnd-1;
+		{
+			animStates[playerID].frame = animStates[playerID].frameEnd - 1;
+		}
 	}
 
 }

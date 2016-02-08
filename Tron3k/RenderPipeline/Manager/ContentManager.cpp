@@ -378,9 +378,9 @@ void ContentManager::renderThunderDome()
 	bruteThunderDome.draw();
 }
 
-void ContentManager::renderPlayer(AnimManager::animState state, glm::mat4 world, GLuint uniformKeyMatrixLocation, bool first, bool primary, GLuint shader, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation)
+void ContentManager::renderPlayer(AnimManager::animState state, glm::mat4 world, GLuint uniformKeyMatrixLocation, bool first, bool primary, GLuint shader, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation, float delta)
 {
-	playerCharacters[state.role].draw(uniformKeyMatrixLocation, state.state, state.frame, first, primary, shader, textureLocation, normalLocation, glowSpecLocation);
+	playerCharacters[state.role].draw(uniformKeyMatrixLocation, state.state, state.frame, first, primary, shader, textureLocation, normalLocation, glowSpecLocation, delta);
 }
 
 void* ContentManager::getChunkCollisionVectorAsPointer(int chunkID)

@@ -7,6 +7,8 @@
 
 #include <Windows.h>
 
+#include <glm\gtc\quaternion.hpp>
+
 using std::ios;
 
 
@@ -316,18 +318,53 @@ int* AnimatedMeshV2::loadAnimations(std::string character)
 	return frames;
 }
 
-void AnimatedMeshV2::draw(GLuint uniformKeyMatrixLocation, int animationID, int keyFrame, bool _first, bool _primary, GLuint shader, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation)
+void AnimatedMeshV2::draw(GLuint uniformKeyMatrixLocation, int animationID, int keyFrame, bool _first, bool _primary, GLuint shader, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation, float delta)
 {
 	
 
-	if (animations[animationID].header.keyCount > 0)
+	if (animations[animationID].header.keyCount > 0 && animations[animationID].header.jointCount > 0)
 	{
 		glBindBuffer(GL_UNIFORM_BUFFER, matricesBuffer);
 		glBindBufferBase(GL_UNIFORM_BUFFER, uniformKeyMatrixLocation, matricesBuffer);
 		glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4)* animations[animationID].header.jointCount, animations[animationID].keyFrames[keyFrame].jointTransform, GL_STATIC_DRAW);
-		glBindBuffer(GL_UNIFORM_BUFFER, secondMatricesBuffer);
-		glBindBufferBase(GL_UNIFORM_BUFFER, uniformKeyMatrixLocation+1, secondMatricesBuffer);
-		glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4)* animations[animationID].header.jointCount, animations[animationID].keyFrames[(keyFrame+1) % animations[animationID].header.keyCount].jointTransform, GL_STATIC_DRAW);
+
+		int next = (keyFrame + 1) % animations[animationID].header.keyCount;
+
+		for (size_t i = 0; i < animations[animationID].header.jointCount; i++)
+		{
+			glm::mat4 m1 = animations[animationID].keyFrames[keyFrame].jointTransform[i];
+
+			glm::mat4 m2 = animations[animationID].keyFrames[next].jointTransform[i];
+
+			//m1 = glm::transpose(m1);
+			//m2 = glm::transpose(m2);
+
+			glm::quat firstQuat = glm::quat_cast(m1);
+			glm::quat secondQuat = glm::quat_cast(m2);
+			glm::quat finalQuat = glm::slerp(firstQuat, secondQuat, delta);
+			
+			glm::mat4 inter = glm::mat4_cast(finalQuat);
+
+			vec4 p1 = vec4(m1[0].w, m1[1].w, m1[2].w, m1[3].w);
+			vec4 p2 = vec4(m2[0].w, m2[1].w, m2[2].w, m2[3].w);
+
+			vec4 final = (float)(1.0 - delta)*p1 + p2*delta;
+
+			inter[0].w = final.x;
+			inter[1].w = final.y;
+			inter[2].w = final.z;
+			inter[3].w = final.w;
+
+			//inter = glm::transpose(inter);
+
+			glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4) * i, sizeof(glm::mat4), &inter);
+			//glBufferSubData(GL_UNIFORM_BUFFER, )
+
+		}
+
+		//glBindBuffer(GL_UNIFORM_BUFFER, secondMatricesBuffer);
+		//glBindBufferBase(GL_UNIFORM_BUFFER, uniformKeyMatrixLocation+1, secondMatricesBuffer);
+		//glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4)* animations[animationID].header.jointCount, animations[animationID].keyFrames[(keyFrame+1) % animations[animationID].header.keyCount].jointTransform, GL_STATIC_DRAW);
 		if (_first)
 		{
 			if(_primary)

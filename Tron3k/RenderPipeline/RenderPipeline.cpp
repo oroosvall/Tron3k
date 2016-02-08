@@ -798,20 +798,25 @@ void RenderPipeline::renderAnimation(int playerID, int roleID, void* world, Anim
 		{
 			AnimManager::animState state = anims.animStates[playerID];
 			//glProgramUniform1f(animationShader, animDelta, state.t / state.speed);
-			//localPlayer_t = state.t / state.speed;
+			localPlayer_t = state.t / state.speed;
 
-			glProgramUniform1f(animationShader, animDelta, localPlayer_t);
+			//glProgramUniform1f(animationShader, animDelta, localPlayer_t);
 
-			if (GetAsyncKeyState(VK_F9))
-			{
-				localPlayer_t += 0.01f;
-			}
-			if (GetAsyncKeyState(VK_F10))
-			{
-				localPlayer_t -= 0.01f;
-			}
+			//if (GetAsyncKeyState(VK_F9))
+			//{
+			//	localPlayer_t += 0.01f;
+			//	if (localPlayer_t > 1.0f)
+			//	{
+			//		localPlayer_t = 0.0f;
+			//		anims.animStates[playerID].frame = (anims.animStates[playerID].frame +1 )% anims.animStates[playerID].frameEnd;
+			//	}
+			//}
+			//if (GetAsyncKeyState(VK_F10))
+			//{
+			//	localPlayer_t -= 0.01f;
+			//}
 
-			contMan.renderPlayer(anims.animStates[playerID], *(glm::mat4*)world, uniformKeyMatrixLocation, first, primary, animationShader, uniformTextureLocation[1], uniformNormalLocation[1], uniformGlowSpecLocation[1]);
+			contMan.renderPlayer(anims.animStates[playerID], *(glm::mat4*)world, uniformKeyMatrixLocation, first, primary, animationShader, uniformTextureLocation[1], uniformNormalLocation[1], uniformGlowSpecLocation[1], localPlayer_t);
 		}
 	}
 }
