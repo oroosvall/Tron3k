@@ -458,7 +458,6 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 	{
 		if (state == PREROUND)
 		{
-			slowdownTime = false;
 			std::vector<int>* teamOne = gamePtr->getTeamConIds(1);
 			std::vector<int>* teamTwo = gamePtr->getTeamConIds(2);
 			for (int c = 0; c < teamOne->size(); c++)
@@ -469,11 +468,27 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 			{
 				teamTwoPlayers.push_back(teamTwo->at(c));
 			}
+			
+			for (int c = 0; c < teamOnePlayers.size(); c++)
+			{
+				gamePtr->allowPlayerRespawn(teamOnePlayers[c], c % 5);
+			}
+			for (int c = 0; c < teamTwoPlayers.size(); c++)
+			{
+				gamePtr->allowPlayerRespawn(teamTwoPlayers[c], c % 5);
+			}
+			gamePtr->clearAllPlayerKD();
+
 			consolePtr->printMsg("ROUND STARTS IN 15 SECONDS", "System", 'S');
+			if (capturePoint == 1)
+				consolePtr->printMsg("The active capture point is the parking area", "System", 'S');
+			if (capturePoint == 2)
+				consolePtr->printMsg("The active capture point is the market area", "System", 'S');
 			timer = 15.0f;
 		}
 		else if (state == ROUND)
 		{
+			slowdownTime = false;
 			timer = 0.0f;
 			if (round == 1 && GetSoundActivated())
 			{
@@ -489,16 +504,6 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 			{
 				GetSound()->playUserGeneratedSound(SOUNDS::announcerRound3);
 			}
-
-			for (int c = 0; c < teamOnePlayers.size(); c++)
-			{
-				gamePtr->allowPlayerRespawn(teamOnePlayers[c], c%5);
-			}
-			for (int c = 0; c < teamTwoPlayers.size(); c++)
-			{
-				gamePtr->allowPlayerRespawn(teamTwoPlayers[c], c%5);
-			}
-			gamePtr->clearAllPlayerKD();
 		}
 		else if (state == OVERTIME)
 		{
