@@ -137,8 +137,8 @@ int SoundPlayer::playJump(int role, float x, float y, float z)
 
 	else if (role == 3)
 	{
-		GetSound()->playExternalSound(SOUNDS::soundEffectBruteJump, x, y, z);
-		stopBrute();
+		//GetSound()->playExternalSound(SOUNDS::soundEffectBruteJump, x, y, z);
+		//stopBrute();
 	}
 	else
 	{
@@ -291,6 +291,8 @@ int SoundPlayer::playUserGeneratedSound(int sound)
 	if (soundEnabler && initialized == 1)
 	{
 		sounds[nrOfSoundsPlaying].setBuffer(soundList[sound]);
+		sounds[nrOfSoundsPlaying].setRelativeToListener(true);
+		sounds[nrOfSoundsPlaying].setPosition(0, 0, 0);
 		sounds[nrOfSoundsPlaying].play();
 		nrOfSoundsPlaying++;
 		nrOfSoundsPlaying %= MAXSOUNDS;
@@ -561,7 +563,8 @@ void SoundPlayer::playFootsteps(int role, float posX, float posY, float posZ)
 
 		if (role == 3)
 		{
-			playBrute(posX, posY, posZ);
+			playExternalSound(SOUNDS::soundEffectBruteSteps, posX, posY, posZ);
+			//playUserGeneratedSound(SOUNDS::soundEffectBruteSteps);
 		}
 
 		if (role == 4)

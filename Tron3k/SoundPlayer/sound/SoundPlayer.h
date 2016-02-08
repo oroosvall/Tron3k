@@ -41,6 +41,7 @@ private:
 	sf::SoundBuffer soundList[SOUNDS::nrOfSounds];
 	string musicList[MUSIC::nrOfMusic];
 	bool fading = false;
+	
 
 	sf::Music musicPlayer;	//Streams big sound files
 	sf::Music theCantinaSong;
@@ -49,7 +50,7 @@ private:
 
 public:
 	SoundPlayer();
-
+    bool bruteGroundBool = true;
 	static void release();
 	static void init(SoundPlayer* sound, int activateSound);
 	static SoundPlayer* getSound();
@@ -84,9 +85,15 @@ public:
 	virtual int playBrute(float, float, float);
 	virtual void stopBrute()
 	{
-		bruteSteps.pause();
+		bruteSteps.stop();
 		brutePaused = true;
 	}
+
+	virtual void setBruteLoopFalse()
+	{
+		bruteSteps.setLoop(false);
+	}
+
 	void stopDestroyer(float x, float y, float z)
 	{
 		destroyerSteps.pause();

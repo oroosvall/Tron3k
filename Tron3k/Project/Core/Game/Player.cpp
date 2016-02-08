@@ -115,7 +115,7 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool spectatin
 			GetSound()->destroyerPaused = false;
 		}
 		
-		/*else if (this->role.getRole() == 3 && GetSoundActivated() && GetSound()->brutePaused == true)
+	/*	else if (this->role.getRole() == 3 && GetSoundActivated() && GetSound()->brutePaused == true)
 		{
 			GetSound()->playFootsteps(this->role.getRole(), pos.x, pos.y, pos.z);
 			GetSound()->brutePaused = false;
@@ -129,10 +129,12 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool spectatin
 			GetSound()->stopDestroyer(pos.x, pos.y, pos.z);
 		}
 
-		/*else if (this->role.getRole() == 3 && GetSoundActivated() && GetSound()->brutePaused == false)
+		else if (this->role.getRole() == 3 && GetSoundActivated() && GetSound()->brutePaused == false)
 		{
-			GetSound()->stopBrute();
-		}*/
+			GetSound()->setBruteLoopFalse();
+			GetSound()->brutePaused = true;
+
+		}
 	}
 }
 
@@ -1214,7 +1216,10 @@ void Player::movementAnimationChecks(float dt)
 					animOverideIfPriority(anim_third_current, AnimationState::third_secondary_jump_end);
 
 			if (GetSoundActivated())
+			{
 				GetSound()->playLand(getRole()->getRole(), pos.x, pos.y, pos.z);
+			}
+				
 		}
 		else // jump begin
 		{
