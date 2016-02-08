@@ -13,7 +13,7 @@ int ThermiteGrenade::update(float dt)
 {
 	pos += dir * vel * dt;
 
-	dir.y -= 1.5f * dt;
+	dir.y -= 1.2f * dt;
 
 	updateWorldMat();
 
