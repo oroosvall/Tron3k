@@ -44,6 +44,8 @@ private:
 	PlayerMesh third;
 
 	GLuint matricesBuffer;
+	GLuint secondMatricesBuffer;
+
 	AnimData animations[AnimationState::none];
 	// todo add animation states & animation data
 

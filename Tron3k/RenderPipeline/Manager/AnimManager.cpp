@@ -28,6 +28,9 @@ void AnimManager::updateAnimStates(int playerID, int role, AnimationState curren
 	else
 	{
 		animStates[playerID].timepass += dt;
+		animStates[playerID].t += dt;
+		if (animStates[playerID].t > animStates[playerID].speed)
+			animStates[playerID].t = 0.0f;
 
 		int rank = getAnimRank(animStates[playerID].state);
 

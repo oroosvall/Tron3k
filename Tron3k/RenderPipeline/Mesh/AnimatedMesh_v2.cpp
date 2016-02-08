@@ -209,6 +209,8 @@ void AnimatedMeshV2::release()
 		secondary.release();
 
 	glDeleteBuffers(1, &matricesBuffer);
+	glDeleteBuffers(1, &secondMatricesBuffer);
+
 
 	for (int i = 0; i < AnimationState::none; i++)
 	{
@@ -240,6 +242,11 @@ void AnimatedMeshV2::load(std::string character)
 	glGenBuffers(1, &matricesBuffer);
 	glBindBuffer(GL_UNIFORM_BUFFER, matricesBuffer);
 	glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4) * animations[0].header.jointCount, (void*)1, GL_STATIC_DRAW);
+
+	glGenBuffers(1, &secondMatricesBuffer);
+	glBindBuffer(GL_UNIFORM_BUFFER, secondMatricesBuffer);
+	glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4) * animations[0].header.jointCount, (void*)1, GL_STATIC_DRAW);
+
 }
 
 int* AnimatedMeshV2::loadAnimations(std::string character)
@@ -309,14 +316,18 @@ int* AnimatedMeshV2::loadAnimations(std::string character)
 	return frames;
 }
 
-void AnimatedMeshV2::draw(GLuint uniformKeyMatrixLocation,int animationID, int keyFrame, bool _first, bool _primary, GLuint shader, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation)
+void AnimatedMeshV2::draw(GLuint uniformKeyMatrixLocation, int animationID, int keyFrame, bool _first, bool _primary, GLuint shader, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation)
 {
-	glBindBuffer(GL_UNIFORM_BUFFER, matricesBuffer);
-	glBindBufferBase(GL_UNIFORM_BUFFER, uniformKeyMatrixLocation, matricesBuffer);
+	
 
 	if (animations[animationID].header.keyCount > 0)
 	{
+		glBindBuffer(GL_UNIFORM_BUFFER, matricesBuffer);
+		glBindBufferBase(GL_UNIFORM_BUFFER, uniformKeyMatrixLocation, matricesBuffer);
 		glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4)* animations[animationID].header.jointCount, animations[animationID].keyFrames[keyFrame].jointTransform, GL_STATIC_DRAW);
+		glBindBuffer(GL_UNIFORM_BUFFER, secondMatricesBuffer);
+		glBindBufferBase(GL_UNIFORM_BUFFER, uniformKeyMatrixLocation+1, secondMatricesBuffer);
+		glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4)* animations[animationID].header.jointCount, animations[animationID].keyFrames[(keyFrame+1) % animations[animationID].header.keyCount].jointTransform, GL_STATIC_DRAW);
 		if (_first)
 		{
 			if(_primary)

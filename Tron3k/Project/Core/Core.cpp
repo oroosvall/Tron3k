@@ -198,6 +198,14 @@ void Core::update(float dt)
 	//			CameraInput* cam = CameraInput::getCam();
 	//			cam->setPlaybackSpeed(playbackSpeed);
 	//		}
+	//		if (i->justPressed(GLFW_KEY_0))
+	//		{
+	//			playbackSpeed = 0.0f;
+	//		}
+	//		if (i->justPressed(GLFW_KEY_9))
+	//		{
+	//			playbackSpeed = 1.0f;
+	//		}
 	//	}
 	//}
 	//
@@ -212,13 +220,13 @@ void Core::update(float dt)
 	default:						break;
 	}
 
-	//if (renderPipe)
-	//{
-	//	if (i->justPressed(GLFW_KEY_8))
-	//	{
-	//		renderPipe->reloadShaders();
-	//	}
-	//}
+	if (renderPipe)
+	{
+		if (i->justPressed(GLFW_KEY_8))
+		{
+			renderPipe->reloadShaders();
+		}
+	}
 
 	i->clearOnPress();
 	console.discardCommandAndLastMsg();
