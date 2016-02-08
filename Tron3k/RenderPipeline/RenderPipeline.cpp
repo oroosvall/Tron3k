@@ -70,6 +70,7 @@ extern "C"
 #endif
 
 float localPlayer_t = 0;
+int frame = 0;
 
 bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 {
@@ -408,7 +409,7 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 		ss << "Buffer binds: " << bufferBinds << "\n";
 		ss << "Shader binds: " << shaderBinds << "\n";
 		ss << "State changes: " << stateChange << "\n";
-		ss << "Local anim (t): " << localPlayer_t << "\n";
+		ss << "Local anim (t): " << localPlayer_t << "\nFrame: " << frame <<  "\n";
 		ss << "Total uptime:" << timepass << "\n";
 		ss << result << "\n";
 		//if (counter > 0.001f)
@@ -799,6 +800,8 @@ void RenderPipeline::renderAnimation(int playerID, int roleID, void* world, Anim
 			AnimManager::animState state = anims.animStates[playerID];
 			//glProgramUniform1f(animationShader, animDelta, state.t / state.speed);
 			localPlayer_t = state.t / state.speed;
+
+			frame = state.frame;
 
 			//glProgramUniform1f(animationShader, animDelta, localPlayer_t);
 
