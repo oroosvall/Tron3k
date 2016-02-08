@@ -4,8 +4,8 @@
 ClusterGrenade::ClusterGrenade(glm::vec3 position, glm::vec3 direction, int pID, int bID, int tID)
 {
 	initValues(position, direction, pID, bID, tID);
-	ttl = 1;
-	vel = glm::vec3(25.0f);
+	ttl = 1.5;
+	vel = glm::vec3(35.0f);
 	damage = 0;
 }
 
