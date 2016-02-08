@@ -458,6 +458,7 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 	{
 		if (state == PREROUND)
 		{
+			slowdownTime = true;
 			std::vector<int>* teamOne = gamePtr->getTeamConIds(1);
 			std::vector<int>* teamTwo = gamePtr->getTeamConIds(2);
 			for (int c = 0; c < teamOne->size(); c++)
