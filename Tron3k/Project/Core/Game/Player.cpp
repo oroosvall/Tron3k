@@ -808,6 +808,15 @@ void Player::movementUpdates(float dt, bool freecam, bool spectatingThisPlayer, 
 	}
 }
 
+int Player::getAmmo()
+{
+	if (role.getRole() != ROLES::NROFROLES)
+	{
+		return role.getAmmo();
+	}
+	return 0;
+}
+
 void Player::rotatePlayer(vec3 olddir, vec3 newdir)
 {
 	float angle = atan2(newdir.x, newdir.z) - atan2(olddir.x, olddir.z);
