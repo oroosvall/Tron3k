@@ -480,9 +480,9 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 			gamePtr->clearAllPlayerKD();
 
 			consolePtr->printMsg("ROUND STARTS IN 15 SECONDS", "System", 'S');
-			if (capturePoint == 1)
+			if (capturePoint == 0)
 				consolePtr->printMsg("The active capture point is the parking area", "System", 'S');
-			if (capturePoint == 2)
+			if (capturePoint == 1)
 				consolePtr->printMsg("The active capture point is the market area", "System", 'S');
 			timer = 15.0f;
 		}
