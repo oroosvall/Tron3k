@@ -1740,26 +1740,52 @@ void Core::renderWorld(float dt)
 
 void Core::inGameUIUpdate() //Ingame ui update
 {
+	Player* local = game->getPlayer(game->GetLocalPlayerId());
+	KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
+	if (local->getHP() != HUD.HP)
+	{
+		HUD.HP = local->getHP();
+		uiManager->setText(std::to_string(HUD.HP), 0);
+	}
+	if (local->getAmmo() != HUD.ammo)
+	{
+		HUD.ammo = local->getAmmo();
+		uiManager->setText(std::to_string(HUD.ammo), 1);
+	}
+	if (koth->getRespawnTokens(1) != HUD.teamOneTokens)
+	{
+		HUD.teamOneTokens = local->getHP();
+		uiManager->setText(std::to_string(HUD.teamOneTokens), 2);
+	}
+	if (koth->getRespawnTokens(2) != HUD.teamTwoTokens)
+	{
+		HUD.teamTwoTokens = local->getHP();
+		uiManager->setText(std::to_string(HUD.teamTwoTokens), 3);
+	}
+	if (koth->getRoundWins(1) != HUD.teamOneRoundWins)
+	{
+		HUD.teamOneRoundWins = local->getHP();
+		uiManager->setText(std::to_string(HUD.teamOneRoundWins), 4);
+	}
+	if (koth->getRoundWins(2) != HUD.teamTwoRoundWins)
+	{
+		HUD.teamTwoRoundWins = local->getHP();
+		uiManager->setText(std::to_string(HUD.teamTwoRoundWins), 5);
+	}
+	if (int(koth->getTimer()) != HUD.time)
+	{
+		HUD.time = local->getHP();
+		uiManager->setText(std::to_string(HUD.time), 6);
+	}
+
+	uiManager->inGameRender();
+
 	double x = (0.0);
 	double y = (0.0);
 	//Get mouse position
 	i->getCursor(x, y);
 	double tX = (x / (double)winX) * 2 - 1.0;
 	double tY = (-y / (double)winY) * 2 + 1.0;
-	
-	//uiManager->setText(getHp in string, 0); //HP
-	//uiManager->setText(getAmmo in string, 1); //Ammo
-	//uiManager->setText(getTickets1 in string, 2); //tickets team 1
-	//uiManager->setText(getTickets2 in string, 3); //tickets team 2
-	//uiManager->setText(getWins1 in string, 4); //rounds won team 1
-	//uiManager->setText(getwins2 in string, 5); //rounds won team 2
-	//uiManager->setText(getTime in string, 6); //time
-
-	uiManager->inGameRender();
-
-	//***********************************************************//
-	//    Lägg in så hover körs endast om esc rutan är igång.    //
-	//***********************************************************//
 
 	if (i->justPressed(GLFW_MOUSE_BUTTON_LEFT))
 	{
@@ -1811,7 +1837,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 			break;
 		case 40: //Continue
 			uiManager->backToGui();
-			game->getPlayer(game->GetLocalPlayerId())->setLockedControls(true);
+			game->getPlayer(game->GetLocalPlayerId())->setLockedControls(false);
 			cursorInvisible = false;
 			game->setCursorInvisible(cursorInvisible);
 			break;

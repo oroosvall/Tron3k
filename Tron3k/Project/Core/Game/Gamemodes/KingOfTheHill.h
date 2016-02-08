@@ -63,6 +63,7 @@ public:
 	GAMEMODE_MSG update(float dt);
 
 	int getRespawnTokens(int team);
+	int getRoundWins(int team);
 
 	bool playerRespawn(int conId); //Checks if a given player is allowed to respawn
 

@@ -370,6 +370,15 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 	return msg;
 }
 
+int KingOfTheHill::getRoundWins(int team)
+{
+	if (team == 1)
+		return teamOneScore;
+	else if (team == 2)
+		return teamTwoScore;
+	return -1;
+}
+
 int KingOfTheHill::getRespawnTokens(int team)
 {
 	if (team == 1)

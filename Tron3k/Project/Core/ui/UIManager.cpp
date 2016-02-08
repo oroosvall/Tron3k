@@ -86,6 +86,24 @@ void UIManager::init(Console* console, int winX, int winY)
 	//Server
 	texturePaths.push_back("GameFiles/Textures/UITextures/server.png"); //18
 
+	//GUI
+	texturePaths.push_back("GameFiles/Textures/UITextures/plain_hud_left_frame.dds"); //19  Ammo, hp and weapons
+	texturePaths.push_back("GameFiles/Textures/UITextures/plain_hud_left_bar_hp.png"); //20 hp bar
+	texturePaths.push_back("GameFiles/Textures/UITextures/plain_hud_left_bar_special.png"); //21 special bar
+
+	texturePaths.push_back("GameFiles/Textures/UITextures/plain_hud_right_frame.png"); //22 tickets
+	texturePaths.push_back("GameFiles/Textures/UITextures/plain_hud_right_bar_0.png"); //23 ticket team 1
+	texturePaths.push_back("GameFiles/Textures/UITextures/plain_hud_right_bar_1.png"); //24 tickets team 2
+
+	texturePaths.push_back("GameFiles/Textures/UITextures/plain_hud_top_bar.png"); //25 capture point timer
+	texturePaths.push_back("GameFiles/Textures/UITextures/plain_hud_top_frame_0.png"); //26 meter
+	texturePaths.push_back("GameFiles/Textures/UITextures/plain_hud_top_frame_1.png"); //27 rounds team 1
+	texturePaths.push_back("GameFiles/Textures/UITextures/plain_hud_top_frame_2.png"); //28 timer
+	texturePaths.push_back("GameFiles/Textures/UITextures/plain_hud_top_frame_3.png"); //29 rounds team 2
+
+	//Släng in allt detta i en fil och läs in ifrån den vid här och lägg det i temp namn vector som sedans cleanas upp.
+
+
 	loadInTexture();
 
 	//Open tthe first groups file
@@ -173,9 +191,7 @@ void UIManager::loadInTexture()
 
 void UIManager::menuRender()
 {
-	renderPipe->disableDepthTest();
 	menus[currentMenu[0]].renderMenu();
-	renderPipe->enableDepthTest();
 }
 
 void UIManager::inGameRender()
@@ -266,17 +282,21 @@ void UIManager::removeAllMenus()
 
 int UIManager::collisionCheck(glm::vec2 pos)
 {
-	return menus[currentMenu[nrOfCurretMenus - 1]].mouseCollission(pos);
+	if (currentMenu[nrOfCurretMenus - 1] > -1)
+		return menus[currentMenu[nrOfCurretMenus - 1]].mouseCollission(pos);
+	return -1;
 }
 void UIManager::hoverCheck(glm::vec2 pos)
 {
-	menus[currentMenu[nrOfCurretMenus - 1]].mouseHover(pos);
+	if (currentMenu[nrOfCurretMenus - 1] > -1)
+		menus[currentMenu[nrOfCurretMenus - 1]].mouseHover(pos);
 }
 
 
 void UIManager::changeTex(int objId, int whichTex)
 {
-	menus[currentMenu[nrOfCurretMenus - 1]].changeTex(objId, whichTex);
+	if (currentMenu[nrOfCurretMenus - 1] > -1)
+		menus[currentMenu[nrOfCurretMenus - 1]].changeTex(objId, whichTex);
 }
 
 bool UIManager::LoadNextSet(int whichMenuGroup, int winX, int winY)
@@ -341,19 +361,24 @@ void UIManager::setWindowResolution(int winX, int winY)
 	this->winX = winX;
 	this->winY = winY;
 
-	menus[currentMenu[nrOfCurretMenus - 1]].setWindowResolution(winX, winY);
+	if (currentMenu[nrOfCurretMenus - 1] > -1)
+		menus[currentMenu[nrOfCurretMenus - 1]].setWindowResolution(winX, winY);
 }
 
 void UIManager::setText(std::string text, int id)
 {
-	menus[currentMenu[nrOfCurretMenus - 1]].setText(text, id);
+	if(currentMenu[nrOfCurretMenus - 1] > -1)
+		menus[currentMenu[nrOfCurretMenus - 1]].setText(text, id);
 }
 
 std::string UIManager::getText(int id)
 {
-	return menus[currentMenu[nrOfCurretMenus - 1]].getText(id);
+	if (currentMenu[nrOfCurretMenus - 1] > -1)
+		return menus[currentMenu[nrOfCurretMenus - 1]].getText(id);
+	return "";
 }
 void UIManager::removeLastInput(int id)
 {
-	menus[currentMenu[nrOfCurretMenus - 1]].removeLastInput(id);
+	if (currentMenu[nrOfCurretMenus - 1] > -1)
+		menus[currentMenu[nrOfCurretMenus - 1]].removeLastInput(id);
 }
