@@ -87,7 +87,7 @@ void UIManager::init(Console* console, int winX, int winY)
 	texturePaths.push_back("GameFiles/Textures/UITextures/server.png"); //18
 
 	//GUI
-	texturePaths.push_back("GameFiles/Textures/UITextures/plain_hud_left_frame.dds"); //19  Ammo, hp and weapons
+	texturePaths.push_back("GameFiles/Textures/UITextures/plain_hud_left_frame.png"); //19  Ammo, hp and weapons
 	texturePaths.push_back("GameFiles/Textures/UITextures/plain_hud_left_bar_hp.png"); //20 hp bar
 	texturePaths.push_back("GameFiles/Textures/UITextures/plain_hud_left_bar_special.png"); //21 special bar
 
