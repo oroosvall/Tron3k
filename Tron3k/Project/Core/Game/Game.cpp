@@ -1600,7 +1600,7 @@ void Game::bounceBullet(BulletHitWorldInfo hwi, Bullet* theBullet)
 void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 {
 	//hit info and bullet rad (assumed 0.6 for all)
-	decalAdd(hi, 0.2f);
+	decalAdd(hi, -0.45f);
 
 	int arraypos = -1;
 	Bullet* b = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, arraypos);
@@ -2016,7 +2016,7 @@ void Game::decalAdd(BulletHitWorldInfo info, float rad)
 	decals_renderInfo[decalCounter].inten = 1.0f;
 	decals_renderInfo[decalCounter].normal = vec3(info.collisionNormal);
 	//for correct; pos = pos - collision.normal * (Bulletrad - pendepth)
-	decals_renderInfo[decalCounter].pos = info.hitPos -vec3(info.collisionNormal) * (rad - info.collisionNormal.w);
+	decals_renderInfo[decalCounter].pos = info.hitPos -vec3(info.collisionNormal) * (rad -info.collisionNormal.w);
 	
 	if (p->getTeam() == 1)
 		decals_renderInfo[decalCounter].color = TEAMONECOLOR;
