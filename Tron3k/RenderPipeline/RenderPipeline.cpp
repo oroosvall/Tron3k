@@ -1163,10 +1163,9 @@ void RenderPipeline::updateTakeDamageEffect(float dt)
 	}
 }
 
-void RenderPipeline::renderMinimap()
+void RenderPipeline::renderMinimap(float* yourPos, float* yourdir, float* teammates, int nrOfTeammates, int team)
 {
-	//float* yourPos, float* teammates, int nrOfTeammates, int team
-
+	//init render
 	glUseProgram(uiShader);
 	//uniformlocation set texture 0  it defaults to 0 so not needed
 	uiQuad.BindVertData();
@@ -1178,6 +1177,7 @@ void RenderPipeline::renderMinimap()
 	asd.textureID = contMan.miniMapTexture;
 	TextureManager::gTm->bind(asd, uiShader, ui_Texture);
 
+	minimapRenderMat = mat4();
 	//pos
 	minimapRenderMat[0].w = 0;
 	minimapRenderMat[1].w = 0;
@@ -1185,11 +1185,42 @@ void RenderPipeline::renderMinimap()
 	//scale
 	minimapRenderMat[0].x = contMan.minimapscaleX;
 	minimapRenderMat[1].y = contMan.minimapScaleY;
-	minimapRenderMat[2].z = 1;
-	minimapRenderMat[3].w = 1;
 
 	vec3 piv(0);
 	glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, &minimapRenderMat[0][0]);
 	glProgramUniform3fv(uiShader, uniformPivotLocation, 1, &piv[0]);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+	//render player markers
+
+	asd.lastTextureSlot = GL_TEXTURE0;
+	asd.state = TEXTURE_LOADED;
+	asd.textureID = contMan.youarehereTexture;
+	TextureManager::gTm->bind(asd, uiShader, ui_Texture);
+
+	minimapRenderMat = mat4();
+
+	//scale, rotate, translate
+
+	//scale
+	minimapRenderMat[0].x = contMan.youareherescaleX;
+	minimapRenderMat[1].y = contMan.youareherescaleX;
+
+	//rotate
+	float rotXZ = -(atan2(yourdir[0], yourdir[2]) - atan2(0, 1));
+
+	minimapRenderMat = glm::rotate(minimapRenderMat, rotXZ , vec3(0, 0, 1));
+
+	////translate
+	float xpos = (yourPos[0] - contMan.mapBotcord.x) / (contMan.mapTopcord.x - contMan.mapBotcord.x);
+	float ypos = (yourPos[2] - contMan.mapBotcord.y) / (contMan.mapTopcord.y - contMan.mapBotcord.y);
+	//to screenspace
+	xpos = (xpos * 2) - 1;
+	ypos = (ypos * 2) - 1;
+	
+	minimapRenderMat[0].w = xpos;
+	minimapRenderMat[1].w = ypos;
+	
+	glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, &minimapRenderMat[0][0]);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }

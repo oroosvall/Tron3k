@@ -1744,7 +1744,8 @@ void Core::renderWorld(float dt)
 		if (i->getKeyInfo(GLFW_KEY_F))
 			if (game->getPlayer(game->GetLocalPlayerId())->getLockedControls() == false)
 			{
-				renderPipe->renderMinimap();
+				float dummy;
+				renderPipe->renderMinimap(&camPos.x, &camDir.x, &dummy, 0, 0);
 			}
 
 		renderPipe->disableBlend();

@@ -218,7 +218,7 @@ public:
 
 	virtual void startTakeDamageEffect(int maxDisplace, float time);
 	virtual void updateTakeDamageEffect(float dt);
-	virtual void renderMinimap();
+	virtual void renderMinimap(float* yourPos, float* yourdir, float* teammates, int nrOfTeammates, int team);
 };
 
 
