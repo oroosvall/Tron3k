@@ -97,6 +97,15 @@ Core::~Core()
 
 void Core::update(float dt)
 {
+	if (shitBool && justAFrameCounterActivated)
+	{
+		justAFrameCounter++;
+	}
+	if (shitBool && justAFrameCounter > 5)
+	{
+		game->getPlayer(game->GetLocalPlayerId())->setLockedControls(false);
+		shitBool = false;
+	}
 	cursorBlink += dt;
 	if (recreate)
 		createWindow(winX, winY, fullscreen);
@@ -217,6 +226,8 @@ void Core::update(float dt)
 	int swapTime = renderPipe->startExecTimer("Swap");
 	glfwSwapBuffers(win);
 	renderPipe->stopExecTimer(swapTime);
+	
+	
 }
 
 void Core::upStart(float dt)
@@ -377,7 +388,7 @@ void Core::upRoam(float dt)
 		sendCapPointBoxes();
 		sendRoomBoxes();
 		Player* p = new Player();
-		p->init(_name, glm::vec3(0, 0, 0));
+		p->init(_name, glm::vec3(0, 30, 0));
 		game->createPlayer(p, 0, 100, ROLES::TRAPPER, true);
 		game->freecam = true;
 		delete p;
@@ -1013,7 +1024,10 @@ void Core::roamHandleCmds(std::string com)
 				uiManager->setFirstMenuSet(false);
 				uiManager->setMenu(0);
 
-				game->getPlayer(game->GetLocalPlayerId())->setLockedControls(false);
+				justAFrameCounterActivated = true;
+				shitBool = true;
+
+				
 				cursorInvisible = true;
 				if (game != nullptr)
 					game->setCursorInvisible(cursorInvisible);

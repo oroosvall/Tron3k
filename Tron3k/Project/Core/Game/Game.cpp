@@ -289,6 +289,8 @@ void Game::update(float dt)
 			//TODO: Send collision results to player
 		}
 	}
+
+	
 }
 
 void Game::playerUpdate(int conid, float dt)
@@ -986,6 +988,7 @@ void Game::getLatestWeaponFired(int localPlayer, WEAPON_TYPE &wt, int &bulletId)
 
 void Game::addBulletToList(int conID, int teamId, int bulletId, BULLET_TYPE bt, glm::vec3 pos, glm::vec3 dir)
 {
+	
 	Bullet* b = nullptr;
 	Player* p = playerList[conID];
 	glm::vec3 rightV = normalize(cross(dir, vec3(0, 1, 0)));
@@ -1067,6 +1070,7 @@ void Game::addBulletToList(int conID, int teamId, int bulletId, BULLET_TYPE bt, 
 
 void Game::handleWeaponFire(int conID, int teamId, int bulletId, WEAPON_TYPE weapontype, glm::vec3 pos, glm::vec3 dir)
 {
+
 	switch (weapontype)
 	{
 	case WEAPON_TYPE::PULSE_RIFLE:

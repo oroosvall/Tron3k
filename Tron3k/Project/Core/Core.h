@@ -123,6 +123,10 @@ private:
 	int nameNrOfKeys;
 	int ipNrOfKeys;
 
+	bool shitBool = false;
+	bool justAFrameCounterActivated = false;
+	int justAFrameCounter = 0;
+
 	bool escWindow;
 
 	//Menu input

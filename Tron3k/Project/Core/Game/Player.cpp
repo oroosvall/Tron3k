@@ -94,7 +94,7 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool spectatin
 
 	if (GetSoundActivated())
 	{
-		GetSound()->setLocalPlayerPos(cam->getPos());
+		GetSound()->setLocalPlayerPos(pos);
 		GetSound()->setLocalPlayerDir(cam->getDir());
 	}
 
@@ -751,6 +751,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		}
 		modifiersSetData(dt);
 	}
+
 	
 	return msg;
 }
@@ -789,6 +790,8 @@ void Player::movementUpdates(float dt, bool freecam, bool spectatingThisPlayer, 
 			}
 		}
 	}
+
+	
 
 	worldMat[0].w = pos.x;
 	worldMat[1].w = pos.y; //head offset. player objects have their origo at their feet
