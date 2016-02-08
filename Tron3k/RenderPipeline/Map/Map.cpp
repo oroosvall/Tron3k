@@ -516,6 +516,21 @@ void* Map::getCapAsPointer(int& count)
 	return cap;
 }
 
+int Map::getCapPointRoomID(int capPoint)
+{
+	return capturePoints[capPoint].roomID;
+}
+
+void Map::setCapPointColor(int capID, glm::vec3 color)
+{
+	capturePoints[capID].color = color;
+}
+
+void* Map::getCapPointColor(int cap)
+{
+	return &capturePoints[cap].color;
+}
+
 void Map::deleteSpawnposData()
 {
 	if (spA)

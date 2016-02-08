@@ -291,11 +291,11 @@ int* AnimatedMeshV2::loadAnimations(std::string character)
 	animations[AnimationState::third_turn_left				].load(file + "_third_turn_left.bin");
 	animations[AnimationState::third_turn_right				].load(file + "_third_turn_right.bin");
 																					
-	animations[AnimationState::third_shankbot_melee_standing].load(file + "_third_shankbot_melee_standing.bin");
-	animations[AnimationState::third_shankbot_melee_run		].load(file + "_third_shankbot_melee_run.bin");
-	animations[AnimationState::third_shankbot_charge		].load(file + "_third_shankbot_charge.bin");
-	animations[AnimationState::third_shankbot_walljump_right].load(file + "_third_shankbot_walljump_right.bin");
-	animations[AnimationState::third_shankbot_walljump_left	].load(file + "_third_shankbot_walljump_left.bin");
+	animations[AnimationState::third_shankbot_melee_standing].load(file + "_Third_Secondary_fire.bin");
+	animations[AnimationState::third_shankbot_melee_run		].load(file + "_Third_Secondary_fire.bin");
+	animations[AnimationState::third_shankbot_charge		].load(file + "_third_primary_charge.bin");
+	animations[AnimationState::third_shankbot_walljump_right].load(file + "_third_primary_walljump_left.bin");
+	animations[AnimationState::third_shankbot_walljump_left	].load(file + "_third_primary_walljump_right.bin");
 																				
 	animations[AnimationState::third_primary_death			].load(file + "_third_primary_death.bin");
 	animations[AnimationState::third_secondary_death		].load(file + "_third_secondary_death.bin");

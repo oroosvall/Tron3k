@@ -1137,13 +1137,13 @@ void Core::clientHandleCmds(std::string com)
 		else if (token == "/role")
 		{
 			ss >> token;
-			if (token == "1" || token == "2" || token == "3" || token == "4" || token == "5")
+			if (token == "1" || token == "3" || token == "4")
 			{
 				int role = stoi(token);
 				top->command_role_change(top->getConId(), role);
 			}
 			else
-				console.printMsg("Invalid role. Use /role <1-5>", "System", 'S');
+				console.printMsg("Invalid role. Use /role <1, 3, 4>", "System", 'S');
 		}
 		else if (token == "/disconnect")
 		{
@@ -1408,6 +1408,24 @@ void Core::renderWorld(float dt)
 		//color = { 0, 0.7, 0 };
 		renderPipe->setChunkColorAndInten(3, &dgColor[0], 0);
 
+		int cap = ((KingOfTheHill*)game->getGameMode())->getCapturePoint();
+		
+		int capOwner = ((KingOfTheHill*)game->getGameMode())->getCapturePointOwner();
+
+		if (capOwner == 0)
+		{
+			renderPipe->setCapRoomColor(cap, vec3(1.0f, 1.0f, 1.0f), 1.0f);
+		}
+		else if (capOwner == 1)
+		{
+			renderPipe->setCapRoomColor(cap, TEAMONECOLOR, 1.0f);
+		}
+		else if (capOwner == 2)
+		{
+			renderPipe->setCapRoomColor(cap, TEAMTWOCOLOR, 1.0f);
+		}
+
+
 		//Culling
 		handleCulling();
 
@@ -1449,15 +1467,16 @@ void Core::renderWorld(float dt)
 				if (p->getTeam() != 0) //Don't render spectators!
 				{
 					if (p->getHP() <= 0 || p->isAlive() == false)  // set red
+					{
 						dgColor = vec3(1, 0, 0);
-
+						hackedTeam = -1;
+					}
 					else
 					{
 						if (hackedTeam == -1)
 						{
 							if (p->getTeam() == 1)  //team 1 color
 								dgColor = TEAMONECOLOR;
-
 							else if (p->getTeam() == 2)  // team 2 color
 								dgColor = TEAMTWOCOLOR;
 						}

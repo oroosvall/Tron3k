@@ -996,7 +996,7 @@ void Game::addBulletToList(int conID, int teamId, int bulletId, BULLET_TYPE bt, 
 	case BULLET_TYPE::PULSE_SHOT:
 		rightV *= 0.2;
 		upV *= -0.13f;
-		dirMod *= 0.3f;
+		dirMod *= 0.6f;
 		pos += upV + rightV + dirMod;
 		b = new PulseShot(pos, dir, conID, bulletId, teamId);
 		break;

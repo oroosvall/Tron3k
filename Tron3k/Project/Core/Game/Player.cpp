@@ -1067,15 +1067,15 @@ glm::mat4 Player::getFPSmat()
 	case BRUTE:
 		if (animPrimary)
 		{
-			yOffset = -0.2f;
-			xOffset = -0.45f;
-			zOffset = 0.20f;
+			yOffset = -0.14f;
+			xOffset = -0.47f;
+			zOffset = 0.12f;
 		}
 		else
 		{
-			yOffset = 0.35f;
+			yOffset = 0.32f;
 			xOffset = 0.45f;
-			zOffset = 0.40f;
+			zOffset = 0.28f;
 		}
 		break;
 	case MANIPULATOR:

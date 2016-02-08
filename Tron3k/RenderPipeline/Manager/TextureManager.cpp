@@ -22,9 +22,7 @@ void TextureManager::init()
 	defaultNormalSlot = GL_TEXTURE0;
 	defaultGlowSlot = GL_TEXTURE0;
 
-
 	gTm = this;
-
 }
 
 void TextureManager::release()
