@@ -1583,6 +1583,10 @@ void Core::renderWorld(float dt)
 			}
 		} // render bullets end
 
+		// capturePoint
+		KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
+		renderPipe->renderCapturePoint(koth->getCapturePoint());
+
 		// render chunks
 		renderPipe->render();
 
@@ -1669,12 +1673,6 @@ void Core::renderWorld(float dt)
 				}
 			}
 		}
-
-		// capturePoint
-
-		KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
-
-		renderPipe->renderCapturePoint(koth->getCapturePoint());
 
 		// render Decals
 		renderPipe->renderDecals(game->getAllDecalRenderInfo(), game->getNrOfDecals());
