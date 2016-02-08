@@ -1408,6 +1408,24 @@ void Core::renderWorld(float dt)
 		//color = { 0, 0.7, 0 };
 		renderPipe->setChunkColorAndInten(3, &dgColor[0], 0);
 
+		int cap = ((KingOfTheHill*)game->getGameMode())->getCapturePoint();
+		
+		int capOwner = ((KingOfTheHill*)game->getGameMode())->getCapturePointOwner();
+
+		if (capOwner == 0)
+		{
+			renderPipe->setCapRoomColor(cap, vec3(1.0f, 1.0f, 1.0f), 1.0f);
+		}
+		else if (capOwner == 1)
+		{
+			renderPipe->setCapRoomColor(cap, TEAMONECOLOR, 1.0f);
+		}
+		else if (capOwner == 2)
+		{
+			renderPipe->setCapRoomColor(cap, TEAMTWOCOLOR, 1.0f);
+		}
+
+
 		//Culling
 		handleCulling();
 

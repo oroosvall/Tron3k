@@ -35,7 +35,7 @@ void streamingThread()
 
 			void* textureData = loadTextureData(it->second, format, x, y, size);
 
-			printf("Loading texture done\n", it->second.c_str());
+			printf("Loading texture done\n");
 
 			StreamedData data;
 			data.x = x;

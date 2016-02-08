@@ -181,6 +181,8 @@ public:
 	virtual void renderTextObject(int id);
 	virtual void renderTextObjectWorldPos(int id, glm::mat4 world);
 
+	virtual void setCapRoomColor(int capPoint, vec3 color, float intensity);
+
 	virtual void setGBufferWin(unsigned int WindowWidth, unsigned int WindowHeight);
 
 	virtual void* getChunkCollisionVectorAsPoint(int chunkID);
