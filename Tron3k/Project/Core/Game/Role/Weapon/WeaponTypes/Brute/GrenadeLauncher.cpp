@@ -19,10 +19,10 @@ void GrenadeLauncher::init()
 
 	currentBulletId = 0;
 
-	firingSpeed = 1.2f;
+	firingSpeed = 1.1f;
 	firingSpeedCurrentDelay = 0;
 
-	reloadTime = 3.5f;
+	reloadTime = 3.0f;
 	rldTimer = 0;
 }
 
