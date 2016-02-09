@@ -14,7 +14,7 @@ void Core::init()
 
 	glfwWindowHint(GLFW_RESIZABLE, false);
 
-	//glfwWindowHint(GLFW_DECORATED, false); borderless toggle
+	//glfwWindowHint(GLFW_DECORATED, false); //borderless toggle
 
 	cursorInvisible = false;
 
@@ -1743,6 +1743,7 @@ void Core::renderWorld(float dt)
 		renderPipe->finalizeRender();
 
 		renderPipe->disableDepthTest();
+		renderPipe->enableBlend();
 
 		//name rendering
 		if (current != SERVER)
@@ -1784,7 +1785,6 @@ void Core::renderWorld(float dt)
 			renderPipe->enableDepthTest();
 		}
 
-		renderPipe->enableBlend();
 		if (renderUI) //Temp
 			inGameUIUpdate();
 
