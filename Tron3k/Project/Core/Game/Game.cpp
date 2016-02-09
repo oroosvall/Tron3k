@@ -816,7 +816,7 @@ void Game::checkBulletVEffectCollision(float dt)
 				{
 					int eid = -1, pid = -1;
 					effects[EFFECT_TYPE::THUNDER_DOME][c]->getId(pid, eid);
-					collNormalDomes = physics->checkPlayerVEffectCollision(bullets[b][j]->getPos(), EFFECT_TYPE::THUNDER_DOME, eid);
+					collNormalDomes = physics->checkBulletVEffectCollision(bullets[b][j]->getPos(), bullets[b][j]->getVel(), bullets[b][j]->getDir(), EFFECT_TYPE::THUNDER_DOME, eid, dt);
 					if (collNormalDomes != vec4(0, 0, 0, 0))
 					{
 						int x = 0;
