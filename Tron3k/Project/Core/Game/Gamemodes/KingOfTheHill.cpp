@@ -330,7 +330,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 		{
 			state = ENDROUND;
 			msg = roundScoring();
-			timer = 5.0f;		//TEMP
+			timer = 7.0f;		//TEMP
 		}
 		break;
 
