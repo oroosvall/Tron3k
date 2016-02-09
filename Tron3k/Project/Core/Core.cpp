@@ -1935,15 +1935,15 @@ void Core::inGameUIUpdate() //Ingame ui update
 		{
 		case 20: //Team 1
 			if (current == ROAM)
-				roamHandleCmds("/team 1");
-			else
-				clientHandleCmds("/team 1");
-			break;
-		case 21: //Team 2
-			if (current == ROAM)
 				roamHandleCmds("/team 2");
 			else
 				clientHandleCmds("/team 2");
+			break;
+		case 21: //Team 2
+			if (current == ROAM)
+				roamHandleCmds("/team 1");
+			else
+				clientHandleCmds("/team 1");
 			break;
 		case 30: //Class 1
 			if (current == ROAM)
