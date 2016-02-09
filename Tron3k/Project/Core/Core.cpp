@@ -1770,7 +1770,7 @@ void Core::renderWorld(float dt)
 					bacon = rotH * bacon;
 
 					bacon[0].w = pPos.x;
-					bacon[1].w = pPos.y;
+					bacon[1].w = pPos.y + 0.5f;
 					bacon[2].w = pPos.z;
 
 					if (p->nameChanged)
