@@ -28,7 +28,7 @@ public:
 	AABBSingle getAABB() { return aabb; };
 	void setAABB(AABBSingle aabb);
 
-	OBB getOBB() { return obb; };
+	OBB* getOBB() { return &obb; };
 	void setOBB(OBB obb);
 
 	Sphere getSphere() { return sphere; };

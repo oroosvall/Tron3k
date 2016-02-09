@@ -152,11 +152,7 @@ struct PLANE
 	//return collision normal, w holds intersection depth
 	glm::vec4 intersects(glm::vec3 origin, glm::vec3 dir, float len)
 	{
-		
-		
-		vec3 nNorm = normalize(n);
-		vec3 dirNorm = normalize(dir);
-		float denom = dot(nNorm, dirNorm);
+		float denom = dot(n, dir);
 
 		float d2 = glm::length(denom);
 		float t = 0;
@@ -164,12 +160,12 @@ struct PLANE
 		{
 			glm::vec3 d = p[0] - origin;
 			glm::vec3 dn = normalize(d);
-			t = dot(dn, nNorm);
+			t = dot(dn, n);
 			t /= denom;
 
 			if (t + FLT_EPSILON >= 0 - FLT_EPSILON) //if we traveled away from the portal
 			{
-				t = dot(d, nNorm);
+				t = dot(d, n);
 				t /= denom;
 				if (len + FLT_EPSILON >= t - FLT_EPSILON) //if we traveled far enough to cross the plane
 				{
@@ -197,7 +193,7 @@ struct PLANE
 							//printf("%f \n", t);
 							if (t < 0)
 								t = 0;
-							return glm::vec4(nNorm, t);
+							return glm::vec4(n, t);
 						}
 					}
 				}
