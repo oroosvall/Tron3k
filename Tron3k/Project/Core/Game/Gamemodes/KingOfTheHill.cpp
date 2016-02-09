@@ -642,7 +642,10 @@ bool KingOfTheHill::allowTeamChange()
 bool KingOfTheHill::allowRoleChange()
 {
 	//Förlåt Adam, Martin tvingade mig
-	//if (state == ROUND)
-		//return false;
+	if (state == ROUND)
+	{
+		return false;
+	}
+		
 	return true;
 }

@@ -364,6 +364,8 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 	diedThisFrame = false;
 	PLAYERMSG msg = NONE;
 
+	
+
 	if (grounded)
 		int x = 0;
 	else
@@ -1321,11 +1323,23 @@ void Player::IncreaseFrags()
 	this->consecutiveFrags++;
 }
 
+void Player::IncreaseDeaths()
+{
+	this->consecutiveDeaths++;
+}
+
+
 void Player::ZeroFrags()
 {
 	this->consecutiveFrags = 0;
 	this->killingSpreeDone = false;
 	this->impressiveDone = false;
+}
+
+void Player::ZeroDeaths()
+{
+	this->consecutiveDeaths = 0;
+	roleChangeWritten = false;
 }
 
 int Player::GetConsecutiveFrags()

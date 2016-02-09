@@ -1429,8 +1429,10 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 					console->printMsg(p->getName() + " was fragged by a quitter!", "System", 'S');
 				playerList[hi.bulletPID]->addKill();
 				playerList[hi.bulletPID]->IncreaseFrags();
+				playerList[hi.bulletPID]->ZeroDeaths();
 				p->ZeroFrags();
 				p->addDeath();
+				p->IncreaseDeaths();
 				if (playerList[hi.bulletPID]->GetConsecutiveFrags() == 3 && !playerList[hi.bulletPID]->killingSpreeDone)
 				{
 					console->printMsg(playerList[hi.bulletPID]->getName() + " is on a killing spree!", "System", 'S');
@@ -1536,9 +1538,11 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 				console->printMsg(p->getName() + " was fragged by a quitter!", "System", 'S');
 			playerList[hi.effectPID]->addKill();
 			playerList[hi.effectPID]->IncreaseFrags();
+			playerList[hi.effectPID]->ZeroDeaths();
+			p->IncreaseDeaths();
 			p->ZeroFrags();
 			p->addDeath();
-
+			
 			if (playerList[hi.effectPID]->GetConsecutiveFrags() == 3 && !playerList[hi.effectPID]->killingSpreeDone)
 			{
 				console->printMsg(playerList[hi.effectPID]->getName() + " is on a killing spree!", "System", 'S');
@@ -1559,7 +1563,15 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 				playerList[hi.effectPID]->impressiveDone = true;
 			}
 			addEffectToList(-1, p->getTeam(), hi.playerHit, EFFECT_TYPE::HEALTHPACK, p->getPos(), 0, 0.5f);
+
+			if (p->GetConsecutiveDeaths() > 4 && !p->roleChangeWritten)
+			{
+				console->printMsg("You can now change role if you want to!", "System", 'S');
+				p->roleChangeWritten = true;
+			}
 		}
+
+
 
 		int newHP = p->getHP();
 		return newHP;

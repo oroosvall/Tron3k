@@ -675,7 +675,7 @@ public:
 		if (!isClient) //Check if we're allowed
 		{
 			Gamemode* gm = gamePtr->getGameMode();
-			if (gm->allowRoleChange())
+			if (gm->allowRoleChange() || gamePtr->getPlayer(p_conID)->GetConsecutiveDeaths() > 4)
 			{
 
 			}

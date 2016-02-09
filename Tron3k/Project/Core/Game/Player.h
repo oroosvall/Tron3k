@@ -104,7 +104,8 @@ private:
 
 	int kills;
 	int deaths;
-	int consecutiveFrags;
+	int consecutiveFrags = 0;
+	int consecutiveDeaths = 0;
 public:
 	Player();
 	~Player();
@@ -124,9 +125,12 @@ public:
 	void setFootstepsLoop(bool);
 	int GetConsecutiveFrags();
 	void IncreaseFrags();
+	void IncreaseDeaths();
 	void ZeroFrags();
+	void ZeroDeaths();
 	bool killingSpreeDone = false;
 	bool impressiveDone = false;
+	bool roleChangeWritten = false;
 
 	PLAYERMSG update(float dt, bool freecam, bool spectatingThisPlayer, bool spectating);
 	void movementUpdates(float dt, bool freecam, bool spectatingThisPlayer, bool spectating);
@@ -220,6 +224,8 @@ public:
 	void addDeath() { deaths++;	};
 
 	bool nameChanged;
+
+	int GetConsecutiveDeaths() { return this->consecutiveDeaths; };
 };
 
 #endif
