@@ -490,7 +490,11 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 		}
 		else if (state == ROUND)
 		{
-			GetSound()->setVolumeSound(50);
+			if (GetSound())
+			{
+				GetSound()->setVolumeSound(50);
+			}
+			
 			freeze = false;
 			slowdownTime = false;
 			timer = 0.0f;
