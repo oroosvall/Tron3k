@@ -23,7 +23,7 @@ int LightwallEffect::update(float dt)
 		if (lifeTime < FLT_EPSILON)
 			return 1;
 
-		if (lifeTime < 9.5f && !collidable)
+		if (lifeTime < 14.5f && !collidable)
 		{
 			collidable = true;
 		}
