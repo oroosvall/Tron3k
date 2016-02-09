@@ -477,7 +477,7 @@ struct Chunk
 		l.Direction = vec3(light.dx, light.dy, light.dz);
 		if (length(l.Direction) > 0.001f)
 			l.Direction = normalize(l.Direction);
-		l.Cutoff = light.coneAngle;
+		l.Cutoff = light.coneAngle / glm::pi<float>();
 		//l.Cutoff = -1.0f;
 
 		lights.push_back(l);
