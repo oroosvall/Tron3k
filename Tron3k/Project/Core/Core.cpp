@@ -33,8 +33,8 @@ void Core::init()
 	//fullscreen = true;
 	winX = winY = 800;
 	//winX = winY = 1000;
-	winX = 1280; winY = 720;
-	//winX = 1920, winY = 1080;
+	//winX = 1280; winY = 720;
+	winX = 1920, winY = 1080;
 
 	createWindow(winX, winY, fullscreen);
 
@@ -1861,7 +1861,8 @@ void Core::inGameUIUpdate() //Ingame ui update
 		Player* local = game->getPlayer(game->GetLocalPlayerId());
 		KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
 
-		if (local->getHP() != HUD.HP)
+		//HP MÄTAREN FUNGERAR INTE, DEN FÖRSVINNER SÅ FORT DU TAR SKADA OCH KOMMER INTE TILLBAKA
+		if (local->getHP() != HUD.HP) 
 		{
 			if (local->getMaxHP() != HUD.maxHp)
 				HUD.maxHp = local->getMaxHP();

@@ -134,9 +134,9 @@ bool UI::loadUI(std::string fileName, int winX, int winY)
 				textId = inputString;
 
 				getline(myfile, inputString); //XOffSet
-				offsetTextSize.x = std::stoi(inputString);;
+				offsetTextSize.x = std::stof(inputString);;
 				getline(myfile, inputString); //YOffSet
-				offsetTextSize.y = std::stoi(inputString);;
+				offsetTextSize.y = std::stof(inputString);;
 				getline(myfile, inputString); //textSize
 				offsetTextSize.z = std::stoi(inputString);
 
