@@ -67,6 +67,8 @@ private:
 	//network
 	float tick_timer;
 
+	int leaderBoardTextID;
+
 	//netlog
 	bool client_record;
 	bool client_playback;
