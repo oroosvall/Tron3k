@@ -320,7 +320,7 @@ void AnimatedMeshV2::draw(GLuint uniformKeyMatrixLocation, int animationID, int 
 {
 	
 
-	if (animations[animationID].header.keyCount > 0)
+	if (animations[animationID].header.keyCount > 0 && animations[animationID].header.jointCount > 0)
 	{
 		glBindBuffer(GL_UNIFORM_BUFFER, matricesBuffer);
 		glBindBufferBase(GL_UNIFORM_BUFFER, uniformKeyMatrixLocation, matricesBuffer);
