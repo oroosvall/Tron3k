@@ -578,19 +578,29 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					{
 						if (role.getWeaponNRequiped() != 1)
 						{
-							role.swapWeaponLocal(1);
 							msg = WPNSWITCH;
 
 							if (animRole == ROLES::TRAPPER)
 							{
-								animPrimary = false;
-								msg = SHOOT;
-								shoot();
-								animPrimary = true;
+								if (role.getCurrentWeapon()->getCurrentAmmo() > 1)
+								{
+									role.swapWeaponLocal(1);
+									animPrimary = false;
+									msg = SHOOT;
+									shoot();
+									animPrimary = true;
+								}
+								else
+								{
+									reloadCurrentWeapon();
+									msg = NONE;
+								}
 							}
 							else
+							{
+								role.swapWeaponLocal(1);
 								animOverideIfPriority(anim_first_current, AnimationState::first_primary_switch);
-
+							}
 							if (animRole == ROLES::BRUTE)
 							{
 								animOverideIfPriority(anim_first_current, AnimationState::first_secondary_switch_IN);
