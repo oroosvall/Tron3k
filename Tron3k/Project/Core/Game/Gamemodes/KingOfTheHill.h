@@ -43,6 +43,7 @@ private:
 	int teamOneSpawnTokens;
 	int teamTwoSpawnTokens;
 
+	bool freeze = false;
 	bool slowdownTime = false;
 
 	//For managing announcer
@@ -77,6 +78,7 @@ public:
 	KOTHSTATE getState();
 	GAMEMODE_MSG getLastMsg() { return lastMsg; };
 	bool getIfSlowdown() { return slowdownTime; };
+	bool getFreeze() { return this->freeze; }
 
 	bool allowTeamChange();
 	bool allowRoleChange();

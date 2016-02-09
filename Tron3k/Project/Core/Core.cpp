@@ -174,8 +174,17 @@ void Core::update(float dt)
 			}
 			else if (slowmode < 1.0f)
 				slowmode = 1.0f;
+
+			
 			else
 				CameraInput::getCam()->setPlaybackSpeed(1.0f);
+
+			if (k->getFreeze() && game->freecam == false)
+			{
+				dt = 0;
+
+				//CameraInput::getCam()->setPlaybackSpeed(1.0f);
+			}
 		}
 	}
 	//if (game)
