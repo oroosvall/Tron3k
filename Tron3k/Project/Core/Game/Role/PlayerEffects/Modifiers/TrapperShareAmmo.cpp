@@ -20,7 +20,7 @@ int TrapperShareAmmo::getData(float dt)
 
 int TrapperShareAmmo::setData(float dt)
 {
-	int newAmmo = target->getRole()->getCurrentWeapon()->getCurrentAmmo();
+	int newAmmo = target->getRole()->getSpecificWeapon(0)->getCurrentAmmo();
 
 	int newWeaponType = target->getRole()->getWeaponNRequiped();
 	if (weaponType != newWeaponType)
