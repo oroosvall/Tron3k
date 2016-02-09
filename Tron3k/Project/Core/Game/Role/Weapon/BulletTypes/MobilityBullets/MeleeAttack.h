@@ -13,6 +13,7 @@ private:
 	Player* target;
 	float attackTimer = 0.3f;
 	bool teleported = false;
+	//glm::vec3 lastPlayerPos;
 public:
 	MeleeAttack(glm::vec3 pos, glm::vec3 dir, int pID, int bID, int tID, Player* player);
 	~MeleeAttack();

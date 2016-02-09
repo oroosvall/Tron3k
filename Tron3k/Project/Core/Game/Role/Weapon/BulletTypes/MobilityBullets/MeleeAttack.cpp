@@ -28,6 +28,18 @@ int MeleeAttack::update(float dt)
 		}
 		pos += dir * vel * dt;
 
+		/*
+		if (!teleported)
+		{
+			lastPlayerPos = pos = target->getPos();
+		}
+		float dist = length(lastPlayerPos - pos);
+		lastPlayerPos = target->getPos();
+		dir = target->getDir();
+		pos = lastPlayerPos + dir*dist;
+		pos += dir*vel*dt;
+		*/
+
 		updateWorldMat();
 
 		ttl -= dt;
