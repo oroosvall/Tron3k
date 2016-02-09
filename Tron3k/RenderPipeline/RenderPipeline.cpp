@@ -420,12 +420,12 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 		ss << "State changes: " << stateChange << "\n";
 		ss << "Total uptime:" << timepass << "\n";
 		ss << result << "\n";
-		//if (counter > 0.001f)
-		//{
+		if (counter > 1.0f)
+		{
 			result = getQueryResult();
 			counter = 0;
 			debugText->setText(ss.str());
-		//}
+		}
 	}
 
 	resetQuery();
