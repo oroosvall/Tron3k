@@ -10,13 +10,13 @@ void main()
 		gl_Position = vp * world[0];
 		EmitVertex();
 		
-		gl_Position = vp * world[1];
+		gl_Position = vp * world[3];
 		EmitVertex();
 
-		gl_Position = vp * world[2];
+		gl_Position = vp * world[1];
 		EmitVertex();
 		
-		gl_Position = vp * world[3];
+		gl_Position = vp * world[2];
 		EmitVertex();
 		
 		EndPrimitive();

@@ -189,7 +189,7 @@ ContentManager::~ContentManager()
 	
 }
 
-void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation, GLuint DglowColor, GLuint SglowColor, GLuint portal_shader, GLuint portal_world)
+void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation, GLuint DglowColor, GLuint SglowColor, GLuint collision_portal_shader, GLuint collision_portal_world, GLuint portal_shader, GLuint portal_world)
 {
 	glUseProgram(shader);
 	//diffuse
@@ -227,12 +227,9 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 	}
 
 	glUseProgram(portal_shader);
-	glm::mat4 alreadyinworldpace;
-	glProgramUniformMatrix4fv(portal_shader, portal_world, 1, GL_FALSE, &alreadyinworldpace[0][0]);
 	glDepthMask(GL_FALSE);
 	glDisable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
-
 
 	int portaltimer = startTimer("Portals");
 	if (f_portal_culling)
@@ -264,7 +261,7 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 						if (portal->waiting == false)
 						{
 							//dont render if it bridges between chunks that are already in the rendernextqueue
-							portal->render();
+							portal->render(portal_shader, portal_world);
 							portal->rendered = true;
 							portal->waiting = true;
 						}
@@ -277,6 +274,10 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 
 	if (f_render_abb || f_render_obb)
 	{
+		glUseProgram(collision_portal_shader);
+		glm::mat4 alreadyinworldpace;
+		glProgramUniformMatrix4fv(collision_portal_shader, collision_portal_world, 1, GL_FALSE, &alreadyinworldpace[0][0]);
+
 		//render collision boxes
 		for (int c = 0; c < nrChunks; c++)
 		{

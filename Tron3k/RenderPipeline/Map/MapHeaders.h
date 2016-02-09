@@ -126,6 +126,8 @@ struct PortalData
 	//used for rendering the portal
 	BlitQuad visualPortal;
 
+	mat4 positionData;
+
 	//calculated once, used for intesection test
 	vec3 v1;
 	vec3 v2;
@@ -155,6 +157,13 @@ struct PortalData
 		positions[1] = topright;
 		positions[2] = botright;
 		positions[3] = botleft;
+
+		positionData[0] = vec4(topleft, 1);
+		positionData[1] = vec4(topright, 1);
+		positionData[2] = vec4(botright, 1);
+		positionData[3] = vec4(botleft, 1);
+		
+		positionData = transpose(positionData);
 
 		v1 = normalize(positions[1] - positions[0]);
 		v2 = normalize(positions[2] - positions[1]);
@@ -208,11 +217,11 @@ struct PortalData
 		return false;
 	}
 
-	void render()
+	void render(GLuint shader, GLuint worldlocation)
 	{
-		visualPortal.BindVertData();
+		glProgramUniformMatrix4fv(shader, worldlocation, 1, GL_TRUE, &positionData[0][0]);
 		glBeginQuery(GL_ANY_SAMPLES_PASSED, query);
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		glDrawArrays(GL_POINTS, 0, 1);
 		glEndQuery(GL_ANY_SAMPLES_PASSED);
 	}
 

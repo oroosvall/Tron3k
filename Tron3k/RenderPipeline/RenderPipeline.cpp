@@ -190,6 +190,20 @@ void RenderPipeline::reloadShaders()
 		temp = 0;
 	}
 
+	//portal shader v2
+	std::string shaderNamesPortal2[] = { "GameFiles/Shaders/portal_mat_vs.glsl", "GameFiles/Shaders/portal_mat_gs.glsl", "GameFiles/Shaders/portal_mat_fs.glsl" };
+	GLenum shaderTypesPortal2[] = { GL_VERTEX_SHADER, GL_GEOMETRY_SHADER, GL_FRAGMENT_SHADER };
+	CreateProgram(temp, shaderNamesPortal2, shaderTypesPortal2, 3);
+	if (temp != 0)
+	{
+		portalShaderV2 = temp;
+		temp = 0;
+	}
+	//portal2 uniforms
+	portal_World = glGetUniformLocation(portalShaderV2, "world");
+	portal_VP = glGetUniformLocation(portalShaderV2, "vp");
+
+
 	std::string shaderNamesRegular[] = { "GameFiles/Shaders/RegularShader_vs.glsl", "GameFiles/Shaders/RegularShader_gs.glsl", "GameFiles/Shaders/RegularShader_fs.glsl" };
 	GLenum shaderTypesRegular[] = { GL_VERTEX_SHADER, GL_GEOMETRY_SHADER, GL_FRAGMENT_SHADER };
 	CreateProgram(temp, shaderNamesRegular, shaderTypesRegular, 3);
@@ -379,6 +393,7 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 
 	cam.setViewProjMat(animationShader, viewProjMat[1]);
 	cam.setViewProjMat(*gBuffer->portal_shaderPtr, gBuffer->portal_vp);
+	cam.setViewProjMat(portalShaderV2, portal_VP);
 
 	contMan.update(dt);
 
@@ -474,7 +489,7 @@ void RenderPipeline::render()
 
 	glProgramUniform1f(regularShader, uniformGlowTrail[0], 0.0f);
 
-	contMan.renderChunks(regularShader, worldMat[0], uniformTextureLocation[0], uniformNormalLocation[0], uniformGlowSpecLocation[0], uniformDynamicGlowColorLocation[0], uniformStaticGlowIntensityLocation[0],  *gBuffer->portal_shaderPtr, gBuffer->portal_model);
+	contMan.renderChunks(regularShader, worldMat[0], uniformTextureLocation[0], uniformNormalLocation[0], uniformGlowSpecLocation[0], uniformDynamicGlowColorLocation[0], uniformStaticGlowIntensityLocation[0],  *gBuffer->portal_shaderPtr, gBuffer->portal_model, portalShaderV2, portal_World);
 	
 	stopTimer(chunkRender);
 	//glDepthMask(GL_TRUE);glEnable(GL_CULL_FACE);glDisable(GL_BLEND);)
@@ -566,7 +581,7 @@ void RenderPipeline::renderWallEffect(void* pos1, void* pos2, float uvStartOffse
 	glProgramUniform3fv(lw_Shader, lw_pos1, 1, &wpos1[0]);
 	glProgramUniform3fv(lw_Shader, lw_pos2, 1, &wpos2[0]);
 
-	glDrawArrays(GL_POINTS, 0, 2);
+	glDrawArrays(GL_POINTS, 0, 1);
 
 }
 

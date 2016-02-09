@@ -75,7 +75,9 @@ private:
 	GLuint decal_color;
 	GLuint decal_inten;
 
-	
+	GLuint portalShaderV2;
+	GLuint portal_World;
+	GLuint portal_VP;
 
 	BlitQuad uiQuad;
 
