@@ -8,12 +8,12 @@ class RenderTarget
 
 public:
 
-	virtual void init(int x, int y, int nrTex, bool useDepth, bool use32Bit = false);
+	virtual void init(int x, int y, int nrTex, bool useDepth, bool use32Bit = false, bool usefloat = true);
 
 	virtual ~RenderTarget();
 	static void releaseStatic();
 
-	virtual void resize(int x, int y, bool use32bit = false);
+	virtual void resize(int x, int y, bool use32bit = false, bool usefloat = true);
 
 	virtual void bind(GLuint target);
 

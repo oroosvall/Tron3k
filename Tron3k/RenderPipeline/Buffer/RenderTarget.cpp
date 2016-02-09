@@ -3,7 +3,7 @@
 GLuint RenderTarget::renderQuad = 0;
 GLuint RenderTarget::renderVao = 0;
 
-void RenderTarget::init(int x, int y, int nrTex, bool depth, bool use32Bit)
+void RenderTarget::init(int x, int y, int nrTex, bool depth, bool use32Bit, bool usefloat)
 {
 	if (renderQuad == 0)
 	{
@@ -12,7 +12,7 @@ void RenderTarget::init(int x, int y, int nrTex, bool depth, bool use32Bit)
 	
 	this->depth = depth;
 	glGenTextures(1, &targetId);
-	resize(x, y, use32Bit);
+	resize(x, y, use32Bit, usefloat);
 
 }
 
@@ -30,7 +30,7 @@ RenderTarget::~RenderTarget()
 	glDeleteTextures(1, &targetId);
 }
 
-void RenderTarget::resize(int x, int y, bool use32bit)
+void RenderTarget::resize(int x, int y, bool use32bit, bool usefloat)
 {
 	if (x == 0)
 	{
@@ -45,9 +45,16 @@ void RenderTarget::resize(int x, int y, bool use32bit)
 	if (depth)
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, x, y, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
 	else if(use32bit)
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, x, y, 0, GL_RGB, GL_FLOAT, nullptr);
+		if(usefloat)
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, x, y, 0, GL_RGB, GL_FLOAT, nullptr);
+		else
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, x, y, 0, GL_RGB, GL_FLOAT, nullptr);
 	else
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, x, y, 0, GL_RGB, GL_FLOAT, nullptr);
+		if (usefloat)
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, x, y, 0, GL_RGB, GL_FLOAT, nullptr);
+		else
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, x, y, 0, GL_RGB, GL_FLOAT, nullptr);
+
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);

@@ -60,7 +60,7 @@ void Gbuffer::init(int x, int y, int nrTex, bool depth)
 	glGenFramebuffers(1, &glowReduce);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, glowReduce);
 
-	glowTexture.init(x, y, 0, false);
+	glowTexture.init(x, y, 0, false, false, false);
 	glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + 1, GL_TEXTURE_2D, glowTexture.getTargetId(), 0);
 
 	GLenum glowTextureBuffers[2] = { GL_NONE, GL_COLOR_ATTACHMENT0 + 1 };
@@ -285,9 +285,14 @@ void Gbuffer::generate(int x, int y)
 		else
 		{
 			if(i == 1)
-				rTexture[i].init(x, y, 0, false, true);
-			else
-				rTexture[i].init(x, y, 0, false);
+				rTexture[i].init(x, y, 0, false, true, true);	// wpos
+			else if (i == 2)
+				rTexture[i].init(x, y, 0, false, false, false);	// diffuse
+			else if (i == 3)
+				rTexture[i].init(x, y, 0, false, false, true);	// normal
+			else if (i == 4)
+				rTexture[i].init(x, y, 0, false, false, false);	// glow
+
 		}
 		
 	}
