@@ -164,11 +164,14 @@ public:
 	}
 	void setDir(glm::vec3 wantedDir) { dir = wantedDir; };
 	glm::vec3 getDir() { return dir; };
+	int getMaxHP() { return role.getMaxHealth(); };
 	int getHP() { return role.getHealth(); };
 	void setHP(int HPfromServer) { role.setHealth(HPfromServer); if (role.getHealth() > 0) isDead = false; }; //Used by client
 
 	int getAmmo();
 	int getMaxAmmo();
+
+	//void setAmmo(int ammoFromServer) {}
 
 	bool isLocal() { return isLocalPlayer; };
 	bool isAlive() { return !isDead; };
@@ -178,6 +181,7 @@ public:
 	void shoot();
 
 	Special* getPlayerSpecialAbility() { return role.getSpecialAbility(); };
+	float getSpecialMeter() { return role.getSpecialMeter(); };
 
 	void setTeam(int teamid) { currentTeam = teamid; };
 	int getTeam() { return currentTeam; };

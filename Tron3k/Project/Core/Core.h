@@ -140,10 +140,13 @@ private:
 	struct HUDvalues
 	{
 		int HP;
+		int maxHp;
 		int ammo;
 		int maxAmmo;
+		float specialMeter;
 		int teamOneTokens;
 		int teamTwoTokens;
+		int maxTokens;
 		int teamOneRoundWins;
 		int teamTwoRoundWins;
 		int time;

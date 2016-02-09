@@ -734,6 +734,12 @@ public:
 				uiPtr->setText(std::to_string(koth->getRoundWins(1)), 4); //wins1
 				uiPtr->setText(std::to_string(koth->getRoundWins(2)), 5); //wins2
 				uiPtr->setText(std::to_string(int(koth->getTimer())), 6); //time
+
+				uiPtr->scaleBar(2, 0.0f, false);
+				uiPtr->scaleBar(3, 0.0f, false);
+				uiPtr->scaleBar(9, 0.0f, true);
+
+				uiPtr->setRoleBool(true);
 			}
 		}
 	}

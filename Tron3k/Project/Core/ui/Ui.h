@@ -39,7 +39,7 @@ private:
 
 	//ids
 	int menuId;
-	int textIdList[9];
+	int textIdList[10];
 
 	Console* console;
 
@@ -51,8 +51,6 @@ private:
 	//Clean up
 	//Convert
 	glm::vec2 fileCoordToScreenSpace(glm::vec2 pos);
-	//Events
-	int collisionEvent(int UniqueKey);
 public:
 	UI();
 	~UI();
@@ -82,6 +80,8 @@ public:
 	std::string getText(int id);
 	void removeLastInput(int id);
 	void clearText(int id);
+
+	void scaleBar(int id, float procentOfMax, bool fromRight);
 };
 
 #endif
