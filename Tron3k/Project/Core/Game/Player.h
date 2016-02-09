@@ -53,12 +53,16 @@ private:
 	glm::vec3 collisionVel; //How we ought to be moving based on our collisions
 	void movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingThis);
 	void movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool specingThis);
+	void effectCollisionHandling();
 	bool grounded = false;
 	bool collided = false;
 
 	glm::vec4 collisionNormals[20];
 	int collisionNormalSize = 0;
 	void clearCollisionNormals() { collisionNormalSize = 0; };
+	glm::vec4 effectCollisionNormals[20];
+	int effectCollNormalSize = 0;
+	void clearEffectCollNormals() { effectCollNormalSize = 0; };
 
 	bool isDead = false;
 	float respawnTimer = 0.0f;
@@ -190,6 +194,7 @@ public:
 	bool getGrounded() { return grounded; };
 
 	void addCollisionNormal(glm::vec4 cn) {if (collisionNormalSize < 20){ collisionNormals[collisionNormalSize] = cn; collisionNormalSize++; } };
+	void addEffectCollisionNormal(glm::vec4 cn) { if (effectCollNormalSize < 20) { effectCollisionNormals[effectCollNormalSize] = cn; effectCollNormalSize++; } };
 
 	void setVelocity(glm::vec3 velocity) { vel = velocity; if (!grounded) airVelocity = velocity; };
 	glm::vec3 getVelocity() { return vel; };

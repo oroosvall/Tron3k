@@ -593,7 +593,7 @@ void Game::checkPlayerVEffectCollision()
 			{
 				collNormalWalls = physics->checkPlayerVEffectCollision(local->getPos(), EFFECT_TYPE::LIGHT_WALL, eid);
 				if(collNormalWalls != vec4(0,0,0,0))
-				playerList[localPlayerId]->addCollisionNormal(collNormalWalls);
+				playerList[localPlayerId]->addEffectCollisionNormal(collNormalWalls);
 			}
 
 		}
@@ -604,7 +604,7 @@ void Game::checkPlayerVEffectCollision()
 			effects[EFFECT_TYPE::THUNDER_DOME][c]->getId(pid, eid);
 			collNormalDomes = physics->checkPlayerVEffectCollision(local->getPos(), EFFECT_TYPE::THUNDER_DOME, eid);
 			if (collNormalDomes != vec4(0, 0, 0, 0))
-			playerList[localPlayerId]->addCollisionNormal(collNormalDomes);
+			playerList[localPlayerId]->addEffectCollisionNormal(collNormalDomes);
 			//this is to be changed, we need to calculate a proper normal for the dome
 
 			//vec3 n = vec3(collNormalDomes[0]);

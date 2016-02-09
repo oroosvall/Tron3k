@@ -439,7 +439,7 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb)
 
 		if (obb->lines[n].line.y < -FLT_EPSILON || obb->lines[n].line.y > FLT_EPSILON)
 		{
-			if (t.w >= 0 - FLT_EPSILON)
+			if (t.w > 0)
 			{
 				if (t.w < closest.w) // a new closest dist was found
 				{
@@ -449,7 +449,7 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb)
 		}
 		else //This is for flat lines. Else we occasionally got stuck on slopes. Without this we would also sometimes fall through lines
 		{
-			if (t.w >= 0 - FLT_EPSILON)
+			if (t.w > 0)
 				if (t.w < closest.w) // a new closest dist was found
 				{
 					closest.x = t.x;

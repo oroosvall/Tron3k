@@ -142,7 +142,7 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 {
 	//get normals
 	//std::vector<vec4> cNorms = physics->sphereVWorldCollision(pos - (vec3(0, 0.55f, 0)), 1);
-
+	effectCollisionHandling();
 	//Collision handling here, after movement
 	bool ceiling = false;
 	vec3 posadjust = vec3(0);
@@ -173,18 +173,27 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 			}
 
 			// abslut value, if two collisions from the same angle they should not move us twice the distance
+			//if (length(pendepth) > length(posadjust))
+				//posadjust = pendepth;
+			
+			if (abs(pendepth.x) > abs(posadjust.x))
+				posadjust.x = pendepth.x;
+			if (abs(pendepth.y) > abs(posadjust.y))
+				posadjust.y = pendepth.y;
+			if (abs(pendepth.z) > abs(posadjust.z))
+				posadjust.z = pendepth.z;
 
-			if (pendepth.x > 0.0f || pendepth.x < 0.0f)//abs(posadjust.x) < abs(pendepth.x))
+			/*if (pendepth.x + FLT_EPSILON > 0.0f || pendepth.x - FLT_EPSILON < 0.0f)//abs(posadjust.x) < abs(pendepth.x))
 			{
 				posadjust.x += pendepth.x;
 				xDivs++;
 			}
-			if (pendepth.y > 0.0f || pendepth.y < 0.0f)
+			if (pendepth.y + FLT_EPSILON > 0.0f || pendepth.y - FLT_EPSILON < 0.0f)
 			{
 				posadjust.y += pendepth.y;
 				yDivs++;
 			}
-			if (pendepth.z > 0.0f || pendepth.z < 0.0f)
+			if (pendepth.z + FLT_EPSILON > 0.0f || pendepth.z - FLT_EPSILON < 0.0f)
 			{
 				posadjust.z += pendepth.z;
 				zDivs++;
@@ -215,18 +224,126 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 		// this is for air only since grounded will set the vel to 0 later
 		// the dt * 0.5 is supposed to remove almost all velocity in that dir
 		// while + posajust w/o  /dt  will remove it slower
-		posadjust = posadjust * 0.99f;
-		vel += posadjust;// / dt * 0.5f;
+		posadjust = posadjust;
+		
 
 		if (ceiling)
 		{
 			posadjust.y = 0;
-			grounded = false;
+			//grounded = false;
 		}
-
+		vel += posadjust;// / dt * 0.5f;
 		pos += posadjust;
 
-		if (posadjust.y < 0.001f && posadjust.y > -0.001f)
+		if (posadjust.y < 0.00001f && posadjust.y > -0.00001f)
+		{
+			vel.y -= posadjust.y;
+			pos.y -= posadjust.y;
+		}
+
+		if (ceiling && vel.y > 0)
+			vel.y = 0;
+
+		
+	}
+	else
+	{
+		collided = false;
+		airVelocity = vel;
+		grounded = false;
+	}
+}
+
+void Player::effectCollisionHandling()
+{
+	//get normals
+	//std::vector<vec4> cNorms = physics->sphereVWorldCollision(pos - (vec3(0, 0.55f, 0)), 1);
+
+	//Collision handling here, after movement
+	bool ceiling = false;
+	vec3 posadjust = vec3(0);
+
+	//if we collided with something
+	if (effectCollNormalSize > 0)
+	{
+		collided = true;
+
+		bool ceiling = false;
+		grounded = false;
+		int xDivs = 0;
+		int yDivs = 0;
+		int zDivs = 0;
+		for (int k = 0; k < effectCollNormalSize; k++)
+		{
+			//push pos away and lower velocity using pendepth
+			vec3 pendepth = vec3(effectCollisionNormals[k]) * effectCollisionNormals[k].w;
+			if (effectCollisionNormals[k].y < -0.6f)
+				ceiling = true;
+
+			//ramp factor and grounded
+
+			if (effectCollisionNormals[k].y > 0.4f)
+			{
+				grounded = true;
+			}
+
+			// abslut value, if two collisions from the same angle they should not move us twice the distance
+			//if (length(pendepth) > length(posadjust))
+			//posadjust = pendepth;
+
+			if (pendepth.x + FLT_EPSILON > 0.0f || pendepth.x - FLT_EPSILON < 0.0f)//abs(posadjust.x) < abs(pendepth.x))
+			{
+			posadjust.x += pendepth.x;
+			xDivs++;
+			}
+			if (pendepth.y + FLT_EPSILON > 0.0f || pendepth.y - FLT_EPSILON < 0.0f)
+			{
+			posadjust.y += pendepth.y;
+			yDivs++;
+			}
+			if (pendepth.z + FLT_EPSILON > 0.0f || pendepth.z - FLT_EPSILON < 0.0f)
+			{
+			posadjust.z += pendepth.z;
+			zDivs++;
+			}/*
+			if ((posadjust.y * posadjust.y) / k < pendepth.y * pendepth.y)
+			posadjust.y += pendepth.y;
+			if (abs(posadjust.z) < abs(pendepth.z))
+			posadjust.z += pendepth.z;
+			*/
+			//posadjust += pendepth;
+		}
+
+		if (xDivs > 1)
+			posadjust.x /= xDivs;
+		if (yDivs > 1)
+			posadjust.y /= yDivs;
+		if (zDivs > 1)
+			posadjust.z /= zDivs;
+		//if (posadjust.y < 0)
+		//ceiling = true;
+		//if (posadjust.y > 0.4)
+		//	grounded = true;
+		/*posadjust = normalize(posadjust);// /= collisionNormalSize;
+		for (int k = 0; k < collisionNormalSize; k++)
+		{
+		posadjust *= collisionNormals[k].w;
+		}*/
+		// this is for air only since grounded will set the vel to 0 later
+		// the dt * 0.5 is supposed to remove almost all velocity in that dir
+		// while + posajust w/o  /dt  will remove it slower
+		posadjust = posadjust;
+
+
+		if (ceiling)
+		{
+			posadjust.y = 0;
+			//grounded = false;
+		}
+		vel += posadjust;// / dt * 0.5f;
+		pos += posadjust;
+
+		if (posadjust.y < 0.00001f && posadjust.y > -0.00001f)
 		{
 			vel.y -= posadjust.y;
 			pos.y -= posadjust.y;
@@ -707,6 +824,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 
 		clearCollisionNormals(); //Doesn't actually clear the array, just manually sets size to 0. This is to speed things up a little.
+		clearEffectCollNormals();
 	} // end of local player check
 	else
 	{
