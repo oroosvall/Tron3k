@@ -43,7 +43,7 @@ void main()
 	boneNormal0 += ((vec4(boneNormal, 1.0f) * m2) * skinWeights.y).xyz;
 	boneTagent0 += ((vec4(boneTagent, 1.0f) * m2) * skinWeights.y).xyz;
 	
-	bonePos0 += ((vec4(bonePos, 1.0f) * m4) * skinWeights.z).xyz;
+	bonePos0 += ((vec4(bonePos, 1.0f) * m3) * skinWeights.z).xyz;
 	boneNormal0 += ((vec4(boneNormal, 1.0f) * m3) * skinWeights.z).xyz;
 	boneTagent0 += ((vec4(boneTagent, 1.0f) * m3) * skinWeights.z).xyz;
 	
