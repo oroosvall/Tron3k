@@ -283,7 +283,7 @@ void SoundPlayer::setVolumeMusic(float volume)
 
 void SoundPlayer::setVolumeSound(float volume)
 {
-	musicPlayer.setVolume(volume);
+	this->soundVolume = volume;
 }
 
 int SoundPlayer::playUserGeneratedSound(int sound)

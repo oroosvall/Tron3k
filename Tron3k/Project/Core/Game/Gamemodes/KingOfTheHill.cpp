@@ -458,6 +458,7 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 	{
 		if (state == PREROUND)
 		{
+			GetSound()->setVolumeSound(0);
 			freeze = true;
 			std::vector<int>* teamOne = gamePtr->getTeamConIds(1);
 			std::vector<int>* teamTwo = gamePtr->getTeamConIds(2);
@@ -489,6 +490,7 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 		}
 		else if (state == ROUND)
 		{
+			GetSound()->setVolumeSound(50);
 			freeze = false;
 			slowdownTime = false;
 			timer = 0.0f;
