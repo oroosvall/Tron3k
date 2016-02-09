@@ -729,11 +729,16 @@ public:
 
 				std::string nText = std::to_string(local->getAmmo()) + "/" + std::to_string(local->getMaxAmmo());
 				uiPtr->setText(nText, 1); //ammo
-				uiPtr->setText(std::to_string(koth->getRespawnTokens(1)), 2); //tickets
-				uiPtr->setText(std::to_string(koth->getRespawnTokens(1)), 3); //tickets2
-				uiPtr->setText(std::to_string(koth->getRoundWins(1)), 4); //wins1
-				uiPtr->setText(std::to_string(koth->getRoundWins(2)), 5); //wins2
-				uiPtr->setText(std::to_string(int(koth->getTimer())), 6); //time
+				uiPtr->setText("0", 2); //tickets
+				uiPtr->setText("0", 3); //tickets2
+				uiPtr->setText("0", 4); //wins1
+				uiPtr->setText("0", 5); //wins2
+				uiPtr->setText("0", 6); //time
+				//uiPtr->setText(std::to_string(koth->getRespawnTokens(1)), 2); //tickets
+				//uiPtr->setText(std::to_string(koth->getRespawnTokens(1)), 3); //tickets2
+				//uiPtr->setText(std::to_string(koth->getRoundWins(1)), 4); //wins1
+				//uiPtr->setText(std::to_string(koth->getRoundWins(2)), 5); //wins2
+				//uiPtr->setText(std::to_string(int(koth->getTimer())), 6); //time
 
 				uiPtr->scaleBar(2, 0.0f, false);
 				uiPtr->scaleBar(3, 0.0f, false);
