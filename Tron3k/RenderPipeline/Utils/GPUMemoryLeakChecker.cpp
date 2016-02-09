@@ -343,12 +343,15 @@ void glCompressedTexImage2D_D(GLenum target, GLint level, GLenum internalformat,
 
 	}
 	// check if we can allocate that memory, if not I'll give you a 1x1 RED pixel only, now take care of the resources
-	if(imageSize + memusage < memoryLimit)
+	if(imageSize + memusage < memoryLimit && imageSize > 0)
 		glCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, data);
 	else
 	{
 		glTexImage2D(target, level, GL_R8, 1, 1, border, GL_RGBA, GL_BYTE, data);
-		printf("Failed to allocate texture, Out of memory!");
+		if(imageSize>0)
+			printf("Failed to allocate texture, Out of memory!\n");
+		else
+			printf("Failed to allocate texture, invalid texture size");
 	}
 
 	glGetTexLevelParameteriv(target, level, GL_TEXTURE_COMPRESSED, (GLint*)&compressed);

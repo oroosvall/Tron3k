@@ -229,13 +229,13 @@ void Core::update(float dt)
 	default:						break;
 	}
 
-	if (renderPipe)
-	{
-		if (i->justPressed(GLFW_KEY_8))
-		{
-			renderPipe->reloadShaders();
-		}
-	}
+	//if (renderPipe)
+	//{
+	//	if (i->justPressed(GLFW_KEY_8))
+	//	{
+	//		renderPipe->reloadShaders();
+	//	}
+	//}
 
 	i->clearOnPress();
 	console.discardCommandAndLastMsg();
