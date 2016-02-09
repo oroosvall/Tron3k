@@ -583,10 +583,15 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 							if (animRole == ROLES::TRAPPER)
 							{
-								animPrimary = false;
-								msg = SHOOT;
-								shoot();
-								animPrimary = true;
+								if (role.getSpecificWeapon(0)->getAmmo() > 1)
+								{
+									animPrimary = false;
+									msg = SHOOT;
+									shoot();
+									animPrimary = true;
+								}
+								else
+									role.getSpecificWeapon(0)->reload();
 							}
 							else
 								animOverideIfPriority(anim_first_current, AnimationState::first_primary_switch);
