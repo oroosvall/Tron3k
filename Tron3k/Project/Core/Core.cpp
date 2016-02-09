@@ -2,6 +2,14 @@
 
 void Core::init()
 {
+	HUD.HP = 1;
+	HUD.maxHp = 1;
+	HUD.teamOneRoundWins = 0;
+	HUD.teamTwoRoundWins = 0;
+	HUD.teamOneTokens = 0;
+	HUD.teamTwoTokens = 0;
+	HUD.maxTokens = 0;
+
 	uitmpcounter = 0;
 
 	glfwInit();
@@ -14,7 +22,7 @@ void Core::init()
 
 	glfwWindowHint(GLFW_RESIZABLE, false);
 
-	//glfwWindowHint(GLFW_DECORATED, false); borderless toggle
+	//glfwWindowHint(GLFW_DECORATED, false); //borderless toggle
 
 	cursorInvisible = false;
 
@@ -229,13 +237,13 @@ void Core::update(float dt)
 	default:						break;
 	}
 
-	if (renderPipe)
-	{
-		if (i->justPressed(GLFW_KEY_8))
-		{
-			renderPipe->reloadShaders();
-		}
-	}
+	//if (renderPipe)
+	//{
+	//	if (i->justPressed(GLFW_KEY_8))
+	//	{
+	//		renderPipe->reloadShaders();
+	//	}
+	//}
 
 	i->clearOnPress();
 	console.discardCommandAndLastMsg();
@@ -410,6 +418,11 @@ void Core::upRoam(float dt)
 		game->createPlayer(p, 0, 100, ROLES::TRAPPER, true);
 		game->freecam = true;
 		delete p;
+
+		HUD.maxHp = game->getPlayer(game->GetLocalPlayerId())->getMaxHP();
+		HUD.specialMeter = 100;
+		KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
+		HUD.maxTokens = koth->getRespawnTokens(1);
 
 		game->getPlayer(game->GetLocalPlayerId())->setLockedControls(true);
 		subState++;
@@ -587,6 +600,11 @@ void Core::upClient(float dt)
 			showTeamSelect();
 			game->setCursorInvisible(false);
 			subState++;
+
+			HUD.specialMeter = 100.0f;
+
+			KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
+			HUD.maxTokens = koth->getRespawnTokens(1);
 		}
 		break;
 	case 2: //main client loop
@@ -1070,6 +1088,12 @@ void Core::roamHandleCmds(std::string com)
 				uiManager->setText(std::to_string(koth->getRoundWins(1)), 4); //wins1
 				uiManager->setText(std::to_string(koth->getRoundWins(2)), 5); //wins2
 				uiManager->setText(std::to_string(int(koth->getTimer())), 6); //time
+
+				uiManager->scaleBar(2, 0.0f, false);
+				uiManager->scaleBar(3, 0.0f, false);
+				uiManager->scaleBar(9, 0.0f, true);
+
+				uiManager->setRoleBool(true);
 			}
 			else 
 				console.printMsg("Invalid role. Use /role <1-5>", "System", 'S');
@@ -1743,6 +1767,7 @@ void Core::renderWorld(float dt)
 		renderPipe->finalizeRender();
 
 		renderPipe->disableDepthTest();
+		renderPipe->enableBlend();
 
 		//name rendering
 		if (current != SERVER)
@@ -1784,7 +1809,6 @@ void Core::renderWorld(float dt)
 			renderPipe->enableDepthTest();
 		}
 
-		renderPipe->enableBlend();
 		if (renderUI) //Temp
 			inGameUIUpdate();
 
@@ -1832,53 +1856,67 @@ void Core::renderWorld(float dt)
 
 void Core::inGameUIUpdate() //Ingame ui update
 {
-	Player* local = game->getPlayer(game->GetLocalPlayerId());
-	KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
-	if (local->getHP() != HUD.HP)
+	if (uiManager->getRoleBool())
 	{
-		HUD.HP = local->getHP();
-		uiManager->clearText(0);
-		uiManager->setText(std::to_string(HUD.HP), 0);
-	}
-	if (local->getAmmo() != HUD.ammo)
-	{
-		if(local->getMaxAmmo() != HUD.maxAmmo)
-			HUD.maxAmmo = local->getMaxAmmo();
+		Player* local = game->getPlayer(game->GetLocalPlayerId());
+		KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
 
-		HUD.ammo = local->getAmmo();
-		std::string nText = std::to_string(HUD.ammo) + "/" + std::to_string(HUD.maxAmmo);
-		uiManager->clearText(1);
-		uiManager->setText(nText, 1);
-	}
-	if (koth->getRespawnTokens(1) != HUD.teamOneTokens)
-	{
-		HUD.teamOneTokens = local->getHP();
-		uiManager->clearText(2);
-		uiManager->setText(std::to_string(HUD.teamOneTokens), 2);
-	}
-	if (koth->getRespawnTokens(2) != HUD.teamTwoTokens)
-	{
-		HUD.teamTwoTokens = local->getHP();
-		uiManager->clearText(3);
-		uiManager->setText(std::to_string(HUD.teamTwoTokens), 3);
-	}
-	if (koth->getRoundWins(1) != HUD.teamOneRoundWins)
-	{
-		HUD.teamOneRoundWins = local->getHP();
-		uiManager->clearText(4);
-		uiManager->setText(std::to_string(HUD.teamOneRoundWins), 4);
-	}
-	if (koth->getRoundWins(2) != HUD.teamTwoRoundWins)
-	{
-		HUD.teamTwoRoundWins = local->getHP();
-		uiManager->clearText(5);
-		uiManager->setText(std::to_string(HUD.teamTwoRoundWins), 5);
-	}
-	if (int(koth->getTimer()) != HUD.time)
-	{
-		HUD.time = local->getHP();
-		uiManager->clearText(6);
-		uiManager->setText(std::to_string(HUD.time), 6);
+		if (local->getHP() != HUD.HP)
+		{
+			if (local->getMaxHP() != HUD.maxHp)
+				HUD.maxHp = local->getMaxHP();
+
+			HUD.HP = local->getHP();
+			uiManager->clearText(0);
+			uiManager->setText(std::to_string(HUD.HP), 0);
+			uiManager->scaleBar(0, HUD.HP / local->getMaxHP(), true); //Kolla med Adam om det finns ett bättre sätt.
+		}
+		if (local->getSpecialMeter() != HUD.specialMeter)
+		{
+			uiManager->scaleBar(9, local->getSpecialMeter() / HUD.specialMeter, true);
+		}
+		if (local->getAmmo() != HUD.ammo)
+		{
+			if (local->getMaxAmmo() != HUD.maxAmmo)
+				HUD.maxAmmo = local->getMaxAmmo();
+
+			HUD.ammo = local->getAmmo();
+			std::string nText = std::to_string(HUD.ammo) + "/" + std::to_string(HUD.maxAmmo);
+			uiManager->clearText(1);
+			uiManager->setText(nText, 1);
+		}
+		if (koth->getRespawnTokens(1) != HUD.teamOneTokens)
+		{
+			HUD.teamOneTokens = koth->getRespawnTokens(1);
+			uiManager->clearText(2);
+			uiManager->setText(std::to_string(HUD.teamOneTokens), 2);
+			uiManager->scaleBar(2, HUD.teamOneTokens / HUD.maxTokens, false);
+		}
+		if (koth->getRespawnTokens(2) != HUD.teamTwoTokens)
+		{
+			HUD.teamTwoTokens = koth->getRespawnTokens(2);
+			uiManager->clearText(3);
+			uiManager->setText(std::to_string(HUD.teamTwoTokens), 3);
+			uiManager->scaleBar(3, HUD.teamTwoTokens / HUD.maxTokens, false);
+		}
+		if (koth->getRoundWins(1) != HUD.teamOneRoundWins)
+		{
+			HUD.teamOneRoundWins = koth->getRoundWins(1);
+			uiManager->clearText(4);
+			uiManager->setText(std::to_string(HUD.teamOneRoundWins), 4);
+		}
+		if (koth->getRoundWins(2) != HUD.teamTwoRoundWins)
+		{
+			HUD.teamTwoRoundWins = koth->getRoundWins(2);
+			uiManager->clearText(5);
+			uiManager->setText(std::to_string(HUD.teamTwoRoundWins), 5);
+		}
+		if (int(koth->getTimer()) != HUD.time) //Not done
+		{
+			HUD.time = int(koth->getTimer());
+			uiManager->clearText(6);
+			uiManager->setText(std::to_string(HUD.time), 6);
+		}
 	}
 
 	uiManager->inGameRender();
@@ -1897,15 +1935,15 @@ void Core::inGameUIUpdate() //Ingame ui update
 		{
 		case 20: //Team 1
 			if (current == ROAM)
-				roamHandleCmds("/team 1");
-			else
-				clientHandleCmds("/team 1");
-			break;
-		case 21: //Team 2
-			if (current == ROAM)
 				roamHandleCmds("/team 2");
 			else
 				clientHandleCmds("/team 2");
+			break;
+		case 21: //Team 2
+			if (current == ROAM)
+				roamHandleCmds("/team 1");
+			else
+				clientHandleCmds("/team 1");
 			break;
 		case 30: //Class 1
 			if (current == ROAM)
@@ -2245,6 +2283,8 @@ void Core::disconnect()
 	//}
 	current = Gamestate::START;
 	subState = 0;
+
+	uiManager->setRoleBool(false);
 
 	current = START;
 	uiManager->setOpenedGuiBool(false);

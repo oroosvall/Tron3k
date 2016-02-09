@@ -387,3 +387,9 @@ void UIManager::clearText(int id)
 	if (currentMenu[nrOfCurretMenus - 1] > -1)
 		menus[currentMenu[nrOfCurretMenus - 1]].clearText(id);
 }
+
+void UIManager::scaleBar(int id, float procentOfMax, bool fromRight)
+{
+	if(currentMenu[nrOfCurretMenus - 1] > -1)
+		menus[currentMenu[nrOfCurretMenus - 1]].scaleBar(id, procentOfMax, fromRight);
+}

@@ -77,6 +77,7 @@ public:
 	int getAmmo() { return weapons[currentWpn]->getAmmo(); };
 	int getMaxAmmo() { return weapons[currentWpn]->getMaxAmmo(); };
 
+	int getMaxHealth() { return maxHealth; };
 	int getHealth() { return health; };
 	float getJumpHeight() { return jumpHeight; };
 	void returnToLife();

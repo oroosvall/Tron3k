@@ -46,12 +46,17 @@ private:
 	std::vector<GLuint> uiTextureIds;
 	std::vector<std::string> texturePaths;
 
+	bool roleSet = false;
+
 	//	Functions
 	void loadInTexture();
 
 public:
 	UIManager();
 	~UIManager();
+
+	void setRoleBool(bool roleSet) { this->roleSet = roleSet; };
+	bool getRoleBool() { return roleSet; };
 
 	void setRenderPtr(IRenderPipeline* ptr) 
 	{ 
@@ -83,6 +88,7 @@ public:
 	std::string getText(int id);
 	void removeLastInput(int id);
 	void clearText(int id);
+	void scaleBar(int id, float procentOfMax, bool fromRight);
 };
 
 #endif

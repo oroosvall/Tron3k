@@ -42,7 +42,7 @@ void UI::init(std::string fileName, Console* console, IRenderPipeline* uiRender,
 	this->uiRender = uiRender;
 	this->console = console;
 
-	for (int i = 0; i < 9; i++)
+	for (int i = 0; i < 10; i++)
 	{
 		textIdList[0] = -1;
 	}
@@ -153,6 +153,9 @@ bool UI::loadUI(std::string fileName, int winX, int winY)
 			}
 			else if (classId == 1) //StaticTextBox
 			{
+				if (textId == "hpBar" && (counter - 1) == textIdList[0])
+					textIdList[9] = counter;
+
 				UiObjects.push_back(new StaticTextureBoxes(xy, textureArray, tmpCounter, uiRender, textureRes[0]));
 				textureIdList[counter] = textureArray[0];
 				result = true;
@@ -197,7 +200,6 @@ bool UI::loadUI(std::string fileName, int winX, int winY)
 					textIdList[8] = counter;
 				counter++;
 			}
-			//else if(classId == 2) {} //DynamicText
 		}
 	}
 	else
@@ -319,4 +321,10 @@ void UI::clearText(int id)
 {
 	if (textIdList[id] > -1)
 		UiObjects[textIdList[id]]->cleanText();
+}
+
+void UI::scaleBar(int id, float procentOfMax, bool fromRight)
+{
+	if (textIdList[id] > -1)
+		UiObjects[textIdList[id]]->scaleBar(procentOfMax, fromRight);
 }
