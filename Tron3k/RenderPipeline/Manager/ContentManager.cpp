@@ -6,7 +6,7 @@
 void ContentManager::init()
 {
 	//init flags
-	f_portal_culling = false;
+	f_portal_culling = true;
 	f_freeze_portals = false;
 	f_render_chunks = true;
 	f_render_abb = false;
