@@ -230,7 +230,7 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 		if (ceiling)
 		{
 			posadjust.y = 0;
-			//grounded = false;
+			grounded = false;
 		}
 		vel += posadjust;// / dt * 0.5f;
 		pos += posadjust;
