@@ -147,6 +147,11 @@ void ContentManager::release()
 	glDeleteTextures(1, &youarehereTexture);
 	glDeleteTextures(1, &teamishereTexture);
 
+	glDeleteTextures(1, &score_team_green);
+	glDeleteTextures(1, &score_team_orange);
+	glDeleteTextures(1, &score_header_green);
+	glDeleteTextures(1, &score_header_orange);
+
 	testMap.release();
 
 	if (nrChunks > 0)

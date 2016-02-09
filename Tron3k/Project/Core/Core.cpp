@@ -85,6 +85,7 @@ Core::~Core()
 		{
 			renderPipe->removeTextObject(namePlates[i]);
 		}
+		renderPipe->removeTextObject(leaderBoardTextID);
 		renderPipe->release();
 	}
 	
