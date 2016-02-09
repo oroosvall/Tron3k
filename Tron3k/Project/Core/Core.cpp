@@ -33,8 +33,9 @@ void Core::init()
 	//fullscreen = true;
 	winX = winY = 800;
 	//winX = winY = 1000;
-	//winX = 1280; winY = 720;
+	winX = 1280; winY = 720;
 	winX = 1920, winY = 1080;
+	winX = 1600, winY = 900;
 
 	createWindow(winX, winY, fullscreen);
 
