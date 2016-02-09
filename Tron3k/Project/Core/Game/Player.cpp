@@ -103,9 +103,19 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool spectatin
 
 		if (this->getFootsteps() && this->getGrounded() && GetSoundActivated() && this->role.getRole() != 1)
 		{
-			this->setFootstepsCountdown();
-			this->setFootstepsLoop(false);
-			GetSound()->playFootsteps(this->role.getRole(), pos.x, pos.y, pos.z);
+			if (isLocal)
+			{
+				this->setFootstepsCountdown();
+				this->setFootstepsLoop(false);
+				//GetSound()->playFootsteps(this->role.getRole(), pos.x, pos.y, pos.z);
+			}
+			
+			else
+			{
+				this->setFootstepsCountdown();
+				this->setFootstepsLoop(false);
+				GetSound()->playFootsteps(this->role.getRole(), pos.x, pos.y, pos.z);
+			}
 		}
 
 		if (this->role.getRole() == 1 && GetSoundActivated() && GetSound()->destroyerPaused == true)
