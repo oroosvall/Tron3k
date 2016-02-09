@@ -1082,10 +1082,12 @@ void Game::handleWeaponFire(int conID, int teamId, int bulletId, WEAPON_TYPE wea
 		break;
 
 	case WEAPON_TYPE::ENERGY_BOOST:
-		if (gameState != Gamestate::SERVER)
-			if (GetSound())
-				GetSound()->playExternalSound(SOUNDS::soundEffectEnergyBoost, pos.x, pos.y, pos.z);
+		if (GetSoundActivated())
+		{
+			GetSound()->playExternalSound(SOUNDS::soundEffectEnergyBoost, pos.x, pos.y, pos.z);
+		}
 		playerList[conID]->healing(10);
+		playerList[conID]->getRole()->swapWeaponLocal(0);
 		break;
 
 	case WEAPON_TYPE::PLASMA_AUTORIFLE:

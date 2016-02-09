@@ -25,11 +25,12 @@ int TrapperShareAmmo::setData(float dt)
 	int newWeaponType = target->getRole()->getWeaponNRequiped();
 	if (weaponType != newWeaponType)
 	{
-		weaponType = newWeaponType;
-		target->getRole()->getCurrentWeapon()->setCurrentAmmo(ammoCount);
+		newAmmo -= 2;
+		Role* temp = target->getRole();
+		temp->getSpecificWeapon(0)->setFiringTimer(2.6f);
 	}
 	if(ammoCount != newAmmo)
 		ammoCount = newAmmo;
-
+	target->getRole()->getSpecificWeapon(0)->setCurrentAmmo(ammoCount);
 	return 0;
 }

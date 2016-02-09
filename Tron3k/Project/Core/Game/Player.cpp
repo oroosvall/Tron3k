@@ -581,8 +581,13 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 							role.swapWeaponLocal(1);
 							msg = WPNSWITCH;
 
-							if(animRole == ROLES::TRAPPER)
-								animOverideIfPriority(anim_first_current, AnimationState::first_secondary_switch);
+							if (animRole == ROLES::TRAPPER)
+							{
+								animPrimary = false;
+								msg = SHOOT;
+								shoot();
+								animPrimary = true;
+							}
 							else
 								animOverideIfPriority(anim_first_current, AnimationState::first_primary_switch);
 

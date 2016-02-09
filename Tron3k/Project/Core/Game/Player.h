@@ -185,9 +185,7 @@ public:
 	void setGrounded(bool grounded) { this->grounded = grounded; };
 	bool getGrounded() { return grounded; };
 
-	void addCollisionNormal(glm::vec4 cn) {if (collisionNormalSize < 20){
-			collisionNormals[collisionNormalSize] = cn; collisionNormalSize++;}
-		};
+	void addCollisionNormal(glm::vec4 cn) {if (collisionNormalSize < 20){ collisionNormals[collisionNormalSize] = cn; collisionNormalSize++; } };
 
 	void setVelocity(glm::vec3 velocity) { vel = velocity; if (!grounded) airVelocity = velocity; };
 	glm::vec3 getVelocity() { return vel; };

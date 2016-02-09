@@ -14,5 +14,6 @@ public:
 	~EnergyBoost();
 	void init();
 	int update(float deltaTime);
+	bool EnergyBoost::shoot();
 };
 #endif

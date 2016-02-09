@@ -64,6 +64,7 @@ public:
 	void swapWeaponLocal(int swapTo);
 	int getWeaponNRequiped() { return currentWpn; };
 	Weapon* getCurrentWeapon();
+	Weapon* getSpecificWeapon(int wpn) { return weapons[wpn]; };
 	int getWeaponPosition() { return currentWpn; };
 	Consumable* getConsumable() { return consumable; };
 

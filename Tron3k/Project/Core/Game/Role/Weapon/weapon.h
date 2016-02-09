@@ -44,5 +44,6 @@ class Weapon
 
 		int getAmmo() { return currentClipAmmo; };
 		int getMaxAmmo() { return maxClipSize; };
+		void setFiringTimer(float tmr) { firingSpeedCurrentDelay = tmr; };
 };
 #endif
