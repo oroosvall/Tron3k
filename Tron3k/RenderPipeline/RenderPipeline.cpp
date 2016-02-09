@@ -1290,3 +1290,76 @@ void RenderPipeline::renderMinimap(float* yourPos, float* yourdir, float* teamma
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	}
 }
+
+void RenderPipeline::renderScoreBoard(int team1size, int team2size)
+{
+	glUseProgram(uiShader);
+	//uniformlocation set texture 0  it defaults to 0 so not needed
+	uiQuad.BindVertData();
+	glActiveTexture(GL_TEXTURE0);
+
+	// render headder ORANGE
+	TextureInfo asd;
+	asd.lastTextureSlot = GL_TEXTURE0;
+	asd.state = TEXTURE_LOADED;
+	asd.textureID = contMan.score_header_orange;
+	TextureManager::gTm->bind(asd, uiShader, ui_Texture);
+	minimapRenderMat = mat4();
+	//pos
+	minimapRenderMat[0].w = -0.5f;
+	minimapRenderMat[1].w = 0.5;
+	//scale
+	minimapRenderMat[0].x = contMan.score_headerscale.x;
+	minimapRenderMat[1].y = contMan.score_headerscale.y;
+
+	glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, &minimapRenderMat[0][0]);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+	// render headder GREEN
+	asd.lastTextureSlot = GL_TEXTURE0;
+	asd.state = TEXTURE_LOADED;
+	asd.textureID = contMan.score_header_green;
+	TextureManager::gTm->bind(asd, uiShader, ui_Texture);
+	//pos
+	minimapRenderMat[0].w = 0.5f;
+	minimapRenderMat[1].w = 0.5f;
+
+	glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, &minimapRenderMat[0][0]);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+	//render Orange playerinfo boxes
+	asd.lastTextureSlot = GL_TEXTURE0;
+	asd.state = TEXTURE_LOADED;
+	asd.textureID = contMan.score_team_orange;
+	TextureManager::gTm->bind(asd, uiShader, ui_Texture);
+	
+	minimapRenderMat[0].x = contMan.score_teamscale.x;
+	minimapRenderMat[1].y = contMan.score_teamscale.y;
+	
+	for (int n = 0; n < team1size; n++)
+	{
+		//pos
+		minimapRenderMat[0].w = -0.5f;
+		minimapRenderMat[1].w = 0.3f - 0.22 * n;
+	
+		glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, &minimapRenderMat[0][0]);
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	}
+	
+	//render Green playerinfo boxes
+	asd.lastTextureSlot = GL_TEXTURE0;
+	asd.state = TEXTURE_LOADED;
+	asd.textureID = contMan.score_team_green;
+	TextureManager::gTm->bind(asd, uiShader, ui_Texture);
+	
+	for (int n = 0; n < team2size; n++)
+	{
+		//pos
+		minimapRenderMat[0].w = 0.5f;
+		minimapRenderMat[1].w = 0.3f - 0.22 * n;
+	
+		glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, &minimapRenderMat[0][0]);
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	}
+
+}
