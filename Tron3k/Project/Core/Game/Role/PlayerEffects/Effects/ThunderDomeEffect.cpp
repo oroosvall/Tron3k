@@ -25,9 +25,9 @@ int ThunderDomeEffect::update(float dt)
 
 float ThunderDomeEffect::explotionRenderRad()
 {
-	//it will grow at 10% of it life spawn then always render the max rad
-	if (lifeTime < startLifeTime * 0.9f)
+	//it will grow at 5% of it life spawn then always render the max rad
+	if (lifeTime < startLifeTime * 0.98f)
 		return domeRadius;
 	
-	return domeRadius * 0.1 + lifeTime;
+	return domeRadius * (startLifeTime - lifeTime) / (startLifeTime * 0.02f);
 }
