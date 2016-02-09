@@ -240,11 +240,12 @@ void Core::update(float dt)
 	i->clearOnPress();
 	console.discardCommandAndLastMsg();
 
-	int swapTime = renderPipe->startExecTimer("Swap");
-	glfwSwapBuffers(win);
-	renderPipe->stopExecTimer(swapTime);
-	
-	
+	if (current != SERVER)
+	{
+		int swapTime = renderPipe->startExecTimer("Swap");
+		glfwSwapBuffers(win);
+		renderPipe->stopExecTimer(swapTime);
+	}
 }
 
 void Core::upStart(float dt)
