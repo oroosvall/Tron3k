@@ -69,8 +69,6 @@ extern "C"
 }
 #endif
 
-float localPlayer_t = 0;
-
 bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 {
 	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
@@ -303,9 +301,6 @@ void RenderPipeline::reloadShaders()
 	uniformGlowTrail[1] = glGetUniformLocation(animationShader, "trail"); //animation shader
 
 	uniformKeyMatrixLocation = glGetUniformBlockIndex(animationShader, "boneMatrices");
-	glUniformBlockBinding(animationShader, glGetUniformBlockIndex(animationShader, "boneMatricesAsd"), 1);
-
-	animDelta = glGetUniformLocation(animationShader, "delta");
 
 	uniformGlowTimeDelta = glGetUniformLocation(glowShaderTweeks, "deltaTime");
 	uniformGlowFalloff = glGetUniformLocation(glowShaderTweeks, "falloff");
@@ -423,7 +418,6 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 		ss << "Buffer binds: " << bufferBinds << "\n";
 		ss << "Shader binds: " << shaderBinds << "\n";
 		ss << "State changes: " << stateChange << "\n";
-		ss << "Local anim (t): " << localPlayer_t << "\n";
 		ss << "Total uptime:" << timepass << "\n";
 		ss << result << "\n";
 		//if (counter > 0.001f)
@@ -812,20 +806,6 @@ void RenderPipeline::renderAnimation(int playerID, int roleID, void* world, Anim
 		if (anims.animStates[playerID].state != AnimationState::none && anims.animStates[playerID].frameEnd > 0)
 		{
 			AnimManager::animState state = anims.animStates[playerID];
-			//glProgramUniform1f(animationShader, animDelta, state.t / state.speed);
-			//localPlayer_t = state.t / state.speed;
-
-			glProgramUniform1f(animationShader, animDelta, localPlayer_t);
-
-			if (GetAsyncKeyState(VK_F9))
-			{
-				localPlayer_t += 0.01f;
-			}
-			if (GetAsyncKeyState(VK_F10))
-			{
-				localPlayer_t -= 0.01f;
-			}
-
 			contMan.renderPlayer(anims.animStates[playerID], *(glm::mat4*)world, uniformKeyMatrixLocation, first, primary, animationShader, uniformTextureLocation[1], uniformNormalLocation[1], uniformGlowSpecLocation[1]);
 		}
 	}

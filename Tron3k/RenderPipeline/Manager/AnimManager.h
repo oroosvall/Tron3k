@@ -19,7 +19,6 @@ public:
 		float speed;
 		float timepass;
 		float timeLength;
-		float t;
 		bool timeout;
 		bool firstPerson;
 
@@ -32,7 +31,6 @@ public:
 			frameEnd = 0;
 			timepass = 0;
 			timeLength = 0;
-			t = 0;
 			timeout = false;
 			firstPerson = false;
 		}

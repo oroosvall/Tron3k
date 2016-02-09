@@ -92,10 +92,7 @@ private:
 	GLuint uniformDynamicGlowColorLocation[2];
 	GLuint uniformStaticGlowIntensityLocation[2];
 	GLuint uniformGlowTrail[2];
-
-
-	GLuint animDelta;
-
+	
 	GLuint uniformDynamicGlowColorLocation_wall;
 	
 	GLuint uniformGlowTimeDelta;
