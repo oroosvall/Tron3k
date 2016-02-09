@@ -10,5 +10,5 @@ void main ()
 	WorldPosOut	= vec4(0);
 	DiffuseOut = vec4(0);
 	NormalOut = vec4(0);
-	GlowMap = vec4( 1, 0, 1, 0.1f);
+	GlowMap = vec4( 1, 0, 1, 0f);
 }
