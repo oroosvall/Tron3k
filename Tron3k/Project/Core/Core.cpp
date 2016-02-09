@@ -35,6 +35,7 @@ void Core::init()
 	//winX = winY = 1000;
 	winX = 1280; winY = 720;
 	//winX = 1920, winY = 1080;
+	//winX = 1600, winY = 900;
 
 	createWindow(winX, winY, fullscreen);
 
@@ -1672,8 +1673,8 @@ void Core::renderWorld(float dt)
 		// capturePoint
 		if (current == CLIENT)
 		{
-			KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
-			renderPipe->renderCapturePoint(koth->getCapturePoint());
+			//KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
+			//renderPipe->renderCapturePoint(koth->getCapturePoint());
 		}
 
 		// render chunks
@@ -1847,6 +1848,39 @@ void Core::renderWorld(float dt)
 
 					renderPipe->renderMinimap(&camPos.x, &camDir.x, &data[0].x, membersize, 0);
 					delete[] data;
+				}
+			}
+
+		// score screen
+		if (i->getKeyInfo(GLFW_KEY_G))
+			if (game->getPlayer(game->GetLocalPlayerId())->getLockedControls() == false)
+			{
+				Player* p = 0;
+				//team 1
+				vec2 startpos = vec2(300, 300);
+				vector<int>* membersTeam = game->getTeamConIds(1);
+				for (int n = 0; n < membersTeam[0].size(); n++)
+				{
+					p = game->getPlayer(membersTeam[0][n]);
+					if (p)
+					{
+						renderPipe->setTextObjectText(leaderBoardTextID, p->getName());
+						renderPipe->setTextPos(leaderBoardTextID, startpos + vec2(0, 50 * n));
+						renderPipe->renderTextObject(leaderBoardTextID);
+					}
+				}
+				//team 2
+				startpos = vec2(600, 300);
+				membersTeam = game->getTeamConIds(2);
+				for (int n = 0; n < membersTeam[0].size(); n++)
+				{
+					p = game->getPlayer(membersTeam[0][n]);
+					if (p)
+					{
+						renderPipe->setTextObjectText(leaderBoardTextID, p->getName());
+						renderPipe->setTextPos(leaderBoardTextID, startpos + vec2(0, 50 * n));
+						renderPipe->renderTextObject(leaderBoardTextID);
+					}
 				}
 			}
 
@@ -2156,6 +2190,9 @@ void Core::initPipeline()
 		{
 			namePlates[i] = renderPipe->createTextObject("", 128, vec2(winX / 2, winY / 2));
 		}
+
+		leaderBoardTextID = renderPipe->createTextObject("", 24, vec2(winX / 2, winY / 2));
+
 	}
 
 	uiManager->setRenderPtr(renderPipe);
