@@ -1092,7 +1092,9 @@ glm::mat4 Player::getFPSmat()
 		zOffset = 0.2f;
 		break;
 	case MOBILITY:
-
+		yOffset = -0.10f;
+		xOffset = -0.05f;
+		zOffset = -0.25f;
 		break;
 	case BRUTE:
 		if (animPrimary)
