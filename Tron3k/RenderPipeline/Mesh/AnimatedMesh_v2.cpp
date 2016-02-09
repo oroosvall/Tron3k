@@ -318,6 +318,8 @@ void AnimatedMeshV2::draw(GLuint uniformKeyMatrixLocation, int animationID, int 
 	{
 		glBindBuffer(GL_UNIFORM_BUFFER, matricesBuffer);
 		glBindBufferBase(GL_UNIFORM_BUFFER, uniformKeyMatrixLocation, matricesBuffer);
+		glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4)* animations[animationID].header.jointCount, animations[animationID].keyFrames[keyFrame].jointTransform, GL_STATIC_DRAW);
+
 		if (_first)
 		{
 			if(_primary)
@@ -327,6 +329,5 @@ void AnimatedMeshV2::draw(GLuint uniformKeyMatrixLocation, int animationID, int 
 		}
 		else
 			third.render(shader, textureLocation, normalLocation, glowSpecLocation);
-		glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4)* animations[animationID].header.jointCount, animations[animationID].keyFrames[keyFrame].jointTransform, GL_STATIC_DRAW);
 	}
 }
