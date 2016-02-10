@@ -179,7 +179,6 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 		}
 		else if (serverState == ROUND)
 		{
-			timer += dt;
 			if (timer - timerModifierForCaptureScoring > 0.0f) //Sound for score plays
 			{
 				if (GetSoundActivated())
@@ -192,8 +191,6 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 		}
 		else if (serverState == OVERTIME)
 		{
-			timer -= dt;
-
 			/*if (!commencePlayed && GetSoundActivated())
 			{
 				GetSound()->playUserGeneratedSound(SOUNDS::SoundForOvertime);
@@ -461,7 +458,7 @@ bool KingOfTheHill::playerRespawn(int conId)
 	return false;
 }
 
-void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int onCap2, int capPoint, KOTHSTATE state, GAMEMODE_MSG serverMsg)
+void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int onCap2, int capPoint, float timer, KOTHSTATE state, GAMEMODE_MSG serverMsg)
 {
 	if (respawn1 == 5 && teamOneSpawnTokens !=5 && GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
 	{
