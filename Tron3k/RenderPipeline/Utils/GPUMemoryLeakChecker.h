@@ -50,6 +50,9 @@ void glDeleteVertexArray_D(GLsizei count, GLuint* id);
 void glDeleteTexture_D(GLsizei count, GLuint* id);
 
 void glDrawElements_D(GLenum mode, GLsizei count, GLenum type, const void* indices);
+
+void glDrawElementsInstanced_D(GLenum mode, GLsizei count, GLenum type, const void * indices, GLsizei primcount);
+
 void glDrawArrays_D(GLenum mode, GLint first, GLsizei count);
 
 void glBufferData_D(GLenum target, GLsizeiptr size, const GLvoid * data, GLenum usage);
@@ -98,6 +101,8 @@ void reportGPULeaks();
 #undef glEnable
 #undef glDisable
 
+#undef glDrawElementsInstanced
+
 #define glGenBuffers(n,i)			glGenBuffers_D(n,i, __FILE__, __LINE__)
 #define glGenVertexArrays(n,i)		glGenVertexArray_D(n,i, __FILE__, __LINE__)
 #define glGenTextures(n,i)			glGenTexture_D(n,i, __FILE__, __LINE__)
@@ -107,6 +112,7 @@ void reportGPULeaks();
 #define glDeleteTextures(n,i)		glDeleteTexture_D(n,i)
 
 #define glDrawElements(m, c, t ,i)		glDrawElements_D(m, c, t ,i)
+#define glDrawElementsInstanced(mode, count, type, indices, primcount)	glDrawElementsInstanced_D(mode, count, type, indices, primcount)
 
 #define glDrawArrays(m, f, c)			glDrawArrays_D(m, f, c)
 

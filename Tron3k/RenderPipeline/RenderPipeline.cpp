@@ -417,6 +417,7 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 		//ss << "Memory usage: " << memusage << "(B)\n";
 		ss << "Memory usage: " << memusage / 1024.0f / 1024.0f << "(MB)\n";
 		ss << "FPS: " << fps << "\n";
+		ss << "Portals (" << (contMan.f_portal_culling ? "on" : "off") << ")\n";
 		//ss << "Texture binds: " << textureBinds << "\n";
 		//ss << "Buffer binds: " << bufferBinds << "\n";
 		//ss << "Shader binds: " << shaderBinds << "\n";

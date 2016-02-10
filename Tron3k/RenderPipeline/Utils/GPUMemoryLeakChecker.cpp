@@ -178,6 +178,14 @@ void glDrawElements_D(GLenum mode, GLsizei count, GLenum type, const void* indic
 		primitiveCount += (count / 3);
 }
 
+void glDrawElementsInstanced_D(GLenum mode, GLsizei count, GLenum type, const void * indices, GLsizei primcount)
+{
+	drawCount++;
+	glDrawElementsInstanced(mode, count, type, indices, primcount);
+	if (mode == GL_TRIANGLES)
+		primitiveCount += ((count / 3) * primcount);
+}
+
 void glDrawArrays_D(GLenum mode, GLint first, GLsizei count)
 {
 	drawCount++;
@@ -479,6 +487,8 @@ void glDisable_D(GLenum state)
 #undef glEnable
 #undef glDisable
 
+#undef glDrawElementsInstanced
+
 #define glGenBuffers(n,i)			glGenBuffers_D(n,i, __FILE__, __LINE__)
 #define glGenVertexArrays(n,i)		glGenVertexArray_D(n,i, __FILE__, __LINE__)
 #define glGenTextures(n,i)			glGenTexture_D(n,i, __FILE__, __LINE__)
@@ -488,6 +498,8 @@ void glDisable_D(GLenum state)
 #define glDeleteTextures(n,i)		glDeleteTexture_D(n,i)
 
 #define glDrawElements(m, c, t ,i)		glDrawElements_D(m, c, t ,i)
+
+#define glDrawElementsInstanced(mode, count, type, indices, primcount)	glDrawElementsInstanced_D(mode, count, type, indices, primcount)
 
 #define glDrawArrays(m, f, c)		glDrawArrays_D(m, f, c)
 

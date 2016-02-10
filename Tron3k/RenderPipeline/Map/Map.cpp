@@ -182,12 +182,14 @@ void Map::renderChunk(GLuint shader, GLuint shaderLocation, GLuint diffuseLocati
 		glBindBuffer(GL_ARRAY_BUFFER, meshes[meshID].vertexBuffer);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshes[meshID].indexBuffer);
 
-		for (size_t ins = 0; ins < chunks[chunkID].props[i].mats.size(); ins++)
-		{
-			glProgramUniformMatrix4fv(shader, shaderLocation, 1, GL_FALSE, (GLfloat*)&chunks[chunkID].props[i].mats[ins][0][0]);
+		//for (size_t ins = 0; ins < chunks[chunkID].props[i].mats.size(); ins++)
+		//{
+		glProgramUniformMatrix4fv(shader, shaderLocation, chunks[chunkID].props[i].mats.size(), GL_FALSE, (GLfloat*)&chunks[chunkID].props[i].mats[0][0][0]);
 
-			glDrawElements(GL_TRIANGLES, meshes[meshID].indexCount, GL_UNSIGNED_INT, 0);
-		}
+		//glDrawElements(GL_TRIANGLES, meshes[meshID].indexCount, GL_UNSIGNED_INT, 0);
+		glDrawElementsInstanced(GL_TRIANGLES, meshes[meshID].indexCount, GL_UNSIGNED_INT, 0, chunks[chunkID].props[i].mats.size());
+
+		//}
 	}
 
 	//if (capturePoints[0].roomID == chunkID)
