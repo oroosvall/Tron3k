@@ -390,6 +390,11 @@ int KingOfTheHill::getRespawnTokens(int team)
 	return -1;
 }
 
+int KingOfTheHill::getMaxTokensPerTeam()
+{
+	return tokensPerTeam;
+}
+
 bool KingOfTheHill::playerRespawn(int conId)
 {
 	if (state == WARMUP || state == PREROUND)

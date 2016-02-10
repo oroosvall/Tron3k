@@ -63,6 +63,7 @@ public:
 	void init(Console* cptr, Game* gptr);
 	GAMEMODE_MSG update(float dt);
 
+	int getMaxTokensPerTeam();
 	int getRespawnTokens(int team);
 	int getRoundWins(int team);
 
