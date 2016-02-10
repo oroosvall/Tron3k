@@ -964,7 +964,7 @@ vec4 Physics::checkBulletVEffectCollision(glm::vec3 bulletPos, vec3 bulletVel, v
 
 	vec3 origPos = bulletPos - (bulletVel * bulletDir * dt);
 	vec3 bPos = bulletPos - (bulletVel * bulletDir * dt);
-	bulletBox.setPos(bPos);
+	bulletBox.setPos(bulletPos);
 
 	AABBSingle box = bulletBox.getAABB();
 	Sphere sphere = bulletBox.getSphere();
@@ -1020,7 +1020,7 @@ vec4 Physics::checkBulletVEffectCollision(glm::vec3 bulletPos, vec3 bulletVel, v
 					{
 						collided = checkSpherevSpheretdCollision(sphere, effectBoxes[i]->getSphere());
 					}
-					else if (eType > 8)//False box, no collision
+					else if (eType > 9)//False box, no collision
 					{
 
 					}
@@ -1032,7 +1032,6 @@ vec4 Physics::checkBulletVEffectCollision(glm::vec3 bulletPos, vec3 bulletVel, v
 					if (eType == 0)
 						if (collided.y > 0.01f || collided.y < -0.01f)
 							collided.y = 0;
-
 				}
 			}
 		}
