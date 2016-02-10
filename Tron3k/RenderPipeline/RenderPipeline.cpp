@@ -509,7 +509,7 @@ void RenderPipeline::finalizeRender()
 	for (int n = 0; n < contMan.nrChunks; n++)
 		if (contMan.renderedChunks[n] == true)
 		{
-			//if (n > 0)
+			if (n > 0)
 			{
 				int count = contMan.testMap.chunks[n].lights.size();
 				if (count > 0)
