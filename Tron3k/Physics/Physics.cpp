@@ -481,15 +481,38 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb)
 
 	// if the closest one if further than sphere rad = no intersection
 	if (closest.w + FLT_EPSILON > rad - FLT_EPSILON)
-		closest.w = -1;
+		closest.w = FLT_MAX;
 
 	if(closest.w < FLT_MAX)
 		return closest;
 
-	for (int n = 0; n < 6; n++)
+	bool outside = false;
+	vec3 smallest = vec3(999999, 999999, 999999);
+	for (int n = 0; n < 6 && !outside; n++)
 	{
 		//Are we inside the obb?
+		//ood
+		vec3 p = (obb->planes[n].p[0]);// +obb->planes[n].p[2]) * 0.5f;
+		vec3 dir = p - pos;
+
+		if (dot(dir, obb->planes[n].n) > 0.00f)
+		{
+			//behind plane
+			//do stuff
+			if (length(smallest) > length(dir))
+				smallest = dir;
+		}
+		else
+			outside = true;
 	}
+
+	if (!outside)
+		closest = vec4(normalize(smallest), length(smallest));
+	else
+		return vec4(FLT_MAX);
+
+	return closest;
+
 }
 
 vec4 Physics::getSpherevOBBlwNorms(vec3 pos, float rad, OBB* obb)
@@ -724,7 +747,6 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 				if (collidedWithPlane)
 				{
 					//WE HAVE COLLISION
-
 					t = getSpherevOBBNorms(bPos, rad, theOBB);
 					vec3 dir = normalize(vec3(t));
 					t.w = rad - t.w; //penetration depth instead of collision distance 
@@ -798,15 +820,11 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 				{
 					if (checkAABBvAABBCollision(box, roomBoxes[i].getSpecificBox(j)->getAABB()))
 					{
-
-
 						//for each obb contained in that abb
 						int size = roomBoxes[i].getSpecificBox(j)->getOBBSize();
 						for (int n = 0; n < size; n++)
 						{
-
 							OBB* theOBB = roomBoxes[i].getSpecificBox(j)->getOBB(n);
-
 
 							bool collidedWithPlane = false;
 							for (int p = 0; p < 6; p++)
@@ -825,7 +843,6 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 							if (collidedWithPlane)
 							{
 								//WE HAVE COLLISION
-
 								t = getSpherevOBBNorms(bPos, rad, theOBB);
 								vec3 dir = normalize(vec3(t));
 								t.w = rad - t.w; //penetration depth instead of collision distance 
@@ -834,7 +851,6 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 									if (dot(dir, bPos - origPos) < -0.1f)
 										dir *= -1;
 									t = vec4(dir, t.w);
-									
 									bulletPos = bPos;
 									return t;
 								}
@@ -848,7 +864,6 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 									if (dot(dir, bPos - origPos) < -0.1f)
 										dir *= -1;
 									t = vec4(dir, t.w);
-									
 									bulletPos = bPos;
 									return t;
 								}
@@ -872,7 +887,6 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 									if (dot(dir, bPos - origPos) < -0.1f)
 										dir *= -1;
 									t = vec4(dir, t.w);
-									
 									bulletPos = origPos;
 									return t;
 								}

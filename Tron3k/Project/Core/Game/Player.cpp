@@ -158,6 +158,10 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 		int xDivs = 0;
 		int yDivs = 0;
 		int zDivs = 0;
+
+		vec3 pd;
+		float l = 0;
+		int divs = 0;
 		for (int k = 0; k < collisionNormalSize; k++)
 		{
 			//push pos away and lower velocity using pendepth
@@ -175,14 +179,17 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 			// abslut value, if two collisions from the same angle they should not move us twice the distance
 			//if (length(pendepth) > length(posadjust))
 				//posadjust = pendepth;
-			
+			/*
 			if (abs(pendepth.x) > abs(posadjust.x))
 				posadjust.x += pendepth.x;
 			if (abs(pendepth.y) > abs(posadjust.y))
 				posadjust.y += pendepth.y;
 			if (abs(pendepth.z) > abs(posadjust.z))
-				posadjust.z += pendepth.z;
+				posadjust.z += pendepth.z;*/
 
+			posadjust += normalize(pendepth);
+			l += length(pendepth);
+			divs++;
 			/*if (pendepth.x + FLT_EPSILON > 0.0f || pendepth.x - FLT_EPSILON < 0.0f)//abs(posadjust.x) < abs(pendepth.x))
 			{
 				posadjust.x += pendepth.x;
@@ -212,9 +219,13 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 			posadjust.y /= yDivs;
 		if (zDivs > 1)
 			posadjust.z /= zDivs;
-		if (posadjust.y < 0)
+		
+		//l /= divs;
+
+		posadjust = (normalize(posadjust) * l);
+
 		//ceiling = true;
-		if (posadjust.y > 0.4)
+		
 		//	grounded = true;
 		/*posadjust = normalize(posadjust);// /= collisionNormalSize;
 		for (int k = 0; k < collisionNormalSize; k++)
@@ -224,7 +235,7 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 		// this is for air only since grounded will set the vel to 0 later
 		// the dt * 0.5 is supposed to remove almost all velocity in that dir
 		// while + posajust w/o  /dt  will remove it slower
-		posadjust = posadjust;
+		posadjust = posadjust * 0.99f;
 		
 
 		if (ceiling)
