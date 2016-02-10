@@ -45,7 +45,7 @@ private:
 
 	UIManager* uiManager;
 	bool renderUI;
-	GAMEMODE_MSG gameModeMessage;
+	KOTHSTATE kothState;
 	
 	int* namePlates;
 	float cursorBlink;

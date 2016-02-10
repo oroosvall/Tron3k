@@ -626,14 +626,14 @@ void Core::upClient(float dt)
 		//update game
 
 		game->update(dt);
-		GAMEMODE_MSG tmp = game->getGameMode()->getLastMsg();
-		if (gameModeMessage != tmp)
+		KOTHSTATE tmp = ((KingOfTheHill*)(game->getGameMode()))->getState();
+		if (kothState != tmp)
 		{
-			if (tmp == GAMEMODE_MSG::ROUND_DRAW || tmp == GAMEMODE_MSG::ROUND_WIN_TEAM1 || tmp == GAMEMODE_MSG::ROUND_WIN_TEAM2)
+			if (tmp == KOTHSTATE::PREROUND)
 			{
 				showClassSelect();
 			}
-			gameModeMessage = tmp;
+			kothState = tmp;
 		}
 	/*	if (GetSoundActivated())
 		{
