@@ -115,6 +115,8 @@ void Core::update(float dt)
 	{
 		game->getPlayer(game->GetLocalPlayerId())->setLockedControls(false);
 		shitBool = false;
+		justAFrameCounterActivated;
+		justAFrameCounter = 0;
 	}
 	cursorBlink += dt;
 	if (recreate)
