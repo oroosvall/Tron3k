@@ -323,7 +323,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 		{
 			state = ENDROUND;
 			msg = roundScoring();
-			timer = 7.0f;		//TEMP
+			timer = 3.0f;		//TEMP
 		}
 		break;
 
@@ -671,6 +671,5 @@ bool KingOfTheHill::allowRoleChange()
 	{
 		return false;
 	}
-		
 	return true;
 }

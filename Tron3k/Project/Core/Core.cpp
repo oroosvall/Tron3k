@@ -626,7 +626,15 @@ void Core::upClient(float dt)
 		//update game
 
 		game->update(dt);
-
+		GAMEMODE_MSG tmp = game->getGameMode()->getLastMsg();
+		if (gameModeMessage != tmp)
+		{
+			if (tmp == GAMEMODE_MSG::ROUND_DRAW || tmp == GAMEMODE_MSG::ROUND_WIN_TEAM1 || tmp == GAMEMODE_MSG::ROUND_WIN_TEAM2)
+			{
+				showClassSelect();
+			}
+			gameModeMessage = tmp;
+		}
 	/*	if (GetSoundActivated())
 		{
 			GetSound()->setLocalPlayerDir(game->getPlayer(top->getConId())->getDir());

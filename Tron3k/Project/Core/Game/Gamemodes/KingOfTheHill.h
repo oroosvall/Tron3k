@@ -23,7 +23,6 @@ private:
 
 	KOTHSTATE state; //State on the process running
 	KOTHSTATE serverState; //State of the server, if we're a client
-	GAMEMODE_MSG lastMsg;
 
 	int playersReadyNeeded = 1;
 	std::vector<int> teamOnePlayers;
@@ -77,7 +76,6 @@ public:
 	void playerOnCapPointThisFrame(int team); //When Game detects a player within the cap zone, it signals with this
 
 	KOTHSTATE getState();
-	GAMEMODE_MSG getLastMsg() { return lastMsg; };
 	bool getIfSlowdown() { return slowdownTime; };
 	bool getFreeze() { return this->freeze; }
 

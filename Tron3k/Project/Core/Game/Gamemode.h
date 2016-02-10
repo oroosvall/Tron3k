@@ -33,6 +33,7 @@ private:
 	Game* gamePtr;
 protected:
 	GAMEMODE_TYPE gameMode;
+	GAMEMODE_MSG lastMsg;
 	float timer;
 public:
 	virtual ~Gamemode() {};
@@ -40,6 +41,7 @@ public:
 	virtual GAMEMODE_MSG update(float dt) = 0;
 	GAMEMODE_TYPE getType() { return gameMode; };
 	float getTimer() { return timer; };
+	GAMEMODE_MSG getLastMsg() { return lastMsg; };
 
 	virtual bool allowTeamChange() { return true; };
 	virtual bool allowRoleChange() { return true; };
