@@ -11,8 +11,8 @@ Gbuffer::Gbuffer()
 
 void Gbuffer::init(int x, int y, int nrTex, bool depth)
 {
-	xres = x;
-	yres = y;
+	xres = (float)x;
+	yres = (float)y;
 
 	if (renderQuad == 0)
 	{

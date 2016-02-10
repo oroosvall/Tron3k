@@ -18,7 +18,7 @@ void AnimManager::updateAnimStates(int playerID, int role, AnimationState curren
 		overide = true;
 
 	if (animStates[playerID].firstPerson != firstPerson)
-		overide == true;
+		overide = true;
 
 	if (overide) // replace animation with the new one
 	{
@@ -56,10 +56,10 @@ void AnimManager::updateAnimStates(int playerID, int role, AnimationState curren
 
 		//if we should run the animation backwards
 		if (animStates[playerID].state == AnimationState::third_primary_run_rev)
-			animStates[playerID].frame = animStates[playerID].frameEnd - animStates[playerID].frameEnd * index;
+			animStates[playerID].frame = (int)animStates[playerID].frameEnd - animStates[playerID].frameEnd * index;
 		else
 		{
-			animStates[playerID].frame = animStates[playerID].frameEnd * index;
+			animStates[playerID].frame = (int)animStates[playerID].frameEnd * index;
 			if (animStates[playerID].frame >= animStates[playerID].frameEnd)
 				if(rank != 2)
 					animStates[playerID].frame = 0;

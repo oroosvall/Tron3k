@@ -94,7 +94,7 @@ void ContentManager::init()
 
 	//count portals
 	int nrofportals = 0;
-	for (int n = 0; n < testMap.chunks.size(); n++)
+	for (unsigned int n = 0; n < testMap.chunks.size(); n++)
 		nrofportals += testMap.chunks[n].portals.size();
 
 	//gen portals and assign them
@@ -105,8 +105,8 @@ void ContentManager::init()
 
 		int id = 0;
 
-		for (int n = 0; n < testMap.chunks.size(); n++)
-			for (int k = 0; k < testMap.chunks[n].portals.size(); k++)
+		for (unsigned int n = 0; n < testMap.chunks.size(); n++)
+			for (unsigned int k = 0; k < testMap.chunks[n].portals.size(); k++)
 			{
 				testMap.chunks[n].portals[k].query = querieIDS[id];
 				id++;
@@ -297,7 +297,7 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 		{
 			ChunkCollision* col = testMap.chunks[c].getChunkCollision();
 
-			float nrABB = col->abbStuff.size();
+			int nrABB = col->abbStuff.size();
 			for (int n = 0; n < nrABB; n++)
 			{
 

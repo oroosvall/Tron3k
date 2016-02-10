@@ -105,7 +105,7 @@ void Text::fillBuffer()
 				break;
 			case 'I':
 			case ' ':
-				size = fontSize / 1.2;
+				size = (int)(fontSize / 1.2f);
 				break;
 			default:
 				size = fontSize;

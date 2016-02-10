@@ -18,7 +18,7 @@ void AnimData::load(std::string fileName)
 
 		keyFrames = new KeyFrame[header.keyCount];
 		
-		for (int i = 0; i < header.keyCount; i++)
+		for (unsigned int i = 0; i < header.keyCount; i++)
 		{
 			keyFrames[i].jointTransform = new glm::mat4[header.jointCount];
 			file.read((char*)&keyFrames[i].jointTransform[0], sizeof(glm::mat4)*header.jointCount);
@@ -30,7 +30,7 @@ void AnimData::load(std::string fileName)
 
 void AnimData::release()
 {
-	for (int i = 0; i < header.keyCount; i++)
+	for (unsigned int i = 0; i < header.keyCount; i++)
 	{
 		delete[] keyFrames[i].jointTransform;
 	}

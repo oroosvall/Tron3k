@@ -41,7 +41,7 @@ GLuint textureBindMap[5];
 
 GLuint bufferBindMap[5];
 
-int memoryLimit = 256 * 1024 * 1024; // 256 MB limit :)
+unsigned int memoryLimit = 256 * 1024 * 1024; // 256 MB limit :)
 
 void glGenBuffers_D(GLsizei n, GLuint* id, char* file, int line)
 {
@@ -199,8 +199,8 @@ void glDrawArrays_D(GLenum mode, GLint first, GLsizei count)
 
 void glBufferData_D(GLenum target, GLsizeiptr size, const GLvoid * data, GLenum usage)
 {
-	GLint64 oldBufferSize = 0;
-	glGetBufferParameteri64v(target, GL_BUFFER_SIZE, &oldBufferSize);
+	GLint oldBufferSize = 0;
+	glGetBufferParameteriv(target, GL_BUFFER_SIZE, &oldBufferSize);
 	glBufferData(target, size, data, usage);
 
 	memusage += (size - oldBufferSize);
@@ -272,7 +272,7 @@ void glTexImage2D_D(GLenum target, GLint level, GLint internalFormat, GLsizei wi
 
 	}
 
-	int asumedSize = width * height * 4;
+	unsigned int asumedSize = width * height * 4;
 
 	// check if we can allocate that memory, if not I'll give you a 1x1 RED pixel only, now take care of the resources
 	if(asumedSize + memusage < memoryLimit)

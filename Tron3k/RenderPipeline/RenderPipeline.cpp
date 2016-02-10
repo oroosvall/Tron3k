@@ -5,8 +5,9 @@
 #include "Shader.h"
 #include "Utils\GPUMemoryLeakChecker.h"
 
+#ifdef _DEBUG
 #include <vld.h>
-
+#endif
 #include <sstream>
 
 #include "Utils\TimeQuery.h"
@@ -1167,7 +1168,7 @@ void RenderPipeline::setCapRoomColor(int capPoint, vec3 color, float intensity)
 
 void RenderPipeline::startTakeDamageEffect(int maxDisplace, float time)
 {
-	takeDamage_startDispalce = maxDisplace;
+	takeDamage_startDispalce = (float)maxDisplace;
 	takeDamage_timer = time;
 	takeDamage_timerStartValue = takeDamage_timer;
 }
@@ -1231,7 +1232,7 @@ void RenderPipeline::renderMinimap(float* yourPos, float* yourdir, float* teamma
 	minimapRenderMat[1].y = contMan.youareherescaleX;
 
 	//rotate
-	float rotXZ = -(atan2(yourdir[0], yourdir[2]) - atan2(0, 1));
+	float rotXZ = -(atan2(yourdir[0], yourdir[2]) - atan2(0.0f, 1.0f));
 
 	minimapRenderMat = glm::rotate(minimapRenderMat, rotXZ , vec3(0, 0, 1));
 
@@ -1270,7 +1271,7 @@ void RenderPipeline::renderMinimap(float* yourPos, float* yourdir, float* teamma
 		vec3 dirrr = teamMateData[n * 2 + 1];
 
 		//rotate
-		float rotXZ = -(atan2(dirrr[0], dirrr[2]) - atan2(0, 1));
+		float rotXZ = -(atan2(dirrr[0], dirrr[2]) - atan2(0.0f, 1.0f));
 
 		minimapRenderMat = glm::rotate(minimapRenderMat, rotXZ, vec3(0, 0, 1));
 
@@ -1309,7 +1310,7 @@ void RenderPipeline::renderScoreBoard(int team1size, int team2size)
 	minimapRenderMat = mat4();
 	//pos
 	minimapRenderMat[0].w = -0.35f;
-	minimapRenderMat[1].w = 0.43;
+	minimapRenderMat[1].w = 0.43f;
 	//scale
 	minimapRenderMat[0].x = contMan.score_headerscale.x;
 	minimapRenderMat[1].y = contMan.score_headerscale.y;
@@ -1344,7 +1345,7 @@ void RenderPipeline::renderScoreBoard(int team1size, int team2size)
 	{
 		//pos
 		minimapRenderMat[0].w = -0.5f;
-		minimapRenderMat[1].w = 0.3f - 0.22 * n;
+		minimapRenderMat[1].w = 0.3f - 0.22f * n;
 	
 		glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, &minimapRenderMat[0][0]);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
@@ -1360,7 +1361,7 @@ void RenderPipeline::renderScoreBoard(int team1size, int team2size)
 	{
 		//pos
 		minimapRenderMat[0].w = 0.5f;
-		minimapRenderMat[1].w = 0.3f - 0.22 * n;
+		minimapRenderMat[1].w = 0.3f - 0.22f * n;
 	
 		glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, &minimapRenderMat[0][0]);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);

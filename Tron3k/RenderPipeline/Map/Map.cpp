@@ -139,7 +139,7 @@ void Map::renderChunk(GLuint shader, GLuint shaderLocation, GLuint diffuseLocati
 	{
 		meshID = chunks[chunkID].props[i].id;
 
-		for (size_t i = 0; i < materialCount; i++)
+		for (int i = 0; i < materialCount; i++)
 		{
 			if (meshes[meshID].material == materials[i].materialID)
 			{

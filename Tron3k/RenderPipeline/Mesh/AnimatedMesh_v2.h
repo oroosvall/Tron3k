@@ -32,6 +32,7 @@ struct PlayerMesh
 	GLuint vao;
 
 	int indexCount;
+
 };
 
 class AnimatedMeshV2
@@ -47,6 +48,8 @@ private:
 
 	AnimData animations[AnimationState::none];
 	// todo add animation states & animation data
+
+	int frames[AnimationState::none];
 
 public:
 
