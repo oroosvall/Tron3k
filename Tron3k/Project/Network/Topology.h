@@ -216,7 +216,7 @@ public:
 			Uint8 lastMsg;
 			float timer;
 			*rec >> teamOneTokens >> teamTwoTokens >> teamOneOnCapP >> teamTwoOnCapP >> capPoint >> timer >> state >> lastMsg;
-			koth->setGamemodeData(teamOneTokens, teamTwoTokens, teamOneOnCapP, teamTwoOnCapP, capPoint, koth->getTimer(), (KOTHSTATE)state, (GAMEMODE_MSG)lastMsg);
+			koth->setGamemodeData(teamOneTokens, teamTwoTokens, teamOneOnCapP, teamTwoOnCapP, capPoint, timer, (KOTHSTATE)state, (GAMEMODE_MSG)lastMsg);
 		}
 	}
 

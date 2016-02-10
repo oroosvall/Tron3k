@@ -472,6 +472,7 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 		GetSound()->playUserGeneratedSound(SOUNDS::announcer5Tokens);
 	}
 
+	this->timer = timer;
 	teamOneSpawnTokens = respawn1;
 	teamTwoSpawnTokens = respawn2;
 	teamOnePlayersAtPoint = onCap1;
