@@ -48,6 +48,7 @@ bool Input::BACKSPACE = false;
 bool Input::PLUS = false;
 bool Input::APOSTROPHE = false;
 bool Input::DASH = false;
+bool Input::TAB = false;
 
 bool Input::pQ = false;
 bool Input::pW = false;
@@ -97,6 +98,7 @@ bool Input::pBACKSPACE = false;
 bool Input::pPLUS = false;
 bool Input::pAPOSTROPHE = false;
 bool Input::pDASH = false;
+bool Input::pTAB = false;
 
 bool Input::LMB = false;
 bool Input::RMB = false;
@@ -538,6 +540,14 @@ void Input::callbackKeyboard(GLFWwindow* wnd, int key, int scancode, int action,
 			keyPressedThisFrame = true;
 		}
 		break;
+	case GLFW_KEY_TAB:
+		TAB = (bool)action;
+		if (action == GLFW_PRESS)
+		{
+			pTAB = true;
+			keyPressedThisFrame = true;
+		}
+		break;
 	}
 }
 
@@ -696,6 +706,8 @@ bool Input::getKeyInfo(int key)
 		return PLUS;
 	case SWE_KEY_DASH: //Dash/Underscore
 		return DASH;
+	case GLFW_KEY_TAB:
+		return TAB;
 
 	case GLFW_MOUSE_BUTTON_LEFT:
 		return LMB;
@@ -815,6 +827,8 @@ bool Input::justPressed(int key)
 			return pPLUS;
 		case SWE_KEY_DASH: //Dash/Underscore
 			return pDASH;
+		case GLFW_KEY_TAB: //Dash/Underscore
+			return pTAB;
 
 		case GLFW_MOUSE_BUTTON_LEFT:
 			return pLMB;
@@ -871,6 +885,7 @@ void Input::clearOnPress()
 		pAPOSTROPHE = false;
 		pPLUS = false;
 		pDASH = false;
+		pTAB = false;
 		pNUM1 = false;
 		pNUM2 = false;
 		pNUM3 = false;

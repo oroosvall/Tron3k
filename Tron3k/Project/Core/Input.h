@@ -22,11 +22,11 @@ private:
 	static bool Q,W,E,R,T,Y,U,I,O,P,A,S,D,F,G,H,J,K,L,Z,X,C,V,B,N,M,
 		SHIFT,CTRL,ALT,SPACE,ESC,ENTER,
 		NUM1,NUM2,NUM3,NUM4,NUM5,NUM6,NUM7,NUM8,NUM9,NUM0,
-		DOT,COMMA, BACKSPACE, PLUS, APOSTROPHE, DASH; //Button is pressed right now
+		DOT,COMMA, BACKSPACE, PLUS, APOSTROPHE, DASH, TAB; //Button is pressed right now
 	static bool pQ, pW, pE, pR, pT, pY, pU, pI, pO, pP, pA, pS, pD, pF, pG, pH, pJ, pK, pL, pZ, pX, pC, pV, pB, pN, pM,
 		pSHIFT, pCTRL, pALT, pSPACE, pESC, pENTER,
 		pNUM1, pNUM2, pNUM3, pNUM4, pNUM5, pNUM6, pNUM7, pNUM8, pNUM9, pNUM0,
-		pDOT, pCOMMA, pBACKSPACE, pPLUS, pAPOSTROPHE, pDASH; //Button was pressed this frame
+		pDOT, pCOMMA, pBACKSPACE, pPLUS, pAPOSTROPHE, pDASH, pTAB; //Button was pressed this frame
 
 	static bool keyPressedThisFrame; //Checks if at least one key was pressed this frame, if false then no clear is done and justPressed returns false automatically
 	static void callbackKeyboard(GLFWwindow* wnd, int key, int scancode, int action, int modkeys);
