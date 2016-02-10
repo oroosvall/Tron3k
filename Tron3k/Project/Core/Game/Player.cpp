@@ -179,18 +179,19 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 			// abslut value, if two collisions from the same angle they should not move us twice the distance
 			//if (length(pendepth) > length(posadjust))
 				//posadjust = pendepth;
-			/*
+			
 			if (abs(pendepth.x) > abs(posadjust.x))
 				posadjust.x += pendepth.x;
 			if (abs(pendepth.y) > abs(posadjust.y))
 				posadjust.y += pendepth.y;
 			if (abs(pendepth.z) > abs(posadjust.z))
-				posadjust.z += pendepth.z;*/
+				posadjust.z += pendepth.z;
 
-			posadjust += normalize(pendepth);
-			l += length(pendepth);
-			divs++;
-			/*if (pendepth.x + FLT_EPSILON > 0.0f || pendepth.x - FLT_EPSILON < 0.0f)//abs(posadjust.x) < abs(pendepth.x))
+		//	posadjust += normalize(pendepth);
+			//l += length(pendepth);
+			//divs++;
+			/*
+			if (pendepth.x + FLT_EPSILON > 0.0f || pendepth.x - FLT_EPSILON < 0.0f)//abs(posadjust.x) < abs(pendepth.x))
 			{
 				posadjust.x += pendepth.x;
 				xDivs++;
@@ -222,7 +223,7 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 		
 		//l /= divs;
 
-		posadjust = (normalize(posadjust) * l);
+		//posadjust = (normalize(posadjust) * l);
 
 		//ceiling = true;
 		
