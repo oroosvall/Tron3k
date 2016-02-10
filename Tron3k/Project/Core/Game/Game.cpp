@@ -1523,7 +1523,8 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 		case EFFECT_TYPE::BATTERY_SLOW:
 			break;
 		case EFFECT_TYPE::HEALTHPACK:
-			p->healing(25);
+			if(gameState == SERVER)
+				p->healing(25);
 			if (theEffect != nullptr)
 				removeEffect(EFFECT_TYPE::HEALTHPACK, effectPosInArray);
 			break;
