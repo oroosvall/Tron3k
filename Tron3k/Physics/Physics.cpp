@@ -483,7 +483,7 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb)
 	if (closest.w + FLT_EPSILON > rad - FLT_EPSILON)
 		closest.w = FLT_MAX;
 
-		return closest;
+	return closest;
 
 	bool outside = false;
 	vec3 smallest = vec3(999999, 999999, 999999);
@@ -736,8 +736,9 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 					if (length(lvP) > 0.0001f)
 						if (dot(lvP - theOBB->planes[p].p[0], theOBB->planes[p].n) < 0.01f)
 						{
-							if (length(bPos - origPos) > (length(lvP - origPos)))
-								bPos = lvP;
+							if (dot(normalize(lvP - origPos), theOBB->planes[p].n) < 0.001f)
+								if (length(bPos - origPos) > (length(lvP - origPos)))
+									bPos = lvP;
 							collidedWithPlane = true;
 						}
 				}
@@ -752,7 +753,7 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 					{
 						if (dot(dir, bPos - origPos) < -0.1f)
 							dir *= -1;
-						t = vec4(dir, t.w);
+						t = vec4(dir, t.w + 0.2f);
 						bulletPos = bPos;
 						return t;
 					}
@@ -765,7 +766,7 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 					{
 						if (dot(dir, bPos - origPos) < -0.1f)
 							dir *= -1;
-						t = vec4(dir, t.w);
+						t = vec4(dir, t.w + 0.2f);
 						bulletPos = bPos;
 						return t;
 					}
@@ -777,7 +778,7 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 					{
 						if (dot(dir, bPos - origPos) < -0.1f)
 							dir *= -1;
-						t = vec4(dir, t.w);
+						t = vec4(dir, t.w + 0.2f);
 						return t;
 					}
 					t = getSpherevOBBNorms(origPos, rad, theOBB);
@@ -787,7 +788,7 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 					{
 						if (dot(dir, bPos - origPos) < -0.1f)
 							dir *= -1;
-						t = vec4(dir, t.w);
+						t = vec4(dir, t.w + 0.2f);
 						bulletPos = origPos;
 						return t;
 					}
@@ -848,7 +849,7 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 								{
 									if (dot(dir, bPos - origPos) < -0.1f)
 										dir *= -1;
-									t = vec4(dir, t.w);
+									t = vec4(dir, t.w + 0.2f);
 									bulletPos = bPos;
 									return t;
 								}
@@ -861,7 +862,7 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 								{
 									if (dot(dir, bPos - origPos) < -0.1f)
 										dir *= -1;
-									t = vec4(dir, t.w);
+									t = vec4(dir, t.w + 0.2f);
 									bulletPos = bPos;
 									return t;
 								}
@@ -873,7 +874,7 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 								{
 									if (dot(dir, bPos - origPos) < -0.1f)
 										dir *= -1;
-									t = vec4(dir, t.w);
+									t = vec4(dir, t.w + 0.2f);
 									return t;
 								}
 
@@ -884,7 +885,7 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 								{
 									if (dot(dir, bPos - origPos) < -0.1f)
 										dir *= -1;
-									t = vec4(dir, t.w);
+									t = vec4(dir, t.w + 0.2f);
 									bulletPos = origPos;
 									return t;
 								}
@@ -1003,7 +1004,7 @@ vec4 Physics::checkBulletVEffectCollision(glm::vec3 bulletPos, vec3 bulletVel, v
 		{
 			if (checkAABBvAABBCollision(box, effectBoxes[i]->getAABB()))
 			{
-				
+
 				if (effectBoxes[i]->getEType() == eType)
 				{
 					if (eType == 0)//Lightwall, aka OBB
