@@ -1476,6 +1476,11 @@ void Core::renderWorld(float dt)
 			cam->setCam(vec3(-6, 1.5f, 33), vec3(0, 0, -1));
 			force3rd = true;
 		}
+		if (i->getKeyInfo(GLFW_KEY_L))
+		{
+			cam->setCam(vec3(-6, 1.5f, 33), vec3(1, 0, 0));
+			force3rd = true;
+		}
 
 		glm::vec3 tmpEyePos = CameraInput::getCam()->getPos();
 		renderPipe->update(tmpEyePos.x, tmpEyePos.y, tmpEyePos.z, dt); // sets the view/proj matrix
@@ -1847,6 +1852,8 @@ void Core::renderWorld(float dt)
 
 		//viewing 3rd person anims in roam
 		if (i->getKeyInfo(GLFW_KEY_P))
+			cam->setCam(camPos, camDir);
+		if (i->getKeyInfo(GLFW_KEY_L))
 			cam->setCam(camPos, camDir);
 	}
 }
