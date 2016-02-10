@@ -62,17 +62,17 @@ GAMEMODE_MSG KingOfTheHill::capturePointScoring()
 	else if (teamOnePlayersAtPoint < teamTwoPlayersAtPoint)
 	{
 		if (teamTwoPlayersAtPoint - teamOnePlayersAtPoint >= 3)
-			teamOnePlayersAtPoint -= 3;
+			teamOneSpawnTokens -= 3;
 		else
-			teamOnePlayersAtPoint--;
+			teamOneSpawnTokens--;
 		ret = OBJECTIVE_TEAM2;
 	}
 	else if (teamTwoPlayersAtPoint < teamOnePlayersAtPoint)
 	{
 		if (teamOnePlayersAtPoint - teamTwoPlayersAtPoint >= 3)
-			teamTwoPlayersAtPoint -= 3;
+			teamTwoSpawnTokens -= 3;
 		else
-			teamTwoPlayersAtPoint--;
+			teamTwoSpawnTokens--;
 		ret = OBJECTIVE_TEAM1;
 	}
 	timerModifierForCaptureScoring += tickForCaptureScoring;
