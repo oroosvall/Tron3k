@@ -910,7 +910,8 @@ vec4 Physics::checkPlayerVEffectCollision(glm::vec3 playerPos, unsigned int eTyp
 
 	//THIS ALL NEEDS TO CHANGE
 	//EFFECTMESH NEEDS TO CHANGE
-	for (int i = 0; i < effectBoxes.size(); i++)
+	int effectSize = (int)effectBoxes.size();
+	for (int i = 0; i < effectSize; i++)
 	{
 		if (effectBoxes[i]->getEID() == eid && effectBoxes[i]->getEType() == eType)
 		{
@@ -951,8 +952,9 @@ bool Physics::checkPlayerVCaptureCollision(vec3 playerPos, int capID)
 	playerBox.setPos(playerPos);
 	playerBox.setWorldSize();
 	AABBSingle box = playerBox.getAABB();
+	int captureBoxesSize = (int)captureBoxes.size();
 
-	for (int i = 0; i < captureBoxes.size(); i++)
+	for (int i = 0; i < captureBoxesSize; i++)
 	{
 		if (captureBoxes[i].getCapID() == capID)
 		{
@@ -993,11 +995,9 @@ vec4 Physics::checkBulletVEffectCollision(glm::vec3 bulletPos, vec3 bulletVel, v
 	//bPos += bulletVel * bulletDir * (dt / (float)i);
 	deltaDir = bulletDir * dtbyI;
 	dirTimesVel = bulletVel * deltaDir;
+	int effectBoxesSize = (int)effectBoxes.size();
 
-
-
-
-	for (int i = 0; i < effectBoxes.size(); i++)
+	for (int i = 0; i < effectBoxesSize; i++)
 	{
 		if (effectBoxes[i]->getEID() == eid && effectBoxes[i]->getEType() == eType)
 		{
@@ -1080,7 +1080,8 @@ bool Physics::removeEffect(int eid, int pid, unsigned int eType)
 {
 	int cpid = -1, ceid = -1;
 	unsigned int ceType = 0;
-	for (int i = 0; i < effectBoxes.size(); i++)
+	int effectBoxesSize = (int)effectBoxes.size();
+	for (int i = 0; i < effectBoxesSize; i++)
 	{
 		effectBoxes[i]->getIDs(ceType, cpid, ceid);
 
@@ -1371,7 +1372,8 @@ void Physics::receiveRoomBoxes(void* _roomboxes)
 void Physics::cullingPointvsRoom(glm::vec3* pos, int* arr_interIDs, int& interCount, int maxsize)
 {
 	interCount = 0;
-	for (int i = 1; i < roomBoxes.size(); i++)
+	int roomBoxesSize = (int)roomBoxes.size();
+	for (int i = 1; i < roomBoxesSize; i++)
 	{
 		if (pos->x > roomBoxes[i].getAABB()->min.x && pos->x < roomBoxes[i].getAABB()->max.x)//x
 			if (pos->y > roomBoxes[i].getAABB()->min.y && pos->y < roomBoxes[i].getAABB()->max.y)//y

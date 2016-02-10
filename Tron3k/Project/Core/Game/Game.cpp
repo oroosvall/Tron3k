@@ -600,7 +600,8 @@ void Game::checkPlayerVEffectCollision()
 		glm::vec4 collNormalWalls;
 		glm::vec4 collNormalDomes;
 
-		for (int c = 0; c < effects[EFFECT_TYPE::LIGHT_WALL].size(); c++)
+		int size = (int)effects[EFFECT_TYPE::LIGHT_WALL].size();
+		for (int c = 0; c < size; c++)
 		{
 			int eid = -1, pid = -1;
 			effects[EFFECT_TYPE::LIGHT_WALL][c]->getId(pid, eid);
@@ -612,8 +613,8 @@ void Game::checkPlayerVEffectCollision()
 			}
 
 		}
-
-		for (int c = 0; c < effects[EFFECT_TYPE::THUNDER_DOME].size(); c++)
+		size = (int)effects[EFFECT_TYPE::THUNDER_DOME].size();
+		for (int c = 0; c < size ; c++)
 		{
 			int eid = -1, pid = -1;
 			effects[EFFECT_TYPE::THUNDER_DOME][c]->getId(pid, eid);
@@ -642,7 +643,8 @@ void Game::checkPlayerVEffectCollision()
 			{
 				for (int t = EFFECT_TYPE::EXPLOSION; t < EFFECT_TYPE::NROFEFFECTS; t++)
 				{
-					for (int i = 0; i < effects[t].size(); i++)
+					int effectsSize = (int)effects[t].size();
+					for (int i = 0; i < effectsSize; i++)
 					{
 						int eid = -1, pid = -1;
 						effects[t][i]->getId(pid, eid);
@@ -1648,9 +1650,9 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 					GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
 				bounceBullet(hi, b);
 				temp = b->getDir();
-				temp.x *= 0.6;
-				temp.y *= 0.6;
-				temp.z *= 0.6;
+				temp.x *= 0.6f;
+				temp.y *= 0.6f;
+				temp.z *= 0.6f;
 				if (length(temp) < 0.05f)
 					removeBullet(hi.bt, arraypos);
 				b->setDir(temp);
@@ -1660,9 +1662,9 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 					GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
 				bounceBullet(hi, b);
 				temp = b->getDir();
-				temp.x *= 0.6;
-				temp.y *= 0.6;
-				temp.z *= 0.6;
+				temp.x *= 0.6f;
+				temp.y *= 0.6f;
+				temp.z *= 0.6f;
 				if (length(temp) < 0.05f)
 					removeBullet(hi.bt, arraypos);
 				b->setDir(temp);
@@ -1672,9 +1674,9 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 					GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
 				bounceBullet(hi, b);
 				temp = b->getDir();
-				temp.x *= 0.6;
-				temp.y *= 0.6;
-				temp.z *= 0.6;
+				temp.x *= 0.6f;
+				temp.y *= 0.6f;
+				temp.z *= 0.6f;
 				if (length(temp) < 0.05f)
 					removeBullet(hi.bt, arraypos);
 				b->setDir(temp);
@@ -1682,9 +1684,9 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 			case BULLET_TYPE::VACUUM_GRENADE:
 				bounceBullet(hi, b);
 				temp = b->getDir();
-				temp.x *= 0.6;
-				temp.y *= 0.6;
-				temp.z *= 0.6;
+				temp.x *= 0.6f;
+				temp.y *= 0.6f;
+				temp.z *= 0.6f;
 				if (length(temp) < 0.05f)
 					removeBullet(hi.bt, arraypos);
 				b->setDir(temp);
@@ -1700,9 +1702,9 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 
 				bounceBullet(hi, b);
 				temp = b->getDir();
-				temp.x *= 0.6;
-				temp.y *= 0.6;
-				temp.z *= 0.6;
+				temp.x *= 0.6f;
+				temp.y *= 0.6f;
+				temp.z *= 0.6f;
 				if (length(temp) < 0.05f)
 					removeBullet(hi.bt, arraypos);
 				b->setDir(temp);
