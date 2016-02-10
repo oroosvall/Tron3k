@@ -53,9 +53,13 @@ InputBox::InputBox(glm::vec2 center, int textureId1, int uniqueKey, IRenderPipel
 	pos[0] = glm::vec2(worldMatrix[0].w - worldMatrix[0].x, worldMatrix[1].w - worldMatrix[1].y);
 	pos[1] = glm::vec2(worldMatrix[0].w + worldMatrix[0].x, worldMatrix[1].w + worldMatrix[1].y);
 
+	yOffSet = 0;
+	xOffSet = 0;
 	//Put offsets and text size in a vec3 since since my construct is abit long
-	yOffSet = -((offSetsTextSize.y - 1) * 0.5) * winY;
-	xOffSet = glm::vec2((offSetsTextSize.x + 1) * 0.5).x * winX;
+	if(offSetsTextSize.y != 0)
+		yOffSet = -((offSetsTextSize.y - 1) * 0.5) * winY;
+	if (offSetsTextSize.x != 0)
+		xOffSet = glm::vec2((offSetsTextSize.x + 1) * 0.5).x * winX;
 
 	//yOffSet = offSetsTextSize.y; //30
 	//xOffSet = offSetsTextSize.x; //25

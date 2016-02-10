@@ -87,7 +87,7 @@ void UIManager::init(Console* console, int winX, int winY)
 	texturePaths.push_back("GameFiles/Textures/UITextures/server.png"); //18
 
 	//GUI
-	texturePaths.push_back("GameFiles/Textures/UITextures/plain_hud_left_frame.png"); //19  Ammo, hp and weapons
+	texturePaths.push_back("GameFiles/Textures/UITextures/plain_hud_left_frame_squared.png"); //19  Ammo, hp and weapons
 	texturePaths.push_back("GameFiles/Textures/UITextures/plain_hud_left_bar_hp.png"); //20 hp bar
 	texturePaths.push_back("GameFiles/Textures/UITextures/plain_hud_left_bar_special.png"); //21 special bar
 
@@ -303,43 +303,41 @@ bool UIManager::LoadNextSet(int whichMenuGroup, int winX, int winY)
 {
 	removeAllMenus();
 
-	if (currentGroup == 0)
-		currentGroup = 1;
-	else
-		currentGroup = 0;
-
-	//Menu init has to take the GLuint texture id!
-
-	switch (currentGroup)
+	if (currentGroup != whichMenuGroup)
 	{
-	case 0: //First Group
-	{
-		menus = new UI[nrOfFileNamesFirstGroup];
-		openedMenus = new int[nrOfFileNamesFirstGroup];
-		currentMenu = new int[nrOfFileNamesFirstGroup];
-		for (int i = 0; i < nrOfFileNamesFirstGroup; i++)
+		switch (whichMenuGroup)
 		{
-			menus[i].init(fileNamesListFirstGroup[i], console, renderPipe, textureRes, winX, winY);
-			menus[i].setTextureId(uiTextureIds);
-			nrOfMenus++;
-		}
-		break;
-	}
-	case 1: //Second Group
-	{
-		menus = new UI[nrOfFileNamesSecondGroup];
-		openedMenus = new int[nrOfFileNamesFirstGroup];
-		currentMenu = new int[nrOfFileNamesFirstGroup];
-		for (int i = 0; i < nrOfFileNamesSecondGroup; i++)
+		case 0: //First Group
 		{
-			menus[i].init(fileNamesListSecondGroup[i], console, renderPipe, textureRes, winX, winY);
-			menus[i].setTextureId(uiTextureIds);
-			nrOfMenus++;
+			currentGroup = 0;
+			menus = new UI[nrOfFileNamesFirstGroup];
+			openedMenus = new int[nrOfFileNamesFirstGroup];
+			currentMenu = new int[nrOfFileNamesFirstGroup];
+			for (int i = 0; i < nrOfFileNamesFirstGroup; i++)
+			{
+				menus[i].init(fileNamesListFirstGroup[i], console, renderPipe, textureRes, winX, winY);
+				menus[i].setTextureId(uiTextureIds);
+				nrOfMenus++;
+			}
+			break;
 		}
-		break;
-	}
-	default:
-		break;
+		case 1: //Second Group
+		{
+			currentGroup = 1;
+			menus = new UI[nrOfFileNamesSecondGroup];
+			openedMenus = new int[nrOfFileNamesFirstGroup];
+			currentMenu = new int[nrOfFileNamesFirstGroup];
+			for (int i = 0; i < nrOfFileNamesSecondGroup; i++)
+			{
+				menus[i].init(fileNamesListSecondGroup[i], console, renderPipe, textureRes, winX, winY);
+				menus[i].setTextureId(uiTextureIds);
+				nrOfMenus++;
+			}
+			break;
+		}
+		default:
+			break;
+		}
 	}
 	nrOfCurretMenus = 0;
 
