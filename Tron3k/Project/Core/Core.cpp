@@ -428,7 +428,7 @@ void Core::upRoam(float dt)
 		uiManager->setText("0", 3); //tickets2
 		uiManager->setText("0", 4); //wins1
 		uiManager->setText("0", 5); //wins2
-		uiManager->setText("0", 6); //time
+		uiManager->setText("00:00", 6); //time
 
 		game->getPlayer(game->GetLocalPlayerId())->setLockedControls(true);
 		subState++;
@@ -1963,9 +1963,25 @@ void Core::inGameUIUpdate() //Ingame ui update
 		}
 		if (int(koth->getTimer()) != HUD.time) //Not done
 		{
+
 			HUD.time = int(koth->getTimer());
+
+			int minutes = HUD.time / 60;
+			int seconds = HUD.time - 60 * minutes;
+
+			std::string sMinutes = "0";
+			std::string sSeconds = "0";
+
+			sMinutes += minutes;
+			sSeconds += seconds;
+
+			if(sMinutes.size() > 3)
+				sMinutes = minutes;
+			if (sSeconds.size() > 3)
+				sSeconds = seconds;
+
 			uiManager->clearText(6);
-			uiManager->setText(std::to_string(HUD.time), 6);
+			uiManager->setText(sMinutes + ":" + sSeconds, 6);
 		}
 	}
 
@@ -2362,6 +2378,21 @@ void Core::showTeamSelect()
 		uiManager->setOpenedGuiBool(true);
 		uiManager->setMenu(0); 
 	}
+}
+
+void Core::showClassSelect()
+{
+	uiManager->LoadNextSet(1, winX, winY);
+	uiManager->setFirstMenuSet(false);
+	uiManager->setMenu(2);
+}
+
+void Core::showGUI()
+{
+	uiManager->LoadNextSet(1, winX, winY);
+	uiManager->setFirstMenuSet(false);
+	uiManager->setOpenedGuiBool(true);
+	uiManager->setMenu(0);
 }
 
 void Core::menuIpKeyInputUpdate()

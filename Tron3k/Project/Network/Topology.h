@@ -733,7 +733,7 @@ public:
 				uiPtr->setText("0", 3); //tickets2
 				uiPtr->setText("0", 4); //wins1
 				uiPtr->setText("0", 5); //wins2
-				uiPtr->setText("0", 6); //time
+				uiPtr->setText("00:00", 6); //time
 				//uiPtr->setText(std::to_string(koth->getRespawnTokens(1)), 2); //tickets
 				//uiPtr->setText(std::to_string(koth->getRespawnTokens(1)), 3); //tickets2
 				//uiPtr->setText(std::to_string(koth->getRoundWins(1)), 4); //wins1
