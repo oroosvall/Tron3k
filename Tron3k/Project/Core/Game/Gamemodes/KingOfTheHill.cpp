@@ -362,7 +362,6 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 				{
 					gamePtr->allowPlayerRespawn(teamTwoPlayers[c], c % 5);
 				}
-				gamePtr->clearAllPlayerKD();
 			}
 		}
 		break;
@@ -379,6 +378,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			fivePlayed = false;
 			commencePlayed = false;
 			gamePtr->nrOfPlayersReadyReset();
+			gamePtr->clearAllPlayerKD();
 		}
 		else
 			timer -= dt;
