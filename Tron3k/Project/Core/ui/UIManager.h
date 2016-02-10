@@ -49,6 +49,7 @@ private:
 	bool roleSet = false;
 
 	int teamColor;
+	bool doHoverCheckInGame;
 
 	//	Functions
 	void loadInTexture();
@@ -95,6 +96,9 @@ public:
 
 	void setTeamColor(int team);
 	int getTeamColor();
+
+	void setHoverCheckBool(bool checkForHover);
+	bool getHoverCheckBool();
 };
 
 #endif

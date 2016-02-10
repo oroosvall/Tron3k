@@ -60,7 +60,6 @@ void Core::init()
 	renderMenu = true;
 	menuIpKeyListener = false;
 	menuNameKeyListener = false;
-	doHoverCheckInGame = false;
 
 	nameNrOfKeys = 0;
 	ipNrOfKeys = 0;
@@ -282,6 +281,7 @@ void Core::upMenu(float dt)
 			uiManager->setMenu(1);
 			subState = 0;
 
+			uiManager->setHoverCheckBool(true);
 			cursorInvisible = false;
 			break;
 		case 1: //Multiplayer -> multiplayer window
@@ -1114,6 +1114,7 @@ void Core::roamHandleCmds(std::string com)
 				uiManager->scaleBar(9, 1.0f, true);
 
 				uiManager->setRoleBool(true);
+				uiManager->setHoverCheckBool(false);
 			}
 			else 
 				console.printMsg("Invalid role. Use /role <1-5>", "System", 'S');
@@ -2035,7 +2036,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 			break;
 		}
 	}
-	else if(doHoverCheckInGame)
+	else if(uiManager->getHoverCheckBool())
 		uiManager->hoverCheck(glm::vec2((float)tX, (float)tY));
 	else{}
 }
@@ -2332,6 +2333,7 @@ void Core::disconnect()
 	uiManager->setRoleBool(false);
 
 	current = START;
+	uiManager->setHoverCheckBool(true);
 	uiManager->setOpenedGuiBool(false);
 	uiManager->setFirstMenuSet(false);
 	cursorInvisible = false;
@@ -2343,12 +2345,14 @@ void Core::showTeamSelect()
 {
 	if(startTeamSelect)
 	{
+		uiManager->setHoverCheckBool(true);
 		uiManager->LoadNextSet(1, winX, winY);
 		uiManager->setFirstMenuSet(false);
 		uiManager->setMenu(1);
 	}
 	else
 	{
+		uiManager->setHoverCheckBool(false);
 		uiManager->LoadNextSet(1, winX, winY);
 		uiManager->setFirstMenuSet(false);
 		uiManager->setOpenedGuiBool(true);
@@ -2358,11 +2362,11 @@ void Core::showTeamSelect()
 
 void Core::showClassSelect()
 {
+	uiManager->setHoverCheckBool(true);
 	game->getPlayer(game->GetLocalPlayerId())->setLockedControls(true);
 	cursorInvisible = false;
 	uiManager->setFirstMenuSet(false);
 	uiManager->setMenu(2);
-	
 }
 
 void Core::menuIpKeyInputUpdate()

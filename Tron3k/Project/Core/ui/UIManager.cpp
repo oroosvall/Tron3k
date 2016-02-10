@@ -19,6 +19,7 @@ UIManager::UIManager()
 
 	guiOpened = false;
 	firstMenuSet = false;
+	doHoverCheckInGame = false;
 }
 UIManager::~UIManager() 
 {
@@ -130,7 +131,7 @@ void UIManager::init(Console* console, int winX, int winY)
 	texturePaths.push_back("GameFiles/Textures/UITextures/connect_to_server_back_hover.png"); //50
 
 	texturePaths.push_back("GameFiles/Textures/UITextures/TeamSelect/team_selection_alpha_hover.png"); //51
-	texturePaths.push_back("GameFiles/Textures/UITextures/TeamSelect/team_selection_background.png"); //52
+	texturePaths.push_back("GameFiles/Textures/UITextures/TeamSelect/team_selection_beta_hover.png"); //52
 
 	texturePaths.push_back("GameFiles/Textures/UITextures/ClassSelect/class_selection_trapper_hover.png"); //53
 	texturePaths.push_back("GameFiles/Textures/UITextures/ClassSelect/class_selection_stalker_hover.png"); //54
@@ -443,4 +444,13 @@ void UIManager::setTeamColor(int team)
 int UIManager::getTeamColor()
 {
 	return teamColor;
+}
+
+void UIManager::setHoverCheckBool(bool checkForHover)
+{
+	doHoverCheckInGame = checkForHover;
+}
+bool UIManager::getHoverCheckBool()
+{
+	return doHoverCheckInGame;
 }
