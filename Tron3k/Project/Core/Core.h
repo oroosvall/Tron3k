@@ -117,6 +117,8 @@ private:
 	void sendWorldBoxes();
 
 	void showTeamSelect();
+	void showClassSelect();
+	void showGUI();
 	//Menu activations
 	bool startTeamSelect; //temp
 	bool renderMenu;
