@@ -480,7 +480,23 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 	capturePoint = capPoint;
 	if (serverState != state)
 	{
-		if (state == PREROUND)
+		if (state == WARMUP)
+		{
+			consolePtr->printMsg("Warmup. Type /ready to start", "System", 'S');
+
+			for (int c = 0; c < teamOnePlayers.size(); c++)
+			{
+				gamePtr->allowPlayerRespawn(teamOnePlayers[c], c % 5);
+			}
+			for (int c = 0; c < teamTwoPlayers.size(); c++)
+			{
+				gamePtr->allowPlayerRespawn(teamTwoPlayers[c], c % 5);
+			}
+
+			freeze = false;
+			slowdownTime = false;
+		}
+		else if (state == PREROUND)
 		{
 			if (GetSound())
 				GetSound()->setVolumeSound(0);
