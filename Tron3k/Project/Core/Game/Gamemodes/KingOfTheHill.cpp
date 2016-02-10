@@ -482,7 +482,7 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 	{
 		if (state == WARMUP)
 		{
-			consolePtr->printMsg("Warmup. Type /ready to start", "System", 'S');
+			consolePtr->printMsg("Warmup. Type /ready to start.", "System", 'S');
 
 			for (int c = 0; c < teamOnePlayers.size(); c++)
 			{
