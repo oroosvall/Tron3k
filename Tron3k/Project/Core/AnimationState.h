@@ -65,6 +65,9 @@ enum AnimationState
 	third_primary_death,			// Trapper	| Destroyer | Shankbot | Brute | Manipulator |
 	third_secondary_death,			//			|			|		   | Brute | Manipulator |
 
+	first_primary_death,			// ?	| ? | ? | ? | ? |
+	first_secondary_death,			// ?	| ? | ? | ? | ? |
+
 	none
 };
 
@@ -135,6 +138,8 @@ int static getAnimRank(AnimationState test)
 
 	case third_primary_death:			return 2;
 	case third_secondary_death:			return 2;
+	case first_primary_death:			return 2;
+	case first_secondary_death:			return 2;
 
 	default:
 	case none: return -1;

@@ -301,6 +301,9 @@ int* AnimatedMeshV2::loadAnimations(std::string character)
 	animations[AnimationState::third_primary_death			].load(file + "_third_primary_death.bin");
 	animations[AnimationState::third_secondary_death		].load(file + "_third_secondary_death.bin");
 
+	animations[AnimationState::first_primary_death			].load(file + "_first_primary_death.bin");
+	animations[AnimationState::first_secondary_death		].load(file + "_first_secondary_death.bin");
+
 	int frames[AnimationState::none];
 
 	for (int i = 0; i < AnimationState::none; i++)

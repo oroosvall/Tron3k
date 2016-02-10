@@ -338,7 +338,7 @@ void Game::playerUpdate(int conid, float dt)
 	}
 	if (msg == PLAYERMSG::DEATH)
 	{
-		freecam = true;
+		//freecam = true;
 	}
 	if (msg == PLAYERMSG::PLAYERRESPAWN)
 	{
