@@ -214,8 +214,9 @@ public:
 			Uint8 capPoint;
 			Uint8 state;
 			Uint8 lastMsg;
-			*rec >> teamOneTokens >> teamTwoTokens >> teamOneOnCapP >> teamTwoOnCapP >> capPoint >> state >> lastMsg;
-			koth->setGamemodeData(teamOneTokens, teamTwoTokens, teamOneOnCapP, teamTwoOnCapP, capPoint, (KOTHSTATE)state, (GAMEMODE_MSG)lastMsg);
+			float timer;
+			*rec >> teamOneTokens >> teamTwoTokens >> teamOneOnCapP >> teamTwoOnCapP >> capPoint >> timer >> state >> lastMsg;
+			koth->setGamemodeData(teamOneTokens, teamTwoTokens, teamOneOnCapP, teamTwoOnCapP, capPoint, koth->getTimer(), (KOTHSTATE)state, (GAMEMODE_MSG)lastMsg);
 		}
 	}
 
@@ -693,7 +694,7 @@ public:
 		if (p_conID == gamePtr->GetLocalPlayerId())
 			gamePtr->setPlayerWantsToRespawn(true);
 		gamePtr->sendPlayerRadSize(p->getRole()->getBoxRadius()); //TEMP BUT W/E
-		consolePtr->printMsg("Player " + p->getName() + " switched class!", "System", 'S');
+		//RIP message "player switched role"
 
 		if (isClient == false)
 		{

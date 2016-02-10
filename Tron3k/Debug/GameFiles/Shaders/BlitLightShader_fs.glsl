@@ -26,6 +26,7 @@ struct SpotLight
 	float AmbientIntensity;
 	vec3 Direction;
 	float Cutoff;
+	vec4 attenuation;
 };
 
 layout (std140) uniform Light
@@ -69,7 +70,7 @@ vec4 CalcPointLight(SpotLight l, vec3 Normal)
 	LightDirection = normalize(LightDirection);    
 
 	vec4 Color = vec4(CalcLightInternal(l, LightDirection, Normal)); 
-	float Attenuation =  0.1 * Distance;
+	float Attenuation = l.attenuation.x + (l.attenuation.y * Distance) + (l.attenuation.z * Distance * Distance); //0.1 * Distance;
 	return Color / Attenuation;     
 	//float att = pointlightArray[i].attenuation.x + (pointlightArray[i].attenuation.y * dist) + (pointlightArray[i].attenuation.z * dist * dist);			
 }                                                                                           

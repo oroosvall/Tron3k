@@ -561,7 +561,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			}
 
 			//If freecam or spectating dont take player move input
-			if (freecam == false)
+			if (freecam == false && isDead == false)
 			{
 				roomID = cam->roomID;
 
@@ -1425,13 +1425,17 @@ void Player::movementAnimationChecks(float dt)
 		lastanimSwapActive = animSwapActive;
 	}
 
-
-
 	//death checks
 	if (isDead != animLastDead)
 	{
 		if (isDead)
+		{
 			animOverideIfPriority(anim_third_current, AnimationState::third_primary_death);
+			if(animPrimary)
+				animOverideIfPriority(anim_first_current, AnimationState::first_primary_death);
+			else
+				animOverideIfPriority(anim_first_current, AnimationState::first_secondary_death);
+		}
 		else
 		{
 			anim_third_current = AnimationState::none;

@@ -69,6 +69,7 @@ private:
 	float tick_timer;
 
 	int leaderBoardTextID;
+	int leaderBoardSmallTextID;
 
 	//netlog
 	bool client_record;
@@ -95,6 +96,8 @@ private:
 	void renderWorld(float dt);
 	void inGameUIUpdate();
 	void handleCulling();
+	void scoreboardRender();
+	void minimapRender();
 	void createWindow(int x, int y, bool fullscreen);
 	void removeWindow();
 
