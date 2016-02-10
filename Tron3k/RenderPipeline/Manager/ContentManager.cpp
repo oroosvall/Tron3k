@@ -267,11 +267,6 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 					if (renderNextChunks[portal->bridgedRooms[0]] == false ||
 						renderNextChunks[portal->bridgedRooms[1]] == false)
 					{
-						if (portal->rendered && portal->passedCulling())
-						{
-							renderNextChunks[portal->bridgedRooms[0]] = true;
-							renderNextChunks[portal->bridgedRooms[1]] = true;
-						}
 						if (portal->waiting == false)
 						{
 							//dont render if it bridges between chunks that are already in the rendernextqueue
@@ -279,6 +274,12 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 							portal->rendered = true;
 							portal->waiting = true;
 						}
+						if (portal->rendered && portal->passedCulling())
+						{
+							renderNextChunks[portal->bridgedRooms[0]] = true;
+							renderNextChunks[portal->bridgedRooms[1]] = true;
+						}
+						
 					}
 				}
 			}
