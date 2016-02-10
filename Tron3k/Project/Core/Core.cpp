@@ -2390,17 +2390,8 @@ void Core::showTeamSelect()
 
 void Core::showClassSelect()
 {
-	uiManager->LoadNextSet(1, winX, winY);
 	uiManager->setFirstMenuSet(false);
 	uiManager->setMenu(2);
-}
-
-void Core::showGUI()
-{
-	uiManager->LoadNextSet(1, winX, winY);
-	uiManager->setFirstMenuSet(false);
-	uiManager->setOpenedGuiBool(true);
-	uiManager->setMenu(0);
 }
 
 void Core::menuIpKeyInputUpdate()
