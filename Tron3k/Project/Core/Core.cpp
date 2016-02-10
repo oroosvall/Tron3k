@@ -85,6 +85,7 @@ Core::~Core()
 		{
 			renderPipe->removeTextObject(namePlates[i]);
 		}
+		renderPipe->removeTextObject(leaderBoardTextID);
 		renderPipe->release();
 	}
 	
@@ -1855,6 +1856,7 @@ void Core::renderWorld(float dt)
 		if (i->getKeyInfo(GLFW_KEY_G))
 			if (game->getPlayer(game->GetLocalPlayerId())->getLockedControls() == false)
 			{
+				renderPipe->renderScoreBoard(2, 5);
 				Player* p = 0;
 				//team 1
 				vec2 startpos = vec2(300, 300);

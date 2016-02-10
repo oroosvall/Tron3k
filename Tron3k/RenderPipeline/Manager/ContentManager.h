@@ -77,6 +77,7 @@ public:
 	bool f_render_obb;
 	bool f_render_gui;
 
+	//minimap
 	GLuint miniMapTexture;
 	float minimapscaleX;
 	float minimapScaleY;
@@ -86,6 +87,14 @@ public:
 	GLuint teamishereTexture;
 	vec2 mapBotcord;
 	vec2 mapTopcord;
+
+	//scoreboard
+	GLuint score_team_green;
+	GLuint score_team_orange;
+	GLuint score_header_green;
+	GLuint score_header_orange;
+	vec2 score_teamscale;
+	vec2 score_headerscale;
 
 	~ContentManager();
 	void init();

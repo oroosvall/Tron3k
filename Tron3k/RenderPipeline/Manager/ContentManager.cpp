@@ -20,6 +20,7 @@ void ContentManager::init()
 	//blank_glow =		loadTexture("GameFiles/Textures/blank_g.dds");
 
 	decalTexture = loadTexture("GameFiles/Textures/decal.png");
+	//minimap
 	int xx, yy;
 	teamishereTexture = loadTexture("GameFiles/Textures/minimap/teamishere.png");
 	youarehereTexture = loadTexture("GameFiles/Textures/minimap/youarehere.png", true, (int*)&xx, (int*)&yy);
@@ -30,6 +31,14 @@ void ContentManager::init()
 	minimapScaleY = float(yy) / 1080;
 	mapBotcord = vec2(-185, 160);
 	mapTopcord = vec2(165, -38);
+	
+	//scoreboard
+	score_team_orange = loadTexture("GameFiles/Textures/scoreboard/team_orange.png");
+	score_team_green = loadTexture("GameFiles/Textures/scoreboard/team_green.png", true, (int*)&xx, (int*)&yy);
+	score_teamscale = vec2(float(xx) / 1920, float(yy) / 1080);
+	score_header_orange = loadTexture("GameFiles/Textures/scoreboard/header_orange.png");
+	score_header_green = loadTexture("GameFiles/Textures/scoreboard/header_green.png", true, (int*)&xx, (int*)&yy);
+	score_headerscale = vec2(float(xx) / 1920, float(yy) / 1080);
 
 	skyTexture = 0;
 	lightWallTex = 0;
@@ -137,6 +146,11 @@ void ContentManager::release()
 	glDeleteTextures(1, &miniMapTexture);
 	glDeleteTextures(1, &youarehereTexture);
 	glDeleteTextures(1, &teamishereTexture);
+
+	glDeleteTextures(1, &score_team_green);
+	glDeleteTextures(1, &score_team_orange);
+	glDeleteTextures(1, &score_header_green);
+	glDeleteTextures(1, &score_header_orange);
 
 	testMap.release();
 

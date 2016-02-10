@@ -130,6 +130,7 @@ public:
 
 	virtual void startTakeDamageEffect(int maxDisplace, float time) = 0;
 	virtual void renderMinimap(float* yourPos, float* yourdir, float* teammates, int nrOfTeammates, int team) = 0;
+	virtual void renderScoreBoard(int team1size, int team2size) = 0;
 
 };
 
