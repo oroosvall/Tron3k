@@ -38,7 +38,7 @@ void KingOfTheHill::init(Console* cptr, Game* gptr)
 	teamTwoScore = 0;
 	winScore = 2;
 
-	tokensPerTeam = 20;
+	tokensPerTeam = 2;
 
 	tickForCaptureScoring = 15.0f;
 	timerModifierForCaptureScoring = tickForCaptureScoring;
@@ -369,6 +369,19 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 
 		//If a winscore has been met for either team, we ENDMATCH and ask for rematch.
 	case ENDMATCH:
+		if (timer < FLT_EPSILON)
+		{
+			state = WARMUP;
+			teamOneScore = 0;
+			teamTwoScore = 0;
+			fiveTokensPlayed = false;
+			fifteenPlayed = false;
+			fivePlayed = false;
+			commencePlayed = false;
+			gamePtr->nrOfPlayersReadyReset();
+		}
+		else
+			timer -= dt;
 		break;
 	}
 	
