@@ -2390,8 +2390,11 @@ void Core::showTeamSelect()
 
 void Core::showClassSelect()
 {
+	game->getPlayer(game->GetLocalPlayerId())->setLockedControls(true);
+	cursorInvisible = false;
 	uiManager->setFirstMenuSet(false);
 	uiManager->setMenu(2);
+	
 }
 
 void Core::menuIpKeyInputUpdate()
