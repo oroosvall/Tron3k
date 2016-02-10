@@ -23,7 +23,7 @@ int Lightwall::update(float deltaTime)
 {
 	if (cooldown > 0.0f)
 		cooldown -= deltaTime;
-	if (myRole->getSpecialMeter() < FLT_EPSILON)
+	if (myRole->isGainingSpecial())
 	{
 		activated = false;
 	}
@@ -53,7 +53,7 @@ bool Lightwall::allowedToActivate(Player* p)
 			if (activated && cooldown < FLT_EPSILON)
 			{
 				specialId++;
-				cooldown = 1.0f;
+				cooldown = 0.7f;
 				return true;
 			}
 		}

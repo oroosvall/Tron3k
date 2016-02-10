@@ -88,6 +88,7 @@ public:
 
 	void shutOffMeterGain() { gainSpecial = false; };
 	void activateMeterGain() { gainSpecial = true; };
+	bool isGainingSpecial() { return gainSpecial; };
 
 	Special* getMobilityAbility() { return mobility; };
 

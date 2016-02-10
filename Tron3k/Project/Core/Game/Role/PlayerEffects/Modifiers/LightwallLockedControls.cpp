@@ -31,8 +31,6 @@ int LightWallLockedControls::getData(float dt)
 	if (kill)
 	{
 		target->getRole()->activateMeterGain();
-		if (target->getRole()->getSpecialMeter() < 90.0f)
-			target->getRole()->setSpecialMeter(0.0f);
 		return 1;
 	}
 
