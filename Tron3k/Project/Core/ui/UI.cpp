@@ -22,6 +22,7 @@ void UI::renderMenu()
 	for (int i = 0; i < UiObjects.size(); i++)
 		UiObjects[i]->renderQuad(i);
 
+
 	for (int i = 0; i < textObjRenderId.size(); i++)
 		UiObjects[textObjRenderId[i]]->renderText(i);
 }
