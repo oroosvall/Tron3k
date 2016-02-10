@@ -164,43 +164,6 @@ void Core::update(float dt)
 	{
 		renderPipe->setChatHistoryText(console.getHistory());
 	}
-	if (game)
-	{
-		//Slow down when we are in endround
-		if (game->getGameMode()->getType() == GAMEMODE_TYPE::KOTH)
-		{
-			KingOfTheHill* k = (KingOfTheHill*)game->getGameMode();
-			if (k->getIfSlowdown() && game->freecam == false)
-			{
-				if (slowdownTimer <= 0)
-				{
-					slowmode *= slowdownFactor;
-					slowdownTimer = 0.5;
-				}
-				else
-					slowdownTimer -= dt;
-				if (slowmode < 0.1f)
-				{
-					slowmode = 0.00000001f;
-				}
-				CameraInput::getCam()->setPlaybackSpeed(slowmode);
-				dt *= slowmode;
-			}
-			else if (slowmode < 1.0f)
-				slowmode = 1.0f;
-
-			
-			else
-				CameraInput::getCam()->setPlaybackSpeed(1.0f);
-
-			if (k->getFreeze() && game->freecam == false)
-			{
-				dt = 0;
-
-				//CameraInput::getCam()->setPlaybackSpeed(1.0f);
-			}
-		}
-	}
 	//if (game)
 	//{
 	//	if (console.getInChatMode() == false)
@@ -622,7 +585,45 @@ void Core::upClient(float dt)
 
 		//update game
 
-		game->update(dt);
+		float newDt = dt;
+		if (game)
+		{
+			//Slow down when we are in endround
+			if (game->getGameMode()->getType() == GAMEMODE_TYPE::KOTH)
+			{
+				KingOfTheHill* k = (KingOfTheHill*)game->getGameMode();
+				if (k->getIfSlowdown() && game->freecam == false)
+				{
+					if (slowdownTimer <= 0)
+					{
+						slowmode *= slowdownFactor;
+						slowdownTimer = 0.5;
+					}
+					else
+						slowdownTimer -= dt;
+					if (slowmode < 0.1f)
+					{
+						slowmode = 0.00000001f;
+					}
+					CameraInput::getCam()->setPlaybackSpeed(slowmode);
+					newDt *= slowmode;
+				}
+				else if (slowmode < 1.0f)
+					slowmode = 1.0f;
+
+
+				else
+					CameraInput::getCam()->setPlaybackSpeed(1.0f);
+
+				if (k->getFreeze() && game->freecam == false)
+				{
+					newDt = 0;
+
+					//CameraInput::getCam()->setPlaybackSpeed(1.0f);
+				}
+			}
+		}
+		game->update(newDt);
 		KOTHSTATE tmp = ((KingOfTheHill*)(game->getGameMode()))->getState();
 		if (kothState != tmp)
 		{

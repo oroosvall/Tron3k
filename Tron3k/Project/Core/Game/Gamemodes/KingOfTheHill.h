@@ -24,7 +24,7 @@ private:
 	KOTHSTATE state; //State on the process running
 	KOTHSTATE serverState; //State of the server, if we're a client
 
-	int playersReadyNeeded = 3;
+	int playersReadyNeeded = 2;
 	std::vector<int> teamOnePlayers;
 	std::vector<int> teamTwoPlayers;
 
