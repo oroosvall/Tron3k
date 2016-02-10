@@ -158,6 +158,10 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 		int xDivs = 0;
 		int yDivs = 0;
 		int zDivs = 0;
+
+		vec3 pd;
+		float l = 0;
+		int divs = 0;
 		for (int k = 0; k < collisionNormalSize; k++)
 		{
 			//push pos away and lower velocity using pendepth
@@ -182,18 +186,22 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 				posadjust.y += pendepth.y;
 			if (abs(pendepth.z) > abs(posadjust.z))
 				posadjust.z += pendepth.z;
-
-			/*if (pendepth.x + FLT_EPSILON > 0.0f || pendepth.x - FLT_EPSILON < 0.0f)//abs(posadjust.x) < abs(pendepth.x))
+				
+		//	posadjust += normalize(pendepth);
+			//l += length(pendepth);
+			//divs++;
+			
+			/*if (pendepth.x > 0.0f || pendepth.x < 0.0f)//abs(posadjust.x) < abs(pendepth.x))
 			{
 				posadjust.x += pendepth.x;
 				xDivs++;
 			}
-			if (pendepth.y + FLT_EPSILON > 0.0f || pendepth.y - FLT_EPSILON < 0.0f)
+			if (pendepth.y > 0.0f || pendepth.y < 0.0f)
 			{
 				posadjust.y += pendepth.y;
 				yDivs++;
 			}
-			if (pendepth.z + FLT_EPSILON > 0.0f || pendepth.z - FLT_EPSILON < 0.0f)
+			if (pendepth.z > 0.0f || pendepth.z < 0.0f)
 			{
 				posadjust.z += pendepth.z;
 				zDivs++;
@@ -212,9 +220,13 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 			posadjust.y /= yDivs;
 		if (zDivs > 1)
 			posadjust.z /= zDivs;
-		if (posadjust.y < 0)
+		
+		//l /= divs;
+
+		//posadjust = (normalize(posadjust) * l);
+
 		//ceiling = true;
-		if (posadjust.y > 0.4)
+		
 		//	grounded = true;
 		/*posadjust = normalize(posadjust);// /= collisionNormalSize;
 		for (int k = 0; k < collisionNormalSize; k++)
@@ -224,15 +236,15 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 		// this is for air only since grounded will set the vel to 0 later
 		// the dt * 0.5 is supposed to remove almost all velocity in that dir
 		// while + posajust w/o  /dt  will remove it slower
-		posadjust = posadjust;
+		posadjust = posadjust * 0.99f;
 		
-
+		vel += posadjust;
 		if (ceiling)
 		{
 			posadjust.y = 0;
 			grounded = false;
 		}
-		vel += posadjust;// / dt * 0.5f;
+		// / dt * 0.5f;
 		pos += posadjust;
 
 		if (posadjust.y < 0.00001f && posadjust.y > -0.00001f)
@@ -332,7 +344,7 @@ void Player::effectCollisionHandling()
 		// this is for air only since grounded will set the vel to 0 later
 		// the dt * 0.5 is supposed to remove almost all velocity in that dir
 		// while + posajust w/o  /dt  will remove it slower
-		posadjust = posadjust;
+		posadjust = posadjust * 0.99f;
 
 
 		if (ceiling)
@@ -351,12 +363,6 @@ void Player::effectCollisionHandling()
 
 		if (ceiling && vel.y > 0)
 			vel.y = 0;
-	}
-	else
-	{
-		collided = false;
-		airVelocity = vel;
-		grounded = false;
 	}
 }
 
