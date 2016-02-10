@@ -289,6 +289,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 				msg = GAMEMODE_MSG::ROUND_WIN_TEAM2;
 				teamTwoScore++;
 				state = ENDROUND;
+				timer = 4.0f;
 			}
 		}
 		else if (teamTwoSpawnTokens == 0)
@@ -314,13 +315,14 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 				msg = GAMEMODE_MSG::ROUND_WIN_TEAM1;
 				teamOneScore++;
 				state = ENDROUND;
+				timer = 4.0f;
 			}
 		}
 		if (timer < FLT_EPSILON)
 		{
 			state = ENDROUND;
 			msg = roundScoring();
-			timer = 3.0f;		//TEMP
+			timer = 4.0f;
 		}
 		break;
 
@@ -329,24 +331,24 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 		if (teamOneScore == winScore)
 		{
 			msg = GAMEMODE_MSG::MATCH_WIN_TEAM1;
-			timer = 8.0f;
+			timer = 6.0f;
 			state = ENDMATCH;
 		}
 		else if (teamTwoScore == winScore)
 		{
 			msg = GAMEMODE_MSG::MATCH_WIN_TEAM2;
-			timer = 8.0f;
+			timer = 6.0f;
 			state = ENDMATCH;
 		}
 		else if (teamTwoScore == winScore && teamOneScore == winScore)
 		{
 			msg = GAMEMODE_MSG::MATCH_DRAW;
-			timer = 8.0f;
+			timer = 6.0f;
 			state = ENDMATCH;
 		}
 		else //Match has not ended, let's start another round!
 		{
-			timer -= dt;
+ 			timer -= dt;
 			if (timer < FLT_EPSILON)
 			{
 				state = PREROUND;
