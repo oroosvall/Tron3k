@@ -162,19 +162,22 @@ float Role::getMovementSpeed()
 
 void Role::update(float dt)
 {
-	weapons[0]->update(dt);
-	weapons[1]->update(dt);
-	specialAbility->update(dt);
-	mobility->update(dt);
-
-	if (swapWeaponTimer > 0)
-		swapWeaponTimer -= dt;
-
-	if (gainSpecial && specialMeter < 100.0f)
+	if (role != NROFROLES)
 	{
-		specialMeter += dt*10.0f;
-		if (specialMeter >= 100.0f)
-			specialMeter = 100.0f;
+		weapons[0]->update(dt);
+		weapons[1]->update(dt);
+		specialAbility->update(dt);
+		mobility->update(dt);
+
+		if (swapWeaponTimer > 0)
+			swapWeaponTimer -= dt;
+
+		if (gainSpecial && specialMeter < 100.0f)
+		{
+			specialMeter += dt*10.0f;
+			if (specialMeter >= 100.0f)
+				specialMeter = 100.0f;
+		}
 	}
 }
 
