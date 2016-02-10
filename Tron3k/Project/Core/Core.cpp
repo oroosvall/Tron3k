@@ -2513,9 +2513,9 @@ void Core::minimapRender()
 			counter++;
 		}
 
-		vec3 camdir = CameraInput::getCam()->getDir();
-
-		renderPipe->renderMinimap(&camdir.x, &camdir.x, &data[0].x, membersize, 0);
+		vec3 playerposs = p->getPos();
+		vec3 playerdirr = p->getDir();
+		renderPipe->renderMinimap(&playerposs.x, &playerdirr.x, &data[0].x, membersize, 0);
 		delete[] data;
 	}
 }
