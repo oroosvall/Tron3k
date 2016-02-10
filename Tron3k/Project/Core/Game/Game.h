@@ -227,6 +227,7 @@ public:
 	void init(int max_connections, int state, Console* con);
 
 	int nrOfPlayersReady();
+	void nrOfPlayersReadyReset();
 
 	Gamemode* getGameMode() { return gamemode; };
 	int GetGameState();

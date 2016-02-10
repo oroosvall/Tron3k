@@ -138,6 +138,15 @@ int Game::nrOfPlayersReady()
 	return ready;
 }
 
+void Game::nrOfPlayersReadyReset()
+{
+	for (int c = 0; c < max_con; c++)
+	{
+		if (playerList[c] != nullptr)
+			playerList[c]->unReady();
+	}
+}
+
 vector<int>* Game::getTeamConIds(int team)
 {
 	if (team == 1)

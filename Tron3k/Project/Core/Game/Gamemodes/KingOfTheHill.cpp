@@ -332,16 +332,19 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 		if (teamOneScore == winScore)
 		{
 			msg = GAMEMODE_MSG::MATCH_WIN_TEAM1;
+			timer = 8.0f;
 			state = ENDMATCH;
 		}
 		else if (teamTwoScore == winScore)
 		{
 			msg = GAMEMODE_MSG::MATCH_WIN_TEAM2;
+			timer = 8.0f;
 			state = ENDMATCH;
 		}
 		else if (teamTwoScore == winScore && teamOneScore == winScore)
 		{
 			msg = GAMEMODE_MSG::MATCH_DRAW;
+			timer = 8.0f;
 			state = ENDMATCH;
 		}
 		else //Match has not ended, let's start another round!
@@ -361,12 +364,25 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 					gamePtr->allowPlayerRespawn(teamTwoPlayers[c], c % 5);
 				}
 				gamePtr->clearAllPlayerKD();
+				gamePtr->nrOfPlayersReadyReset();
 			}
 		}
 		break;
 
 		//If a winscore has been met for either team, we ENDMATCH and ask for rematch.
 	case ENDMATCH:
+		if (timer < FLT_EPSILON)
+		{
+			state = WARMUP;
+			teamOneScore = 0;
+			teamTwoScore = 0;
+			fiveTokensPlayed = false;
+			fifteenPlayed = false;
+			fivePlayed = false;
+			commencePlayed = false;
+		}
+		else
+			timer -= dt;
 		break;
 	}
 	
