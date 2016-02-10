@@ -39,7 +39,7 @@ private:
 
 	//ids
 	int menuId;
-	int textIdList[10];
+	int textIdList[11];
 
 	Console* console;
 

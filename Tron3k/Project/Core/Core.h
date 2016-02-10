@@ -157,6 +157,8 @@ private:
 		int teamOneRoundWins;
 		int teamTwoRoundWins;
 		int time;
+		int ticketLostTimer;
+		int loseTicketPer;
 	}HUD;
 
 	//for take damage blur effect on player or spectated player

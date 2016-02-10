@@ -425,15 +425,7 @@ void Core::upRoam(float dt)
 		game->freecam = true;
 		delete p;
 
-		HUD.maxHp = game->getPlayer(game->GetLocalPlayerId())->getMaxHP();
-		HUD.specialMeter = 100;
-		KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
-		uiManager->setText("0", 2); //tickets
-		uiManager->setText("0", 3); //tickets2
-		uiManager->setText("0", 4); //wins1
-		uiManager->setText("0", 5); //wins2
-		uiManager->setText("00:00", 6); //time
-
+		HUD.specialMeter = 100.0f;
 		game->getPlayer(game->GetLocalPlayerId())->setLockedControls(true);
 		subState++;
 		break;
@@ -612,6 +604,7 @@ void Core::upClient(float dt)
 			subState++;
 
 			HUD.specialMeter = 100.0f;
+			HUD.loseTicketPer = 15;
 
 			KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
 			HUD.maxTokens = koth->getMaxTokensPerTeam();
@@ -1102,14 +1095,16 @@ void Core::roamHandleCmds(std::string com)
 				std::string nText = std::to_string(local->getAmmo()) + "/" + std::to_string(local->getMaxAmmo());
 				uiManager->setText(nText, 1); //ammo
 				uiManager->setText(std::to_string(koth->getRespawnTokens(1)), 2); //tickets
-				uiManager->setText(std::to_string(koth->getRespawnTokens(1)), 3); //tickets2
+				uiManager->setText(std::to_string(koth->getRespawnTokens(2)), 3); //tickets2
 				uiManager->setText(std::to_string(koth->getRoundWins(1)), 4); //wins1
 				uiManager->setText(std::to_string(koth->getRoundWins(2)), 5); //wins2
-				uiManager->setText(std::to_string(int(koth->getTimer())), 6); //time
+				uiManager->setText("00:00", 6); //time
+				//uiManager->setText(std::to_string(int(koth->getTimer())), 6); //time
+
 
 				uiManager->scaleBar(2, 0.0f, false);
 				uiManager->scaleBar(3, 0.0f, false);
-				uiManager->scaleBar(9, 0.0f, true);
+				uiManager->scaleBar(9, 1.0f, true);
 
 				uiManager->setRoleBool(true);
 			}
@@ -1868,7 +1863,8 @@ void Core::inGameUIUpdate() //Ingame ui update
 		}
 		if (local->getSpecialMeter() != HUD.specialMeter)
 		{
-			uiManager->scaleBar(9, local->getSpecialMeter() / HUD.specialMeter, true);
+			float procent = local->getSpecialMeter() / HUD.specialMeter;
+			uiManager->scaleBar(9, procent, true);
 		}
 		if (local->getAmmo() != HUD.ammo)
 		{
@@ -1914,7 +1910,6 @@ void Core::inGameUIUpdate() //Ingame ui update
 		}
 		if (int(koth->getTimer()) != HUD.time) //Not done
 		{
-
 			HUD.time = int(koth->getTimer());
 
 			int minutes = HUD.time / 60;
@@ -1923,16 +1918,27 @@ void Core::inGameUIUpdate() //Ingame ui update
 			std::string sMinutes = "0";
 			std::string sSeconds = "0";
 
-			sMinutes += minutes;
-			sSeconds += seconds;
+			sMinutes += std::to_string(minutes);
+			sSeconds += std::to_string(seconds);
 
-			if(sMinutes.size() > 3)
-				sMinutes = minutes;
-			if (sSeconds.size() > 3)
-				sSeconds = seconds;
+			if(sMinutes.size() > 2)
+				sMinutes = std::to_string(minutes);
+			if (sSeconds.size() > 2)
+				sSeconds = std::to_string(seconds);
 
 			uiManager->clearText(6);
 			uiManager->setText(sMinutes + ":" + sSeconds, 6);
+
+			if (HUD.ticketLostTimer == HUD.loseTicketPer)
+			{
+				HUD.ticketLostTimer = 0;
+				uiManager->scaleBar(10, 0.0f, true);
+			}
+			else
+			{
+				HUD.ticketLostTimer += 1;
+				uiManager->scaleBar(10, (float)(HUD.ticketLostTimer) / (float)(HUD.loseTicketPer), true);
+			}
 		}
 	}
 
