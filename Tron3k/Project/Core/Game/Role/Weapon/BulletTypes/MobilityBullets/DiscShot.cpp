@@ -4,8 +4,8 @@
 DiscShot::DiscShot(glm::vec3 position, glm::vec3 direction, int pID, int bID, int tID)
 {
 	initValues(position, direction, pID, bID, tID);
-	vel = glm::vec3(65.0f);
-	damage = 20;
+	vel = glm::vec3(55.0f);
+	damage = 24;
 	ttl = 2.5f;
 }
 
