@@ -191,11 +191,11 @@ int SoundPlayer::playMapSounds()
 			theCantinaSong.setLoop(true);
 			theCantinaSong.setMinDistance(9.5);
 			
-			mapSounds[0].setBuffer(soundList[SOUNDS::soundAids]);
+			/*mapSounds[0].setBuffer(soundList[SOUNDS::soundAids]);
 			mapSounds[0].setPosition(-10, 5, -10);
 			mapSounds[0].setVolume(30);
 			mapSounds[0].setAttenuation(10);
-			mapSounds[0].setMinDistance(5.0f);
+			mapSounds[0].setMinDistance(5.0f);*/
 			mapSounds[1].setBuffer(soundList[SOUNDS::BreakingOutBass]);
 			mapSounds[1].setPosition(44, 1.55, 100);
 			mapSounds[1].setVolume(50);

@@ -1298,6 +1298,7 @@ void RenderPipeline::renderScoreBoard(int team1size, int team2size)
 	uiQuad.BindVertData();
 	glActiveTexture(GL_TEXTURE0);
 
+
 	// render headder ORANGE
 	TextureInfo asd;
 	asd.lastTextureSlot = GL_TEXTURE0;
@@ -1313,7 +1314,8 @@ void RenderPipeline::renderScoreBoard(int team1size, int team2size)
 	minimapRenderMat[1].y = contMan.score_headerscale.y;
 
 	glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, &minimapRenderMat[0][0]);
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	if(team1size > 0)
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
 	// render headder GREEN
 	asd.lastTextureSlot = GL_TEXTURE0;
@@ -1325,6 +1327,7 @@ void RenderPipeline::renderScoreBoard(int team1size, int team2size)
 	minimapRenderMat[1].w = 0.43f;
 
 	glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, &minimapRenderMat[0][0]);
+	if (team2size > 0)
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
 	//render Orange playerinfo boxes

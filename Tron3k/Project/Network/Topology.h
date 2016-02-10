@@ -693,7 +693,7 @@ public:
 		if (p_conID == gamePtr->GetLocalPlayerId())
 			gamePtr->setPlayerWantsToRespawn(true);
 		gamePtr->sendPlayerRadSize(p->getRole()->getBoxRadius()); //TEMP BUT W/E
-		consolePtr->printMsg("Player " + p->getName() + " switched class!", "System", 'S');
+		//RIP message "player switched role"
 
 		if (isClient == false)
 		{
@@ -723,25 +723,19 @@ public:
 				uiPtr->clearText(3);
 				uiPtr->clearText(4);
 				uiPtr->clearText(5);
-				uiPtr->clearText(6);
 
 				uiPtr->setText(std::to_string(local->getHP()), 0); //hp
 
 				std::string nText = std::to_string(local->getAmmo()) + "/" + std::to_string(local->getMaxAmmo());
 				uiPtr->setText(nText, 1); //ammo
-				//uiPtr->setText("0", 2); //tickets
-				//uiPtr->setText("0", 3); //tickets2
-				//uiPtr->setText("0", 4); //wins1
-				//uiPtr->setText("0", 5); //wins2
-				//uiPtr->setText("00:00", 6); //time
 				uiPtr->setText(std::to_string(koth->getRespawnTokens(1)), 2); //tickets
-				uiPtr->setText(std::to_string(koth->getRespawnTokens(1)), 3); //tickets2
+				uiPtr->setText(std::to_string(koth->getRespawnTokens(2)), 3); //tickets2
 				uiPtr->setText(std::to_string(koth->getRoundWins(1)), 4); //wins1
 				uiPtr->setText(std::to_string(koth->getRoundWins(2)), 5); //wins2
 
-				uiPtr->scaleBar(2, 0.0f, false);
-				uiPtr->scaleBar(3, 0.0f, false);
-				uiPtr->scaleBar(9, 0.0f, true);
+				uiPtr->scaleBar(2, (float)(koth->getRespawnTokens(1)) / (float)(koth->getMaxTokensPerTeam()), false);
+				uiPtr->scaleBar(3, (float)(koth->getRespawnTokens(2)) / (float)(koth->getMaxTokensPerTeam()), false);
+				uiPtr->scaleBar(9, 1.0f, true);
 
 				uiPtr->setRoleBool(true);
 			}

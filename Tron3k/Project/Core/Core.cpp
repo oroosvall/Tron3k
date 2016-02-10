@@ -86,6 +86,8 @@ Core::~Core()
 			renderPipe->removeTextObject(namePlates[i]);
 		}
 		renderPipe->removeTextObject(leaderBoardTextID);
+		renderPipe->removeTextObject(leaderBoardSmallTextID);
+		
 		renderPipe->release();
 	}
 	
@@ -115,6 +117,8 @@ void Core::update(float dt)
 	{
 		game->getPlayer(game->GetLocalPlayerId())->setLockedControls(false);
 		shitBool = false;
+		justAFrameCounterActivated = false;;
+		justAFrameCounter = 0;
 	}
 	cursorBlink += dt;
 	if (recreate)
@@ -1202,7 +1206,7 @@ void Core::clientHandleCmds(std::string com)
 			{
 				int team = stoi(token);
 				top->command_team_change(top->getConId(), team);
-				console.printMsg("Change team request sent to server", "System", 'S');
+				//RIP change team request message
 			}
 			else
 				console.printMsg("Invalid team. Use /team <0/1/2>", "System", 'S');
@@ -1829,73 +1833,12 @@ void Core::renderWorld(float dt)
 		//render minimap
 		if (i->getKeyInfo(GLFW_KEY_F))
 			if (game->getPlayer(game->GetLocalPlayerId())->getLockedControls() == false)
-			{
-				Player* p = game->getPlayer(game->GetLocalPlayerId());
-				Player* p2;
-				int memb = 0;
-				if (p)
-				{
-					vector<int>* members = game->getTeamConIds(p->getTeam());
-					int membersize = members->size();
-
-					vec3* data = new vec3[membersize * 2 ];
-					int counter = 0;
-					for (int n = 0; n < membersize; n++)
-					{
-						p2 = game->getPlayer(members[0][counter]);
-						if (p2->isAlive())
-						{
-							data[n * 2] = p2->getPos();
-							data[n * 2 + 1] = p2->getDir();
-						}
-						else
-						{
-							n--;
-							membersize--;
-						}
-						counter++;
-					}
-					renderPipe->renderMinimap(&camPos.x, &camDir.x, &data[0].x, membersize, 0);
-					delete[] data;
-				}
-			}
+				minimapRender();
 
 		// render score screen
 		if (i->getKeyInfo(GLFW_KEY_TAB))
 			if (game->getPlayer(game->GetLocalPlayerId())->getLockedControls() == false)
-			{
-				vector<int>* membersTeam1 = game->getTeamConIds(1);
-				vector<int>* membersTeam2 = game->getTeamConIds(2);
-
-				renderPipe->renderScoreBoard(membersTeam1[0].size(), membersTeam2[0].size());
-				Player* p = 0;
-				//team 1
-				vec2 startpos = vec2(300, 300);
-				
-				for (int n = 0; n < membersTeam1[0].size(); n++)
-				{
-					p = game->getPlayer(membersTeam1[0][n]);
-					if (p)
-					{
-						renderPipe->setTextObjectText(leaderBoardTextID, p->getName());
-						renderPipe->setTextPos(leaderBoardTextID, startpos + vec2(0, 50 * n));
-						renderPipe->renderTextObject(leaderBoardTextID);
-					}
-				}
-				//team 2
-				startpos = vec2(600, 300);
-				
-				for (int n = 0; n < membersTeam2[0].size(); n++)
-				{
-					p = game->getPlayer(membersTeam2[0][n]);
-					if (p)
-					{
-						renderPipe->setTextObjectText(leaderBoardTextID, p->getName());
-						renderPipe->setTextPos(leaderBoardTextID, startpos + vec2(0, 50 * n));
-						renderPipe->renderTextObject(leaderBoardTextID);
-					}
-				}
-			}
+				scoreboardRender();
 
 		renderPipe->disableBlend();
 
@@ -2218,7 +2161,8 @@ void Core::initPipeline()
 			namePlates[i] = renderPipe->createTextObject("", 128, vec2(winX / 2, winY / 2));
 		}
 
-		leaderBoardTextID = renderPipe->createTextObject("", 24, vec2(winX / 2, winY / 2));
+		leaderBoardTextID = renderPipe->createTextObject("", 20, vec2(winX / 2, winY / 2));
+		leaderBoardSmallTextID = renderPipe->createTextObject("", 15, vec2(winX / 2, winY / 2));
 
 	}
 
@@ -2390,8 +2334,11 @@ void Core::showTeamSelect()
 
 void Core::showClassSelect()
 {
+	game->getPlayer(game->GetLocalPlayerId())->setLockedControls(true);
+	cursorInvisible = false;
 	uiManager->setFirstMenuSet(false);
 	uiManager->setMenu(2);
+	
 }
 
 void Core::menuIpKeyInputUpdate()
@@ -2444,5 +2391,131 @@ void Core::menuNameKeyInputUpdate()
 	{
 		uiManager->removeLastInput(8); //remove from ip object
 		nameNrOfKeys--;
+	}
+}
+
+void Core::scoreboardRender()
+{
+	vector<int>* membersTeam1 = game->getTeamConIds(1);
+	vector<int>* membersTeam2 = game->getTeamConIds(2);
+
+	renderPipe->renderScoreBoard(membersTeam1[0].size(), membersTeam2[0].size());
+	Player* p = 0;
+
+	if (membersTeam1[0].size() > 0)
+	{
+		//team 1
+		vec2 startpos = vec2(125, 260);
+
+		//Render headder text (kills deaths)
+		renderPipe->setTextObjectText(leaderBoardSmallTextID, "Kills");
+		renderPipe->setTextPos(leaderBoardSmallTextID, startpos + vec2(220, -48));
+		renderPipe->renderTextObject(leaderBoardSmallTextID);
+
+		renderPipe->setTextObjectText(leaderBoardSmallTextID, "Deaths");
+		renderPipe->setTextPos(leaderBoardSmallTextID, startpos + vec2(300, -48));
+		renderPipe->renderTextObject(leaderBoardSmallTextID);
+
+		for (int n = 0; n < membersTeam1[0].size(); n++)
+		{
+			p = game->getPlayer(membersTeam1[0][n]);
+			if (p)
+			{
+				//render name
+				renderPipe->setTextObjectText(leaderBoardTextID, p->getName());
+				renderPipe->setTextPos(leaderBoardTextID, startpos + vec2(0, 79 * n));
+				renderPipe->renderTextObject(leaderBoardTextID);
+
+				//render role
+				renderPipe->setTextObjectText(leaderBoardSmallTextID, p->getRole()->getRoleAsString());
+				renderPipe->setTextPos(leaderBoardSmallTextID, startpos + vec2(0, 79 * n + 15));
+				renderPipe->renderTextObject(leaderBoardSmallTextID);
+
+				//render kills / deaths
+				renderPipe->setTextObjectText(leaderBoardTextID, to_string(p->getKills()));
+				renderPipe->setTextPos(leaderBoardTextID, startpos + vec2(220 + 40, 79 * n + 10));
+				renderPipe->renderTextObject(leaderBoardTextID);
+
+				renderPipe->setTextObjectText(leaderBoardTextID, to_string(p->getDeaths()));
+				renderPipe->setTextPos(leaderBoardTextID, startpos + vec2(300 + 40, 79 * n + 10));
+				renderPipe->renderTextObject(leaderBoardTextID);
+			}
+		}
+	}
+
+	//team 2
+	if (membersTeam2[0].size() > 0)
+	{
+		vec2 startpos = vec2(760, 260);
+
+		//Render headder text (kills deaths)
+		renderPipe->setTextObjectText(leaderBoardSmallTextID, "Kills");
+		renderPipe->setTextPos(leaderBoardSmallTextID, startpos + vec2(220, -48));
+		renderPipe->renderTextObject(leaderBoardSmallTextID);
+
+		renderPipe->setTextObjectText(leaderBoardSmallTextID, "Deaths");
+		renderPipe->setTextPos(leaderBoardSmallTextID, startpos + vec2(300, -48));
+		renderPipe->renderTextObject(leaderBoardSmallTextID);
+
+		for (int n = 0; n < membersTeam2[0].size(); n++)
+		{
+			p = game->getPlayer(membersTeam2[0][n]);
+			if (p)
+			{
+				//render name
+				renderPipe->setTextObjectText(leaderBoardTextID, p->getName());
+				renderPipe->setTextPos(leaderBoardTextID, startpos + vec2(0, 79 * n));
+				renderPipe->renderTextObject(leaderBoardTextID);
+
+				//render role
+				renderPipe->setTextObjectText(leaderBoardSmallTextID, p->getRole()->getRoleAsString());
+				renderPipe->setTextPos(leaderBoardSmallTextID, startpos + vec2(0, 79 * n + 20));
+				renderPipe->renderTextObject(leaderBoardSmallTextID);
+
+				//render kills / deaths
+				renderPipe->setTextObjectText(leaderBoardTextID, to_string(p->getKills()));
+				renderPipe->setTextPos(leaderBoardTextID, startpos + vec2(220 + 40, 79 * n + 10));
+				renderPipe->renderTextObject(leaderBoardTextID);
+
+				renderPipe->setTextObjectText(leaderBoardTextID, to_string(p->getDeaths()));
+				renderPipe->setTextPos(leaderBoardTextID, startpos + vec2(300 + 40, 79 * n + 10));
+				renderPipe->renderTextObject(leaderBoardTextID);
+			}
+		}
+	}
+}
+
+void Core::minimapRender()
+{
+	Player* p = game->getPlayer(game->GetLocalPlayerId());
+	Player* p2;
+	int memb = 0;
+	if (p)
+	{
+		vector<int>* members = game->getTeamConIds(p->getTeam());
+		int membersize = members->size();
+
+		vec3* data = new vec3[membersize * 2];
+		int counter = 0;
+		for (int n = 0; n < membersize; n++)
+		{
+			p2 = game->getPlayer(members[0][counter]);
+			if (p2->isAlive())
+			{
+				data[n * 2] = p2->getPos();
+				data[n * 2 + 1] = p2->getDir();
+			}
+			else
+			{
+				n--;
+				membersize--;
+			}
+			counter++;
+		}
+
+		vec3 playerposs = p->getPos();
+		vec3 playerdirr = p->getDir();
+		renderPipe->renderMinimap(&playerposs.x, &playerdirr.x, &data[0].x, membersize, 0);
+		delete[] data;
 	}
 }

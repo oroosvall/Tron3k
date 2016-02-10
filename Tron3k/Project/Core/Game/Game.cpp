@@ -371,6 +371,12 @@ std::vector<Effect*> Game::getEffects(EFFECT_TYPE type)
 
 void Game::createPlayer(Player* p, int conID, int hp, int role, bool isLocal)
 {
+	if (getGameMode()->getType() == GAMEMODE_TYPE::KOTH)
+	{
+		KingOfTheHill* k = (KingOfTheHill*)getGameMode();
+		if(k->getState() == WARMUP)
+			console->printMsg("Warmup. Type /ready to start.", "System", 'S');
+	}
 	playerList[conID] = new Player();
 	playerList[conID]->init(p->getName(), p->getPos(), isLocal);
 	playerList[conID]->setTeam(p->getTeam());
