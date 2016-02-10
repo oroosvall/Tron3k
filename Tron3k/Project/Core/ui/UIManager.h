@@ -48,6 +48,8 @@ private:
 
 	bool roleSet = false;
 
+	int teamColor;
+
 	//	Functions
 	void loadInTexture();
 
@@ -76,6 +78,7 @@ public:
 	void hoverCheck(glm::vec2 pos);
 
 	void changeTex(int objId, int whichTex);
+	void changeColorTeam();
 
 	bool LoadNextSet(int whichMenuGroup, int winX, int winY);
 
@@ -89,6 +92,9 @@ public:
 	void removeLastInput(int id);
 	void clearText(int id);
 	void scaleBar(int id, float procentOfMax, bool fromRight);
+
+	void setTeamColor(int team);
+	int getTeamColor();
 };
 
 #endif

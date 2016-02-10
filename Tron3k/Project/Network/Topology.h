@@ -646,6 +646,7 @@ public:
 		gamePtr->addPlayerToTeam(p_conID, team);
 		if (p_conID == getConId())
 		{
+			uiPtr->changeColorTeam();
 			uiPtr->setFirstMenuSet(false);
 			uiPtr->setMenu(2);
 		}

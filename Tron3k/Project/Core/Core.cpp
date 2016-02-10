@@ -60,7 +60,7 @@ void Core::init()
 	renderMenu = true;
 	menuIpKeyListener = false;
 	menuNameKeyListener = false;
-	escWindow = false;
+	doHoverCheckInGame = false;
 
 	nameNrOfKeys = 0;
 	ipNrOfKeys = 0;
@@ -1039,6 +1039,7 @@ void Core::roamHandleCmds(std::string com)
 				else
 					game->freecam = true;
 
+				uiManager->changeColorTeam();
 				uiManager->setFirstMenuSet(false);
 				uiManager->setMenu(2);
 			}
@@ -1856,7 +1857,6 @@ void Core::inGameUIUpdate() //Ingame ui update
 		Player* local = game->getPlayer(game->GetLocalPlayerId());
 		KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
 
-		//HP MÄTAREN FUNGERAR INTE, DEN FÖRSVINNER SÅ FORT DU TAR SKADA OCH KOMMER INTE TILLBAKA
 		if (local->getHP() != HUD.HP) 
 		{
 			if (local->getMaxHP() != HUD.maxHp)
@@ -1964,15 +1964,27 @@ void Core::inGameUIUpdate() //Ingame ui update
 		{
 		case 20: //Team 1
 			if (current == ROAM)
+			{
+				uiManager->setTeamColor(2);
 				roamHandleCmds("/team 2");
+			}
 			else
+			{
+				uiManager->setTeamColor(2);
 				clientHandleCmds("/team 2");
+			}
 			break;
 		case 21: //Team 2
 			if (current == ROAM)
+			{
+				uiManager->setTeamColor(1);
 				roamHandleCmds("/team 1");
+			}
 			else
+			{
+				uiManager->setTeamColor(1);
 				clientHandleCmds("/team 1");
+			}
 			break;
 		case 30: //Class 1
 			if (current == ROAM)
@@ -2023,7 +2035,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 			break;
 		}
 	}
-	else if(escWindow)
+	else if(doHoverCheckInGame)
 		uiManager->hoverCheck(glm::vec2((float)tX, (float)tY));
 	else{}
 }

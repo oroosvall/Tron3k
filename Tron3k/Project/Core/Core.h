@@ -134,7 +134,7 @@ private:
 	bool justAFrameCounterActivated = false;
 	int justAFrameCounter = 0;
 
-	bool escWindow;
+	bool doHoverCheckInGame;
 
 	//Menu input
 	void menuIpKeyInputUpdate();

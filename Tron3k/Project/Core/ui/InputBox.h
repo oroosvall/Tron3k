@@ -12,7 +12,8 @@ private:
 	glm::vec2 center;
 
 	glm::vec2 textureRes;
-	int textureId;
+	int textureIdList[2];
+	int textureIdInUse;
 
 	int uniqueKey;
 
@@ -36,7 +37,7 @@ private:
 	int xOffSet;
 public:
 	InputBox();
-	InputBox(glm::vec2 center, int textureId1, int uniqueKey, IRenderPipeline* uiRender, glm::vec2 textRes, int winX, int winY, glm::vec3 offSetsTextSize);
+	InputBox(glm::vec2 center, int textureId1, int textureId2, int uniqueKey, IRenderPipeline* uiRender, glm::vec2 textRes, int winX, int winY, glm::vec3 offSetsTextSize);
 	virtual ~InputBox();
 
 	virtual void renderQuad(int id);

@@ -136,8 +136,11 @@ bool UI::loadUI(std::string fileName, int winX, int winY)
 			}
 			else if (classId == 4)
 			{
-				getline(myfile, inputString); //tex1
+				getline(myfile, inputString); //texture1
 				textureId1 = std::stoi(inputString);
+
+				getline(myfile, inputString); //texture2
+				textureId2 = std::stoi(inputString);
 
 				getline(myfile, inputString); //textId
 				textId = inputString;
@@ -186,7 +189,7 @@ bool UI::loadUI(std::string fileName, int winX, int winY)
 			}
 			else if(classId == 4) //InputBox
 			{
-				UiObjects.push_back(new InputBox(xy, textureId1, uniqueKey, uiRender, textureRes[0][textureId1], winX, winY, offsetTextSize));
+				UiObjects.push_back(new InputBox(xy, textureId1, textureId2, uniqueKey, uiRender, textureRes[0][textureId1], winX, winY, offsetTextSize));
 				textObjRenderId.push_back(counter);
 				textureIdList[counter] = textureId1;
 				result = true;
@@ -276,6 +279,12 @@ void UI::changeTex(int objId, int whichTex)
 {
 	if(objId < UiObjects.size())
 		UiObjects[objId]->changeTexUsed(whichTex);
+}
+
+void UI::changeColorTeam(int whichTex)
+{
+	for (int i = 0; i < UiObjects.size(); i++)
+		UiObjects[i]->changeTexUsed(whichTex);
 }
 
 //Empty

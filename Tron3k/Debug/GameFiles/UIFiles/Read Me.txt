@@ -25,6 +25,7 @@ InputBox: //Here is what the inputBox needs
 x y		       //x and y for the center of the box.
 class id	       //Says which class the button needs to be.
 texture1	       //First texture and also the texture it shall begin with.
+texture2	       //Second texture, its two textures since the ingame changed depending on which team you join.
 textId		       //
 dynamic text x offset  //The amount the text needs to be moved in order to be alined with the texture in x
 dynamic text y offset  //The amount the text needs to be moved in order to be alined with the texture in y
