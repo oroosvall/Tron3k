@@ -180,28 +180,28 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 			//if (length(pendepth) > length(posadjust))
 				//posadjust = pendepth;
 			
-			if (abs(pendepth.x) > abs(posadjust.x))
+			/*if (abs(pendepth.x) > abs(posadjust.x))
 				posadjust.x += pendepth.x;
 			if (abs(pendepth.y) > abs(posadjust.y))
 				posadjust.y += pendepth.y;
 			if (abs(pendepth.z) > abs(posadjust.z))
 				posadjust.z += pendepth.z;
-
+				*/
 		//	posadjust += normalize(pendepth);
 			//l += length(pendepth);
 			//divs++;
-			/*
-			if (pendepth.x + FLT_EPSILON > 0.0f || pendepth.x - FLT_EPSILON < 0.0f)//abs(posadjust.x) < abs(pendepth.x))
+			
+			if (pendepth.x > 0.0f || pendepth.x < 0.0f)//abs(posadjust.x) < abs(pendepth.x))
 			{
 				posadjust.x += pendepth.x;
 				xDivs++;
 			}
-			if (pendepth.y + FLT_EPSILON > 0.0f || pendepth.y - FLT_EPSILON < 0.0f)
+			if (pendepth.y > 0.0f || pendepth.y < 0.0f)
 			{
 				posadjust.y += pendepth.y;
 				yDivs++;
 			}
-			if (pendepth.z + FLT_EPSILON > 0.0f || pendepth.z - FLT_EPSILON < 0.0f)
+			if (pendepth.z > 0.0f || pendepth.z < 0.0f)
 			{
 				posadjust.z += pendepth.z;
 				zDivs++;
@@ -238,13 +238,13 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 		// while + posajust w/o  /dt  will remove it slower
 		posadjust = posadjust * 0.99f;
 		
-
+		vel += posadjust;
 		if (ceiling)
 		{
 			posadjust.y = 0;
 			grounded = false;
 		}
-		vel += posadjust;// / dt * 0.5f;
+		// / dt * 0.5f;
 		pos += posadjust;
 
 		if (posadjust.y < 0.00001f && posadjust.y > -0.00001f)
