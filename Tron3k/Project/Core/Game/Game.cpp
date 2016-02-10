@@ -1081,7 +1081,6 @@ void Game::addBulletToList(int conID, int teamId, int bulletId, BULLET_TYPE bt, 
 	}
 
 	bullets[bt].push_back(b);
-
 }
 
 void Game::handleWeaponFire(int conID, int teamId, int bulletId, WEAPON_TYPE weapontype, glm::vec3 pos, glm::vec3 dir)
@@ -1102,7 +1101,7 @@ void Game::handleWeaponFire(int conID, int teamId, int bulletId, WEAPON_TYPE wea
 			GetSound()->playExternalSound(SOUNDS::soundEffectEnergyBoost, pos.x, pos.y, pos.z);
 		}
 		playerList[conID]->healing(10);
-		playerList[conID]->getRole()->swapWeaponLocal(0);
+		playerList[conID]->getRole()->swapWeapon(WEAPON_TYPE::ENERGY_BOOST, 0);
 		break;
 
 	case WEAPON_TYPE::PLASMA_AUTORIFLE:

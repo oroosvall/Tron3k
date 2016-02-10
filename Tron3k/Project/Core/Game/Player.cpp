@@ -707,7 +707,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 							{
 								if (role.getCurrentWeapon()->getCurrentAmmo() > 1)
 								{
-									role.swapWeaponLocal(1);
+									role.swapWeapon(WEAPON_TYPE::ENERGY_BOOST, 1);
 									animPrimary = false;
 									msg = SHOOT;
 									shoot();
