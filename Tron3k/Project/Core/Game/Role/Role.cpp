@@ -197,6 +197,7 @@ void Role::chooseRole(int r)
 		boundingBoxModifier = 0.55f;
 		boundingBoxRadius = 0.9f;
 		gainSpecial = true;
+		currentWpn = 0;
 	}
 }
 
