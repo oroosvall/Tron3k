@@ -498,6 +498,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 	vec3 olddir = cam->getDir();
 	if (isLocalPlayer) // even if we are the local player we can be dead and spectating some one
 	{
+		role.update(dt);
 		//default movement anims
 		animRole = role.getRole();
 		animPrimary = false;
@@ -665,7 +666,6 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					}
 				}
 
-				role.update(dt);		//Temp?
 				if (!role.getIfBusy())
 				{
 					if (i->justPressed(GLFW_KEY_R))
