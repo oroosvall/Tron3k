@@ -507,7 +507,7 @@ void RenderPipeline::finalizeRender()
 	for (int n = 0; n < contMan.nrChunks; n++)
 		if (contMan.renderedChunks[n] == true)
 		{
-			if (n > 0)
+			//if (n > 0)
 			{
 				int count = contMan.testMap.chunks[n].lights.size();
 				if (count > 0)
@@ -1306,8 +1306,8 @@ void RenderPipeline::renderScoreBoard(int team1size, int team2size)
 	TextureManager::gTm->bind(asd, uiShader, ui_Texture);
 	minimapRenderMat = mat4();
 	//pos
-	minimapRenderMat[0].w = -0.5f;
-	minimapRenderMat[1].w = 0.5;
+	minimapRenderMat[0].w = -0.35f;
+	minimapRenderMat[1].w = 0.43;
 	//scale
 	minimapRenderMat[0].x = contMan.score_headerscale.x;
 	minimapRenderMat[1].y = contMan.score_headerscale.y;
@@ -1321,8 +1321,8 @@ void RenderPipeline::renderScoreBoard(int team1size, int team2size)
 	asd.textureID = contMan.score_header_green;
 	TextureManager::gTm->bind(asd, uiShader, ui_Texture);
 	//pos
-	minimapRenderMat[0].w = 0.5f;
-	minimapRenderMat[1].w = 0.5f;
+	minimapRenderMat[0].w = 0.65f;
+	minimapRenderMat[1].w = 0.43f;
 
 	glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, &minimapRenderMat[0][0]);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);

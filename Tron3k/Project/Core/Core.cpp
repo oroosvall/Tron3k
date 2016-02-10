@@ -1818,6 +1818,7 @@ void Core::renderWorld(float dt)
 		if (renderUI) //Temp
 			inGameUIUpdate();
 
+		//render minimap
 		if (i->getKeyInfo(GLFW_KEY_F))
 			if (game->getPlayer(game->GetLocalPlayerId())->getLockedControls() == false)
 			{
@@ -1846,24 +1847,26 @@ void Core::renderWorld(float dt)
 						}
 						counter++;
 					}
-
 					renderPipe->renderMinimap(&camPos.x, &camDir.x, &data[0].x, membersize, 0);
 					delete[] data;
 				}
 			}
 
-		// score screen
-		if (i->getKeyInfo(GLFW_KEY_G))
+		// render score screen
+		if (i->getKeyInfo(GLFW_KEY_TAB))
 			if (game->getPlayer(game->GetLocalPlayerId())->getLockedControls() == false)
 			{
-				renderPipe->renderScoreBoard(2, 5);
+				vector<int>* membersTeam1 = game->getTeamConIds(1);
+				vector<int>* membersTeam2 = game->getTeamConIds(2);
+
+				renderPipe->renderScoreBoard(membersTeam1[0].size(), membersTeam2[0].size());
 				Player* p = 0;
 				//team 1
 				vec2 startpos = vec2(300, 300);
-				vector<int>* membersTeam = game->getTeamConIds(1);
-				for (int n = 0; n < membersTeam[0].size(); n++)
+				
+				for (int n = 0; n < membersTeam1[0].size(); n++)
 				{
-					p = game->getPlayer(membersTeam[0][n]);
+					p = game->getPlayer(membersTeam1[0][n]);
 					if (p)
 					{
 						renderPipe->setTextObjectText(leaderBoardTextID, p->getName());
@@ -1873,10 +1876,10 @@ void Core::renderWorld(float dt)
 				}
 				//team 2
 				startpos = vec2(600, 300);
-				membersTeam = game->getTeamConIds(2);
-				for (int n = 0; n < membersTeam[0].size(); n++)
+				
+				for (int n = 0; n < membersTeam2[0].size(); n++)
 				{
-					p = game->getPlayer(membersTeam[0][n]);
+					p = game->getPlayer(membersTeam2[0][n]);
 					if (p)
 					{
 						renderPipe->setTextObjectText(leaderBoardTextID, p->getName());
