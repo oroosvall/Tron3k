@@ -482,6 +482,8 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 		if (state == WARMUP)
 		{
 			consolePtr->printMsg("Warmup. Type /ready to start.", "System", 'S');
+			teamOneScore = 0;
+			teamTwoScore = 0;
 
 			for (int c = 0; c < teamOnePlayers.size(); c++)
 			{
@@ -608,6 +610,7 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 			if (serverMsg == GAMEMODE_MSG::MATCH_WIN_TEAM1)
 			{
 				consolePtr->printMsg("ALPHA WINS THE MATCH", "System", 'S');
+				teamOneScore++;
 				if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
 				{
 					GetSound()->playUserGeneratedSound(SOUNDS::announcerYouWin);
@@ -620,6 +623,7 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 			else if (serverMsg == GAMEMODE_MSG::MATCH_WIN_TEAM2)
 			{
 				consolePtr->printMsg("BETA WINS THE MATCH", "System", 'S');
+				teamTwoScore++;
 				if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
 				{
 					GetSound()->playUserGeneratedSound(SOUNDS::announcerYouLose);

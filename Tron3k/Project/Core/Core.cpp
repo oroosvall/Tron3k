@@ -631,6 +631,11 @@ void Core::upClient(float dt)
 			{
 				showClassSelect();
 			}
+			else if (tmp == KOTHSTATE::ROUND)
+			{
+				//uiManager->setMenu(-1);
+				//uiManager->backToGui();
+			}
 			kothState = tmp;
 		}
 	/*	if (GetSoundActivated())
@@ -1893,21 +1898,15 @@ void Core::inGameUIUpdate() //Ingame ui update
 		}
 		if (koth->getRoundWins(1) != HUD.teamOneRoundWins)
 		{
-			if (koth->getRoundWins(1) != -1)
-			{
 				HUD.teamOneRoundWins = koth->getRoundWins(1);
-				uiManager->clearText(4);
+ 				uiManager->clearText(4);
 				uiManager->setText(std::to_string(HUD.teamOneRoundWins), 4);
-			}
 		}
 		if (koth->getRoundWins(2) != HUD.teamTwoRoundWins)
 		{
-			if (koth->getRoundWins(2) != -1)
-			{
 				HUD.teamTwoRoundWins = koth->getRoundWins(2);
 				uiManager->clearText(5);
 				uiManager->setText(std::to_string(HUD.teamTwoRoundWins), 5);
-			}
 		}
 		if (int(koth->getTimer()) != HUD.time) //Not done
 		{
