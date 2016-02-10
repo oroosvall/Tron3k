@@ -364,12 +364,6 @@ void Player::effectCollisionHandling()
 		if (ceiling && vel.y > 0)
 			vel.y = 0;
 	}
-	else
-	{
-		collided = false;
-		airVelocity = vel;
-		grounded = false;
-	}
 }
 
 void Player::footstepsLoopReset(float dt)
