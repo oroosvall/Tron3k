@@ -478,6 +478,7 @@ struct Chunk
 		if (length(l.Direction) > 0.001f)
 			l.Direction = normalize(l.Direction);
 		l.Cutoff = light.coneAngle / glm::pi<float>();
+		l.attenuation = vec4(light.ax, light.ay, light.az, light.aw);
 		//l.Cutoff = -1.0f;
 
 		lights.push_back(l);

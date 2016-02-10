@@ -12,6 +12,7 @@ struct SpotLight
 	float AmbientIntensity;
 	glm::vec3 Direction;
 	float Cutoff;
+	glm::vec4 attenuation;
 
 	SpotLight()
 	{
@@ -22,6 +23,7 @@ struct SpotLight
 		AmbientIntensity = 0.0f; // 9
 		DiffuseIntensity = 0.7f; // 10
 		Cutoff = 0.9f; //14
+		attenuation = glm::vec4(0.1f, 0.01f, 0.001f, 0.0f);
 	}
 };
 
