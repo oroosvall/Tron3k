@@ -239,15 +239,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 		if (timer < FLT_EPSILON) //Time is up!
 		{
 			timer = 0.0f;
-			for (int c = 0; c < teamOnePlayers.size(); c++)
-			{
-				gamePtr->allowPlayerRespawn(teamOnePlayers[c], c%5);
-			}
-			for (int c = 0; c < teamTwoPlayers.size(); c++)
-			{
-				gamePtr->allowPlayerRespawn(teamTwoPlayers[c], c%5);
-			}
-			gamePtr->clearAllPlayerKD();
+
 			teamOneSpawnTokens = teamTwoSpawnTokens = tokensPerTeam;
 			state = ROUND;
 			capturePoint = 0;// rand() % 2;
@@ -359,6 +351,16 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			{
 				state = PREROUND;
 				timer = 15.0f;
+
+				for (int c = 0; c < teamOnePlayers.size(); c++)
+				{
+					gamePtr->allowPlayerRespawn(teamOnePlayers[c], c % 5);
+				}
+				for (int c = 0; c < teamTwoPlayers.size(); c++)
+				{
+					gamePtr->allowPlayerRespawn(teamTwoPlayers[c], c % 5);
+				}
+				gamePtr->clearAllPlayerKD();
 			}
 		}
 		break;
