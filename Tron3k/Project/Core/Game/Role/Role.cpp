@@ -274,3 +274,16 @@ int Role::getRole()
 {
 	return role;
 }
+
+string Role::getRoleAsString()
+{
+	switch (role)
+	{
+	case ROLES::TRAPPER:		return "Trapper";
+	case ROLES::DESTROYER:		return "Destroyer";
+	case ROLES::MOBILITY:		return "Stalker";
+	case ROLES::BRUTE:			return "Punisher";
+	case ROLES::MANIPULATOR:	return "Manipualtor";
+	case ROLES::NROFROLES:		return "vampir = nullprt";
+	}
+}

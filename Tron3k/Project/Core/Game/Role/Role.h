@@ -101,5 +101,7 @@ public:
 	bool getIfBusy();
 
 	int getRole();
+
+	string getRoleAsString();
 };
 #endif
