@@ -1682,8 +1682,8 @@ void Core::renderWorld(float dt)
 		// capturePoint
 		if (current == CLIENT)
 		{
-			//KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
-			//renderPipe->renderCapturePoint(koth->getCapturePoint());
+			KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
+			renderPipe->renderCapturePoint(koth->getCapturePoint());
 		}
 
 		// render chunks

@@ -205,13 +205,16 @@ void Map::renderCapturePoint(GLuint shader,GLuint shaderLocation, GLuint diffuse
 
 	tm->bindDefault(shader, glowLocation, GLOW_FB);
 	
-	glBindVertexArray(capturePoints[capturePointID].meshes[0].vertexArray);
-	glBindBuffer(GL_ARRAY_BUFFER, capturePoints[capturePointID].meshes[0].vertexBuffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, capturePoints[capturePointID].meshes[0].indexBuffer);
+	if (capturePointID < capCount && capturePoints[capturePointID].meshCount != 0)
+	{
+		glBindVertexArray(capturePoints[capturePointID].meshes[0].vertexArray);
+		glBindBuffer(GL_ARRAY_BUFFER, capturePoints[capturePointID].meshes[0].vertexBuffer);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, capturePoints[capturePointID].meshes[0].indexBuffer);
 
-	glProgramUniformMatrix4fv(shader, shaderLocation, 1, GL_FALSE, (GLfloat*)&capturePoints[0].mats[0][0][0]);
+		glProgramUniformMatrix4fv(shader, shaderLocation, 1, GL_FALSE, (GLfloat*)&capturePoints[0].mats[0][0][0]);
 
-	glDrawElements(GL_TRIANGLES, capturePoints[capturePointID].meshes[0].indexCount, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, capturePoints[capturePointID].meshes[0].indexCount, GL_UNSIGNED_INT, 0);
+	}
 }
 
 void Map::renderCapAbb()

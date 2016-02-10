@@ -33,6 +33,13 @@ struct CapturePoint
 	void buildABBS();
 	void release();
 
+	CapturePoint()
+	{
+		int roomID = 0;
+		int meshCount = 0;
+		int aabbCount = 0;
+	}
+
 };
 
 struct CaptureExportToGame
