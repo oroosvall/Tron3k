@@ -483,13 +483,7 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb)
 	if (closest.w + FLT_EPSILON > rad - FLT_EPSILON)
 		closest.w = -1;
 
-	if(closest.w < FLT_MAX)
 		return closest;
-
-	for (int n = 0; n < 6; n++)
-	{
-		//Are we inside the obb?
-	}
 }
 
 vec4 Physics::getSpherevOBBlwNorms(vec3 pos, float rad, OBB* obb)
