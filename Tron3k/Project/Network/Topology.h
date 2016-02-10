@@ -693,7 +693,7 @@ public:
 		if (p_conID == gamePtr->GetLocalPlayerId())
 			gamePtr->setPlayerWantsToRespawn(true);
 		gamePtr->sendPlayerRadSize(p->getRole()->getBoxRadius()); //TEMP BUT W/E
-		consolePtr->printMsg("Player " + p->getName() + " switched class!", "System", 'S');
+		//RIP message "player switched role"
 
 		if (isClient == false)
 		{

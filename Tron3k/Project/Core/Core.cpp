@@ -1206,7 +1206,7 @@ void Core::clientHandleCmds(std::string com)
 			{
 				int team = stoi(token);
 				top->command_team_change(top->getConId(), team);
-				console.printMsg("Change team request sent to server", "System", 'S');
+				//RIP change team request message
 			}
 			else
 				console.printMsg("Invalid team. Use /team <0/1/2>", "System", 'S');
