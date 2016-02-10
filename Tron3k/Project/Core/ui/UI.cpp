@@ -67,7 +67,7 @@ bool UI::loadUI(std::string fileName, int winX, int winY)
 		std::string textId;
 		int convertedResult = -1;
 		float x = -1.0f, y = -1.0f, u = -1.0f, v = -1.0f;
-		int textureId1 = -1, textureId2 = -1, scale = -1, counter = 0, uniqueKey = 0, classId = -1, hoverKey = 0, tmpCounter = 0;;
+		int textureId1 = -1, textureId2 = -1, scale = -1, counter = 0, uniqueKey = 0, classId = -1, hoverKey = 0, tmpCounter = 0, scalingBar;
 		int* textureArray = nullptr;
 		glm::vec3 offsetTextSize;
 
@@ -116,6 +116,15 @@ bool UI::loadUI(std::string fileName, int winX, int winY)
 			else if (classId == 1)
 			{
 				getline(myfile, inputString);
+				scalingBar = std::stoi(inputString);
+
+				if (scalingBar > 0)
+				{
+					getline(myfile, inputString); //textId
+					textId = inputString;
+				}
+
+				getline(myfile, inputString);
 				tmpCounter = std::stoi(inputString);
 
 				textureArray = new int[tmpCounter];
@@ -153,8 +162,10 @@ bool UI::loadUI(std::string fileName, int winX, int winY)
 			}
 			else if (classId == 1) //StaticTextBox
 			{
-				if (textId == "hpBar" && (counter - 1) == textIdList[0])
+				if (textId == "abilityMeter")
 					textIdList[9] = counter;
+				else if(textId == "loseTicketsMeter")
+					textIdList[10] = counter;
 
 				UiObjects.push_back(new StaticTextureBoxes(xy, textureArray, tmpCounter, uiRender, textureRes[0]));
 				textureIdList[counter] = textureArray[0];

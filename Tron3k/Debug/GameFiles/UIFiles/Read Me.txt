@@ -13,6 +13,8 @@ hoverKey	  //1 if it should change texture when hovered over and 0 if not. Only 
 StaticTextureBox: //Here is what the staticTextureBox needs
 x y		  //x and y for the center of the box.
 class id	  //Says which class the button needs to be.
+can be scaled	  //1 and higher = true, 0 = false. Tells if the box should scaled depending on a variable for example energy.
+texId		  //If the above is true set this
 number of textures //Only needed if the class id is 1
 texture		   //As many textures as the row above says
 .
@@ -23,7 +25,7 @@ InputBox: //Here is what the inputBox needs
 x y		       //x and y for the center of the box.
 class id	       //Says which class the button needs to be.
 texture1	       //First texture and also the texture it shall begin with.
-textId		       //Class 4 only
+textId		       //
 dynamic text x offset  //The amount the text needs to be moved in order to be alined with the texture in x
 dynamic text y offset  //The amount the text needs to be moved in order to be alined with the texture in y
 texture size           //Size of the text

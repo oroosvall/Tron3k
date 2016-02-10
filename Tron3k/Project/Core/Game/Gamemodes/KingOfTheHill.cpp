@@ -323,7 +323,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 		{
 			state = ENDROUND;
 			msg = roundScoring();
-			timer = 3.0f;		//TEMP
+			timer = 7.0f;		//TEMP
 		}
 		break;
 
@@ -332,19 +332,16 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 		if (teamOneScore == winScore)
 		{
 			msg = GAMEMODE_MSG::MATCH_WIN_TEAM1;
-			timer = 8.0f;
 			state = ENDMATCH;
 		}
 		else if (teamTwoScore == winScore)
 		{
 			msg = GAMEMODE_MSG::MATCH_WIN_TEAM2;
-			timer = 8.0f;
 			state = ENDMATCH;
 		}
 		else if (teamTwoScore == winScore && teamOneScore == winScore)
 		{
 			msg = GAMEMODE_MSG::MATCH_DRAW;
-			timer = 8.0f;
 			state = ENDMATCH;
 		}
 		else //Match has not ended, let's start another round!
@@ -370,19 +367,6 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 
 		//If a winscore has been met for either team, we ENDMATCH and ask for rematch.
 	case ENDMATCH:
-		if (timer < FLT_EPSILON)
-		{
-			state = WARMUP;
-			teamOneScore = 0;
-			teamTwoScore = 0;
-			fiveTokensPlayed = false;
-			fifteenPlayed = false;
-			fivePlayed = false;
-			commencePlayed = false;
-			gamePtr->nrOfPlayersReadyReset();
-		}
-		else
-			timer -= dt;
 		break;
 	}
 	
@@ -480,23 +464,7 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 	capturePoint = capPoint;
 	if (serverState != state)
 	{
-		if (state == WARMUP)
-		{
-			consolePtr->printMsg("Warmup. Type /ready to start", "System", 'S');
-
-			for (int c = 0; c < teamOnePlayers.size(); c++)
-			{
-				gamePtr->allowPlayerRespawn(teamOnePlayers[c], c % 5);
-			}
-			for (int c = 0; c < teamTwoPlayers.size(); c++)
-			{
-				gamePtr->allowPlayerRespawn(teamTwoPlayers[c], c % 5);
-			}
-
-			freeze = false;
-			slowdownTime = false;
-		}
-		else if (state == PREROUND)
+		if (state == PREROUND)
 		{
 			if (GetSound())
 				GetSound()->setVolumeSound(0);
@@ -703,5 +671,6 @@ bool KingOfTheHill::allowRoleChange()
 	{
 		return false;
 	}
+		
 	return true;
 }
