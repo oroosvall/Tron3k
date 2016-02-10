@@ -1913,9 +1913,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 			HUD.HP = local->getHP();
 			uiManager->clearText(0);
 			uiManager->setText(std::to_string(HUD.HP), 0);
-			float temp = local->getMaxHP();
-			temp = HUD.HP / temp;
-			uiManager->scaleBar(0, temp, true); //Kolla med Adam om det finns ett bättre sätt.
+			uiManager->scaleBar(0, (float)HUD.HP / (float)(local->getMaxHP()) , true); //Kolla med Adam om det finns ett bättre sätt.
 		}
 		if (local->getSpecialMeter() != HUD.specialMeter)
 		{
