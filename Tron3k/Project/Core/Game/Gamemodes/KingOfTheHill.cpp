@@ -251,6 +251,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			teamOneSpawnTokens = teamTwoSpawnTokens = tokensPerTeam;
 			state = ROUND;
 			capturePoint = rand() % 2;
+			timerModifierForCaptureScoring = 15.0f;
 		}
 		else
 		{
@@ -500,6 +501,7 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 			freeze = false;
 			slowdownTime = false;
 			timer = 0.0f;
+			timerModifierForCaptureScoring = 15.0f;
 			if (round == 1 && GetSoundActivated())
 			{
 				GetSound()->playUserGeneratedSound(SOUNDS::announcerRound1);
@@ -531,6 +533,7 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 			if (serverMsg == GAMEMODE_MSG::ROUND_WIN_TEAM1)
 			{
 				consolePtr->printMsg("TEAM ONE WINS THE ROUND", "System", 'S');
+				teamOneScore++;
 				if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
 				{
 					GetSound()->playUserGeneratedSound(SOUNDS::YouWin);
@@ -544,6 +547,7 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 			else if (serverMsg == GAMEMODE_MSG::ROUND_WIN_TEAM2)
 			{
 				consolePtr->printMsg("TEAM TWO WINS THE ROUND", "System", 'S');
+				teamTwoScore++;
 				if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
 				{
 					GetSound()->playUserGeneratedSound(SOUNDS::YouLose);
@@ -552,6 +556,12 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 				{
 					GetSound()->playUserGeneratedSound(SOUNDS::YouWin);
 				}
+			}
+			else if (serverMsg == GAMEMODE_MSG::ROUND_DRAW)
+			{
+				consolePtr->printMsg("ROUND DRAW", "System", 'S');
+				teamOneScore++;
+				teamTwoScore++;
 			}
 		}
 		else if (state == ENDMATCH)
