@@ -132,7 +132,7 @@ void Gbuffer::initLight()
 	maxLights = 500;
 
 	glBindBuffer(GL_UNIFORM_BUFFER, lightBuffer);
-	glBufferData(GL_UNIFORM_BUFFER, maxLights * sizeof(maxLights), NULL, GL_DYNAMIC_DRAW);
+	glBufferData(GL_UNIFORM_BUFFER, maxLights * sizeof(SpotLight), NULL, GL_DYNAMIC_DRAW);
 
 	lightInitialized = true;
 }
