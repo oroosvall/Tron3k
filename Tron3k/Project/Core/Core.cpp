@@ -1936,14 +1936,14 @@ void Core::inGameUIUpdate() //Ingame ui update
 			HUD.teamOneTokens = koth->getRespawnTokens(1);
 			uiManager->clearText(2);
 			uiManager->setText(std::to_string(HUD.teamOneTokens), 2);
-			uiManager->scaleBar(2, HUD.teamOneTokens / HUD.maxTokens, false);
+			uiManager->scaleBar(2, (float)HUD.teamOneTokens / (float)HUD.maxTokens, true);
 		}
 		if (koth->getRespawnTokens(2) != HUD.teamTwoTokens)
 		{
 			HUD.teamTwoTokens = koth->getRespawnTokens(2);
 			uiManager->clearText(3);
 			uiManager->setText(std::to_string(HUD.teamTwoTokens), 3);
-			uiManager->scaleBar(3, HUD.teamTwoTokens / HUD.maxTokens, false);
+			uiManager->scaleBar(3, (float)HUD.teamTwoTokens / (float)HUD.maxTokens, true);
 		}
 		if (koth->getRoundWins(1) != HUD.teamOneRoundWins)
 		{
@@ -1963,12 +1963,12 @@ void Core::inGameUIUpdate() //Ingame ui update
 				uiManager->setText(std::to_string(HUD.teamTwoRoundWins), 5);
 			}
 		}
-		//if (int(koth->getTimer()) != HUD.time) //Not done
-		//{
-		//	HUD.time = int(koth->getTimer());
-		//	uiManager->clearText(6);
-		//	uiManager->setText(std::to_string(HUD.time), 6);
-		//}
+		if (int(koth->getTimer()) != HUD.time) //Not done
+		{
+			HUD.time = int(koth->getTimer());
+			uiManager->clearText(6);
+			uiManager->setText(std::to_string(HUD.time), 6);
+		}
 	}
 
 	uiManager->inGameRender();
