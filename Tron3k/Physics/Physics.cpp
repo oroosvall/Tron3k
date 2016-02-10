@@ -483,7 +483,13 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb)
 	if (closest.w + FLT_EPSILON > rad - FLT_EPSILON)
 		closest.w = -1;
 
-	return closest;
+	if(closest.w < FLT_MAX)
+		return closest;
+
+	for (int n = 0; n < 6; n++)
+	{
+		//Are we inside the obb?
+	}
 }
 
 vec4 Physics::getSpherevOBBlwNorms(vec3 pos, float rad, OBB* obb)
@@ -706,10 +712,11 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 				{
 					vec3 lvP = checkLinevPlaneCollision(origPos, bulletPos, theOBB->planes[p].p[0], theOBB->planes[p].p[1], theOBB->planes[p].p[2], theOBB->planes[p].n);
 
-					if (length(lvP) > 0.001f)
-						if (dot(lvP - theOBB->planes[p].p[0], theOBB->planes[p].n) < 0.001f)
+					if (length(lvP) > 0.0001f)
+						if (dot(lvP - theOBB->planes[p].p[0], theOBB->planes[p].n) < 0.01f)
 						{
-							bPos = lvP;
+							if (length(bPos - origPos) > (length(lvP - origPos)))
+								bPos = lvP;
 							collidedWithPlane = true;
 						}
 				}
@@ -924,7 +931,7 @@ bool Physics::checkPlayerVCaptureCollision(vec3 playerPos, int capID)
 	return false;
 }
 
-glm::vec4 Physics::checkBulletVEffectCollision(glm::vec3 bulletPos, vec3 bulletVel, vec3 bulletDir, unsigned int eType, int eid, float dt)
+vec4 Physics::checkBulletVEffectCollision(glm::vec3 bulletPos, vec3 bulletVel, vec3 bulletDir, unsigned int eType, int eid, float dt)
 {
 	glm::vec4 collided;
 

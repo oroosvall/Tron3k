@@ -212,9 +212,9 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 			posadjust.y /= yDivs;
 		if (zDivs > 1)
 			posadjust.z /= zDivs;
-		//if (posadjust.y < 0)
+		if (posadjust.y < 0)
 		//ceiling = true;
-		//if (posadjust.y > 0.4)
+		if (posadjust.y > 0.4)
 		//	grounded = true;
 		/*posadjust = normalize(posadjust);// /= collisionNormalSize;
 		for (int k = 0; k < collisionNormalSize; k++)
