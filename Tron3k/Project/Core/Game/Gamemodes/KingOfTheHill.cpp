@@ -259,7 +259,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 		{
 			consolePtr->printMsg("OVERTIME BEGINS", "System", 'S');
 			state = OVERTIME;
-			timer = 30.0f;
+			timer = 31.0f;
 		}
 		break;
 
@@ -292,7 +292,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 				timer = 4.0f;
 			}
 		}
-		else if (teamTwoSpawnTokens == 0)
+		if (teamTwoSpawnTokens == 0)
 		{
 			bool allDead = true;
 			int pID = -1;
@@ -612,11 +612,11 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 			{
 				consolePtr->printMsg("ALPHA WINS THE MATCH", "System", 'S');
 				teamOneScore++;
-				if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
+				if (GetSoundActivated() && gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
 				{
 					GetSound()->playUserGeneratedSound(SOUNDS::announcerYouWin);
 				}
-				else if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 2)
+				else if (GetSoundActivated() && gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 2)
 				{
 					GetSound()->playUserGeneratedSound(SOUNDS::announcerYouLose);
 				}
@@ -625,11 +625,11 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 			{
 				consolePtr->printMsg("BETA WINS THE MATCH", "System", 'S');
 				teamTwoScore++;
-				if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
+				if (GetSoundActivated() && gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
 				{
 					GetSound()->playUserGeneratedSound(SOUNDS::announcerYouLose);
 				}
-				else if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 2)
+				else if (GetSoundActivated() && gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 2)
 				{
 					GetSound()->playUserGeneratedSound(SOUNDS::announcerYouWin);
 				}
