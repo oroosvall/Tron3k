@@ -45,6 +45,7 @@
     <ClCompile Include="Core\Game\Role\Special\Special.cpp" />
     <ClCompile Include="Core\Game\Role\Special\SpecialTypes\Dash.cpp" />
     <ClCompile Include="Core\Game\Role\Special\SpecialTypes\HackingDartSpecial.cpp" />
+    <ClCompile Include="Core\Game\Role\Special\SpecialTypes\LightSpeedSpecial.cpp" />
     <ClCompile Include="Core\Game\Role\Special\SpecialTypes\Lightwall.cpp" />
     <ClCompile Include="Core\Game\Role\Special\SpecialTypes\MultiJump.cpp" />
     <ClCompile Include="Core\Game\Role\Special\SpecialTypes\SprintD.cpp" />
@@ -123,6 +124,7 @@
     <ClInclude Include="Core\Game\Role\Special\SpecialTypes\AllSpecials.h" />
     <ClInclude Include="Core\Game\Role\Special\SpecialTypes\Dash.h" />
     <ClInclude Include="Core\Game\Role\Special\SpecialTypes\HackingDartSpecial.h" />
+    <ClInclude Include="Core\Game\Role\Special\SpecialTypes\LightSpeedSpecial.h" />
     <ClInclude Include="Core\Game\Role\Special\SpecialTypes\Lightwall.h" />
     <ClInclude Include="Core\Game\Role\Special\SpecialTypes\MultiJump.h" />
     <ClInclude Include="Core\Game\Role\Special\SpecialTypes\SprintD.h" />
