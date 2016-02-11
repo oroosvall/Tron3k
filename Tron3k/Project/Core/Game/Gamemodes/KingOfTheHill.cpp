@@ -482,6 +482,7 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 	{
 		if (state == WARMUP)
 		{
+			gamePtr->clearAllPlayerKD();
 			consolePtr->printMsg("Warmup. Type /ready to start.", "System", 'S');
 			teamOneScore = 0;
 			teamTwoScore = 0;
@@ -523,7 +524,6 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 			{
 				gamePtr->allowPlayerRespawn(teamTwoPlayers[c], c % 5);
 			}
-			gamePtr->clearAllPlayerKD();
 
 			consolePtr->printMsg("ROUND STARTS IN 15 SECONDS", "System", 'S');
 			if (capturePoint == 0)
