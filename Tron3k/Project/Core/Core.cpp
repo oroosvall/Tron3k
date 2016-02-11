@@ -1565,7 +1565,7 @@ void Core::renderWorld(float dt)
 
 		if (capOwner == 0)
 		{
-			renderPipe->setCapRoomColor(cap, vec3(1.0f, 1.0f, 1.0f), 1.0f);
+			renderPipe->setCapRoomColor(cap, vec3(0x36, 0xb2, 0xd0), 1.0f);
 		}
 		else if (capOwner == 1)
 		{

@@ -647,17 +647,10 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 int KingOfTheHill::getCapturePointOwner()
 {
 	if (teamOnePlayersAtPoint > teamTwoPlayersAtPoint)
-	{
-		lastTeamOnPoint = 1;
 		return 1;
-	}
 	else if (teamOnePlayersAtPoint < teamTwoPlayersAtPoint)
-	{
-		lastTeamOnPoint = 2;
 		return 2;
-	}
-	else if (teamOnePlayersAtPoint == teamTwoPlayersAtPoint)
-		return lastTeamOnPoint;
+	return 0;
 }
 
 int KingOfTheHill::getPlayersOnPoint(int team)
