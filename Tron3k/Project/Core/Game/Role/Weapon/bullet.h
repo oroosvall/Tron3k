@@ -17,7 +17,7 @@ protected:
 	glm::vec3 vel;
 	int damage;
 	float ttl = 4;
-
+	
 	int teamId;
 	int playerId;
 	int bulletId = 0;
@@ -26,7 +26,7 @@ protected:
 
 public:
 	virtual ~Bullet();
-
+	int collided = 0;
 	int getTeam() { return teamId; };
 
 	void getId(int &player, int &bullet) { player = playerId; bullet = bulletId; };

@@ -15,7 +15,8 @@ ClusterGrenade::~ClusterGrenade()
 int ClusterGrenade::update(float dt)
 {
 	pos += dir * vel * dt;
-
+	if (collided > 0)
+		collided--;
 	dir.y -= 0.8f * dt;
 
 	updateWorldMat();

@@ -1674,80 +1674,84 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 		if (b != nullptr)
 		{
 			vec3 temp;
-			switch (hi.bt)
+			if (b->collided <= 0)
 			{
 
-			case BULLET_TYPE::CLUSTER_GRENADE:
-				if (GetSoundActivated())
-					GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
-				b->setVel(b->getVel());
-				bounceBullet(hi, b);
-				temp = b->getDir();
-				temp.x *= 0.6f;
-				temp.y *= 0.6f;
-				temp.z *= 0.6f;
-				if (length(temp) < 0.15f)
+				switch (hi.bt)
+				{
+					b->collided = 5;
+				case BULLET_TYPE::CLUSTER_GRENADE:
+					if (GetSoundActivated())
+						GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+					b->setVel(b->getVel());
+					bounceBullet(hi, b);
+					temp = b->getDir();
+					temp.x *= 0.6f;
+					temp.y *= 0.6f;
+					temp.z *= 0.6f;
+					if (length(temp) < 0.15f)
+						removeBullet(hi.bt, arraypos);
+					b->setDir(temp);
+					break;
+				case BULLET_TYPE::CLUSTERLING:
+					if (GetSoundActivated())
+						GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+					b->setVel(b->getVel());
+					bounceBullet(hi, b);
+					temp = b->getDir();
+					temp.x *= 0.6f;
+					temp.y *= 0.6f;
+					temp.z *= 0.6f;
+					if (length(temp) < 0.15f)
+						removeBullet(hi.bt, arraypos);
+					b->setDir(temp);
+					break;
+				case BULLET_TYPE::THERMITE_GRENADE:
+					if (GetSoundActivated())
+						GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+					b->setVel(b->getVel());
+					bounceBullet(hi, b);
+					temp = b->getDir();
+					temp.x *= 0.6f;
+					temp.y *= 0.6f;
+					temp.z *= 0.6f;
+					if (length(temp) < 0.15f)
+						removeBullet(hi.bt, arraypos);
+					b->setDir(temp);
+					break;
+				case BULLET_TYPE::VACUUM_GRENADE:
+					b->setVel(b->getVel());
+					bounceBullet(hi, b);
+					temp = b->getDir();
+					temp.x *= 0.6f;
+					temp.y *= 0.6f;
+					temp.z *= 0.6f;
+					if (length(temp) < 0.15f)
+						removeBullet(hi.bt, arraypos);
+					b->setDir(temp);
+					break;
+				case BULLET_TYPE::DISC_SHOT:
+					if (GetSoundActivated())
+						GetSound()->playExternalSound(SOUNDS::soundEffectDiscBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+					bounceBullet(hi, b);
+					break;
+				case BULLET_TYPE::GRENADE_SHOT:
+					if (GetSoundActivated())
+						GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeLauncherBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+					b->setVel(b->getVel());
+					bounceBullet(hi, b);
+					temp = b->getDir();
+					temp.x *= 0.6f;
+					temp.y *= 0.6f;
+					temp.z *= 0.6f;
+					if (abs(temp.x) < 0.01f && abs(temp.z) && 0.01f)
+						removeBullet(hi.bt, arraypos);
+					b->setDir(temp);
+					break;
+				default:
 					removeBullet(hi.bt, arraypos);
-				b->setDir(temp);
-				break;
-			case BULLET_TYPE::CLUSTERLING:
-				if (GetSoundActivated())
-					GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
-				b->setVel(b->getVel());
-				bounceBullet(hi, b);
-				temp = b->getDir();
-				temp.x *= 0.6f;
-				temp.y *= 0.6f;
-				temp.z *= 0.6f;
-				if (length(temp) < 0.15f)
-					removeBullet(hi.bt, arraypos);
-				b->setDir(temp);
-				break;
-			case BULLET_TYPE::THERMITE_GRENADE:
-				if (GetSoundActivated())
-					GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
-				b->setVel(b->getVel());
-				bounceBullet(hi, b);
-				temp = b->getDir();
-				temp.x *= 0.6f;
-				temp.y *= 0.6f;
-				temp.z *= 0.6f;
-				if (length(temp) < 0.15f)
-					removeBullet(hi.bt, arraypos);
-				b->setDir(temp);
-				break;
-			case BULLET_TYPE::VACUUM_GRENADE:
-				b->setVel(b->getVel());
-				bounceBullet(hi, b);
-				temp = b->getDir();
-				temp.x *= 0.6f;
-				temp.y *= 0.6f;
-				temp.z *= 0.6f;
-				if (length(temp) < 0.15f)
-					removeBullet(hi.bt, arraypos);
-				b->setDir(temp);
-				break;
-			case BULLET_TYPE::DISC_SHOT:
-				if (GetSoundActivated())
-					GetSound()->playExternalSound(SOUNDS::soundEffectDiscBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
-				bounceBullet(hi, b);
-				break;
-			case BULLET_TYPE::GRENADE_SHOT:
-				if (GetSoundActivated())
-					GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeLauncherBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
-				b->setVel(b->getVel());
-				bounceBullet(hi, b);
-				temp = b->getDir();
-				temp.x *= 0.6f;
-				temp.y *= 0.6f;
-				temp.z *= 0.6f;
-				if (abs(temp.x) < 0.01f && abs(temp.z) && 0.01f)
-					removeBullet(hi.bt, arraypos);
-				b->setDir(temp);
-				break;
-			default:
-				removeBullet(hi.bt, arraypos);
-				break;
+					break;
+				}
 			}
 		}
 	}
