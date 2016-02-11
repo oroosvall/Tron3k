@@ -1495,3 +1495,24 @@ int Player::GetConsecutiveFrags()
 {
 	return this->consecutiveFrags;
 }
+
+void Player::SetJumpCoolDown(float cooldown)
+{
+	this->jumpSoundCooldown = cooldown;
+	jumpSoundAble = false;
+}
+
+void Player::CoolDownJump(float dt)
+{
+	if (this->jumpSoundCooldown > FLT_EPSILON)
+	{
+		this->jumpSoundCooldown -= dt;
+	}
+	
+	else jumpSoundAble = true;
+}
+
+bool Player::CheckAbleToJumpSound()
+{
+	return jumpSoundAble;
+}

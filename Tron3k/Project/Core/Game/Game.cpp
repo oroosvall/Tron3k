@@ -504,7 +504,7 @@ void Game::checkFootsteps(float dt)
 				playerList[i]->footstepsLoopReset(dt);
 			}
 
-			if (playerList[i]->getFootsteps())
+			if (playerList[i]->getFootsteps() && playerList[i]->getGrounded())
 			{
 				glm::vec3 pos;
 				glm::vec3 vel;
@@ -517,6 +517,29 @@ void Game::checkFootsteps(float dt)
 					if (GetSoundActivated())
 						GetSound()->playFootsteps(playerList[i]->getRole()->getRole(), pos.x, pos.y, pos.z);
 				}
+				
+			}
+
+			if (!playerList[i]->CheckAbleToJumpSound())
+			{
+				playerList[i]->CoolDownJump(dt);
+			}
+
+			if (!playerList[i]->CheckAbleToJumpSound() && playerList[i]->getGrounded())
+			{
+				playerList[i]->jumpSoundAble = true;
+			}
+
+			if (playerList[i]->CheckAbleToJumpSound() && !playerList[i]->getGrounded())
+			{
+				glm::vec3 pos;
+				pos = playerList[i]->getPos();
+					playerList[i]->SetJumpCoolDown(10.0f);
+
+					if (GetSoundActivated())
+						GetSound()->playJump(playerList[i]->getRole()->getRole(), pos.x, pos.y, pos.z);
+				
+
 			}
 		}
 	}

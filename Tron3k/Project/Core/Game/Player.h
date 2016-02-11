@@ -217,6 +217,12 @@ public:
 
 	glm::mat4 getFPSmat();
 
+	bool jumpSoundAble = true;
+	float jumpSoundCooldown = 0;
+	void SetJumpCoolDown(float cooldown);
+	void CoolDownJump(float dt);
+	bool CheckAbleToJumpSound();
+
 	void movmentSpecialAnimUse(int react = 0);
 	bool getAnimPrimary();
 	bool searchModifier(MODIFIER_TYPE search);
