@@ -644,12 +644,15 @@ public:
 		}
 		//Adds player to the game in chosen team. Both clients and server
 		gamePtr->addPlayerToTeam(p_conID, team);
-		uiPtr->setTeamColor(team);
-		uiPtr->changeColorTeam();
-		if (p_conID == getConId() && gamePtr->getPlayer(p_conID)->getRole()->getRole() == ROLES::NROFROLES)
+		if (p_conID == getConId())
 		{
-			uiPtr->setFirstMenuSet(false);
-			uiPtr->setMenu(2);
+			uiPtr->setTeamColor(team);
+			uiPtr->changeColorTeam();
+			if (gamePtr->getPlayer(p_conID)->getRole()->getRole() == ROLES::NROFROLES)
+			{
+				uiPtr->setFirstMenuSet(false);
+				uiPtr->setMenu(2);
+			}
 		}
 	}
 

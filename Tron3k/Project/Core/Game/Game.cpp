@@ -504,7 +504,7 @@ void Game::checkFootsteps(float dt)
 				playerList[i]->footstepsLoopReset(dt);
 			}
 
-			if (playerList[i]->getFootsteps() && playerList[i]->getGrounded())
+			if (playerList[i]->getFootsteps() && (playerList[i]->getAnimState_t_p() != AnimationState::third_primary_air && playerList[i]->getAnimState_t_p() != AnimationState::first_primary_air))
 			{
 				glm::vec3 pos;
 				glm::vec3 vel;
@@ -525,16 +525,16 @@ void Game::checkFootsteps(float dt)
 				playerList[i]->CoolDownJump(dt);
 			}
 
-			if (!playerList[i]->CheckAbleToJumpSound() && playerList[i]->getGrounded())
+			if (!playerList[i]->CheckAbleToJumpSound() && (playerList[i]->getAnimState_t_p() == AnimationState::third_primary_air || playerList[i]->getAnimState_t_p() == AnimationState::first_primary_air))
 			{
 				playerList[i]->jumpSoundAble = true;
 			}
 
-			if (playerList[i]->CheckAbleToJumpSound() && !playerList[i]->getGrounded())
+			if (playerList[i]->CheckAbleToJumpSound() && (playerList[i]->getAnimState_t_p() != AnimationState::third_primary_air && playerList[i]->getAnimState_t_p() != AnimationState::first_primary_air))
 			{
 				glm::vec3 pos;
 				pos = playerList[i]->getPos();
-					playerList[i]->SetJumpCoolDown(10.0f);
+					playerList[i]->SetJumpCoolDown(100.0f);
 
 					if (GetSoundActivated())
 						GetSound()->playJump(playerList[i]->getRole()->getRole(), pos.x, pos.y, pos.z);
@@ -1495,7 +1495,9 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 					}
 					playerList[hi.bulletPID]->impressiveDone = true;
 				}
-				addEffectToList(-1, p->getTeam(), hi.playerHit, EFFECT_TYPE::HEALTHPACK, p->getPos(), 0, 0.5f);
+				glm::vec3 hpPos = p->getPos();
+				hpPos.y += 0.5f;
+				addEffectToList(-1, p->getTeam(), hi.playerHit, EFFECT_TYPE::HEALTHPACK, hpPos, 0, 0.5f);
 			}
 			removeBullet(hi.bt, bulletPosInArray);
 		}
@@ -1606,13 +1608,16 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 				}
 				playerList[hi.effectPID]->impressiveDone = true;
 			}
-			addEffectToList(-1, p->getTeam(), hi.playerHit, EFFECT_TYPE::HEALTHPACK, p->getPos(), 0, 0.5f);
 
-			if (p->GetConsecutiveDeaths() > 4 && !p->roleChangeWritten)
+			glm::vec3 hpPos = p->getPos();
+			hpPos.y += 0.5f;
+			addEffectToList(-1, p->getTeam(), hi.playerHit, EFFECT_TYPE::HEALTHPACK, hpPos, 0, 0.5f);
+
+			/*if (p->GetConsecutiveDeaths() > 4 && !p->roleChangeWritten)
 			{
 				console->printMsg("You can now change role if you want to!", "System", 'S');
 				p->roleChangeWritten = true;
-			}
+			}*/
 		}
 
 

@@ -1571,7 +1571,7 @@ void Core::renderWorld(float dt)
 
 		if (capOwner == 0)
 		{
-			renderPipe->setCapRoomColor(cap, vec3(1.0f, 1.0f, 1.0f), 1.0f);
+			renderPipe->setCapRoomColor(cap, vec3(0x36, 0xb2, 0xd0), 1.0f);
 		}
 		else if (capOwner == 1)
 		{
@@ -1678,19 +1678,22 @@ void Core::renderWorld(float dt)
 					}
 					else
 					{
-						glm::mat4* playermat = p->getWorldMat();
-						if (force3rd)
+						if (p->getRole()->getRole() != ROLES::NROFROLES)
 						{
-							*playermat = glm::mat4();
-							playermat[0][0].w = p->getPos().x;
-							playermat[0][1].w = p->getPos().y - 0.45;
-							playermat[0][2].w = p->getPos().z;
-						}
+							glm::mat4* playermat = p->getWorldMat();
+							if (force3rd)
+							{
+								*playermat = glm::mat4();
+								playermat[0][0].w = p->getPos().x;
+								playermat[0][1].w = p->getPos().y - 0.45;
+								playermat[0][2].w = p->getPos().z;
+							}
 
-						if (p->isLocal()) //use current anim
-							renderPipe->renderAnimation(i, p->getRole()->getRole(), playermat, p->getAnimState_t_c(), &dgColor.x, hpval, false, false, p->roomID);
-						else              //use peak anim
-							renderPipe->renderAnimation(i, p->getRole()->getRole(), playermat, p->getAnimState_t_p(), &dgColor.x, hpval, false, false, p->roomID);
+							if (p->isLocal()) //use current anim
+								renderPipe->renderAnimation(i, p->getRole()->getRole(), playermat, p->getAnimState_t_c(), &dgColor.x, hpval, false, false, p->roomID);
+							else              //use peak anim
+								renderPipe->renderAnimation(i, p->getRole()->getRole(), playermat, p->getAnimState_t_p(), &dgColor.x, hpval, false, false, p->roomID);
+						}
 					}
 				}
 			}

@@ -320,9 +320,10 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 					}
 				}
 			}
-			if (c > 0)
+
+			if (f_render_roombox)
 			{
-				if (f_render_roombox)
+				if (c < nrChunks - 1)
 				{
 					testMap.chunks[c].roomOnlyRender.abbRender[0].abbBoxR.BindVertData();
 					glDrawArrays(GL_TRIANGLE_STRIP, 0, 20);
