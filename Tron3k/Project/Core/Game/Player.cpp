@@ -553,14 +553,14 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			//if freecam is true the cam can move on its own
 			if (spectating == false)
 			{
-				if (i->justPressed(GLFW_KEY_C)) // flymode
-					noclip = !noclip;
+				//if (i->justPressed(GLFW_KEY_C)) // flymode
+				//	noclip = !noclip;
 
 				if (noclip)
 				{
-					cam->update(dt, true);
-					setPos(cam->getPos());
-					vel *= 0;
+					//cam->update(dt, true);
+					//setPos(cam->getPos());
+					//vel *= 0;
 				}
 				else
 					cam->update(dt, freecam);
@@ -771,7 +771,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					}
 				}
 
-				if (i->justPressed(GLFW_KEY_Z))					//Temp?
+/*				if (i->justPressed(GLFW_KEY_Z))					//Temp?
 				{
 					if (GetSoundActivated() == 0 && GetInitialized() == 0)
 					{
@@ -785,6 +785,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				}
 				if (i->justPressed(GLFW_KEY_M))
 					role.setSpecialMeter(100.0f);
+*/
 			} // end of player input
 		} // end of lock control check
 

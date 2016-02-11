@@ -1471,7 +1471,7 @@ void Core::renderWorld(float dt)
 		vec3 camPos = cam->getPos();
 		vec3 camDir = cam->getDir();
 		bool force3rd = false;
-		if (i->getKeyInfo(GLFW_KEY_P))
+/*		if (i->getKeyInfo(GLFW_KEY_P))
 		{
 			cam->setCam(vec3(-6, 1.5f, 33), vec3(0, 0, -1));
 			force3rd = true;
@@ -1481,7 +1481,7 @@ void Core::renderWorld(float dt)
 			cam->setCam(vec3(-6, 1.5f, 33), vec3(1, 0, 0));
 			force3rd = true;
 		}
-
+*/
 		glm::vec3 tmpEyePos = CameraInput::getCam()->getPos();
 		renderPipe->update(tmpEyePos.x, tmpEyePos.y, tmpEyePos.z, dt); // sets the view/proj matrix
 		renderPipe->renderIni();

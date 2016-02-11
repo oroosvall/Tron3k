@@ -28,7 +28,10 @@ int Weapon::getBulletId()
 {
 	int bid = currentBulletId;
 	if (currentBulletId != -1)
-		currentBulletId++ % 255;
+	{
+		currentBulletId++;
+		currentBulletId % 255;
+	}
 	return bid;
 }
 
