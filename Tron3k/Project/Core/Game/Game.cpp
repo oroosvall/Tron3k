@@ -1648,7 +1648,7 @@ void Game::bounceBullet(BulletHitWorldInfo hwi, Bullet* theBullet)
 
 		//use pendepth to set a new pos 
 		theBullet->setPos(theBullet->getPos() + vec3(posadjust));
-		theBullet->setPos(theBullet->getPos() + (theBullet->getDir() * theBullet->getVel() * lastDT));
+		theBullet->setPos(theBullet->getPos() + (theBullet->getDir() * theBullet->getVel() * lastDT * 1.02f));
 
 		// remove bullet code
 		//BulletHitWorldInfo hi;
