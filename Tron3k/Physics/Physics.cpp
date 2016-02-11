@@ -976,7 +976,7 @@ bool Physics::checkPlayerVCaptureCollision(vec3 playerPos, int capID)
 	return collided;
 }
 
-vec4 Physics::checkBulletVEffectCollision(glm::vec3 bulletPos, vec3 bulletVel, vec3 bulletDir, unsigned int eType, int eid, float dt)
+vec4 Physics::checkBulletVEffectCollision(glm::vec3 &bulletPos, vec3 bulletVel, vec3 bulletDir, unsigned int eType, int eid, float dt)
 {
 	glm::vec4 collided;
 
@@ -1033,7 +1033,7 @@ vec4 Physics::checkBulletVEffectCollision(glm::vec3 bulletPos, vec3 bulletVel, v
 							{
 								if (dot(dir, normalize(bPos - sPos)) > -0.00001f)
 									dir *= -1;
-								collided = vec4(dir, collided.w + 0.2f);
+								collided = vec4(dir, collided.w + 0.25f);
 								bulletPos = bPos;
 							}
 						}

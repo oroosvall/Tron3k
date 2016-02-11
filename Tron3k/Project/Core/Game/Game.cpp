@@ -839,14 +839,15 @@ void Game::checkBulletVEffectCollision(float dt)
 					effects[EFFECT_TYPE::LIGHT_WALL][c]->getId(pid, eid);
 					if (((LightwallEffect*)effects[EFFECT_TYPE::LIGHT_WALL][c])->getCollidable())
 					{
-						collNormalWalls = physics->checkBulletVEffectCollision(bullets[b][j]->getPos(),	bullets[b][j]->getVel(), bullets[b][j]->getDir(), EFFECT_TYPE::LIGHT_WALL, eid, dt);
+						vec3 bPos = bullets[b][j]->getPos();
+						collNormalWalls = physics->checkBulletVEffectCollision(bPos,	bullets[b][j]->getVel(), bullets[b][j]->getDir(), EFFECT_TYPE::LIGHT_WALL, eid, dt);
 						if (collNormalWalls != vec4(0, 0, 0, 0))
 						{
 							BulletHitEffectInfo bi;
 							bullets[b][j]->getId(bi.bulletPID, bi.bulletBID);
 							bi.bt = BULLET_TYPE(b);
 							bi.et = EFFECT_TYPE::LIGHT_WALL;
-							bi.hitPos = bullets[b][j]->getPos();
+							bi.hitPos = bPos;
 							bi.hitDir = bullets[b][j]->getDir();
 							bi.collisionNormal = collNormalWalls;
 							allBulletHitsOnEffects.push_back(bi);				
@@ -858,7 +859,8 @@ void Game::checkBulletVEffectCollision(float dt)
 				{
 					int eid = -1, pid = -1;
 					effects[EFFECT_TYPE::THUNDER_DOME][c]->getId(pid, eid);
-					collNormalDomes = physics->checkBulletVEffectCollision(bullets[b][j]->getPos(), bullets[b][j]->getVel(), bullets[b][j]->getDir(), EFFECT_TYPE::THUNDER_DOME, eid, dt);
+					vec3 bPos = bullets[b][j]->getPos();
+					collNormalDomes = physics->checkBulletVEffectCollision(bPos, bullets[b][j]->getVel(), bullets[b][j]->getDir(), EFFECT_TYPE::THUNDER_DOME, eid, dt);
 					if (collNormalDomes != vec4(0, 0, 0, 0))
 					{
 						int x = 0;
@@ -866,7 +868,7 @@ void Game::checkBulletVEffectCollision(float dt)
 						bullets[b][j]->getId(bi.bulletPID, bi.bulletBID);
 						bi.bt = BULLET_TYPE(b);
 						bi.et = EFFECT_TYPE::THUNDER_DOME;
-						bi.hitPos = bullets[b][j]->getPos();
+						bi.hitPos = bPos;
 						bi.hitDir = bullets[b][j]->getDir();
 						bi.collisionNormal = collNormalDomes;
 						allBulletHitsOnEffects.push_back(bi);
