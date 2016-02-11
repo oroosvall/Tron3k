@@ -45,7 +45,7 @@ void UI::init(std::string fileName, Console* console, IRenderPipeline* uiRender,
 
 	for (int i = 0; i < 10; i++)
 	{
-		textIdList[0] = -1;
+		textIdList[i] = -1;
 	}
 
 	bool result = loadUI(fileName, winX, winY);
