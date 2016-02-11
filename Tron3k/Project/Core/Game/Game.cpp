@@ -1674,17 +1674,13 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 		if (b != nullptr)
 		{
 			vec3 temp;
-			vec3 vel = b->getVel();
 			switch (hi.bt)
 			{
-				
+
 			case BULLET_TYPE::CLUSTER_GRENADE:
 				if (GetSoundActivated())
 					GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
-				vel.x *= 0.8f;
-				vel.y *= 0.4f;
-				vel.z *= 0.8f;
-				b->setVel(vel);
+				b->setVel(b->getVel() * 0.6f);
 				bounceBullet(hi, b);
 				temp = b->getDir();
 				temp.x *= 0.6f;
@@ -1697,10 +1693,7 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 			case BULLET_TYPE::CLUSTERLING:
 				if (GetSoundActivated())
 					GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
-				vel.x *= 0.8f;
-				vel.y *= 0.4f;
-				vel.z *= 0.8f;
-				b->setVel(vel);
+				b->setVel(b->getVel() * 0.6f);
 				bounceBullet(hi, b);
 				temp = b->getDir();
 				temp.x *= 0.6f;
@@ -1713,10 +1706,7 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 			case BULLET_TYPE::THERMITE_GRENADE:
 				if (GetSoundActivated())
 					GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
-				vel.x *= 0.8f;
-				vel.y *= 0.4f;
-				vel.z *= 0.8f;
-				b->setVel(vel);
+				b->setVel(b->getVel() * 0.6f);
 				bounceBullet(hi, b);
 				temp = b->getDir();
 				temp.x *= 0.6f;
@@ -1727,10 +1717,7 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 				b->setDir(temp);
 				break;
 			case BULLET_TYPE::VACUUM_GRENADE:
-				vel.x *= 0.8f;
-				vel.y *= 0.4f;
-				vel.z *= 0.8f;
-				b->setVel(vel);
+				b->setVel(b->getVel() * 0.6f);
 				bounceBullet(hi, b);
 				temp = b->getDir();
 				temp.x *= 0.6f;
@@ -1748,10 +1735,7 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 			case BULLET_TYPE::GRENADE_SHOT:
 				if (GetSoundActivated())
 					GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeLauncherBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
-				vel.x *= 0.8f;
-				vel.y *= 0.4f;
-				vel.z *= 0.8f;
-				b->setVel(vel);
+				b->setVel(b->getVel() * 0.6f);
 				bounceBullet(hi, b);
 				temp = b->getDir();
 				temp.x *= 0.6f;
