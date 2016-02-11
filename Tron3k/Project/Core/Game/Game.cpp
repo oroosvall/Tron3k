@@ -1644,12 +1644,12 @@ void Game::bounceBullet(BulletHitWorldInfo hwi, Bullet* theBullet)
 	{
 		combinedNormal2 = normalize(combinedNormal2);
 		vec3 dir = normalize(reflect(theBullet->getDir(), combinedNormal2));
-		theBullet->setPos(theBullet->getPos() + (-theBullet->getDir() * theBullet->getVel() * lastDT * 1.02f));
+		
 		theBullet->setDir(dir);
 
 		//use pendepth to set a new pos 
 		theBullet->setPos(theBullet->getPos() + vec3(posadjust));
-		
+		theBullet->setPos(theBullet->getPos() + (theBullet->getDir() * theBullet->getVel() * lastDT * 1.0f));
 
 		// remove bullet code
 		//BulletHitWorldInfo hi;
