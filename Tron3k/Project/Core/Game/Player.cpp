@@ -532,8 +532,8 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				lockControls = true;
 		}
 
-		if (noclip)
-			vel *= 0;
+		//if (noclip)
+		//	vel *= 0;
 
 		//friction
 		//if (grounded)
@@ -553,8 +553,8 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			//if freecam is true the cam can move on its own
 			if (spectating == false)
 			{
-				if (i->justPressed(GLFW_KEY_C)) // flymode
-					noclip = !noclip;
+				//if (i->justPressed(GLFW_KEY_C)) // flymode
+				//	noclip = !noclip;
 
 				if (noclip)
 				{
