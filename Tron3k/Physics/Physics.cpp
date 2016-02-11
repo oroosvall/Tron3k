@@ -213,6 +213,8 @@ glm::vec4 Physics::checkSpherevOBBlwCollision(Sphere mesh1, OBB mesh2) //mesh 1 
 			normalize(t3);
 		t = vec4(t3, t.w);
 	}
+	else
+		t = vec4(0);
 	return t;
 }
 //--------------//--------------//
@@ -1008,8 +1010,8 @@ vec4 Physics::checkBulletVEffectCollision(glm::vec3 &bulletPos, vec3 bulletVel, 
 					if (eType == 0)//Lightwall, aka OBB
 					{
 
-						collided = checkSpherevOBBlwCollision(sphere, *effectBoxes[i]->getOBB());
-						/*OBB* theOBB = effectBoxes[i]->getOBB();
+						//collided = checkSpherevOBBlwCollision(sphere, *effectBoxes[i]->getOBB());
+						OBB* theOBB = effectBoxes[i]->getOBB();
 
 						bool collidedWithPlane = false;
 						for (int p = 0; p < 6; p++)
@@ -1036,10 +1038,10 @@ vec4 Physics::checkBulletVEffectCollision(glm::vec3 &bulletPos, vec3 bulletVel, 
 							{
 								if (dot(dir, normalize(bPos - sPos)) > -0.00001f)
 									dir *= -1;
-								collided = vec4(dir, collided.w);
+								collided = vec4(dir, collided.w + 0.2f);
 								bulletPos = bPos;
 							}
-						}*/
+						}
 						
 
 
