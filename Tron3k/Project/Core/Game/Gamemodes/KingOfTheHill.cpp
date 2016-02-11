@@ -328,13 +328,13 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 
 		//After the ROUND ends, ENDROUND is the buffer time between end of a round and the PREROUND
 	case ENDROUND:
-		if (teamOneScore == winScore)
+		if (teamOneScore == winScore && teamTwoScore != winScore)
 		{
 			msg = GAMEMODE_MSG::MATCH_WIN_TEAM1;
 			timer = 6.0f;
 			state = ENDMATCH;
 		}
-		else if (teamTwoScore == winScore)
+		else if (teamTwoScore == winScore && teamOneScore != winScore)
 		{
 			msg = GAMEMODE_MSG::MATCH_WIN_TEAM2;
 			timer = 6.0f;

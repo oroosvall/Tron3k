@@ -176,9 +176,12 @@ void Game::update(float dt)
 		{
 			if (playerList[c] != nullptr)
 			{
-				if (physics->checkPlayerVCaptureCollision(playerList[c]->getPos(), k->getCapturePoint()))
+				if (playerList[c]->isAlive())
 				{
-					k->playerOnCapPointThisFrame(playerList[c]->getTeam());
+					if (physics->checkPlayerVCaptureCollision(playerList[c]->getPos(), k->getCapturePoint()))
+					{
+						k->playerOnCapPointThisFrame(playerList[c]->getTeam());
+					}
 				}
 			}
 		}
