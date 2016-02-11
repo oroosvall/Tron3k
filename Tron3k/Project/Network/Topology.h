@@ -707,15 +707,15 @@ public:
 
 		if (p_conID == getConId())
 		{
-			uiPtr->setOpenedGuiBool(true);
-			uiPtr->setFirstMenuSet(false);
-			uiPtr->setMenu(0);
-
-			gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->setLockedControls(false);
-			gamePtr->setCursorInvisible(true);
-
-			if (isClient)
+			if (((KingOfTheHill*)(gamePtr->getGameMode()))->getState() != KOTHSTATE::PREROUND)
 			{
+				uiPtr->setOpenedGuiBool(true);
+				uiPtr->setFirstMenuSet(false);
+				uiPtr->setMenu(0);
+
+				gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->setLockedControls(false);
+				gamePtr->setCursorInvisible(true);
+
 				Player* local = gamePtr->getPlayer(gamePtr->GetLocalPlayerId());
 				KingOfTheHill* koth = (KingOfTheHill*)gamePtr->getGameMode();
 

@@ -55,9 +55,9 @@ void AnimManager::updateAnimStates(int playerID, int role, AnimationState curren
 		float index = animStates[playerID].timepass / animStates[playerID].timeLength;
 
 		//if we should run the animation backwards
-		if (animStates[playerID].state == AnimationState::third_primary_run_rev)
-			animStates[playerID].frame = (int)animStates[playerID].frameEnd - animStates[playerID].frameEnd * index;
-		else
+		//if (animStates[playerID].state == AnimationState::third_primary_run_rev)
+		//	animStates[playerID].frame = (int)animStates[playerID].frameEnd - animStates[playerID].frameEnd * index;
+		//else
 		{
 			animStates[playerID].frame = (int)animStates[playerID].frameEnd * index;
 			if (animStates[playerID].frame >= animStates[playerID].frameEnd)

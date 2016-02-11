@@ -567,7 +567,7 @@ void Core::upClient(float dt)
 			subState++;
 
 			HUD.specialMeter = 100.0f;
-			HUD.loseTicketPer = 15;
+			HUD.loseTicketPer = 14;
 
 			KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
 			HUD.maxTokens = koth->getMaxTokensPerTeam();
@@ -624,19 +624,58 @@ void Core::upClient(float dt)
 			}
 		}
 		game->update(newDt);
-		KOTHSTATE tmp = ((KingOfTheHill*)(game->getGameMode()))->getState();
-		if (kothState != tmp)
+		if (game->GetGameState() != Gamestate::SERVER)
 		{
-			if (tmp == KOTHSTATE::PREROUND)
+			KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
+			KOTHSTATE tmp = koth->getState();
+			if (kothState != tmp)
 			{
-				showClassSelect();
+				if (tmp == KOTHSTATE::PREROUND)
+				{
+					top->command_role_change(top->getConId(), 1);
+					showClassSelect();
+				}
+				else if (tmp == KOTHSTATE::ROUND)
+				{
+					uiManager->setOpenedGuiBool(true);
+					uiManager->setFirstMenuSet(false);
+					uiManager->setMenu(0);
+
+					game->getPlayer(game->GetLocalPlayerId())->setLockedControls(false);
+					game->setCursorInvisible(true);
+
+					Player* local = game->getPlayer(top->getConId());
+
+					uiManager->clearText(0);
+					uiManager->clearText(1);
+					uiManager->clearText(2);
+					uiManager->clearText(3);
+					uiManager->clearText(4);
+					uiManager->clearText(5);
+
+					uiManager->setText(std::to_string(local->getHP()), 0); //hp
+
+					std::string nText = std::to_string(local->getAmmo()) + "/" + std::to_string(local->getMaxAmmo());
+					uiManager->setText(nText, 1); //ammo
+					uiManager->setText(std::to_string(koth->getRespawnTokens(1)), 2); //tickets
+					uiManager->setText(std::to_string(koth->getRespawnTokens(2)), 3); //tickets2
+					uiManager->setText(std::to_string(koth->getRoundWins(1)), 4); //wins1
+					uiManager->setText(std::to_string(koth->getRoundWins(2)), 5); //wins2
+					if (int(koth->getTimer()) == 0)
+					{
+						uiManager->clearText(6);
+						uiManager->setText("00:00", 6); //time
+					}
+
+					uiManager->scaleBar(2, (float)(koth->getRespawnTokens(1)) / (float)(koth->getMaxTokensPerTeam()), false);
+					uiManager->scaleBar(3, (float)(koth->getRespawnTokens(2)) / (float)(koth->getMaxTokensPerTeam()), false);
+					uiManager->scaleBar(9, 0.0f, true);
+
+					uiManager->setRoleBool(true);
+					uiManager->setHoverCheckBool(false);
+				}
+				kothState = tmp;
 			}
-			else if (tmp == KOTHSTATE::ROUND)
-			{
-				//uiManager->setMenu(-1);
-				//uiManager->backToGui();
-			}
-			kothState = tmp;
 		}
 	/*	if (GetSoundActivated())
 		{
@@ -1926,7 +1965,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 		{
 			HUD.time = int(koth->getTimer());
 
-			int minutes = HUD.time / 60;
+			int minutes = HUD.time / 60; //* 0.016666666666;
 			int seconds = HUD.time - 60 * minutes;
 
 			std::string sMinutes = "0";
@@ -1943,15 +1982,34 @@ void Core::inGameUIUpdate() //Ingame ui update
 			uiManager->clearText(6);
 			uiManager->setText(sMinutes + ":" + sSeconds, 6);
 
-			if (HUD.ticketLostTimer == 0)
+			if (koth->getState() == ROUND) //Tickets meter should only work during the rounds which is why this check is here.
 			{
-				HUD.ticketLostTimer = HUD.loseTicketPer;
-				uiManager->scaleBar(10, 0.0f, true);
+				if (!HUD.firstSecondEachRound) //If it isn't the first second of the round
+				{
+					if (HUD.ticketLostTimer == 0)
+					{
+						uiManager->scaleBar(10, 0.0f, true);
+						HUD.ticketLostTimer = HUD.loseTicketPer;
+					}
+					else
+					{
+						uiManager->scaleBar(10, (float)(HUD.ticketLostTimer) / (float)(HUD.loseTicketPer), true);
+						HUD.ticketLostTimer -= 1;
+					}
+				}
+				else
+				{
+					HUD.ticketLostTimer -= 1;
+					uiManager->scaleBar(10, (float)(HUD.ticketLostTimer) / (float)(HUD.loseTicketPer), true);
+					HUD.ticketLostTimer -= 1;
+				}
+				HUD.firstSecondEachRound = false;
 			}
-			else
+			else //In other states it resets but only once.
 			{
-				uiManager->scaleBar(10, (float)(HUD.ticketLostTimer) / (float)(HUD.loseTicketPer), true);
-				HUD.ticketLostTimer -= 1;
+				HUD.firstSecondEachRound = true;
+				HUD.ticketLostTimer = 14;
+				uiManager->scaleBar(10, 1.0f, true);
 			}
 		}
 	}
@@ -1965,87 +2023,89 @@ void Core::inGameUIUpdate() //Ingame ui update
 	double tX = (x / (double)winX) * 2 - 1.0;
 	double tY = (-y / (double)winY) * 2 + 1.0;
 
-	if (i->justPressed(GLFW_MOUSE_BUTTON_LEFT))
+	if (uiManager->getHoverCheckBool())
 	{
-		int eventIndex = uiManager->collisionCheck(glm::vec2((float)tX, (float)tY));
-		switch (eventIndex)
+		if (i->justPressed(GLFW_MOUSE_BUTTON_LEFT))
 		{
-		case 20: //Team 1
-			if (current == ROAM)
+			int eventIndex = uiManager->collisionCheck(glm::vec2((float)tX, (float)tY));
+			switch (eventIndex)
 			{
-				uiManager->setTeamColor(2);
-				roamHandleCmds("/team 2");
+			case 20: //Team 1
+				if (current == ROAM)
+				{
+					uiManager->setTeamColor(2);
+					roamHandleCmds("/team 2");
+				}
+				else
+				{
+					uiManager->setTeamColor(2);
+					clientHandleCmds("/team 2");
+				}
+				break;
+			case 21: //Team 2
+				if (current == ROAM)
+				{
+					uiManager->setTeamColor(1);
+					roamHandleCmds("/team 1");
+				}
+				else
+				{
+					uiManager->setTeamColor(1);
+					clientHandleCmds("/team 1");
+				}
+				break;
+			case 30: //Class 1
+				if (current == ROAM)
+					roamHandleCmds("/role 1");
+				else
+					clientHandleCmds("/role 1");
+				break;
+			case 31: //Class 2
+				if (current == ROAM)
+					roamHandleCmds("/role 2");
+				else
+					clientHandleCmds("/role 2");
+				break;
+			case 32: //Class 3
+				if (current == ROAM)
+					roamHandleCmds("/role 3");
+				else
+					clientHandleCmds("/role 3");
+				break;
+			case 33: //Class 4
+				if (current == ROAM)
+					roamHandleCmds("/role 4");
+				else
+					clientHandleCmds("/role 4");
+				break;
+			case 34: //Class 5
+				uiManager->setOpenedGuiBool(true);
+				if (current == ROAM)
+					roamHandleCmds("/role 5");
+				else
+					clientHandleCmds("/role 5");
+				break;
+			case 40: //Continue
+				uiManager->backToGui();
+				game->getPlayer(game->GetLocalPlayerId())->setLockedControls(false);
+				cursorInvisible = false;
+				game->setCursorInvisible(cursorInvisible);
+				break;
+			case 41: //Settings
+				break;
+			case 42: //Quit
+				if (current == ROAM)
+					roamHandleCmds("/disconnect");
+				else
+					clientHandleCmds("/disconnect");
+				break;
+			default:
+				break;
 			}
-			else
-			{
-				uiManager->setTeamColor(2);
-				clientHandleCmds("/team 2");
-			}
-			break;
-		case 21: //Team 2
-			if (current == ROAM)
-			{
-				uiManager->setTeamColor(1);
-				roamHandleCmds("/team 1");
-			}
-			else
-			{
-				uiManager->setTeamColor(1);
-				clientHandleCmds("/team 1");
-			}
-			break;
-		case 30: //Class 1
-			if (current == ROAM)
-				roamHandleCmds("/role 1");
-			else
-				clientHandleCmds("/role 1");
-			break;
-		case 31: //Class 2
-			if (current == ROAM)
-				roamHandleCmds("/role 2");
-			else
-				clientHandleCmds("/role 2");
-			break;
-		case 32: //Class 3
-			if (current == ROAM)
-				roamHandleCmds("/role 3");
-			else
-				clientHandleCmds("/role 3");
-			break;
-		case 33: //Class 4
-			if (current == ROAM)
-				roamHandleCmds("/role 4");
-			else
-				clientHandleCmds("/role 4");
-			break;
-		case 34: //Class 5
-			uiManager->setOpenedGuiBool(true);
-			if (current == ROAM)
-				roamHandleCmds("/role 5");
-			else
-				clientHandleCmds("/role 5");
-			break;
-		case 40: //Continue
-			uiManager->backToGui();
-			game->getPlayer(game->GetLocalPlayerId())->setLockedControls(false);
-			cursorInvisible = false;
-			game->setCursorInvisible(cursorInvisible);
-			break;
-		case 41: //Settings
-			break;
-		case 42: //Quit
-			if (current == ROAM)
-				roamHandleCmds("/disconnect");
-			else
-				clientHandleCmds("/disconnect");
-			break;
-		default:
-			break;
 		}
+		else
+			uiManager->hoverCheck(glm::vec2((float)tX, (float)tY));
 	}
-	else if(uiManager->getHoverCheckBool())
-		uiManager->hoverCheck(glm::vec2((float)tX, (float)tY));
-	else{}
 }
 
 void Core::handleCulling()
@@ -2318,7 +2378,11 @@ void Core::sendWorldBoxes()
 
 bool Core::windowVisible() const
 {
-	return !glfwWindowShouldClose(win);
+	if (glfwWindowShouldClose(win))
+	{
+		glfwHideWindow(win);
+	}
+	return glfwGetWindowAttrib(win, GLFW_VISIBLE);
 }
 
 void Core::disconnect()
