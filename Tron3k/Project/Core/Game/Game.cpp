@@ -1936,7 +1936,7 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 			lingDir.x = -lingDir.x;
 			addBulletToList(PID, parent->getTeam(), BID + 3, CLUSTERLING, parent->getPos(), lingDir);
 			
-			addEffectToList(PID, parent->getTeam(), BID, EFFECT_TYPE::EXPLOSION, parent->getPos(), 25, 5.0f);
+			addEffectToList(PID, parent->getTeam(), BID, EFFECT_TYPE::EXPLOSION, parent->getPos(), 35, 6.0f);
 
 			if (GetSoundActivated())
 				GetSound()->playExternalSound(SOUNDS::soundEffectClusterGrenade, parent->getPos().x, parent->getPos().y, parent->getPos().z);
@@ -1944,7 +1944,7 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 		}
 		case BULLET_TYPE::CLUSTERLING:
 		{
-			addEffectToList(PID, parent->getTeam(), BID, EFFECT_TYPE::EXPLOSION, parent->getPos(), 10, 2.0f);
+			addEffectToList(PID, parent->getTeam(), BID, EFFECT_TYPE::EXPLOSION, parent->getPos(), 10, 3.0f);
 
 			if (GetSoundActivated())
 				GetSound()->playExternalSound(SOUNDS::soundEffectClusterlingExplosion, parent->getPos().x, parent->getPos().y, parent->getPos().z);
