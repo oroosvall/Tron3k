@@ -795,7 +795,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		}
 
 		//if (i->justPressed(GLFW_KEY_O))
-		//	role.setHealth(0);
+			//role.setHealth(0);
 
 		if (role.getHealth() <= 0 && !isDead && role.getRole() != ROLES::NROFROLES)
 		{
@@ -1265,12 +1265,11 @@ void Player::deadViewAngles()
 	{
 		switch (animRole)
 		{
-		case TRAPPER:		cam->setCam(cam->getPos() + vec3(0, -1, 0));			break;
+		case TRAPPER:		cam->setCam(cam->getPos() + vec3(0, -0.7f, 0));			break;
 		case DESTROYER:		cam->setCam(cam->getPos() + vec3(0, -1, 0));			break;
 		case MOBILITY:		cam->setCam(cam->getPos() + vec3(0, -1, 0));			break;
-		case BRUTE:			cam->setCam(cam->getPos() + vec3(0, -0.5, 0));			break;
+		case BRUTE:			cam->setCam(cam->getPos() + vec3(0, -0.7f, 0));			break;
 		case MANIPULATOR:	cam->setCam(cam->getPos() + vec3(0, -1, 0));			break;
-		case NROFROLES:		cam->setCam(cam->getPos() + vec3(0, -1, 0));			break;
 		default:																	break;
 		}
 	}
