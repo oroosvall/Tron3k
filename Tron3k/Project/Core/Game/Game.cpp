@@ -1613,11 +1613,11 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 			hpPos.y += 0.5f;
 			addEffectToList(-1, p->getTeam(), hi.playerHit, EFFECT_TYPE::HEALTHPACK, hpPos, 0, 0.5f);
 
-			if (p->GetConsecutiveDeaths() > 4 && !p->roleChangeWritten)
+			/*if (p->GetConsecutiveDeaths() > 4 && !p->roleChangeWritten)
 			{
 				console->printMsg("You can now change role if you want to!", "System", 'S');
 				p->roleChangeWritten = true;
-			}
+			}*/
 		}
 
 
