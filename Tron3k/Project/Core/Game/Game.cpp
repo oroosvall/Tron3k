@@ -497,14 +497,14 @@ void Game::checkFootsteps(float dt)
 {
 	for (int i = 0; i < max_con; i++)
 	{
-		if (playerList[i] != nullptr && i != localPlayerId && (!playerList[i]->getAnimState_t_p() == AnimationState::third_primary_air && !playerList[i]->getAnimState_t_p() == AnimationState::first_primary_air))
+		if (playerList[i] != nullptr && i != localPlayerId)
 		{
 			if (!playerList[i]->getFootsteps())
 			{
 				playerList[i]->footstepsLoopReset(dt);
 			}
 
-			if (playerList[i]->getFootsteps())
+			if (playerList[i]->getFootsteps() && (playerList[i]->getAnimState_t_p() != AnimationState::third_primary_air && playerList[i]->getAnimState_t_p() != AnimationState::first_primary_air))
 			{
 				glm::vec3 pos;
 				glm::vec3 vel;
@@ -530,7 +530,7 @@ void Game::checkFootsteps(float dt)
 				playerList[i]->jumpSoundAble = true;
 			}
 
-			if (playerList[i]->CheckAbleToJumpSound() && (!playerList[i]->getAnimState_t_p() == AnimationState::third_primary_air && !playerList[i]->getAnimState_t_p() == AnimationState::first_primary_air))
+			if (playerList[i]->CheckAbleToJumpSound() && (playerList[i]->getAnimState_t_p() != AnimationState::third_primary_air && playerList[i]->getAnimState_t_p() != AnimationState::first_primary_air))
 			{
 				glm::vec3 pos;
 				pos = playerList[i]->getPos();
