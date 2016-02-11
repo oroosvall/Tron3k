@@ -1633,9 +1633,9 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 void Game::bounceBullet(BulletHitWorldInfo hwi, Bullet* theBullet)
 {
 	vec4 combinedNormal(0); // all normals added together and then normalized
-	vec4 posadjust(0); //pendepths combined
+	vec3 posadjust(0); //pendepths combined
 
-	posadjust += normalize(hwi.collisionNormal) * hwi.collisionNormal.w;
+	posadjust += normalize(vec3(hwi.collisionNormal)) * hwi.collisionNormal.w;
 	combinedNormal += hwi.collisionNormal;
 
 	// the w component holds the pendepth
@@ -1687,12 +1687,11 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 				case BULLET_TYPE::CLUSTER_GRENADE:
 					if (GetSoundActivated())
 						GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
-					
-					bounceBullet(hi, b);
 					vel.x *= 0.8f;
-					vel.y *= 0.4f;
+					vel.y *= 0.5f;
 					vel.z *= 0.8f;
 					b->setVel(b->getVel());
+					bounceBullet(hi, b);
 					temp = b->getDir();
 					temp.x *= 0.8f;
 					temp.y *= 0.5f;
@@ -1704,13 +1703,12 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 				case BULLET_TYPE::CLUSTERLING:
 					if (GetSoundActivated())
 						GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
-					
-					bounceBullet(hi, b);
-					temp = b->getDir();
 					vel.x *= 0.8f;
 					vel.y *= 0.5f;
 					vel.z *= 0.8f;
 					b->setVel(b->getVel());
+					bounceBullet(hi, b);
+					temp = b->getDir();
 					temp.x *= 0.8f;
 					temp.y *= 0.5f;
 					temp.z *= 0.8f;
@@ -1721,11 +1719,11 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 				case BULLET_TYPE::THERMITE_GRENADE:
 					if (GetSoundActivated())
 						GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
-					bounceBullet(hi, b);
 					vel.x *= 0.8f;
 					vel.y *= 0.5f;
 					vel.z *= 0.8f;
 					b->setVel(b->getVel());
+					bounceBullet(hi, b);
 					temp = b->getDir();
 					temp.x *= 0.8f;
 					temp.y *= 0.5f;
@@ -1735,11 +1733,11 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 					b->setDir(temp);
 					break;
 				case BULLET_TYPE::VACUUM_GRENADE:
-					bounceBullet(hi, b);
 					vel.x *= 0.8f;
 					vel.y *= 0.5f;
 					vel.z *= 0.8f;
 					b->setVel(b->getVel());
+					bounceBullet(hi, b);
 					temp = b->getDir();
 					temp.x *= 0.8f;
 					temp.y *= 0.5f;
@@ -1756,11 +1754,11 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 				case BULLET_TYPE::GRENADE_SHOT:
 					if (GetSoundActivated())
 						GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeLauncherBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
-					bounceBullet(hi, b);
 					vel.x *= 0.8f;
 					vel.y *= 0.5f;
 					vel.z *= 0.8f;
 					b->setVel(b->getVel());
+					bounceBullet(hi, b);
 					temp = b->getDir();
 					temp.x *= 0.8f;
 					temp.y *= 0.5f;
