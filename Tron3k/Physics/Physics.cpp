@@ -1017,7 +1017,7 @@ vec4 Physics::checkBulletVEffectCollision(glm::vec3 bulletPos, vec3 bulletVel, v
 								if (dot(lvP - theOBB->planes[p].p[0], theOBB->planes[p].n) < 0.01f)
 								{
 									if (dot(normalize(lvP - sPos), theOBB->planes[p].n) < 0.0f)
-										if (length(bPos - sPos) > (length(lvP - sPos)))
+										if (length((bPos - (bulletDir * rad)) - sPos) > (length(lvP - sPos)))
 											bPos = lvP - bulletDir * rad;
 									collidedWithPlane = true;
 								}
