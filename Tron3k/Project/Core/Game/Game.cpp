@@ -1603,7 +1603,7 @@ void Game::bounceBullet(BulletHitWorldInfo hwi, Bullet* theBullet)
 	vec4 combinedNormal(0); // all normals added together and then normalized
 	vec4 posadjust(0); //pendepths combined
 
-	posadjust += hwi.collisionNormal * hwi.collisionNormal.w;
+	posadjust += normalize(hwi.collisionNormal) * hwi.collisionNormal.w;
 	combinedNormal += hwi.collisionNormal;
 
 	// the w component holds the pendepth
@@ -1653,7 +1653,7 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 				temp.x *= 0.6f;
 				temp.y *= 0.6f;
 				temp.z *= 0.6f;
-				if (length(temp) < 0.05f)
+				if (length(temp) < 0.15f)
 					removeBullet(hi.bt, arraypos);
 				b->setDir(temp);
 				break;
@@ -1665,7 +1665,7 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 				temp.x *= 0.6f;
 				temp.y *= 0.6f;
 				temp.z *= 0.6f;
-				if (length(temp) < 0.05f)
+				if (length(temp) < 0.15f)
 					removeBullet(hi.bt, arraypos);
 				b->setDir(temp);
 				break;
@@ -1677,7 +1677,7 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 				temp.x *= 0.6f;
 				temp.y *= 0.6f;
 				temp.z *= 0.6f;
-				if (length(temp) < 0.05f)
+				if (length(temp) < 0.15f)
 					removeBullet(hi.bt, arraypos);
 				b->setDir(temp);
 				break;
@@ -1687,7 +1687,7 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 				temp.x *= 0.6f;
 				temp.y *= 0.6f;
 				temp.z *= 0.6f;
-				if (length(temp) < 0.05f)
+				if (length(temp) < 0.15f)
 					removeBullet(hi.bt, arraypos);
 				b->setDir(temp);
 				break;
@@ -1705,7 +1705,7 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 				temp.x *= 0.6f;
 				temp.y *= 0.6f;
 				temp.z *= 0.6f;
-				if (length(temp) < 0.05f)
+				if (length(temp) < 0.15f)
 					removeBullet(hi.bt, arraypos);
 				b->setDir(temp);
 				break;
