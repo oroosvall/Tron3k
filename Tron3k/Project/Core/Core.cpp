@@ -637,14 +637,16 @@ void Core::upClient(float dt)
 				}
 				else if (tmp == KOTHSTATE::ROUND)
 				{
+					Player* local = game->getPlayer(top->getConId());
+					uiManager->setTeamColor(local->getTeam());
+					uiManager->changeColorTeam();
+
 					uiManager->setOpenedGuiBool(true);
 					uiManager->setFirstMenuSet(false);
 					uiManager->setMenu(0);
 
 					game->getPlayer(game->GetLocalPlayerId())->setLockedControls(false);
 					game->setCursorInvisible(true);
-
-					Player* local = game->getPlayer(top->getConId());
 
 					uiManager->clearText(0);
 					uiManager->clearText(1);
