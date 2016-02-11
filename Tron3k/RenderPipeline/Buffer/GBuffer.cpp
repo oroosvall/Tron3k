@@ -87,7 +87,7 @@ void Gbuffer::init(int x, int y, int nrTex, bool depth)
 	uBlitLightPixelX  = glGetUniformLocation(*shaderPtr, "pixeluvX");
 	uBlitLightPixelY = glGetUniformLocation(*shaderPtr, "pixeluvY");
 
-	setGlowSamplingDist(2.0f);
+	setGlowSamplingDist(1.0f);
 
 	if (depth)
 	{

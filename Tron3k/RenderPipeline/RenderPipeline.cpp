@@ -1309,6 +1309,8 @@ void RenderPipeline::renderScoreBoard(int team1size, int team2size)
 	asd.textureID = contMan.score_header_orange;
 	TextureManager::gTm->bind(asd, uiShader, ui_Texture);
 	minimapRenderMat = mat4();
+	vec3 piv(0);
+	glProgramUniform3fv(uiShader, uniformPivotLocation, 1, &piv[0]);
 	//pos
 	minimapRenderMat[0].w = -0.35f;
 	minimapRenderMat[1].w = 0.43f;
