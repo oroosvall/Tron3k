@@ -39,6 +39,7 @@ uniform vec3 eyepos;
 
 float gSpecularPower = 200;
 float gMatSpecularIntensity = 0.4;
+vec4 specularAddetive;
 
 out vec4 fragment_color;
 					
@@ -46,8 +47,7 @@ vec4 CalcLightInternal(SpotLight l, vec3 LightDirection, vec3 Normal)
 {                                                                                                 
 	float DiffuseFactor = dot(Normal, -LightDirection);                                     
                                                                                            
-	vec4 DiffuseColor  = vec4(0, 0, 0, 0);                                            
-	vec4 SpecularColor = vec4(0, 0, 0, 0);                                                  
+	vec4 DiffuseColor  = vec4(0, 0, 0, 0);                                                                                             
                                                                                            
 	if (DiffuseFactor > 0) 
 	{                                                                
@@ -58,9 +58,9 @@ vec4 CalcLightInternal(SpotLight l, vec3 LightDirection, vec3 Normal)
 		float SpecularFactor = dot(VertexToEye, LightReflect);                              
 		SpecularFactor = pow(SpecularFactor, gSpecularPower);                               
 		if (SpecularFactor > 0)
-			SpecularColor = vec4(l.Color, 1.0f) * ( 1 - Normal0.w) * SpecularFactor;
+			specularAddetive += vec4(l.Color, 1.0f) * ( 1 - Normal0.w) * SpecularFactor;
 	}                                                                                                                                                                         
-	return (DiffuseColor + SpecularColor);                                   
+	return (DiffuseColor);                                   
 }               
 
 vec4 CalcPointLight(SpotLight l, vec3 Normal)
@@ -118,6 +118,8 @@ void main()
 		Normal0 = texture(Normal, vec2(UV.x, UV.y));
 		Depth0 = texture(Depth, vec2(UV.x, UV.y));
 		glowValue = texture(GlowMap, vec2(UV.x, UV.y));
+		
+		specularAddetive = vec4(0);
 		
 		float len = length(Position0.xyz - eyepos);
 		if(len < 500)
@@ -191,6 +193,6 @@ void main()
 		//middle sample
 		sum += texture(GlowMap, UV) * 0.941;
 		
-		fragment_color += sum * 0.2;
+		fragment_color += sum * 0.2 + specularAddetive;
 	}	
 }
