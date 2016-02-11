@@ -374,8 +374,6 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			teamOneScore = 0;
 			teamTwoScore = 0;
 			fiveTokensPlayed = false;
-			fifteenPlayed = false;
-			fivePlayed = false;
 			commencePlayed = false;
 			gamePtr->nrOfPlayersReadyReset();
 			gamePtr->clearAllPlayerKD();
@@ -569,6 +567,8 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 		}
 		else if (state == ENDROUND)
 		{
+			fivePlayed = false;
+			fifteenPlayed = false;
 			round++;
 			slowdownTime = true;
 			if (serverMsg == GAMEMODE_MSG::ROUND_WIN_TEAM1)
