@@ -164,6 +164,8 @@ void glDeleteTexture_D(GLsizei n, GLuint* id)
 			memusageTex -= oldSize;
 			memusageT -= oldSize;
 
+			printf("Size freed %d\n", oldSize);
+
 			glDeleteTextures(n, id);
 			genTextureCheck.erase(genTextureCheck.begin() + i);
 			break;

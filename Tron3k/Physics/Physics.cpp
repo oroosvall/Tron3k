@@ -957,8 +957,8 @@ bool Physics::checkPlayerVCaptureCollision(vec3 playerPos, int capID)
 	playerBox.setWorldSize();
 	AABBSingle box = playerBox.getAABB();
 	int captureBoxesSize = (int)captureBoxes.size();
-
-	for (int i = 0; i < captureBoxesSize; i++)
+	bool collided = false;
+	for (int i = 0; i < captureBoxesSize && !collided; i++)
 	{
 		if (captureBoxes[i].getCapID() == capID)
 		{
@@ -968,12 +968,12 @@ bool Physics::checkPlayerVCaptureCollision(vec3 playerPos, int capID)
 
 				for (int j = 0; j < size; j++)
 				{
-					return checkAABBvAABBCollision(playerBox.getAABB(), captureBoxes[i].getSubAABBs()[j]);
+					collided = checkAABBvAABBCollision(playerBox.getAABB(), captureBoxes[i].getSubAABBs()[j]);
 				}
 			}
 		}
 	}
-	return false;
+	return collided;
 }
 
 vec4 Physics::checkBulletVEffectCollision(glm::vec3 bulletPos, vec3 bulletVel, vec3 bulletDir, unsigned int eType, int eid, float dt)
