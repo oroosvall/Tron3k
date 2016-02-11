@@ -99,23 +99,26 @@ GLuint uploadStreamedData(unsigned int &texturePos)
 			if (!(it->second.format == GL_COMPRESSED_RGBA || it->second.format == GL_RGBA))
 			{
 				glBindTexture(GL_TEXTURE_2D, texID);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 4);
 				glCompressedTexImage2D(GL_TEXTURE_2D, 0, it->second.format, it->second.x, it->second.y, 0, it->second.size, it->second.data);
 
 			}
 			else
 			{
 				glBindTexture(GL_TEXTURE_2D, texID);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 1);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 4);
 				glTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA, it->second.x, it->second.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, it->second.data);
 
 
 			}
 
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_LOD, 100.0f);
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_LOD, 0.0f);
+			glGenerateMipmap(GL_TEXTURE_2D);
 
 			delete[](char*)it->second.data;
 
