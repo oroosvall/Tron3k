@@ -624,19 +624,27 @@ void Core::upClient(float dt)
 			}
 		}
 		game->update(newDt);
-		KOTHSTATE tmp = ((KingOfTheHill*)(game->getGameMode()))->getState();
-		if (kothState != tmp)
+		if (game->GetGameState() != Gamestate::SERVER)
 		{
-			if (tmp == KOTHSTATE::PREROUND)
+			KOTHSTATE tmp = ((KingOfTheHill*)(game->getGameMode()))->getState();
+			if (kothState != tmp)
 			{
-				showClassSelect();
+				if (tmp == KOTHSTATE::PREROUND)
+				{
+					top->command_role_change(top->getConId(), 1);
+					showClassSelect();
+				}
+				else if (tmp == KOTHSTATE::ROUND)
+				{
+					uiManager->setOpenedGuiBool(true);
+					uiManager->setFirstMenuSet(false);
+					uiManager->setMenu(0);
+
+					game->getPlayer(game->GetLocalPlayerId())->setLockedControls(false);
+					game->setCursorInvisible(true);
+				}
+				kothState = tmp;
 			}
-			else if (tmp == KOTHSTATE::ROUND)
-			{
-				//uiManager->setMenu(-1);
-				//uiManager->backToGui();
-			}
-			kothState = tmp;
 		}
 	/*	if (GetSoundActivated())
 		{

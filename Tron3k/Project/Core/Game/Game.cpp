@@ -1705,7 +1705,7 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 				temp.x *= 0.6f;
 				temp.y *= 0.6f;
 				temp.z *= 0.6f;
-				if (length(temp) < 0.05f)
+				if (abs(temp.x) < 0.01f && abs(temp.z) && 0.01f)
 					removeBullet(hi.bt, arraypos);
 				b->setDir(temp);
 				break;
