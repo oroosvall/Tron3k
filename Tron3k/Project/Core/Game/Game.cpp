@@ -1685,15 +1685,16 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 				case BULLET_TYPE::CLUSTER_GRENADE:
 					if (GetSoundActivated())
 						GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+					
+					bounceBullet(hi, b);
 					vel.x *= 0.8f;
 					vel.y *= 0.4f;
 					vel.z *= 0.8f;
-					b->setVel(b->getVel() * 0.6f);
-					bounceBullet(hi, b);
+					b->setVel(b->getVel());
 					temp = b->getDir();
-					temp.x *= 0.6f;
-					temp.y *= 0.6f;
-					temp.z *= 0.6f;
+					temp.x *= 0.8f;
+					temp.y *= 0.5f;
+					temp.z *= 0.8f;
 					if (length(temp) < 0.15f)
 						removeBullet(hi.bt, arraypos);
 					b->setDir(temp);
@@ -1701,15 +1702,16 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 				case BULLET_TYPE::CLUSTERLING:
 					if (GetSoundActivated())
 						GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
-					vel.x *= 0.8f;
-					vel.y *= 0.4f;
-					vel.z *= 0.8f;
-					b->setVel(b->getVel() * 0.6f);
+					
 					bounceBullet(hi, b);
 					temp = b->getDir();
-					temp.x *= 0.6f;
-					temp.y *= 0.6f;
-					temp.z *= 0.6f;
+					vel.x *= 0.8f;
+					vel.y *= 0.5f;
+					vel.z *= 0.8f;
+					b->setVel(b->getVel());
+					temp.x *= 0.8f;
+					temp.y *= 0.5f;
+					temp.z *= 0.8f;
 					if (length(temp) < 0.15f)
 						removeBullet(hi.bt, arraypos);
 					b->setDir(temp);
@@ -1717,29 +1719,29 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 				case BULLET_TYPE::THERMITE_GRENADE:
 					if (GetSoundActivated())
 						GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
-					vel.x *= 0.8f;
-					vel.y *= 0.4f;
-					vel.z *= 0.8f;
-					b->setVel(b->getVel() * 0.6f);
 					bounceBullet(hi, b);
+					vel.x *= 0.8f;
+					vel.y *= 0.5f;
+					vel.z *= 0.8f;
+					b->setVel(b->getVel());
 					temp = b->getDir();
-					temp.x *= 0.6f;
-					temp.y *= 0.6f;
-					temp.z *= 0.6f;
+					temp.x *= 0.8f;
+					temp.y *= 0.5f;
+					temp.z *= 0.8f;
 					if (length(temp) < 0.15f)
 						removeBullet(hi.bt, arraypos);
 					b->setDir(temp);
 					break;
 				case BULLET_TYPE::VACUUM_GRENADE:
-					vel.x *= 0.8f;
-					vel.y *= 0.4f;
-					vel.z *= 0.8f;
-					b->setVel(b->getVel() * 0.6f);
 					bounceBullet(hi, b);
+					vel.x *= 0.8f;
+					vel.y *= 0.5f;
+					vel.z *= 0.8f;
+					b->setVel(b->getVel());
 					temp = b->getDir();
-					temp.x *= 0.6f;
-					temp.y *= 0.6f;
-					temp.z *= 0.6f;
+					temp.x *= 0.8f;
+					temp.y *= 0.5f;
+					temp.z *= 0.8f;
 					if (length(temp) < 0.15f)
 						removeBullet(hi.bt, arraypos);
 					b->setDir(temp);
@@ -1752,15 +1754,15 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 				case BULLET_TYPE::GRENADE_SHOT:
 					if (GetSoundActivated())
 						GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeLauncherBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
-					vel.x *= 0.8f;
-					vel.y *= 0.4f;
-					vel.z *= 0.8f;
-					b->setVel(b->getVel() * 0.6f);
 					bounceBullet(hi, b);
+					vel.x *= 0.8f;
+					vel.y *= 0.5f;
+					vel.z *= 0.8f;
+					b->setVel(b->getVel());
 					temp = b->getDir();
-					temp.x *= 0.6f;
-					temp.y *= 0.6f;
-					temp.z *= 0.6f;
+					temp.x *= 0.8f;
+					temp.y *= 0.5f;
+					temp.z *= 0.8f;
 					if (abs(temp.x) < 0.01f && abs(temp.z) && 0.01f)
 						removeBullet(hi.bt, arraypos);
 					b->setDir(temp);
