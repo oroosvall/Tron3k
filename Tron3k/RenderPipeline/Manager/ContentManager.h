@@ -75,6 +75,7 @@ public:
 	bool f_render_chunks;
 	bool f_render_abb;
 	bool f_render_obb;
+	bool f_render_roombox;
 	bool f_render_gui;
 
 	//minimap

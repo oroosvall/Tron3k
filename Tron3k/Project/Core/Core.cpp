@@ -1175,6 +1175,7 @@ void Core::roamHandleCmds(std::string com)
 				console.printMsg("/rs  chunk	RENDER_CHUNK ", "", ' ');
 				console.printMsg("/rs  abb		RENDER_ABB ", "", ' ');
 				console.printMsg("/rs  obb		RENDER_OBB ", "", ' ');
+				console.printMsg("/rs  room		RENDER_ROOM ", "", ' ');
 				console.printMsg("/rs  debug	RENDER_DEBUG_TEXT ", "", ' ');
 				console.printMsg("/rs  gui		RENDER_GUI ", "", ' ');
 			}
@@ -1188,6 +1189,8 @@ void Core::roamHandleCmds(std::string com)
 				renderPipe->setRenderFlag(RENDER_ABB);
 			else if (token == "obb")
 				renderPipe->setRenderFlag(RENDER_OBB);
+			else if (token == "room")
+				renderPipe->setRenderFlag(RENDER_ROOM);
 			else if(token == "debug")
 				renderPipe->setRenderFlag(RENDER_DEBUG_TEXT);
 			else if (token == "gui")
@@ -1342,6 +1345,7 @@ void Core::clientHandleCmds(std::string com)
 				console.printMsg("/rs  chunk	RENDER_CHUNK ", "", ' ');
 				console.printMsg("/rs  abb		RENDER_ABB ", "", ' ');
 				console.printMsg("/rs  obb		RENDER_OBB ", "", ' ');
+				console.printMsg("/rs  room		RENDER_ROOM ", "", ' ');
 				console.printMsg("/rs  debug	RENDER_DEBUG_TEXT ", "", ' ');
 				console.printMsg("/rs  gui		RENDER_GUI ", "", ' ');
 			}
@@ -1355,6 +1359,8 @@ void Core::clientHandleCmds(std::string com)
 				renderPipe->setRenderFlag(RENDER_ABB);
 			else if (token == "obb")
 				renderPipe->setRenderFlag(RENDER_OBB);
+			else if (token == "room")
+				renderPipe->setRenderFlag(RENDER_ROOM);
 			else if (token == "debug")
 				renderPipe->setRenderFlag(RENDER_DEBUG_TEXT);
 			else if (token == "gui")

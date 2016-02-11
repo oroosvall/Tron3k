@@ -925,6 +925,7 @@ void RenderPipeline::setRenderFlag(RENDER_FLAGS flag)
 		case RENDER_CHUNK:		contMan.f_render_chunks = !contMan.f_render_chunks;			break;
 		case RENDER_ABB:		contMan.f_render_abb = !contMan.f_render_abb;				break;
 		case RENDER_OBB:		contMan.f_render_obb = !contMan.f_render_obb;				break;
+		case RENDER_ROOM:		contMan.f_render_roombox = !contMan.f_render_roombox;		break;
 		case RENDER_DEBUG_TEXT:	renderDebugText = !renderDebugText; debugText->setText(""); break;
 		case RENDER_GUI:		contMan.f_render_gui = !contMan.f_render_gui;				break;
 	}

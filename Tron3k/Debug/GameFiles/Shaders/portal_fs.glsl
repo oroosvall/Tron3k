@@ -20,8 +20,8 @@ void main ()
 	WorldPosOut	= vec4(0);
 	DiffuseOut = vec4(0);
 	NormalOut = vec4(0);
-	GlowMap = vec4(transp , 0 , transp, transp / 4);
-    GlowMap.w = 0.2;
+	//GlowMap = vec4(transp , 0 , transp, transp / 4);
+	GlowMap = vec4(transp , 0 , 1, 0.2f);
 }
 
 //float maxlen = 20;

@@ -473,6 +473,7 @@ void Map::loadMap(std::string mapName)
 	for (int i = 0; i < roomCount; i++)
 	{
 		chunks[i].roomBox = chunkAABB[i];
+		chunks[i].addRoomBoxRender(chunkAABB[i]);
 	}
 
 	inFile.close();
