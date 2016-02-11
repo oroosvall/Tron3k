@@ -1,5 +1,4 @@
-4
+3
 GameFiles/UIFiles/GUI.txt
 GameFiles/UIFiles/TeamSelect.txt
 GameFiles/UIFiles/ClassSelect.txt
-GameFiles/UIFiles/EscWindow.txt
