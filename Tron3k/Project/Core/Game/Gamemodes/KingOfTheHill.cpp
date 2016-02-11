@@ -216,7 +216,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 		if (gamePtr->nrOfPlayersReady() >= playersReadyNeeded)
 		{
 			timer = 15.0f; //20 seconds in the pre-round
-			capturePoint = 0;// rand() % 2;
+			capturePoint = rand() % 2;
 			state = PREROUND;
 			std::vector<int>* teamOne = gamePtr->getTeamConIds(1);
 			std::vector<int>* teamTwo = gamePtr->getTeamConIds(2);
