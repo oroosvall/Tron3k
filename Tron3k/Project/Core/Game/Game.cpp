@@ -1771,14 +1771,7 @@ void Game::handleBulletHitEffectEvent(BulletHitEffectInfo hi)
 	if (b != nullptr)
 	{
 		//Add exceptions 4 battery fields
-		BulletHitWorldInfo forBounce;
-		forBounce.bulletPID = hi.bulletPID;
-		forBounce.bulletBID = hi.bulletBID;
-		forBounce.bt = hi.bt;
-		forBounce.hitPos = hi.hitPos;
-		forBounce.hitDir = hi.hitDir;
-		forBounce.collisionNormal = hi.collisionNormal;
-		handleBulletHitWorldEvent(forBounce); //Pretty sure this is all we need
+		removeBullet(hi.bt, arraypos);
 		/*vec3 temp;
 		switch (hi.bt)
 		{
