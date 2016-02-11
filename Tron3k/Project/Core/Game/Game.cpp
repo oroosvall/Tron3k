@@ -497,7 +497,7 @@ void Game::checkFootsteps(float dt)
 {
 	for (int i = 0; i < max_con; i++)
 	{
-		if (playerList[i] != nullptr && i != localPlayerId)
+		if (playerList[i] != nullptr && i != localPlayerId && (!playerList[i]->getAnimState_t_p() == AnimationState::third_primary_air && !playerList[i]->getAnimState_t_p() == AnimationState::first_primary_air))
 		{
 			if (!playerList[i]->getFootsteps())
 			{
