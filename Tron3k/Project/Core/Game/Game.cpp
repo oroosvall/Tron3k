@@ -1495,7 +1495,9 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 					}
 					playerList[hi.bulletPID]->impressiveDone = true;
 				}
-				addEffectToList(-1, p->getTeam(), hi.playerHit, EFFECT_TYPE::HEALTHPACK, p->getPos(), 0, 0.5f);
+				glm::vec3 hpPos = p->getPos();
+				hpPos.y += 0.5f;
+				addEffectToList(-1, p->getTeam(), hi.playerHit, EFFECT_TYPE::HEALTHPACK, hpPos, 0, 0.5f);
 			}
 			removeBullet(hi.bt, bulletPosInArray);
 		}
@@ -1606,7 +1608,10 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 				}
 				playerList[hi.effectPID]->impressiveDone = true;
 			}
-			addEffectToList(-1, p->getTeam(), hi.playerHit, EFFECT_TYPE::HEALTHPACK, p->getPos(), 0, 0.5f);
+
+			glm::vec3 hpPos = p->getPos();
+			hpPos.y += 0.5f;
+			addEffectToList(-1, p->getTeam(), hi.playerHit, EFFECT_TYPE::HEALTHPACK, hpPos, 0, 0.5f);
 
 			if (p->GetConsecutiveDeaths() > 4 && !p->roleChangeWritten)
 			{
