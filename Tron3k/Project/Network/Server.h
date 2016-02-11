@@ -38,6 +38,7 @@ public:
 	void event_player_data();
 
 	void event_bullet_hit_player(std::vector<BulletHitPlayerInfo> allhits);
+	void event_bullet_hit_effect(std::vector<BulletHitEffectInfo> allhits);
 
 	void event_bullet_hit_world(std::vector<BulletHitWorldInfo> allhits);
 	void event_effect_hit_player(std::vector<EffectHitPlayerInfo> allhits);

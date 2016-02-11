@@ -826,8 +826,7 @@ void Game::checkBulletVEffectCollision(float dt)
 							bi.hitPos = bullets[b][j]->getPos();
 							bi.hitDir = bullets[b][j]->getDir();
 							bi.collisionNormal = collNormalWalls;
-							allBulletHitsOnEffects.push_back(bi);
-							
+							allBulletHitsOnEffects.push_back(bi);				
 						}
 					}
 
@@ -1725,12 +1724,16 @@ void Game::handleBulletHitEffectEvent(BulletHitEffectInfo hi)
 {
 	int arraypos = -1;
 	Bullet* b = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, arraypos);
-	//Jag hatar structs ... please do better
-	BulletHitWorldInfo forBounce; forBounce.bulletPID = hi.bulletPID; forBounce.bulletBID = hi.bulletBID; forBounce.bt = hi.bt; forBounce.hitPos = hi.hitPos; forBounce.hitDir = hi.hitDir; forBounce.collisionNormal = hi.collisionNormal;
 	if (b != nullptr)
 	{
 		//Add exceptions 4 battery fields
-
+		BulletHitWorldInfo forBounce;
+		forBounce.bulletPID = hi.bulletPID;
+		forBounce.bulletBID = hi.bulletBID;
+		forBounce.bt = hi.bt;
+		forBounce.hitPos = hi.hitPos;
+		forBounce.hitDir = hi.hitDir;
+		forBounce.collisionNormal = hi.collisionNormal;
 		handleBulletHitWorldEvent(forBounce); //Pretty sure this is all we need
 		/*vec3 temp;
 		switch (hi.bt)
