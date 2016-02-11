@@ -484,6 +484,7 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 			consolePtr->printMsg("Warmup. Type /ready to start.", "System", 'S');
 			teamOneScore = 0;
 			teamTwoScore = 0;
+			round = 1;
 
 			for (int c = 0; c < teamOnePlayers.size(); c++)
 			{
@@ -603,6 +604,7 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 				consolePtr->printMsg("ROUND DRAW", "System", 'S');
 				teamOneScore++;
 				teamTwoScore++;
+				round++;
 			}
 		}
 		else if (state == ENDMATCH)
