@@ -756,7 +756,7 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 					{
 						if (dot(dir, normalize(bPos - sPos)) > -0.00001f)
 							dir *= -1;
-						t = vec4(dir, t.w);
+						t = vec4(dir, t.w + 0.2f);
 						bulletPos = bPos;
 						return t;
 					}
@@ -769,7 +769,7 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 					{
 						if (dot(dir, normalize(bPos - sPos)) > -0.00001f)
 							dir *= -1;
-						t = vec4(dir, t.w);
+						t = vec4(dir, t.w + 0.2f);
 						bulletPos = bPos;
 						return t;
 					}
@@ -781,7 +781,7 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 					{
 						if (dot(dir, normalize(bulletPos - sPos)) > -0.00001f)
 							dir *= -1;
-						t = vec4(dir, t.w);
+						t = vec4(dir, t.w + 0.2f);
 						return t;
 					}
 					t = getSpherevOBBNorms(origPos, rad, theOBB);
@@ -791,7 +791,7 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 					{
 						if (dot(dir, normalize(origPos - sPos)) > -0.00001f)
 							dir *= -1;
-						t = vec4(dir, t.w);
+						t = vec4(dir, t.w + 0.2f);
 						bulletPos = origPos;
 						return t;
 					}
@@ -836,7 +836,7 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 								if (length(lvP) > 0.001f)
 									if (dot(lvP - theOBB->planes[p].p[0], theOBB->planes[p].n) < 0.001f)
 									{
-										if (length(bPos - origPos) > (length(lvP - origPos)))
+										if (length((bPos - (bulletDir * rad)) - sPos) > (length(lvP - sPos)))
 											bPos = lvP;
 										collidedWithPlane = true;
 									}
@@ -852,7 +852,7 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 								{
 									if (dot(dir, bPos - sPos) > -0.00001f)
 										dir *= -1;
-									t = vec4(dir, t.w);
+									t = vec4(dir, t.w + 0.2f);
 									bulletPos = bPos;
 									return t;
 								}
@@ -865,7 +865,7 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 								{
 									if (dot(dir, bPos - origPos) > -0.00001f)
 										dir *= -1;
-									t = vec4(dir, t.w);
+									t = vec4(dir, t.w + 0.2f);
 									bulletPos = bPos;
 									return t;
 								}
@@ -877,7 +877,7 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 								{
 									if (dot(dir, bulletPos - sPos) > -0.00001f)
 										dir *= -1;
-									t = vec4(dir, t.w);
+									t = vec4(dir, t.w + 0.2f);
 									return t;
 								}
 
@@ -888,7 +888,7 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 								{
 									if (dot(dir, bPos - origPos) > -0.00001f)
 										dir *= -1;
-									t = vec4(dir, t.w);
+									t = vec4(dir, t.w + 0.2f);
 									bulletPos = origPos;
 									return t;
 								}
