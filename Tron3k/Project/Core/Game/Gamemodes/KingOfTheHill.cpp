@@ -694,15 +694,13 @@ KOTHSTATE KingOfTheHill::getState()
 
 bool KingOfTheHill::allowTeamChange()
 {
-	//Förlåt Adam, Martin tvingade mig
-	//if (state == WARMUP || state == ENDMATCH)
+	if (state == WARMUP || state == ENDMATCH)
 		return true;
 	return false;
 }
 
 bool KingOfTheHill::allowRoleChange()
 {
-	//Förlåt Adam, Martin tvingade mig
 	if (state == ROUND)
 	{
 		return false;
