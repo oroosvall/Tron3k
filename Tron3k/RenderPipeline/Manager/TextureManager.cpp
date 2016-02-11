@@ -65,9 +65,9 @@ void TextureManager::update(float dt)
 		if (textureList[i].state == TEXTURE_LOADED)
 		{
 			textureList[i].timeNotUsed += dt;
-			if (textureList[i].timeNotUsed > 100.0f)
+			if (textureList[i].timeNotUsed > 30.0f)
 			{
-				printf("Texture %d have not been used for 100seconds unloading\n", i);
+				printf("Texture %d have not been used for 30 seconds unloading\n", i);
 				glDeleteTextures(1, &textureList[i].textureID);
 				textureList[i].textureID = 0;
 				textureList[i].state = TEXTURE_UNLOADED;
