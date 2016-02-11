@@ -129,9 +129,9 @@ void main()
 			for(int n = 1; n < NumSpotLights; n++)
 			{
 				if(length(lights[n].Direction) < 0.3f)
-					fragment_color += CalcPointLight(lights[n], Normal0.xyz) * 0.2f;
+					fragment_color += CalcPointLight(lights[n], Normal0.xyz);
 				else
-					fragment_color += CalcSpotLight(lights[n], Normal0.xyz) * 0.6f;
+					fragment_color += CalcSpotLight(lights[n], Normal0.xyz);
 					
 				ambientForce += vec4(lights[n].Color, 1) * lights[n].AmbientIntensity;
 			}

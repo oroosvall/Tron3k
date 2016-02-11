@@ -417,7 +417,9 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 		//ss << "Vao count: " << genVaoPeak << "\n";
 		//ss << "Texture count: " << genTexturePeak << "\n";
 		//ss << "Memory usage: " << memusage << "(B)\n";
-		ss << "Memory usage: " << memusage / 1024.0f / 1024.0f << "(MB)\n";
+		ss << "Memory usage(tot): " << memusageT / 1024.0f / 1024.0f << "(MB)\n";
+		ss << "Memory usage(tex): " << memusageTex / 1024.0f / 1024.0f << "(MB)\n";
+		ss << "Memory usage(buf): " << memusageMesh / 1024.0f / 1024.0f << "(MB)\n";
 		ss << "FPS: " << fps << "\n";
 		ss << "Portals (" << (contMan.f_portal_culling ? "on" : "off") << ")\n";
 		//ss << "Texture binds: " << textureBinds << "\n";

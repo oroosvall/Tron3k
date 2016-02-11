@@ -289,7 +289,7 @@ void Gbuffer::generate(int x, int y)
 			else if (i == 2)
 				rTexture[i].init(x, y, 0, false, false, false);	// diffuse
 			else if (i == 3)
-				rTexture[i].init(x, y, 0, false, true, true);	// normal
+				rTexture[i].init(x, y, 0, false, false, true);	// normal
 			else if (i == 4)
 				rTexture[i].init(x, y, 0, false, false, false);	// glow
 

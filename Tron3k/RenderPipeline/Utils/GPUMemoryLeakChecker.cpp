@@ -22,7 +22,9 @@ unsigned int genBufferPeak = 0;
 unsigned int genVaoPeak = 0;
 unsigned int genTexturePeak = 0;
 
-unsigned int memusage = 0;
+unsigned int memusageTex = 0;
+unsigned int memusageMesh = 0;
+unsigned int memusageT = 0;
 
 unsigned int textureBinds = 0;
 unsigned int bufferBinds = 0;
@@ -159,7 +161,8 @@ void glDeleteTexture_D(GLsizei n, GLuint* id)
 
 			}
 
-			memusage -= oldSize;
+			memusageTex -= oldSize;
+			memusageT -= oldSize;
 
 			glDeleteTextures(n, id);
 			genTextureCheck.erase(genTextureCheck.begin() + i);
@@ -203,7 +206,9 @@ void glBufferData_D(GLenum target, GLsizeiptr size, const GLvoid * data, GLenum 
 	glGetBufferParameteriv(target, GL_BUFFER_SIZE, &oldBufferSize);
 	glBufferData(target, size, data, usage);
 
-	memusage += (size - oldBufferSize);
+	memusageMesh += (size - oldBufferSize);
+	memusageT += (size - oldBufferSize);
+
 }
 
 void glActiveTexture_D(GLenum texture)
@@ -275,7 +280,7 @@ void glTexImage2D_D(GLenum target, GLint level, GLint internalFormat, GLsizei wi
 	unsigned int asumedSize = width * height * 4;
 
 	// check if we can allocate that memory, if not I'll give you a 1x1 RED pixel only, now take care of the resources
-	if(asumedSize + memusage < memoryLimit)
+	if(asumedSize + memusageT < memoryLimit)
 		glTexImage2D(target, level, internalFormat, width, height, border, format, type, data);
 	else
 	{
@@ -309,7 +314,8 @@ void glTexImage2D_D(GLenum target, GLint level, GLint internalFormat, GLsizei wi
 
 	printf("Texture size %d bytes\n", newSize);
 
-	memusage += (newSize - oldSize);
+	memusageTex += (newSize - oldSize);
+	memusageT += (newSize - oldSize);
 
 }
 
@@ -351,7 +357,7 @@ void glCompressedTexImage2D_D(GLenum target, GLint level, GLenum internalformat,
 
 	}
 	// check if we can allocate that memory, if not I'll give you a 1x1 RED pixel only, now take care of the resources
-	if(imageSize + memusage < memoryLimit && imageSize > 0)
+	if(imageSize + memusageT < memoryLimit && imageSize > 0)
 		glCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, data);
 	else
 	{
@@ -387,7 +393,8 @@ void glCompressedTexImage2D_D(GLenum target, GLint level, GLenum internalformat,
 
 	}
 
-	memusage += (newSize - oldSize);
+	memusageTex += (newSize - oldSize);
+	memusageT += (newSize - oldSize);
 
 }
 

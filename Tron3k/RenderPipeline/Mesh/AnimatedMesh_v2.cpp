@@ -98,14 +98,16 @@ void PlayerMesh::load(string fileName, std::string _character)
 
 		file.close();
 	}
-}
 
-void PlayerMesh::release()
-{
 	delete[] matOffsets;
 	delete[] indices;
 	delete[] verts;
 
+}
+
+void PlayerMesh::release()
+{
+	
 	glDeleteVertexArrays(1, &vao);
 	glDeleteBuffers(1, &vbo);
 	glDeleteBuffers(1, &ibo);

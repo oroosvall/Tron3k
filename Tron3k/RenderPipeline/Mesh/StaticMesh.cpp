@@ -2,8 +2,6 @@
 
 void StaticMesh::release()
 {
-	delete[] verts;
-	delete[] indices;
 
 	glDeleteBuffers(1, &vertexBuffer);
 	glDeleteBuffers(1, &indexBuffer);
@@ -68,4 +66,7 @@ void StaticMesh::stream()
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex11), BUFFER_OFFSET(sizeof(float) * 5));
 	// tangent
 	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), BUFFER_OFFSET(sizeof(float) * 8));
+
+	delete[] verts;
+	delete[] indices;
 }
