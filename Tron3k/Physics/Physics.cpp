@@ -629,9 +629,9 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos)
 		//culling player intersection tests vs room aabbs
 		roomBox = roomBoxes[i - 1].getAABB();
 		bool passed = false;
-		if (box.max.x > roomBox->min.x && box.min.x < roomBox->max.x)//x
-			if (box.max.y > roomBox->min.y && box.min.y < roomBox->max.y)//y
-				if (box.max.z > roomBox->min.z && box.min.z < roomBox->max.z)//y
+		//if (box.max.x > roomBox->min.x && box.min.x < roomBox->max.x)//x
+			//if (box.max.y > roomBox->min.y && box.min.y < roomBox->max.y)//y
+				//if (box.max.z > roomBox->min.z && box.min.z < roomBox->max.z)//y
 					passed = true;
 
 		if (passed)
@@ -808,10 +808,10 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 		if (i > 0)
 		{
 			roomBox = roomBoxes[i - 1].getAABB();
-			bool passed = false;
-			if (box.max.x > roomBox->min.x && box.min.x < roomBox->max.x)//x
-				if (box.max.y > roomBox->min.y && box.min.y < roomBox->max.y)//y
-					if (box.max.z > roomBox->min.z && box.min.z < roomBox->max.z)//y
+			bool passed = true;
+			//if (box.max.x > roomBox->min.x && box.min.x < roomBox->max.x)//x
+				//if (box.max.y > roomBox->min.y && box.min.y < roomBox->max.y)//y
+					//if (box.max.z > roomBox->min.z && box.min.z < roomBox->max.z)//y
 						passed = true;
 
 			if (passed)
