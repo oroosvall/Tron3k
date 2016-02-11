@@ -831,7 +831,7 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 							bool collidedWithPlane = false;
 							for (int p = 0; p < 6; p++)
 							{
-								vec3 lvP = checkLinevPlaneCollision(origPos, bulletPos, theOBB->planes[p].p[0], theOBB->planes[p].p[1], theOBB->planes[p].p[2], theOBB->planes[p].n);
+								vec3 lvP = checkLinevPlaneCollision(sPos, ePos, theOBB->planes[p].p[0], theOBB->planes[p].p[1], theOBB->planes[p].p[2], theOBB->planes[p].n);
 
 								if (length(lvP) > 0.001f)
 									if (dot(lvP - theOBB->planes[p].p[0], theOBB->planes[p].n) < 0.001f)
