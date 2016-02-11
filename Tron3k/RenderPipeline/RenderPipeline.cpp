@@ -786,6 +786,7 @@ void RenderPipeline::renderCapturePoint(int capPointID)
 {
 	glDisable(GL_BLEND);
 	glUseProgram(regularShader);
+	glProgramUniform1f(regularShader, uniformGlowTrail[0], 0.0f);
 	glProgramUniform1f(regularShader, uniformStaticGlowIntensityLocation[0], 1.0f);
 	glProgramUniform3fv(regularShader, uniformDynamicGlowColorLocation[0], 1, (GLfloat*)contMan.testMap.getCapPointColor(capPointID));
 	contMan.renderCapturePoint(capPointID, regularShader, worldMat[0], uniformTextureLocation[0], uniformNormalLocation[0], uniformGlowSpecLocation[0]);
