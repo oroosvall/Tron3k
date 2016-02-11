@@ -667,6 +667,7 @@ void Core::upClient(float dt)
 						uiManager->setText("00:00", 6); //time
 					}
 
+					uiManager->scaleBar(0, 1.0f, false);
 					uiManager->scaleBar(2, (float)(koth->getRespawnTokens(1)) / (float)(koth->getMaxTokensPerTeam()), false);
 					uiManager->scaleBar(3, (float)(koth->getRespawnTokens(2)) / (float)(koth->getMaxTokensPerTeam()), false);
 					uiManager->scaleBar(9, 0.0f, true);
