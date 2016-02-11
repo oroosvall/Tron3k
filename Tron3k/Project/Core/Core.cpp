@@ -1935,157 +1935,119 @@ void Core::inGameUIUpdate() //Ingame ui update
 {
 	if (uiManager->getRoleBool())
 	{
-		bool playerExist = false;
 		Player* local = game->getPlayer(game->GetLocalPlayerId());
 		KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
 
-		int tTeam = local->getTeam();
-		int tClass = local->getRole()->getRole();
-
-		if (tClass != ROLES::NROFROLES)
-			if (tTeam != 0)
-				playerExist = true;
-
-		if (playerExist)
+		if (local->getHP() != HUD.HP) 
 		{
-			if (local->getHP() != HUD.HP)
-			{
-				if (local->getMaxHP() != HUD.maxHp)
-					HUD.maxHp = local->getMaxHP();
+			if (local->getMaxHP() != HUD.maxHp)
+				HUD.maxHp = local->getMaxHP();
 
-				HUD.HP = local->getHP();
-				uiManager->clearText(0);
-				uiManager->setText(std::to_string(HUD.HP), 0);
-				if((float)local->getMaxHP() > 0)
-					uiManager->scaleBar(0, (float)HUD.HP / (float)(local->getMaxHP()), true); //Kolla med Adam om det finns ett bättre sätt.
-				else
-					console.printMsg("Error: Class Core line 1943, local->getMaxHP() has a value of 0 or below", "System", 'S');
-			}
-			if (local->getSpecialMeter() != HUD.specialMeter)
+			HUD.HP = local->getHP();
+			uiManager->clearText(0);
+			uiManager->setText(std::to_string(HUD.HP), 0);
+			uiManager->scaleBar(0, (float)HUD.HP / (float)(local->getMaxHP()) , true); //Kolla med Adam om det finns ett bättre sätt.
+		}
+		if (local->getSpecialMeter() != HUD.specialMeter)
+		{
+			float procent = local->getSpecialMeter() / HUD.specialMeter;
+			uiManager->scaleBar(9, procent, true);
+		}
+		if (local->getAmmo() != HUD.ammo)
+		{
+			if (local->getMaxAmmo() != HUD.maxAmmo)
+				HUD.maxAmmo = local->getMaxAmmo();
+
+			HUD.ammo = local->getAmmo();
+			std::string nText = std::to_string(HUD.ammo) + "/" + std::to_string(HUD.maxAmmo);
+			uiManager->clearText(1);
+			uiManager->setText(nText, 1);
+		}
+		if (koth->getRespawnTokens(1) != HUD.teamOneTokens)
+		{
+			HUD.teamOneTokens = koth->getRespawnTokens(1);
+			uiManager->clearText(2);
+			uiManager->setText(std::to_string(HUD.teamOneTokens), 2);
+			uiManager->scaleBar(2, (float)HUD.teamOneTokens / (float)HUD.maxTokens, true);
+		}
+		if (koth->getRespawnTokens(2) != HUD.teamTwoTokens)
+		{
+			HUD.teamTwoTokens = koth->getRespawnTokens(2);
+			uiManager->clearText(3);
+			uiManager->setText(std::to_string(HUD.teamTwoTokens), 3);
+			uiManager->scaleBar(3, (float)HUD.teamTwoTokens / (float)HUD.maxTokens, true);
+		}
+		if (koth->getRoundWins(1) != HUD.teamOneRoundWins)
+		{
+			if (koth->getRoundWins(1) != -1)
 			{
-				if (HUD.specialMeter > 0)
+				HUD.teamOneRoundWins = koth->getRoundWins(1);
+				uiManager->clearText(4);
+				uiManager->setText(std::to_string(HUD.teamOneRoundWins), 4);
+			}
+		}
+		if (koth->getRoundWins(2) != HUD.teamTwoRoundWins)
+		{
+			if (koth->getRoundWins(2) != -1)
+			{
+				HUD.teamTwoRoundWins = koth->getRoundWins(2);
+				uiManager->clearText(5);
+				uiManager->setText(std::to_string(HUD.teamTwoRoundWins), 5);
+			}
+		}
+		if (int(koth->getTimer()) != HUD.time) //Not done
+		{
+			HUD.time = int(koth->getTimer());
+
+			int minutes = HUD.time / 60; //* 0.016666666666;
+			int seconds = HUD.time - 60 * minutes;
+
+			std::string sMinutes = "0";
+			std::string sSeconds = "0";
+
+			sMinutes += std::to_string(minutes);
+			sSeconds += std::to_string(seconds);
+
+			if(sMinutes.size() > 2)
+				sMinutes = std::to_string(minutes);
+			if (sSeconds.size() > 2)
+				sSeconds = std::to_string(seconds);
+
+			uiManager->clearText(6);
+			uiManager->setText(sMinutes + ":" + sSeconds, 6);
+
+			if (koth->getState() == ROUND) //Tickets meter should only work during the rounds which is why this check is here.
+			{
+				if (!HUD.firstSecondEachRound) //If it isn't the first second of the round
 				{
-					float procent = local->getSpecialMeter() / HUD.specialMeter;
-					uiManager->scaleBar(9, procent, true);
-				}
-				else
-					console.printMsg("Error: Class Core line 1950, HUD.specialMeter has a value of 0 or below", "System", 'S');
-			}
-			if (local->getAmmo() != HUD.ammo)
-			{
-				if (local->getMaxAmmo() != HUD.maxAmmo)
-					HUD.maxAmmo = local->getMaxAmmo();
-
-				HUD.ammo = local->getAmmo();
-				std::string nText = std::to_string(HUD.ammo) + "/" + std::to_string(HUD.maxAmmo);
-				uiManager->clearText(1);
-				uiManager->setText(nText, 1);
-			}
-			if (koth->getRespawnTokens(1) != HUD.teamOneTokens)
-			{
-				HUD.teamOneTokens = koth->getRespawnTokens(1);
-				uiManager->clearText(2);
-				uiManager->setText(std::to_string(HUD.teamOneTokens), 2);
-				if((float)HUD.maxTokens > 0)
-					uiManager->scaleBar(2, (float)HUD.teamOneTokens / (float)HUD.maxTokens, true);
-				else
-					console.printMsg("Error: Class Core line 1973, HUD.maxTokens has a value of 0 or below", "System", 'S');
-			}
-			if (koth->getRespawnTokens(2) != HUD.teamTwoTokens)
-			{
-				HUD.teamTwoTokens = koth->getRespawnTokens(2);
-				uiManager->clearText(3);
-				uiManager->setText(std::to_string(HUD.teamTwoTokens), 3);
-				if ((float)HUD.maxTokens > 0)
-					uiManager->scaleBar(3, (float)HUD.teamTwoTokens / (float)HUD.maxTokens, true);
-				else
-					console.printMsg("Error: Class Core line 1983, HUD.maxTokens has a value of 0 or below", "System", 'S');
-			}
-			if (koth->getRoundWins(1) != HUD.teamOneRoundWins)
-			{
-				if (koth->getRoundWins(1) != -1)
-				{
-					HUD.teamOneRoundWins = koth->getRoundWins(1);
-					uiManager->clearText(4);
-					uiManager->setText(std::to_string(HUD.teamOneRoundWins), 4);
-				}
-				else
-					console.printMsg("Error: Class Core line 1990, koth->getRoundWins(1) has a value of -1", "System", 'S');
-			}
-			if (koth->getRoundWins(2) != HUD.teamTwoRoundWins)
-			{
-				if (koth->getRoundWins(2) != -1)
-				{
-					HUD.teamTwoRoundWins = koth->getRoundWins(2);
-					uiManager->clearText(5);
-					uiManager->setText(std::to_string(HUD.teamTwoRoundWins), 5);
-				}
-				else
-					console.printMsg("Error: Class Core line 2001, koth->getRoundWins(1) has a value of -1", "System", 'S');
-			}
-			if (int(koth->getTimer()) != HUD.time) //Not done
-			{
-				HUD.time = int(koth->getTimer());
-
-				int minutes = HUD.time / 60; //* 0.016666666666;
-				int seconds = HUD.time - 60 * minutes;
-
-				std::string sMinutes = "0";
-				std::string sSeconds = "0";
-
-				sMinutes += std::to_string(minutes);
-				sSeconds += std::to_string(seconds);
-
-				if (sMinutes.size() > 2)
-					sMinutes = std::to_string(minutes);
-				if (sSeconds.size() > 2)
-					sSeconds = std::to_string(seconds);
-
-				uiManager->clearText(6);
-				uiManager->setText(sMinutes + ":" + sSeconds, 6);
-
-				if (koth->getState() == ROUND) //Tickets meter should only work during the rounds which is why this check is here.
-				{
-					if (!HUD.firstSecondEachRound) //If it isn't the first second of the round
+					if (HUD.ticketLostTimer == 0)
 					{
-						if (HUD.ticketLostTimer == 0)
-						{
-							uiManager->scaleBar(10, 0.0f, true);
-							HUD.ticketLostTimer = HUD.loseTicketPer;
-						}
-						else
-						{
-							if (HUD.loseTicketPer > 0)
-							{
-								uiManager->scaleBar(10, (float)(HUD.ticketLostTimer) / (float)(HUD.loseTicketPer), true);
-								HUD.ticketLostTimer -= 1;
-							}
-							else
-								console.printMsg("Error: Class Core line 2042, HUD.loseTicketPer has a value of 0 or below", "System", 'S');
-						}
+						uiManager->scaleBar(10, 0.0f, true);
+						HUD.ticketLostTimer = HUD.loseTicketPer;
 					}
 					else
 					{
-						if (HUD.loseTicketPer > 0)
-						{
-							HUD.ticketLostTimer -= 1;
-							uiManager->scaleBar(10, (float)(HUD.ticketLostTimer) / (float)(HUD.loseTicketPer), true);
-							HUD.ticketLostTimer -= 1;
-						}
-						else
-							console.printMsg("Error: Class Core line 2053, HUD.loseTicketPer has a value of 0 or below", "System", 'S');
+						uiManager->scaleBar(10, (float)(HUD.ticketLostTimer) / (float)(HUD.loseTicketPer), true);
+						HUD.ticketLostTimer -= 1;
 					}
-					HUD.firstSecondEachRound = false;
 				}
-				else //In other states it resets but only once.
+				else
 				{
-					HUD.firstSecondEachRound = true;
-					HUD.ticketLostTimer = 14;
-					uiManager->scaleBar(10, 1.0f, true);
+					HUD.ticketLostTimer -= 1;
+					uiManager->scaleBar(10, (float)(HUD.ticketLostTimer) / (float)(HUD.loseTicketPer), true);
+					HUD.ticketLostTimer -= 1;
 				}
+				HUD.firstSecondEachRound = false;
+			}
+			else //In other states it resets but only once.
+			{
+				HUD.firstSecondEachRound = true;
+				HUD.ticketLostTimer = 14;
+				uiManager->scaleBar(10, 1.0f, true);
 			}
 		}
 	}
+
 	uiManager->inGameRender();
 
 	double x = (0.0);
@@ -2478,7 +2440,6 @@ void Core::disconnect()
 	uiManager->setOpenedGuiBool(false);
 	uiManager->setFirstMenuSet(false);
 	cursorInvisible = false;
-	glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	uiManager->LoadNextSet(0, winX, winY);
 	uiManager->setMenu(0);
 }
