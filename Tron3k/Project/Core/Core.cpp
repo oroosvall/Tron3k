@@ -1078,13 +1078,9 @@ void Core::roamHandleCmds(std::string com)
 				else
 					game->freecam = true;
 
-				if (team != 0)
-				{
-					uiManager->setTeamColor(team);
-					uiManager->changeColorTeam();
-					uiManager->setFirstMenuSet(false);
-					uiManager->setMenu(2);
-				}
+				uiManager->changeColorTeam();
+				uiManager->setFirstMenuSet(false);
+				uiManager->setMenu(2);
 			}
 			else
 				console.printMsg("Invalid team. Use /team <1/2/3>", "System", 'S');
@@ -2037,20 +2033,24 @@ void Core::inGameUIUpdate() //Ingame ui update
 			case 20: //Team 1
 				if (current == ROAM)
 				{
+					uiManager->setTeamColor(2);
 					roamHandleCmds("/team 2");
 				}
 				else
 				{
+					uiManager->setTeamColor(2);
 					clientHandleCmds("/team 2");
 				}
 				break;
 			case 21: //Team 2
 				if (current == ROAM)
 				{
+					uiManager->setTeamColor(1);
 					roamHandleCmds("/team 1");
 				}
 				else
 				{
+					uiManager->setTeamColor(1);
 					clientHandleCmds("/team 1");
 				}
 				break;

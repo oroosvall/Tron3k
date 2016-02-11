@@ -644,7 +644,7 @@ public:
 		}
 		//Adds player to the game in chosen team. Both clients and server
 		gamePtr->addPlayerToTeam(p_conID, team);
-		if (p_conID == getConId())
+		if (p_conID == getConId() && gamePtr->getPlayer(p_conID)->getRole()->getRole() == ROLES::NROFROLES)
 		{
 			uiPtr->changeColorTeam();
 			uiPtr->setFirstMenuSet(false);
