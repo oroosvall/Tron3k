@@ -123,7 +123,7 @@ public:
 	void unReady() { ready = false; };
 
 	void footstepsLoopReset(float dt);
-
+	void deadViewAngles();
 	bool getFootsteps();
 	void setFootstepsCountdown();
 	void setFootstepsLoop(bool);

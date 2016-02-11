@@ -1254,7 +1254,26 @@ glm::mat4 Player::getFPSmat()
 	ret[0].w += renderpos.x;
 	ret[1].w += renderpos.y;
 	ret[2].w += renderpos.z;
+
 	return ret;
+}
+
+void Player::deadViewAngles()
+{
+	//if dead lower cam test
+	if (isDead)
+	{
+		switch (animRole)
+		{
+		case TRAPPER:		cam->setCam(cam->getPos() + vec3(0, -1, 0));			break;
+		case DESTROYER:		cam->setCam(cam->getPos() + vec3(0, -1, 0));			break;
+		case MOBILITY:		cam->setCam(cam->getPos() + vec3(0, -1, 0));			break;
+		case BRUTE:			cam->setCam(cam->getPos() + vec3(0, -0.5, 0));			break;
+		case MANIPULATOR:	cam->setCam(cam->getPos() + vec3(0, -1, 0));			break;
+		case NROFROLES:		cam->setCam(cam->getPos() + vec3(0, -1, 0));			break;
+		default:																	break;
+		}
+	}
 }
 
 void Player::movmentSpecialAnimUse(int react)

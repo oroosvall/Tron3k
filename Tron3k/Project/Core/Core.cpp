@@ -1530,7 +1530,13 @@ void Core::renderWorld(float dt)
 			force3rd = true;
 		}
 */
+
+		int pid = game->GetLocalPlayerId();
+		Player* tmp_player = game->getPlayer(pid);
+		tmp_player->deadViewAngles();
+
 		glm::vec3 tmpEyePos = CameraInput::getCam()->getPos();
+
 		renderPipe->update(tmpEyePos.x, tmpEyePos.y, tmpEyePos.z, dt); // sets the view/proj matrix
 		renderPipe->renderIni();
 
