@@ -2318,7 +2318,11 @@ void Core::sendWorldBoxes()
 
 bool Core::windowVisible() const
 {
-	return !glfwWindowShouldClose(win);
+	if (glfwWindowShouldClose(win))
+	{
+		glfwHideWindow(win);
+	}
+	return glfwGetWindowAttrib(win, GLFW_VISIBLE);
 }
 
 void Core::disconnect()
