@@ -1025,13 +1025,21 @@ vec4 Physics::checkBulletVEffectCollision(glm::vec3 bulletPos, vec3 bulletVel, v
 						if (collidedWithPlane)
 						{
 							sphere.pos = bPos;
+
+							collided = checkSpherevOBBlwCollision(sphere, *theOBB);
+							vec3 dir = normalize(vec3(collided));
+
+							if (collided.w + FLT_EPSILON >= 0 - FLT_EPSILON && collided.w - FLT_EPSILON <= rad + FLT_EPSILON)
+							{
+								if (dot(dir, normalize(bPos - sPos)) > -0.00001f)
+									dir *= -1;
+								collided = vec4(dir, collided.w + 0.2f);
+								bulletPos = bPos;
+							}
 						}
-						collided = checkSpherevOBBlwCollision(sphere, *theOBB);
-						vec3 dir = normalize(vec3(collided));
-						if (dot(dir, normalize(bPos - sPos)) > -0.00001f)
-							dir *= -1;
-						collided = vec4(dir, collided.w);
-						bulletPos = bPos;
+						
+
+
 					}
 					else if (eType == 1)//ThunderDome aka sphere
 					{
