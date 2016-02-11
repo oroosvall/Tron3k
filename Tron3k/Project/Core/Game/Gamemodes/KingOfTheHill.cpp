@@ -351,6 +351,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
  			timer -= dt;
 			if (timer < FLT_EPSILON)
 			{
+				capturePoint = rand() % 2;
 				state = PREROUND;
 				timer = 15.0f;
 
