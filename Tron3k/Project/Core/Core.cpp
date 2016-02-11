@@ -2041,7 +2041,6 @@ void Core::inGameUIUpdate() //Ingame ui update
 				}
 				else
 				{
-					uiManager->setTeamColor(2);
 					clientHandleCmds("/team 2");
 				}
 				break;
@@ -2053,7 +2052,6 @@ void Core::inGameUIUpdate() //Ingame ui update
 				}
 				else
 				{
-					uiManager->setTeamColor(1);
 					clientHandleCmds("/team 1");
 				}
 				break;
