@@ -117,7 +117,7 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 		printf("glDebugMessageCallback not available\n");
 #endif
 
-	glClearColor(0.4f, 0.4f, 0.4f, 1);
+	glClearColor(0.0f, 0.0f, 0.0f, 1);
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
