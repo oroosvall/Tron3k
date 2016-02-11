@@ -490,6 +490,14 @@ struct Chunk
 		collisionRender.add(collision);
 	}
 
+	void addRoomBoxRender(ABB in)
+	{
+		ABBFinishedCollision temp;
+		temp.abbBox = in;
+		temp.obbBoxes.clear();
+		roomOnlyRender.add(temp);
+	}
+
 	ChunkCollision* getChunkCollision()
 	{
 		return &collisionMesh;
@@ -509,6 +517,7 @@ struct Chunk
 	ChunkCollision collisionMesh;
 
 	ChunkCollisionRender collisionRender;
+	ChunkCollisionRender roomOnlyRender;
 
 	ABB roomBox;
 

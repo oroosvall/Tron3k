@@ -32,7 +32,6 @@ private:
 	int teamOnePlayersAtPoint;
 	int teamTwoPlayersAtPoint; //Number of people of each team currently in the capture point area
 	int round = 1;
-	int lastTeamOnPoint = 0;
 
 	int teamOneScore;
 	int teamTwoScore;

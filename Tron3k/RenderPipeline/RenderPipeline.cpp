@@ -786,6 +786,7 @@ void RenderPipeline::renderCapturePoint(int capPointID)
 {
 	glDisable(GL_BLEND);
 	glUseProgram(regularShader);
+	glProgramUniform1f(regularShader, uniformGlowTrail[0], 0.0f);
 	glProgramUniform1f(regularShader, uniformStaticGlowIntensityLocation[0], 1.0f);
 	glProgramUniform3fv(regularShader, uniformDynamicGlowColorLocation[0], 1, (GLfloat*)contMan.testMap.getCapPointColor(capPointID));
 	contMan.renderCapturePoint(capPointID, regularShader, worldMat[0], uniformTextureLocation[0], uniformNormalLocation[0], uniformGlowSpecLocation[0]);
@@ -924,6 +925,7 @@ void RenderPipeline::setRenderFlag(RENDER_FLAGS flag)
 		case RENDER_CHUNK:		contMan.f_render_chunks = !contMan.f_render_chunks;			break;
 		case RENDER_ABB:		contMan.f_render_abb = !contMan.f_render_abb;				break;
 		case RENDER_OBB:		contMan.f_render_obb = !contMan.f_render_obb;				break;
+		case RENDER_ROOM:		contMan.f_render_roombox = !contMan.f_render_roombox;		break;
 		case RENDER_DEBUG_TEXT:	renderDebugText = !renderDebugText; debugText->setText(""); break;
 		case RENDER_GUI:		contMan.f_render_gui = !contMan.f_render_gui;				break;
 	}

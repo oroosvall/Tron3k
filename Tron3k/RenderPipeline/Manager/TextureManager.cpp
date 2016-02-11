@@ -16,10 +16,12 @@ void TextureManager::init()
 
 	defaultDiffuse =	loadTexture("GameFiles/Textures/Blank_d.dds");
 	defaultNormal =		loadTexture("GameFiles/Textures/Blank_n.DDS");
+	defaultNormal_full = loadTexture("GameFiles/Textures/Full_glow_normalmap.png");
 	defaultGlow =		loadTexture("GameFiles/Textures/Blank_g.DDS");
 
 	defaultDiffuseSlot = GL_TEXTURE0;
 	defaultNormalSlot = GL_TEXTURE0;
+	defaultNormal_fullSlot = GL_TEXTURE0;
 	defaultGlowSlot = GL_TEXTURE0;
 
 	gTm = this;
@@ -144,6 +146,11 @@ void TextureManager::bindDefault(GLuint shader, GLuint textureLocation, TEXTURE_
 	{
 		texture = defaultNormal;
 		slot = &defaultNormalSlot;
+	}
+	else if (fallback == NORMAL_FULL_FB)
+	{
+		texture = defaultNormal_full;
+		slot = &defaultNormal_fullSlot;
 	}
 	else if (fallback == GLOW_FB)
 	{

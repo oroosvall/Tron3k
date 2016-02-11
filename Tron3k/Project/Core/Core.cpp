@@ -637,14 +637,16 @@ void Core::upClient(float dt)
 				}
 				else if (tmp == KOTHSTATE::ROUND)
 				{
+					Player* local = game->getPlayer(top->getConId());
+					uiManager->setTeamColor(local->getTeam());
+					uiManager->changeColorTeam();
+
 					uiManager->setOpenedGuiBool(true);
 					uiManager->setFirstMenuSet(false);
 					uiManager->setMenu(0);
 
 					game->getPlayer(game->GetLocalPlayerId())->setLockedControls(false);
 					game->setCursorInvisible(true);
-
-					Player* local = game->getPlayer(top->getConId());
 
 					uiManager->clearText(0);
 					uiManager->clearText(1);
@@ -667,6 +669,7 @@ void Core::upClient(float dt)
 						uiManager->setText("00:00", 6); //time
 					}
 
+					uiManager->scaleBar(0, 1.0f, false);
 					uiManager->scaleBar(2, (float)(koth->getRespawnTokens(1)) / (float)(koth->getMaxTokensPerTeam()), false);
 					uiManager->scaleBar(3, (float)(koth->getRespawnTokens(2)) / (float)(koth->getMaxTokensPerTeam()), false);
 					uiManager->scaleBar(9, 0.0f, true);
@@ -1078,13 +1081,9 @@ void Core::roamHandleCmds(std::string com)
 				else
 					game->freecam = true;
 
-				if (team != 0)
-				{
-					uiManager->setTeamColor(team);
-					uiManager->changeColorTeam();
-					uiManager->setFirstMenuSet(false);
-					uiManager->setMenu(2);
-				}
+				uiManager->changeColorTeam();
+				uiManager->setFirstMenuSet(false);
+				uiManager->setMenu(2);
 			}
 			else
 				console.printMsg("Invalid team. Use /team <1/2/3>", "System", 'S');
@@ -1175,6 +1174,7 @@ void Core::roamHandleCmds(std::string com)
 				console.printMsg("/rs  chunk	RENDER_CHUNK ", "", ' ');
 				console.printMsg("/rs  abb		RENDER_ABB ", "", ' ');
 				console.printMsg("/rs  obb		RENDER_OBB ", "", ' ');
+				console.printMsg("/rs  room		RENDER_ROOM ", "", ' ');
 				console.printMsg("/rs  debug	RENDER_DEBUG_TEXT ", "", ' ');
 				console.printMsg("/rs  gui		RENDER_GUI ", "", ' ');
 			}
@@ -1188,6 +1188,8 @@ void Core::roamHandleCmds(std::string com)
 				renderPipe->setRenderFlag(RENDER_ABB);
 			else if (token == "obb")
 				renderPipe->setRenderFlag(RENDER_OBB);
+			else if (token == "room")
+				renderPipe->setRenderFlag(RENDER_ROOM);
 			else if(token == "debug")
 				renderPipe->setRenderFlag(RENDER_DEBUG_TEXT);
 			else if (token == "gui")
@@ -1342,6 +1344,7 @@ void Core::clientHandleCmds(std::string com)
 				console.printMsg("/rs  chunk	RENDER_CHUNK ", "", ' ');
 				console.printMsg("/rs  abb		RENDER_ABB ", "", ' ');
 				console.printMsg("/rs  obb		RENDER_OBB ", "", ' ');
+				console.printMsg("/rs  room		RENDER_ROOM ", "", ' ');
 				console.printMsg("/rs  debug	RENDER_DEBUG_TEXT ", "", ' ');
 				console.printMsg("/rs  gui		RENDER_GUI ", "", ' ');
 			}
@@ -1355,6 +1358,8 @@ void Core::clientHandleCmds(std::string com)
 				renderPipe->setRenderFlag(RENDER_ABB);
 			else if (token == "obb")
 				renderPipe->setRenderFlag(RENDER_OBB);
+			else if (token == "room")
+				renderPipe->setRenderFlag(RENDER_ROOM);
 			else if (token == "debug")
 				renderPipe->setRenderFlag(RENDER_DEBUG_TEXT);
 			else if (token == "gui")
@@ -1525,7 +1530,13 @@ void Core::renderWorld(float dt)
 			force3rd = true;
 		}
 */
+
+		int pid = game->GetLocalPlayerId();
+		Player* tmp_player = game->getPlayer(pid);
+		tmp_player->deadViewAngles();
+
 		glm::vec3 tmpEyePos = CameraInput::getCam()->getPos();
+
 		renderPipe->update(tmpEyePos.x, tmpEyePos.y, tmpEyePos.z, dt); // sets the view/proj matrix
 		renderPipe->renderIni();
 
@@ -1560,7 +1571,7 @@ void Core::renderWorld(float dt)
 
 		if (capOwner == 0)
 		{
-			renderPipe->setCapRoomColor(cap, vec3(1.0f, 1.0f, 1.0f), 1.0f);
+			renderPipe->setCapRoomColor(cap, vec3(0x36, 0xb2, 0xd0), 1.0f);
 		}
 		else if (capOwner == 1)
 		{
@@ -1667,19 +1678,22 @@ void Core::renderWorld(float dt)
 					}
 					else
 					{
-						glm::mat4* playermat = p->getWorldMat();
-						if (force3rd)
+						if (p->getRole()->getRole() != ROLES::NROFROLES)
 						{
-							*playermat = glm::mat4();
-							playermat[0][0].w = p->getPos().x;
-							playermat[0][1].w = p->getPos().y - 0.45;
-							playermat[0][2].w = p->getPos().z;
-						}
+							glm::mat4* playermat = p->getWorldMat();
+							if (force3rd)
+							{
+								*playermat = glm::mat4();
+								playermat[0][0].w = p->getPos().x;
+								playermat[0][1].w = p->getPos().y - 0.45;
+								playermat[0][2].w = p->getPos().z;
+							}
 
-						if (p->isLocal()) //use current anim
-							renderPipe->renderAnimation(i, p->getRole()->getRole(), playermat, p->getAnimState_t_c(), &dgColor.x, hpval, false, false, p->roomID);
-						else              //use peak anim
-							renderPipe->renderAnimation(i, p->getRole()->getRole(), playermat, p->getAnimState_t_p(), &dgColor.x, hpval, false, false, p->roomID);
+							if (p->isLocal()) //use current anim
+								renderPipe->renderAnimation(i, p->getRole()->getRole(), playermat, p->getAnimState_t_c(), &dgColor.x, hpval, false, false, p->roomID);
+							else              //use peak anim
+								renderPipe->renderAnimation(i, p->getRole()->getRole(), playermat, p->getAnimState_t_p(), &dgColor.x, hpval, false, false, p->roomID);
+						}
 					}
 				}
 			}
@@ -2037,6 +2051,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 			case 20: //Team 1
 				if (current == ROAM)
 				{
+					uiManager->setTeamColor(2);
 					roamHandleCmds("/team 2");
 				}
 				else
@@ -2047,6 +2062,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 			case 21: //Team 2
 				if (current == ROAM)
 				{
+					uiManager->setTeamColor(1);
 					roamHandleCmds("/team 1");
 				}
 				else

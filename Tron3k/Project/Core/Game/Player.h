@@ -123,7 +123,7 @@ public:
 	void unReady() { ready = false; };
 
 	void footstepsLoopReset(float dt);
-
+	void deadViewAngles();
 	bool getFootsteps();
 	void setFootstepsCountdown();
 	void setFootstepsLoop(bool);
@@ -216,6 +216,12 @@ public:
 	Role* getRole() { return &role; };
 
 	glm::mat4 getFPSmat();
+
+	bool jumpSoundAble = true;
+	float jumpSoundCooldown = 0;
+	void SetJumpCoolDown(float cooldown);
+	void CoolDownJump(float dt);
+	bool CheckAbleToJumpSound();
 
 	void movmentSpecialAnimUse(int react = 0);
 	bool getAnimPrimary();

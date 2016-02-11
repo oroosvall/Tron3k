@@ -16,6 +16,7 @@ enum TEXTURE_FALLBACK
 {
 	DIFFUSE_FB,
 	NORMAL_FB,
+	NORMAL_FULL_FB,
 	GLOW_FB
 };
 
@@ -46,10 +47,12 @@ private:
 
 	GLuint defaultDiffuse;
 	GLuint defaultNormal;
+	GLuint defaultNormal_full;
 	GLuint defaultGlow;
 
 	GLuint defaultDiffuseSlot;
 	GLuint defaultNormalSlot;
+	GLuint defaultNormal_fullSlot;
 	GLuint defaultGlowSlot;
 
 public:

@@ -203,7 +203,7 @@ void Map::renderCapturePoint(GLuint shader,GLuint shaderLocation, GLuint diffuse
 {
 	tm->bindDefault(shader, diffuseLocation, DIFFUSE_FB);
 
-	tm->bindDefault(shader, normalLocation, NORMAL_FB);
+	tm->bindDefault(shader, normalLocation, NORMAL_FULL_FB);
 
 	tm->bindDefault(shader, glowLocation, GLOW_FB);
 	
@@ -473,6 +473,7 @@ void Map::loadMap(std::string mapName)
 	for (int i = 0; i < roomCount; i++)
 	{
 		chunks[i].roomBox = chunkAABB[i];
+		chunks[i].addRoomBoxRender(chunkAABB[i]);
 	}
 
 	inFile.close();

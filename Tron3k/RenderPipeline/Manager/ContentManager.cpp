@@ -11,6 +11,7 @@ void ContentManager::init()
 	f_render_chunks = true;
 	f_render_abb = false;
 	f_render_obb = false;
+	f_render_roombox = false;
 	f_render_gui = true;
 
 	tm.init();
@@ -175,6 +176,7 @@ void ContentManager::release()
 			for (int b = 0; b < nrObb; b++)
 				testMap.chunks[c].collisionRender.abbRender[a].obbBoxesR[b].release();
 		}
+		testMap.chunks[c].roomOnlyRender.abbRender[0].abbBoxR.release();
 	}
 
 	for (int i = 0; i < 5; i++)
@@ -287,7 +289,7 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 	}
 	stopTimer(portaltimer);
 
-	if (f_render_abb || f_render_obb)
+	if (f_render_abb || f_render_obb || f_render_roombox)
 	{
 		glUseProgram(collision_portal_shader);
 		glm::mat4 alreadyinworldpace;
@@ -299,7 +301,7 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 			ChunkCollision* col = testMap.chunks[c].getChunkCollision();
 
 			int nrABB = col->abbStuff.size();
-			for (int n = 0; n < nrABB; n++)
+			for (int n = 0; n < nrABB - 1; n++)
 			{
 
 				if (f_render_abb)
@@ -318,10 +320,17 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 					}
 				}
 			}
+
+			if (f_render_roombox)
+			{
+				if (c < nrChunks - 1)
+				{
+					testMap.chunks[c].roomOnlyRender.abbRender[0].abbBoxR.BindVertData();
+					glDrawArrays(GL_TRIANGLE_STRIP, 0, 20);
+				}
+			}
 		}
-
 		testMap.renderCapAbb();
-
 	}
 }
 

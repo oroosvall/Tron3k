@@ -504,7 +504,7 @@ void Game::checkFootsteps(float dt)
 				playerList[i]->footstepsLoopReset(dt);
 			}
 
-			if (playerList[i]->getFootsteps())
+			if (playerList[i]->getFootsteps() && (playerList[i]->getAnimState_t_p() != AnimationState::third_primary_air && playerList[i]->getAnimState_t_p() != AnimationState::first_primary_air))
 			{
 				glm::vec3 pos;
 				glm::vec3 vel;
@@ -517,6 +517,29 @@ void Game::checkFootsteps(float dt)
 					if (GetSoundActivated())
 						GetSound()->playFootsteps(playerList[i]->getRole()->getRole(), pos.x, pos.y, pos.z);
 				}
+				
+			}
+
+			if (!playerList[i]->CheckAbleToJumpSound())
+			{
+				playerList[i]->CoolDownJump(dt);
+			}
+
+			if (!playerList[i]->CheckAbleToJumpSound() && (playerList[i]->getAnimState_t_p() == AnimationState::third_primary_air || playerList[i]->getAnimState_t_p() == AnimationState::first_primary_air))
+			{
+				playerList[i]->jumpSoundAble = true;
+			}
+
+			if (playerList[i]->CheckAbleToJumpSound() && (playerList[i]->getAnimState_t_p() != AnimationState::third_primary_air && playerList[i]->getAnimState_t_p() != AnimationState::first_primary_air))
+			{
+				glm::vec3 pos;
+				pos = playerList[i]->getPos();
+					playerList[i]->SetJumpCoolDown(100.0f);
+
+					if (GetSoundActivated())
+						GetSound()->playJump(playerList[i]->getRole()->getRole(), pos.x, pos.y, pos.z);
+				
+
 			}
 		}
 	}
@@ -826,8 +849,7 @@ void Game::checkBulletVEffectCollision(float dt)
 							bi.hitPos = bullets[b][j]->getPos();
 							bi.hitDir = bullets[b][j]->getDir();
 							bi.collisionNormal = collNormalWalls;
-							allBulletHitsOnEffects.push_back(bi);
-							
+							allBulletHitsOnEffects.push_back(bi);				
 						}
 					}
 
@@ -1473,7 +1495,9 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 					}
 					playerList[hi.bulletPID]->impressiveDone = true;
 				}
-				addEffectToList(-1, p->getTeam(), hi.playerHit, EFFECT_TYPE::HEALTHPACK, p->getPos(), 0, 0.5f);
+				glm::vec3 hpPos = p->getPos();
+				hpPos.y += 0.5f;
+				addEffectToList(-1, p->getTeam(), hi.playerHit, EFFECT_TYPE::HEALTHPACK, hpPos, 0, 0.5f);
 			}
 			removeBullet(hi.bt, bulletPosInArray);
 		}
@@ -1584,13 +1608,16 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 				}
 				playerList[hi.effectPID]->impressiveDone = true;
 			}
-			addEffectToList(-1, p->getTeam(), hi.playerHit, EFFECT_TYPE::HEALTHPACK, p->getPos(), 0, 0.5f);
 
-			if (p->GetConsecutiveDeaths() > 4 && !p->roleChangeWritten)
+			glm::vec3 hpPos = p->getPos();
+			hpPos.y += 0.5f;
+			addEffectToList(-1, p->getTeam(), hi.playerHit, EFFECT_TYPE::HEALTHPACK, hpPos, 0, 0.5f);
+
+			/*if (p->GetConsecutiveDeaths() > 4 && !p->roleChangeWritten)
 			{
 				console->printMsg("You can now change role if you want to!", "System", 'S');
 				p->roleChangeWritten = true;
-			}
+			}*/
 		}
 
 
@@ -1652,6 +1679,7 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 			case BULLET_TYPE::CLUSTER_GRENADE:
 				if (GetSoundActivated())
 					GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+				b->setVel(b->getVel() * 0.6f);
 				bounceBullet(hi, b);
 				temp = b->getDir();
 				temp.x *= 0.6f;
@@ -1664,6 +1692,7 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 			case BULLET_TYPE::CLUSTERLING:
 				if (GetSoundActivated())
 					GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+				b->setVel(b->getVel() * 0.6f);
 				bounceBullet(hi, b);
 				temp = b->getDir();
 				temp.x *= 0.6f;
@@ -1676,6 +1705,7 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 			case BULLET_TYPE::THERMITE_GRENADE:
 				if (GetSoundActivated())
 					GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+				b->setVel(b->getVel() * 0.6f);
 				bounceBullet(hi, b);
 				temp = b->getDir();
 				temp.x *= 0.6f;
@@ -1686,6 +1716,7 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 				b->setDir(temp);
 				break;
 			case BULLET_TYPE::VACUUM_GRENADE:
+				b->setVel(b->getVel() * 0.6f);
 				bounceBullet(hi, b);
 				temp = b->getDir();
 				temp.x *= 0.6f;
@@ -1703,7 +1734,7 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 			case BULLET_TYPE::GRENADE_SHOT:
 				if (GetSoundActivated())
 					GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeLauncherBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
-
+				b->setVel(b->getVel() * 0.6f);
 				bounceBullet(hi, b);
 				temp = b->getDir();
 				temp.x *= 0.6f;
@@ -1725,12 +1756,16 @@ void Game::handleBulletHitEffectEvent(BulletHitEffectInfo hi)
 {
 	int arraypos = -1;
 	Bullet* b = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, arraypos);
-	//Jag hatar structs ... please do better
-	BulletHitWorldInfo forBounce; forBounce.bulletPID = hi.bulletPID; forBounce.bulletBID = hi.bulletBID; forBounce.bt = hi.bt; forBounce.hitPos = hi.hitPos; forBounce.hitDir = hi.hitDir; forBounce.collisionNormal = hi.collisionNormal;
 	if (b != nullptr)
 	{
 		//Add exceptions 4 battery fields
-
+		BulletHitWorldInfo forBounce;
+		forBounce.bulletPID = hi.bulletPID;
+		forBounce.bulletBID = hi.bulletBID;
+		forBounce.bt = hi.bt;
+		forBounce.hitPos = hi.hitPos;
+		forBounce.hitDir = hi.hitDir;
+		forBounce.collisionNormal = hi.collisionNormal;
 		handleBulletHitWorldEvent(forBounce); //Pretty sure this is all we need
 		/*vec3 temp;
 		switch (hi.bt)
