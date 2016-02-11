@@ -23,6 +23,7 @@ protected:
 	int bulletId = 0;
 	int type = 0;
 
+	int bounceCounter = 0;
 
 public:
 	virtual ~Bullet();
@@ -43,6 +44,8 @@ public:
 	int getType() { return type; };
 
 	virtual int update(float dt) = 0;
+	void bounce() { bounceCounter++; };
+	int getBounces() { return bounceCounter; };
 
 };
 #endif

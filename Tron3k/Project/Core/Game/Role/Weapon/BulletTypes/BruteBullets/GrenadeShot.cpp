@@ -14,6 +14,12 @@ GrenadeShot::~GrenadeShot()
 
 int GrenadeShot::update(float dt)
 {
+	if (ttl < 1.7f && bounceCounter < 1)
+		bounceCounter = 1;
+	if (ttl < 1.3f && bounceCounter < 2)
+		bounceCounter = 2;
+	if (ttl < 0.9f && bounceCounter < 3)
+		bounceCounter = 3;
 	pos += dir * vel * dt;
 	dir.y -= 0.9f * dt;
 	if (collided > 0)
