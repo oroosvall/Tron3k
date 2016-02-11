@@ -497,6 +497,19 @@ public:
 		{
 			p->setAnimState_f_p(AnimationState(anim_peak_first));
 			p->setAnimState_t_p(AnimationState(anim_peak_third));
+
+			if (anim_peak_first == AnimationState::none || anim_peak_third == AnimationState::none)
+			{
+				p->unlockDeathAnim = true;
+			}
+
+			if (anim_peak_first == AnimationState::first_primary_death || anim_peak_first == AnimationState::first_secondary_death
+				|| anim_peak_third == AnimationState::third_primary_death || anim_peak_third == AnimationState::third_secondary_death)
+			{
+				p->forceDeathAnim = 2;
+				if (p->getRole()->getWeaponNRequiped() == 0)
+					p->forceDeathAnim = 1;
+			}
 		}
 	}
 

@@ -87,6 +87,7 @@ private:
 	bool animSwapActive = false;
 	bool lastanimSwapActive = false;
 	
+	
 	void peakAnimsUpdate();
 	bool animLastDead = false;
 
@@ -229,6 +230,8 @@ public:
 	Modifier* searchModifierGet(MODIFIER_TYPE search);
 
 	int roomID;
+	int forceDeathAnim = false;
+	bool unlockDeathAnim = true;
 
 	void clearKD() { kills = 0; deaths = 0; this->ZeroFrags(); };
 	int getKills() { return kills; };

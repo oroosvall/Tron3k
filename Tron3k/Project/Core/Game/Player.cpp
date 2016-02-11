@@ -94,7 +94,7 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool spectatin
 
 	if (GetSoundActivated())
 	{
-		GetSound()->setLocalPlayerPos(pos);
+		GetSound()->setLocalPlayerPos(cam->getPos());
 		GetSound()->setLocalPlayerDir(cam->getDir());
 	}
 
@@ -854,6 +854,8 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 		{
 			cam->roomID = roomID;
 
+			cam->setCam(pos, dir);
+
 			animRole = role.getRole();
 			animPrimary = false;
 			if (role.getWeaponNRequiped() == 0) // if primary
@@ -1261,16 +1263,19 @@ glm::mat4 Player::getFPSmat()
 void Player::deadViewAngles()
 {
 	//if dead lower cam test
-	if (isDead)
+	if (getTeam() != 0)
 	{
-		switch (animRole)
+		if (isDead)
 		{
-		case TRAPPER:		cam->setCam(cam->getPos() + vec3(0, -0.7f, 0));			break;
-		case DESTROYER:		cam->setCam(cam->getPos() + vec3(0, -1, 0));			break;
-		case MOBILITY:		cam->setCam(cam->getPos() + vec3(0, -1, 0));			break;
-		case BRUTE:			cam->setCam(cam->getPos() + vec3(0, -0.7f, 0));			break;
-		case MANIPULATOR:	cam->setCam(cam->getPos() + vec3(0, -1, 0));			break;
-		default:																	break;
+			switch (animRole)
+			{
+			case TRAPPER:		cam->setCam(cam->getPos() + vec3(0, -0.7f, 0));			break;
+			case DESTROYER:		cam->setCam(cam->getPos() + vec3(0, -1, 0));			break;
+			case MOBILITY:		cam->setCam(cam->getPos() + vec3(0, -1, 0));			break;
+			case BRUTE:			cam->setCam(cam->getPos() + vec3(0, -0.7f, 0));			break;
+			case MANIPULATOR:	cam->setCam(cam->getPos() + vec3(0, -1, 0));			break;
+			default:																	break;
+			}
 		}
 	}
 }

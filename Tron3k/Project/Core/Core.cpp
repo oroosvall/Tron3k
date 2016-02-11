@@ -30,7 +30,7 @@ void Core::init()
 	renderPipe = nullptr;
 
 	recreate = false;
-	//fullscreen = true;
+	fullscreen = false;
 	winX = winY = 800;
 	//winX = winY = 1000;
 	winX = 1280; winY = 720;
@@ -1667,6 +1667,22 @@ void Core::renderWorld(float dt)
 					light.DiffuseIntensity = 0.2f;
 					light.AmbientIntensity = 0.0f;
 					renderPipe->addLight(&light, p->roomID);
+
+					if (p->forceDeathAnim > 0)
+					{
+						p->setAnimState_f_p(AnimationState::first_secondary_death);
+						if (p->forceDeathAnim == 1)
+							p->setAnimState_f_p(AnimationState::first_primary_death);
+
+						p->setAnimState_t_p(AnimationState::third_primary_death);
+						p->forceDeathAnim = 0;
+					}
+					if (p->unlockDeathAnim)
+					{
+						p->setAnimState_f_p(AnimationState::none);
+						p->setAnimState_t_p(AnimationState::none);
+						p->unlockDeathAnim = false;
+					}
 
 					//If first person render
 					if (!force3rd && p->isLocal() && !game->freecam || game->spectateID == i)
