@@ -567,7 +567,7 @@ void Core::upClient(float dt)
 			subState++;
 
 			HUD.specialMeter = 100.0f;
-			HUD.loseTicketPer = 15;
+			HUD.loseTicketPer = 14;
 
 			KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
 			HUD.maxTokens = koth->getMaxTokensPerTeam();
@@ -1934,7 +1934,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 		{
 			HUD.time = int(koth->getTimer());
 
-			int minutes = HUD.time / 60;
+			int minutes = HUD.time / 60; //* 0.016666666666;
 			int seconds = HUD.time - 60 * minutes;
 
 			std::string sMinutes = "0";
@@ -1951,15 +1951,34 @@ void Core::inGameUIUpdate() //Ingame ui update
 			uiManager->clearText(6);
 			uiManager->setText(sMinutes + ":" + sSeconds, 6);
 
-			if (HUD.ticketLostTimer == 0)
+			if (koth->getState() == ROUND) //Tickets meter should only work during the rounds which is why this check is here.
 			{
-				HUD.ticketLostTimer = HUD.loseTicketPer;
-				uiManager->scaleBar(10, 0.0f, true);
+				if (!HUD.firstSecondEachRound) //If it isn't the first second of the round
+				{
+					if (HUD.ticketLostTimer == 0)
+					{
+						uiManager->scaleBar(10, 0.0f, true);
+						HUD.ticketLostTimer = HUD.loseTicketPer;
+					}
+					else
+					{
+						uiManager->scaleBar(10, (float)(HUD.ticketLostTimer) / (float)(HUD.loseTicketPer), true);
+						HUD.ticketLostTimer -= 1;
+					}
+				}
+				else
+				{
+					HUD.ticketLostTimer -= 1;
+					uiManager->scaleBar(10, (float)(HUD.ticketLostTimer) / (float)(HUD.loseTicketPer), true);
+					HUD.ticketLostTimer -= 1;
+				}
+				HUD.firstSecondEachRound = false;
 			}
-			else
+			else //In other states it resets but only once.
 			{
-				uiManager->scaleBar(10, (float)(HUD.ticketLostTimer) / (float)(HUD.loseTicketPer), true);
-				HUD.ticketLostTimer -= 1;
+				HUD.firstSecondEachRound = true;
+				HUD.ticketLostTimer = 14;
+				uiManager->scaleBar(10, 1.0f, true);
 			}
 		}
 	}
@@ -1973,87 +1992,89 @@ void Core::inGameUIUpdate() //Ingame ui update
 	double tX = (x / (double)winX) * 2 - 1.0;
 	double tY = (-y / (double)winY) * 2 + 1.0;
 
-	if (i->justPressed(GLFW_MOUSE_BUTTON_LEFT))
+	if (uiManager->getHoverCheckBool())
 	{
-		int eventIndex = uiManager->collisionCheck(glm::vec2((float)tX, (float)tY));
-		switch (eventIndex)
+		if (i->justPressed(GLFW_MOUSE_BUTTON_LEFT))
 		{
-		case 20: //Team 1
-			if (current == ROAM)
+			int eventIndex = uiManager->collisionCheck(glm::vec2((float)tX, (float)tY));
+			switch (eventIndex)
 			{
-				uiManager->setTeamColor(2);
-				roamHandleCmds("/team 2");
+			case 20: //Team 1
+				if (current == ROAM)
+				{
+					uiManager->setTeamColor(2);
+					roamHandleCmds("/team 2");
+				}
+				else
+				{
+					uiManager->setTeamColor(2);
+					clientHandleCmds("/team 2");
+				}
+				break;
+			case 21: //Team 2
+				if (current == ROAM)
+				{
+					uiManager->setTeamColor(1);
+					roamHandleCmds("/team 1");
+				}
+				else
+				{
+					uiManager->setTeamColor(1);
+					clientHandleCmds("/team 1");
+				}
+				break;
+			case 30: //Class 1
+				if (current == ROAM)
+					roamHandleCmds("/role 1");
+				else
+					clientHandleCmds("/role 1");
+				break;
+			case 31: //Class 2
+				if (current == ROAM)
+					roamHandleCmds("/role 2");
+				else
+					clientHandleCmds("/role 2");
+				break;
+			case 32: //Class 3
+				if (current == ROAM)
+					roamHandleCmds("/role 3");
+				else
+					clientHandleCmds("/role 3");
+				break;
+			case 33: //Class 4
+				if (current == ROAM)
+					roamHandleCmds("/role 4");
+				else
+					clientHandleCmds("/role 4");
+				break;
+			case 34: //Class 5
+				uiManager->setOpenedGuiBool(true);
+				if (current == ROAM)
+					roamHandleCmds("/role 5");
+				else
+					clientHandleCmds("/role 5");
+				break;
+			case 40: //Continue
+				uiManager->backToGui();
+				game->getPlayer(game->GetLocalPlayerId())->setLockedControls(false);
+				cursorInvisible = false;
+				game->setCursorInvisible(cursorInvisible);
+				break;
+			case 41: //Settings
+				break;
+			case 42: //Quit
+				if (current == ROAM)
+					roamHandleCmds("/disconnect");
+				else
+					clientHandleCmds("/disconnect");
+				break;
+			default:
+				break;
 			}
-			else
-			{
-				uiManager->setTeamColor(2);
-				clientHandleCmds("/team 2");
-			}
-			break;
-		case 21: //Team 2
-			if (current == ROAM)
-			{
-				uiManager->setTeamColor(1);
-				roamHandleCmds("/team 1");
-			}
-			else
-			{
-				uiManager->setTeamColor(1);
-				clientHandleCmds("/team 1");
-			}
-			break;
-		case 30: //Class 1
-			if (current == ROAM)
-				roamHandleCmds("/role 1");
-			else
-				clientHandleCmds("/role 1");
-			break;
-		case 31: //Class 2
-			if (current == ROAM)
-				roamHandleCmds("/role 2");
-			else
-				clientHandleCmds("/role 2");
-			break;
-		case 32: //Class 3
-			if (current == ROAM)
-				roamHandleCmds("/role 3");
-			else
-				clientHandleCmds("/role 3");
-			break;
-		case 33: //Class 4
-			if (current == ROAM)
-				roamHandleCmds("/role 4");
-			else
-				clientHandleCmds("/role 4");
-			break;
-		case 34: //Class 5
-			uiManager->setOpenedGuiBool(true);
-			if (current == ROAM)
-				roamHandleCmds("/role 5");
-			else
-				clientHandleCmds("/role 5");
-			break;
-		case 40: //Continue
-			uiManager->backToGui();
-			game->getPlayer(game->GetLocalPlayerId())->setLockedControls(false);
-			cursorInvisible = false;
-			game->setCursorInvisible(cursorInvisible);
-			break;
-		case 41: //Settings
-			break;
-		case 42: //Quit
-			if (current == ROAM)
-				roamHandleCmds("/disconnect");
-			else
-				clientHandleCmds("/disconnect");
-			break;
-		default:
-			break;
 		}
+		else
+			uiManager->hoverCheck(glm::vec2((float)tX, (float)tY));
 	}
-	else if(uiManager->getHoverCheckBool())
-		uiManager->hoverCheck(glm::vec2((float)tX, (float)tY));
-	else{}
 }
 
 void Core::handleCulling()
