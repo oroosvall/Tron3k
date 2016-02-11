@@ -99,6 +99,9 @@ public:
 
 	void setHoverCheckBool(bool checkForHover);
 	bool getHoverCheckBool();
+
+	int getNrOfCurretMenus();
+	int getCurrentMenu();
 };
 
 #endif

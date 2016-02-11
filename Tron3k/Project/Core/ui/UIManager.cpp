@@ -251,14 +251,24 @@ void UIManager::setMenu(int menuId)
 				nrOfCurretMenus = 0;
 				firstMenuSet = true;
 			}
-			currentMenu[nrOfCurretMenus] = menuId;
-			nrOfCurretMenus++;
+			if (nrOfCurretMenus > -1)
+			{
+				currentMenu[nrOfCurretMenus] = menuId;
+				nrOfCurretMenus++;
+			}
+			else
+				console->printMsg("Error: Class UIManager line 254, nrOfCurretMenus has a value below 0", "System", 'S');
 		}
 		else if(firstMenuSet)//Changing menu
 		{
-			openedMenus[nrOfOpenedMenus] = currentMenu[0];
-			currentMenu[0] = menuId;
-			nrOfOpenedMenus++;
+			if ((nrOfOpenedMenus && currentMenu[0]) > -1)
+			{
+				openedMenus[nrOfOpenedMenus] = currentMenu[0];
+				currentMenu[0] = menuId;
+				nrOfOpenedMenus++;
+			}
+			else
+				console->printMsg("Error: Class UIManager line 264, nrOfOpenedMenus OR currentMenu[0] have value below 0", "System", 'S');
 		}
 		else
 		{
@@ -281,7 +291,10 @@ void UIManager::setMenu(int menuId)
 					menus[currentMenu[0]].clearText(8);
 				}
 				nrOfOpenedMenus--;
-				currentMenu[0] = openedMenus[nrOfOpenedMenus];
+				if(nrOfOpenedMenus > -1)
+					currentMenu[0] = openedMenus[nrOfOpenedMenus];
+				else
+					console->printMsg("Error: Class UIManager line 294, nrOfOpenedMenus has a value below 0", "System", 'S');
 			}
 		}
 	}
@@ -316,21 +329,36 @@ void UIManager::removeAllMenus()
 
 int UIManager::collisionCheck(glm::vec2 pos)
 {
-	if (currentMenu[nrOfCurretMenus - 1] > -1)
-		return menus[currentMenu[nrOfCurretMenus - 1]].mouseCollission(pos);
+	if ((nrOfCurretMenus - 1) > -1)
+		if (currentMenu[nrOfCurretMenus - 1] > -1)
+			return menus[currentMenu[nrOfCurretMenus - 1]].mouseCollission(pos);
+		else
+			console->printMsg("Error: Class UIManager line 333, currentMenu[nrOfCurretMenus - 1] has a value below 0", "System", 'S');
+	else
+		console->printMsg("Error: Class UIManager line 332, (nrOfCurretMenus - 1) has a value below 0", "System", 'S');
 	return -1;
 }
 void UIManager::hoverCheck(glm::vec2 pos)
 {
-	if (currentMenu[nrOfCurretMenus - 1] > -1)
-		menus[currentMenu[nrOfCurretMenus - 1]].mouseHover(pos);
+	if ((nrOfCurretMenus - 1) > -1)
+		if (currentMenu[nrOfCurretMenus - 1] > -1)
+			menus[currentMenu[nrOfCurretMenus - 1]].mouseHover(pos);
+		else
+			console->printMsg("Error: Class UIManager line 344, currentMenu[nrOfCurretMenus - 1] has a value below 0", "System", 'S');
+	else
+		console->printMsg("Error: Class UIManager line 343, (nrOfCurretMenus - 1) has a value below 0", "System", 'S');
 }
 
 
 void UIManager::changeTex(int objId, int whichTex)
 {
-	if (currentMenu[nrOfCurretMenus - 1] > -1)
-		menus[currentMenu[nrOfCurretMenus - 1]].changeTex(objId, whichTex);
+	if ((nrOfCurretMenus - 1) > -1)
+		if (currentMenu[nrOfCurretMenus - 1] > -1)
+			menus[currentMenu[nrOfCurretMenus - 1]].changeTex(objId, whichTex);
+		else
+			console->printMsg("Error: Class UIManager line 356, currentMenu[nrOfCurretMenus - 1] has a value below 0", "System", 'S');
+	else
+		console->printMsg("Error: Class UIManager line 355, (nrOfCurretMenus - 1) has a value below 0", "System", 'S');
 }
 
 void UIManager::changeColorTeam()
@@ -399,14 +427,24 @@ void UIManager::setWindowResolution(int winX, int winY)
 	this->winX = winX;
 	this->winY = winY;
 
-	if (currentMenu[nrOfCurretMenus - 1] > -1)
-		menus[currentMenu[nrOfCurretMenus - 1]].setWindowResolution(winX, winY);
+	if ((nrOfCurretMenus - 1) > -1)
+		if (currentMenu[nrOfCurretMenus - 1] > -1)
+			menus[currentMenu[nrOfCurretMenus - 1]].setWindowResolution(winX, winY);
+		else
+			console->printMsg("Error: Class UIManager line 431, currentMenu[nrOfCurretMenus - 1] has a value below 0", "System", 'S');
+	else
+		console->printMsg("Error: Class UIManager line 430, (nrOfCurretMenus - 1) has a value below 0", "System", 'S');
 }
 
 void UIManager::setText(std::string text, int id)
 {
-	if(currentMenu[nrOfCurretMenus - 1] > -1)
-		menus[currentMenu[nrOfCurretMenus - 1]].setText(text, id);
+	if ((nrOfCurretMenus - 1) > -1)
+		if(currentMenu[nrOfCurretMenus - 1] > -1)
+			menus[currentMenu[nrOfCurretMenus - 1]].setText(text, id);
+		else
+			console->printMsg("Error: Class UIManager line 442, currentMenu[nrOfCurretMenus - 1] has a value below 0", "System", 'S');
+	else
+		console->printMsg("Error: Class UIManager line 441, (nrOfCurretMenus - 1) has a value below 0", "System", 'S');
 }
 
 std::string UIManager::getText(int id)
@@ -417,19 +455,34 @@ std::string UIManager::getText(int id)
 }
 void UIManager::removeLastInput(int id)
 {
-	if (currentMenu[nrOfCurretMenus - 1] > -1)
-		menus[currentMenu[nrOfCurretMenus - 1]].removeLastInput(id);
+	if ((nrOfCurretMenus - 1) > -1)
+		if (currentMenu[nrOfCurretMenus - 1] > -1)
+			menus[currentMenu[nrOfCurretMenus - 1]].removeLastInput(id);
+		else
+			console->printMsg("Error: Class UIManager line 458, currentMenu[nrOfCurretMenus - 1] has a value below 0", "System", 'S');
+	else
+		console->printMsg("Error: Class UIManager line 463, (nrOfCurretMenus - 1) has a value below 0", "System", 'S');
 }
 void UIManager::clearText(int id)
 {
-	if (currentMenu[nrOfCurretMenus - 1] > -1)
-		menus[currentMenu[nrOfCurretMenus - 1]].clearText(id);
+	if ((nrOfCurretMenus - 1) > -1)
+		if (currentMenu[nrOfCurretMenus - 1] > -1)
+			menus[currentMenu[nrOfCurretMenus - 1]].clearText(id);
+		else
+			console->printMsg("Error: Class UIManager line 469, currentMenu[nrOfCurretMenus - 1] has a value below 0", "System", 'S');
+	else
+		console->printMsg("Error: Class UIManager line 468, (nrOfCurretMenus - 1) has a value below 0", "System", 'S');
 }
 
 void UIManager::scaleBar(int id, float procentOfMax, bool fromRight)
 {
-	if(currentMenu[nrOfCurretMenus - 1] > -1)
-		menus[currentMenu[nrOfCurretMenus - 1]].scaleBar(id, procentOfMax, fromRight);
+	if((nrOfCurretMenus - 1) > -1)
+		if(currentMenu[nrOfCurretMenus - 1] > -1)
+			menus[currentMenu[nrOfCurretMenus - 1]].scaleBar(id, procentOfMax, fromRight);
+		else
+			console->printMsg("Error: Class UIManager line 480, currentMenu[nrOfCurretMenus - 1] has a value below 0", "System", 'S');
+	else
+		console->printMsg("Error: Class UIManager line 479, (nrOfCurretMenus - 1) has a value below 0", "System", 'S');
 }
 
 void UIManager::setTeamColor(int team)
@@ -451,4 +504,21 @@ void UIManager::setHoverCheckBool(bool checkForHover)
 bool UIManager::getHoverCheckBool()
 {
 	return doHoverCheckInGame;
+}
+
+int UIManager::getNrOfCurretMenus()
+{
+	return nrOfCurretMenus;
+}
+int UIManager::getCurrentMenu()
+{
+	int returnValue = -1;
+	if ((nrOfCurretMenus - 1) > -1)
+		if (currentMenu[nrOfCurretMenus - 1] > -1)
+			returnValue = currentMenu[nrOfCurretMenus - 1];
+		else
+			console->printMsg("Error: Class UIManager line 517, currentMenu[nrOfCurretMenus - 1] has a value below 0", "System", 'S');
+	else
+		console->printMsg("Error: Class UIManager line 516, (nrOfCurretMenus - 1) has a value below 0", "System", 'S');
+	return returnValue;
 }
