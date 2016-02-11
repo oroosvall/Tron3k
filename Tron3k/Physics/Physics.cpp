@@ -1081,7 +1081,7 @@ bool Physics::removeEffect(int eid, int pid, unsigned int eType)
 {
 	int cpid = -1, ceid = -1;
 	unsigned int ceType = 0;
-	int effectBoxesSize = (int)effectBoxes.size();
+	int effectBoxesSize = effectBoxes.size();
 	for (int i = 0; i < effectBoxesSize; i++)
 	{
 		effectBoxes[i]->getIDs(ceType, cpid, ceid);
@@ -1091,6 +1091,7 @@ bool Physics::removeEffect(int eid, int pid, unsigned int eType)
 			delete effectBoxes[i];
 			effectBoxes[i] = effectBoxes[effectBoxes.size() - 1];
 			effectBoxes.pop_back();
+			effectBoxesSize--;
 
 		}
 	}
