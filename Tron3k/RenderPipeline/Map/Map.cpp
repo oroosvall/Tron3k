@@ -209,13 +209,17 @@ void Map::renderCapturePoint(GLuint shader,GLuint shaderLocation, GLuint diffuse
 	
 	if (capturePointID < capCount && capturePoints[capturePointID].meshCount != 0)
 	{
-		glBindVertexArray(capturePoints[capturePointID].meshes[0].vertexArray);
-		glBindBuffer(GL_ARRAY_BUFFER, capturePoints[capturePointID].meshes[0].vertexBuffer);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, capturePoints[capturePointID].meshes[0].indexBuffer);
+		for (size_t i = 0; i < capturePoints[capturePointID].meshCount; i++)
+		{
+			glBindVertexArray(capturePoints[capturePointID].meshes[i].vertexArray);
+			glBindBuffer(GL_ARRAY_BUFFER, capturePoints[capturePointID].meshes[i].vertexBuffer);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, capturePoints[capturePointID].meshes[i].indexBuffer);
 
-		glProgramUniformMatrix4fv(shader, shaderLocation, 1, GL_FALSE, (GLfloat*)&capturePoints[capturePointID].mats[0][0][0]);
+			glProgramUniformMatrix4fv(shader, shaderLocation, 1, GL_FALSE, (GLfloat*)&capturePoints[capturePointID].mats[i][0][0]);
 
-		glDrawElements(GL_TRIANGLES, capturePoints[capturePointID].meshes[0].indexCount, GL_UNSIGNED_INT, 0);
+			glDrawElements(GL_TRIANGLES, capturePoints[capturePointID].meshes[i].indexCount, GL_UNSIGNED_INT, 0);
+		}
+		
 	}
 }
 
