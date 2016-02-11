@@ -298,7 +298,7 @@ void Game::update(float dt)
 			//TODO: Send collision results to player
 		}
 	}
-
+	lastDT = dt;
 	
 }
 
@@ -1613,11 +1613,12 @@ void Game::bounceBullet(BulletHitWorldInfo hwi, Bullet* theBullet)
 	if (combinedNormal2 != glm::vec3(0, 0, 0))
 	{
 		combinedNormal2 = normalize(combinedNormal2);
-
-		theBullet->setDir(reflect(theBullet->getDir(), combinedNormal2));
+		vec3 dir = normalize(reflect(theBullet->getDir(), combinedNormal2));
+		theBullet->setDir(dir);
 
 		//use pendepth to set a new pos 
 		theBullet->setPos(theBullet->getPos() + vec3(posadjust));
+		theBullet->setPos(theBullet->getPos() + (theBullet->getDir() * theBullet->getVel() * lastDT));
 
 		// remove bullet code
 		//BulletHitWorldInfo hi;
