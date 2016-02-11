@@ -28,7 +28,9 @@ extern unsigned int genBufferPeak;
 extern unsigned int genVaoPeak;
 extern unsigned int genTexturePeak;
 
-extern unsigned int memusage;
+extern unsigned int memusageTex;
+extern unsigned int memusageMesh;
+extern unsigned int memusageT;
 
 extern unsigned int textureBinds;
 
