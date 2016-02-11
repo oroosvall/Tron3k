@@ -60,7 +60,6 @@ void Core::init()
 	renderMenu = true;
 	menuIpKeyListener = false;
 	menuNameKeyListener = false;
-	escWindow = false;
 
 	nameNrOfKeys = 0;
 	ipNrOfKeys = 0;
@@ -282,6 +281,7 @@ void Core::upMenu(float dt)
 			uiManager->setMenu(1);
 			subState = 0;
 
+			uiManager->setHoverCheckBool(true);
 			cursorInvisible = false;
 			break;
 		case 1: //Multiplayer -> multiplayer window
@@ -1039,6 +1039,7 @@ void Core::roamHandleCmds(std::string com)
 				else
 					game->freecam = true;
 
+				uiManager->changeColorTeam();
 				uiManager->setFirstMenuSet(false);
 				uiManager->setMenu(2);
 			}
@@ -1113,6 +1114,7 @@ void Core::roamHandleCmds(std::string com)
 				uiManager->scaleBar(9, 1.0f, true);
 
 				uiManager->setRoleBool(true);
+				uiManager->setHoverCheckBool(false);
 			}
 			else 
 				console.printMsg("Invalid role. Use /role <1-5>", "System", 'S');
@@ -1472,6 +1474,11 @@ void Core::renderWorld(float dt)
 		if (i->getKeyInfo(GLFW_KEY_P))
 		{
 			cam->setCam(vec3(-6, 1.5f, 33), vec3(0, 0, -1));
+			force3rd = true;
+		}
+		if (i->getKeyInfo(GLFW_KEY_L))
+		{
+			cam->setCam(vec3(-6, 1.5f, 33), vec3(1, 0, 0));
 			force3rd = true;
 		}
 
@@ -1846,6 +1853,8 @@ void Core::renderWorld(float dt)
 		//viewing 3rd person anims in roam
 		if (i->getKeyInfo(GLFW_KEY_P))
 			cam->setCam(camPos, camDir);
+		if (i->getKeyInfo(GLFW_KEY_L))
+			cam->setCam(camPos, camDir);
 	}
 }
 
@@ -1856,7 +1865,6 @@ void Core::inGameUIUpdate() //Ingame ui update
 		Player* local = game->getPlayer(game->GetLocalPlayerId());
 		KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
 
-		//HP MÄTAREN FUNGERAR INTE, DEN FÖRSVINNER SÅ FORT DU TAR SKADA OCH KOMMER INTE TILLBAKA
 		if (local->getHP() != HUD.HP) 
 		{
 			if (local->getMaxHP() != HUD.maxHp)
@@ -1935,15 +1943,15 @@ void Core::inGameUIUpdate() //Ingame ui update
 			uiManager->clearText(6);
 			uiManager->setText(sMinutes + ":" + sSeconds, 6);
 
-			if (HUD.ticketLostTimer == HUD.loseTicketPer)
+			if (HUD.ticketLostTimer == 0)
 			{
-				HUD.ticketLostTimer = 0;
+				HUD.ticketLostTimer = HUD.loseTicketPer;
 				uiManager->scaleBar(10, 0.0f, true);
 			}
 			else
 			{
-				HUD.ticketLostTimer += 1;
 				uiManager->scaleBar(10, (float)(HUD.ticketLostTimer) / (float)(HUD.loseTicketPer), true);
+				HUD.ticketLostTimer -= 1;
 			}
 		}
 	}
@@ -1964,15 +1972,27 @@ void Core::inGameUIUpdate() //Ingame ui update
 		{
 		case 20: //Team 1
 			if (current == ROAM)
+			{
+				uiManager->setTeamColor(2);
 				roamHandleCmds("/team 2");
+			}
 			else
+			{
+				uiManager->setTeamColor(2);
 				clientHandleCmds("/team 2");
+			}
 			break;
 		case 21: //Team 2
 			if (current == ROAM)
+			{
+				uiManager->setTeamColor(1);
 				roamHandleCmds("/team 1");
+			}
 			else
+			{
+				uiManager->setTeamColor(1);
 				clientHandleCmds("/team 1");
+			}
 			break;
 		case 30: //Class 1
 			if (current == ROAM)
@@ -2023,7 +2043,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 			break;
 		}
 	}
-	else if(escWindow)
+	else if(uiManager->getHoverCheckBool())
 		uiManager->hoverCheck(glm::vec2((float)tX, (float)tY));
 	else{}
 }
@@ -2320,6 +2340,7 @@ void Core::disconnect()
 	uiManager->setRoleBool(false);
 
 	current = START;
+	uiManager->setHoverCheckBool(true);
 	uiManager->setOpenedGuiBool(false);
 	uiManager->setFirstMenuSet(false);
 	cursorInvisible = false;
@@ -2331,12 +2352,14 @@ void Core::showTeamSelect()
 {
 	if(startTeamSelect)
 	{
+		uiManager->setHoverCheckBool(true);
 		uiManager->LoadNextSet(1, winX, winY);
 		uiManager->setFirstMenuSet(false);
 		uiManager->setMenu(1);
 	}
 	else
 	{
+		uiManager->setHoverCheckBool(false);
 		uiManager->LoadNextSet(1, winX, winY);
 		uiManager->setFirstMenuSet(false);
 		uiManager->setOpenedGuiBool(true);
@@ -2346,11 +2369,11 @@ void Core::showTeamSelect()
 
 void Core::showClassSelect()
 {
+	uiManager->setHoverCheckBool(true);
 	game->getPlayer(game->GetLocalPlayerId())->setLockedControls(true);
 	cursorInvisible = false;
 	uiManager->setFirstMenuSet(false);
 	uiManager->setMenu(2);
-	
 }
 
 void Core::menuIpKeyInputUpdate()

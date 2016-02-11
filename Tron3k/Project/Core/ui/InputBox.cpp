@@ -8,7 +8,9 @@ InputBox::InputBox()
 	center = glm::vec2(0.0f);
 
 	textureRes = glm::vec2(0.0f);;
-	textureId = -1;
+	textureIdList[0] = -1;
+	textureIdList[1] = -1;
+	textureIdInUse = -1;
 
 	uniqueKey = -1;
 
@@ -26,13 +28,15 @@ InputBox::InputBox()
 	yOffSet = 0;
 	xOffSet = 0;
 }
-InputBox::InputBox(glm::vec2 center, int textureId1, int uniqueKey, IRenderPipeline* uiRender, glm::vec2 textRes, int winX, int winY, glm::vec3 offSetsTextSize)
+InputBox::InputBox(glm::vec2 center, int textureId1, int textureId2,int uniqueKey, IRenderPipeline* uiRender, glm::vec2 textRes, int winX, int winY, glm::vec3 offSetsTextSize)
 {
 	this->uiRender = uiRender;
 	this->center = center;
 	this->textureRes = textRes;
 
-	textureId = textureId1;
+	textureIdList[0] = textureId1;
+	textureIdList[1] = textureId2;
+	textureIdInUse = textureId1;
 	this->uniqueKey = uniqueKey;
 	hoverCheckKey = 0;
 
@@ -83,7 +87,7 @@ void InputBox::renderText(int id)
 
 void InputBox::renderQuad(int id)
 {
-	uiRender->ui_renderQuad((float*)&worldMatrix[0][0], (float*)&pivot.x, textureId, 1.0f, id);
+	uiRender->ui_renderQuad((float*)&worldMatrix[0][0], (float*)&pivot.x, textureIdInUse, 1.0f, id);
 }
 
 void InputBox::setWorldMatrix(float x, float y, int id)
@@ -94,6 +98,8 @@ void InputBox::setWorldMatrix(float x, float y, int id)
 
 void InputBox::changeTexUsed(int id)
 {
+	if(id > -1 && id < 2)
+		textureIdInUse = textureIdList[id];
 }
 
 void InputBox::fromPosToQuadScreen(glm::vec2 positions, int id)
@@ -125,7 +131,11 @@ void InputBox::hoverCheck(glm::vec2 mpos)
 
 void InputBox::setTexture(std::vector<GLuint> uiTextureIds)
 {
-	textureId = uiTextureIds[textureId];
+	for (int i = 0; i < 2; i++)
+	{
+		textureIdList[i] = uiTextureIds[textureIdList[i]];
+	}
+	textureIdInUse = textureIdList[0];
 }
 
 void InputBox::scaleBar(float procentOfMax, bool fromRight)

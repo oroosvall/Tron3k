@@ -134,8 +134,6 @@ private:
 	bool justAFrameCounterActivated = false;
 	int justAFrameCounter = 0;
 
-	bool escWindow;
-
 	//Menu input
 	void menuIpKeyInputUpdate();
 	void menuNameKeyInputUpdate();

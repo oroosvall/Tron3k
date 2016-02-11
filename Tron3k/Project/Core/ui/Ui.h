@@ -68,6 +68,8 @@ public:
 	
 	void changeTex(int objId, int whichTex);
 
+	void changeColorTeam(int whichTex);
+
 	void hideWindow();
 
 	void setWorldMatrix(float x, float y, int objId);

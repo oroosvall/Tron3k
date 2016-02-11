@@ -15,8 +15,11 @@ UIManager::UIManager()
 	nrOfCurretMenus = 0;
 	nrOfOpenedMenus = 0;
 
+	teamColor = 0;
+
 	guiOpened = false;
 	firstMenuSet = false;
+	doHoverCheckInGame = false;
 }
 UIManager::~UIManager() 
 {
@@ -48,58 +51,91 @@ void UIManager::init(Console* console, int winX, int winY)
 
 	//Texture Paths
 	//Main menu
-	texturePaths.push_back("GameFiles/Textures/UITextures/main_menu_background.png"); //0
-	texturePaths.push_back("GameFiles/Textures/UITextures/testmap.png"); //1
-	texturePaths.push_back("GameFiles/Textures/UITextures/multiplayer.png"); //2
-	texturePaths.push_back("GameFiles/Textures/UITextures/settings.png"); //3
-	texturePaths.push_back("GameFiles/Textures/UITextures/exit.png"); //4
-
-	//Multiplayer
-	//Background  //5
-	//Client  //6
-	//Server  //7
+	texturePaths.push_back("GameFiles/Textures/UITextures/MainMenu/main_menu_background.png"); //0
+	texturePaths.push_back("GameFiles/Textures/UITextures/MainMenu/testmap.png"); //1
+	texturePaths.push_back("GameFiles/Textures/UITextures/MainMenu/multiplayer.png"); //2
+	texturePaths.push_back("GameFiles/Textures/UITextures/MainMenu/settings.png"); //3
+	texturePaths.push_back("GameFiles/Textures/UITextures/MainMenu/exit.png"); //4
 
 	//Connect
-	texturePaths.push_back("GameFiles/Textures/UITextures/connect_to_server_background.png"); //5
-	texturePaths.push_back("GameFiles/Textures/UITextures/connect_to_server_connect.png"); //6
+	texturePaths.push_back("GameFiles/Textures/UITextures/Connect/connect_to_server_background.png"); //5
+	texturePaths.push_back("GameFiles/Textures/UITextures/Connect/connect_to_server_connect.png"); //6
 	texturePaths.push_back("GameFiles/Textures/UITextures/connect_to_server_back.png"); //7
 
 	//Team select
-	texturePaths.push_back("GameFiles/Textures/UITextures/team_selection_background.png"); //8
-	texturePaths.push_back("GameFiles/Textures/UITextures/team_selection_alpha.png"); //9
-	texturePaths.push_back("GameFiles/Textures/UITextures/team_selection_beta.png"); //10
+	texturePaths.push_back("GameFiles/Textures/UITextures/TeamSelect/team_selection_background.png"); //8
+	texturePaths.push_back("GameFiles/Textures/UITextures/TeamSelect/team_selection_alpha.png"); //9
+	texturePaths.push_back("GameFiles/Textures/UITextures/TeamSelect/team_selection_beta.png"); //10
 
 	//Class select
-	texturePaths.push_back("GameFiles/Textures/UITextures/class_selection_background.png"); //11
-	texturePaths.push_back("GameFiles/Textures/UITextures/class_selection_trapper.png"); //12
-	texturePaths.push_back("GameFiles/Textures/UITextures/class_selection_stalker.png"); //13
-	texturePaths.push_back("GameFiles/Textures/UITextures/class_selection_punisher.png"); //14
+	texturePaths.push_back("GameFiles/Textures/UITextures/ClassSelect/class_selection_background.png"); //11
+	texturePaths.push_back("GameFiles/Textures/UITextures/ClassSelect/class_selection_trapper.png"); //12
+	texturePaths.push_back("GameFiles/Textures/UITextures/ClassSelect/class_selection_stalker.png"); //13
+	texturePaths.push_back("GameFiles/Textures/UITextures/ClassSelect/class_selection_punisher.png"); //14
 
 	//Ip input
-	texturePaths.push_back("GameFiles/Textures/UITextures/ip_field.png"); //15
+	texturePaths.push_back("GameFiles/Textures/UITextures/Connect/ip_field.png"); //15
 	//Port input
-	texturePaths.push_back("GameFiles/Textures/UITextures/name_field.png"); //16
+	texturePaths.push_back("GameFiles/Textures/UITextures/Connect/name_field.png"); //16
 
 	//Title
-	texturePaths.push_back("GameFiles/Textures/UITextures/title.png"); //17
+	texturePaths.push_back("GameFiles/Textures/UITextures/title_new.png"); //17
 
 	//Server
 	texturePaths.push_back("GameFiles/Textures/UITextures/server.png"); //18
 
-	//GUI
-	texturePaths.push_back("GameFiles/Textures/UITextures/plain_hud_left_frame_squared.png"); //19  Ammo, hp and weapons
-	texturePaths.push_back("GameFiles/Textures/UITextures/plain_hud_left_bar_hp.png"); //20 hp bar
-	texturePaths.push_back("GameFiles/Textures/UITextures/plain_hud_left_bar_special.png"); //21 special bar
+	//GUI TEAM 1
+	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/Orange/plain_hud_left_frame_squared.png"); //19  Ammo, hp and weapons
+	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/Orange/plain_hud_left_bar_hp.png"); //20 hp bar
+	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/Orange/plain_hud_left_bar_special.png"); //21 special bar
 
-	texturePaths.push_back("GameFiles/Textures/UITextures/plain_hud_right_frame.png"); //22 tickets
-	texturePaths.push_back("GameFiles/Textures/UITextures/plain_hud_right_bar_0.png"); //23 ticket team 1
-	texturePaths.push_back("GameFiles/Textures/UITextures/plain_hud_right_bar_1.png"); //24 tickets team 2
+	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/Orange/plain_hud_right_frame.png"); //22 tickets
+	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/Orange/plain_hud_right_bar_0.png"); //23 ticket team 1
+	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/Orange/plain_hud_right_bar_1.png"); //24 tickets team 2
 
-	texturePaths.push_back("GameFiles/Textures/UITextures/plain_hud_top_bar.png"); //25 capture point timer
-	texturePaths.push_back("GameFiles/Textures/UITextures/plain_hud_top_frame_0.png"); //26 meter
-	texturePaths.push_back("GameFiles/Textures/UITextures/plain_hud_top_frame_1.png"); //27 rounds team 1
-	texturePaths.push_back("GameFiles/Textures/UITextures/plain_hud_top_frame_2.png"); //28 timer
-	texturePaths.push_back("GameFiles/Textures/UITextures/plain_hud_top_frame_3.png"); //29 rounds team 2
+	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/Orange/plain_hud_top_bar.png"); //25 capture point timer
+	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/Orange/plain_hud_top_frame_0.png"); //26 meter
+	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/Orange/plain_hud_top_frame_1.png"); //27 rounds team 1
+	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/Orange/plain_hud_top_frame_2.png"); //28 timer
+	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/Orange/plain_hud_top_frame_3.png"); //29 rounds team 2
+
+	//GUI TEAM 2
+	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/Green/plain_hud_left_frame_squared_green.png"); //30  Ammo, hp and weapons
+	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/Green/plain_hud_left_bar_hp_green.png"); //31 hp bar
+	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/Green/plain_hud_left_bar_special_green.png"); //32 special bar
+
+	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/Green/plain_hud_right_frame_green.png"); //33 tickets
+	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/Green/plain_hud_right_bar_0_green.png"); //34 ticket team 1
+	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/Green/plain_hud_right_bar_1_green.png"); //35 tickets team 2
+
+	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/Green/plain_hud_top_bar_green.png"); //36 capture point timer
+	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/Green/plain_hud_top_frame_0_green.png"); //37 meter
+	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/Green/plain_hud_top_frame_1_green.png"); //38 rounds team 1
+	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/Green/plain_hud_top_frame_2_green.png"); //39 timer
+	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/Green/plain_hud_top_frame_3_green.png"); //40 rounds team 2
+
+	//Multiplayer
+	texturePaths.push_back("GameFiles/Textures/UITextures/ClientServer/client_server_background.png"); //41 background
+	texturePaths.push_back("GameFiles/Textures/UITextures/ClientServer/client_button.png"); //42 client
+	texturePaths.push_back("GameFiles/Textures/UITextures/ClientServer/server_button.png"); //43 server
+
+	//Hovers
+	texturePaths.push_back("GameFiles/Textures/UITextures/MainMenu/multiplayer_hover.png"); //44
+	texturePaths.push_back("GameFiles/Textures/UITextures/MainMenu/settings_hover.png"); //45
+	texturePaths.push_back("GameFiles/Textures/UITextures/MainMenu/exit_hover.png"); //46
+
+	texturePaths.push_back("GameFiles/Textures/UITextures/ClientServer/client_button_hover.png"); //47
+	texturePaths.push_back("GameFiles/Textures/UITextures/ClientServer/server_button_hover.png"); //48
+
+	texturePaths.push_back("GameFiles/Textures/UITextures/Connect/connect_to_server_connect_hover.png"); //49
+	texturePaths.push_back("GameFiles/Textures/UITextures/connect_to_server_back_hover.png"); //50
+
+	texturePaths.push_back("GameFiles/Textures/UITextures/TeamSelect/team_selection_alpha_hover.png"); //51
+	texturePaths.push_back("GameFiles/Textures/UITextures/TeamSelect/team_selection_beta_hover.png"); //52
+
+	texturePaths.push_back("GameFiles/Textures/UITextures/ClassSelect/class_selection_trapper_hover.png"); //53
+	texturePaths.push_back("GameFiles/Textures/UITextures/ClassSelect/class_selection_stalker_hover.png"); //54
+	texturePaths.push_back("GameFiles/Textures/UITextures/ClassSelect/class_selection_punisher_hover.png"); //55
 
 	//Släng in allt detta i en fil och läs in ifrån den vid här och lägg det i temp namn vector som sedans cleanas upp.
 
@@ -299,6 +335,12 @@ void UIManager::changeTex(int objId, int whichTex)
 		menus[currentMenu[nrOfCurretMenus - 1]].changeTex(objId, whichTex);
 }
 
+void UIManager::changeColorTeam()
+{
+	if (currentGroup == 1)
+		menus[0].changeColorTeam(teamColor);
+}
+
 bool UIManager::LoadNextSet(int whichMenuGroup, int winX, int winY)
 {
 	removeAllMenus();
@@ -390,4 +432,25 @@ void UIManager::scaleBar(int id, float procentOfMax, bool fromRight)
 {
 	if(currentMenu[nrOfCurretMenus - 1] > -1)
 		menus[currentMenu[nrOfCurretMenus - 1]].scaleBar(id, procentOfMax, fromRight);
+}
+
+void UIManager::setTeamColor(int team)
+{
+	if(team == 1 )
+		teamColor = 0;
+	else if(team == 2)
+		teamColor = 1;
+}
+int UIManager::getTeamColor()
+{
+	return teamColor;
+}
+
+void UIManager::setHoverCheckBool(bool checkForHover)
+{
+	doHoverCheckInGame = checkForHover;
+}
+bool UIManager::getHoverCheckBool()
+{
+	return doHoverCheckInGame;
 }

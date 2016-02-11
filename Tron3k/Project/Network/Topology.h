@@ -216,7 +216,7 @@ public:
 			Uint8 lastMsg;
 			float timer;
 			*rec >> teamOneTokens >> teamTwoTokens >> teamOneOnCapP >> teamTwoOnCapP >> capPoint >> timer >> state >> lastMsg;
-			koth->setGamemodeData(teamOneTokens, teamTwoTokens, teamOneOnCapP, teamTwoOnCapP, capPoint, koth->getTimer(), (KOTHSTATE)state, (GAMEMODE_MSG)lastMsg);
+			koth->setGamemodeData(teamOneTokens, teamTwoTokens, teamOneOnCapP, teamTwoOnCapP, capPoint, timer, (KOTHSTATE)state, (GAMEMODE_MSG)lastMsg);
 		}
 	}
 
@@ -646,6 +646,7 @@ public:
 		gamePtr->addPlayerToTeam(p_conID, team);
 		if (p_conID == getConId())
 		{
+			uiPtr->changeColorTeam();
 			uiPtr->setFirstMenuSet(false);
 			uiPtr->setMenu(2);
 		}
@@ -733,14 +734,18 @@ public:
 				uiPtr->setText(std::to_string(koth->getRespawnTokens(2)), 3); //tickets2
 				uiPtr->setText(std::to_string(koth->getRoundWins(1)), 4); //wins1
 				uiPtr->setText(std::to_string(koth->getRoundWins(2)), 5); //wins2
-				if(int(koth->getTimer()) == 0)
+				if (int(koth->getTimer()) == 0)
+				{
+					uiPtr->clearText(6);
 					uiPtr->setText("00:00", 6); //time
+				}
 
 				uiPtr->scaleBar(2, (float)(koth->getRespawnTokens(1)) / (float)(koth->getMaxTokensPerTeam()), false);
 				uiPtr->scaleBar(3, (float)(koth->getRespawnTokens(2)) / (float)(koth->getMaxTokensPerTeam()), false);
-				uiPtr->scaleBar(9, 1.0f, true);
+				uiPtr->scaleBar(9, 0.0f, true);
 
 				uiPtr->setRoleBool(true);
+				uiPtr->setHoverCheckBool(false);
 			}
 		}
 	}
