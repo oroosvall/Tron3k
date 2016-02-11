@@ -1943,15 +1943,15 @@ void Core::inGameUIUpdate() //Ingame ui update
 			uiManager->clearText(6);
 			uiManager->setText(sMinutes + ":" + sSeconds, 6);
 
-			if (HUD.ticketLostTimer == HUD.loseTicketPer)
+			if (HUD.ticketLostTimer == 0)
 			{
-				HUD.ticketLostTimer = 0;
+				HUD.ticketLostTimer = HUD.loseTicketPer;
 				uiManager->scaleBar(10, 0.0f, true);
 			}
 			else
 			{
-				HUD.ticketLostTimer += 1;
 				uiManager->scaleBar(10, (float)(HUD.ticketLostTimer) / (float)(HUD.loseTicketPer), true);
+				HUD.ticketLostTimer -= 1;
 			}
 		}
 	}

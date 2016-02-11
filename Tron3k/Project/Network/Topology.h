@@ -742,7 +742,7 @@ public:
 
 				uiPtr->scaleBar(2, (float)(koth->getRespawnTokens(1)) / (float)(koth->getMaxTokensPerTeam()), false);
 				uiPtr->scaleBar(3, (float)(koth->getRespawnTokens(2)) / (float)(koth->getMaxTokensPerTeam()), false);
-				uiPtr->scaleBar(9, 1.0f, true);
+				uiPtr->scaleBar(9, 0.0f, true);
 
 				uiPtr->setRoleBool(true);
 				uiPtr->setHoverCheckBool(false);
