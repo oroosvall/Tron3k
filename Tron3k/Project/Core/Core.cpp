@@ -637,14 +637,16 @@ void Core::upClient(float dt)
 				}
 				else if (tmp == KOTHSTATE::ROUND)
 				{
+					Player* local = game->getPlayer(top->getConId());
+					uiManager->setTeamColor(local->getTeam());
+					uiManager->changeColorTeam();
+
 					uiManager->setOpenedGuiBool(true);
 					uiManager->setFirstMenuSet(false);
 					uiManager->setMenu(0);
 
 					game->getPlayer(game->GetLocalPlayerId())->setLockedControls(false);
 					game->setCursorInvisible(true);
-
-					Player* local = game->getPlayer(top->getConId());
 
 					uiManager->clearText(0);
 					uiManager->clearText(1);
@@ -667,6 +669,7 @@ void Core::upClient(float dt)
 						uiManager->setText("00:00", 6); //time
 					}
 
+					uiManager->scaleBar(0, 1.0f, false);
 					uiManager->scaleBar(2, (float)(koth->getRespawnTokens(1)) / (float)(koth->getMaxTokensPerTeam()), false);
 					uiManager->scaleBar(3, (float)(koth->getRespawnTokens(2)) / (float)(koth->getMaxTokensPerTeam()), false);
 					uiManager->scaleBar(9, 0.0f, true);
@@ -1078,13 +1081,9 @@ void Core::roamHandleCmds(std::string com)
 				else
 					game->freecam = true;
 
-				if (team != 0)
-				{
-					uiManager->setTeamColor(team);
-					uiManager->changeColorTeam();
-					uiManager->setFirstMenuSet(false);
-					uiManager->setMenu(2);
-				}
+				uiManager->changeColorTeam();
+				uiManager->setFirstMenuSet(false);
+				uiManager->setMenu(2);
 			}
 			else
 				console.printMsg("Invalid team. Use /team <1/2/3>", "System", 'S');
@@ -2043,6 +2042,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 			case 20: //Team 1
 				if (current == ROAM)
 				{
+					uiManager->setTeamColor(2);
 					roamHandleCmds("/team 2");
 				}
 				else
@@ -2053,6 +2053,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 			case 21: //Team 2
 				if (current == ROAM)
 				{
+					uiManager->setTeamColor(1);
 					roamHandleCmds("/team 1");
 				}
 				else

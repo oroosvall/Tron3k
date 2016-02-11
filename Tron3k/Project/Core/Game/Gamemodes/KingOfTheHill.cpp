@@ -216,6 +216,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 		if (gamePtr->nrOfPlayersReady() >= playersReadyNeeded)
 		{
 			timer = 15.0f; //20 seconds in the pre-round
+			capturePoint = 0;// rand() % 2;
 			state = PREROUND;
 			std::vector<int>* teamOne = gamePtr->getTeamConIds(1);
 			std::vector<int>* teamTwo = gamePtr->getTeamConIds(2);
@@ -239,7 +240,6 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 
 			teamOneSpawnTokens = teamTwoSpawnTokens = tokensPerTeam;
 			state = ROUND;
-			capturePoint = 0;// rand() % 2;
 			timerModifierForCaptureScoring = 15.0f;
 		}
 		else
@@ -694,15 +694,13 @@ KOTHSTATE KingOfTheHill::getState()
 
 bool KingOfTheHill::allowTeamChange()
 {
-	//Förlåt Adam, Martin tvingade mig
-	//if (state == WARMUP || state == ENDMATCH)
+	if (state == WARMUP || state == ENDMATCH)
 		return true;
 	return false;
 }
 
 bool KingOfTheHill::allowRoleChange()
 {
-	//Förlåt Adam, Martin tvingade mig
 	if (state == ROUND)
 	{
 		return false;

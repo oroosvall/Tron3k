@@ -623,11 +623,11 @@ public:
 		}
 
 		if (team == 0)
-			consolePtr->printMsg("Player (" + p->getName() + ") joined team Spectators", "System", 'S');
+			consolePtr->printMsg("Player (" + p->getName() + ") joined Spectators", "System", 'S');
 		if (team == 1)
-			consolePtr->printMsg("Player (" + p->getName() + ") joined team One", "System", 'S');
+			consolePtr->printMsg("Player (" + p->getName() + ") joined team Alpha", "System", 'S');
 		if (team == 2)
-			consolePtr->printMsg("Player (" + p->getName() + ") joined team Two", "System", 'S');
+			consolePtr->printMsg("Player (" + p->getName() + ") joined team Beta", "System", 'S');
 
 		if (p_conID == getConId())
 		{
@@ -644,9 +644,10 @@ public:
 		}
 		//Adds player to the game in chosen team. Both clients and server
 		gamePtr->addPlayerToTeam(p_conID, team);
-		if (p_conID == getConId())
+		uiPtr->setTeamColor(team);
+		uiPtr->changeColorTeam();
+		if (p_conID == getConId() && gamePtr->getPlayer(p_conID)->getRole()->getRole() == ROLES::NROFROLES)
 		{
-			uiPtr->changeColorTeam();
 			uiPtr->setFirstMenuSet(false);
 			uiPtr->setMenu(2);
 		}
