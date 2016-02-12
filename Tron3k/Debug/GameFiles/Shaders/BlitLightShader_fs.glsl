@@ -40,6 +40,7 @@ uniform vec3 eyepos;
 float gSpecularPower = 200;
 float gMatSpecularIntensity = 0.4;
 vec4 specularAddetive;
+bool isAmbient = true;
 
 out vec4 fragment_color;
 					
@@ -50,7 +51,7 @@ vec4 CalcLightInternal(SpotLight l, vec3 LightDirection, vec3 Normal)
 	vec4 DiffuseColor  = vec4(0, 0, 0, 0);                                                                                             
                                                                                            
 	if (DiffuseFactor > 0) 
-	{                                                                
+	{                                                            
 		DiffuseColor = vec4(l.Color, 1.0f) * (l.DiffuseIntensity * 3) * DiffuseFactor;    
                                                                                            
 		vec3 VertexToEye = normalize(eyepos - Position0.xyz);                             
@@ -58,7 +59,16 @@ vec4 CalcLightInternal(SpotLight l, vec3 LightDirection, vec3 Normal)
 		float SpecularFactor = dot(VertexToEye, LightReflect);                              
 		SpecularFactor = pow(SpecularFactor, gSpecularPower);                               
 		if (SpecularFactor > 0)
-			specularAddetive += vec4(l.Color, 1.0f) * ( 1 - Normal0.w) * SpecularFactor;
+			if(isAmbient == false)
+			{
+				float Distance = length(Position0.xyz - l.Position);
+				float Attenuation = 1.0 + (0.027 * Distance) + (0.0028 * Distance * Distance);
+				specularAddetive += (vec4(l.Color, 1.0f) * ( 1 - Normal0.w) * SpecularFactor) / Attenuation;
+			}
+			else
+			{
+				specularAddetive += (vec4(l.Color, 1.0f) * ( 1 - Normal0.w) * SpecularFactor);
+			}
 	}                                                                                                                                                                         
 	return (DiffuseColor);                                   
 }               
@@ -72,8 +82,7 @@ vec4 CalcPointLight(SpotLight l, vec3 Normal)
 	vec4 Color = vec4(CalcLightInternal(l, LightDirection, Normal)); 
 	float Attenuation = 1.0 + (0.14 * Distance) + (0.07 * Distance * Distance); //0.1 * Distance;
 	//float Attenuation = l.attenuation.x + (l.attenuation.y * Distance) + (l.attenuation.z * Distance * Distance); //0.1 * Distance;
-	return Color / Attenuation;     
-	//float att = pointlightArray[i].attenuation.x + (pointlightArray[i].attenuation.y * dist) + (pointlightArray[i].attenuation.z * dist * dist);		
+	return Color / Attenuation;	
 }                                                                                           
                                                                                            
 vec4 CalcSpotLight(SpotLight l, vec3 Normal)                                                
@@ -93,25 +102,6 @@ vec4 CalcSpotLight(SpotLight l, vec3 Normal)
 
 void main()
 {
-	//if(Use == 0)
-	//{
-	//	float Depth = texture(Depth, vec2(UV.x, UV.y)).x;
-	//	fragment_color = vec4(1.0 - (1.0 - Depth) * 25.0); 
-	//}
-	//else if(Use == 1)
-	//	fragment_color = texture(Position, vec2(UV.x, UV.y)) * 0.25;
-	//else if(Use == 2)	 
-	//	fragment_color = texture(Diffuse, vec2(UV.x, UV.y));
-	//else if(Use == 3)	 
-	//	fragment_color = texture(Normal, vec2(UV.x, UV.y));
-	//else if(Use == 4)
-	//	{	
-	//		if(UV.x > 0.5f)
-	//			fragment_color = vec4(texture(GlowMap, vec2(UV.x, UV.y)).w);
-	//		else
-	//			fragment_color = texture(GlowMap, vec2(UV.x, UV.y));
-	//	}
-	//else if(Use == 5)
 	{
 		fragment_color = vec4(0,0,0,0);
 		Diffuse0 = texture(Diffuse, vec2(UV.x, UV.y));
@@ -128,6 +118,7 @@ void main()
 			//light 0
 			fragment_color = CalcLightInternal(lights[0], lights[0].Direction, Normal0.xyz);
 			vec4 ambientForce = vec4(lights[0].Color, 1) * lights[0].AmbientIntensity;
+			isAmbient = false;
 			
 			for(int n = 1; n < NumSpotLights; n++)
 			{
