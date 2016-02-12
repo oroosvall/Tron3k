@@ -10,7 +10,7 @@ void ThunderDomeEffect::init(int pid, int eid, glm::vec3 position)
 	type = EFFECT_TYPE::THUNDER_DOME;
 	playerId = pid; effectId = eid;
 	pos = position;
-	lifeTime = 10.0f;
+	lifeTime = 8.0f;
 	startLifeTime = lifeTime;
 	domeRadius = 10;
 }
