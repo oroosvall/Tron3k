@@ -8,6 +8,32 @@
 #include <sstream>
 #include <fstream>
 
+enum MainMenu
+{
+	StartMenu,
+	Multiplayer,
+	Connect,
+};
+
+enum InGameUI
+{
+	GUI,
+	TeamSelect,
+	ClassSelect
+};
+
+enum UISets
+{
+	Menu,
+	InGame
+};
+
+enum TeamColors
+{
+	TeamOne,
+	TeamTwo
+};
+
 
 class UIManager
 {

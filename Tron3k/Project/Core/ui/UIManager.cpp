@@ -487,10 +487,11 @@ void UIManager::scaleBar(int id, float procentOfMax, bool fromRight)
 
 void UIManager::setTeamColor(int team)
 {
-	if(team == 1 )
-		teamColor = 0;
-	else if(team == 2)
-		teamColor = 1;
+	teamColor = team;
+	//if(team == 1 )
+	//	teamColor = 0;
+	//else if(team == 2)
+	//	teamColor = 1;
 }
 int UIManager::getTeamColor()
 {

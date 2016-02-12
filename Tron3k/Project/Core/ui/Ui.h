@@ -22,6 +22,21 @@
 #include <glm\glm.hpp>
 #include <glm\gtc\matrix_transform.hpp>
 
+enum scaleAndText
+{
+	HP, //Dynamic text and scaleBar
+	Ammo,  //Dynamic text
+	TicketBar1,  //Dynamic text and ScaleBar
+	TicketBar2,  //Dynamic text and ScaleBar
+	Wins1, //Dynamic text
+	Wins2, //Dynamic text
+	Time, //Dynamic text
+	IP, //Dynamic text and inpit
+	Name, //Dynamic text and input
+	AbilityMeter, //ScaleBar
+	LoseTicketsMeter //ScaleBar
+};
+
 class UI
 {
 private:
