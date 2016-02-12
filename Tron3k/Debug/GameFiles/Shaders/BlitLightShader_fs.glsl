@@ -51,7 +51,7 @@ vec4 CalcLightInternal(SpotLight l, vec3 LightDirection, vec3 Normal)
                                                                                            
 	if (DiffuseFactor > 0) 
 	{                                                                
-		DiffuseColor = vec4(l.Color, 1.0f) * l.DiffuseIntensity * DiffuseFactor;    
+		DiffuseColor = vec4(l.Color, 1.0f) * (l.DiffuseIntensity * 3) * DiffuseFactor;    
                                                                                            
 		vec3 VertexToEye = normalize(eyepos - Position0.xyz);                             
 		vec3 LightReflect = normalize(reflect(LightDirection, Normal));                     
@@ -70,9 +70,10 @@ vec4 CalcPointLight(SpotLight l, vec3 Normal)
 	LightDirection = normalize(LightDirection);    
 
 	vec4 Color = vec4(CalcLightInternal(l, LightDirection, Normal)); 
-	float Attenuation = l.attenuation.x + (l.attenuation.y * Distance) + (l.attenuation.z * Distance * Distance); //0.1 * Distance;
+	float Attenuation = 1.0 + (0.14 * Distance) + (0.07 * Distance * Distance); //0.1 * Distance;
+	//float Attenuation = l.attenuation.x + (l.attenuation.y * Distance) + (l.attenuation.z * Distance * Distance); //0.1 * Distance;
 	return Color / Attenuation;     
-	//float att = pointlightArray[i].attenuation.x + (pointlightArray[i].attenuation.y * dist) + (pointlightArray[i].attenuation.z * dist * dist);			
+	//float att = pointlightArray[i].attenuation.x + (pointlightArray[i].attenuation.y * dist) + (pointlightArray[i].attenuation.z * dist * dist);		
 }                                                                                           
                                                                                            
 vec4 CalcSpotLight(SpotLight l, vec3 Normal)                                                
@@ -130,12 +131,15 @@ void main()
 			
 			for(int n = 1; n < NumSpotLights; n++)
 			{
-				if(length(lights[n].Direction) < 0.3f)
-					fragment_color += CalcPointLight(lights[n], Normal0.xyz);
-				else
-					fragment_color += CalcSpotLight(lights[n], Normal0.xyz);
-					
-				ambientForce += vec4(lights[n].Color, 1) * lights[n].AmbientIntensity;
+				float Distance = length(Position0.xyz - lights[n].Position);
+				if (Distance < 32)
+				{
+					if(length(lights[n].Direction) < 0.3f)
+						fragment_color += CalcPointLight(lights[n], Normal0.xyz);
+					else
+						fragment_color += CalcSpotLight(lights[n], Normal0.xyz);
+				}
+				
 			}
 			fragment_color = fragment_color * Diffuse0 +  Diffuse0 * ambientForce;
 		}

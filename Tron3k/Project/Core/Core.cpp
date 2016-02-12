@@ -1546,7 +1546,7 @@ void Core::renderWorld(float dt)
 		light.Position = vec3(131, 45, 0);
 		light.Direction = normalize(vec3(-0.16f, -0.36f, 0.91f));//p->getDir();
 		light.Color = vec3(0.7f, 0.7f , 1.0f);
-		light.DiffuseIntensity = 0.3f;
+		light.DiffuseIntensity = 0.1f;
 		light.AmbientIntensity = 0.1f;
 		renderPipe->addLight(&light, 0);
 		light.AmbientIntensity = 0.0f;
