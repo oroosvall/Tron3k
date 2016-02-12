@@ -1186,10 +1186,10 @@ void RenderPipeline::updateTakeDamageEffect(float dt)
 		if (takeDamage_timer > 0)
 		{
 			float precent = (takeDamage_timer / takeDamage_timerStartValue);
-			gBuffer->setGlowSamplingDist(precent * takeDamage_startDispalce + 2);
+			gBuffer->setGlowSamplingDist(precent * takeDamage_startDispalce + 1);
 		}
 		else //timeout
-			gBuffer->setGlowSamplingDist(2.0f);
+			gBuffer->setGlowSamplingDist(1.0f);
 	}
 }
 
