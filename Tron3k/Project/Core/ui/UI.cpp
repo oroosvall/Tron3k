@@ -43,7 +43,7 @@ void UI::init(std::string fileName, Console* console, IRenderPipeline* uiRender,
 	this->uiRender = uiRender;
 	this->console = console;
 
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 11; i++)
 	{
 		textIdList[i] = -1;
 	}
