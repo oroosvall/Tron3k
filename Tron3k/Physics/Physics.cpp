@@ -969,7 +969,7 @@ bool Physics::checkPlayerVCaptureCollision(vec3 playerPos, int capID)
 			{
 				int size = captureBoxes[i].getSubAABBs().size();
 
-				for (int j = 0; j < size; j++)
+				for (int j = 0; j < size && !collided; j++)
 				{
 					collided = checkAABBvAABBCollision(playerBox.getAABB(), captureBoxes[i].getSubAABBs()[j]);
 				}
