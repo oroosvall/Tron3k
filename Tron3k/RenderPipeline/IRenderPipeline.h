@@ -38,6 +38,17 @@ enum RENDER_FLAGS
 	RENDER_GUI
 };
 
+enum CROSSHAIR_TYPE
+{
+	CROSSHAIR_TRAPPER_P,
+	CROSSHAIR_SHANKER_P,
+	CROSSHAIR_SHANKER_S,
+	CROSSHAIR_BRUTE_P,
+	CROSSHAIR_BRUTE_S,
+
+	CROSSHAIR_NONE,
+};
+
 struct PipelineValues
 {
 	enum {INT2, BOOL, FLOAT, FLOAT3} type;
@@ -81,6 +92,8 @@ public:
 	virtual void renderThunderDomeEffect(float* pos, float rad, float transp, float* dgColor) = 0;
 
 	virtual void renderDecals(void* data, int size) = 0;
+
+	virtual void renderCrosshair(CROSSHAIR_TYPE cross) = 0;
 
 	virtual void renderCapturePoint(int capPointID) = 0;
 
