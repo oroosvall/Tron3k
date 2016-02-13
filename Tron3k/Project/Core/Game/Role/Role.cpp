@@ -122,12 +122,12 @@ void Role::loadRoleSpecifics(int _role)
 			break;
 		case MOBILITY:
 			role = 2;
-			specialAbility = new HackingDartSpecial(this);
+			specialAbility = new LightSpeedSpecial();
 			specialAbility->init();
 			mobility = new WallJump();
 			mobility->init();
 			consumable = new Consumable();
-			consumable->init(CONSUMABLE_TYPE::LIGHTSPEED);
+			consumable->init(CONSUMABLE_TYPE::HACKINGDART);
 			this->size = glm::vec3(0.8, 0.85, 0.8);
 			break;
 		case BRUTE:
