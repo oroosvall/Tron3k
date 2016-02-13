@@ -230,6 +230,8 @@ void Game::update(float dt)
 		for (unsigned int c = 0; c < effects[i].size(); c++)
 		{
 			int msg = effects[i][c]->update(dt);
+			int pid = -1, eid = -1;
+			effects[i][c]->getId(pid, eid);
 
 			if (i == EFFECT_TYPE::LIGHT_WALL)
 			{
@@ -241,8 +243,6 @@ void Game::update(float dt)
 				//effect removal in physics
 				if (gameState == Gamestate::SERVER || gameState == Gamestate::ROAM)
 				{
-					int pid = -1, eid = -1;
-					effects[i][c]->getId(pid, eid);
 					EffectTimeOutInfo toi;
 					toi.et = EFFECT_TYPE(i);
 					toi.effectID = eid;
@@ -251,7 +251,13 @@ void Game::update(float dt)
 					allEffectTimeOuts.push_back(toi);
 				}
 			}
-
+			
+			if (effects[i][c]->desynced())
+			{
+				int arraypos = -1;
+				getSpecificEffect(pid, eid, EFFECT_TYPE(i), arraypos);
+				removeEffect(EFFECT_TYPE(i), arraypos);
+			}
 		}
 	}
 

@@ -7,7 +7,6 @@
 class HealthPack : public Effect
 {
 private:
-	float lifeTime;
 	float damage;
 	float size = 2.5f;
 public:
