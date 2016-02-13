@@ -88,8 +88,8 @@ void CameraInput::keypan(float dt)
 
 void CameraInput::mousepan(float x, float y)
 {
-	angleH -= x * (mouseSpeed * playbackSpeed);
-	angleV -= y * (mouseSpeed * playbackSpeed);
+	angleH -= x * (mouseSpeed/5.0f * playbackSpeed);
+	angleV -= y * (mouseSpeed/5.0f * playbackSpeed);
 	if (angleV > 89)
 		angleV = 89;
 	if (angleV < -89)

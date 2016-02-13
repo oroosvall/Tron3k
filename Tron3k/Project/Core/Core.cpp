@@ -1050,6 +1050,7 @@ void Core::roamHandleCmds(std::string com)
 			console.printMsg("/free (turns freecam on/off)", "", ' ');
 			console.printMsg("/rs  show render settings", "", ' ');
 			console.printMsg("/disconnect", "", ' ');
+			console.printMsg("/sens <positive decimal number>", "", ' ');
 
 		}
 		else if (token == "/name")
@@ -1099,6 +1100,23 @@ void Core::roamHandleCmds(std::string com)
 				game->freecam = true;
 
 			game->spectateID = -1;
+		}
+		else if (token == "/sens")
+		{
+			float sens = 0.0f;
+			if (!(ss >> sens))
+			{
+				console.printMsg("Invalid input.", "System", 'S');
+			}
+			else
+			{
+				if (sens < FLT_EPSILON)
+				{
+					console.printMsg("Positive numbers only, dummy.", "System", 'S');
+				}
+				else
+					serverCam->setSensitivity(sens);
+			}
 		}
 
 		else if (token == "/cleanup")
@@ -1218,6 +1236,7 @@ void Core::clientHandleCmds(std::string com)
 		{
 			console.printMsg("Console commands", "", ' ');
 			console.printMsg("/name " + _name, "", ' ');
+			console.printMsg("/sens <positive decimal number>", "", ' ');
 			console.printMsg("/team " + to_string(game->getPlayer(top->getConId())->getTeam()), "", ' ');
 			console.printMsg("/players", "", ' ');
 			console.printMsg("/disconnect", "", ' ');
@@ -1257,6 +1276,23 @@ void Core::clientHandleCmds(std::string com)
 			}
 			else
 				console.printMsg("Invalid team. Use /team <0/1/2>", "System", 'S');
+		}
+		else if (token == "/sens")
+		{
+			float sens = 0.0f;
+			if (!(ss >> sens))
+			{
+				console.printMsg("Invalid input.", "System", 'S');
+			}
+			else
+			{
+				if (sens < FLT_EPSILON)
+				{
+					console.printMsg("Positive numbers only, dummy.", "System", 'S');
+				}
+				else
+					serverCam->setSensitivity(sens);
+			}
 		}
 		else if (token == "/players")
 		{
