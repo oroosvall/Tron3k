@@ -226,7 +226,7 @@ void Role::swapWeapon(WEAPON_TYPE wt, int swapTo)
 void Role::swapWeaponLocal(int swapTo)
 {
 	currentWpn = swapTo;
-	swapWeaponTimer = 1.0f;
+	swapWeaponTimer = 0.5f;
 }
 
 Weapon* Role::getCurrentWeapon()
