@@ -24,13 +24,15 @@ void Core::init()
 
 	//glfwWindowHint(GLFW_DECORATED, false); //borderless toggle
 
+	closeGame = false;
+
 	cursorInvisible = false;
 
 	win = nullptr;
 	renderPipe = nullptr;
 
 	recreate = false;
-	fullscreen = false;
+	fullscreen = true;
 	winX = winY = 800;
 	//winX = winY = 1000;
 	winX = 1280; winY = 720;
@@ -290,7 +292,7 @@ void Core::upMenu(float dt)
 		case 2: //Settings
 			break;
 		case 3: //Exit
-			glfwHideWindow(win);
+			glfwSetWindowShouldClose(win, 1);
 			break;
 		case 4: //Client -> connect window
 		{
@@ -2499,13 +2501,14 @@ void Core::sendWorldBoxes()
 	}
 }
 
-bool Core::windowVisible() const
+bool Core::windowVisible()
 {
 	if (glfwWindowShouldClose(win))
 	{
 		glfwHideWindow(win);
+		closeGame = true;
 	}
-	return glfwGetWindowAttrib(win, GLFW_VISIBLE);
+	return !closeGame;
 }
 
 void Core::disconnect()

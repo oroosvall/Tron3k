@@ -864,7 +864,10 @@ bool RenderPipeline::setSetting(PIPELINE_SETTINGS type, PipelineValues value)
 	}
 	else
 	{
-
+		if (type == PIPELINE_SETTINGS::VIEWPORT)
+		{
+			glViewport(0, 0, value.xy[0], value.xy[1]);
+		}
 	}
 	return true;
 }

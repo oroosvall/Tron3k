@@ -8,7 +8,7 @@ void Crosshair::init()
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-	float xPos = 0.02;
+	float xPos = 0.02f;
 	float xSize = Text::ScreenResWidth * xPos;
 	float yPos = xSize / Text::ScreenResHeight;
 

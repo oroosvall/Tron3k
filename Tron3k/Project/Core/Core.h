@@ -59,6 +59,8 @@ private:
 	bool serverRender;
 	int winX, winY;
 
+	bool closeGame;
+
 	//gamestates
 	Gamestate current;
 	Gamestate last;
@@ -170,7 +172,7 @@ public:
 	void init();
 	void update(float dt);
 
-	bool windowVisible() const;
+	bool windowVisible();
 
 	void setfps(int fps);
 
