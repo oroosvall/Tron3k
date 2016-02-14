@@ -32,7 +32,7 @@ void Core::init()
 	renderPipe = nullptr;
 
 	recreate = false;
-	fullscreen = true;
+	fullscreen = false;
 	winX = winY = 800;
 	//winX = winY = 1000;
 	winX = 1280; winY = 720;
