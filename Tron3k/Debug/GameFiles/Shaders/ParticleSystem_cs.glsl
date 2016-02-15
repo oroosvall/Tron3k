@@ -17,7 +17,7 @@ layout(std430, binding = 0) buffer ParticleBuffer
 
 uniform float lifetime; // when reset full intensity
 uniform float deltaTime;
-uniform float force
+uniform float force;
 uniform float drag;
 uniform float gravity;
 uniform float emission;

@@ -128,6 +128,67 @@ SoundPlayer::~SoundPlayer()
 	
 }
 
+void SoundPlayer::playMelee(float x, float y, float z)
+{
+	if (melee.getStatus() != 2)
+	{
+		melee.setBuffer(soundList[SOUNDS::soundEffectMelee]);
+		melee.setPosition(x, y, z);
+		melee.setVolume(50);
+		melee.setAttenuation(80);
+		melee.setMinDistance(10.0f);
+		melee.play();
+	}
+	else if (melee2.getStatus() != 2)
+	{
+		melee2.setBuffer(soundList[SOUNDS::soundEffectMelee]);
+		melee2.setPosition(x, y, z);
+		melee2.setVolume(50);
+		melee2.setAttenuation(80);
+		melee2.setMinDistance(10.0f);
+		melee2.play();
+	}
+
+	else
+	{
+		melee3.setBuffer(soundList[SOUNDS::soundEffectMelee]);
+		melee3.setPosition(x, y, z);
+		melee3.setVolume(50);
+		melee3.setAttenuation(80);
+		melee3.setMinDistance(10.0f);
+		melee3.play();
+	}
+}
+
+void SoundPlayer::playMeleeStereo()
+{
+	if (melee.getStatus() != 2)
+	{
+		melee.setBuffer(soundList[SOUNDS::soundEffectMeleeStereo]);
+		melee.setVolume(50);
+		melee.setAttenuation(80);
+		melee.setMinDistance(10.0f);
+		melee.play();
+	}
+	else if (melee2.getStatus() != 2)
+	{
+		melee2.setBuffer(soundList[SOUNDS::soundEffectMeleeStereo]);
+		melee2.setVolume(50);
+		melee2.setAttenuation(80);
+		melee2.setMinDistance(10.0f);
+		melee2.play();
+	}
+
+	else
+	{
+		melee3.setBuffer(soundList[SOUNDS::soundEffectMeleeStereo]);
+		melee3.setVolume(50);
+		melee3.setAttenuation(80);
+		melee3.setMinDistance(10.0f);
+		melee3.play();
+	}
+}
+
 float SoundPlayer::getVolumeMusic()
 {
 	return musicVolume;
