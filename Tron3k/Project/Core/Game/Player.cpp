@@ -670,7 +670,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					{
 						reloadCurrentWeapon();
 					}
-					int areWeScrolling = i->getScrollValue();
+					areWeScrolling = i->getScrollValue();
 
 					if (areWeScrolling < 0.0 || i->justPressed(GLFW_KEY_1))
 					{
