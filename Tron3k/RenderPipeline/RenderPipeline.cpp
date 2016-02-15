@@ -172,7 +172,7 @@ void RenderPipeline::reloadShaders()
 
 	GLuint temp;
 
-	if(gBuffer->shaderPtr == nullptr)
+	if (gBuffer->shaderPtr == nullptr)
 		gBuffer->shaderPtr = new GLuint();
 	std::string shaderNamesDeffered[] = { "GameFiles/Shaders/BlitLightShader_vs.glsl", "GameFiles/Shaders/BlitLightShader_fs.glsl" };
 	GLenum shaderTypesDeffered[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
@@ -348,6 +348,27 @@ void RenderPipeline::reloadShaders()
 	textShaderVP = glGetUniformLocation(textShader, "view");
 	textShaderOffset = glGetUniformLocation(textShader, "offset");
 
+
+	std::string particleShaders[] = { "GameFiles/Shaders/particle_vs.glsl", "GameFiles/Shaders/particle_gs.glsl" , "GameFiles/Shaders/particle_fs.glsl" };
+	GLenum particleshaderTypes[] = { GL_VERTEX_SHADER, GL_GEOMETRY_SHADER , GL_FRAGMENT_SHADER };
+
+	CreateProgram(temp, particleShaders, particleshaderTypes, 3);
+	if (temp != 0)
+	{
+		particleShader = temp;
+		temp = 0;
+	}
+
+
+	particleShaders[0] = "GameFiles/Shaders/ParticleSystem_cs.glsl";
+	textshaderTypes[0] = GL_COMPUTE_SHADER;
+
+	CreateProgram(temp, particleShaders, particleshaderTypes, 1);
+	if (temp != 0)
+	{
+		particleCS = temp;
+		temp = 0;
+	}
 
 	std::cout << "Done loading shaders\n";
 
