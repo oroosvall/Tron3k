@@ -166,6 +166,7 @@
     <ClCompile Include="Mesh\Mesh.cpp" />
     <ClCompile Include="Mesh\MiscMesh.cpp" />
     <ClCompile Include="Mesh\StaticMesh.cpp" />
+    <ClCompile Include="ParticleSystem\ParticleSystem.cpp" />
     <ClCompile Include="RenderPipeline.cpp" />
     <ClCompile Include="Streaming\TextureStreamer.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -193,6 +194,8 @@
     <ClInclude Include="Mesh\Mesh.h" />
     <ClInclude Include="Mesh\MiscMesh.h" />
     <ClInclude Include="Mesh\StaticMesh.h" />
+    <ClInclude Include="ParticleSystem\ParticleStructs.h" />
+    <ClInclude Include="ParticleSystem\ParticleSystem.h" />
     <ClInclude Include="RenderPipeline.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Streaming\TextureStreamer.h" />
