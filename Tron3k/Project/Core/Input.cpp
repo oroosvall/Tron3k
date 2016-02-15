@@ -912,11 +912,9 @@ double Input::getScrollValue()
 	if (scrollLastFrame != scrollVal)
 	{
 		scrollLastFrame = scrollVal;
-		scrollVal = 0.0;
-		return scrollLastFrame;
+		return scrollVal;
 	}
-	else
-		return 0.0;
+	return 0.0;
 }
 
 char Input::keyToChar(int key)

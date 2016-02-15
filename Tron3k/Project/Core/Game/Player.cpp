@@ -680,7 +680,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					}
 					int areWeScrolling = i->getScrollValue();
 
-					if (areWeScrolling != 0.0 || i->justPressed(GLFW_KEY_1))
+					if (areWeScrolling < 0.0 || i->justPressed(GLFW_KEY_1))
 					{
 						if (role.getWeaponNRequiped() != 0)
 						{
@@ -699,7 +699,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 						}
 					}
 
-					if (areWeScrolling != 0.0 || i->justPressed(GLFW_KEY_2))
+					if (areWeScrolling > 0.0 || i->justPressed(GLFW_KEY_2))
 					{
 						if (role.getWeaponNRequiped() != 1)
 						{
