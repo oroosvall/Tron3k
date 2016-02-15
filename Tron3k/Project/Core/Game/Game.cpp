@@ -230,6 +230,8 @@ void Game::update(float dt)
 		for (unsigned int c = 0; c < effects[i].size(); c++)
 		{
 			int msg = effects[i][c]->update(dt);
+			int pid = -1, eid = -1;
+			effects[i][c]->getId(pid, eid);
 
 			if (i == EFFECT_TYPE::LIGHT_WALL)
 			{
@@ -241,8 +243,6 @@ void Game::update(float dt)
 				//effect removal in physics
 				if (gameState == Gamestate::SERVER || gameState == Gamestate::ROAM)
 				{
-					int pid = -1, eid = -1;
-					effects[i][c]->getId(pid, eid);
 					EffectTimeOutInfo toi;
 					toi.et = EFFECT_TYPE(i);
 					toi.effectID = eid;
@@ -251,7 +251,13 @@ void Game::update(float dt)
 					allEffectTimeOuts.push_back(toi);
 				}
 			}
-
+			
+			if (effects[i][c]->desynced())
+			{
+				int arraypos = -1;
+				getSpecificEffect(pid, eid, EFFECT_TYPE(i), arraypos);
+				removeEffect(EFFECT_TYPE(i), arraypos);
+			}
 		}
 	}
 
@@ -1233,6 +1239,11 @@ void Game::handleConsumableUse(int conID, int teamId, CONSUMABLE_TYPE ct, glm::v
 	case CONSUMABLE_TYPE::THERMITEGRENADE:
 		addBulletToList(conID, teamId, 0, BULLET_TYPE::THERMITE_GRENADE, pos, dir);
 		break;
+	case CONSUMABLE_TYPE::HACKINGDART:
+		addBulletToList(conID, teamId, 0, BULLET_TYPE::HACKING_DART, pos, dir);
+		if (GetSoundActivated())
+			GetSound()->playExternalSound(SOUNDS::soundEffectHackingDart, pos.x, pos.y, pos.z);
+		break;
 	}
 }
 
@@ -1313,6 +1324,13 @@ void Game::handleSpecialAbilityUse(int conID, int teamId, int sID, SPECIAL_TYPE 
 		addBulletToList(conID, teamId, 0, BULLET_TYPE::HACKING_DART, pos, dir);
 		if (GetSoundActivated())
 			GetSound()->playExternalSound(SOUNDS::soundEffectHackingDart, pos.x, pos.y, pos.z);
+	}
+	break;
+	case SPECIAL_TYPE::LIGHTSPEEDSPECIAL:
+	{
+		p->addModifier(MODIFIER_TYPE::LIGHTSPEEDMODIFIER);
+		if (GetSoundActivated())
+			GetSound()->playExternalSound(SOUNDS::soundEffectLightSpeed, pos.x, pos.y, pos.z);
 	}
 	break;
 	case SPECIAL_TYPE::SPRINTD:		// D = Destroyer

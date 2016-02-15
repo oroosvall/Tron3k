@@ -3,6 +3,9 @@
 
 #include "../Special.h"
 
+class Role;
+class Player;
+
 class LightSpeedSpecial : public Special
 {
 private:

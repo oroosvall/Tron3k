@@ -10,6 +10,8 @@
 
 #include "Manager\AnimManager.h"
 
+#include "Text\Crosshair.h"
+
 enum SETTING_INPUT
 {
 	CLEAR_COLOR_IN = PipelineValues::FLOAT3,
@@ -38,8 +40,6 @@ private:
 
 	Text* debugText;
 	Text* chatText;
-
-	Text* uglyCrosshairSolution;
 
 	GLuint fontTexture;
 
@@ -137,6 +137,10 @@ private:
 
 	mat4 minimapRenderMat;
 
+	Crosshair* cross;
+
+	GLuint crosshairTexture;
+
 public:
 
 	RenderPipeline() {};
@@ -170,6 +174,8 @@ public:
 	virtual void renderThunderDomeEffect(float* pos, float rad, float transp, float* dgColor);
 
 	virtual void renderDecals(void* data, int size);
+
+	virtual void renderCrosshair(CROSSHAIR_TYPE cross);
 
 	virtual void renderCapturePoint(int capPointID);
 

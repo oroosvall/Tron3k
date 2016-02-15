@@ -7,7 +7,6 @@
 class ThermiteCloud : public Effect
 {
 private:
-	float lifeTime;
 	float startingLifetime;
 	float exploRadius;
 	int damage;

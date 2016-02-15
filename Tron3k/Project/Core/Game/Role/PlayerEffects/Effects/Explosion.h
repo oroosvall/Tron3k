@@ -7,7 +7,6 @@
 class Explosion : public Effect
 {
 private:
-	float lifeTime;
 	float startingLifetime;
 	float exploRadius = 1.0f;
 	float damage;

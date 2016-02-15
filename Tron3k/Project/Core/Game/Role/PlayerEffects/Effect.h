@@ -10,7 +10,7 @@ class Effect
 {
 protected:
 	glm::vec3 pos;
-
+	float lifeTime;
 	int teamId;
 	int playerId;
 	int effectId;
@@ -38,5 +38,7 @@ public:
 	bool thisPlayerHasBeenHitByMe(int conid);
 
 	EFFECT_TYPE getType() { return type; };
+
+	bool desynced() { if (lifeTime < -0.5f)return true; return false; };
 };
 #endif

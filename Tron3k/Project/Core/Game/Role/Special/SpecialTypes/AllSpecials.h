@@ -7,5 +7,6 @@
 #include "SprintD.h"
 #include "Dash.h"
 #include "ThunderDome.h"
+#include "LightSpeedSpecial.h"
 
 #endif

@@ -102,8 +102,11 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	chatTypeText = "..";
 	chatText = new Text(chatHistoryText + chatTypeText, 11, fontTexture, vec2(10, 420));
 
-	uglyCrosshairSolution = new Text("+", 32, fontTexture, vec2(WindowWidth / 2 - 10, WindowHeight / 2 + 18));
+	cross = new Crosshair();
 
+	cross->init();
+
+	crosshairTexture = TextureManager::gTm->createTexture("GameFiles/Textures/Crosshairs/Crosshair.png");
 
 #ifdef _DEBUG
 	if (glDebugMessageCallback) {
@@ -370,12 +373,12 @@ void RenderPipeline::release()
 	delete debugText;
 	delete chatText;
 
-	delete uglyCrosshairSolution;
-
-
 	delete gBuffer;
 
 	contMan.release();
+
+	cross->release();
+	delete cross;
 
 	reportGPULeaks();
 
@@ -551,7 +554,9 @@ void RenderPipeline::finalizeRender()
 	debugText->draw();
 	chatText->draw();
 	
-	uglyCrosshairSolution->draw();
+	//uglyCrosshairSolution->draw();
+
+	renderCrosshair(CROSSHAIR_TRAPPER_P);
 
 	glDisable(GL_BLEND);
 
@@ -676,6 +681,35 @@ void RenderPipeline::renderDecals(void* data, int size)
 		}
 		
 	}
+}
+
+void RenderPipeline::renderCrosshair(CROSSHAIR_TYPE cross)
+{
+	glUseProgram(textShader);
+	glProgramUniformMatrix4fv(textShader, textShaderModel, 1, GL_FALSE, (GLfloat*)&glm::mat4());
+	glProgramUniformMatrix4fv(textShader, textShaderVP, 1, GL_FALSE, (GLfloat*)&glm::mat4());
+	glProgramUniform3f(textShader, textShaderOffset, 0, 0, 0);
+
+	//switch (cross)
+	//{
+	//case CROSSHAIR_TRAPPER_P:
+	//	break;
+	//case CROSSHAIR_SHANKER_P:
+	//	break;
+	//case CROSSHAIR_SHANKER_S:
+	//	break;
+	//case CROSSHAIR_BRUTE_P:
+	//	break;
+	//case CROSSHAIR_BRUTE_S:
+	//	break;
+	//case CROSSHAIR_NONE:
+	//	break;
+	//default:
+	//	break;
+	//}
+	TextureManager::gTm->bindTexture(crosshairTexture, textShader, textShaderLocation, DIFFUSE_FB);
+
+	this->cross->draw();
 }
 
 void RenderPipeline::renderEffects()
@@ -830,7 +864,10 @@ bool RenderPipeline::setSetting(PIPELINE_SETTINGS type, PipelineValues value)
 	}
 	else
 	{
-
+		if (type == PIPELINE_SETTINGS::VIEWPORT)
+		{
+			glViewport(0, 0, value.xy[0], value.xy[1]);
+		}
 	}
 	return true;
 }

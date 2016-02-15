@@ -762,9 +762,6 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				}
 				if (i->justPressed(GLFW_KEY_E))
 				{
-					/*
-					Add logic (in role) that checks against the applicable special and other conditions
-					*/
 					if (role.getSpecialAbility()->allowedToActivate(this))
 					{
 						msg = SPECIALUSE;
@@ -1425,9 +1422,9 @@ void Player::movementAnimationChecks(float dt)
 		if (lastanimSwapActive == false)
 		{
 			if (animPrimary)
-				animSwapTime_OUT = 0.53f;
+				animSwapTime_OUT = 0.53f * 0.5f;
 			else
-				animSwapTime_OUT = 0.34f;
+				animSwapTime_OUT = 0.34f * 0.5f;
 
 			if (animPrimary == false)
 				animOverideIfPriority(anim_first_current, AnimationState::first_secondary_switch);

@@ -92,5 +92,13 @@ void AnimManager::setAnim(animState& current, AnimationState overide, bool first
 
 	current.frameEnd = keyFrameLenghts[current.role*AnimationState::none + current.state];
 
+	if (overide == AnimationState::first_primary_switch ||
+		overide == AnimationState::first_primary_switch_IN ||
+		overide == AnimationState::first_secondary_switch ||
+		overide == AnimationState::first_secondary_switch_IN)
+	{
+		current.speed *= 0.5f;
+	}
+
 	current.timeLength = current.frameEnd * current.speed;
 }

@@ -8,7 +8,6 @@ class LightwallEffect : public Effect
 {
 private:
 	Player* myPlayer;
-	float lifeTime;
 	bool expandDong;
 	bool collidable;
 	glm::vec3 playerVel;
