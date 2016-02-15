@@ -182,18 +182,26 @@ void Core::update(float dt)
 
 	if (game)
 	{
-		if (!console.getInChatMode() && current != SERVER && cursorInvisible)
+		if (current != SERVER)
 		{
-			game->getPlayer(game->GetLocalPlayerId())->setLockedControls(false);
-		}
-		else if (console.getInChatMode() && current != SERVER)
-		{
-			game->getPlayer(game->GetLocalPlayerId())->setLockedControls(true);
-		}
-		
-		if (!game->getPlayer(game->GetLocalPlayerId())->getLockedControls())
-		{
-			cursorInvisible = true;
+			if (!uiManager->isThereAMenuUp())
+				cursorInvisible = true;
+			if (game->getPlayer(top->getConId()) != nullptr)
+			{
+				if (!console.getInChatMode() && current != SERVER && cursorInvisible)
+				{
+					game->getPlayer(game->GetLocalPlayerId())->setLockedControls(false);
+				}
+				else if (console.getInChatMode() && current != SERVER)
+				{
+					game->getPlayer(game->GetLocalPlayerId())->setLockedControls(true);
+				}
+
+				if (!game->getPlayer(game->GetLocalPlayerId())->getLockedControls())
+				{
+					cursorInvisible = true;
+				}
+			}
 		}
 
 		if (console.getInChatMode() == false)
@@ -2232,7 +2240,6 @@ void Core::inGameUIUpdate() //Ingame ui update
 				break;
 			case 40: //Continue
 				uiManager->backToGui();
-				cursorInvisible = false;
 				break;
 			case 41: //Settings
 				break;
