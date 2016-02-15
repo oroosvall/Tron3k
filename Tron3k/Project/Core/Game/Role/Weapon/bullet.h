@@ -27,7 +27,6 @@ protected:
 
 public:
 	virtual ~Bullet();
-	int collided = 0;
 	int getTeam() { return teamId; };
 
 	void getId(int &player, int &bullet) { player = playerId; bullet = bulletId; };

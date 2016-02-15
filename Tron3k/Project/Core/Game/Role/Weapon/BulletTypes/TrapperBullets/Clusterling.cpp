@@ -21,8 +21,6 @@ Clusterling::~Clusterling()
 
 int Clusterling::update(float dt)
 {
-	if (collided > 0)
-		collided--;
 	pos += dir * vel * dt;
 	dir.y -= 1.5f * dt;
 
