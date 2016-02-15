@@ -145,6 +145,8 @@ public:
 		int loseTicketPer;
 		bool firstSecondEachRound;
 	}HUD;
+
+	bool isThereAMenuUp();
 };
 
 #endif

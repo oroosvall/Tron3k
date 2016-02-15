@@ -909,7 +909,12 @@ void Input::clearOnPress()
 
 double Input::getScrollValue()
 {
-	return scrollVal;
+	if (scrollLastFrame != scrollVal)
+	{
+		scrollLastFrame = scrollVal;
+		return scrollVal;
+	}
+	return 0.0;
 }
 
 char Input::keyToChar(int key)

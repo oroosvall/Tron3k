@@ -92,6 +92,22 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->soundList[SOUNDS::announcerCleanup].loadFromFile("GameFiles/Sound/announcerCleanup.ogg");
 		singleton->soundList[SOUNDS::soundEffectHP].loadFromFile("GameFiles/Sound/soundEffectHP.ogg");
 		singleton->soundList[SOUNDS::soundEffectRespawn].loadFromFile("GameFiles/Sound/soundEffectRespawn.ogg");
+		singleton->soundList[SOUNDS::soundEffectBulletPlayerHitSelf].loadFromFile("GameFiles/Sound/soundEffectBulletPlayerHitSelf.ogg");
+		singleton->soundList[SOUNDS::soundEffectBruteStepsStereo].loadFromFile("GameFiles/Sound/soundEffectBruteStepsStereo.ogg");
+		singleton->soundList[SOUNDS::soundEffectDiscGunStereo].loadFromFile("GameFiles/Sound/soundEffectDiscGunStereo.ogg");
+		singleton->soundList[SOUNDS::soundEffectEnergyBoostStereo].loadFromFile("GameFiles/Sound/soundEffectEnergyBoostStereo.ogg");
+		singleton->soundList[SOUNDS::soundEffectGrenadeLauncherStereo].loadFromFile("GameFiles/Sound/soundEffectGrenadeLauncherStereo.ogg");
+		singleton->soundList[SOUNDS::soundEffectHunterJumpStereo].loadFromFile("GameFiles/Sound/soundEffectHunterJumpStereo.ogg");
+		singleton->soundList[SOUNDS::soundEffectLightSpeedStereo].loadFromFile("GameFiles/Sound/soundEffectLightSpeedStereo.ogg");
+		singleton->soundList[SOUNDS::soundEffectLightWallStereo].loadFromFile("GameFiles/Sound/soundEffectLightWallStereo.ogg");
+		singleton->soundList[SOUNDS::soundEffectMeleeStereo].loadFromFile("GameFiles/Sound/soundEffectMeleeStereo.ogg");
+		singleton->soundList[SOUNDS::soundEffectPulseRifleShotStereo].loadFromFile("GameFiles/Sound/soundEffectPulseRifleShotStereo.ogg");
+		singleton->soundList[SOUNDS::soundEffectShankerStepsStereo].loadFromFile("GameFiles/Sound/soundEffectShankerStepsStereo.ogg");
+		singleton->soundList[SOUNDS::soundEffectShotGunStereo].loadFromFile("GameFiles/Sound/soundEffectShotGunStereo.ogg");
+		singleton->soundList[SOUNDS::soundEffectTrapperJumpStereo].loadFromFile("GameFiles/Sound/soundEffectTrapperJumpStereo.ogg");
+		singleton->soundList[SOUNDS::soundEffectTrapperLandStereo].loadFromFile("GameFiles/Sound/soundEffectTrapperLandStereo.ogg");
+		singleton->soundList[SOUNDS::soundEffectTrapperMultiJumpStereo].loadFromFile("GameFiles/Sound/soundEffectTrapperMultiJumpStereo.ogg");
+		singleton->soundList[SOUNDS::soundFootStepsStereo].loadFromFile("GameFiles/Sound/soundFootStepsStereo.ogg");
 
 		initialized = true;
 	}
@@ -599,5 +615,24 @@ void SoundPlayer::playFootsteps(int role, float posX, float posY, float posZ)
 		}
 	
 	
+}
+
+void SoundPlayer::PlayStereoFootsteps(int role)
+{
+	if (role == 0)
+	{
+		playUserGeneratedSound(SOUNDS::soundFootStepsStereo);
+	}
+
+	if (role == 2)
+	{
+		playUserGeneratedSound(SOUNDS::soundEffectShankerStepsStereo);
+	}
+
+	if (role == 3)
+	{
+		playUserGeneratedSound(SOUNDS::soundEffectBruteStepsStereo);
+	}
+
 }
 

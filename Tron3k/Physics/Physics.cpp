@@ -714,11 +714,15 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 	vec4 t = vec4(0);
 	AABBSingle box = bulletBox.getAABB();
 	float rad = bulletBox.getSphere().radius;
-
+	
 	vec3 origPos = bulletPos - (bulletVel * bulletDir * dt);
 	vec3 bPos = bulletPos;// -(bulletVel * bulletDir * dt);
 	vec3 ePos = bulletPos + bulletDir * rad;
 	vec3 sPos = origPos - bulletDir * rad;
+
+	box.pos = (bulletPos);
+	box.max = bulletPos + bulletBox.getWorldSize();
+	box.min = origPos - bulletBox.getWorldSize(); //This should make sure that we never pass through walls???
 
 	for (unsigned int j = 0; j < roomBoxes[0].getRoomBoxes()->size(); j++)
 	{
@@ -983,11 +987,16 @@ vec4 Physics::checkBulletVEffectCollision(glm::vec3 &bulletPos, vec3 bulletVel, 
 {
 	glm::vec4 collided;
 
-	vec3 origPos = bulletPos - (bulletVel * bulletDir * dt);
-	vec3 bPos = bulletPos - (bulletVel * bulletDir * dt);
-	bulletBox.setPos(bulletPos);
-
 	AABBSingle box = bulletBox.getAABB();
+
+	vec3 origPos = bulletPos - (bulletVel * bulletDir * dt);
+	vec3 bPos = bulletPos;
+	bulletBox.setPos(bulletPos);
+	box.pos = (bulletPos);
+	box.max = bulletPos + bulletBox.getWorldSize();
+	box.min = origPos - bulletBox.getWorldSize(); //This should make sure that we never pass through walls???
+	
+	
 	Sphere sphere = bulletBox.getSphere();
 	float rad = sphere.radius;
 	vec4 t;

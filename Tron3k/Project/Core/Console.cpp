@@ -111,6 +111,7 @@ bool Console::update(string clientName)
 
 	return cmdReady;
 }
+
 #include <Windows.h>
 void Console::printConsole()
 {

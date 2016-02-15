@@ -105,15 +105,15 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool spectatin
 		{
 			this->setFootstepsCountdown();
 			this->setFootstepsLoop(false);
-			GetSound()->playFootsteps(this->role.getRole(), pos.x, pos.y, pos.z);
+			GetSound()->PlayStereoFootsteps(this->role.getRole());
 		}
 
-		if (this->role.getRole() == 1 && GetSoundActivated() && GetSound()->destroyerPaused == true)
+		/*if (this->role.getRole() == 1 && GetSoundActivated() && GetSound()->destroyerPaused == true)
 		{
 
 			GetSound()->playFootsteps(this->role.getRole(), pos.x, pos.y, pos.z);
 			GetSound()->destroyerPaused = false;
-		}
+		}*/
 
 		/*	else if (this->role.getRole() == 3 && GetSoundActivated() && GetSound()->brutePaused == true)
 		{
@@ -524,14 +524,6 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			if (animPrimary == false)
 				anim_third_current = AnimationState::third_secondary_idle;
 
-		if (i->justPressed(GLFW_KEY_ENTER))
-		{
-			if (lockControls)
-				lockControls = false;
-			else
-				lockControls = true;
-		}
-
 		//if (noclip)
 		//	vel *= 0;
 
@@ -678,8 +670,9 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					{
 						reloadCurrentWeapon();
 					}
+					int areWeScrolling = i->getScrollValue();
 
-					if (i->justPressed(GLFW_KEY_1))
+					if (areWeScrolling < 0.0 || i->justPressed(GLFW_KEY_1))
 					{
 						if (role.getWeaponNRequiped() != 0)
 						{
@@ -694,10 +687,11 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 							}
 
 							animSwapActive = true;
+							areWeScrolling = 0.0;
 						}
 					}
 
-					if (i->justPressed(GLFW_KEY_2))
+					if (areWeScrolling > 0.0 || i->justPressed(GLFW_KEY_2))
 					{
 						if (role.getWeaponNRequiped() != 1)
 						{
