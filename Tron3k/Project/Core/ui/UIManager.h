@@ -35,6 +35,7 @@ enum TeamColors
 };
 
 
+
 class UIManager
 {
 private:
@@ -128,6 +129,22 @@ public:
 
 	int getNrOfCurretMenus();
 	int getCurrentMenu();
+
+	struct HUDvalues
+	{
+		int HP;
+		int ammo;
+		float specialMeter;
+		int teamOneTokens;
+		int teamTwoTokens;
+		int maxTokens;
+		int teamOneRoundWins;
+		int teamTwoRoundWins;
+		int time;
+		int ticketLostTimer;
+		int loseTicketPer;
+		bool firstSecondEachRound;
+	}HUD;
 };
 
 #endif

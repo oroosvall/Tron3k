@@ -2,13 +2,18 @@
 
 void Core::init()
 {
-	HUD.HP = 1;
-	HUD.maxHp = 1;
-	HUD.teamOneRoundWins = 0;
-	HUD.teamTwoRoundWins = 0;
-	HUD.teamOneTokens = 0;
-	HUD.teamTwoTokens = 0;
-	HUD.maxTokens = 0;
+	uiManager->HUD.HP = 1;
+	uiManager->HUD.ammo = 0;
+	uiManager->HUD.specialMeter = 0.0f;
+	uiManager->HUD.teamOneRoundWins = 0;
+	uiManager->HUD.teamTwoRoundWins = 0;
+	uiManager->HUD.teamOneTokens = 0;
+	uiManager->HUD.teamTwoTokens = 0;
+	uiManager->HUD.maxTokens = 0;
+	uiManager->HUD.time = 0;
+	uiManager->HUD.ticketLostTimer = 0;
+	uiManager->HUD.loseTicketPer = 1;
+	uiManager->HUD.firstSecondEachRound = true;
 
 	uitmpcounter = 0;
 
@@ -23,6 +28,8 @@ void Core::init()
 	glfwWindowHint(GLFW_RESIZABLE, false);
 
 	//glfwWindowHint(GLFW_DECORATED, false); //borderless toggle
+
+	closeGame = false;
 
 	cursorInvisible = false;
 
@@ -42,7 +49,7 @@ void Core::init()
 	serverRender = false;
 
 	timepass = 0.0f;
-	
+
 	current = Gamestate::START;
 
 	tick_timer = 0;
@@ -86,10 +93,10 @@ Core::~Core()
 		}
 		renderPipe->removeTextObject(leaderBoardTextID);
 		renderPipe->removeTextObject(leaderBoardSmallTextID);
-		
+
 		renderPipe->release();
 	}
-	
+
 	delete[] namePlates;
 
 	ReleaseSound();
@@ -163,38 +170,38 @@ void Core::update(float dt)
 	{
 		renderPipe->setChatHistoryText(console.getHistory());
 	}
-	//if (game)
-	//{
-	//	if (console.getInChatMode() == false)
-	//	{
-	//		if (i->justPressed(GLFW_KEY_7))
-	//		{
-	//			playbackSpeed *= 2.0f;
-	//			if (playbackSpeed > 16.0f)
-	//				playbackSpeed = 16.0f;
-	//			CameraInput* cam = CameraInput::getCam();
-	//			cam->setPlaybackSpeed(playbackSpeed);
-	//		}
-	//		if (i->justPressed(GLFW_KEY_6))
-	//		{
-	//			playbackSpeed *= 0.5f;
-	//			if (playbackSpeed < 0.03125f)
-	//				playbackSpeed = 0.03125f;
-	//			CameraInput* cam = CameraInput::getCam();
-	//			cam->setPlaybackSpeed(playbackSpeed);
-	//		}
-	//		if (i->justPressed(GLFW_KEY_0))
-	//		{
-	//			playbackSpeed = 0.0f;
-	//		}
-	//		if (i->justPressed(GLFW_KEY_9))
-	//		{
-	//			playbackSpeed = 1.0f;
-	//		}
-	//	}
-	//}
-	//
-	//dt *= playbackSpeed;
+	if (game)
+	{
+		if (console.getInChatMode() == false)
+		{
+			if (i->justPressed(GLFW_KEY_7))
+			{
+				playbackSpeed *= 2.0f;
+				if (playbackSpeed > 16.0f)
+					playbackSpeed = 16.0f;
+				CameraInput* cam = CameraInput::getCam();
+				cam->setPlaybackSpeed(playbackSpeed);
+			}
+			if (i->justPressed(GLFW_KEY_6))
+			{
+				playbackSpeed *= 0.5f;
+				if (playbackSpeed < 0.03125f)
+					playbackSpeed = 0.03125f;
+				CameraInput* cam = CameraInput::getCam();
+				cam->setPlaybackSpeed(playbackSpeed);
+			}
+			if (i->justPressed(GLFW_KEY_0))
+			{
+				playbackSpeed = 0.0f;
+			}
+			if (i->justPressed(GLFW_KEY_9))
+			{
+				playbackSpeed = 1.0f;
+			}
+		}
+	}
+
+	dt *= playbackSpeed;
 
 	switch (current)
 	{
@@ -205,13 +212,13 @@ void Core::update(float dt)
 	default:						break;
 	}
 
-	//if (renderPipe)
-	//{
-	//	if (i->justPressed(GLFW_KEY_8))
-	//	{
-	//		renderPipe->reloadShaders();
-	//	}
-	//}
+	if (renderPipe)
+	{
+		if (i->justPressed(GLFW_KEY_8))
+		{
+			renderPipe->reloadShaders();
+		}
+	}
 
 	i->clearOnPress();
 	console.discardCommandAndLastMsg();
@@ -234,40 +241,40 @@ void Core::upStart(float dt)
 		console.printMsg("[/3] Roam", "System", 'S');
 		console.printMsg("[/4] Client_Record", "System", 'S');
 		console.printMsg("[/5] Client_Playback", "System", 'S');
-	
+
 		if (!settingsLoaded)
 		{
 			loadSettings();
 			settingsLoaded = true;
 		}
-		
+
 		subState++;
 		break;
 
 	case 1:
 		//start console commands
 		startHandleCmds();
-		if(renderMenu)
+		if (renderMenu)
 			upMenu(dt);
 		break;
 	}
-	
+
 }
 
 void Core::upMenu(float dt)
 {
 	renderUI = true;
 
-	double x = (0.0);
-	double y = (0.0);
+	double tX = (0.0);
+	double tY = (0.0);
 	//Get mouse position
-	i->getCursor(x, y);
-	double tX = (x / (double)winX) * 2 - 1.0; // (x/ResolutionX) * 2 - 1
-	double tY = (-y / (double)winY) * 2 + 1.0; // (y/ResolutionY) * 2 - 1
+	i->getCursor(tX, tY);
+	tX = (tX / (double)winX) * 2 - 1.0; // (x/ResolutionX) * 2 - 1
+	tY = (-tY / (double)winY) * 2 + 1.0; // (y/ResolutionY) * 2 - 1
 
 	uiManager->menuRender();
-	
-	if (i->justPressed(GLFW_MOUSE_BUTTON_LEFT))//button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
+
+	if (i->justPressed(GLFW_MOUSE_BUTTON_LEFT))
 	{
 		menuIpKeyListener = false;
 		menuNameKeyListener = false;
@@ -290,7 +297,7 @@ void Core::upMenu(float dt)
 		case 2: //Settings
 			break;
 		case 3: //Exit
-			glfwHideWindow(win);
+			glfwSetWindowShouldClose(win, 1);
 			break;
 		case 4: //Client -> connect window
 		{
@@ -308,15 +315,14 @@ void Core::upMenu(float dt)
 		case 5: //Server -> starts a server
 			current = SERVER;
 			subState = 0;
-			
+
 			uiManager->removeAllMenus();
-			
+
 			renderPipe->clearColor();
 			renderPipe->clearBothBuffers();
-			//uiManager->setMenu(6);
 			glfwSwapBuffers(win);
 			renderPipe->clearBothBuffers();
-			
+
 			renderMenu = false;
 			renderUI = false;
 			break;
@@ -337,7 +343,7 @@ void Core::upMenu(float dt)
 			current = Gamestate::CLIENT; //Start the game as a client
 			client_record = false;
 			client_playback = false;
-			subState = 0; 
+			subState = 0;
 			break;
 		}
 		case 7: //Back
@@ -377,7 +383,7 @@ void Core::upRoam(float dt)
 		renderPipe->getSpawnpoints(*game->getSpawnpoints());
 		// fetch all collision boxes
 		bool allchunksSent = false;
-		
+
 		for (int i = 0; !allchunksSent; i++)
 			allchunksSent = sendChunkBoxes(i);
 		sendCapPointBoxes();
@@ -388,7 +394,7 @@ void Core::upRoam(float dt)
 		game->freecam = true;
 		delete p;
 
-		HUD.specialMeter = 100.0f;
+		uiManager->HUD.specialMeter = 100.0f;
 		game->getPlayer(game->GetLocalPlayerId())->setLockedControls(true);
 		subState++;
 		break;
@@ -398,12 +404,12 @@ void Core::upRoam(float dt)
 		break;
 	case 2: //roam main loop
 
-		/*roamHandleCmds();
-		game->update(dt);
-		renderWorld(dt);
-		break;*/
+			/*roamHandleCmds();
+			game->update(dt);
+			renderWorld(dt);
+			break;*/
 
-		//Command and message handle
+			//Command and message handle
 		roamHandleCmds();
 		//if /disconnected command was entered
 		if (game == nullptr)
@@ -413,8 +419,8 @@ void Core::upRoam(float dt)
 		game->update(dt);
 		/*if (GetSoundActivated())
 		{
-				GetSound()->setLocalPlayerDir(game->getPlayer(0)->getDir());
-				GetSound()->setLocalPlayerPos(game->getPlayer(0)->getPos());		
+		GetSound()->setLocalPlayerDir(game->getPlayer(0)->getDir());
+		GetSound()->setLocalPlayerPos(game->getPlayer(0)->getPos());
 		}*/
 
 		if (game->playerWantsToRespawn() && game->getPlayer(0)->getTeam() != 0)
@@ -564,18 +570,18 @@ void Core::upClient(float dt)
 			game->getPlayer(game->GetLocalPlayerId())->setLockedControls(true);
 			showTeamSelect();
 			game->setCursorInvisible(false);
-			subState++;
 
-			HUD.specialMeter = 100.0f;
-			HUD.loseTicketPer = 14;
+			subState++;
+			uiManager->HUD.specialMeter = 100.0f;
+			uiManager->HUD.loseTicketPer = 14;
 
 			KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
-			HUD.maxTokens = koth->getMaxTokensPerTeam();
+			uiManager->HUD.maxTokens = koth->getMaxTokensPerTeam();
 		}
 		break;
 	case 2: //main client loop
 
-		//fetch new network data
+			//fetch new network data
 		top->netlogUpdate(dt);
 		if (top->network_IN(dt) == false)
 		{
@@ -610,8 +616,6 @@ void Core::upClient(float dt)
 				}
 				else if (slowmode < 1.0f)
 					slowmode = 1.0f;
-
-
 				else
 					CameraInput::getCam()->setPlaybackSpeed(1.0f);
 
@@ -624,66 +628,71 @@ void Core::upClient(float dt)
 			}
 		}
 		game->update(newDt);
-		if (game->GetGameState() != Gamestate::SERVER)
+
+		KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
+		KOTHSTATE tmp = koth->getState();
+
+		Player* localp = game->getPlayer(top->getConId());
+
+		if (kothState != tmp)
 		{
-			KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
-			KOTHSTATE tmp = koth->getState();
-			if (kothState != tmp)
+			if (tmp == KOTHSTATE::PREROUND)
 			{
-				if (tmp == KOTHSTATE::PREROUND)
-				{
-					top->command_role_change(top->getConId(), 1);
+				top->command_role_change(top->getConId(), 1);
+				//dont show class select when in spectate
+				if (localp->getTeam() != 0)
 					showClassSelect();
-				}
-				else if (tmp == KOTHSTATE::ROUND)
-				{
-					Player* local = game->getPlayer(top->getConId());
-					uiManager->setTeamColor(local->getTeam());
-					uiManager->changeColorTeam();
-
-					uiManager->setOpenedGuiBool(true);
-					uiManager->setFirstMenuSet(false);
-					uiManager->setMenu(InGameUI::GUI);
-
-					game->getPlayer(game->GetLocalPlayerId())->setLockedControls(false);
-					game->setCursorInvisible(true);
-
-					uiManager->clearText(scaleAndText::HP);
-					uiManager->clearText(scaleAndText::Ammo);
-					uiManager->clearText(scaleAndText::TicketBar1);
-					uiManager->clearText(scaleAndText::TicketBar2);
-					uiManager->clearText(scaleAndText::Wins1);
-					uiManager->clearText(scaleAndText::Wins2);
-
-					uiManager->setText(std::to_string(local->getHP()), scaleAndText::HP); //hp
-
-					std::string nText = std::to_string(local->getAmmo()) + "/" + std::to_string(local->getMaxAmmo());
-					uiManager->setText(nText, scaleAndText::Ammo); //ammo
-					uiManager->setText(std::to_string(koth->getRespawnTokens(1)), scaleAndText::TicketBar1); //tickets
-					uiManager->setText(std::to_string(koth->getRespawnTokens(2)), scaleAndText::TicketBar2); //tickets2
-					uiManager->setText(std::to_string(koth->getRoundWins(1)), scaleAndText::Wins1); //wins1
-					uiManager->setText(std::to_string(koth->getRoundWins(2)), scaleAndText::Wins2); //wins2
-					if (int(koth->getTimer()) == 0)
-					{
-						uiManager->clearText(scaleAndText::Time);
-						uiManager->setText("00:00", 6); //time
-					}
-
-					uiManager->scaleBar(scaleAndText::HP, 1.0f, false);
-					uiManager->scaleBar(scaleAndText::TicketBar1, (float)(koth->getRespawnTokens(1)) / (float)(koth->getMaxTokensPerTeam()), false);
-					uiManager->scaleBar(scaleAndText::TicketBar2, (float)(koth->getRespawnTokens(2)) / (float)(koth->getMaxTokensPerTeam()), false);
-					uiManager->scaleBar(scaleAndText::AbilityMeter, 0.0f, true);
-
-					uiManager->setRoleBool(true);
-					uiManager->setHoverCheckBool(false);
-				}
-				kothState = tmp;
 			}
+			else if (tmp == KOTHSTATE::ROUND)
+			{
+				if (game->spectateID != -1)
+					localp = game->getPlayer(game->spectateID);
+
+				uiManager->setTeamColor(localp->getTeam());
+				uiManager->changeColorTeam();
+
+				uiManager->setOpenedGuiBool(true);
+				uiManager->setFirstMenuSet(false);
+				uiManager->setMenu(InGameUI::GUI);
+
+				localp->setLockedControls(false);
+				game->setCursorInvisible(true);
+
+				uiManager->clearText(scaleAndText::HP);
+				uiManager->clearText(scaleAndText::Ammo);
+				uiManager->clearText(scaleAndText::TicketBar1);
+				uiManager->clearText(scaleAndText::TicketBar2);
+				uiManager->clearText(scaleAndText::Wins1);
+				uiManager->clearText(scaleAndText::Wins2);
+
+				uiManager->setText(std::to_string(localp->getHP()), scaleAndText::HP); //hp
+
+				std::string nText = std::to_string(localp->getAmmo()) + "/" + std::to_string(localp->getMaxAmmo());
+				uiManager->setText(nText, scaleAndText::Ammo); //ammo
+				uiManager->setText(std::to_string(koth->getRespawnTokens(1)), scaleAndText::TicketBar1); //tickets
+				uiManager->setText(std::to_string(koth->getRespawnTokens(2)), scaleAndText::TicketBar2); //tickets2
+				uiManager->setText(std::to_string(koth->getRoundWins(1)), scaleAndText::Wins1); //wins1
+				uiManager->setText(std::to_string(koth->getRoundWins(2)), scaleAndText::Wins2); //wins2
+				if (int(koth->getTimer()) == 0)
+				{
+					uiManager->clearText(6);
+					uiManager->setText("00:00", scaleAndText::Time); //time
+				}
+
+				uiManager->scaleBar(scaleAndText::HP, 1.0f, false);
+				uiManager->scaleBar(scaleAndText::TicketBar1, (float)(koth->getRespawnTokens(1)) / (float)(koth->getMaxTokensPerTeam()), false);
+				uiManager->scaleBar(scaleAndText::TicketBar2, (float)(koth->getRespawnTokens(2)) / (float)(koth->getMaxTokensPerTeam()), false);
+				uiManager->scaleBar(scaleAndText::AbilityMeter, 0.0f, true);
+
+				uiManager->setRoleBool(true);
+				uiManager->setHoverCheckBool(false);
+			}
+			kothState = tmp;
 		}
-	/*	if (GetSoundActivated())
+		/*	if (GetSoundActivated())
 		{
-			GetSound()->setLocalPlayerDir(game->getPlayer(top->getConId())->getDir());
-			GetSound()->setLocalPlayerPos(game->getPlayer(top->getConId())->getPos());
+		GetSound()->setLocalPlayerDir(game->getPlayer(top->getConId())->getDir());
+		GetSound()->setLocalPlayerPos(game->getPlayer(top->getConId())->getPos());
 		}*/
 
 		//Command and message handle
@@ -700,7 +709,7 @@ void Core::upClient(float dt)
 
 		if (game->playerWantsToRespawn())
 		{
-			if(game->getPlayer(top->getConId())->getTeam() != 0 ) // dont ask for respawns if we are on team 0
+			if (game->getPlayer(top->getConId())->getTeam() != 0) // dont ask for respawns if we are on team 0
 				top->command_respawn(top->getConId());
 		}
 
@@ -713,7 +722,7 @@ void Core::upClient(float dt)
 			Player* local = game->getPlayer(top->getConId());
 
 			top->frame_pos(top->getConId(), local->getPos(), local->getDir(), local->getVelocity(), local->roomID);
-		
+
 			if (game->weaponSwitchReady())
 			{
 				int swaploc = -1;
@@ -743,10 +752,6 @@ void Core::upClient(float dt)
 			}
 
 			//send animstates
-			if (local->getAnimState_t_p() == AnimationState::none)
-			{
-				int k = 0;
-			}
 			top->frame_anim(top->getConId(), local->getAnimState_f_p(), local->getAnimState_t_p());
 			local->setAnimState_f_p(AnimationState::first_primary_idle);
 			local->setAnimState_t_p(AnimationState::third_primary_idle);
@@ -814,7 +819,7 @@ void Core::upServer(float dt)
 		break;
 	}
 	case 1: //main server loop
-		//get data
+			//get data
 		top->network_IN(dt);
 
 		//update game
@@ -895,7 +900,7 @@ void Core::upServer(float dt)
 			top->event_effect_timed_out(effectTimeOut);
 			game->clearTimedOutEffects();
 		}
-	
+
 		/*
 		MIGHT WANT TO CHANGE THIS LOL
 		*/
@@ -991,7 +996,6 @@ void Core::startHandleCmds(std::string com)
 			client_record = false;
 			client_playback = false;
 			subState = 0;
-			renderMenu = false;
 		}
 
 		else if (token == "/2")
@@ -1010,9 +1014,10 @@ void Core::startHandleCmds(std::string com)
 		{
 			current = Gamestate::ROAM;
 			subState = 0;
-			
-			showTeamSelect();
 			renderMenu = false;
+			renderUI = true;
+
+			showTeamSelect();
 		}
 		else if (token == "/4")
 		{
@@ -1051,6 +1056,7 @@ void Core::roamHandleCmds(std::string com)
 			console.printMsg("/free (turns freecam on/off)", "", ' ');
 			console.printMsg("/rs  show render settings", "", ' ');
 			console.printMsg("/disconnect", "", ' ');
+			console.printMsg("/sens <positive decimal number>", "", ' ');
 
 		}
 		else if (token == "/name")
@@ -1081,6 +1087,7 @@ void Core::roamHandleCmds(std::string com)
 				else
 					game->freecam = true;
 
+				uiManager->setTeamColor(team);
 				uiManager->changeColorTeam();
 				uiManager->setFirstMenuSet(false);
 				uiManager->setMenu(InGameUI::ClassSelect);
@@ -1101,6 +1108,23 @@ void Core::roamHandleCmds(std::string com)
 
 			game->spectateID = -1;
 		}
+		else if (token == "/sens")
+		{
+			float sens = 0.0f;
+			if (!(ss >> sens))
+			{
+				console.printMsg("Invalid input.", "System", 'S');
+			}
+			else
+			{
+				if (sens < FLT_EPSILON)
+				{
+					console.printMsg("Positive numbers only, dummy.", "System", 'S');
+				}
+				else
+					serverCam->setSensitivity(sens);
+			}
+		}
 
 		else if (token == "/cleanup")
 		{
@@ -1116,14 +1140,14 @@ void Core::roamHandleCmds(std::string com)
 				game->getPlayer(0)->chooseRole(role - 1);
 				game->sendPlayerRadSize(game->getPlayer(0)->getRole()->getBoxRadius());
 				console.printMsg("You switched class!", "System", 'S');
-			
+
 				uiManager->setFirstMenuSet(false);
 				uiManager->setMenu(InGameUI::GUI);
 
 				justAFrameCounterActivated = true;
 				shitBool = true;
 
-				
+
 				cursorInvisible = true;
 				if (game != nullptr)
 					game->setCursorInvisible(cursorInvisible);
@@ -1148,7 +1172,7 @@ void Core::roamHandleCmds(std::string com)
 				uiManager->setText(std::to_string(koth->getRoundWins(1)), scaleAndText::Wins1); //wins1
 				uiManager->setText(std::to_string(koth->getRoundWins(2)), scaleAndText::Wins2); //wins2
 				uiManager->setText("00:00", scaleAndText::Time); //time
-				//uiManager->setText(std::to_string(int(koth->getTimer())), 6); //time
+												//uiManager->setText(std::to_string(int(koth->getTimer())), 6); //time
 
 
 				uiManager->scaleBar(scaleAndText::TicketBar1, 0.0f, false);
@@ -1158,7 +1182,7 @@ void Core::roamHandleCmds(std::string com)
 				uiManager->setRoleBool(true);
 				uiManager->setHoverCheckBool(false);
 			}
-			else 
+			else
 				console.printMsg("Invalid role. Use /role <1-5>", "System", 'S');
 
 		}
@@ -1190,7 +1214,7 @@ void Core::roamHandleCmds(std::string com)
 				renderPipe->setRenderFlag(RENDER_OBB);
 			else if (token == "room")
 				renderPipe->setRenderFlag(RENDER_ROOM);
-			else if(token == "debug")
+			else if (token == "debug")
 				renderPipe->setRenderFlag(RENDER_DEBUG_TEXT);
 			else if (token == "gui")
 				renderPipe->setRenderFlag(RENDER_GUI);
@@ -1219,6 +1243,7 @@ void Core::clientHandleCmds(std::string com)
 		{
 			console.printMsg("Console commands", "", ' ');
 			console.printMsg("/name " + _name, "", ' ');
+			console.printMsg("/sens <positive decimal number>", "", ' ');
 			console.printMsg("/team " + to_string(game->getPlayer(top->getConId())->getTeam()), "", ' ');
 			console.printMsg("/players", "", ' ');
 			console.printMsg("/disconnect", "", ' ');
@@ -1258,6 +1283,23 @@ void Core::clientHandleCmds(std::string com)
 			}
 			else
 				console.printMsg("Invalid team. Use /team <0/1/2>", "System", 'S');
+		}
+		else if (token == "/sens")
+		{
+			float sens = 0.0f;
+			if (!(ss >> sens))
+			{
+				console.printMsg("Invalid input.", "System", 'S');
+			}
+			else
+			{
+				if (sens < FLT_EPSILON)
+				{
+					console.printMsg("Positive numbers only, dummy.", "System", 'S');
+				}
+				else
+					serverCam->setSensitivity(sens);
+			}
 		}
 		else if (token == "/players")
 		{
@@ -1325,6 +1367,9 @@ void Core::clientHandleCmds(std::string com)
 						CameraInput::getCam()->setCam(p->getPos(), p->getDir());
 						game->spectateID = id;
 						game->freecam = true;
+						//set team color
+						uiManager->setTeamColor(p->getTeam());
+						uiManager->changeColorTeam();
 					}
 					else
 						console.printMsg("That Player Doesn't exist", "System", 'S');
@@ -1446,7 +1491,7 @@ void Core::saveSettings()
 			file << "Name: " << _name << endl;
 		file << "IP: " << _addrs.toString() << endl;
 		file << "Port: " << _port << endl;
-		if(GetSoundActivated() == 1)
+		if (GetSoundActivated() == 1)
 			file << "Sound: " << "1" << endl;
 		else
 			file << "Sound: " << "0" << endl;
@@ -1519,17 +1564,17 @@ void Core::renderWorld(float dt)
 		vec3 camPos = cam->getPos();
 		vec3 camDir = cam->getDir();
 		bool force3rd = false;
-/*		if (i->getKeyInfo(GLFW_KEY_P))
+		/*		if (i->getKeyInfo(GLFW_KEY_P))
 		{
-			cam->setCam(vec3(-6, 1.5f, 33), vec3(0, 0, -1));
-			force3rd = true;
+		cam->setCam(vec3(-6, 1.5f, 33), vec3(0, 0, -1));
+		force3rd = true;
 		}
 		if (i->getKeyInfo(GLFW_KEY_L))
 		{
-			cam->setCam(vec3(-6, 1.5f, 33), vec3(1, 0, 0));
-			force3rd = true;
+		cam->setCam(vec3(-6, 1.5f, 33), vec3(1, 0, 0));
+		force3rd = true;
 		}
-*/
+		*/
 
 		int pid = game->GetLocalPlayerId();
 		Player* tmp_player = game->getPlayer(pid);
@@ -1545,7 +1590,7 @@ void Core::renderWorld(float dt)
 
 		light.Position = vec3(131, 45, 0);
 		light.Direction = normalize(vec3(-0.16f, -0.36f, 0.91f));//p->getDir();
-		light.Color = vec3(0.7f, 0.7f , 1.0f);
+		light.Color = vec3(0.7f, 0.7f, 1.0f);
 		light.DiffuseIntensity = 0.1f;
 		light.AmbientIntensity = 0.1f;
 		renderPipe->addLight(&light, 0);
@@ -1566,7 +1611,7 @@ void Core::renderWorld(float dt)
 		renderPipe->setChunkColorAndInten(3, &dgColor[0], 0);
 
 		int cap = ((KingOfTheHill*)game->getGameMode())->getCapturePoint();
-		
+
 		int capOwner = ((KingOfTheHill*)game->getGameMode())->getCapturePointOwner();
 
 		if (capOwner == 0)
@@ -1655,7 +1700,7 @@ void Core::renderWorld(float dt)
 							renderPipe->startTakeDamageEffect(6, 0.6f);
 						lastHP_blurreffect = p->getHP();
 					}
-				
+
 					//static intense based on health
 					float hpval = float(p->getHP()) / 130.0f;
 
@@ -1764,7 +1809,7 @@ void Core::renderWorld(float dt)
 			}
 		} // render bullets end
 
-		// capturePoint
+		  // capturePoint
 		if (current == CLIENT)
 		{
 			KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
@@ -1790,7 +1835,7 @@ void Core::renderWorld(float dt)
 			for (unsigned int i = 0; i < eff.size(); i++)
 			{
 				EFFECT_TYPE type = eff[i]->getType();
-				
+
 				int pid, eid;
 				eff[i]->getId(pid, eid);
 				int team = eff[i]->getTeam();
@@ -1802,7 +1847,7 @@ void Core::renderWorld(float dt)
 					else if (team == 2)
 						dgColor = TEAMTWOCOLOR;
 				}
-				
+
 				switch (type)
 				{
 				case LIGHT_WALL:
@@ -1811,21 +1856,21 @@ void Core::renderWorld(float dt)
 					renderPipe->renderWallEffect(&asd->getPos(), &asd->getEndPoint(), herpderpOffset, &dgColor.x);
 					herpderpOffset += glm::distance(asd->getPos(), asd->getEndPoint());
 				}
-					break;
+				break;
 				case THUNDER_DOME:
 				{
 					ThunderDomeEffect* asd = (ThunderDomeEffect*)eff[i];
 					vec3 pos = asd->getPos();
 					renderPipe->renderThunderDomeEffect(&pos.x, asd->explotionRenderRad(), 0, &dgColor.x);
 				}
-					break;
+				break;
 				case EXPLOSION:
 				{
 					Explosion* asd = (Explosion*)eff[i];
 					vec3 pos = asd->getPos();
 					renderPipe->renderExploEffect(&pos.x, asd->explosionRenderRad(), 0, &dgColor.x);
 				}
-					break;
+				break;
 				case CLEANSEEXPLOSION:
 					break;
 				case BATTERY_SLOW:
@@ -1838,7 +1883,7 @@ void Core::renderWorld(float dt)
 					vec3 pos = asd->getPos();
 					renderPipe->renderExploEffect(&pos.x, asd->explosionRenderRad(), 0, &dgColor.x);
 				}
-					break;
+				break;
 				case ZEROFRICTION:
 					break;
 				case VACUUM:
@@ -1869,16 +1914,24 @@ void Core::renderWorld(float dt)
 		renderPipe->enableBlend();
 
 		//name rendering
-		if (current != SERVER)
+		if (current == CLIENT)
 		{
 			for (int c = 0; c < 20; c++)
 			{
 				Player* p = game->getPlayer(c);
+
+				if (p == nullptr)
+					continue;
+
 				int local = game->GetLocalPlayerId();
 				Player* lP = game->getPlayer(local);
+				if (game->spectateID != -1)
+					lP = game->getPlayer(game->spectateID);
+
 				if ((HackingDartModifier*)lP->searchModifierGet(HACKINGDARTMODIFIER))
 					continue;
-				if (p != nullptr  && lP != nullptr && p->getTeam() == lP->getTeam())
+
+				if (p->getTeam() == lP->getTeam() || lP->getTeam() == 0)
 				{
 					mat4 bacon;
 					vec3 pPos = p->getPos();
@@ -1933,159 +1986,164 @@ void Core::renderWorld(float dt)
 
 void Core::inGameUIUpdate() //Ingame ui update
 {
-	if (uiManager->getRoleBool())
+	Player* local;
+	if (game->spectateID == -1)
+		local = game->getPlayer(game->GetLocalPlayerId());
+	else
+		local = game->getPlayer(game->spectateID);
+
+	KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
+
+	int tTeam = local->getTeam();
+	int tClass = local->getRole()->getRole();
+
+	bool playerExist = false;
+
+	if (tClass != ROLES::NROFROLES)
+		if (tTeam != 0)
+			playerExist = true;
+
+	if (playerExist)
 	{
-		bool playerExist = false;
-		Player* local = game->getPlayer(game->GetLocalPlayerId());
-		KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
-
-		int tTeam = local->getTeam();
-		int tClass = local->getRole()->getRole();
-
-		if (tClass != ROLES::NROFROLES)
-			if (tTeam != 0)
-				playerExist = true;
-
-		if (playerExist)
+		if (local->getHP() != uiManager->HUD.HP)
 		{
-			if (local->getHP() != HUD.HP)
+			uiManager->HUD.HP = local->getHP();
+			uiManager->clearText(scaleAndText::HP);
+			uiManager->setText(std::to_string(uiManager->HUD.HP), scaleAndText::HP);
+			if ((float)local->getMaxHP() > 0)
 			{
-				if (local->getMaxHP() != HUD.maxHp)
-					HUD.maxHp = local->getMaxHP();
-
-				HUD.HP = local->getHP();
-				uiManager->clearText(scaleAndText::HP);
-				uiManager->setText(std::to_string(HUD.HP), scaleAndText::HP);
-				if((float)local->getMaxHP() > 0)
-					uiManager->scaleBar(scaleAndText::HP, (float)HUD.HP / (float)(local->getMaxHP()), true); //Kolla med Adam om det finns ett bättre sätt.
-				else
-					console.printMsg("Error: Class Core line 1943, local->getMaxHP() has a value of 0 or below", "System", 'S');
+				uiManager->scaleBar(scaleAndText::HP, (float)(uiManager->HUD.HP) / (float)(local->getMaxHP()), true);
 			}
-			if (local->getSpecialMeter() != HUD.specialMeter)
+			else
+				console.printMsg("Error: Class Core line 2010, local player maxHp has a value of 0 or below", "System", 'S');
+		}
+		if (local->getSpecialMeter() != uiManager->HUD.specialMeter)
+		{
+			if (uiManager->HUD.specialMeter > 0)
 			{
-				if (HUD.specialMeter > 0)
-				{
-					float procent = local->getSpecialMeter() / HUD.specialMeter;
-					uiManager->scaleBar(scaleAndText::AbilityMeter, procent, true);
-				}
-				else
-					console.printMsg("Error: Class Core line 1950, HUD.specialMeter has a value of 0 or below", "System", 'S');
+				float procent = local->getSpecialMeter() / uiManager->HUD.specialMeter;
+				uiManager->scaleBar(scaleAndText::AbilityMeter, procent, true);
 			}
-			if (local->getAmmo() != HUD.ammo)
+			else
 			{
-				if (local->getMaxAmmo() != HUD.maxAmmo)
-					HUD.maxAmmo = local->getMaxAmmo();
-
-				HUD.ammo = local->getAmmo();
-				std::string nText = std::to_string(HUD.ammo) + "/" + std::to_string(HUD.maxAmmo);
-				uiManager->clearText(scaleAndText::Ammo);
-				uiManager->setText(nText, scaleAndText::Ammo);
-			}
-			if (koth->getRespawnTokens(1) != HUD.teamOneTokens)
-			{
-				HUD.teamOneTokens = koth->getRespawnTokens(1);
-				uiManager->clearText(scaleAndText::TicketBar1);
-				uiManager->setText(std::to_string(HUD.teamOneTokens), scaleAndText::TicketBar1);
-				if((float)HUD.maxTokens > 0)
-					uiManager->scaleBar(scaleAndText::TicketBar1, (float)HUD.teamOneTokens / (float)HUD.maxTokens, true);
-				else
-					console.printMsg("Error: Class Core line 1973, HUD.maxTokens has a value of 0 or below", "System", 'S');
-			}
-			if (koth->getRespawnTokens(2) != HUD.teamTwoTokens)
-			{
-				HUD.teamTwoTokens = koth->getRespawnTokens(2);
-				uiManager->clearText(scaleAndText::TicketBar2);
-				uiManager->setText(std::to_string(HUD.teamTwoTokens), scaleAndText::TicketBar2);
-				if ((float)HUD.maxTokens > 0)
-					uiManager->scaleBar(scaleAndText::TicketBar2, (float)HUD.teamTwoTokens / (float)HUD.maxTokens, true);
-				else
-					console.printMsg("Error: Class Core line 1983, HUD.maxTokens has a value of 0 or below", "System", 'S');
-			}
-			if (koth->getRoundWins(1) != HUD.teamOneRoundWins)
-			{
-				if (koth->getRoundWins(1) != -1)
-				{
-					HUD.teamOneRoundWins = koth->getRoundWins(1);
-					uiManager->clearText(scaleAndText::Wins1);
-					uiManager->setText(std::to_string(HUD.teamOneRoundWins), scaleAndText::Wins1);
-				}
-				else
-					console.printMsg("Error: Class Core line 1990, koth->getRoundWins(1) has a value of -1", "System", 'S');
-			}
-			if (koth->getRoundWins(2) != HUD.teamTwoRoundWins)
-			{
-				if (koth->getRoundWins(2) != -1)
-				{
-					HUD.teamTwoRoundWins = koth->getRoundWins(2);
-					uiManager->clearText(scaleAndText::Wins2);
-					uiManager->setText(std::to_string(HUD.teamTwoRoundWins), scaleAndText::Wins2);
-				}
-				else
-					console.printMsg("Error: Class Core line 2001, koth->getRoundWins(1) has a value of -1", "System", 'S');
-			}
-			if (int(koth->getTimer()) != HUD.time) //Not done
-			{
-				HUD.time = int(koth->getTimer());
-
-				int minutes = HUD.time / 60; //* 0.016666666666;
-				int seconds = HUD.time - 60 * minutes;
-
-				std::string sMinutes = "0";
-				std::string sSeconds = "0";
-
-				sMinutes += std::to_string(minutes);
-				sSeconds += std::to_string(seconds);
-
-				if (sMinutes.size() > 2)
-					sMinutes = std::to_string(minutes);
-				if (sSeconds.size() > 2)
-					sSeconds = std::to_string(seconds);
-
-				uiManager->clearText(scaleAndText::Time);
-				uiManager->setText(sMinutes + ":" + sSeconds, scaleAndText::Time);
-
-				if (koth->getState() == ROUND) //Tickets meter should only work during the rounds which is why this check is here.
-				{
-					if (!HUD.firstSecondEachRound) //If it isn't the first second of the round
-					{
-						if (HUD.ticketLostTimer == 0)
-						{
-							uiManager->scaleBar(scaleAndText::LoseTicketsMeter, 0.0f, true);
-							HUD.ticketLostTimer = HUD.loseTicketPer;
-						}
-						else
-						{
-							if (HUD.loseTicketPer > 0)
-							{
-								uiManager->scaleBar(scaleAndText::LoseTicketsMeter, (float)(HUD.ticketLostTimer) / (float)(HUD.loseTicketPer), true);
-								HUD.ticketLostTimer -= 1;
-							}
-							else
-								console.printMsg("Error: Class Core line 2042, HUD.loseTicketPer has a value of 0 or below", "System", 'S');
-						}
-					}
-					else
-					{
-						if (HUD.loseTicketPer > 0)
-						{
-							HUD.ticketLostTimer -= 1;
-							uiManager->scaleBar(scaleAndText::LoseTicketsMeter, (float)(HUD.ticketLostTimer) / (float)(HUD.loseTicketPer), true);
-							HUD.ticketLostTimer -= 1;
-						}
-						else
-							console.printMsg("Error: Class Core line 2053, HUD.loseTicketPer has a value of 0 or below", "System", 'S');
-					}
-					HUD.firstSecondEachRound = false;
-				}
-				else //In other states it resets but only once.
-				{
-					HUD.firstSecondEachRound = true;
-					HUD.ticketLostTimer = 14;
-					uiManager->scaleBar(scaleAndText::LoseTicketsMeter, 1.0f, true);
-				}
+				uiManager->scaleBar(scaleAndText::AbilityMeter, 0.0f, true);
+				console.printMsg("Error: Class Core line 2022, HUD.specialMeter has a value of 0 or below", "System", 'S');
 			}
 		}
+		if (local->getAmmo() != uiManager->HUD.ammo)
+		{
+			uiManager->HUD.ammo = local->getAmmo();
+			std::string nText = std::to_string(uiManager->HUD.ammo) + "/" + std::to_string(local->getMaxAmmo());
+			uiManager->clearText(scaleAndText::Ammo);
+			uiManager->setText(nText, scaleAndText::Ammo);
+		}
+	} //player stats on HUD end
+
+	  //game mode stats on HUD
+	if (koth->getRespawnTokens(1) != uiManager->HUD.teamOneTokens)
+	{
+		uiManager->HUD.teamOneTokens = koth->getRespawnTokens(1);
+		uiManager->clearText(scaleAndText::TicketBar1);
+		uiManager->setText(std::to_string(uiManager->HUD.teamOneTokens), scaleAndText::TicketBar1);
+		if ((float)(uiManager->HUD.maxTokens) > 0)
+			uiManager->scaleBar(scaleAndText::TicketBar1, (float)uiManager->HUD.teamOneTokens / (float)(uiManager->HUD.maxTokens), true);
+		else
+			console.printMsg("Error: Class Core line 1973, HUD.maxTokens has a value of 0 or below", "System", 'S');
 	}
+	if (koth->getRespawnTokens(2) != uiManager->HUD.teamTwoTokens)
+	{
+		uiManager->HUD.teamTwoTokens = koth->getRespawnTokens(2);
+		uiManager->clearText(scaleAndText::TicketBar2);
+		uiManager->setText(std::to_string(uiManager->HUD.teamTwoTokens), scaleAndText::TicketBar2);
+		if ((float)(uiManager->HUD.maxTokens) > 0)
+			uiManager->scaleBar(scaleAndText::TicketBar2, (float)(uiManager->HUD.teamTwoTokens) / (float)(uiManager->HUD.maxTokens), true);
+		else
+			console.printMsg("Error: Class Core line 1983, HUD.maxTokens has a value of 0 or below", "System", 'S');
+	}
+	if (koth->getRoundWins(1) != uiManager->HUD.teamOneRoundWins)
+	{
+		if (koth->getRoundWins(1) != -1)
+		{
+			uiManager->HUD.teamOneRoundWins = koth->getRoundWins(1);
+			uiManager->clearText(scaleAndText::Wins1);
+			uiManager->setText(std::to_string(uiManager->HUD.teamOneRoundWins), scaleAndText::Wins1);
+		}
+		else
+			console.printMsg("Error: Class Core line 1990, koth->getRoundWins(1) has a value of -1", "System", 'S');
+	}
+	if (koth->getRoundWins(2) != uiManager->HUD.teamTwoRoundWins)
+	{
+		if (koth->getRoundWins(2) != -1)
+		{
+			uiManager->HUD.teamTwoRoundWins = koth->getRoundWins(2);
+			uiManager->clearText(scaleAndText::Wins2);
+			uiManager->setText(std::to_string(uiManager->HUD.teamTwoRoundWins), scaleAndText::Wins2);
+		}
+		else
+			console.printMsg("Error: Class Core line 2001, koth->getRoundWins(1) has a value of -1", "System", 'S');
+	}
+	if (int(koth->getTimer()) != uiManager->HUD.time) //Not done
+	{
+		uiManager->HUD.time = int(koth->getTimer());
+
+		int minutes = uiManager->HUD.time * 0.01666;
+		int seconds = uiManager->HUD.time - 60 * minutes;
+
+		std::string sMinutes = "0";
+		std::string sSeconds = "0";
+
+		sMinutes += std::to_string(minutes);
+		sSeconds += std::to_string(seconds);
+
+		if (sMinutes.size() > 2)
+			sMinutes = std::to_string(minutes);
+		if (sSeconds.size() > 2)
+			sSeconds = std::to_string(seconds);
+
+		uiManager->clearText(scaleAndText::Time);
+		uiManager->setText(sMinutes + ":" + sSeconds, scaleAndText::Time);
+
+		if (koth->getState() == ROUND) //Tickets meter should only work during the rounds which is why this check is here.
+		{
+			if (!uiManager->HUD.firstSecondEachRound) //If it isn't the first second of the round
+			{
+				if (uiManager->HUD.ticketLostTimer == 0)
+				{
+					uiManager->scaleBar(scaleAndText::LoseTicketsMeter, 0.0f, true);
+					uiManager->HUD.ticketLostTimer = uiManager->HUD.loseTicketPer;
+				}
+				else
+				{
+					if (uiManager->HUD.loseTicketPer > 0)
+					{
+						uiManager->scaleBar(scaleAndText::LoseTicketsMeter, (float)(uiManager->HUD.ticketLostTimer) / (float)(uiManager->HUD.loseTicketPer), true);
+						uiManager->HUD.ticketLostTimer -= 1;
+					}
+					else
+						console.printMsg("Error: Class Core line 2042, HUD.loseTicketPer has a value of 0 or below", "System", 'S');
+				}
+			}
+			else
+			{
+				if (uiManager->HUD.loseTicketPer > 1)
+				{
+					uiManager->HUD.ticketLostTimer -= 1;
+					uiManager->scaleBar(scaleAndText::LoseTicketsMeter, (float)(uiManager->HUD.ticketLostTimer) / (float)(uiManager->HUD.loseTicketPer), true);
+					uiManager->HUD.ticketLostTimer -= 1;
+				}
+				else
+					console.printMsg("Error: Class Core line 2053, HUD.loseTicketPer has a value of 1 or below at the start of the round", "System", 'S');
+			}
+			uiManager->HUD.firstSecondEachRound = false;
+		}
+		else //In other states it resets but only once.
+		{
+			uiManager->HUD.firstSecondEachRound = true;
+			uiManager->HUD.ticketLostTimer = 14;
+			uiManager->scaleBar(scaleAndText::LoseTicketsMeter, 1.0f, true);
+		}
+	}
+
 	uiManager->inGameRender();
 
 	double x = (0.0);
@@ -2216,7 +2274,7 @@ void Core::handleCulling()
 				p = game->getPlayer(0);
 			else
 				p = game->getPlayer(top->getConId());
-	
+
 			if (p)
 			{
 				game->cullingPointvsRoom(&p->getPos(), interarr, count, 2);
@@ -2245,7 +2303,7 @@ void Core::handleCulling()
 		}
 	}
 	lastCampos = cam->getPos();
-	
+
 	renderPipe->setCullingCurrentChunkID(cam->roomID);
 }
 
@@ -2338,13 +2396,13 @@ void Core::setfps(int fps)
 		if (game != nullptr)
 		{
 			CameraInput* cam = CameraInput::getCam();
-			string print( "X: " + to_string(cam->getPos().x) + "  Y: " + to_string(cam->getPos().y) + "  Z: " + to_string(cam->getPos().z) + "  FPS: " + to_string(fps));
+			string print("X: " + to_string(cam->getPos().x) + "  Y: " + to_string(cam->getPos().y) + "  Z: " + to_string(cam->getPos().z) + "  FPS: " + to_string(fps));
 			glfwSetWindowTitle(win, print.c_str());
 		}
 		else
 			glfwSetWindowTitle(win, to_string(fps).c_str());
 	}
-		
+
 }
 
 void Core::sendPlayerBox()
@@ -2361,7 +2419,7 @@ void Core::sendPlayerBox()
 	if (renderPipe != nullptr)
 	{
 		renderPipe->getPlayerBox(xMax, xMin, yMax, yMin, zMax, zMin);
-		
+
 	}
 
 	pBox.push_back(xMax);
@@ -2446,19 +2504,20 @@ void Core::sendWorldBoxes()
 	}
 }
 
-bool Core::windowVisible() const
+bool Core::windowVisible()
 {
 	if (glfwWindowShouldClose(win))
 	{
 		glfwHideWindow(win);
+		closeGame = true;
 	}
-	return glfwGetWindowAttrib(win, GLFW_VISIBLE);
+	return !closeGame;
 }
 
 void Core::disconnect()
 {
 	saveSettings();
-	if(top)
+	if (top)
 		delete top;
 	top = nullptr;
 	game->release();
@@ -2473,7 +2532,6 @@ void Core::disconnect()
 
 	uiManager->setRoleBool(false);
 
-	current = START;
 	uiManager->setHoverCheckBool(true);
 	uiManager->setOpenedGuiBool(false);
 	uiManager->setFirstMenuSet(false);
@@ -2485,10 +2543,10 @@ void Core::disconnect()
 
 void Core::showTeamSelect()
 {
-	if(startTeamSelect)
+	if (startTeamSelect)
 	{
 		uiManager->setHoverCheckBool(true);
-		uiManager->LoadNextSet(UISets::InGame , winX, winY);
+		uiManager->LoadNextSet(UISets::InGame, winX, winY);
 		uiManager->setFirstMenuSet(false);
 		uiManager->setMenu(InGameUI::TeamSelect);
 	}
@@ -2498,7 +2556,7 @@ void Core::showTeamSelect()
 		uiManager->LoadNextSet(UISets::InGame, winX, winY);
 		uiManager->setFirstMenuSet(false);
 		uiManager->setOpenedGuiBool(true);
-		uiManager->setMenu(InGameUI::GUI); 
+		uiManager->setMenu(InGameUI::GUI);
 	}
 }
 
