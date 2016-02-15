@@ -69,6 +69,24 @@ enum SOUNDS
 	soundEffectDestroyerSteps,
 	soundEffectHP,
 	soundEffectRespawn,
+	soundEffectBulletPlayerHitSelf,
+	soundEffectBruteStepsStereo,
+	soundEffectEnergyBoostStereo,
+	soundEffectEnergyBoostStereo,
+	soundEffectGrenadeLauncherStereo,
+	soundEffectHunterJumpStereo,
+	soundEffectLightSpeedStereo,
+	soundEffectLightWallStereo,
+	soundEffectMeleeStereo,
+	soundEffectPulseRifleShotStereo,
+	soundEffectShankerStepsStereo,
+	soundEffectShotGunStereo,
+	soundEffectTrapperJumpStereo,
+	soundEffectTrapperLandStereo,
+	soundEffectTrapperMultiJumpStereo,
+	soundFootStepsStereo,
+	soundEffectDiscGunStereo,
+
 	nrOfSounds //leave last
 };
 

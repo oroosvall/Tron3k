@@ -1469,10 +1469,10 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 					{
 						GetSound()->playUserGeneratedSound(SOUNDS::hackedSound);
 					}
-					else
-					{
+					else if (!p->isLocal())
 						GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHit, pos.x, pos.y, pos.z);
-					}
+					else
+						GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHitSelf, pos.x, pos.y, pos.z);
 				}
 			}
 			int bulletPosInArray = -1;
@@ -1538,8 +1538,10 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 			{
 				if (hi.et == EFFECT_TYPE::HEALTHPACK)
 					GetSound()->playExternalSound(SOUNDS::soundEffectHP, pos.x, pos.y, pos.z);
-				else
+				else if(!p->isLocal())
 					GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHit, pos.x, pos.y, pos.z);
+				else
+					GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHitSelf, pos.x, pos.y, pos.z);
 			}
 		}
 
