@@ -1123,15 +1123,31 @@ void Game::handleWeaponFire(int conID, int teamId, int bulletId, WEAPON_TYPE wea
 	case WEAPON_TYPE::PULSE_RIFLE:
 		if (gameState != Gamestate::SERVER)
 			if (GetSound())
-				GetSound()->playExternalSound(SOUNDS::soundEffectPusleRifleShot, pos.x, pos.y, pos.z);
+			{
+				if (conID == localPlayerId)
+				{
+					GetSound()->playExternalSound(SOUNDS::soundEffectPulseRifleShotStereo, pos.x, pos.y, pos.z);
+				}
+
+				else
+					GetSound()->playExternalSound(SOUNDS::soundEffectPusleRifleShot, pos.x, pos.y, pos.z);
+			}
+				
 		addBulletToList(conID, teamId, bulletId, BULLET_TYPE::PULSE_SHOT, pos, dir);
 		break;
 
 	case WEAPON_TYPE::ENERGY_BOOST:
 		if (GetSoundActivated())
-		{
-			GetSound()->playExternalSound(SOUNDS::soundEffectEnergyBoost, pos.x, pos.y, pos.z);
-		}
+			if (GetSound())
+			{
+				if (conID == localPlayerId)
+				{
+					GetSound()->playExternalSound(SOUNDS::soundEffectEnergyBoostStereo, pos.x, pos.y, pos.z);
+				}
+
+				else
+					GetSound()->playExternalSound(SOUNDS::soundEffectEnergyBoost, pos.x, pos.y, pos.z);
+			}
 		playerList[conID]->healing(10);
 		playerList[conID]->getRole()->swapWeapon(WEAPON_TYPE::ENERGY_BOOST, 0);
 		break;
@@ -1150,21 +1166,45 @@ void Game::handleWeaponFire(int conID, int teamId, int bulletId, WEAPON_TYPE wea
 	case WEAPON_TYPE::DISC_GUN:
 		if (gameState != Gamestate::SERVER)
 			if (GetSound())
-				GetSound()->playExternalSound(SOUNDS::soundEffectDiscGun, pos.x, pos.y, pos.z);
+			{
+				if (conID == localPlayerId)
+				{
+					GetSound()->playExternalSound(SOUNDS::soundEffectDiscGunStereo, pos.x, pos.y, pos.z);
+				}
+
+				else
+					GetSound()->playExternalSound(SOUNDS::soundEffectDiscGun, pos.x, pos.y, pos.z);
+			}
 		addBulletToList(conID, teamId, bulletId, BULLET_TYPE::DISC_SHOT, pos, dir);
 		break;
 
 	case WEAPON_TYPE::MELEE:
 		if (gameState != Gamestate::SERVER)
 			if (GetSound())
-				GetSound()->playExternalSound(SOUNDS::soundEffectMelee, pos.x, pos.y, pos.z);
+			{
+				if (conID == localPlayerId)
+				{
+					GetSound()->playExternalSound(SOUNDS::soundEffectMeleeStereo, pos.x, pos.y, pos.z);
+				}
+
+				else
+					GetSound()->playExternalSound(SOUNDS::soundEffectMelee, pos.x, pos.y, pos.z);
+			}
 		addBulletToList(conID, teamId, bulletId, BULLET_TYPE::MELEE_ATTACK, pos, dir);
 		break;
 
 	case WEAPON_TYPE::GRENADE_LAUNCHER:
 		if (gameState != Gamestate::SERVER)
 			if (GetSound())
-				GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeLauncher, pos.x, pos.y, pos.z);
+			{
+				if (conID == localPlayerId)
+				{
+					GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeLauncherStereo, pos.x, pos.y, pos.z);
+				}
+
+				else
+					GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeLauncher, pos.x, pos.y, pos.z);
+			}
 		addBulletToList(conID, teamId, bulletId, BULLET_TYPE::GRENADE_SHOT, pos, dir);
 		break;
 
@@ -1172,7 +1212,15 @@ void Game::handleWeaponFire(int conID, int teamId, int bulletId, WEAPON_TYPE wea
 	{
 		if (gameState != Gamestate::SERVER)
 			if (GetSound())
-				GetSound()->playExternalSound(SOUNDS::soundEffectShotGun, pos.x, pos.y, pos.z);
+			{
+				if (conID == localPlayerId)
+				{
+					GetSound()->playExternalSound(SOUNDS::soundEffectShotGunStereo, pos.x, pos.y, pos.z);
+				}
+
+				else
+					GetSound()->playExternalSound(SOUNDS::soundEffectShotGun, pos.x, pos.y, pos.z);
+			}
 		glm::vec3 rightV = normalize(cross(dir, vec3(0, 1, 0)));
 		glm::vec3 upV = normalize(cross(dir, rightV));
 		for (int k = 0; k < 10; k++)

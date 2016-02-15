@@ -93,7 +93,7 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->soundList[SOUNDS::soundEffectHP].loadFromFile("GameFiles/Sound/soundEffectHP.ogg");
 		singleton->soundList[SOUNDS::soundEffectRespawn].loadFromFile("GameFiles/Sound/soundEffectRespawn.ogg");
 		singleton->soundList[SOUNDS::soundEffectBulletPlayerHitSelf].loadFromFile("GameFiles/Sound/soundEffectBulletPlayerHitSelf.ogg");
-		singleton->soundList[SOUNDS::soundEffectBruteStepsStereo].loadFromFile("GameFiles/Sound/soundEffectBruteStepsStereo.ogg");
+		singleton->soundList[SOUNDS::soundEffectBruteStepsStereo].loadFromFile("GameFiles/Sound/soundEffectBruteSteps2Stereo.ogg");
 		singleton->soundList[SOUNDS::soundEffectDiscGunStereo].loadFromFile("GameFiles/Sound/soundEffectDiscGunStereo.ogg");
 		singleton->soundList[SOUNDS::soundEffectEnergyBoostStereo].loadFromFile("GameFiles/Sound/soundEffectEnergyBoostStereo.ogg");
 		singleton->soundList[SOUNDS::soundEffectGrenadeLauncherStereo].loadFromFile("GameFiles/Sound/soundEffectGrenadeLauncherStereo.ogg");
