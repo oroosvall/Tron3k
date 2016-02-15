@@ -679,7 +679,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 						reloadCurrentWeapon();
 					}
 
-					if (i->justPressed(GLFW_KEY_1))
+					if (int(i->getScrollValue() > 0.0) || i->justPressed(GLFW_KEY_1))
 					{
 						if (role.getWeaponNRequiped() != 0)
 						{
@@ -697,7 +697,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 						}
 					}
 
-					if (i->justPressed(GLFW_KEY_2))
+					if (int(i->getScrollValue() < 0.0) || i->justPressed(GLFW_KEY_2))
 					{
 						if (role.getWeaponNRequiped() != 1)
 						{
