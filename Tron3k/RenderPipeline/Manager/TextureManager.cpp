@@ -99,6 +99,40 @@ unsigned int TextureManager::createTexture(std::string path)
 
 }
 
+bool TextureManager::PNGSize(const char* fileName, unsigned int &x, unsigned int &y)
+{
+	std::ifstream file(fileName, std::ios_base::binary | std::ios_base::in);
+
+	if (!file.is_open() || !file)
+	{
+		file.close();
+		return false;
+	}
+
+	file.seekg(8, std::ios_base::cur);
+	file.seekg(4, std::ios_base::cur);
+	file.seekg(4, std::ios_base::cur);
+
+	__int32 width, height;
+	
+	file.read((char*)&width, 4);
+	file.read((char*)&height, 4);
+
+
+	#define SWAPWORD(x) MAKEWORD(HIBYTE(x), LOBYTE(x))
+	#define SWAPLONG(x) MAKELONG(SWAPWORD(HIWORD(x)), SWAPWORD(LOWORD(x)))
+	//x = ntohl(width);
+	//y = ntohl(height);
+
+	x = SWAPLONG(width);
+	y = SWAPLONG(height);
+
+	file.close();
+
+	return true;
+}
+
+
 void TextureManager::bindTexture(unsigned int &textureID, GLuint shader, GLuint shaderLocation, TEXTURE_FALLBACK fallback)
 {
 	if (!textureList.empty() && textureID < textureList.size())

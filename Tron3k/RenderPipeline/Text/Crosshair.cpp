@@ -1,6 +1,6 @@
 #include "Crosshair.h"
 
-void Crosshair::init()
+void Crosshair::init(int x, int y)
 {
 
 	glGenBuffers(1, &vbo);
@@ -8,8 +8,8 @@ void Crosshair::init()
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-	float xPos = 24.0f / Text::ScreenResWidth;
-	float yPos = 24.0f / Text::ScreenResHeight;
+	float xPos = (float)x / Text::ScreenResWidth;
+	float yPos = (float)y / Text::ScreenResHeight;
 
 	Float5 verts[4]
 	{

@@ -4,6 +4,9 @@
 #include "../Streaming/TextureStreamer.h"
 #include <thread>
 #include <vector>
+#include <fstream>
+#include <winsock.h>
+
 
 enum TEXTURE_STATE
 {
@@ -63,7 +66,7 @@ public:
 	void update(float dt);
 
 	unsigned int createTexture(std::string path);
-
+	bool PNGSize(const char* fileName, unsigned int &x, unsigned int &y);
 	void bindTexture(unsigned int &textureID, GLuint shader, GLuint shaderLocation, TEXTURE_FALLBACK fallback);
 	void bindDefault(GLuint shader, GLuint shaderLocation, TEXTURE_FALLBACK fallback);
 

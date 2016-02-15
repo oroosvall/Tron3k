@@ -103,10 +103,10 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	chatText = new Text(chatHistoryText + chatTypeText, 11, fontTexture, vec2(10, 420));
 
 	cross = new Crosshair();
-
-	cross->init();
-
+	unsigned int x, y;
 	crosshairTexture = TextureManager::gTm->createTexture("GameFiles/Textures/Crosshairs/Crosshair.png");
+	bool success = TextureManager::gTm->PNGSize("GameFiles/Textures/Crosshairs/Crosshair.png", x, y);
+	cross->init(x, y);
 
 #ifdef _DEBUG
 	if (glDebugMessageCallback) {
