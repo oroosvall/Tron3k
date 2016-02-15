@@ -72,7 +72,6 @@ enum SOUNDS
 	soundEffectBulletPlayerHitSelf,
 	soundEffectBruteStepsStereo,
 	soundEffectEnergyBoostStereo,
-	soundEffectEnergyBoostStereo,
 	soundEffectGrenadeLauncherStereo,
 	soundEffectHunterJumpStereo,
 	soundEffectLightSpeedStereo,
