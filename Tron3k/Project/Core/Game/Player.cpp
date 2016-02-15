@@ -780,10 +780,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			} // end of player input
 		} // end of lock control check
 
-		if (pos.y < -5.0f && isLocalPlayer)	//If we fall through the map we die
-		{
-			role.setHealth(0);
-		}
+		
 
 		//if (i->justPressed(GLFW_KEY_O))
 			//role.setHealth(0);
@@ -1529,4 +1526,14 @@ void Player::CoolDownJump(float dt)
 bool Player::CheckAbleToJumpSound()
 {
 	return jumpSoundAble;
+}
+
+bool Player::allahuAkhbar()
+{
+	if (pos.y < -5.0f && !isDead)	//If we fall through the map we die
+	{
+		role.setHealth(0);
+		return true;
+	}
+	return false;
 }

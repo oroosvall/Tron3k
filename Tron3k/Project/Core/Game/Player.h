@@ -242,6 +242,8 @@ public:
 	bool nameChanged;
 
 	int GetConsecutiveDeaths() { return this->consecutiveDeaths; };
+
+	bool allahuAkhbar();
 };
 
 #endif

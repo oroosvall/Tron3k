@@ -322,6 +322,11 @@ void Game::playerUpdate(int conid, float dt)
 	// apply movement vel and then handle collision
 	PLAYERMSG msg = playerList[conid]->update(dt, freecam, spectatingThis, spectating);
 
+	if (playerList[conid]->allahuAkhbar())
+	{
+		console->printMsg(playerList[conid]->getName() + " gave up on life.", "System", 'S');
+	}
+
 	if (msg == PLAYERMSG::SHOOT)
 	{
 		registerWeapon(playerList[conid]);
