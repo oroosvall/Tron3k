@@ -143,23 +143,6 @@ void Core::update(float dt)
 	else
 		menuNameKeyInputUpdate(); //Updates to check input for the name window
 
-	/*if (!console.getInChatMode())
-	{
-		if (i->justPressed(GLFW_KEY_ENTER))
-		{
-			console.setInChatMode(true);
-			if (i->getKeyInfo(GLFW_KEY_LEFT_SHIFT))
-				console.setScope('A');
-		}
-	}
-	else
-	{
-		if (i->justPressed(GLFW_KEY_ENTER))
-		{
-			cursorInvisible = true;
-		}
-	}*/
-
 	bool chatMode = console.getInChatMode();
 	if (chatMode && renderPipe)
 	{
@@ -185,22 +168,29 @@ void Core::update(float dt)
 		{
 			if (!uiManager->isThereAMenuUp())
 				cursorInvisible = true;
-			if (game->getPlayer(game->GetLocalPlayerId()) != nullptr)
-			{
-				if (current != SERVER)
-				{
-					if (!console.getInChatMode() && cursorInvisible)
-					{
-						game->getPlayer(game->GetLocalPlayerId())->setLockedControls(false);
-					}
-					else if (console.getInChatMode())
-					{
-						game->getPlayer(game->GetLocalPlayerId())->setLockedControls(true);
-					}
 
-					if (!game->getPlayer(game->GetLocalPlayerId())->getLockedControls())
+			int pid = game->GetLocalPlayerId();
+			if (pid != -1)
+			{
+				Player* p = game->getPlayer(pid);
+				if (p != nullptr)
+				{
+					if (current != SERVER)
 					{
-						cursorInvisible = true;
+						if (!console.getInChatMode() && cursorInvisible)
+						{
+							p->setLockedControls(false);
+							renderPipe->setChatTypeMessage("");
+						}
+						else if (console.getInChatMode())
+						{
+							p->setLockedControls(true);
+						}
+
+						if (!p->getLockedControls())
+						{
+							cursorInvisible = true;
+						}
 					}
 				}
 			}
