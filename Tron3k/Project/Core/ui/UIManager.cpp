@@ -522,3 +522,13 @@ int UIManager::getCurrentMenu()
 		console->printMsg("Error: Class UIManager line 516, (nrOfCurretMenus - 1) has a value below 0", "System", 'S');
 	return returnValue;
 }
+
+bool UIManager::isThereAMenuUp()
+{
+	bool returnValue = true;
+	if (currentGroup == 1)
+		if (currentMenu[0] == 0 && nrOfCurretMenus == 1)
+			returnValue = false;
+
+	return returnValue;
+}
