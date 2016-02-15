@@ -62,7 +62,7 @@ vec4 CalcLightInternal(SpotLight l, vec3 LightDirection, vec3 Normal)
 			if(isAmbient == false)
 			{
 				float Distance = length(Position0.xyz - l.Position);
-				float Attenuation = 1.0 + (0.027 * Distance) + (0.0028 * Distance * Distance);
+				float Attenuation = 1.0f / pow(max(0.0f, 1.0f - (Distance/80)), 5);
 				specularAddetive += (vec4(l.Color, 1.0f) * ( 1 - Normal0.w) * SpecularFactor) / Attenuation;
 			}
 			else
@@ -80,8 +80,7 @@ vec4 CalcPointLight(SpotLight l, vec3 Normal)
 	LightDirection = normalize(LightDirection);    
 
 	vec4 Color = vec4(CalcLightInternal(l, LightDirection, Normal)); 
-	float Attenuation = 1.0 + (0.14 * Distance) + (0.07 * Distance * Distance); //0.1 * Distance;
-	//float Attenuation = l.attenuation.x + (l.attenuation.y * Distance) + (l.attenuation.z * Distance * Distance); //0.1 * Distance;
+	float Attenuation = 1.0f / pow(max(0.0f, 1.0f - (Distance/80)), 10);
 	return Color / Attenuation;	
 }                                                                                           
                                                                                            
