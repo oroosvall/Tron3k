@@ -2182,7 +2182,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 			case 20: //Team 1
 				if (current == ROAM)
 				{
-					uiManager->setTeamColor(TeamColors::TeamTwo);
+					uiManager->setTeamColor(TeamColors::TeamOne);
 					roamHandleCmds("/team 2");
 				}
 				else
@@ -2193,7 +2193,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 			case 21: //Team 2
 				if (current == ROAM)
 				{
-					uiManager->setTeamColor(TeamColors::TeamOne);
+					uiManager->setTeamColor(TeamColors::TeamTwo);
 					roamHandleCmds("/team 1");
 				}
 				else
