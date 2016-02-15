@@ -1184,11 +1184,11 @@ void Game::handleWeaponFire(int conID, int teamId, int bulletId, WEAPON_TYPE wea
 			{
 				if (conID == localPlayerId)
 				{
-					GetSound()->playExternalSound(SOUNDS::soundEffectMeleeStereo, pos.x, pos.y, pos.z);
+					GetSound()->playMeleeStereo();
 				}
 
 				else
-					GetSound()->playExternalSound(SOUNDS::soundEffectMelee, pos.x, pos.y, pos.z);
+					GetSound()->playMelee(pos.x, pos.y, pos.z);
 			}
 		addBulletToList(conID, teamId, bulletId, BULLET_TYPE::MELEE_ATTACK, pos, dir);
 		break;

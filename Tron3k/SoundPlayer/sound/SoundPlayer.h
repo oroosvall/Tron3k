@@ -38,6 +38,9 @@ private:
 	sf::Sound destroyerStop;
 	sf::Sound destroyerStart;
 	sf::Sound bruteSteps;
+	sf::Sound melee;
+	sf::Sound melee2;
+	sf::Sound melee3;
 	sf::SoundBuffer soundList[SOUNDS::nrOfSounds];
 	string musicList[MUSIC::nrOfMusic];
 	bool fading = false;
@@ -84,6 +87,9 @@ public:
 	virtual int playDestroyerStop(float x, float y, float z);
 	virtual int playDestroyerStart(float x, float y, float z);
 	virtual int playBrute(float, float, float);
+	virtual void playMelee(float, float, float);
+	virtual void playMeleeStereo();
+
 	virtual void stopBrute()
 	{
 		bruteSteps.stop();
