@@ -20,6 +20,19 @@ UIManager::UIManager()
 	guiOpened = false;
 	firstMenuSet = false;
 	doHoverCheckInGame = false;
+
+	HUD.HP = 1;
+	HUD.ammo = 0;
+	HUD.specialMeter = 0.0f;
+	HUD.teamOneRoundWins = 0;
+	HUD.teamTwoRoundWins = 0;
+	HUD.teamOneTokens = 0;
+	HUD.teamTwoTokens = 0;
+	HUD.maxTokens = 0;
+	HUD.time = 0;
+	HUD.ticketLostTimer = 0;
+	HUD.loseTicketPer = 1;
+	HUD.firstSecondEachRound = true;
 }
 UIManager::~UIManager() 
 {

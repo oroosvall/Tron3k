@@ -2,19 +2,6 @@
 
 void Core::init()
 {
-	uiManager->HUD.HP = 1;
-	uiManager->HUD.ammo = 0;
-	uiManager->HUD.specialMeter = 0.0f;
-	uiManager->HUD.teamOneRoundWins = 0;
-	uiManager->HUD.teamTwoRoundWins = 0;
-	uiManager->HUD.teamOneTokens = 0;
-	uiManager->HUD.teamTwoTokens = 0;
-	uiManager->HUD.maxTokens = 0;
-	uiManager->HUD.time = 0;
-	uiManager->HUD.ticketLostTimer = 0;
-	uiManager->HUD.loseTicketPer = 1;
-	uiManager->HUD.firstSecondEachRound = true;
-
 	uitmpcounter = 0;
 
 	glfwInit();
