@@ -37,7 +37,6 @@ private:
 
 	bool ready = false; //Ready to start a game mode
 
-	bool justRespawned = false; // used for culling
 	bool diedThisFrame = false; // used for K/D and messages
 
 	bool footstepsLoop = false;
@@ -210,7 +209,6 @@ public:
 	void chooseRole(int r);
 
 	void respawn(glm::vec3 respawnPos, glm::vec3 dir, int roomID);
-	bool getJustRespawned() { return justRespawned; };
 
 	void healing(int amount);
 

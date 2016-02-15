@@ -322,9 +322,18 @@ void Game::playerUpdate(int conid, float dt)
 	// apply movement vel and then handle collision
 	PLAYERMSG msg = playerList[conid]->update(dt, freecam, spectatingThis, spectating);
 
-	if (playerList[conid]->allahuAkhbar())
+	if (gameState != Gamestate::CLIENT)
 	{
-		console->printMsg(playerList[conid]->getName() + " gave up on life.", "System", 'S');
+		if (playerList[conid]->allahuAkhbar())
+		{
+			BulletHitPlayerInfo suicide;
+			suicide.bt = BULLET_TYPE::KILLYOURSELF;
+			suicide.bulletBID = 0;
+			suicide.bulletPID = 0;
+			suicide.newHPtotal = 0;
+			suicide.playerHit = conid;
+			allBulletHitsOnPlayers.push_back(suicide);
+		}
 	}
 
 	if (msg == PLAYERMSG::SHOOT)
@@ -1511,6 +1520,12 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 	Player* p = playerList[hi.playerHit];
 	if (!p->didIDieThisFrame())
 	{
+		if (hi.bt == BULLET_TYPE::KILLYOURSELF)
+		{
+			p->setHP(0);
+			console->printMsg(p->getName() + " gave up on life.", "System", 'S');
+			return 0;
+		}
 		if (hi.bt != BULLET_TYPE::CLUSTERLING)	//Any bullets that should not detonate on contact
 		{
 			glm::vec3 pos = playerList[hi.playerHit]->getPos();
