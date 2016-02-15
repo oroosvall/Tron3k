@@ -22,8 +22,6 @@ int GrenadeShot::update(float dt)
 		bounceCounter = 3;
 	pos += dir * vel * dt;
 	dir.y -= 0.9f * dt;
-	if (collided > 0)
-		collided--;
 	updateWorldMat();
 
 	ttl -= dt;

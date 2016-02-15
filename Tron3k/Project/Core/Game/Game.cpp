@@ -1712,7 +1712,49 @@ void Game::bounceBullet(BulletHitWorldInfo hwi, Bullet* theBullet)
 	if (combinedNormal2 != glm::vec3(0, 0, 0))
 	{
 		combinedNormal2 = normalize(combinedNormal2);
+		
 		vec3 dir = normalize(reflect(theBullet->getDir(), combinedNormal2));
+
+		//vec3 dirn = vec3(theBullet->getDir());
+		//dirn = normalize(dirn);
+		
+		float d = dot(dir, combinedNormal2);
+
+		if(d < 0.3f)
+			dir = normalize((dir * (1 - d)) + (combinedNormal2 * d));
+		if (dot(dir, combinedNormal2) < 0.1f && dot(dir, combinedNormal2) > -0.1f)
+		{
+			int x = 0;
+
+			//dir = normalize(dir * 0.9f + combinedNormal2 * 0.1f);
+		}
+		/*
+		//float dotp = dot(dirn, obb->planes[n].n);
+		//if (dotp < 0.9f && dotp > -0.9f)
+		//{
+			//vec3 right = obb->planes[n].v1; //goes to the right
+			//vec3 left = -right;
+			//rotate it to an angle to  increase the dot product. so TOWARDS the normal face
+			//dirn = dirn * 0.9f + obb->planes[n].n * 0.1f;
+			dirn = normalize(dirn);
+			if (dot(dir, right) > 0.0f)//if we're moving to the right
+			{
+				//We need to angle one direction
+
+			}
+			else if (dot(dir, left) > 0.0f)//We're moving ot the left
+			{
+				//We need to angle opposite direction
+			}
+			else
+			{
+
+			}
+			t.x = dir.x;
+			t.y = dir.y;
+			t.z = dir.z;
+		}*/
+		
 		
 		theBullet->setDir(dir);
 
@@ -1745,12 +1787,9 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 		{
 			vec3 temp;
 			vec3 vel = b->getVel();
-			if (b->collided <= 0)
-			{
 
 				switch (hi.bt)
 				{
-					b->collided = 5;
 				case BULLET_TYPE::CLUSTER_GRENADE:
 					if (GetSoundActivated())
 						GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
@@ -1824,7 +1863,6 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 					removeBullet(hi.bt, arraypos);
 					break;
 				}
-			}
 		}
 	}
 }

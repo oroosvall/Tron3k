@@ -429,6 +429,7 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb)
 		//plane intersection will always be closer than all other intersections on the obb
 		if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON * 10)
 		{
+			
 			return t;
 		}
 	}
@@ -666,48 +667,6 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos)
 	return cNorms;
 }
 
-void* Physics::checkBulletvWorldInternal(AABBSingle bulletBox, float rad, int index)//NOT USED
-{
-	return 0;
-	/* currently unused
-	std::vector<vec4> cNorms;
-
-	//each chunk
-	vec4 t = vec4(0);
-	for (unsigned int i = 0; i < worldBoxes.size(); i++)
-	{
-		//each abb
-		for (unsigned int j = 0; j < worldBoxes[i].size(); j++)
-		{
-			bool contin = false;
-
-			//do or do not, there is a try again at half the position
-
-			if (checkAABBvAABBCollision(bulletBox, worldBoxes[i][j].getAABB()))
-			{
-				//printf("%d %d \n", i, j); // test for abbs so they register
-
-				//for each obb contained in that abb
-				int size = worldBoxes[i][j].getOBBs().size();
-				for (int n = 0; n < size; n++)
-				{
-					t = getSpherevOBBNorms(bulletBox.pos, rad, &worldBoxes[i][j].getOBBs()[n]);
-					t.w = rad - t.w; //penetration depth instead of collision distance
-					if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
-					{
-						t = vec4(normalize(vec3(t)), t.w);
-						t.w = t.w * (4 - i);//gets the pendepth based on where in the dt we are
-						bulletNormal[index] = t;
-						return (void*)&t;
-					}
-				}
-			}
-		}
-	}
-	return (void*)&t;
-	*/
-}
-
 vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bulletDir, float dt)
 {
 	bulletBox.setPos(bulletPos);
@@ -729,8 +688,6 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 		//each chunk
 		if (checkAABBvAABBCollision(box, roomBoxes[0].getSpecificBox(j)->getAABB()))
 		{
-			//printf("%d %d \n", i, j); // test for abbs so they register
-
 			//for each obb contained in that abb
 			int size = roomBoxes[0].getSpecificBox(j)->getOBBSize();
 			for (int n = 0; n < size; n++)
