@@ -102,6 +102,10 @@ private:
 
 	GLuint uniformKeyMatrixLocation;
 
+	//particle shaders
+	GLuint particleCS;
+	GLuint particleShader;
+	GLuint particleSize;
 
 	//lightwall
 	GLuint lwVertexDataId;
