@@ -298,7 +298,7 @@ void UIManager::setMenu(int menuId)
 		{
 			if (nrOfOpenedMenus > 0)
 			{
-				if (currentMenu[0] == 2)
+				if (currentMenu[0] == MainMenu::Connect)
 				{
 					menus[currentMenu[0]].clearText(7);
 					menus[currentMenu[0]].clearText(8);

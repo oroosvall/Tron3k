@@ -13,13 +13,15 @@ enum MainMenu
 	StartMenu,
 	Multiplayer,
 	Connect,
+	Back = -1
 };
 
 enum InGameUI
 {
 	GUI,
 	TeamSelect,
-	ClassSelect
+	ClassSelect,
+	RemoveMenu = -2
 };
 
 enum UISets

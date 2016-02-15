@@ -2026,7 +2026,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 				uiManager->scaleBar(scaleAndText::HP, (float)(uiManager->HUD.HP) / (float)(local->getMaxHP()), true);
 			}
 			else
-				console.printMsg("Error: Class Core line 2010, local player maxHp has a value of 0 or below", "System", 'S');
+				console.printMsg("Error: Class Core, local player maxHp has a value of 0 or below", "System", 'S');
 		}
 		if (local->getSpecialMeter() != uiManager->HUD.specialMeter)
 		{
@@ -2038,7 +2038,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 			else
 			{
 				uiManager->scaleBar(scaleAndText::AbilityMeter, 0.0f, true);
-				console.printMsg("Error: Class Core line 2022, HUD.specialMeter has a value of 0 or below", "System", 'S');
+				console.printMsg("Error: Class Core, HUD.specialMeter has a value of 0 or below", "System", 'S');
 			}
 		}
 		if (local->getAmmo() != uiManager->HUD.ammo)
@@ -2059,7 +2059,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 		if ((float)(uiManager->HUD.maxTokens) > 0)
 			uiManager->scaleBar(scaleAndText::TicketBar1, (float)uiManager->HUD.teamOneTokens / (float)(uiManager->HUD.maxTokens), true);
 		else
-			console.printMsg("Error: Class Core line 1973, HUD.maxTokens has a value of 0 or below", "System", 'S');
+			console.printMsg("Error: Class Core, HUD.maxTokens has a value of 0 or below", "System", 'S');
 	}
 	if (koth->getRespawnTokens(2) != uiManager->HUD.teamTwoTokens)
 	{
@@ -2069,7 +2069,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 		if ((float)(uiManager->HUD.maxTokens) > 0)
 			uiManager->scaleBar(scaleAndText::TicketBar2, (float)(uiManager->HUD.teamTwoTokens) / (float)(uiManager->HUD.maxTokens), true);
 		else
-			console.printMsg("Error: Class Core line 1983, HUD.maxTokens has a value of 0 or below", "System", 'S');
+			console.printMsg("Error: Class Core, HUD.maxTokens has a value of 0 or below", "System", 'S');
 	}
 	if (koth->getRoundWins(1) != uiManager->HUD.teamOneRoundWins)
 	{
@@ -2080,7 +2080,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 			uiManager->setText(std::to_string(uiManager->HUD.teamOneRoundWins), scaleAndText::Wins1);
 		}
 		else
-			console.printMsg("Error: Class Core line 1990, koth->getRoundWins(1) has a value of -1", "System", 'S');
+			console.printMsg("Error: Class Core, koth->getRoundWins(1) has a value of -1", "System", 'S');
 	}
 	if (koth->getRoundWins(2) != uiManager->HUD.teamTwoRoundWins)
 	{
@@ -2091,7 +2091,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 			uiManager->setText(std::to_string(uiManager->HUD.teamTwoRoundWins), scaleAndText::Wins2);
 		}
 		else
-			console.printMsg("Error: Class Core line 2001, koth->getRoundWins(1) has a value of -1", "System", 'S');
+			console.printMsg("Error: Class Core, koth->getRoundWins(1) has a value of -1", "System", 'S');
 	}
 	if (int(koth->getTimer()) != uiManager->HUD.time) //Not done
 	{
@@ -2131,7 +2131,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 						uiManager->HUD.ticketLostTimer -= 1;
 					}
 					else
-						console.printMsg("Error: Class Core line 2042, HUD.loseTicketPer has a value of 0 or below", "System", 'S');
+						console.printMsg("Error: Class Core, HUD.loseTicketPer has a value of 0 or below", "System", 'S');
 				}
 			}
 			else
@@ -2143,7 +2143,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 					uiManager->HUD.ticketLostTimer -= 1;
 				}
 				else
-					console.printMsg("Error: Class Core line 2053, HUD.loseTicketPer has a value of 1 or below at the start of the round", "System", 'S');
+					console.printMsg("Error: Class Core, HUD.loseTicketPer has a value of 1 or below at the start of the round", "System", 'S');
 			}
 			uiManager->HUD.firstSecondEachRound = false;
 		}
