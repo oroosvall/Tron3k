@@ -186,7 +186,7 @@ void Core::update(float dt)
 		{
 			if (!uiManager->isThereAMenuUp())
 				cursorInvisible = true;
-			if (game->getPlayer(top->getConId()) != nullptr)
+			if (game->getPlayer(game->GetLocalPlayerId()) != nullptr)
 			{
 				if (!console.getInChatMode() && current != SERVER && cursorInvisible)
 				{
