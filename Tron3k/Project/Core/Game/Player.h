@@ -111,6 +111,8 @@ private:
 	int deaths;
 	int consecutiveFrags = 0;
 	int consecutiveDeaths = 0;
+
+	int areWeScrolling;
 public:
 	Player();
 	~Player();
@@ -242,6 +244,8 @@ public:
 	bool nameChanged;
 
 	int GetConsecutiveDeaths() { return this->consecutiveDeaths; };
+
+	bool allahuAkhbar();
 };
 
 #endif

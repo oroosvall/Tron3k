@@ -107,19 +107,6 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool spectatin
 			this->setFootstepsLoop(false);
 			GetSound()->PlayStereoFootsteps(this->role.getRole());
 		}
-
-		/*if (this->role.getRole() == 1 && GetSoundActivated() && GetSound()->destroyerPaused == true)
-		{
-
-			GetSound()->playFootsteps(this->role.getRole(), pos.x, pos.y, pos.z);
-			GetSound()->destroyerPaused = false;
-		}*/
-
-		/*	else if (this->role.getRole() == 3 && GetSoundActivated() && GetSound()->brutePaused == true)
-		{
-		GetSound()->playFootsteps(this->role.getRole(), pos.x, pos.y, pos.z);
-		GetSound()->brutePaused = false;
-		}*/
 	}
 
 	else
@@ -140,8 +127,6 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool spectatin
 
 void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool specingThis)
 {
-	//get normals
-	//std::vector<vec4> cNorms = physics->sphereVWorldCollision(pos - (vec3(0, 0.55f, 0)), 1);
 	effectCollisionHandling();
 	//Collision handling here, after movement
 	bool ceiling = false;
@@ -170,48 +155,27 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 				ceiling = true;
 
 			//ramp factor and grounded
-
 			if (collisionNormals[k].y > 0.4f)
 			{
 				grounded = true;
 			}
 
-			// abslut value, if two collisions from the same angle they should not move us twice the distance
-			//if (length(pendepth) > length(posadjust))
-				//posadjust = pendepth;
 			
 			if (abs(pendepth.x) > abs(posadjust.x))
-				posadjust.x += pendepth.x;
-			if (abs(pendepth.y) > abs(posadjust.y))
-				posadjust.y += pendepth.y;
-			if (abs(pendepth.z) > abs(posadjust.z))
-				posadjust.z += pendepth.z;
-				
-		//	posadjust += normalize(pendepth);
-			//l += length(pendepth);
-			//divs++;
-			
-			/*if (pendepth.x > 0.0f || pendepth.x < 0.0f)//abs(posadjust.x) < abs(pendepth.x))
 			{
 				posadjust.x += pendepth.x;
 				xDivs++;
 			}
-			if (pendepth.y > 0.0f || pendepth.y < 0.0f)
+			if (abs(pendepth.y) > abs(posadjust.y))
 			{
 				posadjust.y += pendepth.y;
 				yDivs++;
 			}
-			if (pendepth.z > 0.0f || pendepth.z < 0.0f)
+			if (abs(pendepth.z) > abs(posadjust.z))
 			{
 				posadjust.z += pendepth.z;
 				zDivs++;
-			}/*
-			 if ((posadjust.y * posadjust.y) / k < pendepth.y * pendepth.y)
-			 posadjust.y += pendepth.y;
-			 if (abs(posadjust.z) < abs(pendepth.z))
-			 posadjust.z += pendepth.z;
-			 */
-			 //posadjust += pendepth;
+			}
 		}
 
 		if (xDivs > 1)
@@ -220,22 +184,7 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 			posadjust.y /= yDivs;
 		if (zDivs > 1)
 			posadjust.z /= zDivs;
-		
-		//l /= divs;
 
-		//posadjust = (normalize(posadjust) * l);
-
-		//ceiling = true;
-		
-		//	grounded = true;
-		/*posadjust = normalize(posadjust);// /= collisionNormalSize;
-		for (int k = 0; k < collisionNormalSize; k++)
-		{
-		posadjust *= collisionNormals[k].w;
-		}*/
-		// this is for air only since grounded will set the vel to 0 later
-		// the dt * 0.5 is supposed to remove almost all velocity in that dir
-		// while + posajust w/o  /dt  will remove it slower
 		posadjust = posadjust * 0.99f;
 		
 		vel += posadjust;
@@ -244,7 +193,7 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 			posadjust.y = 0;
 			grounded = false;
 		}
-		// / dt * 0.5f;
+
 		pos += posadjust;
 
 		if (posadjust.y < 0.00001f && posadjust.y > -0.00001f)
@@ -670,7 +619,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					{
 						reloadCurrentWeapon();
 					}
-					int areWeScrolling = i->getScrollValue();
+					areWeScrolling = i->getScrollValue();
 
 					if (areWeScrolling < 0.0 || i->justPressed(GLFW_KEY_1))
 					{
@@ -780,10 +729,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			} // end of player input
 		} // end of lock control check
 
-		if (pos.y < -5.0f && isLocalPlayer)	//If we fall through the map we die
-		{
-			role.setHealth(0);
-		}
+		
 
 		//if (i->justPressed(GLFW_KEY_O))
 			//role.setHealth(0);
@@ -1529,4 +1475,14 @@ void Player::CoolDownJump(float dt)
 bool Player::CheckAbleToJumpSound()
 {
 	return jumpSoundAble;
+}
+
+bool Player::allahuAkhbar()
+{
+	if (pos.y < -5.0f && !isDead)	//If we fall through the map we die
+	{
+		role.setHealth(0);
+		return true;
+	}
+	return false;
 }

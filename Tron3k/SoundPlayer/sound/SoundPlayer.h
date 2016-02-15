@@ -38,9 +38,8 @@ private:
 	sf::Sound destroyerStop;
 	sf::Sound destroyerStart;
 	sf::Sound bruteSteps;
-	sf::Sound melee;
-	sf::Sound melee2;
-	sf::Sound melee3;
+	sf::Sound melee[10];
+	
 	sf::SoundBuffer soundList[SOUNDS::nrOfSounds];
 	string musicList[MUSIC::nrOfMusic];
 	bool fading = false;

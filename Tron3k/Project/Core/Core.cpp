@@ -188,7 +188,7 @@ void Core::update(float dt)
 			}
 		}
 
-		if (console.getInChatMode() == false)
+		if (console.getInChatMode() == false && cheatsOn)
 		{
 			if (i->justPressed(GLFW_KEY_7))
 			{
@@ -1073,6 +1073,13 @@ void Core::roamHandleCmds(std::string com)
 			console.printMsg("/sens <positive decimal number>", "", ' ');
 
 		}
+		else if (token == "/cheats")
+		{
+			if (cheatsOn)
+				cheatsOn = false;
+			else
+				cheatsOn = true;
+		}
 		else if (token == "/name")
 		{
 			ss >> token;
@@ -1261,6 +1268,13 @@ void Core::clientHandleCmds(std::string com)
 			console.printMsg("/free (turns freecam on/off)", "", ' ');
 			console.printMsg("/spec # (spectate player id)", "", ' ');
 			console.printMsg("/rs  show render settings", "", ' ');
+		}
+		else if (token == "/cheats")
+		{
+			if (cheatsOn)
+				cheatsOn = false;
+			else
+				cheatsOn = true;
 		}
 		if (token == "/ready")
 		{
