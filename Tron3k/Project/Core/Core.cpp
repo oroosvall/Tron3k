@@ -684,7 +684,6 @@ void Core::upClient(float dt)
 				uiManager->setMenu(InGameUI::GUI);
 
 				localp->setLockedControls(false);
-				game->setCursorInvisible(true);
 
 				uiManager->clearText(scaleAndText::HP);
 				uiManager->clearText(scaleAndText::Ammo);
@@ -1176,8 +1175,6 @@ void Core::roamHandleCmds(std::string com)
 				shitBool = true;
 
 				cursorInvisible = true;
-				if (game != nullptr)
-					game->setCursorInvisible(cursorInvisible);
 
 				Player* local = game->getPlayer(game->GetLocalPlayerId());
 				KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
