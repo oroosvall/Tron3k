@@ -30,8 +30,8 @@ enum UISets
 
 enum TeamColors
 {
-	TeamOne,
-	TeamTwo
+	TeamOne = 0,
+	TeamTwo = 1
 };
 
 
