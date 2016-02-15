@@ -1912,7 +1912,7 @@ void Core::renderWorld(float dt)
 			{
 				Player* p = game->getPlayer(c);
 
-				if (p == nullptr)
+				if (p == nullptr || !p->isAlive())
 					continue;
 
 				int local = game->GetLocalPlayerId();
