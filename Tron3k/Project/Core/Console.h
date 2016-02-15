@@ -58,6 +58,7 @@ public:
 	void discardCommandAndLastMsg();
 
 	void setInChatMode(bool chatMode) { inChatMode = chatMode; };
+	void setScope(char s) { scope = s; };
 	std::string pollLatest()
 	{
 		return msg;

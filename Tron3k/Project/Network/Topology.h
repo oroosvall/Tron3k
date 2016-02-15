@@ -732,9 +732,6 @@ public:
 				uiPtr->setFirstMenuSet(false);
 				uiPtr->setMenu(0);
 
-				gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->setLockedControls(false);
-				gamePtr->setCursorInvisible(true);
-
 				Player* local = gamePtr->getPlayer(gamePtr->GetLocalPlayerId());
 				KingOfTheHill* koth = (KingOfTheHill*)gamePtr->getGameMode();
 

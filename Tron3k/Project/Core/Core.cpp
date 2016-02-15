@@ -127,15 +127,10 @@ void Core::update(float dt)
 
 	bool chatMode = console.getInChatMode();
 
-	if (cursorInvisible != chatMode)
-	{
-		cursorInvisible = chatMode;
-		if (chatMode)
-			glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-		else
-			glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-		renderPipe->setChatTypeMessage("");
-	}
+	if (!cursorInvisible)
+		glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	else
+		glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
 	glfwPollEvents();
 
@@ -150,7 +145,24 @@ void Core::update(float dt)
 	else
 		menuNameKeyInputUpdate(); //Updates to check input for the name window
 
-	if (cursorInvisible && renderPipe)
+	/*if (!console.getInChatMode())
+	{
+		if (i->justPressed(GLFW_KEY_ENTER))
+		{
+			console.setInChatMode(true);
+			if (i->getKeyInfo(GLFW_KEY_LEFT_SHIFT))
+				console.setScope('A');
+		}
+	}
+	else
+	{
+		if (i->justPressed(GLFW_KEY_ENTER))
+		{
+			cursorInvisible = true;
+		}
+	}*/
+
+	if (chatMode && renderPipe)
 	{
 		if (cursorBlink > 0.5f)
 		{
@@ -165,8 +177,25 @@ void Core::update(float dt)
 	{
 		renderPipe->setChatHistoryText(console.getHistory());
 	}
+
+
+
 	if (game)
 	{
+		if (!console.getInChatMode() && current != SERVER && cursorInvisible)
+		{
+			game->getPlayer(game->GetLocalPlayerId())->setLockedControls(false);
+		}
+		else if (console.getInChatMode() && current != SERVER)
+		{
+			game->getPlayer(game->GetLocalPlayerId())->setLockedControls(true);
+		}
+		
+		if (!game->getPlayer(game->GetLocalPlayerId())->getLockedControls())
+		{
+			cursorInvisible = true;
+		}
+
 		if (console.getInChatMode() == false)
 		{
 			if (i->justPressed(GLFW_KEY_7))
@@ -267,6 +296,7 @@ void Core::upMenu(float dt)
 	double tX = (x / (double)winX) * 2 - 1.0; // (x/ResolutionX) * 2 - 1
 	double tY = (-y / (double)winY) * 2 + 1.0; // (y/ResolutionY) * 2 - 1
 
+	cursorInvisible = false;
 	uiManager->menuRender();
 	
 	if (i->justPressed(GLFW_MOUSE_BUTTON_LEFT))//button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
@@ -284,7 +314,6 @@ void Core::upMenu(float dt)
 			subState = 0;
 
 			uiManager->setHoverCheckBool(true);
-			cursorInvisible = false;
 			break;
 		case 1: //Multiplayer -> multiplayer window
 			uiManager->setMenu(1);
@@ -565,7 +594,6 @@ void Core::upClient(float dt)
 			me->setName(_name);
 			game->getPlayer(game->GetLocalPlayerId())->setLockedControls(true);
 			showTeamSelect();
-			game->setCursorInvisible(false);
 
 			subState++;
 			HUD.specialMeter = 100.0f;
@@ -650,9 +678,6 @@ void Core::upClient(float dt)
 				uiManager->setOpenedGuiBool(true);
 				uiManager->setFirstMenuSet(false);
 				uiManager->setMenu(0);
-
-				localp->setLockedControls(false);
-				game->setCursorInvisible(true);
 
 				uiManager->clearText(0);
 				uiManager->clearText(1);
@@ -1141,11 +1166,6 @@ void Core::roamHandleCmds(std::string com)
 
 				justAFrameCounterActivated = true;
 				shitBool = true;
-
-				
-				cursorInvisible = true;
-				if (game != nullptr)
-					game->setCursorInvisible(cursorInvisible);
 
 				Player* local = game->getPlayer(game->GetLocalPlayerId());
 				KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
@@ -2212,9 +2232,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 				break;
 			case 40: //Continue
 				uiManager->backToGui();
-				game->getPlayer(game->GetLocalPlayerId())->setLockedControls(false);
 				cursorInvisible = false;
-				game->setCursorInvisible(cursorInvisible);
 				break;
 			case 41: //Settings
 				break;

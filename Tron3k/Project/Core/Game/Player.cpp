@@ -524,14 +524,6 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			if (animPrimary == false)
 				anim_third_current = AnimationState::third_secondary_idle;
 
-		if (i->justPressed(GLFW_KEY_ENTER))
-		{
-			if (lockControls)
-				lockControls = false;
-			else
-				lockControls = true;
-		}
-
 		//if (noclip)
 		//	vel *= 0;
 

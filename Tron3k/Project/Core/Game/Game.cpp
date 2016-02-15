@@ -165,9 +165,6 @@ void Game::update(float dt)
 		GetSound()->setVolumeMusic(musicVolumeForMenu);
 	}
 
-	if(gameState != SERVER)
-		console->setInChatMode(playerList[localPlayerId]->getLockedControls());
-
 	if (gamemode->getType() == GAMEMODE_TYPE::KOTH && gameState == Gamestate::SERVER)
 	{
 		KingOfTheHill* k = (KingOfTheHill*)gamemode;
@@ -2132,14 +2129,4 @@ void Game::clearAllPlayerKD()
 		if (playerList[c] != nullptr)
 			playerList[c]->clearKD();
 	}
-}
-
-void Game::setCursorInvisible(bool invisible)
-{
-	cursorInvisible = invisible;
-}
-
-bool Game::getCursorInvisible()
-{
-	return cursorInvisible;
 }
