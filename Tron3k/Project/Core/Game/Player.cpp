@@ -678,8 +678,9 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					{
 						reloadCurrentWeapon();
 					}
+					int areWeScrolling = i->getScrollValue();
 
-					if (int(i->getScrollValue() > 0.0) || i->justPressed(GLFW_KEY_1))
+					if (areWeScrolling != 0.0 || i->justPressed(GLFW_KEY_1))
 					{
 						if (role.getWeaponNRequiped() != 0)
 						{
@@ -694,10 +695,11 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 							}
 
 							animSwapActive = true;
+							areWeScrolling = 0.0;
 						}
 					}
 
-					if (int(i->getScrollValue() < 0.0) || i->justPressed(GLFW_KEY_2))
+					if (areWeScrolling != 0.0 || i->justPressed(GLFW_KEY_2))
 					{
 						if (role.getWeaponNRequiped() != 1)
 						{
