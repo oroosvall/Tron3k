@@ -36,9 +36,9 @@ void KingOfTheHill::init(Console* cptr, Game* gptr)
 
 	teamOneScore = 0;
 	teamTwoScore = 0;
-	winScore = 2;
+	winScore = 5;
 
-	tokensPerTeam = 20;
+	tokensPerTeam = 5;
 
 	tickForCaptureScoring = 15.0f;
 	timerModifierForCaptureScoring = tickForCaptureScoring;
@@ -89,89 +89,32 @@ GAMEMODE_MSG KingOfTheHill::capturePointScoring()
 
 GAMEMODE_MSG KingOfTheHill::roundScoring()
 {
-	/*
-	Antal spelare på kontrollpunkten. Har ena laget fler spelare på punkten vinner detta laget.
-	*/
+	GAMEMODE_MSG ret = OBJECTIVE_DRAW;
 
-	if (teamOnePlayersAtPoint < teamTwoPlayersAtPoint)
-	{
-		teamTwoScore++;
-		if (teamTwoScore == winScore)
-			return GAMEMODE_MSG::MATCH_WIN_TEAM2;
-		return GAMEMODE_MSG::ROUND_WIN_TEAM2;
-	}
-	if (teamTwoPlayersAtPoint < teamOnePlayersAtPoint)
+	if (teamOnePlayersAtPoint == teamTwoPlayersAtPoint)
 	{
 		teamOneScore++;
-		if (teamOneScore == winScore)
-			return GAMEMODE_MSG::MATCH_WIN_TEAM1;
-		return GAMEMODE_MSG::ROUND_WIN_TEAM1;
+		teamTwoScore++;
 	}
-
-	/*
-		Vinnande laget definieras av.
-		Spawn tokens kvar. Har ett lag spawn tokens kvar vinner detta laget.
-	*/
-
-	if (teamOneSpawnTokens > 0)
-	{
-		teamOneScore++;
-		if (teamOneScore == winScore)
-			return GAMEMODE_MSG::MATCH_WIN_TEAM1;
-		return GAMEMODE_MSG::ROUND_WIN_TEAM1;
-	}
-	else if (teamTwoSpawnTokens > 0)
+	else if (teamOnePlayersAtPoint < teamTwoPlayersAtPoint)
 	{
 		teamTwoScore++;
-		if (teamTwoScore == winScore)
-			return GAMEMODE_MSG::MATCH_WIN_TEAM2;
-		return GAMEMODE_MSG::ROUND_WIN_TEAM2;
+		ret = OBJECTIVE_TEAM2;
 	}
-
-	/*
-		Spelare vid liv. Har ena laget fler spelare vid liv vinner detta laget.
-	*/
-
-	vector<int>* team1ids = gamePtr->getTeamConIds(1);
-	int T1alive = 0;
-	for (int c = 0; c < team1ids->size(); c++)
-	{
-		if (gamePtr->getPlayer(team1ids->at(c))->isAlive())
-			T1alive++;
-	}
-
-	vector<int>* team2ids = gamePtr->getTeamConIds(2);
-	int T2alive = 0;
-	for (int c = 0; c < team2ids->size(); c++)
-	{
-		if (gamePtr->getPlayer(team2ids->at(c))->isAlive())
-			T2alive++;
-	}
-
-	if (T1alive < T2alive)
-	{
-		teamTwoScore++;
-		if (teamTwoScore == winScore)
-			return GAMEMODE_MSG::MATCH_WIN_TEAM2;
-		return GAMEMODE_MSG::ROUND_WIN_TEAM2;
-	}
-	else if (T1alive > T2alive)
+	else if (teamTwoPlayersAtPoint < teamOnePlayersAtPoint)
 	{
 		teamOneScore++;
-		if (teamOneScore == winScore)
-			return GAMEMODE_MSG::MATCH_WIN_TEAM1;
-		return GAMEMODE_MSG::ROUND_WIN_TEAM1;
+		ret = OBJECTIVE_TEAM1;
 	}
 
-	/*
-		Lika! Båda lagen vinner rundan.
-	*/
-	teamOneScore++;
-	teamTwoScore++;
 	if (teamOneScore == winScore && teamTwoScore == winScore)
-		return GAMEMODE_MSG::MATCH_DRAW;
-	return GAMEMODE_MSG::ROUND_DRAW;
+		ret = MATCH_DRAW;
+	else if (teamOneScore == winScore)
+		ret = MATCH_WIN_TEAM1;
+	else if (teamTwoScore == winScore)
+		ret = MATCH_WIN_TEAM2;
 
+	return ret;
 }
 
 GAMEMODE_MSG KingOfTheHill::update(float dt)
@@ -267,16 +210,19 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 		{
 			consolePtr->printMsg("OVERTIME BEGINS", "System", 'S');
 			state = OVERTIME;
-			timer = 31.0f;
+			timer = 46.0f;
+			timerModifierForCaptureScoring = 30.0f;
 		}
 		break;
 
 		//When OVERTIME begins, we count down from 30. We also check for win conditions.
 	case OVERTIME:
+	{
 		timer -= dt;
+		bool allDead = false;
 		if (teamOneSpawnTokens == 0)
 		{
-			bool allDead = true;
+			allDead = true;
 			int pID = -1;
 			bool pIsAlive = true;
 			for (int c = 0; c < teamOnePlayers.size() && allDead; c++)
@@ -294,15 +240,20 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			}
 			if (allDead)
 			{
-				msg = GAMEMODE_MSG::ROUND_WIN_TEAM2;
-				teamTwoScore++;
-				state = ENDROUND;
-				timer = 4.0f;
+				//msg = GAMEMODE_MSG::ROUND_WIN_TEAM2;
+				if (timer > 30.0f)
+					teamTwoScore += 3;
+				else if (timer > 15.0f)
+					teamTwoScore += 2;
+				else
+					teamTwoScore++;
+				if (teamTwoScore >= winScore)
+					msg = MATCH_WIN_TEAM2;
 			}
 		}
 		if (teamTwoSpawnTokens == 0)
 		{
-			bool allDead = true;
+			allDead = true;
 			int pID = -1;
 			bool pIsAlive = true;
 			for (int c = 0; c < teamTwoPlayers.size() && allDead; c++)
@@ -320,19 +271,31 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			}
 			if (allDead)
 			{
-				msg = GAMEMODE_MSG::ROUND_WIN_TEAM1;
-				teamOneScore++;
-				state = ENDROUND;
-				timer = 4.0f;
+				//msg = GAMEMODE_MSG::ROUND_WIN_TEAM1;
+				if (timer > 30.0f)
+					teamOneScore += 3;
+				else if (timer > 15.0f)
+					teamOneScore += 2;
+				else
+					teamOneScore++;
+				if (teamOneScore >= winScore)
+					msg = MATCH_WIN_TEAM1;
 			}
 		}
-		if (timer < FLT_EPSILON)
+
+		if (timer - timerModifierForCaptureScoring < 0.0f) //15 seconds have passed and we should now proceed with scoring for capture point control
+		{
+			msg = roundScoring();
+			timerModifierForCaptureScoring -= tickForCaptureScoring;
+		}
+
+		if (timer < FLT_EPSILON || msg == MATCH_DRAW || msg == MATCH_WIN_TEAM1 || msg == MATCH_WIN_TEAM2 || allDead)
 		{
 			state = ENDROUND;
-			msg = roundScoring();
 			timer = 4.0f;
 		}
-		break;
+	}
+	break;
 
 		//After the ROUND ends, ENDROUND is the buffer time between end of a round and the PREROUND
 	case ENDROUND:
@@ -467,7 +430,7 @@ bool KingOfTheHill::playerRespawn(int conId)
 	return false;
 }
 
-void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int onCap2, int capPoint, float timer, KOTHSTATE state, GAMEMODE_MSG serverMsg)
+void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int onCap2, int capPoint, float timer, int score1, int score2, KOTHSTATE state, GAMEMODE_MSG serverMsg)
 {
 	if (respawn1 == 5 && teamOneSpawnTokens !=5 && GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
 	{
@@ -485,6 +448,8 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 	teamOnePlayersAtPoint = onCap1;
 	teamTwoPlayersAtPoint = onCap2;
 	capturePoint = capPoint;
+	teamOneScore = score1;
+	teamTwoScore = score2;
 	if (serverState != state)
 	{
 		if (state == WARMUP)
@@ -509,6 +474,9 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 		}
 		else if (state == PREROUND)
 		{
+			if (teamOneScore == 0 || teamTwoScore == 0)
+				gamePtr->clearAllPlayerKD();
+
 			if (GetSound())
 				GetSound()->setVolumeSound(0);
 
@@ -581,7 +549,7 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 			fifteenPlayed = false;
 			round++;
 			slowdownTime = true;
-			if (serverMsg == GAMEMODE_MSG::ROUND_WIN_TEAM1)
+			/*if (serverMsg == GAMEMODE_MSG::ROUND_WIN_TEAM1)
 			{
 				consolePtr->printMsg("ALPHA WINS THE ROUND", "System", 'S');
 				teamOneScore++;
@@ -615,6 +583,7 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 				teamTwoScore++;
 				round++;
 			}
+			*/
 		}
 		else if (state == ENDMATCH)
 		{
@@ -622,7 +591,6 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 			if (serverMsg == GAMEMODE_MSG::MATCH_WIN_TEAM1)
 			{
 				consolePtr->printMsg("ALPHA WINS THE MATCH", "System", 'S');
-				teamOneScore++;
 				if (GetSoundActivated() && gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
 				{
 					GetSound()->playUserGeneratedSound(SOUNDS::announcerYouWin);
@@ -635,7 +603,6 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 			else if (serverMsg == GAMEMODE_MSG::MATCH_WIN_TEAM2)
 			{
 				consolePtr->printMsg("BETA WINS THE MATCH", "System", 'S');
-				teamTwoScore++;
 				if (GetSoundActivated() && gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
 				{
 					GetSound()->playUserGeneratedSound(SOUNDS::announcerYouLose);
