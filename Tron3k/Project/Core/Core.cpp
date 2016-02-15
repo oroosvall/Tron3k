@@ -125,8 +125,6 @@ void Core::update(float dt)
 	if (recreate)
 		createWindow(winX, winY, fullscreen);
 
-	bool chatMode = console.getInChatMode();
-
 	if (!cursorInvisible)
 		glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	else
@@ -162,6 +160,7 @@ void Core::update(float dt)
 		}
 	}*/
 
+	bool chatMode = console.getInChatMode();
 	if (chatMode && renderPipe)
 	{
 		if (cursorBlink > 0.5f)
@@ -188,18 +187,21 @@ void Core::update(float dt)
 				cursorInvisible = true;
 			if (game->getPlayer(game->GetLocalPlayerId()) != nullptr)
 			{
-				if (!console.getInChatMode() && current != SERVER && cursorInvisible)
+				if (current != SERVER)
 				{
-					game->getPlayer(game->GetLocalPlayerId())->setLockedControls(false);
-				}
-				else if (console.getInChatMode() && current != SERVER)
-				{
-					game->getPlayer(game->GetLocalPlayerId())->setLockedControls(true);
-				}
+					if (!console.getInChatMode() && cursorInvisible)
+					{
+						game->getPlayer(game->GetLocalPlayerId())->setLockedControls(false);
+					}
+					else if (console.getInChatMode())
+					{
+						game->getPlayer(game->GetLocalPlayerId())->setLockedControls(true);
+					}
 
-				if (!game->getPlayer(game->GetLocalPlayerId())->getLockedControls())
-				{
-					cursorInvisible = true;
+					if (!game->getPlayer(game->GetLocalPlayerId())->getLockedControls())
+					{
+						cursorInvisible = true;
+					}
 				}
 			}
 		}
