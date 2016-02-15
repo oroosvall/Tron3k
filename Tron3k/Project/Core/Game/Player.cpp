@@ -181,12 +181,20 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 				//posadjust = pendepth;
 			
 			if (abs(pendepth.x) > abs(posadjust.x))
+			{
 				posadjust.x += pendepth.x;
+				xDivs++;
+			}
 			if (abs(pendepth.y) > abs(posadjust.y))
+			{
 				posadjust.y += pendepth.y;
+				yDivs++;
+			}
 			if (abs(pendepth.z) > abs(posadjust.z))
+			{
 				posadjust.z += pendepth.z;
-				
+				zDivs++;
+			}
 		//	posadjust += normalize(pendepth);
 			//l += length(pendepth);
 			//divs++;

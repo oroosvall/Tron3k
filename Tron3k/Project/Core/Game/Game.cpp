@@ -159,7 +159,7 @@ vector<int>* Game::getTeamConIds(int team)
 void Game::update(float dt)
 {
 	//some things need to be done before movement, some after
-	if (GetSoundActivated() && musicVolumeForMenu > 0 &&  GetSound()->getFading())
+	if (GetSoundActivated() && musicVolumeForMenu > 0 && GetSound()->getFading())
 	{
 		musicVolumeForMenu--;
 		GetSound()->setVolumeMusic(musicVolumeForMenu);
@@ -248,7 +248,7 @@ void Game::update(float dt)
 					allEffectTimeOuts.push_back(toi);
 				}
 			}
-			
+
 			if (effects[i][c]->desynced())
 			{
 				int arraypos = -1;
@@ -305,7 +305,7 @@ void Game::update(float dt)
 		}
 	}
 	lastDT = dt;
-	
+
 }
 
 void Game::playerUpdate(int conid, float dt)
@@ -385,7 +385,7 @@ void Game::createPlayer(Player* p, int conID, int hp, int role, bool isLocal)
 	if (getGameMode()->getType() == GAMEMODE_TYPE::KOTH)
 	{
 		KingOfTheHill* k = (KingOfTheHill*)getGameMode();
-		if(k->getState() == WARMUP)
+		if (k->getState() == WARMUP)
 			console->printMsg("Warmup. Type /ready to start.", "System", 'S');
 	}
 	playerList[conID] = new Player();
@@ -525,7 +525,7 @@ void Game::checkFootsteps(float dt)
 					if (GetSoundActivated())
 						GetSound()->playFootsteps(playerList[i]->getRole()->getRole(), pos.x, pos.y, pos.z);
 				}
-				
+
 			}
 
 			if (!playerList[i]->CheckAbleToJumpSound())
@@ -542,11 +542,11 @@ void Game::checkFootsteps(float dt)
 			{
 				glm::vec3 pos;
 				pos = playerList[i]->getPos();
-					playerList[i]->SetJumpCoolDown(100.0f);
+				playerList[i]->SetJumpCoolDown(100.0f);
 
-					if (GetSoundActivated())
-						GetSound()->playJump(playerList[i]->getRole()->getRole(), pos.x, pos.y, pos.z);
-				
+				if (GetSoundActivated())
+					GetSound()->playJump(playerList[i]->getRole()->getRole(), pos.x, pos.y, pos.z);
+
 
 			}
 		}
@@ -642,19 +642,19 @@ void Game::checkPlayerVEffectCollision()
 			if (((LightwallEffect*)effects[EFFECT_TYPE::LIGHT_WALL][c])->getCollidable() || localPlayerId != pid)
 			{
 				collNormalWalls = physics->checkPlayerVEffectCollision(local->getPos(), EFFECT_TYPE::LIGHT_WALL, eid);
-				if(collNormalWalls != vec4(0,0,0,0))
-				playerList[localPlayerId]->addEffectCollisionNormal(collNormalWalls);
+				if (collNormalWalls != vec4(0, 0, 0, 0))
+					playerList[localPlayerId]->addEffectCollisionNormal(collNormalWalls);
 			}
 
 		}
 		size = (int)effects[EFFECT_TYPE::THUNDER_DOME].size();
-		for (int c = 0; c < size ; c++)
+		for (int c = 0; c < size; c++)
 		{
 			int eid = -1, pid = -1;
 			effects[EFFECT_TYPE::THUNDER_DOME][c]->getId(pid, eid);
 			collNormalDomes = physics->checkPlayerVEffectCollision(local->getPos(), EFFECT_TYPE::THUNDER_DOME, eid);
 			if (collNormalDomes != vec4(0, 0, 0, 0))
-			playerList[localPlayerId]->addEffectCollisionNormal(collNormalDomes);
+				playerList[localPlayerId]->addEffectCollisionNormal(collNormalDomes);
 			//this is to be changed, we need to calculate a proper normal for the dome
 
 			//vec3 n = vec3(collNormalDomes[0]);
@@ -787,7 +787,7 @@ void Game::checkPlayerVWorldCollision(float dt)
 	{
 		vec3 posadjust = vec3(0);
 		//lower with distance from eyes to center
-		std::vector<vec4> cNorms = physics->PlayerVWorldCollision(playerList[localPlayerId]->getPos() - (vec3(0, playerList[localPlayerId]->getRole()->getBoxModifier(), 0)));
+		std::vector<vec4> cNorms = physics->PlayerVWorldCollision(playerList[localPlayerId]->getPos() - vec3(0, playerList[localPlayerId]->getRole()->getBoxModifier(), 0), playerList[localPlayerId]->getDir(), playerList[localPlayerId]->getVelocity(), dt);
 
 
 		//if we collided with something
@@ -848,7 +848,7 @@ void Game::checkBulletVEffectCollision(float dt)
 					if (((LightwallEffect*)effects[EFFECT_TYPE::LIGHT_WALL][c])->getCollidable())
 					{
 						vec3 bPos = bullets[b][j]->getPos();
-						collNormalWalls = physics->checkBulletVEffectCollision(bPos,	bullets[b][j]->getVel(), bullets[b][j]->getDir(), EFFECT_TYPE::LIGHT_WALL, eid, dt);
+						collNormalWalls = physics->checkBulletVEffectCollision(bPos, bullets[b][j]->getVel(), bullets[b][j]->getDir(), EFFECT_TYPE::LIGHT_WALL, eid, dt);
 						if (collNormalWalls != vec4(0, 0, 0, 0))
 						{
 							BulletHitEffectInfo bi;
@@ -858,7 +858,7 @@ void Game::checkBulletVEffectCollision(float dt)
 							bi.hitPos = bPos;
 							bi.hitDir = bullets[b][j]->getDir();
 							bi.collisionNormal = collNormalWalls;
-							allBulletHitsOnEffects.push_back(bi);				
+							allBulletHitsOnEffects.push_back(bi);
 						}
 					}
 
@@ -881,7 +881,7 @@ void Game::checkBulletVEffectCollision(float dt)
 						bi.collisionNormal = collNormalDomes;
 						allBulletHitsOnEffects.push_back(bi);
 					}
-						//glm::vec3 vel = bullets[b][j]->getPos()->getVelocity();
+					//glm::vec3 vel = bullets[b][j]->getPos()->getVelocity();
 				}
 			}
 		}
@@ -1041,7 +1041,7 @@ void Game::getLatestWeaponFired(int localPlayer, WEAPON_TYPE &wt, int &bulletId)
 
 void Game::addBulletToList(int conID, int teamId, int bulletId, BULLET_TYPE bt, glm::vec3 pos, glm::vec3 dir)
 {
-	
+
 	Bullet* b = nullptr;
 	Player* p = playerList[conID];
 	glm::vec3 rightV = normalize(cross(dir, vec3(0, 1, 0)));
@@ -1059,7 +1059,7 @@ void Game::addBulletToList(int conID, int teamId, int bulletId, BULLET_TYPE bt, 
 	case BULLET_TYPE::PLASMA_SHOT:
 		upV *= -0.17;
 		dirMod *= 0.1f;
-		pos += upV +dirMod;
+		pos += upV + dirMod;
 		b = new PlasmaShot(pos, dir, conID, bulletId, teamId);
 		break;
 	case BULLET_TYPE::GRENADE_SHOT:
@@ -1114,7 +1114,7 @@ void Game::addBulletToList(int conID, int teamId, int bulletId, BULLET_TYPE bt, 
 		break;
 	case BULLET_TYPE::MELEE_ATTACK:
 		b = new MeleeAttack(vec3(999.0f, 999.0f, 999.0f), dir, conID, bulletId, teamId, p);
-	break;
+		break;
 	}
 
 	bullets[bt].push_back(b);
@@ -1137,7 +1137,7 @@ void Game::handleWeaponFire(int conID, int teamId, int bulletId, WEAPON_TYPE wea
 				else
 					GetSound()->playExternalSound(SOUNDS::soundEffectPusleRifleShot, pos.x, pos.y, pos.z);
 			}
-				
+
 		addBulletToList(conID, teamId, bulletId, BULLET_TYPE::PULSE_SHOT, pos, dir);
 		break;
 
@@ -1591,7 +1591,7 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 			{
 				if (hi.et == EFFECT_TYPE::HEALTHPACK)
 					GetSound()->playExternalSound(SOUNDS::soundEffectHP, pos.x, pos.y, pos.z);
-				else if(!p->isLocal())
+				else if (!p->isLocal())
 					GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHit, pos.x, pos.y, pos.z);
 				else
 					GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHitSelf, pos.x, pos.y, pos.z);
@@ -1638,7 +1638,7 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 		case EFFECT_TYPE::BATTERY_SLOW:
 			break;
 		case EFFECT_TYPE::HEALTHPACK:
-			if(gameState == SERVER)
+			if (gameState == SERVER)
 				p->healing(25);
 			if (theEffect != nullptr)
 				removeEffect(EFFECT_TYPE::HEALTHPACK, effectPosInArray);
@@ -1660,7 +1660,7 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 			p->IncreaseDeaths();
 			p->ZeroFrags();
 			p->addDeath();
-			
+
 			if (playerList[hi.effectPID]->GetConsecutiveFrags() == 3 && !playerList[hi.effectPID]->killingSpreeDone)
 			{
 				console->printMsg(playerList[hi.effectPID]->getName() + " is on a killing spree!", "System", 'S');
@@ -1717,15 +1717,15 @@ void Game::bounceBullet(BulletHitWorldInfo hwi, Bullet* theBullet)
 	if (combinedNormal2 != glm::vec3(0, 0, 0))
 	{
 		combinedNormal2 = normalize(combinedNormal2);
-		
+
 		vec3 dir = normalize(reflect(theBullet->getDir(), combinedNormal2));
 
 		//vec3 dirn = vec3(theBullet->getDir());
 		//dirn = normalize(dirn);
-		
+
 		float d = dot(dir, combinedNormal2);
 
-		if(d < 0.3f)
+		if (d < 0.3f)
 			dir = normalize((dir * (1 - d)) + (combinedNormal2 * d));
 		/*
 		//float dotp = dot(dirn, obb->planes[n].n);
@@ -1753,8 +1753,8 @@ void Game::bounceBullet(BulletHitWorldInfo hwi, Bullet* theBullet)
 			t.y = dir.y;
 			t.z = dir.z;
 		}*/
-		
-		
+
+
 		theBullet->setDir(dir);
 
 		//use pendepth to set a new pos 
@@ -1787,81 +1787,81 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 			vec3 temp;
 			vec3 vel = b->getVel();
 
-				switch (hi.bt)
-				{
-				case BULLET_TYPE::CLUSTER_GRENADE:
-					if (GetSoundActivated())
-						GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
-					vel *= 0.7f;
-					b->setVel(vel);
-					bounceBullet(hi, b);
-					if (b->getBounces() > 3)
-						removeBullet(hi.bt, arraypos);
-					temp = b->getDir();
-					temp.x *= 0.8f;
-					temp.y *= 0.6f;
-					temp.z *= 0.8f;
-					b->setDir(temp);
-					break;
-				case BULLET_TYPE::CLUSTERLING:
-					if (GetSoundActivated())
-						GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
-					vel *= 0.7f;
-					b->setVel(vel);
-					bounceBullet(hi, b);
-					temp = b->getDir();
-					temp.x *= 0.8f;
-					temp.y *= 0.6f;
-					temp.z *= 0.8f;
-					b->setDir(temp);
-					break;
-				case BULLET_TYPE::THERMITE_GRENADE:
-					if (GetSoundActivated())
-						GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
-					vel *= 0.7f;
-					b->setVel(vel);
-					bounceBullet(hi, b);
-					if (b->getBounces() > 3)
-						removeBullet(hi.bt, arraypos);
-					temp = b->getDir();
-					temp.x *= 0.8f;
-					temp.y *= 0.6f;
-					temp.z *= 0.8f;
-					b->setDir(temp);
-					break;
-				case BULLET_TYPE::VACUUM_GRENADE:
-					vel *= 0.7f;
-					b->setVel(vel);
-					bounceBullet(hi, b);
-					temp = b->getDir();
-					temp.x *= 0.8f;
-					temp.y *= 0.6f;
-					temp.z *= 0.8f;
-					b->setDir(temp);
-					break;
-				case BULLET_TYPE::DISC_SHOT:
-					if (GetSoundActivated())
-						GetSound()->playExternalSound(SOUNDS::soundEffectDiscBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
-					bounceBullet(hi, b);
-					break;
-				case BULLET_TYPE::GRENADE_SHOT:
-					if (GetSoundActivated())
-						GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeLauncherBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
-					vel *= 0.7f;
-					b->setVel(vel);
-					bounceBullet(hi, b);
-					temp = b->getDir();
-					temp.x *= 0.8f;
-					temp.y *= 0.6f;
-					temp.z *= 0.8f;
-					if (b->getBounces() > 3)
-						removeBullet(hi.bt, arraypos);
-					b->setDir(temp);
-					break;
-				default:
+			switch (hi.bt)
+			{
+			case BULLET_TYPE::CLUSTER_GRENADE:
+				if (GetSoundActivated())
+					GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+				vel *= 0.7f;
+				b->setVel(vel);
+				bounceBullet(hi, b);
+				if (b->getBounces() > 3)
 					removeBullet(hi.bt, arraypos);
-					break;
-				}
+				temp = b->getDir();
+				temp.x *= 0.8f;
+				temp.y *= 0.6f;
+				temp.z *= 0.8f;
+				b->setDir(temp);
+				break;
+			case BULLET_TYPE::CLUSTERLING:
+				if (GetSoundActivated())
+					GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+				vel *= 0.7f;
+				b->setVel(vel);
+				bounceBullet(hi, b);
+				temp = b->getDir();
+				temp.x *= 0.8f;
+				temp.y *= 0.6f;
+				temp.z *= 0.8f;
+				b->setDir(temp);
+				break;
+			case BULLET_TYPE::THERMITE_GRENADE:
+				if (GetSoundActivated())
+					GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+				vel *= 0.7f;
+				b->setVel(vel);
+				bounceBullet(hi, b);
+				if (b->getBounces() > 3)
+					removeBullet(hi.bt, arraypos);
+				temp = b->getDir();
+				temp.x *= 0.8f;
+				temp.y *= 0.6f;
+				temp.z *= 0.8f;
+				b->setDir(temp);
+				break;
+			case BULLET_TYPE::VACUUM_GRENADE:
+				vel *= 0.7f;
+				b->setVel(vel);
+				bounceBullet(hi, b);
+				temp = b->getDir();
+				temp.x *= 0.8f;
+				temp.y *= 0.6f;
+				temp.z *= 0.8f;
+				b->setDir(temp);
+				break;
+			case BULLET_TYPE::DISC_SHOT:
+				if (GetSoundActivated())
+					GetSound()->playExternalSound(SOUNDS::soundEffectDiscBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+				bounceBullet(hi, b);
+				break;
+			case BULLET_TYPE::GRENADE_SHOT:
+				if (GetSoundActivated())
+					GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeLauncherBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+				vel *= 0.7f;
+				b->setVel(vel);
+				bounceBullet(hi, b);
+				temp = b->getDir();
+				temp.x *= 0.8f;
+				temp.y *= 0.6f;
+				temp.z *= 0.8f;
+				if (b->getBounces() > 3)
+					removeBullet(hi.bt, arraypos);
+				b->setDir(temp);
+				break;
+			default:
+				removeBullet(hi.bt, arraypos);
+				break;
+			}
 		}
 	}
 }
@@ -2018,7 +2018,7 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 			addBulletToList(PID, parent->getTeam(), BID + 2, CLUSTERLING, parent->getPos(), lingDir);
 			lingDir.x = -lingDir.x;
 			addBulletToList(PID, parent->getTeam(), BID + 3, CLUSTERLING, parent->getPos(), lingDir);
-			
+
 			addEffectToList(PID, parent->getTeam(), BID, EFFECT_TYPE::EXPLOSION, parent->getPos(), 35, 6.0f);
 
 			if (GetSoundActivated())
@@ -2194,14 +2194,14 @@ void Game::decalAdd(BulletHitWorldInfo info, float rad)
 	decals_renderInfo[decalCounter].inten = 1.0f;
 	decals_renderInfo[decalCounter].normal = vec3(info.collisionNormal);
 	//for correct; pos = pos - collision.normal * (Bulletrad - pendepth)
-	decals_renderInfo[decalCounter].pos = info.hitPos -vec3(info.collisionNormal) * (rad -info.collisionNormal.w);
-	
+	decals_renderInfo[decalCounter].pos = info.hitPos - vec3(info.collisionNormal) * (rad - info.collisionNormal.w);
+
 	if (p->getTeam() == 1)
 		decals_renderInfo[decalCounter].color = TEAMONECOLOR;
 	else
 		decals_renderInfo[decalCounter].color = TEAMTWOCOLOR;
 
-		decalCounter++;
+	decalCounter++;
 }
 
 void Game::cullingPointvsRoom(glm::vec3* pos, int* arr_interIDs, int& interCount, int maxsize)
