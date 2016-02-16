@@ -116,6 +116,7 @@ public:
 	virtual glm::vec4 BulletVWorldCollision(glm::vec3 &bulletPos, vec3 bulletVel, vec3 bulletDir, float dt);
 	virtual glm::vec4 checkPlayerVEffectCollision(glm::vec3 playerPos, unsigned int eType, int eid);
 	virtual glm::vec4 checkBulletVEffectCollision(glm::vec3 &bulletPos, vec3 bulletVel, vec3 bulletDir, unsigned int eType, int eid, float dt);
+	virtual bool checkEffectVEffectCollision(unsigned int eType1, unsigned int eType2, int eid1, int eid2, int pid1, int pid2);
 	virtual bool checkPlayerVCaptureCollision(vec3 playerPos, int capID);
 
 	virtual float addGravity(float dt);
