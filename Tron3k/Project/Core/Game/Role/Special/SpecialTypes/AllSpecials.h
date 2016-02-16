@@ -8,5 +8,6 @@
 #include "Dash.h"
 #include "ThunderDome.h"
 #include "LightSpeedSpecial.h"
+#include "GrapplingHookSpecial.h"
 
 #endif

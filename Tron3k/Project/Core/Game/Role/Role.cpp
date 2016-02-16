@@ -145,7 +145,7 @@ void Role::loadRoleSpecifics(int _role)
 			role = 4;
 			specialAbility = new Lightwall(this);
 			specialAbility->init();
-			mobility = new MultiJump();
+			mobility = new GrapplingHookSpecial();
 			mobility->init();
 			consumable = new Consumable();
 			consumable->init(CONSUMABLE_TYPE::VACUUMGRENADE);

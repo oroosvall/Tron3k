@@ -13,6 +13,7 @@
 #include "ManipulatorBullets\BatterySpeedShot.h"
 #include "ManipulatorBullets\LinkShot.h"
 #include "ManipulatorBullets\VacuumGrenade.h"
+#include "ManipulatorBullets\GrapplingHook.h"
 
 #include "DestroyerBullets\CleanseBomb.h"
 #include "DestroyerBullets\PlasmaShot.h"

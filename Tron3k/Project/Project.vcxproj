@@ -49,6 +49,7 @@
     <ClCompile Include="Core\Game\Role\Role.cpp" />
     <ClCompile Include="Core\Game\Role\Special\Special.cpp" />
     <ClCompile Include="Core\Game\Role\Special\SpecialTypes\Dash.cpp" />
+    <ClCompile Include="Core\Game\Role\Special\SpecialTypes\GrapplingHookSpecial.cpp" />
     <ClCompile Include="Core\Game\Role\Special\SpecialTypes\HackingDartSpecial.cpp" />
     <ClCompile Include="Core\Game\Role\Special\SpecialTypes\LightSpeedSpecial.cpp" />
     <ClCompile Include="Core\Game\Role\Special\SpecialTypes\Lightwall.cpp" />
@@ -64,6 +65,7 @@
     <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\DestroyerBullets\PlasmaShot.cpp" />
     <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\BatterySlowShot.cpp" />
     <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\BatterySpeedShot.cpp" />
+    <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\GrapplingHook.cpp" />
     <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\LinkShot.cpp" />
     <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\VacuumGrenade.cpp" />
     <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\MobilityBullets\DiscShot.cpp" />
@@ -133,6 +135,7 @@
     <ClInclude Include="Core\Game\Role\Special\Special.h" />
     <ClInclude Include="Core\Game\Role\Special\SpecialTypes\AllSpecials.h" />
     <ClInclude Include="Core\Game\Role\Special\SpecialTypes\Dash.h" />
+    <ClInclude Include="Core\Game\Role\Special\SpecialTypes\GrapplingHookSpecial.h" />
     <ClInclude Include="Core\Game\Role\Special\SpecialTypes\HackingDartSpecial.h" />
     <ClInclude Include="Core\Game\Role\Special\SpecialTypes\LightSpeedSpecial.h" />
     <ClInclude Include="Core\Game\Role\Special\SpecialTypes\Lightwall.h" />
@@ -149,6 +152,7 @@
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\DestroyerBullets\PlasmaShot.h" />
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\BatterySlowShot.h" />
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\BatterySpeedShot.h" />
+    <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\GrapplingHook.h" />
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\LinkShot.h" />
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\VacuumGrenade.h" />
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\MobilityBullets\DiscShot.h" />

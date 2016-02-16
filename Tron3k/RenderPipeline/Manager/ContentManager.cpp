@@ -389,6 +389,7 @@ void ContentManager::renderBullet(int bid)
 	case BULLET_TYPE::GRENADE_SHOT:
 	case BULLET_TYPE::THERMITE_GRENADE:
 	case BULLET_TYPE::VACUUM_GRENADE:
+	case BULLET_TYPE::GRAPPLING_HOOK:
 		trapperConsume.draw();
 		break;
 	case BULLET_TYPE::DISC_SHOT:

@@ -1220,6 +1220,8 @@ void Game::addBulletToList(int conID, int teamId, int bulletId, BULLET_TYPE bt, 
 	case BULLET_TYPE::MELEE_ATTACK:
 		b = new MeleeAttack(vec3(999.0f, 999.0f, 999.0f), dir, conID, bulletId, teamId, p);
 		break;
+	case BULLET_TYPE::GRAPPLING_HOOK:
+		b = new GrapplingHook(pos, dir, conID, bulletId, teamId);
 	}
 
 	bullets[bt].push_back(b);
@@ -1542,6 +1544,11 @@ void Game::handleSpecialAbilityUse(int conID, int teamId, int sID, SPECIAL_TYPE 
 			else
 				GetSound()->playExternalSound(SOUNDS::soundEffectBruteDash, pos.x, pos.y, pos.z);
 		}
+	}
+	break;
+	case SPECIAL_TYPE::GRAPPLINGHOOKSPECIAL:
+	{
+		addBulletToList(conID, teamId, 0, BULLET_TYPE::GRAPPLING_HOOK, pos, dir);
 	}
 	break;
 	}
@@ -2095,6 +2102,15 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 				temp.z *= 0.8f;
 
 				b->setDir(temp);
+				break;
+			case BULLET_TYPE::GRAPPLING_HOOK:
+				temp = normalize(b->getPos() - playerList[hi.bulletPID]->getPos());
+				temp.y += 2.0f;
+				temp*= 4.0f;
+				playerList[hi.bulletPID]->setVelocity(temp);
+				playerList[hi.bulletPID]->setGrounded(false);
+
+				removeBullet(hi.bt, arraypos);
 				break;
 			default:
 				removeBullet(hi.bt, arraypos);
