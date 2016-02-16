@@ -61,38 +61,39 @@ void main()
 		
 		vec3 cam_normal = normalize(cam - pos);
 		
-		vec3 up = vec3(0,1,0);
-		vec3 right = cross(-cam_normal, up);
+		vec3 up = vec3(dir[0].xyz);
+		vec3 right = cross(cam_normal, up);
 		
 		vec3 v = pos;
 		
 		up *= size.y;
 		right *= size.x;
 		
-		v += right;
-		v += up;
-		
-		gl_Position = VP * vec4(v, 1.0f);
-		EmitVertex();
-		
 		v = pos;
 		v -= right;
-		v += up;
-		
+		v -= up;
+		uv_frag = vec2(0.0f, 1.0f);
 		gl_Position = VP * vec4(v, 1.0f);
 		EmitVertex();
 		
 		v = pos;
 		v += right;
 		v -= up;
-		
+		uv_frag = vec2(1.0f, 1.0f);
 		gl_Position = VP * vec4(v, 1.0f);
 		EmitVertex();
-		
+
 		v = pos;
 		v -= right;
-		v -= up;
-		
+		v += up;
+		uv_frag = vec2(0.0f, 0.0f);
+		gl_Position = VP * vec4(v, 1.0f);
+		EmitVertex();		
+
+		v = pos;
+		v += right;
+		v += up;
+		uv_frag = vec2(1.0f, 0.0f);
 		gl_Position = VP * vec4(v, 1.0f);
 		EmitVertex();
 		
