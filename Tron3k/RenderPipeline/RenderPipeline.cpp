@@ -165,7 +165,7 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	pdata.maxparticles = 10;
 	pdata.dir = glm::vec3(1, 0, 0);
 
-	particleTest.Initialize(glm::vec3(-10, 6.5, 120), &pdata, &particleCS);
+	particleTest.Initialize(glm::vec3(0,5,0), &pdata, &particleCS);
 
 	initialized = true;
 	return true;
@@ -366,7 +366,7 @@ void RenderPipeline::reloadShaders()
 
 	particleCam = glGetUniformLocation(particleShader, "cam");
 	particleSize = glGetUniformLocation(particleShader, "size");
-	particleViewProj = glGetUniformLocation(particleShader, "MVP");
+	particleViewProj = glGetUniformLocation(particleShader, "VP");
 	particleTexture = glGetUniformLocation(particleShader, "tex");
 
 
@@ -557,6 +557,18 @@ void RenderPipeline::finalizeRender()
 			}
 		}
 	
+	glDisable(GL_BLEND);
+
+	glUseProgram(particleShader);
+	cam.setViewProjMat(particleShader, particleViewProj);
+	//glProgramUniformMatrix4fv(particleShader, particleViewProj, 1, GL_FALSE, (GLfloat*)&glm::mat4());
+	glProgramUniform2f(particleShader, particleSize, 0.1f, 0.1f);
+
+	glProgramUniform3f(particleShader, particleCam, gBuffer->eyePos.x, gBuffer->eyePos.y, gBuffer->eyePos.z);
+
+
+	particleTest.Draw();
+
 
 	glUseProgram(glowShaderTweeks);
 	
@@ -566,7 +578,7 @@ void RenderPipeline::finalizeRender()
 
 	//GBuffer Render
 	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
-	glClear(GL_DEPTH_BUFFER_BIT);
+	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
 	gBuffer->render();
 	
@@ -590,17 +602,7 @@ void RenderPipeline::finalizeRender()
 	//uglyCrosshairSolution->draw();
 
 	renderCrosshair(CROSSHAIR_TRAPPER_P);
-
-	glUseProgram(particleShader);
-	cam.setViewProjMat(particleShader, particleViewProj);
-	//glProgramUniformMatrix4fv(particleShader, particleViewProj, 1, GL_FALSE, (GLfloat*)&glm::mat4());
-	glProgramUniform2f(particleShader, particleSize, 0.01f, 0.01f);
-
-	glProgramUniform3f(particleShader, particleCam, gBuffer->eyePos.x, gBuffer->eyePos.y, gBuffer->eyePos.z);
-
 	glDisable(GL_BLEND);
-
-	particleTest.Draw();
 
 	stopTimer(renderFrameTimeID);
 
