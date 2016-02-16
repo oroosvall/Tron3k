@@ -6,7 +6,7 @@ UIManager::UIManager()
 	fileNamesListSecondGroup = nullptr;
 	menus = nullptr;
 	openedMenus = nullptr;
-	currentMenu = nullptr;
+	currentMenu = -1;
 	nrOfFileNamesFirstGroup = 0;
 	nrOfFileNamesSecondGroup = 0;
 	nrOfMenus = 0;
@@ -17,8 +17,7 @@ UIManager::UIManager()
 
 	teamColor = 0;
 
-	guiOpened = false;
-	firstMenuSet = false;
+	firstMenu = false;
 	doHoverCheckInGame = false;
 
 	HUD.HP = 1;
@@ -51,8 +50,6 @@ UIManager::~UIManager()
 		delete textureRes;
 	if (openedMenus != nullptr)
 		delete[] openedMenus;
-	if (currentMenu != nullptr)
-		delete[] currentMenu;
 }
 
 //Start menu
@@ -214,8 +211,8 @@ void UIManager::init(Console* console, int winX, int winY)
 	this->winX = winX;
 	this->winY = winY;
 
-	LoadNextSet(0, winX, winY); //Load the first set of menus.
-	setMenu(0); //Set start menu as the current menu
+	LoadNextSet(UISets::Menu, winX, winY); //Load the first set of menus.
+	setMenu(MainMenu::StartMenu, false); //Set start menu as the current menu
 }
 
 void UIManager::loadInTexture()
@@ -238,7 +235,7 @@ void UIManager::loadInTexture()
 
 void UIManager::menuRender()
 {
-	menus[currentMenu[0]].renderMenu();
+	menus[currentMenu].renderMenu();
 }
 
 void UIManager::inGameRender()
@@ -247,102 +244,129 @@ void UIManager::inGameRender()
 
 	renderPipe->disableDepthTest();
 	for (int i = 0; i < nrOfCurretMenus; i++)
-		menus[currentMenu[i]].renderIngame();
+		menus[openedMenus[i]].renderIngame();
 	renderPipe->enableDepthTest();
 }
 
 
-//Add and remove menus
-void UIManager::setMenu(int menuId)
+//Add and remove menus CHANGE THIS function
+void UIManager::setMenu(int menuId, bool singleMenu)
 {
 	if (menuId > -1 && menuId < nrOfMenus)
 	{
-		if (guiOpened) //guiOpened is true when the gui needs to be rendered, since menus needs to be rendered together with the gui.
+		if (!singleMenu)
 		{
-			if (!firstMenuSet)//Changing menu
+			if (firstMenu)
 			{
-				nrOfCurretMenus = 0;
-				firstMenuSet = true;
+				firstMenu = false;
+				nrOfOpenedMenus = 0;
 			}
-			if (nrOfCurretMenus > -1)
+			if (nrOfOpenedMenus < maxMenus)
 			{
-				currentMenu[nrOfCurretMenus] = menuId;
-				nrOfCurretMenus++;
-			}
-			else
-				console->printMsg("Error: Class UIManager line 254, nrOfCurretMenus has a value below 0", "System", 'S');
-		}
-		else if(firstMenuSet)//Changing menu
-		{
-			if ((nrOfOpenedMenus && currentMenu[0]) > -1)
-			{
-				openedMenus[nrOfOpenedMenus] = currentMenu[0];
-				currentMenu[0] = menuId;
+				openedMenus[nrOfOpenedMenus] = menuId;
+				currentMenu = menuId;
 				nrOfOpenedMenus++;
 			}
-			else
-				console->printMsg("Error: Class UIManager line 264, nrOfOpenedMenus OR currentMenu[0] have value below 0", "System", 'S');
 		}
 		else
 		{
-			currentMenu[0] = menuId;
-			nrOfCurretMenus = 1;
-			firstMenuSet = true;
+			nrOfOpenedMenus = 1;
+			currentMenu = menuId;
 		}
 	}
-	else if (menuId == -1) //This is for going back to the last menu
+	else if (menuId == InGameUI::RemoveMenu)
 	{
-		if (guiOpened) //remove extra windows ingame for example continue/quit window(esc) window or score window(tab).
-			nrOfCurretMenus--;
-		else //Going back in the menu
+		if(nrOfOpenedMenus > 0)
 		{
-			if (nrOfOpenedMenus > 0)
+			nrOfOpenedMenus--;
+			openedMenus[nrOfOpenedMenus] = -1;
+		}
+		else
+			console->printMsg("Error: setMenu in UIManager, nrOfOpenedMenus value is 0 or below.", "System", 'S');
+	}
+	else if (menuId == MainMenu::Back)
+	{
+		if (nrOfOpenedMenus > 0)
+		{
+			if (currentMenu == MainMenu::Connect)
 			{
-				if (currentMenu[0] == MainMenu::Connect)
-				{
-					menus[currentMenu[0]].clearText(7);
-					menus[currentMenu[0]].clearText(8);
-				}
-				nrOfOpenedMenus--;
-				if(nrOfOpenedMenus > -1)
-					currentMenu[0] = openedMenus[nrOfOpenedMenus];
-				else
-					console->printMsg("Error: Class UIManager line 294, nrOfOpenedMenus has a value below 0", "System", 'S');
+				menus[currentMenu].clearText(scaleAndText::IP);
+				menus[currentMenu].clearText(scaleAndText::Name);
 			}
+			nrOfOpenedMenus--;
+			currentMenu = openedMenus[nrOfOpenedMenus];
 		}
 	}
 	else
-		console->printMsg("Error: invalid menuId in function setMenu.", "System", 'S');
+		console->printMsg("Error: setMenu in UIManager, menuId is invalid", "System", 'S');
 }
-void UIManager::backToGui() //This is used when you go back to esc window from settings
-{
-	nrOfCurretMenus = 2;
-	nrOfOpenedMenus = 2;
-	currentMenu[0] = openedMenus[0];
-	currentMenu[1] = openedMenus[1];
-
-	setOpenedGuiBool(true);
-}
-void UIManager::removeAllMenus() 
+void UIManager::removeAllMenus()
 {
 	nrOfMenus = 0;
 	if (openedMenus != nullptr)
 		delete[] openedMenus;
-	if (currentMenu != nullptr)
-		delete[] currentMenu;
 	if(menus != nullptr)
 		delete[] menus;
 	menus = nullptr;
 	openedMenus = nullptr;
-	currentMenu = nullptr;
-
+	
+	currentMenu = 0;
 	nrOfOpenedMenus = 0;
 	nrOfCurretMenus = 0;
 }
+bool UIManager::LoadNextSet(int whichMenuGroup, int winX, int winY)
+{
+	removeAllMenus();
+
+	if (currentGroup != whichMenuGroup)
+	{
+		switch (whichMenuGroup)
+		{
+		case 0: //First Group
+		{
+			currentGroup = 0;
+			currentMenu = -1;
+			menus = new UI[nrOfFileNamesFirstGroup];
+			openedMenus = new int[nrOfFileNamesFirstGroup];
+			for (int i = 0; i < nrOfFileNamesFirstGroup; i++)
+			{
+				menus[i].init(fileNamesListFirstGroup[i], console, renderPipe, textureRes, winX, winY);
+				menus[i].setTextureId(uiTextureIds);
+				nrOfMenus++;
+			}
+			break;
+		}
+		case 1: //Second Group
+		{
+			currentGroup = 1;
+			currentMenu = -1;
+			menus = new UI[nrOfFileNamesSecondGroup];
+			openedMenus = new int[nrOfFileNamesFirstGroup];
+			for (int i = 0; i < nrOfFileNamesSecondGroup; i++)
+			{
+				menus[i].init(fileNamesListSecondGroup[i], console, renderPipe, textureRes, winX, winY);
+				menus[i].setTextureId(uiTextureIds);
+				nrOfMenus++;
+			}
+			break;
+		}
+		default:
+			break;
+		}
+	}
+	nrOfCurretMenus = 0;
+
+	return true;
+}
+void UIManager::setFirstMenuSet(bool set)
+{
+	firstMenu = set;
+}
+
 
 int UIManager::collisionCheck(glm::vec2 pos)
 {
-	if ((nrOfCurretMenus - 1) > -1)
+	if (nrOfOpenedMenus > -1)
 		if (currentMenu[nrOfCurretMenus - 1] > -1)
 			return menus[currentMenu[nrOfCurretMenus - 1]].mouseCollission(pos);
 		else
@@ -378,61 +402,6 @@ void UIManager::changeColorTeam()
 {
 	if (currentGroup == 1)
 		menus[0].changeColorTeam(teamColor);
-}
-
-bool UIManager::LoadNextSet(int whichMenuGroup, int winX, int winY)
-{
-	removeAllMenus();
-
-	if (currentGroup != whichMenuGroup)
-	{
-		switch (whichMenuGroup)
-		{
-		case 0: //First Group
-		{
-			currentGroup = 0;
-			menus = new UI[nrOfFileNamesFirstGroup];
-			openedMenus = new int[nrOfFileNamesFirstGroup];
-			currentMenu = new int[nrOfFileNamesFirstGroup];
-			for (int i = 0; i < nrOfFileNamesFirstGroup; i++)
-			{
-				menus[i].init(fileNamesListFirstGroup[i], console, renderPipe, textureRes, winX, winY);
-				menus[i].setTextureId(uiTextureIds);
-				nrOfMenus++;
-			}
-			break;
-		}
-		case 1: //Second Group
-		{
-			currentGroup = 1;
-			menus = new UI[nrOfFileNamesSecondGroup];
-			openedMenus = new int[nrOfFileNamesFirstGroup];
-			currentMenu = new int[nrOfFileNamesFirstGroup];
-			for (int i = 0; i < nrOfFileNamesSecondGroup; i++)
-			{
-				menus[i].init(fileNamesListSecondGroup[i], console, renderPipe, textureRes, winX, winY);
-				menus[i].setTextureId(uiTextureIds);
-				nrOfMenus++;
-			}
-			break;
-		}
-		default:
-			break;
-		}
-	}
-	nrOfCurretMenus = 0;
-
-	return true;
-}
-
-void UIManager::setOpenedGuiBool(bool guiBool)
-{
-	guiOpened = guiBool;
-}
-
-void UIManager::setFirstMenuSet(bool set)
-{
-	firstMenuSet = set;
 }
 
 void UIManager::setWindowResolution(int winX, int winY)

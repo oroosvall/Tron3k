@@ -50,18 +50,15 @@ private:
 	UI* menus;
 	int nrOfMenus;
 	int maxMenus;
-	int* currentMenu;
 	int nrOfCurretMenus;
 	int* openedMenus;
 	int nrOfOpenedMenus;
+	int currentMenu;
+
+	bool firstMenu;
 
 	int winX;
 	int winY;
-
-	//Since multiple menus needs to be rendered when the gui is opened
-	bool guiOpened;
-
-	bool firstMenuSet;
 
 	//Lists of file names
 	std::string* fileNamesListFirstGroup; //First set of menus(Those you can use before going ingame)
@@ -100,20 +97,17 @@ public:
 	void menuRender();
 	void inGameRender();
 
-	void setMenu(int menuId);
-	void backToGui();
+	void setMenu(int menuId, bool singleMenu);
 	void removeAllMenus();
+	bool LoadNextSet(int whichMenuGroup, int winX, int winY);
+
+	void setFirstMenuSet(bool set);
 
 	int collisionCheck(glm::vec2 pos);
 	void hoverCheck(glm::vec2 pos);
 
 	void changeTex(int objId, int whichTex);
 	void changeColorTeam();
-
-	bool LoadNextSet(int whichMenuGroup, int winX, int winY);
-
-	void setOpenedGuiBool(bool guiBool);
-	void setFirstMenuSet(bool set);
 
 	void setWindowResolution(int winX, int winY);
 
