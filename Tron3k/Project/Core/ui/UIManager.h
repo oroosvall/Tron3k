@@ -50,7 +50,6 @@ private:
 	UI* menus;
 	int nrOfMenus;
 	int maxMenus;
-	int nrOfCurretMenus;
 	int* openedMenus;
 	int nrOfOpenedMenus;
 	int currentMenu;
@@ -72,7 +71,7 @@ private:
 	std::vector<GLuint> uiTextureIds;
 	std::vector<std::string> texturePaths;
 
-	bool roleSet = false;
+	bool roleSetFirstTime = false;
 
 	int teamColor;
 	bool doHoverCheckInGame;
@@ -84,8 +83,8 @@ public:
 	UIManager();
 	~UIManager();
 
-	void setRoleBool(bool roleSet) { this->roleSet = roleSet; };
-	bool getRoleBool() { return roleSet; };
+	void setRoleBool(bool roleSet) { this->roleSetFirstTime = roleSet; };
+	bool getRoleBool() { return roleSetFirstTime; };
 
 	void setRenderPtr(IRenderPipeline* ptr) 
 	{ 
@@ -97,7 +96,7 @@ public:
 	void menuRender();
 	void inGameRender();
 
-	void setMenu(int menuId, bool singleMenu);
+	void setMenu(int menuId);
 	void removeAllMenus();
 	bool LoadNextSet(int whichMenuGroup, int winX, int winY);
 
@@ -123,7 +122,7 @@ public:
 	void setHoverCheckBool(bool checkForHover);
 	bool getHoverCheckBool();
 
-	int getNrOfCurretMenus();
+	int getNrOfOpenedMenus();
 	int getCurrentMenu();
 
 	struct HUDvalues

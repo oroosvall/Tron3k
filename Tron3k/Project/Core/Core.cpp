@@ -301,6 +301,7 @@ void Core::upMenu(float dt)
 		case 0: //Roam
 			current = ROAM;
 			uiManager->LoadNextSet(UISets::InGame, winX, winY);
+			uiManager->setRoleBool(false);
 			uiManager->setFirstMenuSet(false);
 			uiManager->setMenu(InGameUI::TeamSelect);
 			subState = 0;
@@ -308,6 +309,7 @@ void Core::upMenu(float dt)
 			uiManager->setHoverCheckBool(true);
 			break;
 		case 1: //Multiplayer -> multiplayer window
+			uiManager->setFirstMenuSet(true);
 			uiManager->setMenu(MainMenu::Multiplayer);
 			break;
 		case 2: //Settings
@@ -317,6 +319,7 @@ void Core::upMenu(float dt)
 			break;
 		case 4: //Client -> connect window
 		{
+			uiManager->setFirstMenuSet(true);
 			uiManager->setMenu(MainMenu::Connect);
 
 			string addr = _addrs.toString();
@@ -354,6 +357,8 @@ void Core::upMenu(float dt)
 			name += uiManager->getText(scaleAndText::Name); //From ip object
 			startHandleCmds(name);
 
+			uiManager->setRoleBool(false);
+
 			nameNrOfKeys = 0;
 			ipNrOfKeys = 0;
 			current = Gamestate::CLIENT; //Start the game as a client
@@ -365,7 +370,7 @@ void Core::upMenu(float dt)
 		case 7: //Back
 			nameNrOfKeys = 0;
 			ipNrOfKeys = 0;
-			uiManager->setMenu(-1); //Last menu
+			uiManager->setMenu(MainMenu::Back); //Last menu
 			break;
 		case 10: //Ip input
 			menuIpKeyListener = true;
@@ -666,7 +671,6 @@ void Core::upClient(float dt)
 				uiManager->setTeamColor(localp->getTeam());
 				uiManager->changeColorTeam();
 
-				uiManager->setOpenedGuiBool(true);
 				uiManager->setFirstMenuSet(false);
 				uiManager->setMenu(InGameUI::GUI);
 
@@ -1110,8 +1114,15 @@ void Core::roamHandleCmds(std::string com)
 
 				uiManager->setTeamColor(team);
 				uiManager->changeColorTeam();
-				uiManager->setFirstMenuSet(false);
-				uiManager->setMenu(InGameUI::ClassSelect);
+
+				if (uiManager->getRoleBool())
+				{
+					uiManager->setMenu(InGameUI::RemoveMenu);
+					uiManager->setFirstMenuSet(false);
+					uiManager->setMenu(InGameUI::ClassSelect);
+				}
+				else
+					uiManager->setMenu(InGameUI::ClassSelect);
 			}
 			else
 				console.printMsg("Invalid team. Use /team <1/2/3>", "System", 'S');
@@ -1162,6 +1173,7 @@ void Core::roamHandleCmds(std::string com)
 				game->sendPlayerRadSize(game->getPlayer(0)->getRole()->getBoxRadius());
 				console.printMsg("You switched class!", "System", 'S');
 
+				uiManager->setMenu(InGameUI::RemoveMenu);
 				uiManager->setFirstMenuSet(false);
 				uiManager->setMenu(InGameUI::GUI);
 
@@ -2040,7 +2052,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 				uiManager->scaleBar(scaleAndText::HP, (float)(uiManager->HUD.HP) / (float)(local->getMaxHP()), true);
 			}
 			else
-				console.printMsg("Error: Class Core, local player maxHp has a value of 0 or below", "System", 'S');
+				console.printMsg("Error: Function inGameUIUpdate in Core, local player maxHp has a value of 0 or below", "System", 'S');
 		}
 		if (local->getSpecialMeter() != uiManager->HUD.specialMeter)
 		{
@@ -2052,7 +2064,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 			else
 			{
 				uiManager->scaleBar(scaleAndText::AbilityMeter, 0.0f, true);
-				console.printMsg("Error: Class Core, HUD.specialMeter has a value of 0 or below", "System", 'S');
+				console.printMsg("Error: Function inGameUIUpdate in Core, HUD.specialMeter has a value of 0 or below", "System", 'S');
 			}
 		}
 		if (local->getAmmo() != uiManager->HUD.ammo)
@@ -2073,7 +2085,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 		if ((float)(uiManager->HUD.maxTokens) > 0)
 			uiManager->scaleBar(scaleAndText::TicketBar1, (float)uiManager->HUD.teamOneTokens / (float)(uiManager->HUD.maxTokens), true);
 		else
-			console.printMsg("Error: Class Core, HUD.maxTokens has a value of 0 or below", "System", 'S');
+			console.printMsg("Error: Function inGameUIUpdate in Core, HUD.maxTokens has a value of 0 or below", "System", 'S');
 	}
 	if (koth->getRespawnTokens(2) != uiManager->HUD.teamTwoTokens)
 	{
@@ -2083,7 +2095,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 		if ((float)(uiManager->HUD.maxTokens) > 0)
 			uiManager->scaleBar(scaleAndText::TicketBar2, (float)(uiManager->HUD.teamTwoTokens) / (float)(uiManager->HUD.maxTokens), true);
 		else
-			console.printMsg("Error: Class Core, HUD.maxTokens has a value of 0 or below", "System", 'S');
+			console.printMsg("Error: Function inGameUIUpdate in Core, HUD.maxTokens has a value of 0 or below", "System", 'S');
 	}
 	if (koth->getRoundWins(1) != uiManager->HUD.teamOneRoundWins)
 	{
@@ -2094,7 +2106,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 			uiManager->setText(std::to_string(uiManager->HUD.teamOneRoundWins), scaleAndText::Wins1);
 		}
 		else
-			console.printMsg("Error: Class Core, koth->getRoundWins(1) has a value of -1", "System", 'S');
+			console.printMsg("Error: Function inGameUIUpdate in Core, koth->getRoundWins(1) has a value of -1", "System", 'S');
 	}
 	if (koth->getRoundWins(2) != uiManager->HUD.teamTwoRoundWins)
 	{
@@ -2105,7 +2117,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 			uiManager->setText(std::to_string(uiManager->HUD.teamTwoRoundWins), scaleAndText::Wins2);
 		}
 		else
-			console.printMsg("Error: Class Core, koth->getRoundWins(1) has a value of -1", "System", 'S');
+			console.printMsg("Error: Function inGameUIUpdate in Core, koth->getRoundWins(1) has a value of -1", "System", 'S');
 	}
 	if (int(koth->getTimer()) != uiManager->HUD.time) //Not done
 	{
@@ -2145,7 +2157,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 						uiManager->HUD.ticketLostTimer -= 1;
 					}
 					else
-						console.printMsg("Error: Class Core, HUD.loseTicketPer has a value of 0 or below", "System", 'S');
+						console.printMsg("Error: Function inGameUIUpdate in Core, HUD.loseTicketPer has a value of 0 or below", "System", 'S');
 				}
 			}
 			else
@@ -2157,7 +2169,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 					uiManager->HUD.ticketLostTimer -= 1;
 				}
 				else
-					console.printMsg("Error: Class Core, HUD.loseTicketPer has a value of 1 or below at the start of the round", "System", 'S');
+					console.printMsg("Error: Function inGameUIUpdate in Core, HUD.loseTicketPer has a value of 1 or below at the start of the round", "System", 'S');
 			}
 			uiManager->HUD.firstSecondEachRound = false;
 		}
@@ -2192,9 +2204,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 					roamHandleCmds("/team 2");
 				}
 				else
-				{
 					clientHandleCmds("/team 2");
-				}
 				break;
 			case 21: //Team 2
 				if (current == ROAM)
@@ -2203,9 +2213,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 					roamHandleCmds("/team 1");
 				}
 				else
-				{
 					clientHandleCmds("/team 1");
-				}
 				break;
 			case 30: //Class 1
 				if (current == ROAM)
@@ -2232,14 +2240,13 @@ void Core::inGameUIUpdate() //Ingame ui update
 					clientHandleCmds("/role 4");
 				break;
 			case 34: //Class 5
-				uiManager->setOpenedGuiBool(true);
 				if (current == ROAM)
 					roamHandleCmds("/role 5");
 				else
 					clientHandleCmds("/role 5");
 				break;
 			case 40: //Continue
-				uiManager->backToGui();
+				
 				break;
 			case 41: //Settings
 				break;
@@ -2552,7 +2559,7 @@ void Core::disconnect()
 	uiManager->setRoleBool(false);
 
 	uiManager->setHoverCheckBool(true);
-	uiManager->setOpenedGuiBool(false);
+	uiManager->setRoleBool(false);
 	uiManager->setFirstMenuSet(false);
 	cursorInvisible = false;
 	glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
@@ -2566,7 +2573,7 @@ void Core::showTeamSelect()
 	{
 		uiManager->setHoverCheckBool(true);
 		uiManager->LoadNextSet(UISets::InGame, winX, winY);
-		uiManager->setFirstMenuSet(false);
+		uiManager->setFirstMenuSet(true);
 		uiManager->setMenu(InGameUI::TeamSelect);
 	}
 	else
@@ -2574,7 +2581,6 @@ void Core::showTeamSelect()
 		uiManager->setHoverCheckBool(false);
 		uiManager->LoadNextSet(UISets::InGame, winX, winY);
 		uiManager->setFirstMenuSet(false);
-		uiManager->setOpenedGuiBool(true);
 		uiManager->setMenu(InGameUI::GUI);
 	}
 }
@@ -2584,7 +2590,7 @@ void Core::showClassSelect()
 	uiManager->setHoverCheckBool(true);
 	game->getPlayer(game->GetLocalPlayerId())->setLockedControls(true);
 	cursorInvisible = false;
-	uiManager->setFirstMenuSet(false);
+	uiManager->setFirstMenuSet(true);
 	uiManager->setMenu(InGameUI::ClassSelect);
 }
 

@@ -12,7 +12,6 @@ UIManager::UIManager()
 	nrOfMenus = 0;
 	maxMenus = 5;
 	textureRes = new std::vector<glm::vec2>;
-	nrOfCurretMenus = 0;
 	nrOfOpenedMenus = 0;
 
 	teamColor = 0;
@@ -212,7 +211,8 @@ void UIManager::init(Console* console, int winX, int winY)
 	this->winY = winY;
 
 	LoadNextSet(UISets::Menu, winX, winY); //Load the first set of menus.
-	setMenu(MainMenu::StartMenu, false); //Set start menu as the current menu
+	firstMenu = false;
+	setMenu(MainMenu::StartMenu); //Set start menu as the current menu
 }
 
 void UIManager::loadInTexture()
@@ -240,53 +240,43 @@ void UIManager::menuRender()
 
 void UIManager::inGameRender()
 {
-	renderPipe->ui_InGameRenderInit();
-
 	renderPipe->disableDepthTest();
-	for (int i = 0; i < nrOfCurretMenus; i++)
+	for (int i = 0; i < nrOfOpenedMenus; i++)
 		menus[openedMenus[i]].renderIngame();
 	renderPipe->enableDepthTest();
 }
 
 
 //Add and remove menus CHANGE THIS function
-void UIManager::setMenu(int menuId, bool singleMenu)
+void UIManager::setMenu(int menuId)
 {
 	if (menuId > -1 && menuId < nrOfMenus)
 	{
-		if (!singleMenu)
+		if (!firstMenu)
 		{
-			if (firstMenu)
-			{
-				firstMenu = false;
-				nrOfOpenedMenus = 0;
-			}
-			if (nrOfOpenedMenus < maxMenus)
-			{
-				openedMenus[nrOfOpenedMenus] = menuId;
-				currentMenu = menuId;
-				nrOfOpenedMenus++;
-			}
+			firstMenu = true;
+			nrOfOpenedMenus = 0;
 		}
-		else
+		if (nrOfOpenedMenus < maxMenus)
 		{
-			nrOfOpenedMenus = 1;
+			openedMenus[nrOfOpenedMenus] = menuId;
 			currentMenu = menuId;
+			nrOfOpenedMenus++;
 		}
 	}
 	else if (menuId == InGameUI::RemoveMenu)
 	{
-		if(nrOfOpenedMenus > 0)
+		if(nrOfOpenedMenus > 1)
 		{
 			nrOfOpenedMenus--;
 			openedMenus[nrOfOpenedMenus] = -1;
 		}
 		else
-			console->printMsg("Error: setMenu in UIManager, nrOfOpenedMenus value is 0 or below.", "System", 'S');
+			console->printMsg("Error: Function setMenu in UIManager, Someone is trying to use RemoveMenu when nrOfOpenedMenus has a value of 1 or lower .", "System", 'S');
 	}
 	else if (menuId == MainMenu::Back)
 	{
-		if (nrOfOpenedMenus > 0)
+		if (nrOfOpenedMenus > 1)
 		{
 			if (currentMenu == MainMenu::Connect)
 			{
@@ -294,11 +284,13 @@ void UIManager::setMenu(int menuId, bool singleMenu)
 				menus[currentMenu].clearText(scaleAndText::Name);
 			}
 			nrOfOpenedMenus--;
-			currentMenu = openedMenus[nrOfOpenedMenus];
+			currentMenu = openedMenus[nrOfOpenedMenus - 1];
 		}
+		else
+			console->printMsg("Error: Function setMenu in UIManager, Someone is trying to use Back when nrOfOpenedMenus has a value of 1 or lower .", "System", 'S');
 	}
 	else
-		console->printMsg("Error: setMenu in UIManager, menuId is invalid", "System", 'S');
+		console->printMsg("Error: Function setMenu in UIManager, menuId is invalid", "System", 'S');
 }
 void UIManager::removeAllMenus()
 {
@@ -312,7 +304,6 @@ void UIManager::removeAllMenus()
 	
 	currentMenu = 0;
 	nrOfOpenedMenus = 0;
-	nrOfCurretMenus = 0;
 }
 bool UIManager::LoadNextSet(int whichMenuGroup, int winX, int winY)
 {
@@ -341,7 +332,7 @@ bool UIManager::LoadNextSet(int whichMenuGroup, int winX, int winY)
 			currentGroup = 1;
 			currentMenu = -1;
 			menus = new UI[nrOfFileNamesSecondGroup];
-			openedMenus = new int[nrOfFileNamesFirstGroup];
+			openedMenus = new int[nrOfFileNamesSecondGroup];
 			for (int i = 0; i < nrOfFileNamesSecondGroup; i++)
 			{
 				menus[i].init(fileNamesListSecondGroup[i], console, renderPipe, textureRes, winX, winY);
@@ -354,7 +345,9 @@ bool UIManager::LoadNextSet(int whichMenuGroup, int winX, int winY)
 			break;
 		}
 	}
-	nrOfCurretMenus = 0;
+	else
+		console->printMsg("Abit meaningless load the same set of menus that you already use...","System", 'S');
+	nrOfOpenedMenus = 0;
 
 	return true;
 }
@@ -366,42 +359,42 @@ void UIManager::setFirstMenuSet(bool set)
 
 int UIManager::collisionCheck(glm::vec2 pos)
 {
-	if (nrOfOpenedMenus > -1)
-		if (currentMenu[nrOfCurretMenus - 1] > -1)
-			return menus[currentMenu[nrOfCurretMenus - 1]].mouseCollission(pos);
+	if (nrOfOpenedMenus > 0)
+		if (currentMenu > -1)
+			return menus[currentMenu].mouseCollission(pos);
 		else
-			console->printMsg("Error: Class UIManager line 333, currentMenu[nrOfCurretMenus - 1] has a value below 0", "System", 'S');
+			console->printMsg("Error: Function collisionCheck in UIManager, currentMenu has a value lower then 0", "System", 'S');
 	else
-		console->printMsg("Error: Class UIManager line 332, (nrOfCurretMenus - 1) has a value below 0", "System", 'S');
+		console->printMsg("Error: Function collisionCheck in UIManager, nrOfOpenedMenus has a value of 0 or lower", "System", 'S');
 	return -1;
 }
 void UIManager::hoverCheck(glm::vec2 pos)
 {
-	if ((nrOfCurretMenus - 1) > -1)
-		if (currentMenu[nrOfCurretMenus - 1] > -1)
-			menus[currentMenu[nrOfCurretMenus - 1]].mouseHover(pos);
+	if (nrOfOpenedMenus > 0)
+		if (currentMenu > -1)
+			menus[currentMenu].mouseHover(pos);
 		else
-			console->printMsg("Error: Class UIManager line 344, currentMenu[nrOfCurretMenus - 1] has a value below 0", "System", 'S');
+			console->printMsg("Error: Function hoverCheck in UIManager, currentMenu has a value lower then 0", "System", 'S');
 	else
-		console->printMsg("Error: Class UIManager line 343, (nrOfCurretMenus - 1) has a value below 0", "System", 'S');
+		console->printMsg("Error: Function hoverCheck in UIManager, nrOfOpenedMenus has a value of 0 or lower", "System", 'S');
 }
 
 
 void UIManager::changeTex(int objId, int whichTex)
 {
-	if ((nrOfCurretMenus - 1) > -1)
-		if (currentMenu[nrOfCurretMenus - 1] > -1)
-			menus[currentMenu[nrOfCurretMenus - 1]].changeTex(objId, whichTex);
+	if (nrOfOpenedMenus > 0)
+		if (currentMenu > -1)
+			menus[currentMenu].changeTex(objId, whichTex);
 		else
-			console->printMsg("Error: Class UIManager line 356, currentMenu[nrOfCurretMenus - 1] has a value below 0", "System", 'S');
+			console->printMsg("Error: Function changeTex in UIManager, currentMenu has a value lower then 0", "System", 'S');
 	else
-		console->printMsg("Error: Class UIManager line 355, (nrOfCurretMenus - 1) has a value below 0", "System", 'S');
+		console->printMsg("Error: Function changeTex in UIManager, nrOfOpenedMenus has a value of 0 or lower", "System", 'S');
 }
 
 void UIManager::changeColorTeam()
 {
 	if (currentGroup == 1)
-		menus[0].changeColorTeam(teamColor);
+		menus[InGameUI::GUI].changeColorTeam(teamColor);
 }
 
 void UIManager::setWindowResolution(int winX, int winY)
@@ -409,62 +402,62 @@ void UIManager::setWindowResolution(int winX, int winY)
 	this->winX = winX;
 	this->winY = winY;
 
-	if ((nrOfCurretMenus - 1) > -1)
-		if (currentMenu[nrOfCurretMenus - 1] > -1)
-			menus[currentMenu[nrOfCurretMenus - 1]].setWindowResolution(winX, winY);
+	if (nrOfOpenedMenus > 0)
+		if (currentMenu > -1)
+			menus[currentMenu].setWindowResolution(winX, winY);
 		else
-			console->printMsg("Error: Class UIManager line 431, currentMenu[nrOfCurretMenus - 1] has a value below 0", "System", 'S');
+			console->printMsg("Error: Function setWindowResolution in UIManager, currentMenu has a value lower then 0", "System", 'S');
 	else
-		console->printMsg("Error: Class UIManager line 430, (nrOfCurretMenus - 1) has a value below 0", "System", 'S');
+		console->printMsg("Error: Function setWindowResolution in UIManager, nrOfOpenedMenus has a value of 0 or lower", "System", 'S');
 }
 
 void UIManager::setText(std::string text, int id)
 {
-	if ((nrOfCurretMenus - 1) > -1)
-		if(currentMenu[nrOfCurretMenus - 1] > -1)
-			menus[currentMenu[nrOfCurretMenus - 1]].setText(text, id);
+	if (nrOfOpenedMenus > 0)
+		if(currentMenu > -1)
+			menus[currentMenu].setText(text, id);
 		else
-			console->printMsg("Error: Class UIManager line 442, currentMenu[nrOfCurretMenus - 1] has a value below 0", "System", 'S');
+			console->printMsg("Error: Function setText in UIManager, currentMenu has a value lower then 0", "System", 'S');
 	else
-		console->printMsg("Error: Class UIManager line 441, (nrOfCurretMenus - 1) has a value below 0", "System", 'S');
+		console->printMsg("Error: Function setText in UIManager, nrOfOpenedMenus has a value of 0 or lower", "System", 'S');
 }
 
 std::string UIManager::getText(int id)
 {
-	if (currentMenu[nrOfCurretMenus - 1] > -1)
-		return menus[currentMenu[nrOfCurretMenus - 1]].getText(id);
+	if (currentMenu > -1)
+		return menus[currentMenu].getText(id);
 	return "";
 }
 void UIManager::removeLastInput(int id)
 {
-	if ((nrOfCurretMenus - 1) > -1)
-		if (currentMenu[nrOfCurretMenus - 1] > -1)
-			menus[currentMenu[nrOfCurretMenus - 1]].removeLastInput(id);
+	if (nrOfOpenedMenus > 0)
+		if (currentMenu > -1)
+			menus[currentMenu].removeLastInput(id);
 		else
-			console->printMsg("Error: Class UIManager line 458, currentMenu[nrOfCurretMenus - 1] has a value below 0", "System", 'S');
+			console->printMsg("Error: Function removeLastInput in UIManager, currentMenu has a value lower then 0", "System", 'S');
 	else
-		console->printMsg("Error: Class UIManager line 463, (nrOfCurretMenus - 1) has a value below 0", "System", 'S');
+		console->printMsg("Error: Function removeLastInput in UIManager, nrOfOpenedMenus has a value of 0 or lower", "System", 'S');
 }
 void UIManager::clearText(int id)
 {
-	if ((nrOfCurretMenus - 1) > -1)
-		if (currentMenu[nrOfCurretMenus - 1] > -1)
-			menus[currentMenu[nrOfCurretMenus - 1]].clearText(id);
+	if (nrOfOpenedMenus > 0)
+		if (currentMenu > -1)
+			menus[currentMenu].clearText(id);
 		else
-			console->printMsg("Error: Class UIManager line 469, currentMenu[nrOfCurretMenus - 1] has a value below 0", "System", 'S');
+			console->printMsg("Error: Function clearText in UIManager, currentMenu has a value lower then 0", "System", 'S');
 	else
-		console->printMsg("Error: Class UIManager line 468, (nrOfCurretMenus - 1) has a value below 0", "System", 'S');
+		console->printMsg("Error: Function clearText in UIManager, nrOfOpenedMenus has a value of 0 or lower", "System", 'S');
 }
 
 void UIManager::scaleBar(int id, float procentOfMax, bool fromRight)
 {
-	if((nrOfCurretMenus - 1) > -1)
-		if(currentMenu[nrOfCurretMenus - 1] > -1)
-			menus[currentMenu[nrOfCurretMenus - 1]].scaleBar(id, procentOfMax, fromRight);
+	if(nrOfOpenedMenus  > 0)
+		if(currentMenu > -1)
+			menus[currentMenu].scaleBar(id, procentOfMax, fromRight);
 		else
-			console->printMsg("Error: Class UIManager line 480, currentMenu[nrOfCurretMenus - 1] has a value below 0", "System", 'S');
+			console->printMsg("Error: Function scaleBar in UIManager, currentMenu has a value lower then 0", "System", 'S');
 	else
-		console->printMsg("Error: Class UIManager line 479, (nrOfCurretMenus - 1) has a value below 0", "System", 'S');
+		console->printMsg("Error: Function scaleBar in UIManager, nrOfOpenedMenus has a value of 0 or lower", "System", 'S');
 }
 
 void UIManager::setTeamColor(int team)
@@ -488,29 +481,28 @@ bool UIManager::getHoverCheckBool()
 	return doHoverCheckInGame;
 }
 
-int UIManager::getNrOfCurretMenus()
+int UIManager::getNrOfOpenedMenus()
 {
-	return nrOfCurretMenus;
+	return nrOfOpenedMenus;
 }
 int UIManager::getCurrentMenu()
 {
 	int returnValue = -1;
-	if ((nrOfCurretMenus - 1) > -1)
-		if (currentMenu[nrOfCurretMenus - 1] > -1)
-			returnValue = currentMenu[nrOfCurretMenus - 1];
+	if (nrOfOpenedMenus > 0)
+		if (currentMenu > -1)
+			returnValue = currentMenu;
 		else
-			console->printMsg("Error: Class UIManager line 517, currentMenu[nrOfCurretMenus - 1] has a value below 0", "System", 'S');
+			console->printMsg("Error: Function getCurrentMenu in UIManager, currentMenu has a value lower then 0", "System", 'S');
 	else
-		console->printMsg("Error: Class UIManager line 516, (nrOfCurretMenus - 1) has a value below 0", "System", 'S');
+		console->printMsg("Error: Function getCurrentMenu in UIManager, nrOfOpenedMenus has a value of 0 or lower", "System", 'S');
 	return returnValue;
 }
 
 bool UIManager::isThereAMenuUp()
 {
 	bool returnValue = true;
-	if (currentGroup == 1)
-		if (currentMenu[0] == 0 && nrOfCurretMenus == 1)
-			returnValue = false;
+	if (currentMenu == InGameUI::GUI && nrOfOpenedMenus == 1)
+		returnValue = false;
 
 	return returnValue;
 }

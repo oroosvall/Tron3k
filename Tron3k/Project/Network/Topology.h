@@ -665,8 +665,13 @@ public:
 			uiPtr->changeColorTeam();
 			if (gamePtr->getPlayer(p_conID)->getRole()->getRole() == ROLES::NROFROLES)
 			{
-				uiPtr->setFirstMenuSet(false);
-				uiPtr->setMenu(InGameUI::ClassSelect);
+				if (uiPtr->getRoleBool())
+				{
+					uiPtr->setFirstMenuSet(false);
+					uiPtr->setMenu(InGameUI::ClassSelect);
+				}
+				else
+					uiPtr->setMenu(InGameUI::ClassSelect);
 			}
 		}
 	}
@@ -728,7 +733,7 @@ public:
 		{
 			if (((KingOfTheHill*)(gamePtr->getGameMode()))->getState() != KOTHSTATE::PREROUND)
 			{
-				uiPtr->setOpenedGuiBool(true);
+				uiPtr->setRoleBool(true);
 				uiPtr->setFirstMenuSet(false);
 				uiPtr->setMenu(InGameUI::GUI);
 
@@ -764,7 +769,6 @@ public:
 				uiPtr->scaleBar(scaleAndText::TicketBar2, (float)(koth->getRespawnTokens(2)) / (float)(koth->getMaxTokensPerTeam()), false);
 				uiPtr->scaleBar(scaleAndText::AbilityMeter, 0.0f, true);
 
-				uiPtr->setRoleBool(true);
 				uiPtr->setHoverCheckBool(false);
 			}
 		}
