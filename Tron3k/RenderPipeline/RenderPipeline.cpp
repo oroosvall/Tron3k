@@ -265,6 +265,16 @@ void RenderPipeline::reloadShaders()
 		temp = 0;
 	}
 
+	//Spotlight volume shader
+	std::string shaderNamesSpotVolume[] = { "GameFiles/Shaders/SpotlightVolume_vs.glsl", "GameFiles/Shaders/SpotlightVolume_gs.glsl", "GameFiles/Shaders/SpotlightVolume_fs.glsl" };
+	GLenum shaderTypesSpotVolume[] = { GL_VERTEX_SHADER, GL_GEOMETRY_SHADER, GL_FRAGMENT_SHADER };
+	CreateProgram(temp, shaderNamesSpotVolume, shaderTypesSpotVolume, 3);
+	if (temp != 0)
+	{
+		gBuffer->spotligtVolumeShader = temp;
+		temp = 0;
+	}
+
 	//UI shaderLocations
 	ui_Texture = glGetUniformLocation(uiShader, "textureSample");
 	ui_World = glGetUniformLocation(uiShader, "WorldMatrix");
@@ -430,6 +440,7 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 
 	cam.setViewProjMat(animationShader, viewProjMat[1]);
 	cam.setViewProjMat(*gBuffer->portal_shaderPtr, gBuffer->portal_vp);
+	cam.setViewProjMat(gBuffer->spotligtVolumeShader, gBuffer->spotlightVP);
 	cam.setViewProjMat(portalShaderV2, portal_VP);
 
 	contMan.update(dt);
@@ -541,7 +552,7 @@ void RenderPipeline::render()
 void RenderPipeline::finalizeRender()
 {
 	glDepthMask(GL_TRUE);
-	glEnable(GL_CULL_FACE);
+	//glEnable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
 
 	//system("CLS");
