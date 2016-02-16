@@ -75,6 +75,7 @@ public:
 	virtual int playMusic(int music);
 	virtual void stopMusic();
 	virtual void PlayStereoFootsteps(int);
+	virtual void PlayStereoJump(int);
 
 	virtual int playMapSounds();
 

@@ -99,7 +99,7 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool spectatin
 
 	if (GetSoundActivated())
 	{
-		GetSound()->setLocalPlayerPos(pos);
+		GetSound()->setLocalPlayerPos(cam->getPos());
 		GetSound()->setLocalPlayerDir(cam->getDir());
 	}
 
@@ -594,8 +594,15 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 						{
 							vel.y = role.getJumpHeight() * 5;
 							airVelocity = vel;
-							if (GetSoundActivated())
+							if (GetSoundActivated() && (isLocal() || spectatingThisPlayer))
+							{
+								GetSound()->PlayStereoJump(role.getRole());
+							}
+							else
+							{
 								GetSound()->playJump(role.getRole(), pos.x, pos.y, pos.z);
+							}
+								
 						}
 					}
 

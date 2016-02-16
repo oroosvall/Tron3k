@@ -532,7 +532,17 @@ void Game::checkFootsteps(float dt)
 					playerList[i]->setFootstepsCountdown();
 					playerList[i]->setFootstepsLoop(false);
 					if (GetSoundActivated())
-						GetSound()->playFootsteps(playerList[i]->getRole()->getRole(), pos.x, pos.y, pos.z);
+					{
+						if (i == spectateID)
+						{
+							GetSound()->PlayStereoFootsteps(playerList[i]->getRole()->getRole());
+						}
+						else
+						{
+							GetSound()->playFootsteps(playerList[i]->getRole()->getRole(), pos.x, pos.y, pos.z);
+						}
+					}
+						
 				}
 
 			}
@@ -554,7 +564,17 @@ void Game::checkFootsteps(float dt)
 				playerList[i]->SetJumpCoolDown(100.0f);
 
 				if (GetSoundActivated())
-					GetSound()->playJump(playerList[i]->getRole()->getRole(), pos.x, pos.y, pos.z);
+				{
+					if (i == spectateID)
+					{
+						GetSound()->PlayStereoJump(playerList[i]->getRole()->getRole());
+					}
+					else
+					{
+						GetSound()->playJump(playerList[i]->getRole()->getRole(), pos.x, pos.y, pos.z);
+					}
+				}
+					
 
 
 			}
@@ -1138,7 +1158,7 @@ void Game::handleWeaponFire(int conID, int teamId, int bulletId, WEAPON_TYPE wea
 		if (gameState != Gamestate::SERVER)
 			if (GetSound())
 			{
-				if (conID == localPlayerId)
+				if (conID == localPlayerId || conID == spectateID)
 				{
 					GetSound()->playExternalSound(SOUNDS::soundEffectPulseRifleShotStereo, pos.x, pos.y, pos.z);
 				}
@@ -1154,7 +1174,7 @@ void Game::handleWeaponFire(int conID, int teamId, int bulletId, WEAPON_TYPE wea
 		if (GetSoundActivated())
 			if (GetSound())
 			{
-				if (conID == localPlayerId)
+				if (conID == localPlayerId || conID == spectateID)
 				{
 					GetSound()->playExternalSound(SOUNDS::soundEffectEnergyBoostStereo, pos.x, pos.y, pos.z);
 				}
@@ -1162,7 +1182,7 @@ void Game::handleWeaponFire(int conID, int teamId, int bulletId, WEAPON_TYPE wea
 				else
 					GetSound()->playExternalSound(SOUNDS::soundEffectEnergyBoost, pos.x, pos.y, pos.z);
 			}
-		playerList[conID]->healing(10);
+		playerList[conID]->healing(15);
 		playerList[conID]->getRole()->swapWeapon(WEAPON_TYPE::ENERGY_BOOST, 0);
 		break;
 
@@ -1181,7 +1201,7 @@ void Game::handleWeaponFire(int conID, int teamId, int bulletId, WEAPON_TYPE wea
 		if (gameState != Gamestate::SERVER)
 			if (GetSound())
 			{
-				if (conID == localPlayerId)
+				if (conID == localPlayerId || conID == spectateID)
 				{
 					GetSound()->playExternalSound(SOUNDS::soundEffectDiscGunStereo, pos.x, pos.y, pos.z);
 				}
@@ -1196,7 +1216,7 @@ void Game::handleWeaponFire(int conID, int teamId, int bulletId, WEAPON_TYPE wea
 		if (gameState != Gamestate::SERVER)
 			if (GetSound())
 			{
-				if (conID == localPlayerId)
+				if (conID == localPlayerId || conID == spectateID)
 				{
 					GetSound()->playMeleeStereo();
 				}
@@ -1211,7 +1231,7 @@ void Game::handleWeaponFire(int conID, int teamId, int bulletId, WEAPON_TYPE wea
 		if (gameState != Gamestate::SERVER)
 			if (GetSound())
 			{
-				if (conID == localPlayerId)
+				if (conID == localPlayerId || conID == spectateID)
 				{
 					GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeLauncherStereo, pos.x, pos.y, pos.z);
 				}
@@ -1227,7 +1247,7 @@ void Game::handleWeaponFire(int conID, int teamId, int bulletId, WEAPON_TYPE wea
 		if (gameState != Gamestate::SERVER)
 			if (GetSound())
 			{
-				if (conID == localPlayerId)
+				if (conID == localPlayerId || conID == spectateID)
 				{
 					GetSound()->playExternalSound(SOUNDS::soundEffectShotGunStereo, pos.x, pos.y, pos.z);
 				}
@@ -1237,14 +1257,18 @@ void Game::handleWeaponFire(int conID, int teamId, int bulletId, WEAPON_TYPE wea
 			}
 		glm::vec3 rightV = normalize(cross(dir, vec3(0, 1, 0)));
 		glm::vec3 upV = normalize(cross(dir, rightV));
+		float xoff = 0.0f;
+		float yoff = 0.0f;
+		float r = 0.0f;
+		glm::vec3 ndir;
 		for (int k = 0; k < 10; k++)
 		{
-			float xoff = glm::sin(k);
-			float yoff = glm::cos(k);
-			float r = ((rand() % 100) / 2000.0f) + 0.01f;
+			xoff = glm::sin(k);
+			yoff = glm::cos(k);
+			r = ((rand() % 100) / 2000.0f) + 0.01f;
 			rightV *= xoff*r;
 			upV *= yoff*r;
-			glm::vec3 ndir = dir + upV + rightV;
+			ndir = dir + upV + rightV;
 			addBulletToList(conID, teamId, bulletId, BULLET_TYPE::SHOTGUN_PELLET, pos, ndir);
 			rightV = normalize(cross(dir, vec3(0, 1, 0)));
 			upV = normalize(cross(dir, rightV));
@@ -1292,8 +1316,16 @@ void Game::handleConsumableUse(int conID, int teamId, CONSUMABLE_TYPE ct, glm::v
 		break;
 	case CONSUMABLE_TYPE::LIGHTSPEED:
 		playerList[conID]->addModifier(LIGHTSPEEDMODIFIER);
-		if (GetSoundActivated())
-			GetSound()->playExternalSound(SOUNDS::soundEffectLightSpeed, pos.x, pos.y, pos.z);
+		if (GetSound())
+		{
+			if (conID == localPlayerId || conID == spectateID)
+			{
+				GetSound()->playExternalSound(SOUNDS::soundEffectLightSpeedStereo, pos.x, pos.y, pos.z);
+			}
+
+			else
+				GetSound()->playExternalSound(SOUNDS::soundEffectLightSpeed, pos.x, pos.y, pos.z);
+		}
 		break;
 	case CONSUMABLE_TYPE::THERMITEGRENADE:
 		addBulletToList(conID, teamId, 0, BULLET_TYPE::THERMITE_GRENADE, pos, dir);
@@ -1338,8 +1370,16 @@ void Game::handleSpecialAbilityUse(int conID, int teamId, int sID, SPECIAL_TYPE 
 		break;
 	case SPECIAL_TYPE::MULTIJUMP:
 	{
-		if (GetSoundActivated())
-			GetSound()->playExternalSound(SOUNDS::soundEffectTrapperMultiJump, pos.x, pos.y, pos.z);
+		if (GetSound())
+		{
+			if (conID == localPlayerId || conID == spectateID)
+			{
+				GetSound()->playExternalSound(SOUNDS::soundEffectTrapperMultiJumpStereo, pos.x, pos.y, pos.z);
+			}
+
+			else
+				GetSound()->playExternalSound(SOUNDS::soundEffectTrapperMultiJump, pos.x, pos.y, pos.z);
+		}
 
 		vec3 vel = p->getVelocity();
 		if (vel.y < 0)
@@ -1362,8 +1402,16 @@ void Game::handleSpecialAbilityUse(int conID, int teamId, int sID, SPECIAL_TYPE 
 		{
 			if (cNorms[c].y < 0.5f && cNorms[c].y > -0.2f)
 			{
-				if (GetSoundActivated())
-					GetSound()->playExternalSound(SOUNDS::soundEffectHunterJump, pos.x, pos.y, pos.z);
+				if (GetSound())
+				{
+					if (conID == localPlayerId || conID == spectateID)
+					{
+						GetSound()->playExternalSound(SOUNDS::soundEffectHunterJumpStereo, pos.x, pos.y, pos.z);
+					}
+
+					else
+						GetSound()->playExternalSound(SOUNDS::soundEffectHunterJump, pos.x, pos.y, pos.z);
+				}
 
 				jumped = true;
 				glm::vec3 reflect = normalize(glm::vec3(cNorms[c].x, 0, cNorms[c].z));
@@ -1388,8 +1436,16 @@ void Game::handleSpecialAbilityUse(int conID, int teamId, int sID, SPECIAL_TYPE 
 	case SPECIAL_TYPE::LIGHTSPEEDSPECIAL:
 	{
 		p->addModifier(MODIFIER_TYPE::LIGHTSPEEDMODIFIER);
-		if (GetSoundActivated())
-			GetSound()->playExternalSound(SOUNDS::soundEffectLightSpeed, pos.x, pos.y, pos.z);
+		if (GetSound())
+		{
+			if (conID == localPlayerId || conID == spectateID)
+			{
+				GetSound()->playExternalSound(SOUNDS::soundEffectLightSpeedStereo, pos.x, pos.y, pos.z);
+			}
+
+			else
+				GetSound()->playExternalSound(SOUNDS::soundEffectLightSpeed, pos.x, pos.y, pos.z);
+		}
 	}
 	break;
 	case SPECIAL_TYPE::SPRINTD:		// D = Destroyer
@@ -1400,9 +1456,15 @@ void Game::handleSpecialAbilityUse(int conID, int teamId, int sID, SPECIAL_TYPE 
 	case SPECIAL_TYPE::DASH:
 	{
 		p->addModifier(MODIFIER_TYPE::TRUEGRITMODIFIER);
-		if (GetSoundActivated())
+		if (GetSound())
 		{
-			GetSound()->playExternalSound(SOUNDS::soundEffectBruteDash, pos.x, pos.y, pos.z);
+			if (conID == localPlayerId || conID == spectateID)
+			{
+				GetSound()->playExternalSound(SOUNDS::soundEffectBruteDashStereo, pos.x, pos.y, pos.z);
+			}
+
+			else
+				GetSound()->playExternalSound(SOUNDS::soundEffectBruteDash, pos.x, pos.y, pos.z);
 		}
 	}
 	break;
@@ -1419,7 +1481,12 @@ void Game::addEffectToList(int conID, int teamId, int effectId, EFFECT_TYPE et, 
 	{
 	case EFFECT_TYPE::LIGHT_WALL:
 		e = new LightwallEffect(p);
-		if (GetSoundActivated())
+		if (conID == localPlayerId || conID == spectateID)
+		{
+			GetSound()->playExternalSound(SOUNDS::soundEffectLightWallStereo, pos.x, pos.y, pos.z);
+		}
+
+		else
 			GetSound()->playExternalSound(SOUNDS::soundEffectLightWall, pos.x, pos.y, pos.z);
 		break;
 	case EFFECT_TYPE::THUNDER_DOME:
@@ -1523,6 +1590,7 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 		if (hi.bt == BULLET_TYPE::KILLYOURSELF)
 		{
 			p->setHP(0);
+			p->addDeath();
 			console->printMsg(p->getName() + " gave up on life.", "System", 'S');
 			return 0;
 		}
@@ -1862,6 +1930,11 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 			case BULLET_TYPE::GRENADE_SHOT:
 				if (GetSoundActivated())
 					GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeLauncherBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+				if (b->getBounces() > 3)
+				{
+					removeBullet(hi.bt, arraypos);
+					break;
+				}
 				vel *= 0.7f;
 				b->setVel(vel);
 				bounceBullet(hi, b);
@@ -1869,8 +1942,7 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 				temp.x *= 0.8f;
 				temp.y *= 0.6f;
 				temp.z *= 0.8f;
-				if (b->getBounces() > 3)
-					removeBullet(hi.bt, arraypos);
+
 				b->setDir(temp);
 				break;
 			default:
