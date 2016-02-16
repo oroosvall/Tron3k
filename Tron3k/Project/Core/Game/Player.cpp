@@ -594,8 +594,15 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 						{
 							vel.y = role.getJumpHeight() * 5;
 							airVelocity = vel;
-							if (GetSoundActivated())
+							if (GetSoundActivated() && (isLocal() || spectatingThisPlayer))
+							{
+								GetSound()->PlayStereoJump(role.getRole());
+							}
+							else
+							{
 								GetSound()->playJump(role.getRole(), pos.x, pos.y, pos.z);
+							}
+								
 						}
 					}
 

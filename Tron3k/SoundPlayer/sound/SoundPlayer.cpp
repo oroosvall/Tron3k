@@ -30,7 +30,7 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->soundList[SOUNDS::soundEffectPusleRifleShot].loadFromFile("GameFiles/Sound/soundEffectPusleRifleShot.ogg");
 		singleton->soundList[SOUNDS::firstBlood].loadFromFile("GameFiles/Sound/voiceFirstBlood.ogg");
 		singleton->musicList[MUSIC::mainMenu] = "GameFiles/Sound/musicMainMenu.ogg";
-		singleton->soundList[SOUNDS::soundEffectGrenadeLauncher].loadFromFile("GameFiles/Sound/soundEffectGrenadeLauncher.ogg");
+		singleton->soundList[SOUNDS::soundEffectGrenadeLauncher].loadFromFile("GameFiles/Sound/soundEffectGrenadeLauncher2.ogg");
 		singleton->soundList[SOUNDS::soundEffectShotGun].loadFromFile("GameFiles/Sound/soundEffectShotGun.ogg");
 		singleton->soundList[SOUNDS::soundEffectDiscGun].loadFromFile("GameFiles/Sound/soundEffectDiscGun.ogg");
 		singleton->soundList[SOUNDS::soundEffectLinkGun].loadFromFile("GameFiles/Sound/soundEffectLinkGun.ogg");
@@ -96,7 +96,7 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->soundList[SOUNDS::soundEffectBruteStepsStereo].loadFromFile("GameFiles/Sound/soundEffectBruteSteps2Stereo.ogg");
 		singleton->soundList[SOUNDS::soundEffectDiscGunStereo].loadFromFile("GameFiles/Sound/soundEffectDiscGunStereo.ogg");
 		singleton->soundList[SOUNDS::soundEffectEnergyBoostStereo].loadFromFile("GameFiles/Sound/soundEffectEnergyBoostStereo.ogg");
-		singleton->soundList[SOUNDS::soundEffectGrenadeLauncherStereo].loadFromFile("GameFiles/Sound/soundEffectGrenadeLauncherStereo.ogg");
+		singleton->soundList[SOUNDS::soundEffectGrenadeLauncherStereo].loadFromFile("GameFiles/Sound/soundEffectGrenadeLauncher2Stereo.ogg");
 		singleton->soundList[SOUNDS::soundEffectHunterJumpStereo].loadFromFile("GameFiles/Sound/soundEffectHunterJumpStereo.ogg");
 		singleton->soundList[SOUNDS::soundEffectLightSpeedStereo].loadFromFile("GameFiles/Sound/soundEffectLightSpeedStereo.ogg");
 		singleton->soundList[SOUNDS::soundEffectLightWallStereo].loadFromFile("GameFiles/Sound/soundEffectLightWallStereo.ogg");
@@ -199,12 +199,12 @@ int SoundPlayer::playLand(int role, float x, float y, float z)
 {
 	if (role == 0)
 	{
-		GetSound()->playExternalSound(SOUNDS::soundEffectTrapperLand, x, y, z);
+		GetSound()->playExternalSound(SOUNDS::soundEffectTrapperLandStereo, x, y, z);
 	}
 
 	else if (role == 2)
 	{
-		GetSound()->playExternalSound(SOUNDS::soundEffectTrapperLand, x, y, z);
+		GetSound()->playExternalSound(SOUNDS::soundEffectTrapperLandStereo, x, y, z);
 	}
 
 	else if (role == 3)
@@ -648,6 +648,19 @@ void SoundPlayer::playFootsteps(int role, float posX, float posY, float posZ)
 		}
 	
 	
+}
+
+void SoundPlayer::PlayStereoJump(int role)
+{
+	if (role == 0)
+	{
+		playUserGeneratedSound(SOUNDS::soundEffectTrapperJumpStereo);
+	}
+
+	if (role == 2)
+	{
+		playUserGeneratedSound(SOUNDS::soundEffectHunterJumpStereo);
+	}
 }
 
 void SoundPlayer::PlayStereoFootsteps(int role)
