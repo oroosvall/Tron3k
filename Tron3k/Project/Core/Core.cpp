@@ -2154,16 +2154,8 @@ void Core::inGameUIUpdate() //Ingame ui update
 				{
 					if (uiManager->HUD.loseTicketPer > 0)
 					{
-						if (uiManager->HUD.ticketLostTimer == 9)
-						{
-							uiManager->scaleBar(scaleAndText::LoseTicketsMeter, (float)(uiManager->HUD.ticketLostTimer) / 30.0f, true);
-							uiManager->HUD.ticketLostTimer -= 1;
-						}
-						else
-						{
-							uiManager->scaleBar(scaleAndText::LoseTicketsMeter, (float)(uiManager->HUD.ticketLostTimer) / (float)(uiManager->HUD.loseTicketPer), true);
-							uiManager->HUD.ticketLostTimer -= 1;
-						}
+						uiManager->scaleBar(scaleAndText::LoseTicketsMeter, (float)(uiManager->HUD.ticketLostTimer) / (float)(uiManager->HUD.loseTicketPer), true);
+						uiManager->HUD.ticketLostTimer -= 1;
 					}
 					else
 						console.printMsg("Error: Function inGameUIUpdate in Core, HUD.loseTicketPer has a value of 0 or below", "System", 'S');
