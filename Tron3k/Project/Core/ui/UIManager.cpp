@@ -266,7 +266,7 @@ void UIManager::setMenu(int menuId)
 	}
 	else if (menuId == InGameUI::RemoveMenu)
 	{
-		if(nrOfOpenedMenus > 1)
+		if(openedMenus[nrOfOpenedMenus] != InGameUI::GUI)
 		{
 			nrOfOpenedMenus--;
 			openedMenus[nrOfOpenedMenus] = -1;

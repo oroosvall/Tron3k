@@ -1115,14 +1115,13 @@ void Core::roamHandleCmds(std::string com)
 				uiManager->setTeamColor(team);
 				uiManager->changeColorTeam();
 
-				if (uiManager->getRoleBool())
+				if (!uiManager->getRoleBool())
 				{
 					uiManager->setMenu(InGameUI::RemoveMenu);
 					uiManager->setFirstMenuSet(false);
 					uiManager->setMenu(InGameUI::ClassSelect);
+					uiManager->setRoleBool(true);
 				}
-				else
-					uiManager->setMenu(InGameUI::ClassSelect);
 			}
 			else
 				console.printMsg("Invalid team. Use /team <1/2/3>", "System", 'S');
@@ -1209,7 +1208,6 @@ void Core::roamHandleCmds(std::string com)
 				uiManager->scaleBar(scaleAndText::TicketBar2, 0.0f, false);
 				uiManager->scaleBar(scaleAndText::AbilityMeter, 1.0f, true);
 
-				uiManager->setRoleBool(true);
 				uiManager->setHoverCheckBool(false);
 			}
 			else
@@ -2153,8 +2151,16 @@ void Core::inGameUIUpdate() //Ingame ui update
 				{
 					if (uiManager->HUD.loseTicketPer > 0)
 					{
-						uiManager->scaleBar(scaleAndText::LoseTicketsMeter, (float)(uiManager->HUD.ticketLostTimer) / (float)(uiManager->HUD.loseTicketPer), true);
-						uiManager->HUD.ticketLostTimer -= 1;
+						if (uiManager->HUD.ticketLostTimer == 9)
+						{
+							uiManager->scaleBar(scaleAndText::LoseTicketsMeter, (float)(uiManager->HUD.ticketLostTimer) / 30.0f, true);
+							uiManager->HUD.ticketLostTimer -= 1;
+						}
+						else
+						{
+							uiManager->scaleBar(scaleAndText::LoseTicketsMeter, (float)(uiManager->HUD.ticketLostTimer) / (float)(uiManager->HUD.loseTicketPer), true);
+							uiManager->HUD.ticketLostTimer -= 1;
+						}
 					}
 					else
 						console.printMsg("Error: Function inGameUIUpdate in Core, HUD.loseTicketPer has a value of 0 or below", "System", 'S');

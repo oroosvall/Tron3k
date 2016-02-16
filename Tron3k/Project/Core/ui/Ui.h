@@ -66,6 +66,8 @@ private:
 	//Clean up
 	//Convert
 	glm::vec2 fileCoordToScreenSpace(glm::vec2 pos);
+
+	
 public:
 	UI();
 	~UI();
@@ -78,16 +80,14 @@ public:
 
 	void clean();
 
+	void changeTex(int objId, int whichTex);
+
 	int mouseCollission(glm::vec2 pos);
 	void mouseHover(glm::vec2 pos);
-	
-	void changeTex(int objId, int whichTex);
 
 	void changeColorTeam(int whichTex);
 
 	void hideWindow();
-
-	void setWorldMatrix(float x, float y, int objId);
 
 	void setTextureId(std::vector<GLuint> uiTextureIds);
 
