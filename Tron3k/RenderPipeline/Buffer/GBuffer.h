@@ -47,11 +47,27 @@ public:
 	GLuint spotVolBuffer;
 	GLuint spotVolBufferPos; 
 
+	//pointlight volume shader
+	GLuint pointVolShader;
+	GLuint pointVolVP;
+	GLuint pointVolEye;
+	GLuint pointID;
+
+	GLuint pointvol_Position;
+	GLuint pointvol_Diffuse;
+	GLuint pointvol_Normal;
+	GLuint pointvol_GlowMap;
+
+	//pointlight Buffers
+	GLuint pointVolBuffer;
+	GLuint pointVolBufferPos;
+
 	GLuint* shaderPtr;
 	GLuint* portal_shaderPtr;
 
 	//Light variables
-	int nrOfLights;
+	int nrOfSpotLights;
+	int nrOfPointLights;
 	glm::vec3 eyePos;
 	GLuint uniformEyePos;
 

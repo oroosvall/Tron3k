@@ -287,15 +287,22 @@ void RenderPipeline::reloadShaders()
 		temp = 0;
 	}
 
+	//pointlight volume shader
+	std::string shaderNamesPointVolume[] = { "GameFiles/Shaders/pointlightVolume_vs.glsl", "GameFiles/Shaders/pointlightVolume_gs.glsl", "GameFiles/Shaders/pointlightVolume_fs.glsl" };
+	GLenum shaderTypesPointVolume[] = { GL_VERTEX_SHADER, GL_GEOMETRY_SHADER, GL_FRAGMENT_SHADER };
+	CreateProgram(temp, shaderNamesPointVolume, shaderTypesPointVolume, 3);
+	if (temp != 0)
+	{
+		gBuffer->pointVolShader = temp;
+		temp = 0;
+	}
+
 	//UI shaderLocations
 	ui_Texture = glGetUniformLocation(uiShader, "textureSample");
 	ui_World = glGetUniformLocation(uiShader, "WorldMatrix");
 	uniformPivotLocation = glGetUniformLocation(uiShader, "pivot");
 
 	//decal uniforms
-	//http:/d/www.opentk.com/node/2926
-	//decal_struct_UBO_index = glGetUniformBlockIndex(decal_Shader, "decal_in");
-	//decal_nrDecals = glGetUniformLocation(decal_Shader, "NrDecals");
 	decal_viewProj = glGetUniformLocation(decal_Shader, "ViewProjMatrix");
 	decal_pos = glGetUniformLocation(decal_Shader, "pos");
 	decal_normal = glGetUniformLocation(decal_Shader, "normal");
@@ -454,6 +461,7 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	cam.setViewProjMat(animationShader, viewProjMat[1]);
 	cam.setViewProjMat(*gBuffer->portal_shaderPtr, gBuffer->portal_vp);
 	cam.setViewProjMat(gBuffer->spotVolShader, gBuffer->spotVolVP);
+	cam.setViewProjMat(gBuffer->pointVolShader, gBuffer->pointVolVP);
 	cam.setViewProjMat(portalShaderV2, portal_VP);
 
 	contMan.update(dt);
