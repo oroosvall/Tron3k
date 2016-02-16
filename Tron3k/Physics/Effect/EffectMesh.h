@@ -42,5 +42,6 @@ public:
 
 	unsigned int getEType() { return etype; };
 	int getEID() { return eID; };
+	int getPID() { return pID; };
 };
 #endif
