@@ -1901,6 +1901,11 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 			case BULLET_TYPE::GRENADE_SHOT:
 				if (GetSoundActivated())
 					GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeLauncherBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+				if (b->getBounces() > 3)
+				{
+					removeBullet(hi.bt, arraypos);
+					break;
+				}
 				vel *= 0.7f;
 				b->setVel(vel);
 				bounceBullet(hi, b);
@@ -1908,8 +1913,7 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 				temp.x *= 0.8f;
 				temp.y *= 0.6f;
 				temp.z *= 0.8f;
-				if (b->getBounces() > 3)
-					removeBullet(hi.bt, arraypos);
+
 				b->setDir(temp);
 				break;
 			default:
