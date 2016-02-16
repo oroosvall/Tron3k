@@ -44,23 +44,26 @@ out vec4 fragment_color;
 
 void main()
 {
-	// TODO:: Only sample if we need them. Might fail before we get to use them
-	fragment_color = vec4(0,0,0,0);
-	Diffuse0 = texture(Diffuse, vec2(UV.x, UV.y));
+	fragment_color = vec4(0);
+	
 	Position0 = texture(Position, vec2(UV.x, UV.y));
-	Normal0 = texture(Normal, vec2(UV.x, UV.y));
-	glowValue = texture(GlowMap, vec2(UV.x, UV.y));
+	Diffuse0 = texture(Diffuse, vec2(UV.x, UV.y));
+	//glowValue = texture(GlowMap, vec2(UV.x, UV.y));
 	
 	vec4 specularAddetive = vec4(0,0,0,0);
 	
 	float len = length(Position0.xyz - eyepos);
 	if(len < 500)
 	{
+		
+		Normal0 = texture(Normal, vec2(UV.x, UV.y));
+		
 		vec3 normal3 = vec3(Normal0);	
 		float DiffuseFactor = dot(normal3, -ambientLightDirection);                                                                                                           
 																				   
 		if (DiffuseFactor > 0) 
 		{    
+		
 			fragment_color = vec4(0);
 			fragment_color = vec4(ambientLightColor, 1.0f) * (ambientLightDiffuseIntensity * 3) * DiffuseFactor;                                                                                          
 			vec3 VertexToEye = normalize(eyepos - Position0.xyz);                             

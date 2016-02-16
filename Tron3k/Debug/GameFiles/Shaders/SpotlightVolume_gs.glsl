@@ -29,14 +29,15 @@ vec3 down;
 
 void main() 
 {	
-	vec3 spot_pos = vec3(82, 8, 68);
-	vec3 spot_normal = normalize(vec3(1, -1, 0));
+
+	float spotlength = 5.0f;
+	float halfwidth = 5.0f;
 	
-	spot_pos = lights[spotlightID].Position;
-	spot_normal = lights[spotlightID].Direction * 5;
+	vec3 spot_pos = lights[spotlightID].Position;
+	vec3 spot_normal = lights[spotlightID].Direction * spotlength;
 	
-	right = normalize(cross(spot_normal, vec3(0,1,0))) * 5;
-	down = normalize(cross(spot_normal, right)) * 5;
+	right = normalize(cross(spot_normal, vec3(0,1,0))) * halfwidth;
+	down = normalize(cross(spot_normal, right)) * halfwidth;
 	
 	//0
 	gl_Position = ViewProjMatrix * vec4(spot_pos - down - right + spot_normal, 1);

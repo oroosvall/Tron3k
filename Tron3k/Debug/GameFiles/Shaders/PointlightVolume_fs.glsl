@@ -40,51 +40,50 @@ float gMatSpecularIntensity = 0.4;
 
 void main()
 {
-
+	fragment_color = vec4(0);
+	float size = 5.0f;
+	
 	vec2 UV = gl_FragCoord.xy / gScreenSize;
 	//fragment_color = vec4(lights[spotlightID].Color, 1) * 0.1 + texture(Diffuse, UV);
 	
-	
 	Position0 = texture(Position, UV).xyz;
-	Normal0 = texture(Normal, UV);
 	
 	vec3 LightDirection = Position0.xyz - lights[pointlightID].Position;
 	float Distance = length(LightDirection);
-	LightDirection = normalize(LightDirection);
 	
-	float DiffuseFactor = dot(Normal0.xyz, -LightDirection); 
-	
-	if (DiffuseFactor > 0) 
-	{	
-		//directional light
-		fragment_color = vec4(lights[pointlightID].Color, 1.0f) * lights[pointlightID].DiffuseIntensity * DiffuseFactor;
-		
-		//specular
-		vec4 specularAddetive = vec4(0);
-	
-		vec3 VertexToEye = normalize(eyepos - Position0);                             
-		vec3 LightReflect = normalize(reflect(LightDirection, Normal0.xyz));                     
-		float SpecularFactor = dot(VertexToEye, LightReflect);                              
-		SpecularFactor = pow(SpecularFactor, gSpecularPower);                               
-		if (SpecularFactor > 0)
-		{
-			float Distance = length(Position0.xyz - lights[pointlightID].Position);
-			float Attenuation = 1.0f / pow(max(0.0f, 1.0f - (Distance/80)), 5);
-			specularAddetive = (vec4(lights[pointlightID].Color, 1.0f) * ( 1 - Normal0.w) * SpecularFactor) / Attenuation;
-		}
-	
-		//pointlight attenuations
-		fragment_color *= pow(max(0.0f, 1.0f - (Distance/80)), 10);
-	
-		Diffuse0 = texture(Diffuse, UV);
-		fragment_color = fragment_color * Diffuse0 + specularAddetive;
-		
-		//fragment_color = vec4(1,1,1,1);
-	}
-	else
+	if(Distance < size)
 	{
-		fragment_color = vec4(0);
+		LightDirection = normalize(LightDirection);
+		Normal0 = texture(Normal, UV);	
+		float DiffuseFactor = dot(Normal0.xyz, -LightDirection); 
+		
+		if (DiffuseFactor > 0) 
+		{	
+			//directional light
+			fragment_color = vec4(lights[pointlightID].Color, 1.0f) * lights[pointlightID].DiffuseIntensity * DiffuseFactor;
+			
+			//specular
+			vec4 specularAddetive = vec4(0);
+		
+			vec3 VertexToEye = normalize(eyepos - Position0);                             
+			vec3 LightReflect = normalize(reflect(LightDirection, Normal0.xyz));                     
+			float SpecularFactor = dot(VertexToEye, LightReflect);                              
+			SpecularFactor = pow(SpecularFactor, gSpecularPower);                               
+			if (SpecularFactor > 0)
+			{
+				float Distance = length(Position0.xyz - lights[pointlightID].Position);
+				float Attenuation = 1.0f / pow(max(0.0f, 1.0f - (Distance/80)), 5);
+				specularAddetive = (vec4(lights[pointlightID].Color, 1.0f) * ( 1 - Normal0.w) * SpecularFactor) / Attenuation;
+			}
+		
+			//pointlight attenuations
+			fragment_color *= pow(max(0.0f, 1.0f - (Distance/80)), 10);
+		
+			Diffuse0 = texture(Diffuse, UV);
+			fragment_color = fragment_color * Diffuse0 + specularAddetive;
+			
+			//fragment_color = vec4(1,1,1,1);
+		}
+		//fragment_color += vec4(lights[pointlightID].Color, 1) * 0.1f;
 	}
-	
-	//fragment_color += vec4(lights[pointlightID].Color, 1) * 0.1f;
 }
