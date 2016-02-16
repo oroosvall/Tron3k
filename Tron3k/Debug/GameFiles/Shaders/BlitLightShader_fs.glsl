@@ -80,8 +80,10 @@ vec4 CalcPointLight(SpotLight l, vec3 Normal)
 	LightDirection = normalize(LightDirection);    
 
 	vec4 Color = vec4(CalcLightInternal(l, LightDirection, Normal)); 
-	float Attenuation = 1.0f / pow(max(0.0f, 1.0f - (Distance/80)), 10);
-	return Color / Attenuation;	
+	float Attenuation = pow(max(0.0f, 1.0f - (Distance/80)), 10);
+	if(length(l.Direction) < 0.3f)
+		Attenuation = pow(max(0.0f, 1.0f - (Distance/l.attenuation.w)), l.AmbientIntensity);
+	return Color * Attenuation;	
 }                                                                                           
                                                                                            
 vec4 CalcSpotLight(SpotLight l, vec3 Normal)                                                
@@ -91,7 +93,7 @@ vec4 CalcSpotLight(SpotLight l, vec3 Normal)
     	
 	if (SpotFactor > l.Cutoff) 
 	{                                                            
-		vec4 Color = CalcPointLight(l, Normal);                             
+		vec4 Color = CalcPointLight(l, Normal0.xyz);                             
 		return Color * (1.0 - (1.0 - SpotFactor) * 1.0/(1.0 - l.Cutoff));                   
 	}                                                                                       
 	else                                                                                
@@ -122,11 +124,14 @@ void main()
 			for(int n = 1; n < NumSpotLights; n++)
 			{
 				float Distance = length(Position0.xyz - lights[n].Position);
-				if (Distance < 32)
+				if(length(lights[n].Direction) < 0.3f)
 				{
-					if(length(lights[n].Direction) < 0.3f)
+					if (Distance < lights[n].attenuation.w)
 						fragment_color += CalcPointLight(lights[n], Normal0.xyz);
-					else
+				}
+				else
+				{
+					if (Distance < 32) // Hardcoded, fix with lightvolumes
 						fragment_color += CalcSpotLight(lights[n], Normal0.xyz);
 				}
 				
