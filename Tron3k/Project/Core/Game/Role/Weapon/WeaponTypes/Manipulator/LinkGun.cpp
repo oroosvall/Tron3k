@@ -1,13 +1,23 @@
 #include "LinkGun.h"
 
 LinkGun::LinkGun()
-{
-
-}
+{}
 
 LinkGun::~LinkGun()
-{
+{}
 
+bool LinkGun::shoot()
+{
+	bool ableToShoot = false;
+
+	if (firingSpeedCurrentDelay < FLT_EPSILON)
+	{
+		firingSpeedCurrentDelay = firingSpeed;
+		ableToShoot = true;
+	}
+
+
+	return ableToShoot;
 }
 
 void LinkGun::init()
@@ -19,10 +29,10 @@ void LinkGun::init()
 
 	currentBulletId = 0;
 
-	firingSpeed = 0.0f;
+	firingSpeed = 2.0f;
 	firingSpeedCurrentDelay = 0.0f;
 
-	reloadTime = 3.0f;
+	reloadTime = 0.0f;
 	rldTimer = 0;
 }
 
