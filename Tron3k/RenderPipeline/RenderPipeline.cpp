@@ -108,6 +108,8 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	bool success = TextureManager::gTm->PNGSize("GameFiles/Textures/Crosshairs/Crosshair.png", x, y);
 	cross->init(x, y);
 
+	ptex = TextureManager::gTm->createTexture("GameFiles/Textures/Particles/arrow.png");
+
 #ifdef _DEBUG
 	if (glDebugMessageCallback) {
 		printf("Register OpenGL debug callback\n");
@@ -569,6 +571,7 @@ void RenderPipeline::finalizeRender()
 		}
 	
 	glDisable(GL_BLEND);
+	glDisable(GL_CULL_FACE);
 
 	glUseProgram(particleShader);
 	cam.setViewProjMat(particleShader, particleViewProj);
@@ -576,7 +579,8 @@ void RenderPipeline::finalizeRender()
 	glProgramUniform2f(particleShader, particleSize, 0.1f, 0.1f);
 
 	glProgramUniform3f(particleShader, particleCam, gBuffer->eyePos.x, gBuffer->eyePos.y, gBuffer->eyePos.z);
-
+	
+	TextureManager::gTm->bindTexture(ptex, particleShader, particleTexture, DIFFUSE_FB);
 
 	particleTest.Draw();
 
@@ -616,6 +620,7 @@ void RenderPipeline::finalizeRender()
 	glDisable(GL_BLEND);
 
 	stopTimer(renderFrameTimeID);
+	glEnable(GL_CULL_FACE);
 
 }
 

@@ -152,6 +152,7 @@ private:
 
 	ParticleSystem particleTest;
 	ParticleSystemData pdata;
+	GLuint ptex;
 
 public:
 
