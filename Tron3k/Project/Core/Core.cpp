@@ -1178,7 +1178,7 @@ void Core::roamHandleCmds(std::string com)
 		else if (token == "/role")
 		{
 			ss >> token;
-			if (token != "/role" || token == "1" || token == "3" || token == "4")
+			if (token != "/role" || token == "1" || token == "3" || token == "4" || token == "5")
 			{
 				int role = stoi(token);
 				game->getPlayer(0)->chooseRole(role - 1);
@@ -1370,7 +1370,7 @@ void Core::clientHandleCmds(std::string com)
 		else if (token == "/role")
 		{
 			ss >> token;
-			if (token == "1" || token == "3" || token == "4")
+			if (token == "1" || token == "3" || token == "4" || token == "5")
 			{
 				int role = stoi(token);
 				top->command_role_change(top->getConId(), role);
