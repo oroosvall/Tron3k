@@ -33,9 +33,9 @@ public:
 	float yres;
 
 	//Spotlight volume shader
-	GLuint spotligtVolumeShader;
-	GLuint spotlightVP;
-	GLuint uniformEyePos_spotlightVolume;
+	GLuint spotVolShader;
+	GLuint spotVolVP;
+	GLuint spotVolEye;
 	GLuint spotID;
 
 	GLuint spotvol_Position;
@@ -43,9 +43,9 @@ public:
 	GLuint spotvol_Normal;
 	GLuint spotvol_GlowMap;
 
-	//Light Buffers
-	GLuint lightBuffer_spotlightVolume;
-	GLuint uniformBufferLightPos_spotlightVolume; 
+	//spotLight Buffers
+	GLuint spotVolBuffer;
+	GLuint spotVolBufferPos; 
 
 	GLuint* shaderPtr;
 	GLuint* portal_shaderPtr;
