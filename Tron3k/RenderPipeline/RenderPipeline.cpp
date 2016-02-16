@@ -275,6 +275,16 @@ void RenderPipeline::reloadShaders()
 		temp = 0;
 	}
 
+	//Water shader
+	std::string shaderNamesWater[] = { "GameFiles/Shaders/Water_vs.glsl", "GameFiles/Shaders/Water_fs.glsl" };
+	GLenum shaderTypesWater[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
+	CreateProgram(temp, shaderNamesWater, shaderTypesWater, 2);
+	if (temp != 0)
+	{
+		waterShader = temp;
+		temp = 0;
+	}
+
 	//UI shaderLocations
 	ui_Texture = glGetUniformLocation(uiShader, "textureSample");
 	ui_World = glGetUniformLocation(uiShader, "WorldMatrix");
@@ -408,6 +418,7 @@ void RenderPipeline::release()
 	glDeleteShader(animationShader);
 	glDeleteShader(uiShader);
 	glDeleteShader(decal_Shader);
+	glDeleteShader(waterShader);
 	uiQuad.release();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -884,6 +895,14 @@ void RenderPipeline::renderCapturePoint(int capPointID)
 	glProgramUniform1f(regularShader, uniformStaticGlowIntensityLocation[0], 1.0f);
 	glProgramUniform3fv(regularShader, uniformDynamicGlowColorLocation[0], 1, (GLfloat*)contMan.testMap.getCapPointColor(capPointID));
 	contMan.renderCapturePoint(capPointID, regularShader, worldMat[0], uniformTextureLocation[0], uniformNormalLocation[0], uniformGlowSpecLocation[0]);
+}
+
+void RenderPipeline::renderWater()
+{
+	//uvAnim = uvAnim + 0.1f * delta;
+	glDisable(GL_BLEND);
+	glUseProgram(waterShader);
+	glProgramUniform1f(waterShader, uniformUVAnim, uvAnim);
 }
 
 void RenderPipeline::renderAnimation(int playerID, int roleID, void* world, AnimationState animState, float* dgColor, float sgInten, bool first, bool primary, int roomID)
