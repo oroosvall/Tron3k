@@ -57,24 +57,41 @@ void main()
 	
 	//if(dir[0].w > 0.0f)
 	//{
-	vec3 pos = vec3(-6.8, 6.55, 124); // a position in world space
-	vec3 asd = pos + vec3(-1.50f,-1.50f,0);	// move it some
-	gl_Position = MVP * vec4(asd, 1.0f);	// and view project it
-	EmitVertex();
-	
-	asd = pos + vec3(1.50f,-1.50f,0);
-	gl_Position = MVP * vec4(asd, 1.0f);
-	EmitVertex();
-	
-	asd = pos + vec3(-1.50f,1.10f,0);
-	gl_Position = MVP * vec4(asd, 1.0f);
-	EmitVertex();
-	
-	asd = pos + vec3(1.50f,1.50f,0);
-	gl_Position = MVP * vec4(asd, 1.0f);
-	EmitVertex();
-	
-	EndPrimitive();
+//first node
+
+		vec3 pos1 = vec3(0,5,0);
+
+		vec3 pos2 = vec3(100, 5, 100);
+		//pos2.x += 20;
+		
+		gl_Position = vec4(pos1, 1);
+		gl_Position.y += 1.3;
+		gl_Position = MVP * gl_Position;
+		//UV = uv1 + vec2(0,1);
+		EmitVertex();
+		
+		//second node
+		gl_Position = vec4(pos1, 1);
+		gl_Position.y -= 1.5;
+		gl_Position = MVP * gl_Position;
+		//UV = uv1;
+		EmitVertex();
+
+		//third node
+		gl_Position = vec4(pos2, 1);
+		gl_Position.y += 1.3;
+		gl_Position = MVP * gl_Position;
+		//UV = uv2 + vec2(0,1);
+		EmitVertex();
+		
+		//third node
+		gl_Position = vec4(pos2, 1);
+		gl_Position.y -= 1.5;
+		gl_Position = MVP * gl_Position;
+		//UV = uv2;
+		EmitVertex();
+		
+		EndPrimitive();
 	// result makes no sense
 	//}
 }
