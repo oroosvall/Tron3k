@@ -1162,7 +1162,7 @@ void Game::handleWeaponFire(int conID, int teamId, int bulletId, WEAPON_TYPE wea
 				else
 					GetSound()->playExternalSound(SOUNDS::soundEffectEnergyBoost, pos.x, pos.y, pos.z);
 			}
-		playerList[conID]->healing(10);
+		playerList[conID]->healing(15);
 		playerList[conID]->getRole()->swapWeapon(WEAPON_TYPE::ENERGY_BOOST, 0);
 		break;
 
@@ -1561,6 +1561,7 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 		if (hi.bt == BULLET_TYPE::KILLYOURSELF)
 		{
 			p->setHP(0);
+			p->addDeath();
 			console->printMsg(p->getName() + " gave up on life.", "System", 'S');
 			return 0;
 		}
