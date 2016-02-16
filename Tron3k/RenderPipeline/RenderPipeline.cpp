@@ -600,7 +600,7 @@ void RenderPipeline::finalizeRender()
 
 	glDisable(GL_BLEND);
 
-	particleTest.Draw();
+	//particleTest.Draw();
 
 	stopTimer(renderFrameTimeID);
 
