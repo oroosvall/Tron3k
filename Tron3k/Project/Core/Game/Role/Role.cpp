@@ -245,7 +245,7 @@ void Role::heal(int h)
 {
 	health += h;
 	if (h > maxHealth)
-		h = maxHealth;
+		health = maxHealth;
 }
 
 void Role::returnToLife()

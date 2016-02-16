@@ -82,6 +82,7 @@ public:
 	bool allowRoleChange();
 
 	void clearPlayersOnCapPoint(); //Clear the values at the start of each frame
+	void clearTeams();
 };
 
 #endif
