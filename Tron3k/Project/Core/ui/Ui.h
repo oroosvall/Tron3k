@@ -22,6 +22,21 @@
 #include <glm\glm.hpp>
 #include <glm\gtc\matrix_transform.hpp>
 
+enum scaleAndText
+{
+	HP, //Dynamic text and scaleBar
+	Ammo,  //Dynamic text
+	TicketBar1,  //Dynamic text and ScaleBar
+	TicketBar2,  //Dynamic text and ScaleBar
+	Wins1, //Dynamic text
+	Wins2, //Dynamic text
+	Time, //Dynamic text
+	IP, //Dynamic text and inpit
+	Name, //Dynamic text and input
+	AbilityMeter, //ScaleBar
+	LoseTicketsMeter //ScaleBar
+};
+
 class UI
 {
 private:
@@ -51,6 +66,8 @@ private:
 	//Clean up
 	//Convert
 	glm::vec2 fileCoordToScreenSpace(glm::vec2 pos);
+
+	
 public:
 	UI();
 	~UI();
@@ -63,16 +80,14 @@ public:
 
 	void clean();
 
+	void changeTex(int objId, int whichTex);
+
 	int mouseCollission(glm::vec2 pos);
 	void mouseHover(glm::vec2 pos);
-	
-	void changeTex(int objId, int whichTex);
 
 	void changeColorTeam(int whichTex);
 
 	void hideWindow();
-
-	void setWorldMatrix(float x, float y, int objId);
 
 	void setTextureId(std::vector<GLuint> uiTextureIds);
 

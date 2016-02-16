@@ -665,8 +665,13 @@ public:
 			uiPtr->changeColorTeam();
 			if (gamePtr->getPlayer(p_conID)->getRole()->getRole() == ROLES::NROFROLES)
 			{
-				uiPtr->setFirstMenuSet(false);
-				uiPtr->setMenu(2);
+				if (!uiPtr->getRoleBool())
+				{
+					uiPtr->setFirstMenuSet(false);
+					uiPtr->setMenu(InGameUI::ClassSelect);
+				}
+				else
+					uiPtr->setMenu(InGameUI::ClassSelect);
 			}
 		}
 	}
@@ -728,39 +733,42 @@ public:
 		{
 			if (((KingOfTheHill*)(gamePtr->getGameMode()))->getState() != KOTHSTATE::PREROUND)
 			{
-				uiPtr->setOpenedGuiBool(true);
+				uiPtr->setRoleBool(true);
 				uiPtr->setFirstMenuSet(false);
-				uiPtr->setMenu(0);
+				uiPtr->setMenu(InGameUI::GUI);
 
 				Player* local = gamePtr->getPlayer(gamePtr->GetLocalPlayerId());
 				KingOfTheHill* koth = (KingOfTheHill*)gamePtr->getGameMode();
 
-				uiPtr->clearText(0);
-				uiPtr->clearText(1);
-				uiPtr->clearText(2);
-				uiPtr->clearText(3);
-				uiPtr->clearText(4);
-				uiPtr->clearText(5);
+				uiPtr->clearText(scaleAndText::HP);
+				uiPtr->clearText(scaleAndText::Ammo);
+				uiPtr->clearText(scaleAndText::TicketBar1);
+				uiPtr->clearText(scaleAndText::TicketBar2);
+				uiPtr->clearText(scaleAndText::Wins1);
+				uiPtr->clearText(scaleAndText::Wins2);
 
-				uiPtr->setText(std::to_string(local->getHP()), 0); //hp
+				uiPtr->HUD.HP = local->getMaxHP();
+				uiPtr->setText(std::to_string(local->getHP()), scaleAndText::HP); //hp
 
+				uiPtr->HUD.ammo = local->getMaxAmmo();
 				std::string nText = std::to_string(local->getAmmo()) + "/" + std::to_string(local->getMaxAmmo());
 				uiPtr->setText(nText, 1); //ammo
-				uiPtr->setText(std::to_string(koth->getRespawnTokens(1)), 2); //tickets
-				uiPtr->setText(std::to_string(koth->getRespawnTokens(2)), 3); //tickets2
-				uiPtr->setText(std::to_string(koth->getRoundWins(1)), 4); //wins1
-				uiPtr->setText(std::to_string(koth->getRoundWins(2)), 5); //wins2
+				uiPtr->setText(std::to_string(koth->getRespawnTokens(1)), scaleAndText::TicketBar1); //tickets
+				uiPtr->setText(std::to_string(koth->getRespawnTokens(2)), scaleAndText::TicketBar2); //tickets2
+				uiPtr->setText(std::to_string(koth->getRoundWins(1)), scaleAndText::Wins1); //wins1
+				uiPtr->setText(std::to_string(koth->getRoundWins(2)), scaleAndText::Wins2); //wins2
 				if (int(koth->getTimer()) == 0)
 				{
-					uiPtr->clearText(6);
-					uiPtr->setText("00:00", 6); //time
+					uiPtr->clearText(scaleAndText::Time);
+					uiPtr->setText("00:00", scaleAndText::Time); //time
 				}
 
-				uiPtr->scaleBar(2, (float)(koth->getRespawnTokens(1)) / (float)(koth->getMaxTokensPerTeam()), false);
-				uiPtr->scaleBar(3, (float)(koth->getRespawnTokens(2)) / (float)(koth->getMaxTokensPerTeam()), false);
-				uiPtr->scaleBar(9, 0.0f, true);
+				uiPtr->HUD.specialMeter = 100.0f;
 
-				uiPtr->setRoleBool(true);
+				uiPtr->scaleBar(scaleAndText::TicketBar1, (float)(koth->getRespawnTokens(1)) / (float)(koth->getMaxTokensPerTeam()), false);
+				uiPtr->scaleBar(scaleAndText::TicketBar2, (float)(koth->getRespawnTokens(2)) / (float)(koth->getMaxTokensPerTeam()), false);
+				uiPtr->scaleBar(scaleAndText::AbilityMeter, 0.0f, true);
+
 				uiPtr->setHoverCheckBool(false);
 			}
 		}

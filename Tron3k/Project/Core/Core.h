@@ -145,24 +145,6 @@ private:
 		GLFW_KEY_A, GLFW_KEY_S, GLFW_KEY_D, GLFW_KEY_F, GLFW_KEY_G, GLFW_KEY_H, GLFW_KEY_J, GLFW_KEY_K, GLFW_KEY_L,
 		GLFW_KEY_Z, GLFW_KEY_X, GLFW_KEY_C, GLFW_KEY_V, GLFW_KEY_B, GLFW_KEY_N, GLFW_KEY_M, GLFW_KEY_COMMA, GLFW_KEY_PERIOD, GLFW_KEY_SPACE};
 
-	struct HUDvalues
-	{
-		int HP;
-		int maxHp;
-		int ammo;
-		int maxAmmo;
-		float specialMeter;
-		int teamOneTokens;
-		int teamTwoTokens;
-		int maxTokens;
-		int teamOneRoundWins;
-		int teamTwoRoundWins;
-		int time;
-		int ticketLostTimer;
-		int loseTicketPer;
-		bool firstSecondEachRound;
-	}HUD;
-
 	//for take damage blur effect on player or spectated player
 	int lastHP_blurreffect = 0;
 public:

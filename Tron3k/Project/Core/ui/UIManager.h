@@ -8,6 +8,35 @@
 #include <sstream>
 #include <fstream>
 
+enum MainMenu
+{
+	StartMenu,
+	Multiplayer,
+	Connect,
+	Back = -1
+};
+
+enum InGameUI
+{
+	GUI,
+	TeamSelect,
+	ClassSelect,
+	RemoveMenu = -2
+};
+
+enum UISets
+{
+	Menu,
+	InGame
+};
+
+enum TeamColors
+{
+	TeamOne = 1,
+	TeamTwo = 2
+};
+
+
 
 class UIManager
 {
@@ -21,18 +50,14 @@ private:
 	UI* menus;
 	int nrOfMenus;
 	int maxMenus;
-	int* currentMenu;
-	int nrOfCurretMenus;
 	int* openedMenus;
 	int nrOfOpenedMenus;
+	int currentMenu;
+
+	bool firstMenu;
 
 	int winX;
 	int winY;
-
-	//Since multiple menus needs to be rendered when the gui is opened
-	bool guiOpened;
-
-	bool firstMenuSet;
 
 	//Lists of file names
 	std::string* fileNamesListFirstGroup; //First set of menus(Those you can use before going ingame)
@@ -46,7 +71,7 @@ private:
 	std::vector<GLuint> uiTextureIds;
 	std::vector<std::string> texturePaths;
 
-	bool roleSet = false;
+	bool roleSetFirstTime = false;
 
 	int teamColor;
 	bool doHoverCheckInGame;
@@ -58,8 +83,8 @@ public:
 	UIManager();
 	~UIManager();
 
-	void setRoleBool(bool roleSet) { this->roleSet = roleSet; };
-	bool getRoleBool() { return roleSet; };
+	void setRoleBool(bool roleSet) { this->roleSetFirstTime = roleSet; };
+	bool getRoleBool() { return roleSetFirstTime; };
 
 	void setRenderPtr(IRenderPipeline* ptr) 
 	{ 
@@ -72,19 +97,16 @@ public:
 	void inGameRender();
 
 	void setMenu(int menuId);
-	void backToGui();
 	void removeAllMenus();
+	bool LoadNextSet(int whichMenuGroup, int winX, int winY);
+
+	void setFirstMenuSet(bool set);
 
 	int collisionCheck(glm::vec2 pos);
 	void hoverCheck(glm::vec2 pos);
 
 	void changeTex(int objId, int whichTex);
 	void changeColorTeam();
-
-	bool LoadNextSet(int whichMenuGroup, int winX, int winY);
-
-	void setOpenedGuiBool(bool guiBool);
-	void setFirstMenuSet(bool set);
 
 	void setWindowResolution(int winX, int winY);
 
@@ -100,8 +122,24 @@ public:
 	void setHoverCheckBool(bool checkForHover);
 	bool getHoverCheckBool();
 
-	int getNrOfCurretMenus();
+	int getNrOfOpenedMenus();
 	int getCurrentMenu();
+
+	struct HUDvalues
+	{
+		int HP;
+		int ammo;
+		float specialMeter;
+		int teamOneTokens;
+		int teamTwoTokens;
+		int maxTokens;
+		int teamOneRoundWins;
+		int teamTwoRoundWins;
+		int time;
+		int ticketLostTimer;
+		int loseTicketPer;
+		bool firstSecondEachRound;
+	}HUD;
 
 	bool isThereAMenuUp();
 };

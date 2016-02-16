@@ -294,11 +294,6 @@ void hideWindow()
 
 }
 
-void UI::setWorldMatrix(float x, float y, int objId)
-{
-//	UiObjects[objId].setWorldMatrix(x, y);
-}
-
 //Empty
 void UI::removeMenu() 
 {
