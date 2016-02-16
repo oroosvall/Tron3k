@@ -271,7 +271,7 @@ void RenderPipeline::reloadShaders()
 	CreateProgram(temp, shaderNamesSpotVolume, shaderTypesSpotVolume, 3);
 	if (temp != 0)
 	{
-		gBuffer->spotligtVolumeShader = temp;
+		gBuffer->spotVolShader = temp;
 		temp = 0;
 	}
 
@@ -440,7 +440,7 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 
 	cam.setViewProjMat(animationShader, viewProjMat[1]);
 	cam.setViewProjMat(*gBuffer->portal_shaderPtr, gBuffer->portal_vp);
-	cam.setViewProjMat(gBuffer->spotligtVolumeShader, gBuffer->spotlightVP);
+	cam.setViewProjMat(gBuffer->spotVolShader, gBuffer->spotVolVP);
 	cam.setViewProjMat(portalShaderV2, portal_VP);
 
 	contMan.update(dt);
