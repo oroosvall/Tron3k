@@ -47,6 +47,10 @@ void ParticleSystem::Initialize(glm::vec3 pos, ParticleSystemData* ps, GLuint* p
 	omni = glGetUniformLocation(*m_program, "omni");
 	initialPos = glGetUniformLocation(*m_program, "initialPos");
 
+	//bufferLocation = glGetUniformBlockIndex(*m_program, "ParticleBuffer");
+	//
+	//glShaderStorageBlockBinding(*m_program, 1, m_vbo);
+
 	glProgramUniform1f(*m_program, lifetime, m_data->lifetime);
 	glProgramUniform1f(*m_program, force, m_data->force);
 	glProgramUniform1f(*m_program, drag, m_data->drag);
@@ -61,8 +65,10 @@ void ParticleSystem::Initialize(glm::vec3 pos, ParticleSystemData* ps, GLuint* p
 
 void ParticleSystem::Update(float dT)
 {
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, m_vbo);
+
 	glProgramUniform1f(*m_program, deltaTime, dT);
-	glDispatchCompute(1, 0, 0);
+	glDispatchCompute(1, 1, 1);
 }
 
 void ParticleSystem::Draw()

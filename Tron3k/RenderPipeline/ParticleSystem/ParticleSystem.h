@@ -34,5 +34,6 @@ private:
 	GLuint continuous;
 	GLuint omni;		
 	GLuint initialPos;
+	GLuint bufferLocation;
 };
 #endif

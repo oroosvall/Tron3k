@@ -166,6 +166,8 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 	pdata.maxparticles = 10;
 	pdata.dir = glm::vec3(1, 0, 0);
+	pdata.lifetime = 5.0f;
+	pdata.gravity = 1.0f;
 
 	particleTest.Initialize(glm::vec3(0,5,0), &pdata, &particleCS);
 
@@ -466,6 +468,11 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	gBuffer->clearLights();
 	
 	std::stringstream ss;
+
+
+	glUseProgram(particleCS);
+
+	particleTest.Update(dt);
 
 	terminateQuery();
 	
