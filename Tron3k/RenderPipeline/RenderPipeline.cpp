@@ -162,6 +162,11 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 	resetQuery();
 
+	pdata.maxparticles = 10;
+	pdata.dir = glm::vec3(1, 0, 0);
+
+	particleTest.Initialize(glm::vec3(-10, 6.5, 120), &pdata, &particleCS);
+
 	initialized = true;
 	return true;
 }
@@ -359,9 +364,14 @@ void RenderPipeline::reloadShaders()
 		temp = 0;
 	}
 
+	particleCam = glGetUniformLocation(particleShader, "cam");
+	particleSize = glGetUniformLocation(particleShader, "size");
+	particleViewProj = glGetUniformLocation(particleShader, "MVP");
+	particleTexture = glGetUniformLocation(particleShader, "tex");
+
 
 	particleShaders[0] = "GameFiles/Shaders/ParticleSystem_cs.glsl";
-	textshaderTypes[0] = GL_COMPUTE_SHADER;
+	particleshaderTypes[0] = GL_COMPUTE_SHADER;
 
 	CreateProgram(temp, particleShaders, particleshaderTypes, 1);
 	if (temp != 0)
@@ -400,6 +410,8 @@ void RenderPipeline::release()
 
 	cross->release();
 	delete cross;
+
+	particleTest.Release();
 
 	reportGPULeaks();
 
@@ -579,7 +591,16 @@ void RenderPipeline::finalizeRender()
 
 	renderCrosshair(CROSSHAIR_TRAPPER_P);
 
+	glUseProgram(particleShader);
+	cam.setViewProjMat(particleShader, particleViewProj);
+	//glProgramUniformMatrix4fv(particleShader, particleViewProj, 1, GL_FALSE, (GLfloat*)&glm::mat4());
+	glProgramUniform2f(particleShader, particleSize, 0.01f, 0.01f);
+
+	glProgramUniform3f(particleShader, particleCam, gBuffer->eyePos.x, gBuffer->eyePos.y, gBuffer->eyePos.z);
+
 	glDisable(GL_BLEND);
+
+	particleTest.Draw();
 
 	stopTimer(renderFrameTimeID);
 

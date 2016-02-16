@@ -1,41 +1,79 @@
 #version 410
-layout(triangles) in;
-layout(triangle_strip, max_vertices = 3) out;
+layout(points) in;
+layout(triangle_strip, max_vertices = 4) out;
 
-layout (location = 0) in vec4 dir[3];
-layout (location = 1) in vec4 iDir[3];
+layout (location = 0) in vec4 dir[1];
+layout (location = 1) in vec4 iDir[1];
 
-layout(location = 0) out vec4 dirOut;
-layout(location = 1) out vec4 iDirOut;
+//layout(location = 0) out vec4 dirOut;
+//layout(location = 1) out vec4 iDirOut;
+layout(location = 0) out vec2 uv_frag;
+
+uniform mat4 MVP;
+uniform vec3 cam;
+uniform vec2 size;
 
 void main() 
 {
-
-    MEN PAJA FÖR FAN!!!!
-	//vec3 v0 = Position[0];
-	//vec3 v1 = Position[1];
-	//vec3 v2 = Position[2];
+	//if(dir[0].w > 0.0f)
+	//{
+	//	vec3 pos = gl_in[0].gl_Position.xyz;
+	//	vec3 cam_normal = normalize(cam - pos);
+	//	//vec3 up = vec3(0.0f, 1.0f, 0.0f);
+	//	vec3 up = dir[0].xyz;
+	//	vec3 right = cross(cam_normal, up);
     //
-    //PositionOut = Position[0];
-    //NormalOut = (NormalIn[0]);
-    //TangentOut = (TangentIn[0]);
-    //gl_Position = gl_in[0].gl_Position;
-    //UVOut = UVCord[0];
-    //EmitVertex();
+	//	up = up * size.y*10;
+	//	right = right * size.x*10;
     //
-    //PositionOut = Position[1];
-    //NormalOut = (NormalIn[1]);
-    //TangentOut = (TangentIn[1]);
-    //gl_Position = gl_in[1].gl_Position;
-    //UVOut = UVCord[1];
-    //EmitVertex();
+	//	vec3 cPos = pos;
     //
-    //PositionOut = Position[2];
-    //NormalOut = (NormalIn[2]);
-    //TangentOut = (TangentIn[2]);
-    //gl_Position = gl_in[2].gl_Position;
-    //UVOut = UVCord[2];
-    //EmitVertex();		
+	//	//VTX 1
+	//	cPos = pos - right - up;
+	//	gl_Position = MVP * vec4(cPos, 1.0f);
+	//	uv_frag = vec2(0.0f, 0.0f);
+	//	EmitVertex();
     //
-	//EndPrimitive();
+	//	//VTX 2
+	//	cPos = pos + right - up;
+	//	gl_Position = MVP * vec4(cPos, 1.0f);
+	//	uv_frag = vec2(1.0f, 0.0f);
+	//	EmitVertex();
+    //
+	//	//VTX 3
+	//	cPos = pos + up - right;
+	//	gl_Position = MVP * vec4(cPos, 1.0f);
+	//	uv_frag = vec2(0.0f, 1.0f);
+	//	EmitVertex();
+    //
+	//	//VTX 4
+	//	cPos = pos + up + right;
+	//	gl_Position = MVP * vec4(cPos, 1.0f);
+	//	uv_frag = vec2(1.0f, 1.0f);
+	//	EmitVertex();
+	//	
+	//	EndPrimitive();
+	//}
+	
+	//if(dir[0].w > 0.0f)
+	//{
+	vec3 pos = vec3(-6.8, 6.55, 124);
+	vec3 asd = pos + vec3(-1.50f,-1.50f,0);
+	gl_Position = MVP * vec4(asd, 1.0f);
+	EmitVertex();
+	
+	asd = pos + vec3(1.50f,-1.50f,0);
+	gl_Position = MVP * vec4(asd, 1.0f);
+	EmitVertex();
+	
+	asd = pos + vec3(-1.50f,1.10f,0);
+	gl_Position = MVP * vec4(asd, 1.0f);
+	EmitVertex();
+	
+	asd = pos + vec3(1.50f,1.50f,0);
+	gl_Position = MVP * vec4(asd, 1.0f);
+	EmitVertex();
+	
+	EndPrimitive();
+	//}
 }

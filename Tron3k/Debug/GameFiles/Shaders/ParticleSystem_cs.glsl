@@ -27,7 +27,7 @@ uniform bool omni;
 
 uniform vec3 initialPos; // w == 0.0f
 
-shared uint indexCounter = 0;
+shared uint indexCounter;
 
 layout (local_size_x = WORKGROUP_SIZE, local_size_y = WORKGROUP_SIZE) in;
 void main()
