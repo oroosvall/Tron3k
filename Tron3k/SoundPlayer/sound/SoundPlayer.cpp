@@ -141,6 +141,7 @@ void SoundPlayer::playMelee(float x, float y, float z)
 			melee[i].setAttenuation(80);
 			melee[i].setMinDistance(10.0f);
 			melee[i].play();
+			return;
 		}
 	}
 }

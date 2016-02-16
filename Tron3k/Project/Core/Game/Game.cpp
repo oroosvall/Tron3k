@@ -951,6 +951,26 @@ void Game::checkBulletVEffectCollision(float dt)
 	}*/
 }
 
+void Game::checkEffectVEffectCollision()
+{
+	//bool E-coli = physics->checkEffectVEffectCollision(eType1, eType2, eid1, eid2, pid1, pid2);
+
+	//Use this line, etype1, eid1 and pid1 are for the thing, the 2s are for the other things, the lightwalls etc
+	//so thing1 is the thing removing effects.
+
+	//so just alter that line.
+	//or don't
+	//whatever.
+	//It's not like I care if you do or anything
+
+
+
+	//...
+
+
+	//baka
+}
+
 void Game::registerWeapon(Player* p)
 {
 	Weapon* wpn = p->getPlayerCurrentWeapon();
