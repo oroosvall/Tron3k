@@ -152,8 +152,6 @@ private:
 	Physics* physics;
 	int localPlayerId = -1;
 
-	bool cursorInvisible;
-
 	int musicVolumeForMenu = 30;
 
 	void checkFootsteps(float dt);
@@ -211,6 +209,7 @@ private:
 	void checkBulletVWorldCollision(float dt);
 	void checkBulletVEffectCollision(float dt);
 	void checkPlayerVEffectCollision();
+	void checkEffectVEffectCollision();
 	void checkPlayerVCapCollision();
 
 	void sendEffectBox(Effect* ef);
@@ -331,9 +330,6 @@ public:
 	float lastDT = 0;
 
 	void clearAllPlayerKD();
-
-	void setCursorInvisible(bool invisible);
-	bool getCursorInvisible();
 };
 
 #endif

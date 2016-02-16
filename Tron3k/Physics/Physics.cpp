@@ -152,7 +152,7 @@ vec3 Physics::checkAngledCylindervSphereCollision(CollideMesh mesh1, CollideMesh
 //-------Sphere Collision-------//
 glm::vec4 Physics::checkSpherevSphereCollision(Sphere mesh1, Sphere mesh2)
 {
-	glm::vec4 collided;
+	glm::vec4 collided = vec4(0,0,0,0);
 
 	glm::vec3 dist = mesh1.pos - mesh2.pos;
 	float radius = mesh1.radius + mesh2.radius;
@@ -168,7 +168,7 @@ glm::vec4 Physics::checkSpherevSphereCollision(Sphere mesh1, Sphere mesh2)
 
 glm::vec4 Physics::checkSpherevSpheretdCollision(Sphere mesh1, Sphere mesh2)
 {
-	glm::vec4 collided;
+	glm::vec4 collided = vec4(0,0,0,0);
 
 	glm::vec3 dist = mesh1.pos - mesh2.pos;
 	float radius = mesh1.radius + mesh2.radius;
@@ -429,6 +429,7 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb)
 		//plane intersection will always be closer than all other intersections on the obb
 		if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON * 10)
 		{
+			
 			return t;
 		}
 	}
@@ -581,16 +582,16 @@ vec3 Physics::checkPlayerVBulletCollision(vec3 playerPos, vec3 bulletPos, vec3 s
 	return collide;
 }
 
-std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos)
+std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos, vec3 playerDir, vec3 playerVel, float dt)
 {
 	playerBox.setPos(playerPos);
 	playerBox.setWorldSize();
+	vec3 origPos = playerPos - (playerDir * playerVel * dt);
 	AABBSingle box = playerBox.getAABB();
 	float rad = playerBox.getSphere().radius;
 	float abbrad = rad + 0.01f;
-	//box.max = playerPos + vec3(abbrad, abbrad, abbrad);
-	//box.min = playerPos - vec3(abbrad, abbrad, abbrad);
 
+	box.min = origPos - playerBox.getWorldSize();
 
 
 	std::vector<vec4> cNorms;
@@ -604,9 +605,8 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos)
 	//each abb
 	for (unsigned int j = 0; j < roomBoxes[0].getRoomBoxes()->size(); j++)
 	{
-		if (checkAABBvAABBCollision(playerBox.getAABB(), roomBoxes[0].getSpecificBox(j)->getAABB()))
+		if (checkAABBvAABBCollision(box, roomBoxes[0].getSpecificBox(j)->getAABB()))
 		{
-			//printf("%d %d \n", i, j); // test for abbs so they register
 			int size = roomBoxes[0].getSpecificBox(j)->getOBBSize();
 
 			for (int n = 0; n < size; n++)
@@ -618,7 +618,23 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos)
 					t = vec4(normalize(vec3(t)), t.w);
 					if (t.y > 0.98f)
 						t.y = 1;
+					else if (t.y < -0.98f)
+						t.y = -1;
 					cNorms.push_back(t);
+				}
+				else
+				{
+					t = getSpherevOBBNorms(origPos, rad, roomBoxes[0].getSpecificBox(j)->getOBB(n));
+					t.w = rad - t.w; //penetration depth instead of collision distance 
+					if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
+					{
+						t = vec4(normalize(vec3(t)), t.w);
+						if (t.y > 0.98f)
+							t.y = 1;
+						else if (t.y < -0.98f)
+							t.y = -1;
+						cNorms.push_back(t);
+					}
 				}
 			}
 		}
@@ -641,7 +657,7 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos)
 			//each abb
 			for (unsigned int j = 0; j < roomBoxes[i].getRoomBoxes()->size(); j++)
 			{
-				if (checkAABBvAABBCollision(playerBox.getAABB(), roomBoxes[i].getSpecificBox(j)->getAABB()))
+				if (checkAABBvAABBCollision(box, roomBoxes[i].getSpecificBox(j)->getAABB()))
 				{
 					//for each obb contained in that abb
 					int size = roomBoxes[i].getSpecificBox(j)->getOBBSize();
@@ -654,58 +670,30 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos)
 							t = vec4(normalize(vec3(t)), t.w);
 							if (t.y > 0.98f)
 								t.y = 1;
+							else if (t.y < -0.98f)
+								t.y = -1;
 							cNorms.push_back(t);
+						}
+						else
+						{
+							t = getSpherevOBBNorms(origPos, rad, roomBoxes[i].getSpecificBox(j)->getOBB(n));
+							t.w = rad - t.w; //penetration depth instead of collision distance 
+							if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
+							{
+								t = vec4(normalize(vec3(t)), t.w);
+								if (t.y > 0.98f)
+									t.y = 1;
+								else if (t.y < -0.98f)
+									t.y = -1;
+								cNorms.push_back(t);
+							}
 						}
 					}
 				}
 			}
 		}
 	}
-	if (cNorms.size() > 1)
-		int x = 0;
 	return cNorms;
-}
-
-void* Physics::checkBulletvWorldInternal(AABBSingle bulletBox, float rad, int index)//NOT USED
-{
-	return 0;
-	/* currently unused
-	std::vector<vec4> cNorms;
-
-	//each chunk
-	vec4 t = vec4(0);
-	for (unsigned int i = 0; i < worldBoxes.size(); i++)
-	{
-		//each abb
-		for (unsigned int j = 0; j < worldBoxes[i].size(); j++)
-		{
-			bool contin = false;
-
-			//do or do not, there is a try again at half the position
-
-			if (checkAABBvAABBCollision(bulletBox, worldBoxes[i][j].getAABB()))
-			{
-				//printf("%d %d \n", i, j); // test for abbs so they register
-
-				//for each obb contained in that abb
-				int size = worldBoxes[i][j].getOBBs().size();
-				for (int n = 0; n < size; n++)
-				{
-					t = getSpherevOBBNorms(bulletBox.pos, rad, &worldBoxes[i][j].getOBBs()[n]);
-					t.w = rad - t.w; //penetration depth instead of collision distance
-					if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
-					{
-						t = vec4(normalize(vec3(t)), t.w);
-						t.w = t.w * (4 - i);//gets the pendepth based on where in the dt we are
-						bulletNormal[index] = t;
-						return (void*)&t;
-					}
-				}
-			}
-		}
-	}
-	return (void*)&t;
-	*/
 }
 
 vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bulletDir, float dt)
@@ -716,7 +704,7 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 	float rad = bulletBox.getSphere().radius;
 	
 	vec3 origPos = bulletPos - (bulletVel * bulletDir * dt);
-	vec3 bPos = bulletPos;// -(bulletVel * bulletDir * dt);
+	vec3 bPos = bulletPos;
 	vec3 ePos = bulletPos + bulletDir * rad;
 	vec3 sPos = origPos - bulletDir * rad;
 
@@ -729,8 +717,6 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 		//each chunk
 		if (checkAABBvAABBCollision(box, roomBoxes[0].getSpecificBox(j)->getAABB()))
 		{
-			//printf("%d %d \n", i, j); // test for abbs so they register
-
 			//for each obb contained in that abb
 			int size = roomBoxes[0].getSpecificBox(j)->getOBBSize();
 			for (int n = 0; n < size; n++)
@@ -746,21 +732,23 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 						if (dot(lvP - theOBB->planes[p].p[0], theOBB->planes[p].n) < 0.01f)
 						{
 							if (dot(normalize(lvP - sPos), theOBB->planes[p].n) < 0.0f)
-								if (length((bPos - (bulletDir * rad)) - sPos) > (length(lvP - sPos)))
-									bPos = lvP - bulletDir * rad;
+								if (length(bPos - sPos) > (length((lvP/* - (bulletDir * rad)*/)-sPos)))
+									bPos = lvP;// -theOBB->planes[p].n * rad;// - bulletDir * rad;
 							collidedWithPlane = true;
 						}
 				}
 
 				if (collidedWithPlane)
 				{
+					//bPos -= bulletDir * rad;
 					//WE HAVE COLLISION
 					t = getSpherevOBBNorms(bPos, rad, theOBB);
 					vec3 dir = normalize(vec3(t));
 					t.w = rad - t.w; //penetration depth instead of collision distance 
 					if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 					{
-						if (dot(dir, normalize(bPos - sPos)) > -0.00001f)
+						bPos -= dir* rad;
+						if (dot(dir, normalize(bPos - sPos)) > -0.0001f)
 							dir *= -1;
 						t = vec4(dir, t.w + 0.2f);
 						bulletPos = bPos;
@@ -773,7 +761,8 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 					t.w = rad - t.w;
 					if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 					{
-						if (dot(dir, normalize(bPos - sPos)) > -0.00001f)
+						bPos -= dir* rad;
+						if (dot(dir, normalize(bPos - sPos)) > -0.0001f)
 							dir *= -1;
 						t = vec4(dir, t.w + 0.2f);
 						bulletPos = bPos;
@@ -785,7 +774,8 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 					t.w = rad - t.w; //penetration depth instead of collision distance 
 					if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 					{
-						if (dot(dir, normalize(bulletPos - sPos)) > -0.00001f)
+						bPos -= dir* rad;
+						if (dot(dir, normalize(bulletPos - sPos)) > -0.0001f)
 							dir *= -1;
 						t = vec4(dir, t.w + 0.2f);
 						return t;
@@ -795,7 +785,8 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 					t.w = rad - t.w;
 					if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 					{
-						if (dot(dir, normalize(origPos - sPos)) > -0.00001f)
+						bPos -= dir* rad;
+						if (dot(dir, normalize(origPos - sPos)) > -0.0001f)
 							dir *= -1;
 						t = vec4(dir, t.w + 0.2f);
 						bulletPos = origPos;
@@ -843,21 +834,23 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 									if (dot(lvP - theOBB->planes[p].p[0], theOBB->planes[p].n) < 0.001f)
 									{
 										if (dot(normalize(lvP - sPos), theOBB->planes[p].n) < 0.0f)
-										if (length((bPos - (bulletDir * rad)) - sPos) > (length(lvP - sPos)))
-											bPos = lvP - bulletDir * rad;
+											if (length(bPos - -sPos) > (length((lvP/* - (bulletDir * rad)*/)-sPos)))
+												bPos = lvP;// -theOBB->planes[p].n * rad;// -bulletDir * rad;
 										collidedWithPlane = true;
 									}
 							}
-
+							
 							if (collidedWithPlane)
 							{
+								//bPos -= bulletDir * rad;
 								//WE HAVE COLLISION
 								t = getSpherevOBBNorms(bPos, rad, theOBB);
 								vec3 dir = normalize(vec3(t));
 								t.w = rad - t.w; //penetration depth instead of collision distance 
 								if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 								{
-									if (dot(dir, bPos - sPos) > -0.00001f)
+									bPos -= dir* rad;
+									if (dot(dir, bPos - sPos) > -0.0001f)
 										dir *= -1;
 									t = vec4(dir, t.w + 0.2f);
 									bulletPos = bPos;
@@ -870,7 +863,8 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 								t.w = rad - t.w;
 								if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 								{
-									if (dot(dir, bPos - sPos) > -0.00001f)
+									bPos -= dir* rad;
+									if (dot(dir, bPos - sPos) > -0.0001f)
 										dir *= -1;
 									t = vec4(dir, t.w + 0.2f);
 									bulletPos = bPos;
@@ -882,7 +876,8 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 								t.w = rad - t.w; //penetration depth instead of collision distance 
 								if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 								{
-									if (dot(dir, bulletPos - sPos) > -0.00001f)
+									bPos -= dir* rad;
+									if (dot(dir, bulletPos - sPos) > -0.0001f)
 										dir *= -1;
 									t = vec4(dir, t.w + 0.2f);
 									return t;
@@ -893,7 +888,8 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 								t.w = rad - t.w;
 								if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 								{
-									if (dot(dir, origPos - sPos) > -0.00001f)
+									bPos -= dir* rad;
+									if (dot(dir, origPos - sPos) > -0.0001f)
 										dir *= -1;
 									t = vec4(dir, t.w + 0.2f);
 									bulletPos = origPos;
@@ -1031,8 +1027,8 @@ vec4 Physics::checkBulletVEffectCollision(glm::vec3 &bulletPos, vec3 bulletVel, 
 								if (dot(lvP - theOBB->planes[p].p[0], theOBB->planes[p].n) < 0.01f)
 								{
 									if (dot(normalize(lvP - sPos), theOBB->planes[p].n) < 0.0f)
-										if (length((bPos - (bulletDir * rad)) - sPos) > (length(lvP - sPos)))
-											bPos = lvP - bulletDir * rad;
+										if (length((bPos/* - (bulletDir * rad)*/)-sPos) > (length(lvP - sPos)))
+											bPos = lvP - theOBB->planes[p].n * rad;// -bulletDir * rad;
 									collidedWithPlane = true;
 								}
 						}
@@ -1075,11 +1071,96 @@ vec4 Physics::checkBulletVEffectCollision(glm::vec3 &bulletPos, vec3 bulletVel, 
 			}
 		}
 	}
+	return collided;
+}
 
-	//bPos += dirTimesVel;
-	//bulletBox.setPos(bPos);
-	//box = bulletBox.getAABB();
-	//sphere = bulletBox.getSphere();
+bool Physics::checkEffectVEffectCollision(unsigned int eType1, unsigned int eType2, int eid1, int eid2, int pid1, int pid2)
+{
+	bool collided = false;
+
+	EffectMesh* eMesh = nullptr;
+	int effectBoxesSize = (int)effectBoxes.size();
+	for (int i = 0; i < effectBoxesSize; i++)
+	{
+		if (effectBoxes[i]->getEType() == eType1 && effectBoxes[i]->getEID() == eid1 && effectBoxes[i]->getPID() == pid1)
+			eMesh = effectBoxes[i];
+	}
+
+	if (eMesh != nullptr)
+	{
+		Sphere sphere = eMesh->getSphere();
+
+		int effectBoxesSize = (int)effectBoxes.size();
+		for (int i = 0; i < effectBoxesSize; i++)
+		{
+			if (effectBoxes[i]->getEID() == eid2 && effectBoxes[i]->getEType() == eType2 && effectBoxes[i]->getPID() == pid2)
+			{
+				if (checkAABBvAABBCollision(eMesh->getAABB(), effectBoxes[i]->getAABB()))
+				{
+					if (effectBoxes[i]->getEType() == eType2)
+					{
+						if (eType2 == 0)//Lightwall, aka OBB
+						{
+							vec4 col = checkSpherevOBBlwCollision(sphere, *effectBoxes[i]->getOBB());
+								//collided = checkSpherevOBBlwCollision(sphere, *effectBoxes[i]->getOBB());
+								/*OBB* theOBB = effectBoxes[i]->getOBB();
+
+								bool collidedWithPlane = false;
+								for (int p = 0; p < 6; p++)
+								{
+									vec3 lvP = checkLinevPlaneCollision(sPos, ePos, theOBB->planes[p].p[0], theOBB->planes[p].p[1], theOBB->planes[p].p[2], theOBB->planes[p].n);
+
+									if (length(lvP) > 0.00001f)
+										if (dot(lvP - theOBB->planes[p].p[0], theOBB->planes[p].n) < 0.01f)
+										{
+											if (dot(normalize(lvP - sPos), theOBB->planes[p].n) < 0.0f)
+												if (length((bPos/* - (bulletDir * rad))-sPos) > (length(lvP - sPos)))
+													bPos = lvP - theOBB->planes[p].n * rad;// -bulletDir * rad;
+											collidedWithPlane = true;
+										}
+								}
+								if (collidedWithPlane)
+								{
+									sphere.pos = bPos;
+
+									collided = checkSpherevOBBlwCollision(sphere, *theOBB);
+									vec3 dir = normalize(vec3(collided));
+
+									if (collided.w + FLT_EPSILON >= 0 - FLT_EPSILON && collided.w - FLT_EPSILON <= rad + FLT_EPSILON)
+									{
+										if (dot(dir, normalize(bPos - sPos)) > -0.00001f)
+											dir *= -1;
+										collided = vec4(dir, collided.w + 0.2f);
+										bulletPos = bPos;
+									}
+								}
+
+								*/
+								if (col != vec4(0, 0, 0, 0))
+									collided = true;
+
+						}
+						else if (eType2 == 1)//ThunderDome aka sphere
+						{
+							vec4 col = checkSpherevSpheretdCollision(sphere, effectBoxes[i]->getSphere());
+							if (col != vec4(0, 0, 0, 0))
+								collided = true;
+						}
+						else if (eType2 > 9)//False box, no collision
+						{
+							collided = false;
+						}
+						else //evrything else is a sphere, if not, not my goddamn problem
+						{
+							vec4 col = checkSpherevSphereCollision(sphere, effectBoxes[i]->getSphere());
+							if (col != vec4(0, 0, 0, 0))
+								collided = true;
+						}
+					}
+				}
+			}
+		}
+	}
 	return collided;
 }
 

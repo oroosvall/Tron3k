@@ -15,8 +15,7 @@ DiscShot::~DiscShot()
 int DiscShot::update(float dt)
 {
 	pos += dir * vel * dt;
-	if (collided > 0)
-		collided--;
+
 	updateWorldMat();
 
 	ttl -= dt;

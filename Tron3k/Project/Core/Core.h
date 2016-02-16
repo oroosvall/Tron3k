@@ -40,6 +40,7 @@ private:
 	IRenderPipeline* renderPipe;
 	Input* i;
 	Console console;
+	bool cheatsOn = false;
 
 	CameraInput* serverCam;
 

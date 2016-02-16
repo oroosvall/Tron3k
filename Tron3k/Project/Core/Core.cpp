@@ -125,17 +125,10 @@ void Core::update(float dt)
 	if (recreate)
 		createWindow(winX, winY, fullscreen);
 
-	bool chatMode = console.getInChatMode();
-
-	if (cursorInvisible != chatMode)
-	{
-		cursorInvisible = chatMode;
-		if (chatMode)
-			glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-		else
-			glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-		renderPipe->setChatTypeMessage("");
-	}
+	if (!cursorInvisible)
+		glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	else
+		glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
 	glfwPollEvents();
 
@@ -150,7 +143,8 @@ void Core::update(float dt)
 	else
 		menuNameKeyInputUpdate(); //Updates to check input for the name window
 
-	if (cursorInvisible && renderPipe)
+	bool chatMode = console.getInChatMode();
+	if (chatMode && renderPipe)
 	{
 		if (cursorBlink > 0.5f)
 		{
@@ -165,9 +159,44 @@ void Core::update(float dt)
 	{
 		renderPipe->setChatHistoryText(console.getHistory());
 	}
+
+
+
 	if (game)
 	{
-		if (console.getInChatMode() == false)
+		if (current != SERVER)
+		{
+			if (!uiManager->isThereAMenuUp())
+				cursorInvisible = true;
+
+			int pid = game->GetLocalPlayerId();
+			if (pid != -1)
+			{
+				Player* p = game->getPlayer(pid);
+				if (p != nullptr)
+				{
+					if (current != SERVER)
+					{
+						if (!console.getInChatMode() && cursorInvisible)
+						{
+							p->setLockedControls(false);
+							renderPipe->setChatTypeMessage("");
+						}
+						else if (console.getInChatMode())
+						{
+							p->setLockedControls(true);
+						}
+
+						if (!p->getLockedControls())
+						{
+							cursorInvisible = true;
+						}
+					}
+				}
+			}
+		}
+
+		if (console.getInChatMode() == false && cheatsOn)
 		{
 			if (i->justPressed(GLFW_KEY_7))
 			{
@@ -267,6 +296,7 @@ void Core::upMenu(float dt)
 	double tX = (x / (double)winX) * 2 - 1.0; // (x/ResolutionX) * 2 - 1
 	double tY = (-y / (double)winY) * 2 + 1.0; // (y/ResolutionY) * 2 - 1
 
+	cursorInvisible = false;
 	uiManager->menuRender();
 	
 	if (i->justPressed(GLFW_MOUSE_BUTTON_LEFT))//button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
@@ -284,7 +314,6 @@ void Core::upMenu(float dt)
 			subState = 0;
 
 			uiManager->setHoverCheckBool(true);
-			cursorInvisible = false;
 			break;
 		case 1: //Multiplayer -> multiplayer window
 			uiManager->setMenu(1);
@@ -565,7 +594,6 @@ void Core::upClient(float dt)
 			me->setName(_name);
 			game->getPlayer(game->GetLocalPlayerId())->setLockedControls(true);
 			showTeamSelect();
-			game->setCursorInvisible(false);
 
 			subState++;
 			HUD.specialMeter = 100.0f;
@@ -650,9 +678,6 @@ void Core::upClient(float dt)
 				uiManager->setOpenedGuiBool(true);
 				uiManager->setFirstMenuSet(false);
 				uiManager->setMenu(0);
-
-				localp->setLockedControls(false);
-				game->setCursorInvisible(true);
 
 				uiManager->clearText(0);
 				uiManager->clearText(1);
@@ -1055,6 +1080,13 @@ void Core::roamHandleCmds(std::string com)
 			console.printMsg("/sens <positive decimal number>", "", ' ');
 
 		}
+		else if (token == "/cheats")
+		{
+			if (cheatsOn)
+				cheatsOn = false;
+			else
+				cheatsOn = true;
+		}
 		else if (token == "/name")
 		{
 			ss >> token;
@@ -1141,11 +1173,6 @@ void Core::roamHandleCmds(std::string com)
 
 				justAFrameCounterActivated = true;
 				shitBool = true;
-
-				
-				cursorInvisible = true;
-				if (game != nullptr)
-					game->setCursorInvisible(cursorInvisible);
 
 				Player* local = game->getPlayer(game->GetLocalPlayerId());
 				KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
@@ -1245,6 +1272,13 @@ void Core::clientHandleCmds(std::string com)
 			console.printMsg("/free (turns freecam on/off)", "", ' ');
 			console.printMsg("/spec # (spectate player id)", "", ' ');
 			console.printMsg("/rs  show render settings", "", ' ');
+		}
+		else if (token == "/cheats")
+		{
+			if (cheatsOn)
+				cheatsOn = false;
+			else
+				cheatsOn = true;
 		}
 		if (token == "/ready")
 		{
@@ -1857,6 +1891,11 @@ void Core::renderWorld(float dt)
 				case CLEANSEEXPLOSION:
 					break;
 				case BATTERY_SLOW:
+				{
+					BatteryFieldSlow* asd = (BatteryFieldSlow*)eff[i];
+					vec3 pos = asd->getPos();
+					renderPipe->renderExploEffect(&pos.x, asd->renderRad(), 0, &dgColor.x);
+				}
 					break;
 				case BATTERY_SPEED:
 					break;
@@ -1903,7 +1942,7 @@ void Core::renderWorld(float dt)
 			{
 				Player* p = game->getPlayer(c);
 
-				if (p == nullptr)
+				if (p == nullptr || !p->isAlive())
 					continue;
 
 				int local = game->GetLocalPlayerId();
@@ -2203,9 +2242,6 @@ void Core::inGameUIUpdate() //Ingame ui update
 				break;
 			case 40: //Continue
 				uiManager->backToGui();
-				game->getPlayer(game->GetLocalPlayerId())->setLockedControls(false);
-				cursorInvisible = false;
-				game->setCursorInvisible(cursorInvisible);
 				break;
 			case 41: //Settings
 				break;
@@ -2276,9 +2312,6 @@ void Core::handleCulling()
 				}
 				else
 				{
-					if (p->getJustRespawned())
-						lastPlayerPos = p->getPos();
-
 					int newRoom = renderPipe->portalIntersection((float*)&lastPlayerPos, (float*)&p->getPos(), p->roomID);
 					if (newRoom != -1)
 					{

@@ -16,7 +16,7 @@ private:
 
 public:
 
-	void init();
+	void init(int, int);
 
 	void release();
 	

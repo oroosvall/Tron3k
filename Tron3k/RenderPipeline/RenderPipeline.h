@@ -12,6 +12,8 @@
 
 #include "Text\Crosshair.h"
 
+#include "ParticleSystem\ParticleSystem.h"
+
 enum SETTING_INPUT
 {
 	CLEAR_COLOR_IN = PipelineValues::FLOAT3,
@@ -102,6 +104,13 @@ private:
 
 	GLuint uniformKeyMatrixLocation;
 
+	//particle shaders
+	GLuint particleCS;
+	GLuint particleShader;
+	GLuint particleSize;
+	GLuint particleViewProj;
+	GLuint particleCam;
+	GLuint particleTexture;
 
 	//lightwall
 	GLuint lwVertexDataId;
@@ -140,6 +149,9 @@ private:
 	Crosshair* cross;
 
 	GLuint crosshairTexture;
+
+	ParticleSystem particleTest;
+	ParticleSystemData pdata;
 
 public:
 

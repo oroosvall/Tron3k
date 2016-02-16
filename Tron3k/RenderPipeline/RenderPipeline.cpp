@@ -103,10 +103,10 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	chatText = new Text(chatHistoryText + chatTypeText, 11, fontTexture, vec2(10, 420));
 
 	cross = new Crosshair();
-
-	cross->init();
-
+	unsigned int x, y;
 	crosshairTexture = TextureManager::gTm->createTexture("GameFiles/Textures/Crosshairs/Crosshair.png");
+	bool success = TextureManager::gTm->PNGSize("GameFiles/Textures/Crosshairs/Crosshair.png", x, y);
+	cross->init(x, y);
 
 #ifdef _DEBUG
 	if (glDebugMessageCallback) {
@@ -162,6 +162,11 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 	resetQuery();
 
+	pdata.maxparticles = 10;
+	pdata.dir = glm::vec3(1, 0, 0);
+
+	particleTest.Initialize(glm::vec3(0,5,0), &pdata, &particleCS);
+
 	initialized = true;
 	return true;
 }
@@ -172,7 +177,7 @@ void RenderPipeline::reloadShaders()
 
 	GLuint temp;
 
-	if(gBuffer->shaderPtr == nullptr)
+	if (gBuffer->shaderPtr == nullptr)
 		gBuffer->shaderPtr = new GLuint();
 	std::string shaderNamesDeffered[] = { "GameFiles/Shaders/BlitLightShader_vs.glsl", "GameFiles/Shaders/BlitLightShader_fs.glsl" };
 	GLenum shaderTypesDeffered[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
@@ -359,6 +364,32 @@ void RenderPipeline::reloadShaders()
 	textShaderOffset = glGetUniformLocation(textShader, "offset");
 
 
+	std::string particleShaders[] = { "GameFiles/Shaders/particle_vs.glsl", "GameFiles/Shaders/particle_gs.glsl" , "GameFiles/Shaders/particle_fs.glsl" };
+	GLenum particleshaderTypes[] = { GL_VERTEX_SHADER, GL_GEOMETRY_SHADER , GL_FRAGMENT_SHADER };
+
+	CreateProgram(temp, particleShaders, particleshaderTypes, 3);
+	if (temp != 0)
+	{
+		particleShader = temp;
+		temp = 0;
+	}
+
+	particleCam = glGetUniformLocation(particleShader, "cam");
+	particleSize = glGetUniformLocation(particleShader, "size");
+	particleViewProj = glGetUniformLocation(particleShader, "VP");
+	particleTexture = glGetUniformLocation(particleShader, "tex");
+
+
+	particleShaders[0] = "GameFiles/Shaders/ParticleSystem_cs.glsl";
+	particleshaderTypes[0] = GL_COMPUTE_SHADER;
+
+	CreateProgram(temp, particleShaders, particleshaderTypes, 1);
+	if (temp != 0)
+	{
+		particleCS = temp;
+		temp = 0;
+	}
+
 	std::cout << "Done loading shaders\n";
 
 }
@@ -389,6 +420,8 @@ void RenderPipeline::release()
 
 	cross->release();
 	delete cross;
+
+	particleTest.Release();
 
 	reportGPULeaks();
 
@@ -535,6 +568,18 @@ void RenderPipeline::finalizeRender()
 			}
 		}
 	
+	glDisable(GL_BLEND);
+
+	glUseProgram(particleShader);
+	cam.setViewProjMat(particleShader, particleViewProj);
+	//glProgramUniformMatrix4fv(particleShader, particleViewProj, 1, GL_FALSE, (GLfloat*)&glm::mat4());
+	glProgramUniform2f(particleShader, particleSize, 0.1f, 0.1f);
+
+	glProgramUniform3f(particleShader, particleCam, gBuffer->eyePos.x, gBuffer->eyePos.y, gBuffer->eyePos.z);
+
+
+	particleTest.Draw();
+
 
 	glUseProgram(glowShaderTweeks);
 	
@@ -544,7 +589,7 @@ void RenderPipeline::finalizeRender()
 
 	//GBuffer Render
 	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
-	glClear(GL_DEPTH_BUFFER_BIT);
+	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
 	gBuffer->render();
 	
@@ -568,7 +613,6 @@ void RenderPipeline::finalizeRender()
 	//uglyCrosshairSolution->draw();
 
 	renderCrosshair(CROSSHAIR_TRAPPER_P);
-
 	glDisable(GL_BLEND);
 
 	stopTimer(renderFrameTimeID);

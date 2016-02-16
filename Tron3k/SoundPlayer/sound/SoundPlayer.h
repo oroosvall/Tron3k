@@ -38,6 +38,8 @@ private:
 	sf::Sound destroyerStop;
 	sf::Sound destroyerStart;
 	sf::Sound bruteSteps;
+	sf::Sound melee[10];
+	
 	sf::SoundBuffer soundList[SOUNDS::nrOfSounds];
 	string musicList[MUSIC::nrOfMusic];
 	bool fading = false;
@@ -72,6 +74,8 @@ public:
 	virtual void setLocalPlayerPos(glm::vec3 playerPos);
 	virtual int playMusic(int music);
 	virtual void stopMusic();
+	virtual void PlayStereoFootsteps(int);
+	virtual void PlayStereoJump(int);
 
 	virtual int playMapSounds();
 
@@ -83,6 +87,9 @@ public:
 	virtual int playDestroyerStop(float x, float y, float z);
 	virtual int playDestroyerStart(float x, float y, float z);
 	virtual int playBrute(float, float, float);
+	virtual void playMelee(float, float, float);
+	virtual void playMeleeStereo();
+
 	virtual void stopBrute()
 	{
 		bruteSteps.stop();

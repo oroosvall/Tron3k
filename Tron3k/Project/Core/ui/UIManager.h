@@ -102,6 +102,8 @@ public:
 
 	int getNrOfCurretMenus();
 	int getCurrentMenu();
+
+	bool isThereAMenuUp();
 };
 
 #endif

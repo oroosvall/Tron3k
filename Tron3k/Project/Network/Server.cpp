@@ -60,9 +60,11 @@ void Server::event_gamemode_data()
 		Uint8 teamTwoOnCapP = koth->getPlayersOnPoint(2);
 		Uint8 capPoint = koth->getCapturePoint();
 		float timer = koth->getTimer();
+		Uint8 teamOneScore = koth->getRoundWins(1);
+		Uint8 teamTwoScore = koth->getRoundWins(2);
 		Uint8 state = koth->getState();
 		Uint8 lastMsg = koth->getLastMsg();
-		*out << teamOneTokens << teamTwoTokens << teamOneOnCapP << teamTwoOnCapP << capPoint << timer;
+		*out << teamOneTokens << teamTwoTokens << teamOneOnCapP << teamTwoOnCapP << capPoint << timer << teamOneScore << teamTwoScore;
 		*out << state << lastMsg;
 	}
 	

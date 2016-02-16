@@ -21,10 +21,10 @@ bool BatteryFields::shoot()
 			currentClipAmmo--;
 			firingSpeedCurrentDelay = firingSpeed;
 			ableToShoot = true;
-			if (weaponType == WEAPON_TYPE::BATTERYFIELD_SLOW)
-				weaponType = WEAPON_TYPE::BATTERYFIELD_SPEED;
-			else if (weaponType == WEAPON_TYPE::BATTERYFIELD_SPEED)
-				weaponType = WEAPON_TYPE::BATTERYFIELD_SLOW;
+			if (weaponType == WEAPON_TYPE::BATTERYWPN_SLOW)
+				weaponType = WEAPON_TYPE::BATTERYWPN_SPEED;
+			else if (weaponType == WEAPON_TYPE::BATTERYWPN_SPEED)
+				weaponType = WEAPON_TYPE::BATTERYWPN_SLOW;
 		}
 	}
 
@@ -34,13 +34,13 @@ bool BatteryFields::shoot()
 bool BatteryFields::reload()
 {
 	rldTimer = reloadTime;
-	weaponType = WEAPON_TYPE::BATTERYFIELD_SPEED;
+	weaponType = WEAPON_TYPE::BATTERYWPN_SPEED;
 	return true;
 }
 
 void BatteryFields::init()
 {
-	weaponType = WEAPON_TYPE::BATTERYFIELD_SPEED;
+	weaponType = WEAPON_TYPE::BATTERYWPN_SPEED;
 
 	maxClipSize = 2;
 	currentClipAmmo = maxClipSize;

@@ -40,6 +40,9 @@
     <Filter Include="Source Files\Streaming">
       <UniqueIdentifier>{a2871761-4ebf-4e5f-818e-5dbbc3a72066}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\ParticleSystem">
+      <UniqueIdentifier>{7b8440a1-f87b-4188-820b-33fc63e6c69b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RenderPipeline.cpp">
@@ -104,6 +107,9 @@
     </ClCompile>
     <ClCompile Include="Text\Text.cpp">
       <Filter>Source Files\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystem\ParticleSystem.cpp">
+      <Filter>Source Files\ParticleSystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -184,6 +190,12 @@
     </ClInclude>
     <ClInclude Include="Text\Crosshair.h">
       <Filter>Source Files\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem\ParticleSystem.h">
+      <Filter>Source Files\ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem\ParticleStructs.h">
+      <Filter>Source Files\ParticleSystem</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

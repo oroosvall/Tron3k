@@ -42,6 +42,11 @@ void Player::setName(std::string newName)
 
 void Player::setGoalPos(glm::vec3 newPos)
 {
+	if (!isDead)
+	{
+		if (newPos.y < -6.0f)
+			return;
+	}
 	goalpos = newPos;
 	oldPos = pos;
 	goalTimer = 0.0f;
@@ -94,7 +99,7 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool spectatin
 
 	if (GetSoundActivated())
 	{
-		GetSound()->setLocalPlayerPos(pos);
+		GetSound()->setLocalPlayerPos(cam->getPos());
 		GetSound()->setLocalPlayerDir(cam->getDir());
 	}
 
@@ -105,21 +110,8 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool spectatin
 		{
 			this->setFootstepsCountdown();
 			this->setFootstepsLoop(false);
-			GetSound()->playFootsteps(this->role.getRole(), pos.x, pos.y, pos.z);
+			GetSound()->PlayStereoFootsteps(this->role.getRole());
 		}
-
-		if (this->role.getRole() == 1 && GetSoundActivated() && GetSound()->destroyerPaused == true)
-		{
-
-			GetSound()->playFootsteps(this->role.getRole(), pos.x, pos.y, pos.z);
-			GetSound()->destroyerPaused = false;
-		}
-
-		/*	else if (this->role.getRole() == 3 && GetSoundActivated() && GetSound()->brutePaused == true)
-		{
-		GetSound()->playFootsteps(this->role.getRole(), pos.x, pos.y, pos.z);
-		GetSound()->brutePaused = false;
-		}*/
 	}
 
 	else
@@ -140,8 +132,6 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool spectatin
 
 void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool specingThis)
 {
-	//get normals
-	//std::vector<vec4> cNorms = physics->sphereVWorldCollision(pos - (vec3(0, 0.55f, 0)), 1);
 	effectCollisionHandling();
 	//Collision handling here, after movement
 	bool ceiling = false;
@@ -170,48 +160,27 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 				ceiling = true;
 
 			//ramp factor and grounded
-
 			if (collisionNormals[k].y > 0.4f)
 			{
 				grounded = true;
 			}
 
-			// abslut value, if two collisions from the same angle they should not move us twice the distance
-			//if (length(pendepth) > length(posadjust))
-				//posadjust = pendepth;
 			
 			if (abs(pendepth.x) > abs(posadjust.x))
-				posadjust.x += pendepth.x;
-			if (abs(pendepth.y) > abs(posadjust.y))
-				posadjust.y += pendepth.y;
-			if (abs(pendepth.z) > abs(posadjust.z))
-				posadjust.z += pendepth.z;
-				
-		//	posadjust += normalize(pendepth);
-			//l += length(pendepth);
-			//divs++;
-			
-			/*if (pendepth.x > 0.0f || pendepth.x < 0.0f)//abs(posadjust.x) < abs(pendepth.x))
 			{
 				posadjust.x += pendepth.x;
 				xDivs++;
 			}
-			if (pendepth.y > 0.0f || pendepth.y < 0.0f)
+			if (abs(pendepth.y) > abs(posadjust.y))
 			{
 				posadjust.y += pendepth.y;
 				yDivs++;
 			}
-			if (pendepth.z > 0.0f || pendepth.z < 0.0f)
+			if (abs(pendepth.z) > abs(posadjust.z))
 			{
 				posadjust.z += pendepth.z;
 				zDivs++;
-			}/*
-			 if ((posadjust.y * posadjust.y) / k < pendepth.y * pendepth.y)
-			 posadjust.y += pendepth.y;
-			 if (abs(posadjust.z) < abs(pendepth.z))
-			 posadjust.z += pendepth.z;
-			 */
-			 //posadjust += pendepth;
+			}
 		}
 
 		if (xDivs > 1)
@@ -220,22 +189,7 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 			posadjust.y /= yDivs;
 		if (zDivs > 1)
 			posadjust.z /= zDivs;
-		
-		//l /= divs;
 
-		//posadjust = (normalize(posadjust) * l);
-
-		//ceiling = true;
-		
-		//	grounded = true;
-		/*posadjust = normalize(posadjust);// /= collisionNormalSize;
-		for (int k = 0; k < collisionNormalSize; k++)
-		{
-		posadjust *= collisionNormals[k].w;
-		}*/
-		// this is for air only since grounded will set the vel to 0 later
-		// the dt * 0.5 is supposed to remove almost all velocity in that dir
-		// while + posajust w/o  /dt  will remove it slower
 		posadjust = posadjust * 0.99f;
 		
 		vel += posadjust;
@@ -244,7 +198,7 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool s
 			posadjust.y = 0;
 			grounded = false;
 		}
-		// / dt * 0.5f;
+
 		pos += posadjust;
 
 		if (posadjust.y < 0.00001f && posadjust.y > -0.00001f)
@@ -486,422 +440,414 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 {
 	diedThisFrame = false;
 	PLAYERMSG msg = NONE;
-
-
-
-	if (grounded)
-		int x = 0;
-	else
-		int x = 1;
-
-	if (collided)
-		int x = 0;
-	else
-		int x = 1;
-
-	modifiersGetData(dt); //Dont Remove Please!
-
-	vec3 olddir = cam->getDir();
-	if (isLocalPlayer) // even if we are the local player we can be dead and spectating some one
+	if (role.getRole() != NROFROLES)
 	{
-		role.update(dt);
-		//default movement anims
-		animRole = role.getRole();
-		animPrimary = false;
-		if (role.getWeaponNRequiped() == 0) // if primary
-			animPrimary = true;
+		modifiersGetData(dt); //Dont Remove Please!
 
-		// *** first person defaults ***
-		anim_first_current = AnimationState::first_primary_idle;
-		if (animRole != ROLES::TRAPPER) // trapper renders regular primary as secondary
-			if (animPrimary == false)
-				anim_first_current = AnimationState::first_secondary_idle;
-
-		// *** third person defaults ***
-		anim_third_current = AnimationState::third_primary_idle;
-		//only brute and manipulator has a secondary 3rd person render
-		if (animRole == ROLES::BRUTE || animRole == ROLES::MANIPULATOR)
-			if (animPrimary == false)
-				anim_third_current = AnimationState::third_secondary_idle;
-
-		if (i->justPressed(GLFW_KEY_ENTER))
+		vec3 olddir = cam->getDir();
+		if (isLocalPlayer) // even if we are the local player we can be dead and spectating some one
 		{
-			if (lockControls)
-				lockControls = false;
-			else
-				lockControls = true;
-		}
-
-		//if (noclip)
-		//	vel *= 0;
-
-		//friction
-		//if (grounded)
-		//{
-		//	vel -= vec3(vel.x, 0, vel.z) * dt * 30.0f;
-		//}
-
-		//instant stop
-		if (grounded && isLocalPlayer)
-		{
-			airVelocity = vel = vec3(0);
-		}
-
-		if (!lockControls)
-		{
-			//move camera to where we are looking.
-			//if freecam is true the cam can move on its own
-			if (spectating == false)
-			{
-				//if (i->justPressed(GLFW_KEY_C)) // flymode
-				//	noclip = !noclip;
-
-				if (noclip)
-				{
-					cam->update(dt, true);
-					setPos(cam->getPos());
-					vel *= 0;
-				}
-				else
-					cam->update(dt, freecam);
-			}
-
-			//If freecam or spectating dont take player move input
-			if (freecam == false && isDead == false)
-			{
-				roomID = cam->roomID;
-
-				dir = cam->getDir();
-				vec2 tempvec = vec2(0, 0);
-
-				if (!grounded)//IN THE AIR YO
-				{
-					/*
-					Att lägga till: Kolla så att hastigheten I DEN GIVNA RIKTNINGEN
-					är mindre än tillåtet innan speed läggs till.
-					Detta på alla knappar, inte bara W och S.
-					*/
-					if (i->getKeyInfo(GLFW_KEY_W))
-					{
-						//if (length(glm::vec2(airVelocity.x, airVelocity.z)) < role.getMovementSpeed()*0.1f)
-						//{
-						vel += normalize(glm::vec3(dir.x, 0, dir.z))*dt*0.3f;
-						//}
-					}
-
-					if (i->getKeyInfo(GLFW_KEY_S))
-					{
-						//if (length(glm::vec2(airVelocity.x, airVelocity.z)) < role.getMovementSpeed()*0.1f)
-						//{
-						vel -= normalize(glm::vec3(dir.x, 0, dir.z))*dt*0.3f;
-						//}
-					}
-
-					if (!(i->getKeyInfo(GLFW_KEY_A) && i->getKeyInfo(GLFW_KEY_D)))
-					{
-						if (i->getKeyInfo(GLFW_KEY_A))
-						{
-							vec3 left = cross(vec3(0, 1, 0), dir);
-							if (length(left) > 0)
-								vel += normalize(left)*dt*0.4f;
-						}
-						if (i->getKeyInfo(GLFW_KEY_D))
-						{
-							vec3 right = cross(dir, vec3(0, 1, 0));
-							if (length(right) > 0)
-								vel += normalize(right)*dt*0.4f;
-						}
-					}
-				}
-				else if (grounded)
-				{
-					if (i->getKeyInfo(GLFW_KEY_W))
-					{
-						tempvec += normalize(vec2(dir.x, dir.z));
-					}
-
-					if (i->getKeyInfo(GLFW_KEY_S))
-					{
-						tempvec += -normalize(vec2(dir.x, dir.z));
-					}
-
-					if (!(i->getKeyInfo(GLFW_KEY_A) && i->getKeyInfo(GLFW_KEY_D)))
-					{
-						if (i->getKeyInfo(GLFW_KEY_A))
-						{
-							vec3 left = cross(vec3(0, 1, 0), dir);
-							tempvec += normalize(vec2(left.x, left.z));
-						}
-						if (i->getKeyInfo(GLFW_KEY_D))
-						{
-							vec3 right = cross(dir, vec3(0, 1, 0));
-							tempvec += normalize(vec2(right.x, right.z));
-						}
-					}
-
-					if (length(tempvec) > 0)
-					{
-						tempvec = normalize(tempvec);
-						vel.x = tempvec.x;
-						vel.z = tempvec.y;
-					}
-				}
-
-
-				Special* mobility = role.getMobilityAbility();
-				if (i->justPressed(mobility->getActivationKey()))
-				{
-					if (mobility->allowedToActivate(this))
-					{
-						if (mobility->getActivationCost() < role.getSpecialMeter())
-						{
-							role.setSpecialMeter(role.getSpecialMeter() - mobility->getActivationCost());
-							msg = MOBILITYUSE;
-						}
-					}
-				}
-
-				if (i->getKeyInfo(GLFW_KEY_SPACE))
-				{
-					if (grounded)
-					{
-						vel.y = role.getJumpHeight() * 5;
-						airVelocity = vel;
-						if (GetSoundActivated())
-							GetSound()->playJump(role.getRole(), pos.x, pos.y, pos.z);
-					}
-				}
-
-				if (!role.getIfBusy())
-				{
-					if (i->justPressed(GLFW_KEY_R))
-					{
-						reloadCurrentWeapon();
-					}
-
-					if (int(i->getScrollValue() > 0.0) || i->justPressed(GLFW_KEY_1))
-					{
-						if (role.getWeaponNRequiped() != 0)
-						{
-							role.swapWeaponLocal(0);
-							msg = WPNSWITCH;
-
-							animOverideIfPriority(anim_first_current, AnimationState::first_secondary_switch);
-							if (animRole == ROLES::BRUTE)
-							{
-								animOverideIfPriority(anim_third_current, AnimationState::third_secondary_switch);
-								animOverideIfPriority(anim_first_current, AnimationState::first_primary_switch_IN);
-							}
-
-							animSwapActive = true;
-						}
-					}
-
-					if (int(i->getScrollValue() < 0.0) || i->justPressed(GLFW_KEY_2))
-					{
-						if (role.getWeaponNRequiped() != 1)
-						{
-							msg = WPNSWITCH;
-
-							if (animRole == ROLES::TRAPPER)
-							{
-								if (role.getCurrentWeapon()->getCurrentAmmo() > 1)
-								{
-									role.swapWeapon(WEAPON_TYPE::ENERGY_BOOST, 1);
-									animPrimary = false;
-									msg = SHOOT;
-									shoot();
-									animPrimary = true;
-								}
-								else
-								{
-									reloadCurrentWeapon();
-									msg = NONE;
-								}
-							}
-							else
-							{
-								role.swapWeaponLocal(1);
-								animOverideIfPriority(anim_first_current, AnimationState::first_primary_switch);
-							}
-							if (animRole == ROLES::BRUTE)
-							{
-								animOverideIfPriority(anim_first_current, AnimationState::first_secondary_switch_IN);
-								animOverideIfPriority(anim_third_current, AnimationState::third_primary_switch);
-							}
-
-							animSwapActive = true;
-
-						}
-					}
-
-					if (i->getKeyInfo(GLFW_MOUSE_BUTTON_LEFT))		//Temp
-					{
-						if (role.getCurrentWeapon()->shoot())
-						{
-							msg = SHOOT;
-							shoot();
-						}
-						else if (role.getCurrentWeapon()->getCurrentAmmo() == 0)
-						{
-							reloadCurrentWeapon();
-						}
-					}
-
-					if (i->justPressed(GLFW_KEY_Q))
-					{
-
-						Consumable* c = role.getConsumable();
-						if (c->use())
-						{
-							msg = USEITEM;
-							animOverideIfPriority(anim_first_current, AnimationState::first_primary_throw);
-						}
-
-					}
-				}
-				if (i->justPressed(GLFW_KEY_E))
-				{
-					if (role.getSpecialAbility()->allowedToActivate(this))
-					{
-						msg = SPECIALUSE;
-					}
-				}
-
-/*				if (i->justPressed(GLFW_KEY_Z))					//Temp?
-				{
-					if (GetSoundActivated() == 0 && GetInitialized() == 0)
-					{
-						InitSound(CreateSound(), 1);
-						GetSound()->playMusic(mainMenu);
-					}
-					else if (GetInitialized())
-					{
-						GetSound()->enableSounds();
-					}
-				}
-				if (i->justPressed(GLFW_KEY_M))
-					role.setSpecialMeter(100.0f);
-*/
-			} // end of player input
-		} // end of lock control check
-
-		if (pos.y < -5.0f && isLocalPlayer)	//If we fall through the map we die
-		{
-			role.setHealth(0);
-		}
-
-		//if (i->justPressed(GLFW_KEY_O))
-			//role.setHealth(0);
-
-		if (role.getHealth() <= 0 && !isDead && role.getRole() != ROLES::NROFROLES)
-		{
-			isDead = true;
-			msg = DEATH;
-			respawnTimer = respawnTime;
-			vel = glm::vec3(0, 0, 0);
-
-			if (GetSoundActivated())
-			{
-				GetSound()->playUserGeneratedSound(SOUNDS::soundEffectYouDied);
-			}
-		}
-
-		if (isDead && respawnTimer != 0.0f)
-		{
-			respawnTimer -= dt;
-			if (respawnTimer < FLT_EPSILON)
-			{
-				respawnTimer = 0.0f;
-				msg = PLAYERRESPAWN;
-				if (GetSoundActivated())
-				{
-					GetSound()->playUserGeneratedSound(SOUNDS::soundEffectRespawn);
-				}
-			}
-		}
-
-		movementAnimationChecks(dt);
-
-		modifiersSetData(dt);	//Dont Remove Again Please!
-		movePlayer(dt, olddir, freecam, spectating); //This moves the player regardless of what we might end up colliding with
-
-
-		clearCollisionNormals(); //Doesn't actually clear the array, just manually sets size to 0. This is to speed things up a little.
-		clearEffectCollNormals();
-	} // end of local player check
-	else
-	{
-		/*
-		THIS IS NOT THE LOCAL PLAYER
-		*/
-		goalTimer += dt;
-		float t = goalTimer / interpolationTick;
-
-		if (t > 1.0f)
-			t = 1.0f;
-
-		pos = (oldPos * (1.0f - t)) + (goalpos * t);
-		glm::vec3 prev = dir;
-		dir = (oldDir * (1.0f - t)) + (goaldir * t);
-
-		rotatePlayer(prev, dir);
-
-		if (spectatingThisPlayer == true)
-		{
-			cam->roomID = roomID;
-
-			cam->setCam(pos, dir);
-
+			role.update(dt);
+			//default movement anims
 			animRole = role.getRole();
 			animPrimary = false;
 			if (role.getWeaponNRequiped() == 0) // if primary
 				animPrimary = true;
 
-			//special case when spectating a brute and he swaps weapons
+			// *** first person defaults ***
+			anim_first_current = AnimationState::first_primary_idle;
+			if (animRole != ROLES::TRAPPER) // trapper renders regular primary as secondary
+				if (animPrimary == false)
+					anim_first_current = AnimationState::first_secondary_idle;
 
-			if (animRole == ROLES::BRUTE && animSwapActive == false)
+			// *** third person defaults ***
+			anim_third_current = AnimationState::third_primary_idle;
+			//only brute and manipulator has a secondary 3rd person render
+			if (animRole == ROLES::BRUTE || animRole == ROLES::MANIPULATOR)
+				if (animPrimary == false)
+					anim_third_current = AnimationState::third_secondary_idle;
+
+
+			//instant stop
+			if (grounded && isLocalPlayer)
 			{
-				//init swap 1st to second
-				if (anim_first_framePeak == AnimationState::first_primary_switch)
+				airVelocity = vel = vec3(0);
+			}
+
+			if (!lockControls)
+			{
+				//move camera to where we are looking.
+				//if freecam is true the cam can move on its own
+				if (spectating == false)
 				{
-					animSwapTime_OUT = 0.53f;
-					animSwapActive = true;
+					//if (i->justPressed(GLFW_KEY_C)) // flymode
+					//	noclip = !noclip;
+
+					if (noclip)
+					{
+						cam->update(dt, true);
+						setPos(cam->getPos());
+						vel *= 0;
+					}
+					else
+						cam->update(dt, freecam);
 				}
-				//init swap 2nd to first
-				else if (anim_first_framePeak == AnimationState::first_secondary_switch)
+
+				//If freecam or spectating dont take player move input
+				if (freecam == false && isDead == false)
 				{
-					animSwapTime_OUT = 0.34f;
-					animSwapActive = true;
+					roomID = cam->roomID;
+
+					dir = cam->getDir();
+					vec2 tempvec = vec2(0, 0);
+
+					if (!grounded)//IN THE AIR YO
+					{
+						/*
+						Att lägga till: Kolla så att hastigheten I DEN GIVNA RIKTNINGEN
+						är mindre än tillåtet innan speed läggs till.
+						Detta på alla knappar, inte bara W och S.
+						*/
+						if (i->getKeyInfo(GLFW_KEY_W))
+						{
+							//if (length(glm::vec2(airVelocity.x, airVelocity.z)) < role.getMovementSpeed()*0.1f)
+							//{
+							vel += normalize(glm::vec3(dir.x, 0, dir.z))*dt*0.3f;
+							//}
+						}
+
+						if (i->getKeyInfo(GLFW_KEY_S))
+						{
+							//if (length(glm::vec2(airVelocity.x, airVelocity.z)) < role.getMovementSpeed()*0.1f)
+							//{
+							vel -= normalize(glm::vec3(dir.x, 0, dir.z))*dt*0.3f;
+							//}
+						}
+
+						if (!(i->getKeyInfo(GLFW_KEY_A) && i->getKeyInfo(GLFW_KEY_D)))
+						{
+							if (i->getKeyInfo(GLFW_KEY_A))
+							{
+								vec3 left = cross(vec3(0, 1, 0), dir);
+								if (length(left) > 0)
+									vel += normalize(left)*dt*0.4f;
+							}
+							if (i->getKeyInfo(GLFW_KEY_D))
+							{
+								vec3 right = cross(dir, vec3(0, 1, 0));
+								if (length(right) > 0)
+									vel += normalize(right)*dt*0.4f;
+							}
+						}
+					}
+					else if (grounded)
+					{
+						if (i->getKeyInfo(GLFW_KEY_W))
+						{
+							tempvec += normalize(vec2(dir.x, dir.z));
+						}
+
+						if (i->getKeyInfo(GLFW_KEY_S))
+						{
+							tempvec += -normalize(vec2(dir.x, dir.z));
+						}
+
+						if (!(i->getKeyInfo(GLFW_KEY_A) && i->getKeyInfo(GLFW_KEY_D)))
+						{
+							if (i->getKeyInfo(GLFW_KEY_A))
+							{
+								vec3 left = cross(vec3(0, 1, 0), dir);
+								tempvec += normalize(vec2(left.x, left.z));
+							}
+							if (i->getKeyInfo(GLFW_KEY_D))
+							{
+								vec3 right = cross(dir, vec3(0, 1, 0));
+								tempvec += normalize(vec2(right.x, right.z));
+							}
+						}
+
+						if (length(tempvec) > 0)
+						{
+							tempvec = normalize(tempvec);
+							vel.x = tempvec.x;
+							vel.z = tempvec.y;
+						}
+					}
+
+
+					Special* mobility = role.getMobilityAbility();
+					if (i->justPressed(mobility->getActivationKey()))
+					{
+						if (mobility->allowedToActivate(this))
+						{
+							if (mobility->getActivationCost() < role.getSpecialMeter())
+							{
+								role.setSpecialMeter(role.getSpecialMeter() - mobility->getActivationCost());
+								msg = MOBILITYUSE;
+							}
+						}
+					}
+
+					if (i->getKeyInfo(GLFW_KEY_SPACE))
+					{
+						if (grounded)
+						{
+							vel.y = role.getJumpHeight() * 5;
+							airVelocity = vel;
+							if (GetSoundActivated())
+							{
+								if (isLocal() || spectatingThisPlayer)
+								{
+									GetSound()->PlayStereoJump(role.getRole());
+								}
+								else
+								{
+									GetSound()->playJump(role.getRole(), pos.x, pos.y, pos.z);
+								}
+								
+							}
+							
+								
+						}
+					}
+
+					areWeScrolling = i->getScrollValue();
+
+					if (!role.getIfBusy())
+					{
+						if (i->justPressed(GLFW_KEY_R))
+						{
+							reloadCurrentWeapon();
+						}
+						int areWeScrolling = i->getScrollValue();
+
+						if (areWeScrolling < 0.0 || i->justPressed(GLFW_KEY_1))
+						{
+							if (role.getWeaponNRequiped() != 0)
+							{
+								role.swapWeaponLocal(0);
+								msg = WPNSWITCH;
+
+								animOverideIfPriority(anim_first_current, AnimationState::first_secondary_switch);
+								if (animRole == ROLES::BRUTE)
+								{
+									animOverideIfPriority(anim_third_current, AnimationState::third_secondary_switch);
+									animOverideIfPriority(anim_first_current, AnimationState::first_primary_switch_IN);
+								}
+
+								animSwapActive = true;
+								areWeScrolling = 0.0;
+							}
+						}
+
+						if (areWeScrolling > 0.0 || i->justPressed(GLFW_KEY_2))
+						{
+							if (role.getWeaponNRequiped() != 1)
+							{
+								msg = WPNSWITCH;
+
+								if (animRole == ROLES::TRAPPER)
+								{
+									if (role.getCurrentWeapon()->getCurrentAmmo() > 1)
+									{
+										role.swapWeapon(WEAPON_TYPE::ENERGY_BOOST, 1);
+										animPrimary = false;
+										msg = SHOOT;
+										shoot();
+										animPrimary = true;
+									}
+									else
+									{
+										reloadCurrentWeapon();
+										msg = NONE;
+									}
+								}
+								else
+								{
+									role.swapWeaponLocal(1);
+									animOverideIfPriority(anim_first_current, AnimationState::first_primary_switch);
+								}
+								if (animRole == ROLES::BRUTE)
+								{
+									animOverideIfPriority(anim_first_current, AnimationState::first_secondary_switch_IN);
+									animOverideIfPriority(anim_third_current, AnimationState::third_primary_switch);
+								}
+
+								animSwapActive = true;
+
+							}
+						}
+
+						if (i->getKeyInfo(GLFW_MOUSE_BUTTON_LEFT))		//Temp
+						{
+							if (role.getCurrentWeapon()->shoot())
+							{
+								msg = SHOOT;
+								shoot();
+							}
+							else if (role.getCurrentWeapon()->getCurrentAmmo() == 0)
+							{
+								reloadCurrentWeapon();
+							}
+						}
+
+						if (i->justPressed(GLFW_KEY_Q))
+						{
+
+							Consumable* c = role.getConsumable();
+							if (c->use())
+							{
+								msg = USEITEM;
+								animOverideIfPriority(anim_first_current, AnimationState::first_primary_throw);
+							}
+
+						}
+					}
+					if (i->justPressed(GLFW_KEY_E))
+					{
+						if (role.getSpecialAbility()->allowedToActivate(this))
+						{
+							msg = SPECIALUSE;
+						}
+					}
+
+					/*				if (i->justPressed(GLFW_KEY_Z))					//Temp?
+									{
+										if (GetSoundActivated() == 0 && GetInitialized() == 0)
+										{
+											InitSound(CreateSound(), 1);
+											GetSound()->playMusic(mainMenu);
+										}
+										else if (GetInitialized())
+										{
+											GetSound()->enableSounds();
+										}
+									}
+									if (i->justPressed(GLFW_KEY_M))
+										role.setSpecialMeter(100.0f);
+					*/
+				} // end of player input
+			} // end of lock control check
+
+
+
+			//if (i->justPressed(GLFW_KEY_O))
+				//role.setHealth(0);
+
+			if (role.getHealth() <= 0 && !isDead && role.getRole() != ROLES::NROFROLES)
+			{
+				isDead = true;
+				msg = DEATH;
+				respawnTimer = respawnTime;
+				vel = glm::vec3(0, 0, 0);
+
+				if (GetSoundActivated())
+				{
+					GetSound()->playUserGeneratedSound(SOUNDS::soundEffectYouDied);
 				}
 			}
 
-			if (animSwapActive && animSwapTime_OUT > 0)
+			if (isDead && respawnTimer != 0.0f)
 			{
-				animPrimary = !animPrimary;
-				animSwapTime_OUT -= dt;
-				if (animSwapTime_OUT < 0.001f) // out swap timeout
+				respawnTimer -= dt;
+				if (respawnTimer < FLT_EPSILON)
 				{
-					if (animPrimary)
-						animOverideIfPriority(anim_first_current, AnimationState::first_secondary_switch_IN);
-					else
-						animOverideIfPriority(anim_first_current, AnimationState::first_primary_switch_IN);
-
-					animPrimary = !animPrimary;
-					animSwapActive = false;
+					respawnTimer = 0.0f;
+					msg = PLAYERRESPAWN;
+					if (GetSoundActivated())
+					{
+						GetSound()->playUserGeneratedSound(SOUNDS::soundEffectRespawn);
+					}
 				}
-			} // spec brute animswap end
-		} // spectating this end
+			}
 
-		if (role.getHealth() == 0)
+			movementAnimationChecks(dt);
+
+			modifiersSetData(dt);	//Dont Remove Again Please!
+			movePlayer(dt, olddir, freecam, spectating); //This moves the player regardless of what we might end up colliding with
+
+
+			clearCollisionNormals(); //Doesn't actually clear the array, just manually sets size to 0. This is to speed things up a little.
+			clearEffectCollNormals();
+		} // end of local player check
+		else
 		{
-			isDead = true;
-			vel = glm::vec3(0, 0, 0);
-			cleanseModifiers();
-		}
-		modifiersSetData(dt);
-	}
+			/*
+			THIS IS NOT THE LOCAL PLAYER
+			*/
+			goalTimer += dt;
+			float t = goalTimer / interpolationTick;
 
+			if (t > 1.0f)
+				t = 1.0f;
+
+			pos = (oldPos * (1.0f - t)) + (goalpos * t);
+			glm::vec3 prev = dir;
+			dir = (oldDir * (1.0f - t)) + (goaldir * t);
+
+			rotatePlayer(prev, dir);
+
+			if (spectatingThisPlayer == true)
+			{
+				cam->roomID = roomID;
+
+				cam->setCam(pos, dir);
+
+				animRole = role.getRole();
+				animPrimary = false;
+				if (role.getWeaponNRequiped() == 0) // if primary
+					animPrimary = true;
+
+				//special case when spectating a brute and he swaps weapons
+
+				if (animRole == ROLES::BRUTE && animSwapActive == false)
+				{
+					//init swap 1st to second
+					if (anim_first_framePeak == AnimationState::first_primary_switch)
+					{
+						animSwapTime_OUT = 0.53f;
+						animSwapActive = true;
+					}
+					//init swap 2nd to first
+					else if (anim_first_framePeak == AnimationState::first_secondary_switch)
+					{
+						animSwapTime_OUT = 0.34f;
+						animSwapActive = true;
+					}
+				}
+
+				if (animSwapActive && animSwapTime_OUT > 0)
+				{
+					animPrimary = !animPrimary;
+					animSwapTime_OUT -= dt;
+					if (animSwapTime_OUT < 0.001f) // out swap timeout
+					{
+						if (animPrimary)
+							animOverideIfPriority(anim_first_current, AnimationState::first_secondary_switch_IN);
+						else
+							animOverideIfPriority(anim_first_current, AnimationState::first_primary_switch_IN);
+
+						animPrimary = !animPrimary;
+						animSwapActive = false;
+					}
+				} // spec brute animswap end
+			} // spectating this end
+
+			if (role.getHealth() == 0)
+			{
+				isDead = true;
+				vel = glm::vec3(0, 0, 0);
+				cleanseModifiers();
+			}
+			modifiersSetData(dt);
+		}
+	}
+	else //We have yet to pick a class, so stop fucking moving
+	{
+		pos.x = 0.0f;
+		pos.y = -4.5f;
+		pos.z = 0.0f;
+	}
 
 	return msg;
 }
@@ -1154,7 +1100,7 @@ void Player::respawn(glm::vec3 respawnPos, glm::vec3 _dir, int _roomID)
 	//reset matrix
 	worldMat = mat4();
 	rotatePlayer(vec3(0, 0, 1), _dir);
-	pos = respawnPos;
+	goalpos = pos = respawnPos;
 
 	worldMat[0].w = pos.x;
 	worldMat[1].w = pos.y;
@@ -1173,8 +1119,6 @@ void Player::respawn(glm::vec3 respawnPos, glm::vec3 _dir, int _roomID)
 
 	if (isLocalPlayer)
 		cam->roomID = _roomID;
-
-	justRespawned = true;
 }
 
 void Player::healing(int amount)
@@ -1535,4 +1479,13 @@ void Player::CoolDownJump(float dt)
 bool Player::CheckAbleToJumpSound()
 {
 	return jumpSoundAble;
+}
+
+bool Player::allahuAkhbar()
+{
+	if (pos.y < -5.0f && !isDead && role.getRole() != NROFROLES)	//If we fall through the map we die
+	{
+		return true;
+	}
+	return false;
 }

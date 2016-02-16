@@ -101,16 +101,21 @@ bool Console::update(string clientName)
 	}
 	else
 	{
-		if (i->justPressed(GLFW_KEY_ENTER))
+		if (i->justPressed(GLFW_KEY_T))
 		{
 			inChatMode = true;
-			if (i->getKeyInfo(GLFW_KEY_LEFT_SHIFT))
-				scope = 'A';
+			scope = 'T';
+		}
+		if (i->justPressed(GLFW_KEY_Y))
+		{
+			inChatMode = true;
+			scope = 'A';
 		}
 	}
 
 	return cmdReady;
 }
+
 #include <Windows.h>
 void Console::printConsole()
 {

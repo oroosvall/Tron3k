@@ -37,7 +37,6 @@ private:
 
 	bool ready = false; //Ready to start a game mode
 
-	bool justRespawned = false; // used for culling
 	bool diedThisFrame = false; // used for K/D and messages
 
 	bool footstepsLoop = false;
@@ -111,6 +110,8 @@ private:
 	int deaths;
 	int consecutiveFrags = 0;
 	int consecutiveDeaths = 0;
+
+	int areWeScrolling;
 public:
 	Player();
 	~Player();
@@ -210,7 +211,6 @@ public:
 	void chooseRole(int r);
 
 	void respawn(glm::vec3 respawnPos, glm::vec3 dir, int roomID);
-	bool getJustRespawned() { return justRespawned; };
 
 	void healing(int amount);
 
@@ -242,6 +242,8 @@ public:
 	bool nameChanged;
 
 	int GetConsecutiveDeaths() { return this->consecutiveDeaths; };
+
+	bool allahuAkhbar();
 };
 
 #endif

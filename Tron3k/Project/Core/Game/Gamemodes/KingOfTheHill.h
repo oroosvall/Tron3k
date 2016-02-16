@@ -24,7 +24,7 @@ private:
 	KOTHSTATE state; //State on the process running
 	KOTHSTATE serverState; //State of the server, if we're a client
 
-	int playersReadyNeeded = 4;
+	int playersReadyNeeded = 1;
 	std::vector<int> teamOnePlayers;
 	std::vector<int> teamTwoPlayers;
 
@@ -67,7 +67,7 @@ public:
 
 	bool playerRespawn(int conId); //Checks if a given player is allowed to respawn
 
-	void setGamemodeData(int respawn1, int respawn2, int onCap1, int onCap2, int capPoint, float timer, KOTHSTATE state, GAMEMODE_MSG serverMsg); //Used to keep clients updated over network
+	void setGamemodeData(int respawn1, int respawn2, int onCap1, int onCap2, int capPoint, float timer, int score1, int score2, KOTHSTATE state, GAMEMODE_MSG serverMsg); //Used to keep clients updated over network
 
 	int getCapturePoint() { return capturePoint; }; //Returns currently active cap point
 	int getCapturePointOwner();
@@ -82,6 +82,7 @@ public:
 	bool allowRoleChange();
 
 	void clearPlayersOnCapPoint(); //Clear the values at the start of each frame
+	void clearTeams();
 };
 
 #endif
