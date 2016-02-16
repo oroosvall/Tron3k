@@ -86,6 +86,8 @@ void main()
 	
 		Diffuse0 = texture(Diffuse, UV);
 		fragment_color = fragment_color * Diffuse0 + specularAddetive;
+		
+		//fragment_color = vec4(1,1,1,1);
 	}
 	else
 	{
