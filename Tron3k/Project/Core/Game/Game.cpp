@@ -1237,14 +1237,18 @@ void Game::handleWeaponFire(int conID, int teamId, int bulletId, WEAPON_TYPE wea
 			}
 		glm::vec3 rightV = normalize(cross(dir, vec3(0, 1, 0)));
 		glm::vec3 upV = normalize(cross(dir, rightV));
+		float xoff = 0.0f;
+		float yoff = 0.0f;
+		float r = 0.0f;
+		glm::vec3 ndir;
 		for (int k = 0; k < 10; k++)
 		{
-			float xoff = glm::sin(k);
-			float yoff = glm::cos(k);
-			float r = ((rand() % 100) / 2000.0f) + 0.01f;
+			xoff = glm::sin(k);
+			yoff = glm::cos(k);
+			r = ((rand() % 100) / 2000.0f) + 0.01f;
 			rightV *= xoff*r;
 			upV *= yoff*r;
-			glm::vec3 ndir = dir + upV + rightV;
+			ndir = dir + upV + rightV;
 			addBulletToList(conID, teamId, bulletId, BULLET_TYPE::SHOTGUN_PELLET, pos, ndir);
 			rightV = normalize(cross(dir, vec3(0, 1, 0)));
 			upV = normalize(cross(dir, rightV));
