@@ -137,7 +137,7 @@ void SoundPlayer::playMelee(float x, float y, float z)
 		{
 			melee[i].setBuffer(soundList[SOUNDS::soundEffectMelee]);
 			melee[i].setPosition(x, y, z);
-			melee[i].setVolume(50);
+			melee[i].setVolume(30);
 			melee[i].setAttenuation(80);
 			melee[i].setMinDistance(10.0f);
 			melee[i].play();
