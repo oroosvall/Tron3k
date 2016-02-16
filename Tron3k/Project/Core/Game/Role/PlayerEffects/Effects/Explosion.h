@@ -2,12 +2,10 @@
 #define EXPLOSIONEFFECT_H
 
 #include "../Effect.h"
-#include "../../../Player.h"
 
 class Explosion : public Effect
 {
 private:
-	float startingLifetime;
 	float exploRadius = 1.0f;
 	float damage;
 public:

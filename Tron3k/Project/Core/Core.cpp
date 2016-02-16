@@ -498,6 +498,8 @@ void Core::upRoam(float dt)
 		std::vector<EffectHitPlayerInfo> effectHitsOnPlayer = game->getAllEffectOnPlayerCollisions();
 		if (effectHitsOnPlayer.size() != 0)
 		{
+			for (int c = 0; c < effectHitsOnPlayer.size(); c++)
+				game->handleEffectHitPlayerEvent(effectHitsOnPlayer[c]);
 			game->clearEffectOnPlayerCollisions();
 		}
 
@@ -1621,15 +1623,6 @@ void Core::renderWorld(float dt)
 		renderPipe->renderIni();
 
 		SpotLight light;
-		//world ambient temp
-
-		light.Position = vec3(131, 45, 0);
-		light.Direction = normalize(vec3(-0.16f, -0.36f, 0.91f));//p->getDir();
-		light.Color = vec3(0.7f, 0.7f, 1.0f);
-		light.DiffuseIntensity = 0.1f;
-		light.AmbientIntensity = 0.1f;
-		renderPipe->addLight(&light, 0);
-		light.AmbientIntensity = 0.0f;
 
 		vec3 dgColor(0);
 		//render skybox
@@ -1909,8 +1902,18 @@ void Core::renderWorld(float dt)
 				case CLEANSEEXPLOSION:
 					break;
 				case BATTERY_SLOW:
+				{
+					BatteryFieldSlow* asd = (BatteryFieldSlow*)eff[i];
+					vec3 pos = asd->getPos();
+					renderPipe->renderExploEffect(&pos.x, asd->renderRad(), 0, &dgColor.x);
+				}
 					break;
 				case BATTERY_SPEED:
+				{
+					BatteryFieldSpeed* asd = (BatteryFieldSpeed*)eff[i];
+					vec3 pos = asd->getPos();
+					renderPipe->renderExploEffect(&pos.x, asd->renderRad(), 0, &dgColor.x);
+				}
 					break;
 				case THERMITE_CLOUD:
 				{

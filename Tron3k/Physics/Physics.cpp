@@ -934,7 +934,7 @@ vec4 Physics::checkPlayerVEffectCollision(glm::vec3 playerPos, unsigned int eTyp
 					{
 						collided = checkSpherevSpheretdCollision(sphere, effectBoxes[i]->getSphere());
 					}
-					else if (eType > 9)//False box, no collision
+					else if (eType > 11)//False box, no collision
 					{
 
 					}

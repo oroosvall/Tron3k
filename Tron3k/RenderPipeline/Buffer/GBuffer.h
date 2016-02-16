@@ -32,6 +32,20 @@ public:
 	float xres;
 	float yres;
 
+	//Spotlight volume shader
+	GLuint spotVolShader;
+	GLuint spotVolVP;
+	GLuint spotVolEye;
+	GLuint spotID;
+
+	GLuint spotvol_Position;
+	GLuint spotvol_Diffuse;
+	GLuint spotvol_Normal;
+	GLuint spotvol_GlowMap;
+
+	//spotLight Buffers
+	GLuint spotVolBuffer;
+	GLuint spotVolBufferPos; 
 
 	GLuint* shaderPtr;
 	GLuint* portal_shaderPtr;
@@ -39,6 +53,7 @@ public:
 	//Light variables
 	int nrOfLights;
 	glm::vec3 eyePos;
+	GLuint uniformEyePos;
 
 	//Portal shader uniforms
 	glm::vec3 eyePosLast;
@@ -48,6 +63,8 @@ public:
 	GLuint glowReduce;
 
 	RenderTarget glowTexture;
+
+	
 
 private:
 
@@ -61,15 +78,9 @@ private:
 	//Uniforms
 	GLuint* uniformBitsList;
 	GLuint uniformUse;
-	GLuint uniformEyePos;
-	GLuint uniformNrOfLight;
 
 	GLuint uBlitLightPixelX;
 	GLuint uBlitLightPixelY;
-
-	//Light Buffers
-	GLuint lightBuffer;
-	GLuint uniformBufferLightPos;
 
 	//Bits
 	BlitQuad* blitQuads;

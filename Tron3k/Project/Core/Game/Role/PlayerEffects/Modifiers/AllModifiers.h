@@ -8,5 +8,7 @@
 #include "SprintControlLock.h"
 #include "TrueGrit.h"
 #include "TrapperShareAmmo.h"
+#include "BatterySlow.h"
+#include "BatterySpeed.h"
 
 #endif

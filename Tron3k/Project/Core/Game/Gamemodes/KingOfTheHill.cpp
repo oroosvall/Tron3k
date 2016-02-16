@@ -169,6 +169,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			timer = 15.0f; //20 seconds in the pre-round
 			capturePoint = rand() % 2;
 			state = PREROUND;
+			clearTeams();
 			std::vector<int>* teamOne = gamePtr->getTeamConIds(1);
 			std::vector<int>* teamTwo = gamePtr->getTeamConIds(2);
 			for (int c = 0; c < teamOne->size(); c++)
@@ -224,15 +225,13 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 		{
 			allDead = true;
 			int pID = -1;
-			bool pIsAlive = true;
 			for (int c = 0; c < teamOnePlayers.size() && allDead; c++)
 			{
 				pID = teamOnePlayers[c];
 				Player* p = gamePtr->getPlayer(pID);
 				if (p != nullptr)
 				{
-					pIsAlive = p->isAlive();
-					if (pIsAlive)
+					if (p->isAlive())
 					{
 						allDead = false;
 					}
@@ -240,7 +239,6 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			}
 			if (allDead)
 			{
-				//msg = GAMEMODE_MSG::ROUND_WIN_TEAM2;
 				if (timer > 31.0f)
 					teamTwoScore += 3;
 				else if (timer > 16.0f)
@@ -256,15 +254,13 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 		{
 			allDead = true;
 			int pID = -1;
-			bool pIsAlive = true;
 			for (int c = 0; c < teamTwoPlayers.size() && allDead; c++)
 			{
 				pID = teamTwoPlayers[c];
 				Player* p = gamePtr->getPlayer(pID);
 				if (p != nullptr)
 				{
-					pIsAlive = p->isAlive();
-					if (pIsAlive)
+					if (p->isAlive())
 					{
 						allDead = false;
 					}
@@ -272,7 +268,6 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			}
 			if (allDead)
 			{
-				//msg = GAMEMODE_MSG::ROUND_WIN_TEAM1;
 				if (timer > 31.0f)
 					teamOneScore += 3;
 				else if (timer > 16.0f)
@@ -476,7 +471,7 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 		}
 		else if (state == PREROUND)
 		{
-			if (teamOneScore == 0 && teamTwoScore == 0)
+			if (round == 1)
 				gamePtr->clearAllPlayerKD();
 
 			if (GetSound())
@@ -551,41 +546,7 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 			fifteenPlayed = false;
 			round++;
 			slowdownTime = true;
-			/*if (serverMsg == GAMEMODE_MSG::ROUND_WIN_TEAM1)
-			{
-				consolePtr->printMsg("ALPHA WINS THE ROUND", "System", 'S');
-				teamOneScore++;
-				if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
-				{
-					GetSound()->playUserGeneratedSound(SOUNDS::YouWin);
-				}
-				else if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 2)
-				{
-					GetSound()->playUserGeneratedSound(SOUNDS::YouLose);
-				}
-			}
 
-			else if (serverMsg == GAMEMODE_MSG::ROUND_WIN_TEAM2)
-			{
-				consolePtr->printMsg("BETA WINS THE ROUND", "System", 'S');
-				teamTwoScore++;
-				if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
-				{
-					GetSound()->playUserGeneratedSound(SOUNDS::YouLose);
-				}
-				else if (GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 2)
-				{
-					GetSound()->playUserGeneratedSound(SOUNDS::YouWin);
-				}
-			}
-			else if (serverMsg == GAMEMODE_MSG::ROUND_DRAW)
-			{
-				consolePtr->printMsg("ROUND DRAW", "System", 'S');
-				teamOneScore++;
-				teamTwoScore++;
-				round++;
-			}
-			*/
 		}
 		else if (state == ENDMATCH)
 		{
@@ -680,4 +641,16 @@ bool KingOfTheHill::allowRoleChange()
 	}
 		
 	return true;
+}
+
+void KingOfTheHill::clearTeams()
+{
+	for (int i = 0; i < teamOnePlayers.size(); i++)
+	{
+		teamOnePlayers.pop_back();
+	}
+	for (int i = 0; i < teamTwoPlayers.size(); i++)
+	{
+		teamTwoPlayers.pop_back();
+	}
 }

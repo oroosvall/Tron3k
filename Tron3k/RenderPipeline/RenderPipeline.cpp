@@ -108,6 +108,8 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	bool success = TextureManager::gTm->PNGSize("GameFiles/Textures/Crosshairs/Crosshair.png", x, y);
 	cross->init(x, y);
 
+	ptex = TextureManager::gTm->createTexture("GameFiles/Textures/Particles/arrow.png");
+
 #ifdef _DEBUG
 	if (glDebugMessageCallback) {
 		printf("Register OpenGL debug callback\n");
@@ -165,7 +167,7 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	pdata.maxparticles = 10;
 	pdata.dir = glm::vec3(1, 0, 0);
 
-	particleTest.Initialize(glm::vec3(-10, 6.5, 120), &pdata, &particleCS);
+	particleTest.Initialize(glm::vec3(0,5,0), &pdata, &particleCS);
 
 	initialized = true;
 	return true;
@@ -260,6 +262,16 @@ void RenderPipeline::reloadShaders()
 	if (temp != 0)
 	{
 		decal_Shader = temp;
+		temp = 0;
+	}
+
+	//Spotlight volume shader
+	std::string shaderNamesSpotVolume[] = { "GameFiles/Shaders/SpotlightVolume_vs.glsl", "GameFiles/Shaders/SpotlightVolume_gs.glsl", "GameFiles/Shaders/SpotlightVolume_fs.glsl" };
+	GLenum shaderTypesSpotVolume[] = { GL_VERTEX_SHADER, GL_GEOMETRY_SHADER, GL_FRAGMENT_SHADER };
+	CreateProgram(temp, shaderNamesSpotVolume, shaderTypesSpotVolume, 3);
+	if (temp != 0)
+	{
+		gBuffer->spotVolShader = temp;
 		temp = 0;
 	}
 
@@ -366,7 +378,7 @@ void RenderPipeline::reloadShaders()
 
 	particleCam = glGetUniformLocation(particleShader, "cam");
 	particleSize = glGetUniformLocation(particleShader, "size");
-	particleViewProj = glGetUniformLocation(particleShader, "MVP");
+	particleViewProj = glGetUniformLocation(particleShader, "VP");
 	particleTexture = glGetUniformLocation(particleShader, "tex");
 
 
@@ -428,6 +440,7 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 
 	cam.setViewProjMat(animationShader, viewProjMat[1]);
 	cam.setViewProjMat(*gBuffer->portal_shaderPtr, gBuffer->portal_vp);
+	cam.setViewProjMat(gBuffer->spotVolShader, gBuffer->spotVolVP);
 	cam.setViewProjMat(portalShaderV2, portal_VP);
 
 	contMan.update(dt);
@@ -539,7 +552,7 @@ void RenderPipeline::render()
 void RenderPipeline::finalizeRender()
 {
 	glDepthMask(GL_TRUE);
-	glEnable(GL_CULL_FACE);
+	//glEnable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
 
 	//system("CLS");
@@ -557,6 +570,20 @@ void RenderPipeline::finalizeRender()
 			}
 		}
 	
+	glDisable(GL_BLEND);
+	glDisable(GL_CULL_FACE);
+
+	glUseProgram(particleShader);
+	cam.setViewProjMat(particleShader, particleViewProj);
+	//glProgramUniformMatrix4fv(particleShader, particleViewProj, 1, GL_FALSE, (GLfloat*)&glm::mat4());
+	glProgramUniform2f(particleShader, particleSize, 0.1f, 0.1f);
+
+	glProgramUniform3f(particleShader, particleCam, gBuffer->eyePos.x, gBuffer->eyePos.y, gBuffer->eyePos.z);
+	
+	TextureManager::gTm->bindTexture(ptex, particleShader, particleTexture, DIFFUSE_FB);
+
+	particleTest.Draw();
+
 
 	glUseProgram(glowShaderTweeks);
 	
@@ -566,7 +593,7 @@ void RenderPipeline::finalizeRender()
 
 	//GBuffer Render
 	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
-	glClear(GL_DEPTH_BUFFER_BIT);
+	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
 	gBuffer->render();
 	
@@ -590,19 +617,10 @@ void RenderPipeline::finalizeRender()
 	//uglyCrosshairSolution->draw();
 
 	renderCrosshair(CROSSHAIR_TRAPPER_P);
-
-	glUseProgram(particleShader);
-	cam.setViewProjMat(particleShader, particleViewProj);
-	//glProgramUniformMatrix4fv(particleShader, particleViewProj, 1, GL_FALSE, (GLfloat*)&glm::mat4());
-	glProgramUniform2f(particleShader, particleSize, 0.01f, 0.01f);
-
-	glProgramUniform3f(particleShader, particleCam, gBuffer->eyePos.x, gBuffer->eyePos.y, gBuffer->eyePos.z);
-
 	glDisable(GL_BLEND);
 
-	//particleTest.Draw();
-
 	stopTimer(renderFrameTimeID);
+	glEnable(GL_CULL_FACE);
 
 }
 
