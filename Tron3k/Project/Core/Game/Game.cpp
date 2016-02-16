@@ -1503,7 +1503,8 @@ void Game::addEffectToList(int conID, int teamId, int effectId, EFFECT_TYPE et, 
 		e = new LightwallEffect(p);
 		if (conID == localPlayerId || conID == spectateID)
 		{
-			GetSound()->playExternalSound(SOUNDS::soundEffectLightWallStereo, pos.x, pos.y, pos.z);
+			if(GetSound())
+				GetSound()->playExternalSound(SOUNDS::soundEffectLightWallStereo, pos.x, pos.y, pos.z);
 		}
 
 		else
