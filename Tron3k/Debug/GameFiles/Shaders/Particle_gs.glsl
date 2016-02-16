@@ -57,9 +57,9 @@ void main()
 	
 	//if(dir[0].w > 0.0f)
 	//{
-	vec3 pos = vec3(-6.8, 6.55, 124);
-	vec3 asd = pos + vec3(-1.50f,-1.50f,0);
-	gl_Position = MVP * vec4(asd, 1.0f);
+	vec3 pos = vec3(-6.8, 6.55, 124); // a position in world space
+	vec3 asd = pos + vec3(-1.50f,-1.50f,0);	// move it some
+	gl_Position = MVP * vec4(asd, 1.0f);	// and view project it
 	EmitVertex();
 	
 	asd = pos + vec3(1.50f,-1.50f,0);
@@ -75,5 +75,6 @@ void main()
 	EmitVertex();
 	
 	EndPrimitive();
+	// result makes no sense
 	//}
 }
