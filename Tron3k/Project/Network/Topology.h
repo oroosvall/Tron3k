@@ -757,7 +757,7 @@ public:
 
 				uiPtr->HUD.ammo = local->getMaxAmmo();
 				std::string nText = std::to_string(local->getAmmo()) + "/" + std::to_string(local->getMaxAmmo());
-				uiPtr->setText(nText, 1); //ammo
+				uiPtr->setText(nText, scaleAndText::Ammo); //ammo
 				uiPtr->setText(std::to_string(koth->getRespawnTokens(1)), scaleAndText::TicketBar1); //tickets
 				uiPtr->setText(std::to_string(koth->getRespawnTokens(2)), scaleAndText::TicketBar2); //tickets2
 				uiPtr->setText(std::to_string(koth->getRoundWins(1)), scaleAndText::Wins1); //wins1

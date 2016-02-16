@@ -454,6 +454,12 @@ void Core::upRoam(float dt)
 			int swaploc = 0;
 			WEAPON_TYPE wt = game->getWpnSwitch(swaploc);
 			game->handleWeaponSwitch(0, wt, swaploc);
+
+			Player* p = game->getPlayer(0);
+			uiManager->HUD.ammo = p->getMaxAmmo();
+			std::string nText = std::to_string(p->getAmmo()) + "/" + std::to_string(p->getMaxAmmo());
+			uiManager->clearText(scaleAndText::Ammo);
+			uiManager->setText(nText, scaleAndText::Ammo);
 		}
 
 		if (game->fireEventReady())
@@ -748,6 +754,11 @@ void Core::upClient(float dt)
 				int swaploc = -1;
 				WEAPON_TYPE ws = game->getWpnSwitch(swaploc);
 				top->frame_weapon_switch(top->getConId(), ws, swaploc);
+				
+				uiManager->HUD.ammo = local->getMaxAmmo();
+				std::string nText = std::to_string(local->getAmmo()) + "/" + std::to_string(local->getMaxAmmo());
+				uiManager->clearText(scaleAndText::Ammo);
+				uiManager->setText(nText, scaleAndText::Ammo); //ammo
 			}
 
 			if (game->specialActivationReady())
