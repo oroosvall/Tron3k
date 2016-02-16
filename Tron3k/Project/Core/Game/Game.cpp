@@ -1292,8 +1292,16 @@ void Game::handleConsumableUse(int conID, int teamId, CONSUMABLE_TYPE ct, glm::v
 		break;
 	case CONSUMABLE_TYPE::LIGHTSPEED:
 		playerList[conID]->addModifier(LIGHTSPEEDMODIFIER);
-		if (GetSoundActivated())
-			GetSound()->playExternalSound(SOUNDS::soundEffectLightSpeed, pos.x, pos.y, pos.z);
+		if (GetSound())
+		{
+			if (conID == localPlayerId)
+			{
+				GetSound()->playExternalSound(SOUNDS::soundEffectLightSpeedStereo, pos.x, pos.y, pos.z);
+			}
+
+			else
+				GetSound()->playExternalSound(SOUNDS::soundEffectLightSpeed, pos.x, pos.y, pos.z);
+		}
 		break;
 	case CONSUMABLE_TYPE::THERMITEGRENADE:
 		addBulletToList(conID, teamId, 0, BULLET_TYPE::THERMITE_GRENADE, pos, dir);
@@ -1338,8 +1346,16 @@ void Game::handleSpecialAbilityUse(int conID, int teamId, int sID, SPECIAL_TYPE 
 		break;
 	case SPECIAL_TYPE::MULTIJUMP:
 	{
-		if (GetSoundActivated())
-			GetSound()->playExternalSound(SOUNDS::soundEffectTrapperMultiJump, pos.x, pos.y, pos.z);
+		if (GetSound())
+		{
+			if (conID == localPlayerId)
+			{
+				GetSound()->playExternalSound(SOUNDS::soundEffectTrapperMultiJumpStereo, pos.x, pos.y, pos.z);
+			}
+
+			else
+				GetSound()->playExternalSound(SOUNDS::soundEffectTrapperMultiJump, pos.x, pos.y, pos.z);
+		}
 
 		vec3 vel = p->getVelocity();
 		if (vel.y < 0)
@@ -1362,8 +1378,16 @@ void Game::handleSpecialAbilityUse(int conID, int teamId, int sID, SPECIAL_TYPE 
 		{
 			if (cNorms[c].y < 0.5f && cNorms[c].y > -0.2f)
 			{
-				if (GetSoundActivated())
-					GetSound()->playExternalSound(SOUNDS::soundEffectHunterJump, pos.x, pos.y, pos.z);
+				if (GetSound())
+				{
+					if (conID == localPlayerId)
+					{
+						GetSound()->playExternalSound(SOUNDS::soundEffectHunterJumpStereo, pos.x, pos.y, pos.z);
+					}
+
+					else
+						GetSound()->playExternalSound(SOUNDS::soundEffectHunterJump, pos.x, pos.y, pos.z);
+				}
 
 				jumped = true;
 				glm::vec3 reflect = normalize(glm::vec3(cNorms[c].x, 0, cNorms[c].z));
@@ -1388,8 +1412,16 @@ void Game::handleSpecialAbilityUse(int conID, int teamId, int sID, SPECIAL_TYPE 
 	case SPECIAL_TYPE::LIGHTSPEEDSPECIAL:
 	{
 		p->addModifier(MODIFIER_TYPE::LIGHTSPEEDMODIFIER);
-		if (GetSoundActivated())
-			GetSound()->playExternalSound(SOUNDS::soundEffectLightSpeed, pos.x, pos.y, pos.z);
+		if (GetSound())
+		{
+			if (conID == localPlayerId)
+			{
+				GetSound()->playExternalSound(SOUNDS::soundEffectLightSpeedStereo, pos.x, pos.y, pos.z);
+			}
+
+			else
+				GetSound()->playExternalSound(SOUNDS::soundEffectLightSpeed, pos.x, pos.y, pos.z);
+		}
 	}
 	break;
 	case SPECIAL_TYPE::SPRINTD:		// D = Destroyer
@@ -1400,9 +1432,15 @@ void Game::handleSpecialAbilityUse(int conID, int teamId, int sID, SPECIAL_TYPE 
 	case SPECIAL_TYPE::DASH:
 	{
 		p->addModifier(MODIFIER_TYPE::TRUEGRITMODIFIER);
-		if (GetSoundActivated())
+		if (GetSound())
 		{
-			GetSound()->playExternalSound(SOUNDS::soundEffectBruteDash, pos.x, pos.y, pos.z);
+			if (conID == localPlayerId)
+			{
+				GetSound()->playExternalSound(SOUNDS::soundEffectBruteDashStereo, pos.x, pos.y, pos.z);
+			}
+
+			else
+				GetSound()->playExternalSound(SOUNDS::soundEffectBruteDash, pos.x, pos.y, pos.z);
 		}
 	}
 	break;

@@ -108,6 +108,7 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->soundList[SOUNDS::soundEffectTrapperLandStereo].loadFromFile("GameFiles/Sound/soundEffectTrapperLandStereo.ogg");
 		singleton->soundList[SOUNDS::soundEffectTrapperMultiJumpStereo].loadFromFile("GameFiles/Sound/soundEffectTrapperMultiJumpStereo.ogg");
 		singleton->soundList[SOUNDS::soundFootStepsStereo].loadFromFile("GameFiles/Sound/soundFootStepsStereo.ogg");
+		singleton->soundList[SOUNDS::soundEffectBruteDashStereo].loadFromFile("GameFiles/Sound/soundEffectBruteDashStereo.ogg");
 
 		initialized = true;
 	}

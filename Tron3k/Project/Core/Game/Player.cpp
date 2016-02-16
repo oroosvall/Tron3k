@@ -99,7 +99,7 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool spectatin
 
 	if (GetSoundActivated())
 	{
-		GetSound()->setLocalPlayerPos(pos);
+		GetSound()->setLocalPlayerPos(cam->getPos());
 		GetSound()->setLocalPlayerDir(cam->getDir());
 	}
 
