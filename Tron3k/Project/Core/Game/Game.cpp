@@ -713,7 +713,7 @@ void Game::checkPlayerVEffectCollision()
 						effects[t][i]->getId(pid, eid);
 						if (!effects[t][i]->thisPlayerHasBeenHitByMe(j))
 						{
-							if (pid != j && effects[t][i]->getTeam() != playerList[j]->getTeam())
+							if (effects[t][i]->getTeam() != playerList[j]->getTeam())
 							{
 								collNormals = physics->checkPlayerVEffectCollision(playerList[j]->getPos(), t, eid);
 								if (collNormals != vec4(0, 0, 0, 0))
@@ -1521,7 +1521,12 @@ void Game::addEffectToList(int conID, int teamId, int effectId, EFFECT_TYPE et, 
 		e = new ThermiteCloud();
 		break;
 	case EFFECT_TYPE::BATTERY_SLOW:
+		teamId = 0;
 		e = new BatteryFieldSlow();
+		break;
+	case EFFECT_TYPE::BATTERY_SPEED:
+		teamId = 0;
+		e = new BatteryFieldSpeed();
 		break;
 	case EFFECT_TYPE::HEALTHPACK:
 		e = new HealthPack();
@@ -1570,6 +1575,13 @@ void Game::addEffectToPhysics(Effect* effect)
 		eBox.push_back(effect->getPos().z);
 		eBox.push_back(effect->getInterestingVariable());
 		physics->receiveEffectBox(eBox, EFFECT_TYPE::BATTERY_SLOW, pid, eid);
+		break;
+	case EFFECT_TYPE::BATTERY_SPEED:
+		eBox.push_back(effect->getPos().x);
+		eBox.push_back(effect->getPos().y);
+		eBox.push_back(effect->getPos().z);
+		eBox.push_back(effect->getInterestingVariable());
+		physics->receiveEffectBox(eBox, EFFECT_TYPE::BATTERY_SPEED, pid, eid);
 		break;
 	case EFFECT_TYPE::HEALTHPACK:
 		eBox.push_back(effect->getPos().x);
@@ -1749,6 +1761,26 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 		case EFFECT_TYPE::THERMITE_CLOUD:
 			break;
 		case EFFECT_TYPE::BATTERY_SLOW:
+			if (p->searchModifier(MODIFIER_TYPE::BATTERYSLOWMOD))
+			{
+				BatterySlowMod* bsm = (BatterySlowMod*)(p->searchModifierGet(MODIFIER_TYPE::BATTERYSLOWMOD));
+				bsm->refresh();
+			}
+			else
+			{
+				p->addModifier(MODIFIER_TYPE::BATTERYSLOWMOD);
+			}
+			break;
+		case EFFECT_TYPE::BATTERY_SPEED:
+			if (p->searchModifier(MODIFIER_TYPE::BATTERYSPEEDMOD))
+			{
+				BatterySpeedMod* bsm = (BatterySpeedMod*)(p->searchModifierGet(MODIFIER_TYPE::BATTERYSPEEDMOD));
+				bsm->refresh();
+			}
+			else
+			{
+				p->addModifier(MODIFIER_TYPE::BATTERYSPEEDMOD);
+			}
 			break;
 		case EFFECT_TYPE::HEALTHPACK:
 			if (gameState == SERVER)
@@ -2177,6 +2209,9 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 		}
 		case BULLET_TYPE::BATTERY_SLOW_SHOT:
 			addEffectToList(PID, parent->getTeam(), BID, EFFECT_TYPE::BATTERY_SLOW, parent->getPos(), 0, 0.0f);
+			break;
+		case BULLET_TYPE::BATTERY_SPEED_SHOT:
+			addEffectToList(PID, parent->getTeam(), BID, EFFECT_TYPE::BATTERY_SPEED, parent->getPos(), 0, 0.0f);
 			break;
 		}
 		delete bullets[bt][posInArray];

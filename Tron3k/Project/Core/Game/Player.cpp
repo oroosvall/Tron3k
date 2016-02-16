@@ -1086,6 +1086,18 @@ void Player::addModifier(MODIFIER_TYPE mt)
 		myModifiers.push_back(m);
 	}
 	break;
+	case MODIFIER_TYPE::BATTERYSLOWMOD:
+	{
+		m = new BatterySlowMod();
+		myModifiers.push_back(m);
+	}
+	break;
+	case MODIFIER_TYPE::BATTERYSPEEDMOD:
+	{
+		m = new BatterySpeedMod();
+		myModifiers.push_back(m);
+	}
+	break;
 	}
 	myModifiers[myModifiers.size() - 1]->init(this);
 }

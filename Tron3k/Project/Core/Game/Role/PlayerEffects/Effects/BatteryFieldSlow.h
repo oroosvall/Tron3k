@@ -12,7 +12,7 @@ public:
 	BatteryFieldSlow();
 	void init(int pid, int eid, glm::vec3 position);
 	int update(float dt);
-
+	float getInterestingVariable() { return rad; };
 	float renderRad() { return 40.0f; };
 };
 

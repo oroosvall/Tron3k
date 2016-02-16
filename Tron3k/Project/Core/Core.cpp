@@ -502,6 +502,8 @@ void Core::upRoam(float dt)
 		std::vector<EffectHitPlayerInfo> effectHitsOnPlayer = game->getAllEffectOnPlayerCollisions();
 		if (effectHitsOnPlayer.size() != 0)
 		{
+			for (int c = 0; c < effectHitsOnPlayer.size(); c++)
+				game->handleEffectHitPlayerEvent(effectHitsOnPlayer[c]);
 			game->clearEffectOnPlayerCollisions();
 		}
 
@@ -1907,6 +1909,11 @@ void Core::renderWorld(float dt)
 				}
 					break;
 				case BATTERY_SPEED:
+				{
+					BatteryFieldSpeed* asd = (BatteryFieldSpeed*)eff[i];
+					vec3 pos = asd->getPos();
+					renderPipe->renderExploEffect(&pos.x, asd->renderRad(), 0, &dgColor.x);
+				}
 					break;
 				case THERMITE_CLOUD:
 				{
