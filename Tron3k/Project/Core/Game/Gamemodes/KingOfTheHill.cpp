@@ -241,9 +241,9 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			if (allDead)
 			{
 				//msg = GAMEMODE_MSG::ROUND_WIN_TEAM2;
-				if (timer > 30.0f)
+				if (timer > 31.0f)
 					teamTwoScore += 3;
-				else if (timer > 15.0f)
+				else if (timer > 16.0f)
 					teamTwoScore += 2;
 				else
 					teamTwoScore++;
@@ -252,7 +252,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 					msg = MATCH_WIN_TEAM2;
 			}
 		}
-		if (teamTwoSpawnTokens == 0)
+		if (teamTwoSpawnTokens == 0 && !allDead)
 		{
 			allDead = true;
 			int pID = -1;
@@ -273,9 +273,9 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			if (allDead)
 			{
 				//msg = GAMEMODE_MSG::ROUND_WIN_TEAM1;
-				if (timer > 30.0f)
+				if (timer > 31.0f)
 					teamOneScore += 3;
-				else if (timer > 15.0f)
+				else if (timer > 16.0f)
 					teamOneScore += 2;
 				else
 					teamOneScore++;
@@ -476,7 +476,7 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 		}
 		else if (state == PREROUND)
 		{
-			if (teamOneScore == 0 || teamTwoScore == 0)
+			if (teamOneScore == 0 && teamTwoScore == 0)
 				gamePtr->clearAllPlayerKD();
 
 			if (GetSound())
