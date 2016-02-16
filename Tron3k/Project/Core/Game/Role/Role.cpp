@@ -73,7 +73,7 @@ void Role::loadWeapons(int role, int wpn)
 	case PLASMA_AUTORIFLE:
 		weapons[wpn] = new PlasmaAutorifle();
 		break;
-	case BATTERYFIELD_SLOW:
+	case BATTERYWPN_SLOW:
 		weapons[wpn] = new BatteryFields();
 		break;
 	case LINK_GUN:

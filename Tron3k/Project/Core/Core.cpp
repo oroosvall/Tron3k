@@ -1900,6 +1900,11 @@ void Core::renderWorld(float dt)
 				case CLEANSEEXPLOSION:
 					break;
 				case BATTERY_SLOW:
+				{
+					BatteryFieldSlow* asd = (BatteryFieldSlow*)eff[i];
+					vec3 pos = asd->getPos();
+					renderPipe->renderExploEffect(&pos.x, asd->renderRad(), 0, &dgColor.x);
+				}
 					break;
 				case BATTERY_SPEED:
 					break;
