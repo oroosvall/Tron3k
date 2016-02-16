@@ -25,6 +25,8 @@ protected:
 
 	int bounceCounter = 0;
 
+	bool spawnAdditionals = true;
+
 public:
 	virtual ~Bullet();
 	int getTeam() { return teamId; };
@@ -45,6 +47,9 @@ public:
 	virtual int update(float dt) = 0;
 	void bounce() { bounceCounter++; };
 	int getBounces() { return bounceCounter; };
+
+	void setSpawnAdditionals(bool s) { spawnAdditionals = s; };
+	bool getSpawnAdditionals() { return spawnAdditionals; };
 
 };
 #endif

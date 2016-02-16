@@ -883,6 +883,9 @@ void Game::checkBulletVEffectCollision(float dt)
 							BulletHitEffectInfo bi;
 							bullets[b][j]->getId(bi.bulletPID, bi.bulletBID);
 							bi.bt = BULLET_TYPE(b);
+							bi.effectID = eid;
+							bi.effectPID = pid;
+							bi.bulletTeam = bullets[b][j]->getTeam();
 							bi.et = EFFECT_TYPE::LIGHT_WALL;
 							bi.hitPos = bPos;
 							bi.hitDir = bullets[b][j]->getDir();
@@ -890,8 +893,8 @@ void Game::checkBulletVEffectCollision(float dt)
 							allBulletHitsOnEffects.push_back(bi);
 						}
 					}
-
 				}
+
 				for (int c = 0; c < effects[EFFECT_TYPE::THUNDER_DOME].size(); c++)
 				{
 					int eid = -1, pid = -1;
@@ -904,6 +907,9 @@ void Game::checkBulletVEffectCollision(float dt)
 						BulletHitEffectInfo bi;
 						bullets[b][j]->getId(bi.bulletPID, bi.bulletBID);
 						bi.bt = BULLET_TYPE(b);
+						bi.effectID = eid;
+						bi.effectPID = pid;
+						bi.bulletTeam = bullets[b][j]->getTeam();
 						bi.et = EFFECT_TYPE::THUNDER_DOME;
 						bi.hitPos = bPos;
 						bi.hitDir = bullets[b][j]->getDir();
@@ -911,6 +917,59 @@ void Game::checkBulletVEffectCollision(float dt)
 						allBulletHitsOnEffects.push_back(bi);
 					}
 					//glm::vec3 vel = bullets[b][j]->getPos()->getVelocity();
+				}
+
+				if (BULLET_TYPE(b) == BULLET_TYPE::BATTERY_SLOW_SHOT || BULLET_TYPE(b) == BULLET_TYPE::BATTERY_SPEED_SHOT || BULLET_TYPE::LINK_SHOT)
+				{
+					for (int c = 0; c < effects[EFFECT_TYPE::BATTERY_SLOW].size(); c++)
+					{
+						int eid = -1, pid = -1;
+						effects[EFFECT_TYPE::BATTERY_SLOW][c]->getId(pid, eid);
+						if (((LightwallEffect*)effects[EFFECT_TYPE::BATTERY_SLOW][c])->getCollidable())
+						{
+							vec3 bPos = bullets[b][j]->getPos();
+							collNormalWalls = physics->checkBulletVEffectCollision(bPos, bullets[b][j]->getVel(), bullets[b][j]->getDir(), EFFECT_TYPE::BATTERY_SLOW, eid, dt);
+							if (collNormalWalls != vec4(0, 0, 0, 0))
+							{
+								BulletHitEffectInfo bi;
+								bullets[b][j]->getId(bi.bulletPID, bi.bulletBID);
+								bi.bt = BULLET_TYPE(b);
+								bi.effectID = eid;
+								bi.effectPID = pid;
+								bi.bulletTeam = bullets[b][j]->getTeam();
+								bi.et = EFFECT_TYPE::BATTERY_SLOW;
+								bi.hitPos = bPos;
+								bi.hitDir = bullets[b][j]->getDir();
+								bi.collisionNormal = collNormalWalls;
+								allBulletHitsOnEffects.push_back(bi);
+							}
+						}
+					}
+
+					for (int c = 0; c < effects[EFFECT_TYPE::BATTERY_SPEED].size(); c++)
+					{
+						int eid = -1, pid = -1;
+						effects[EFFECT_TYPE::BATTERY_SPEED][c]->getId(pid, eid);
+						if (((LightwallEffect*)effects[EFFECT_TYPE::BATTERY_SPEED][c])->getCollidable())
+						{
+							vec3 bPos = bullets[b][j]->getPos();
+							collNormalWalls = physics->checkBulletVEffectCollision(bPos, bullets[b][j]->getVel(), bullets[b][j]->getDir(), EFFECT_TYPE::BATTERY_SPEED, eid, dt);
+							if (collNormalWalls != vec4(0, 0, 0, 0))
+							{
+								BulletHitEffectInfo bi;
+								bullets[b][j]->getId(bi.bulletPID, bi.bulletBID);
+								bi.bt = BULLET_TYPE(b);
+								bi.effectID = eid;
+								bi.effectPID = pid;
+								bi.bulletTeam = bullets[b][j]->getTeam();
+								bi.et = EFFECT_TYPE::BATTERY_SPEED;
+								bi.hitPos = bPos;
+								bi.hitDir = bullets[b][j]->getDir();
+								bi.collisionNormal = collNormalWalls;
+								allBulletHitsOnEffects.push_back(bi);
+							}
+						}
+					}
 				}
 			}
 		}
@@ -2020,71 +2079,27 @@ void Game::handleBulletHitEffectEvent(BulletHitEffectInfo hi)
 {
 	int arraypos = -1;
 	Bullet* b = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, arraypos);
+	if (hi.bt == BULLET_TYPE::BATTERY_SLOW_SHOT || hi.bt == BULLET_TYPE::BATTERY_SPEED_SHOT || BULLET_TYPE::LINK_SHOT) //Battery Field exceptions
+	{
+		if (hi.et == EFFECT_TYPE::BATTERY_SLOW || hi.et == EFFECT_TYPE::BATTERY_SPEED)
+		{
+			int apos = -1;
+			Effect* e = getSpecificEffect(hi.effectPID, hi.effectID, hi.et, apos);
+			if (e != nullptr)
+			{
+				if (hi.bt == (BULLET_TYPE::LINK_SHOT))
+					addEffectToList(hi.effectPID, hi.bulletTeam, hi.effectID, EFFECT_TYPE::EXPLOSION, e->getPos(), 30, 10.0f);
+				else
+					addEffectToList(hi.effectPID, hi.bulletTeam, hi.effectID, EFFECT_TYPE::EXPLOSION, e->getPos(), 15, 5.0f);
+				removeEffect(hi.et, apos);
+			}
+			if (b != nullptr)
+				b->setSpawnAdditionals(false);
+		}
+	}
 	if (b != nullptr)
 	{
-		//Add exceptions 4 battery fields
 		removeBullet(hi.bt, arraypos);
-		/*vec3 temp;
-		switch (hi.bt)
-		{
-		case BULLET_TYPE::PULSE_SHOT:
-			removeBullet(hi.bt, arraypos);
-			break;
-		case BULLET_TYPE::PLASMA_SHOT:
-			removeBullet(hi.bt, arraypos);
-			break;
-		case BULLET_TYPE::GRENADE_SHOT:
-			bounceBullet(forBounce, b);
-			if (GetSoundActivated())
-				GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
-			break;
-		case BULLET_TYPE::SHOTGUN_PELLET:
-			removeBullet(hi.bt, arraypos);
-			break;
-		case BULLET_TYPE::THERMITE_GRENADE:
-			bounceBullet(forBounce, b);
-			if (GetSoundActivated())
-				GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
-			break;
-		case BULLET_TYPE::CLEANSE_BOMB:
-			bounceBullet(forBounce, b);
-			if (GetSoundActivated())
-				GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
-			break;
-		case BULLET_TYPE::CLUSTER_GRENADE:
-			bounceBullet(forBounce, b);
-			if (GetSoundActivated())
-				GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
-			break;
-		case BULLET_TYPE::CLUSTERLING:
-			bounceBullet(forBounce, b);
-			if (GetSoundActivated())
-				GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
-			break;
-		case BULLET_TYPE::BATTERY_SLOW_SHOT:
-			removeBullet(hi.bt, arraypos);
-			break;
-		case BULLET_TYPE::BATTERY_SPEED_SHOT:
-			removeBullet(hi.bt, arraypos);
-			break;
-		case BULLET_TYPE::LINK_SHOT:
-			removeBullet(hi.bt, arraypos);
-			break;
-		case BULLET_TYPE::VACUUM_GRENADE:
-			bounceBullet(forBounce, b);
-			if (GetSoundActivated())
-				GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
-			break;
-		case BULLET_TYPE::DISC_SHOT:
-			bounceBullet(forBounce, b);
-			break;
-		case BULLET_TYPE::HACKING_DART:
-			removeBullet(hi.bt, arraypos);
-			break;
-		case BULLET_TYPE::MELEE_ATTACK:
-			removeBullet(hi.bt, arraypos);
-			break;
-		}*/
 	}
 }
 
@@ -2209,10 +2224,12 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 			break;
 		}
 		case BULLET_TYPE::BATTERY_SLOW_SHOT:
-			addEffectToList(PID, parent->getTeam(), BID, EFFECT_TYPE::BATTERY_SLOW, parent->getPos(), 0, 0.0f);
+			if (parent->getSpawnAdditionals())
+				addEffectToList(PID, parent->getTeam(), BID, EFFECT_TYPE::BATTERY_SLOW, parent->getPos(), 0, 0.0f);
 			break;
 		case BULLET_TYPE::BATTERY_SPEED_SHOT:
-			addEffectToList(PID, parent->getTeam(), BID, EFFECT_TYPE::BATTERY_SPEED, parent->getPos(), 0, 0.0f);
+			if (parent->getSpawnAdditionals())
+				addEffectToList(PID, parent->getTeam(), BID, EFFECT_TYPE::BATTERY_SPEED, parent->getPos(), 0, 0.0f);
 			break;
 		}
 		delete bullets[bt][posInArray];

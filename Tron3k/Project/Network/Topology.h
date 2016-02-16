@@ -266,19 +266,24 @@ public:
 	virtual void in_event_bullet_hit_effect(Packet* rec)
 	{
 		BulletHitEffectInfo hi;
-		Uint8 PID, BID, bt;
+		Uint8 PID, BID, bt, bTeam;
+		Uint8 EPID, EID, et;
 		glm::vec3 hitpos; glm::vec3 hitdir; glm::vec4 cNorm;
 		Uint8 size;
 		*rec >> size;
 		for (int c = 0; c < size; c++)
 		{
-			*rec >> PID >> BID >> bt;
+			*rec >> PID >> BID >> bt >> bTeam;
+			*rec >> EPID >> EID >> et;
 			*rec >> hitpos.x >> hitpos.y >> hitpos.z;
 			*rec >> hitdir.x >> hitdir.y >> hitdir.z;
 			*rec >> cNorm.x >> cNorm.y >> cNorm.z >> cNorm.w;
 			hi.bt = BULLET_TYPE(bt);
 			hi.bulletBID = BID;
 			hi.bulletPID = PID;
+			hi.et = EFFECT_TYPE(et);
+			hi.effectPID = EPID;
+			hi.effectID = EID;
 			hi.hitPos = hitpos;
 			hi.hitDir = hitdir;
 			hi.collisionNormal = cNorm;

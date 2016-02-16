@@ -93,7 +93,8 @@ void Server::event_bullet_hit_effect(std::vector<BulletHitEffectInfo> allhits)
 	*out << Uint8(allhits.size());
 	for (unsigned int c = 0; c < allhits.size(); c++)
 	{
-		*out << Uint8(allhits[c].bulletPID) << Uint8(allhits[c].bulletBID) << Uint8(allhits[c].bt);
+		*out << Uint8(allhits[c].bulletPID) << Uint8(allhits[c].bulletBID) << Uint8(allhits[c].bt) << Uint8(allhits[c].bulletTeam);
+		*out << Uint8(allhits[c].effectPID) << Uint8(allhits[c].effectID) << Uint8(allhits[c].et);
 		*out << allhits[c].hitPos.x << allhits[c].hitPos.y << allhits[c].hitPos.z;
 		*out << allhits[c].hitDir.x << allhits[c].hitDir.y << allhits[c].hitDir.z;
 		*out << allhits[c].collisionNormal.x << allhits[c].collisionNormal.y;

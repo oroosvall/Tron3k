@@ -60,7 +60,10 @@ struct BulletHitEffectInfo
 {
 	int bulletPID;
 	int bulletBID;
+	int bulletTeam;
 	BULLET_TYPE bt;
+	int effectPID;
+	int effectID;
 	EFFECT_TYPE et;
 	glm::vec3 hitPos;
 	glm::vec3 hitDir;
