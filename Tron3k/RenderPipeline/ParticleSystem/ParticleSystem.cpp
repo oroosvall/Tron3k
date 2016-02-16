@@ -10,8 +10,9 @@ void ParticleSystem::Initialize(glm::vec3 pos, ParticleSystemData* ps, GLuint* p
 	for (int i = 0; i < m_data->maxparticles; i++)
 	{
 		Particle p;
-		p.pos = glm::vec4(0, 0, 0, 0);
-		p.dir = glm::vec4(0, 0, 0, 0);
+		//p.pos = glm::vec4(0, 0, 0, 0);
+		p.pos = glm::vec4(pos, 0);
+		p.dir = glm::vec4(1, 0, 0, 1.0f);
 		p.iDir = glm::vec4(m_data->dir, 0);
 		m_vertices.push_back(p);
 	}
@@ -66,11 +67,14 @@ void ParticleSystem::Update(float dT)
 
 void ParticleSystem::Draw()
 {
+	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+	glBindVertexArray(m_vao);
+
 	glDrawArrays(GL_POINTS, 0, m_vertices.size());
 }
 
 void ParticleSystem::Release()
 {
 	glDeleteBuffers(1, &m_vbo);
-	glDeleteBuffers(1, &m_vao);
+	glDeleteVertexArrays(1, &m_vao);
 }

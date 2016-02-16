@@ -7,5 +7,7 @@
 #include "ThunderDomeEffect.h"
 #include "ThermiteCloud.h"
 #include "HealthPack.h"
+#include "BatteryFieldSlow.h"
+#include "BatteryFieldSpeed.h"
 
 #endif

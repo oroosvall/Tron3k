@@ -108,6 +108,8 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	bool success = TextureManager::gTm->PNGSize("GameFiles/Textures/Crosshairs/Crosshair.png", x, y);
 	cross->init(x, y);
 
+	ptex = TextureManager::gTm->createTexture("GameFiles/Textures/Particles/arrow.png");
+
 #ifdef _DEBUG
 	if (glDebugMessageCallback) {
 		printf("Register OpenGL debug callback\n");
@@ -161,6 +163,11 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	//glBufferData(GL_UNIFORM_BUFFER, maxDecals * sizeof(float) * 12, NULL, GL_DYNAMIC_DRAW);
 
 	resetQuery();
+
+	pdata.maxparticles = 10;
+	pdata.dir = glm::vec3(1, 0, 0);
+
+	particleTest.Initialize(glm::vec3(0,5,0), &pdata, &particleCS);
 
 	initialized = true;
 	return true;
@@ -255,6 +262,16 @@ void RenderPipeline::reloadShaders()
 	if (temp != 0)
 	{
 		decal_Shader = temp;
+		temp = 0;
+	}
+
+	//Spotlight volume shader
+	std::string shaderNamesSpotVolume[] = { "GameFiles/Shaders/SpotlightVolume_vs.glsl", "GameFiles/Shaders/SpotlightVolume_gs.glsl", "GameFiles/Shaders/SpotlightVolume_fs.glsl" };
+	GLenum shaderTypesSpotVolume[] = { GL_VERTEX_SHADER, GL_GEOMETRY_SHADER, GL_FRAGMENT_SHADER };
+	CreateProgram(temp, shaderNamesSpotVolume, shaderTypesSpotVolume, 3);
+	if (temp != 0)
+	{
+		gBuffer->spotligtVolumeShader = temp;
 		temp = 0;
 	}
 
@@ -359,9 +376,14 @@ void RenderPipeline::reloadShaders()
 		temp = 0;
 	}
 
+	particleCam = glGetUniformLocation(particleShader, "cam");
+	particleSize = glGetUniformLocation(particleShader, "size");
+	particleViewProj = glGetUniformLocation(particleShader, "VP");
+	particleTexture = glGetUniformLocation(particleShader, "tex");
+
 
 	particleShaders[0] = "GameFiles/Shaders/ParticleSystem_cs.glsl";
-	textshaderTypes[0] = GL_COMPUTE_SHADER;
+	particleshaderTypes[0] = GL_COMPUTE_SHADER;
 
 	CreateProgram(temp, particleShaders, particleshaderTypes, 1);
 	if (temp != 0)
@@ -401,6 +423,8 @@ void RenderPipeline::release()
 	cross->release();
 	delete cross;
 
+	particleTest.Release();
+
 	reportGPULeaks();
 
 	delete this; // yes this is safe
@@ -416,6 +440,7 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 
 	cam.setViewProjMat(animationShader, viewProjMat[1]);
 	cam.setViewProjMat(*gBuffer->portal_shaderPtr, gBuffer->portal_vp);
+	cam.setViewProjMat(gBuffer->spotligtVolumeShader, gBuffer->spotlightVP);
 	cam.setViewProjMat(portalShaderV2, portal_VP);
 
 	contMan.update(dt);
@@ -527,7 +552,7 @@ void RenderPipeline::render()
 void RenderPipeline::finalizeRender()
 {
 	glDepthMask(GL_TRUE);
-	glEnable(GL_CULL_FACE);
+	//glEnable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
 
 	//system("CLS");
@@ -545,6 +570,20 @@ void RenderPipeline::finalizeRender()
 			}
 		}
 	
+	glDisable(GL_BLEND);
+	glDisable(GL_CULL_FACE);
+
+	glUseProgram(particleShader);
+	cam.setViewProjMat(particleShader, particleViewProj);
+	//glProgramUniformMatrix4fv(particleShader, particleViewProj, 1, GL_FALSE, (GLfloat*)&glm::mat4());
+	glProgramUniform2f(particleShader, particleSize, 0.1f, 0.1f);
+
+	glProgramUniform3f(particleShader, particleCam, gBuffer->eyePos.x, gBuffer->eyePos.y, gBuffer->eyePos.z);
+	
+	TextureManager::gTm->bindTexture(ptex, particleShader, particleTexture, DIFFUSE_FB);
+
+	particleTest.Draw();
+
 
 	glUseProgram(glowShaderTweeks);
 	
@@ -554,7 +593,7 @@ void RenderPipeline::finalizeRender()
 
 	//GBuffer Render
 	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
-	glClear(GL_DEPTH_BUFFER_BIT);
+	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
 	gBuffer->render();
 	
@@ -578,10 +617,10 @@ void RenderPipeline::finalizeRender()
 	//uglyCrosshairSolution->draw();
 
 	renderCrosshair(CROSSHAIR_TRAPPER_P);
-
 	glDisable(GL_BLEND);
 
 	stopTimer(renderFrameTimeID);
+	glEnable(GL_CULL_FACE);
 
 }
 

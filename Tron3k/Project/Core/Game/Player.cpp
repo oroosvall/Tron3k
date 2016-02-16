@@ -99,7 +99,7 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool spectatin
 
 	if (GetSoundActivated())
 	{
-		GetSound()->setLocalPlayerPos(pos);
+		GetSound()->setLocalPlayerPos(cam->getPos());
 		GetSound()->setLocalPlayerDir(cam->getDir());
 	}
 
@@ -595,7 +595,19 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 							vel.y = role.getJumpHeight() * 5;
 							airVelocity = vel;
 							if (GetSoundActivated())
-								GetSound()->playJump(role.getRole(), pos.x, pos.y, pos.z);
+							{
+								if (isLocal() || spectatingThisPlayer)
+								{
+									GetSound()->PlayStereoJump(role.getRole());
+								}
+								else
+								{
+									GetSound()->playJump(role.getRole(), pos.x, pos.y, pos.z);
+								}
+								
+							}
+							
+								
 						}
 					}
 
@@ -1071,6 +1083,18 @@ void Player::addModifier(MODIFIER_TYPE mt)
 	case MODIFIER_TYPE::TRAPPERSHAREAMMO:
 	{
 		m = new TrapperShareAmmo();
+		myModifiers.push_back(m);
+	}
+	break;
+	case MODIFIER_TYPE::BATTERYSLOWMOD:
+	{
+		m = new BatterySlowMod();
+		myModifiers.push_back(m);
+	}
+	break;
+	case MODIFIER_TYPE::BATTERYSPEEDMOD:
+	{
+		m = new BatterySpeedMod();
 		myModifiers.push_back(m);
 	}
 	break;

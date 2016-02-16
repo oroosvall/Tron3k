@@ -18,9 +18,6 @@ vec4 glowValue;
 uniform float pixeluvX;
 uniform float pixeluvY;
 
-float tempPixeluvX = pixeluvX; //1.0f / 512.0f; USE THESE TO BLUR SHIT WHEN WE SEPARATE NEON AND "GLOW"
-float tempPixeluvY = pixeluvY; //1.0f / 512.0f;
-
 struct SpotLight
 {
 	vec3 Color;
@@ -32,189 +29,125 @@ struct SpotLight
 	vec4 attenuation;
 };
 
-layout (std140) uniform Light
-{ 
-	SpotLight lights[500];
-};
-
-uniform int NumSpotLights;
 uniform vec3 eyepos;
 
-float gSpecularPower = 200;
-float gMatSpecularIntensity = 0.4;
-vec4 specularAddetive;
-bool isAmbient = true;
-
-out vec4 fragment_color;
-					
-vec4 CalcLightInternal(SpotLight l, vec3 LightDirection, vec3 Normal)                   
-{                                                                                                 
-	float DiffuseFactor = dot(Normal, -LightDirection);                                     
-                                                                                           
-	vec4 DiffuseColor  = vec4(0, 0, 0, 0);                                                                                             
-                                                                                           
-	if (DiffuseFactor > 0) 
-	{                                                            
-		DiffuseColor = vec4(l.Color, 1.0f) * (l.DiffuseIntensity * 3) * DiffuseFactor;    
-                                                                                           
-		vec3 VertexToEye = normalize(eyepos - Position0.xyz);                             
-		vec3 LightReflect = normalize(reflect(LightDirection, Normal));                     
-		float SpecularFactor = dot(VertexToEye, LightReflect);                              
-		SpecularFactor = pow(SpecularFactor, gSpecularPower);                               
-		if (SpecularFactor > 0)
-			if(isAmbient == false)
-			{
-				float Distance = length(Position0.xyz - l.Position);
-				float Attenuation = 1.0f / pow(max(0.0f, 1.0f - (Distance/80)), 5);
-				specularAddetive += (vec4(l.Color, 1.0f) * ( 1 - Normal0.w) * SpecularFactor) / Attenuation;
-			}
-			else
-			{
-				specularAddetive += (vec4(l.Color, 1.0f) * ( 1 - Normal0.w) * SpecularFactor);
-			}
-	}                                                                                                                                                                         
-	return (DiffuseColor);                                   
-}               
-
-vec4 CalcPointLight(SpotLight l, vec3 Normal)
-{
-	vec3 LightDirection = Position0.xyz - l.Position;
-	float Distance = length(LightDirection);
-	LightDirection = normalize(LightDirection);    
-
-	vec4 Color = vec4(CalcLightInternal(l, LightDirection, Normal)); 
-	float Attenuation = pow(max(0.0f, 1.0f - (Distance/80)), 10);
-	if(length(l.Direction) < 0.3f)
-		Attenuation = pow(max(0.0f, 1.0f - (Distance/l.attenuation.w)), l.AmbientIntensity);
-	return Color * Attenuation;	
-}                                                                                           
-                                                                                           
-vec4 CalcSpotLight(SpotLight l, vec3 Normal)                                                
-{                                                                                           
-	vec3 LightToPixel = normalize(Position0.xyz - l.Position);                             
-	float SpotFactor = dot(LightToPixel, l.Direction);                                      
-    	
-	if (SpotFactor > l.Cutoff) 
-	{                                                            
-		vec4 Color = CalcPointLight(l, Normal0.xyz);                             
-		return Color * (1.0 - (1.0 - SpotFactor) * 1.0/(1.0 - l.Cutoff));                   
-	}                                                                                       
-	else                                                                                
-		return vec4(0,0,0,0);                                                                   
+float gSpecularPower = 200.0f;
+float gMatSpecularIntensity = 0.4f;
 	
-}  		
+vec3 ambientLightPosition = vec3(131.0f, 45.0f, 0.0f);
+vec3 ambientLightDirection = vec3(-0.16f, -0.36f, 0.61f);
+vec3 ambientLightColor = vec3(0.7f, 0.7f , 1.0f);
+float ambientLightDiffuseIntensity = 0.1f;
+float ambientLightAmbientIntensity = 0.1f;
+
+out vec4 fragment_color;                                                                                       
 
 void main()
 {
+	// TODO:: Only sample if we need them. Might fail before we get to use them
+	fragment_color = vec4(0,0,0,0);
+	Diffuse0 = texture(Diffuse, vec2(UV.x, UV.y));
+	Position0 = texture(Position, vec2(UV.x, UV.y));
+	Normal0 = texture(Normal, vec2(UV.x, UV.y));
+	glowValue = texture(GlowMap, vec2(UV.x, UV.y));
+	
+	vec4 specularAddetive = vec4(0,0,0,0);
+	
+	float len = length(Position0.xyz - eyepos);
+	if(len < 500)
 	{
-		fragment_color = vec4(0,0,0,0);
-		Diffuse0 = texture(Diffuse, vec2(UV.x, UV.y));
-		Position0 = texture(Position, vec2(UV.x, UV.y));
-		Normal0 = texture(Normal, vec2(UV.x, UV.y));
-		Depth0 = texture(Depth, vec2(UV.x, UV.y));
-		glowValue = texture(GlowMap, vec2(UV.x, UV.y));
-		
-		specularAddetive = vec4(0);
-		
-		float len = length(Position0.xyz - eyepos);
-		if(len < 500)
-		{
-			//light 0
-			fragment_color = CalcLightInternal(lights[0], lights[0].Direction, Normal0.xyz);
-			vec4 ambientForce = vec4(lights[0].Color, 1) * lights[0].AmbientIntensity;
-			isAmbient = false;
+		vec3 normal3 = vec3(Normal0);	
+		float DiffuseFactor = dot(normal3, -ambientLightDirection);                                                                                                           
+																				   
+		if (DiffuseFactor > 0) 
+		{    
+			fragment_color = vec4(0);
+			fragment_color = vec4(ambientLightColor, 1.0f) * (ambientLightDiffuseIntensity * 3) * DiffuseFactor;                                                                                          
+			vec3 VertexToEye = normalize(eyepos - Position0.xyz);                             
+			vec3 LightReflect = normalize(reflect(ambientLightDirection, normal3));                     
+			float SpecularFactor = dot(VertexToEye, LightReflect); 		
+			SpecularFactor = pow(SpecularFactor, gSpecularPower);
 			
-			for(int n = 1; n < NumSpotLights; n++)
-			{
-				float Distance = length(Position0.xyz - lights[n].Position);
-				if(length(lights[n].Direction) < 0.3f)
-				{
-					if (Distance < lights[n].attenuation.w)
-						fragment_color += CalcPointLight(lights[n], Normal0.xyz);
-				}
-				else
-				{
-					if (Distance < 32) // Hardcoded, fix with lightvolumes
-						fragment_color += CalcSpotLight(lights[n], Normal0.xyz);
-				}
-				
-			}
-			fragment_color = fragment_color * Diffuse0 +  Diffuse0 * ambientForce;
-		}
-		else
-		{
-			fragment_color = Diffuse0;
-		}
-		vec4 sum = vec4(0);
+			if (SpecularFactor > 0)				
+				specularAddetive += (vec4(ambientLightColor, 1.0f) * ( 1 - Normal0.w) * SpecularFactor);
+		}       
 		
-		//top left quadrant
-		sum += texture(GlowMap, UV + vec2( -tempPixeluvX * 1 , -tempPixeluvY * 1 )) * 0.058488;
-		sum += texture(GlowMap, UV + vec2( -tempPixeluvX * 1 , -tempPixeluvY * 2 )) * 0.014662;
-		sum += texture(GlowMap, UV + vec2( -tempPixeluvX * 1 , -tempPixeluvY * 3 )) * 0.001446;
-		sum += texture(GlowMap, UV + vec2( -tempPixeluvX * 2 , -tempPixeluvY * 1 )) * 0.014662;
-		sum += texture(GlowMap, UV + vec2( -tempPixeluvX * 2 , -tempPixeluvY * 2 )) * 0.003676;
-		sum += texture(GlowMap, UV + vec2( -tempPixeluvX * 2 , -tempPixeluvY * 3 )) * 0.000363;
-		sum += texture(GlowMap, UV + vec2( -tempPixeluvX * 3 , -tempPixeluvY * 1 )) * 0.001446;
-		sum += texture(GlowMap, UV + vec2( -tempPixeluvX * 3 , -tempPixeluvY * 2 )) * 0.000363;
-		sum += texture(GlowMap, UV + vec2( -tempPixeluvX * 3 , -tempPixeluvY * 3 )) * 0.000036;
+		vec4 ambientForce = vec4(ambientLightColor, 1) * ambientLightAmbientIntensity;
+		fragment_color = fragment_color * Diffuse0 +  Diffuse0 * ambientForce;
+	}
+	else //dont color the skybox!
+	{
+		fragment_color = Diffuse0;
+	}
+	vec4 sum = vec4(0);
+	
+	//top left quadrant
+	sum += texture(GlowMap, UV + vec2( -pixeluvX * 1 , -pixeluvY * 1 )) * 0.058488;
+	sum += texture(GlowMap, UV + vec2( -pixeluvX * 1 , -pixeluvY * 2 )) * 0.014662;
+	sum += texture(GlowMap, UV + vec2( -pixeluvX * 1 , -pixeluvY * 3 )) * 0.001446;
+	sum += texture(GlowMap, UV + vec2( -pixeluvX * 2 , -pixeluvY * 1 )) * 0.014662;
+	sum += texture(GlowMap, UV + vec2( -pixeluvX * 2 , -pixeluvY * 2 )) * 0.003676;
+	sum += texture(GlowMap, UV + vec2( -pixeluvX * 2 , -pixeluvY * 3 )) * 0.000363;
+	sum += texture(GlowMap, UV + vec2( -pixeluvX * 3 , -pixeluvY * 1 )) * 0.001446;
+	sum += texture(GlowMap, UV + vec2( -pixeluvX * 3 , -pixeluvY * 2 )) * 0.000363;
+	sum += texture(GlowMap, UV + vec2( -pixeluvX * 3 , -pixeluvY * 3 )) * 0.000036;
 
-		//top right quadrant   
-		sum += texture(GlowMap, UV + vec2( tempPixeluvX * 1 , -tempPixeluvY * 1 )) * 0.058488;
-		sum += texture(GlowMap, UV + vec2( tempPixeluvX * 1 , -tempPixeluvY * 2 )) * 0.014662;
-		sum += texture(GlowMap, UV + vec2( tempPixeluvX * 1 , -tempPixeluvY * 3 )) * 0.001446;
-		sum += texture(GlowMap, UV + vec2( tempPixeluvX * 2 , -tempPixeluvY * 1 )) * 0.014662;
-		sum += texture(GlowMap, UV + vec2( tempPixeluvX * 2 , -tempPixeluvY * 2 )) * 0.003676;
-		sum += texture(GlowMap, UV + vec2( tempPixeluvX * 2 , -tempPixeluvY * 3 )) * 0.000363;
-		sum += texture(GlowMap, UV + vec2( tempPixeluvX * 3 , -tempPixeluvY * 1 )) * 0.001446;
-		sum += texture(GlowMap, UV + vec2( tempPixeluvX * 3 , -tempPixeluvY * 2 )) * 0.000363;
-		sum += texture(GlowMap, UV + vec2( tempPixeluvX * 3 , -tempPixeluvY * 3 )) * 0.000036;
+	//top right quadrant   
+	sum += texture(GlowMap, UV + vec2( pixeluvX * 1 , -pixeluvY * 1 )) * 0.058488;
+	sum += texture(GlowMap, UV + vec2( pixeluvX * 1 , -pixeluvY * 2 )) * 0.014662;
+	sum += texture(GlowMap, UV + vec2( pixeluvX * 1 , -pixeluvY * 3 )) * 0.001446;
+	sum += texture(GlowMap, UV + vec2( pixeluvX * 2 , -pixeluvY * 1 )) * 0.014662;
+	sum += texture(GlowMap, UV + vec2( pixeluvX * 2 , -pixeluvY * 2 )) * 0.003676;
+	sum += texture(GlowMap, UV + vec2( pixeluvX * 2 , -pixeluvY * 3 )) * 0.000363;
+	sum += texture(GlowMap, UV + vec2( pixeluvX * 3 , -pixeluvY * 1 )) * 0.001446;
+	sum += texture(GlowMap, UV + vec2( pixeluvX * 3 , -pixeluvY * 2 )) * 0.000363;
+	sum += texture(GlowMap, UV + vec2( pixeluvX * 3 , -pixeluvY * 3 )) * 0.000036;
 
-		//bot left quadrant  
-		sum += texture(GlowMap, UV + vec2( -tempPixeluvX * 1 , tempPixeluvY * 1 )) * 0.058488;
-		sum += texture(GlowMap, UV + vec2( -tempPixeluvX * 1 , tempPixeluvY * 2 )) * 0.014662;
-		sum += texture(GlowMap, UV + vec2( -tempPixeluvX * 1 , tempPixeluvY * 3 )) * 0.001446;
-		sum += texture(GlowMap, UV + vec2( -tempPixeluvX * 2 , tempPixeluvY * 1 )) * 0.014662;
-		sum += texture(GlowMap, UV + vec2( -tempPixeluvX * 2 , tempPixeluvY * 2 )) * 0.003676;
-		sum += texture(GlowMap, UV + vec2( -tempPixeluvX * 2 , tempPixeluvY * 3 )) * 0.000363;
-		sum += texture(GlowMap, UV + vec2( -tempPixeluvX * 3 , tempPixeluvY * 1 )) * 0.001446;
-		sum += texture(GlowMap, UV + vec2( -tempPixeluvX * 3 , tempPixeluvY * 2 )) * 0.000363;
-		sum += texture(GlowMap, UV + vec2( -tempPixeluvX * 3 , tempPixeluvY * 3 )) * 0.000036;
+	//bot left quadrant  
+	sum += texture(GlowMap, UV + vec2( -pixeluvX * 1 , pixeluvY * 1 )) * 0.058488;
+	sum += texture(GlowMap, UV + vec2( -pixeluvX * 1 , pixeluvY * 2 )) * 0.014662;
+	sum += texture(GlowMap, UV + vec2( -pixeluvX * 1 , pixeluvY * 3 )) * 0.001446;
+	sum += texture(GlowMap, UV + vec2( -pixeluvX * 2 , pixeluvY * 1 )) * 0.014662;
+	sum += texture(GlowMap, UV + vec2( -pixeluvX * 2 , pixeluvY * 2 )) * 0.003676;
+	sum += texture(GlowMap, UV + vec2( -pixeluvX * 2 , pixeluvY * 3 )) * 0.000363;
+	sum += texture(GlowMap, UV + vec2( -pixeluvX * 3 , pixeluvY * 1 )) * 0.001446;
+	sum += texture(GlowMap, UV + vec2( -pixeluvX * 3 , pixeluvY * 2 )) * 0.000363;
+	sum += texture(GlowMap, UV + vec2( -pixeluvX * 3 , pixeluvY * 3 )) * 0.000036;
 
-		//bot left quadrant  
-		sum += texture(GlowMap, UV + vec2( tempPixeluvX * 1 , tempPixeluvY * 1 )) * 0.058488;
-		sum += texture(GlowMap, UV + vec2( tempPixeluvX * 1 , tempPixeluvY * 2 )) * 0.014662;
-		sum += texture(GlowMap, UV + vec2( tempPixeluvX * 1 , tempPixeluvY * 3 )) * 0.001446;
-		sum += texture(GlowMap, UV + vec2( tempPixeluvX * 2 , tempPixeluvY * 1 )) * 0.014662;
-		sum += texture(GlowMap, UV + vec2( tempPixeluvX * 2 , tempPixeluvY * 2 )) * 0.003676;
-		sum += texture(GlowMap, UV + vec2( tempPixeluvX * 2 , tempPixeluvY * 3 )) * 0.000363;
-		sum += texture(GlowMap, UV + vec2( tempPixeluvX * 3 , tempPixeluvY * 1 )) * 0.001446;
-		sum += texture(GlowMap, UV + vec2( tempPixeluvX * 3 , tempPixeluvY * 2 )) * 0.000363;
-		sum += texture(GlowMap, UV + vec2( tempPixeluvX * 3 , tempPixeluvY * 3 )) * 0.000036;
+	//bot left quadrant  
+	sum += texture(GlowMap, UV + vec2( pixeluvX * 1 , pixeluvY * 1 )) * 0.058488;
+	sum += texture(GlowMap, UV + vec2( pixeluvX * 1 , pixeluvY * 2 )) * 0.014662;
+	sum += texture(GlowMap, UV + vec2( pixeluvX * 1 , pixeluvY * 3 )) * 0.001446;
+	sum += texture(GlowMap, UV + vec2( pixeluvX * 2 , pixeluvY * 1 )) * 0.014662;
+	sum += texture(GlowMap, UV + vec2( pixeluvX * 2 , pixeluvY * 2 )) * 0.003676;
+	sum += texture(GlowMap, UV + vec2( pixeluvX * 2 , pixeluvY * 3 )) * 0.000363;
+	sum += texture(GlowMap, UV + vec2( pixeluvX * 3 , pixeluvY * 1 )) * 0.001446;
+	sum += texture(GlowMap, UV + vec2( pixeluvX * 3 , pixeluvY * 2 )) * 0.000363;
+	sum += texture(GlowMap, UV + vec2( pixeluvX * 3 , pixeluvY * 3 )) * 0.000036;
 
-		//Cross samples
-		//up
-		sum += texture(GlowMap, UV + vec2( 0, -tempPixeluvY * 1)) * 0.092651;
-		sum += texture(GlowMap, UV + vec2( 0, -tempPixeluvY * 2)) * 0.023226;
-		sum += texture(GlowMap, UV + vec2( 0, -tempPixeluvY * 3)) * 0.002291;
+	//Cross samples
+	//up
+	sum += texture(GlowMap, UV + vec2( 0, -pixeluvY * 1)) * 0.092651;
+	sum += texture(GlowMap, UV + vec2( 0, -pixeluvY * 2)) * 0.023226;
+	sum += texture(GlowMap, UV + vec2( 0, -pixeluvY * 3)) * 0.002291;
 
-		//left
-		sum += texture(GlowMap, UV + vec2( -tempPixeluvX * 1, 0)) * 0.092651;
-		sum += texture(GlowMap, UV + vec2( -tempPixeluvX * 2, 0)) * 0.023226;
-		sum += texture(GlowMap, UV + vec2( -tempPixeluvX * 3, 0)) * 0.002291;
+	//left
+	sum += texture(GlowMap, UV + vec2( -pixeluvX * 1, 0)) * 0.092651;
+	sum += texture(GlowMap, UV + vec2( -pixeluvX * 2, 0)) * 0.023226;
+	sum += texture(GlowMap, UV + vec2( -pixeluvX * 3, 0)) * 0.002291;
 
-		//right
-		sum += texture(GlowMap, UV + vec2( tempPixeluvX * 1, 0)) * 0.092651;
-		sum += texture(GlowMap, UV + vec2( tempPixeluvX * 2, 0)) * 0.023226;
-		sum += texture(GlowMap, UV + vec2( tempPixeluvX * 3, 0)) * 0.002291;
+	//right
+	sum += texture(GlowMap, UV + vec2( pixeluvX * 1, 0)) * 0.092651;
+	sum += texture(GlowMap, UV + vec2( pixeluvX * 2, 0)) * 0.023226;
+	sum += texture(GlowMap, UV + vec2( pixeluvX * 3, 0)) * 0.002291;
 
-		//down
-		sum += texture(GlowMap, UV + vec2( 0, tempPixeluvY * 1)) * 0.092651;
-		sum += texture(GlowMap, UV + vec2( 0, tempPixeluvY * 2)) * 0.023226;
-		sum += texture(GlowMap, UV + vec2( 0, tempPixeluvY * 3)) * 0.002291;
+	//down
+	sum += texture(GlowMap, UV + vec2( 0, pixeluvY * 1)) * 0.092651;
+	sum += texture(GlowMap, UV + vec2( 0, pixeluvY * 2)) * 0.023226;
+	sum += texture(GlowMap, UV + vec2( 0, pixeluvY * 3)) * 0.002291;
 
-		//middle sample
-		sum += texture(GlowMap, UV) * 0.146768;
-		
-		fragment_color += sum + specularAddetive;
-	}	
+	//middle sample
+	sum += texture(GlowMap, UV) * 0.146768;
+	
+	fragment_color += sum + specularAddetive;
 }

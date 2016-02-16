@@ -209,6 +209,7 @@ private:
 	void checkBulletVWorldCollision(float dt);
 	void checkBulletVEffectCollision(float dt);
 	void checkPlayerVEffectCollision();
+	void checkEffectVEffectCollision();
 	void checkPlayerVCapCollision();
 
 	void sendEffectBox(Effect* ef);

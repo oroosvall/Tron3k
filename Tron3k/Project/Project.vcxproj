@@ -28,12 +28,16 @@
     <ClCompile Include="Core\Game\Player.cpp" />
     <ClCompile Include="Core\Game\Role\Consumable\Consumable.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effect.cpp" />
+    <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\BatteryFieldSlow.cpp" />
+    <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\BatteryFieldSpeed.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\Explosion.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\HealthPack.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\LightwallEffect.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\ThermiteCloud.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\ThunderDomeEffect.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Modifier.cpp" />
+    <ClCompile Include="Core\Game\Role\PlayerEffects\Modifiers\BatterySlow.cpp" />
+    <ClCompile Include="Core\Game\Role\PlayerEffects\Modifiers\BatterySpeed.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Modifiers\HackingDartModifier.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Modifiers\LightSpeed.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Modifiers\LightWallLockedControls.cpp" />
@@ -105,6 +109,8 @@
     <ClInclude Include="Core\Game\Role\Consumable\Consumable.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effect.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\AllEffects.h" />
+    <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\BatteryFieldSlow.h" />
+    <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\BatteryFieldSpeed.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\Explosion.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\HealthPack.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\LightwallEffect.h" />
@@ -112,6 +118,8 @@
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\ThunderDomeEffect.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Modifier.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Modifiers\AllModifiers.h" />
+    <ClInclude Include="Core\Game\Role\PlayerEffects\Modifiers\BatterySlow.h" />
+    <ClInclude Include="Core\Game\Role\PlayerEffects\Modifiers\BatterySpeed.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Modifiers\HackingDartModifier.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Modifiers\LightSpeed.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Modifiers\LightWallLockedControls.h" />

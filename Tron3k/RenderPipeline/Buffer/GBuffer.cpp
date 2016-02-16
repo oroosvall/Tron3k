@@ -81,9 +81,19 @@ void Gbuffer::init(int x, int y, int nrTex, bool depth)
 
 	uniformBitsList = new GLuint[nrTextures];
 
+	//ambient blitquad
 	uniformEyePos = glGetUniformLocation(*shaderPtr, "eyepos");
-	uniformNrOfLight = glGetUniformLocation(*shaderPtr, "NumSpotLights");
-	uniformBufferLightPos = glGetUniformBlockIndex(*shaderPtr, "Light");
+
+	//spotlight volumes
+	uniformBufferLightPos_spotlightVolume = glGetUniformBlockIndex(spotligtVolumeShader, "Light");
+	spotID = glGetUniformLocation(spotligtVolumeShader, "spotlightID");
+	spotlightVP = glGetUniformLocation(spotligtVolumeShader, "ViewProjMatrix");
+	uniformEyePos_spotlightVolume = glGetUniformLocation(spotligtVolumeShader, "eyepos");
+	spotvol_Position = glGetUniformLocation(spotligtVolumeShader, "Position");
+	spotvol_Diffuse = glGetUniformLocation(spotligtVolumeShader, "Diffuse");
+	spotvol_Normal = glGetUniformLocation(spotligtVolumeShader, "Normal");
+	spotvol_GlowMap = glGetUniformLocation(spotligtVolumeShader, "GlowMap");
+
 	uBlitLightPixelX  = glGetUniformLocation(*shaderPtr, "pixeluvX");
 	uBlitLightPixelY = glGetUniformLocation(*shaderPtr, "pixeluvY");
 
@@ -127,11 +137,11 @@ void Gbuffer::initLight()
 {
 	if (targetId == 0)
 		throw;
-	glGenBuffers(1, &lightBuffer);
+	glGenBuffers(1, &lightBuffer_spotlightVolume);
 
 	maxLights = 500;
 
-	glBindBuffer(GL_UNIFORM_BUFFER, lightBuffer);
+	glBindBuffer(GL_UNIFORM_BUFFER, lightBuffer_spotlightVolume);
 	glBufferData(GL_UNIFORM_BUFFER, maxLights * sizeof(SpotLight), NULL, GL_DYNAMIC_DRAW);
 
 	lightInitialized = true;
@@ -152,7 +162,7 @@ Gbuffer::~Gbuffer()
 		//Debug::DebugOutput("Deleting gbuffer target\n");
 	}
 
-	glDeleteBuffers(1, &lightBuffer);
+	glDeleteBuffers(1, &lightBuffer_spotlightVolume);
 
 	glDeleteShader(*shaderPtr);
 	delete shaderPtr;
@@ -178,13 +188,17 @@ void Gbuffer::resize(int x, int y)
 
 void Gbuffer::pushLights(SpotLight* light, int nrLight)
 {
-	glBindBuffer(GL_UNIFORM_BUFFER, lightBuffer);
-
-	if (nrOfLights + nrLight < maxLights)
+	//only push spotlights (temp)
+	if (length(light->Direction) > 0.5f)
 	{
-		//glBindBuffer(GL_UNIFORM_BUFFER, lightBuffer);
-		glBufferSubData(GL_UNIFORM_BUFFER, nrOfLights * sizeof(SpotLight), nrLight * sizeof(SpotLight), &light[0]);
-		nrOfLights += nrLight;
+		glBindBuffer(GL_UNIFORM_BUFFER, lightBuffer_spotlightVolume);
+		
+		if (nrOfLights + nrLight < maxLights)
+		{
+			glBindBuffer(GL_UNIFORM_BUFFER, lightBuffer_spotlightVolume);
+			glBufferSubData(GL_UNIFORM_BUFFER, nrOfLights * sizeof(SpotLight), nrLight * sizeof(SpotLight), &light[0]);
+			nrOfLights += nrLight;
+		}
 	}
 }
 
@@ -233,16 +247,16 @@ void Gbuffer::render(/*glm::vec3 playerPos, glm::vec3 playerDir*/)
 		}
 		glProgramUniform1i(*shaderPtr, uniformBitsList[i], i);
 	}
-	
+
 	glProgramUniform3fv(*shaderPtr, uniformEyePos, 1, &eyePos[0]);
-	glProgramUniform1i(*shaderPtr, uniformNrOfLight, nrOfLights);
+	//glProgramUniform1i(*shaderPtr, uniformNrOfLight, nrOfLights);
 
 	// bind buffer
 	glBindBuffer(GL_ARRAY_BUFFER, renderQuad);
 	glBindVertexArray(renderVao);
 
-	glBindBuffer(GL_UNIFORM_BUFFER, lightBuffer);
-	glBindBufferBase(GL_UNIFORM_BUFFER, uniformBufferLightPos, lightBuffer);
+	glBindBuffer(GL_UNIFORM_BUFFER, lightBuffer_spotlightVolume);
+	glBindBufferBase(GL_UNIFORM_BUFFER, uniformBufferLightPos_spotlightVolume, lightBuffer_spotlightVolume);
 
 	blitQuads[5].BindVertData();
 	glProgramUniform1i(*shaderPtr, uniformUse, 5);
@@ -256,6 +270,36 @@ void Gbuffer::render(/*glm::vec3 playerPos, glm::vec3 playerDir*/)
 	//	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	//}
 
+	
+
+	if (nrOfLights > 0)
+	{
+		//render lightvolumes
+		glUseProgram(spotligtVolumeShader);
+
+		glProgramUniform1i(spotligtVolumeShader, spotvol_Position, 1);
+		glProgramUniform1i(spotligtVolumeShader, spotvol_Diffuse, 2);
+		glProgramUniform1i(spotligtVolumeShader, spotvol_Normal, 3);
+		glProgramUniform1i(spotligtVolumeShader, spotvol_GlowMap, 4);
+
+		glProgramUniform3fv(spotligtVolumeShader, uniformEyePos_spotlightVolume, 1, &eyePos[0]);
+
+		glEnable(GL_BLEND);
+		glBlendEquation(GL_FUNC_ADD);
+		glBlendFunc(GL_ONE, GL_ONE);
+		glDisable(GL_DEPTH_TEST);
+		glCullFace(GL_FRONT);
+		glEnable(GL_CULL_FACE);
+		//for each spotlight
+		for (int n = 0; n < nrOfLights; n++)
+		{
+			glProgramUniform1i(spotligtVolumeShader, spotID, n);
+			glDrawArrays(GL_POINTS, 0, 1);
+		}
+		glCullFace(GL_BACK);
+		glEnable(GL_DEPTH_TEST);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	}
 }
 
 void Gbuffer::clearLights()
