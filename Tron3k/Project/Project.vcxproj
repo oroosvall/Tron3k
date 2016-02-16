@@ -35,6 +35,7 @@
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\LightwallEffect.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\ThermiteCloud.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\ThunderDomeEffect.cpp" />
+    <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\Vacuum.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Modifier.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Modifiers\BatterySlow.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Modifiers\BatterySpeed.cpp" />
@@ -116,6 +117,7 @@
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\LightwallEffect.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\ThermiteCloud.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\ThunderDomeEffect.h" />
+    <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\Vacuum.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Modifier.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Modifiers\AllModifiers.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Modifiers\BatterySlow.h" />

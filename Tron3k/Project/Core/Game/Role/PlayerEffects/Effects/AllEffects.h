@@ -9,5 +9,6 @@
 #include "HealthPack.h"
 #include "BatteryFieldSlow.h"
 #include "BatteryFieldSpeed.h"
+#include "Vacuum.h"
 
 #endif

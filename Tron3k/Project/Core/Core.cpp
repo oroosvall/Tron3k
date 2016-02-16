@@ -1933,11 +1933,13 @@ void Core::renderWorld(float dt)
 					renderPipe->renderExploEffect(&pos.x, asd->explosionRenderRad(), 0, &dgColor.x);
 				}
 				break;
-				case ZEROFRICTION:
-					break;
 				case VACUUM:
-					break;
-
+				{
+					Vacuum* asd = (Vacuum*)eff[i];
+					vec3 pos = asd->getPos();
+					renderPipe->renderExploEffect(&pos.x, asd->renderRad(), 0, &dgColor.x);
+				}
+				break;
 				case HEALTHPACK:
 				{
 					vec3 pos = eff[i]->getPos();

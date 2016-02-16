@@ -497,9 +497,6 @@ void Game::updateEffectBox(Effect* effect)
 	case EFFECT_TYPE::VACUUM:
 
 		break;
-	case EFFECT_TYPE::ZEROFRICTION:
-
-		break;
 	case EFFECT_TYPE::EXPLOSION:
 		eBox.push_back(effect->getPos().x);
 		eBox.push_back(effect->getPos().y);
@@ -1588,6 +1585,9 @@ void Game::addEffectToList(int conID, int teamId, int effectId, EFFECT_TYPE et, 
 		teamId = 0;
 		e = new BatteryFieldSpeed();
 		break;
+	case EFFECT_TYPE::VACUUM:
+		e = new Vacuum();
+		break;
 	case EFFECT_TYPE::HEALTHPACK:
 		e = new HealthPack();
 		break;
@@ -1621,6 +1621,13 @@ void Game::addEffectToPhysics(Effect* effect)
 		eBox.push_back(effect->getPos().z);
 		eBox.push_back(effect->getInterestingVariable());
 		physics->receiveEffectBox(eBox, EFFECT_TYPE::EXPLOSION, pid, eid);
+		break;
+	case EFFECT_TYPE::VACUUM:
+		eBox.push_back(effect->getPos().x);
+		eBox.push_back(effect->getPos().y);
+		eBox.push_back(effect->getPos().z);
+		eBox.push_back(effect->getInterestingVariable());
+		physics->receiveEffectBox(eBox, EFFECT_TYPE::VACUUM, pid, eid);
 		break;
 	case EFFECT_TYPE::THERMITE_CLOUD:
 		eBox.push_back(effect->getPos().x);
@@ -1818,6 +1825,29 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 			}
 		}
 		break;
+		case EFFECT_TYPE::VACUUM:
+		{
+			if (gameState != Gamestate::SERVER)
+			{
+				vec3 normalFromVacuum = normalize(hi.playerPos - hi.hitPos);
+				vec3 newVel = vec3(0);
+				if (theEffect != nullptr)
+					newVel = -normalFromVacuum*theEffect->getInterestingVariable() / 3.0f;
+				else
+					newVel = -normalFromVacuum / 3.0f; //If, by any chance, the effect got removed before this occured, we use a default explosion value of 1.0
+				if (p->getGrounded())
+				{
+					p->setGrounded(false);
+					if (theEffect != nullptr)
+						newVel.y = theEffect->getInterestingVariable()*1.5f; //3.0f and 1.5f are arbitrary values
+					else
+						newVel.y = 1.5f;
+				}
+
+				p->setVelocity(newVel);
+			}
+		}
+		break;
 		case EFFECT_TYPE::THERMITE_CLOUD:
 			break;
 		case EFFECT_TYPE::BATTERY_SLOW:
@@ -1995,13 +2025,16 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 			switch (hi.bt)
 			{
 			case BULLET_TYPE::CLUSTER_GRENADE:
+				if (b->getBounces() > 3)
+				{
+					removeBullet(hi.bt, arraypos);
+					break;
+				}
 				if (GetSoundActivated())
 					GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
 				vel *= 0.7f;
 				b->setVel(vel);
 				bounceBullet(hi, b);
-				if (b->getBounces() > 3)
-					removeBullet(hi.bt, arraypos);
 				temp = b->getDir();
 				temp.x *= 0.8f;
 				temp.y *= 0.6f;
@@ -2021,13 +2054,16 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 				b->setDir(temp);
 				break;
 			case BULLET_TYPE::THERMITE_GRENADE:
+				if (b->getBounces() > 3)
+				{
+					removeBullet(hi.bt, arraypos);
+					break;
+				}
 				if (GetSoundActivated())
 					GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
 				vel *= 0.7f;
 				b->setVel(vel);
 				bounceBullet(hi, b);
-				if (b->getBounces() > 3)
-					removeBullet(hi.bt, arraypos);
 				temp = b->getDir();
 				temp.x *= 0.8f;
 				temp.y *= 0.6f;
@@ -2035,14 +2071,7 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 				b->setDir(temp);
 				break;
 			case BULLET_TYPE::VACUUM_GRENADE:
-				vel *= 0.7f;
-				b->setVel(vel);
-				bounceBullet(hi, b);
-				temp = b->getDir();
-				temp.x *= 0.8f;
-				temp.y *= 0.6f;
-				temp.z *= 0.8f;
-				b->setDir(temp);
+				removeBullet(hi.bt, arraypos);
 				break;
 			case BULLET_TYPE::DISC_SHOT:
 				if (GetSoundActivated())
@@ -2050,13 +2079,13 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 				bounceBullet(hi, b);
 				break;
 			case BULLET_TYPE::GRENADE_SHOT:
-				if (GetSoundActivated())
-					GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeLauncherBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
 				if (b->getBounces() > 3)
 				{
 					removeBullet(hi.bt, arraypos);
 					break;
 				}
+				if (GetSoundActivated())
+					GetSound()->playExternalSound(SOUNDS::soundEffectGrenadeLauncherBounce, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
 				vel *= 0.7f;
 				b->setVel(vel);
 				bounceBullet(hi, b);
@@ -2205,7 +2234,7 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 		}
 		case BULLET_TYPE::VACUUM_GRENADE:
 		{
-			addEffectToList(PID, parent->getTeam(), BID, EFFECT_TYPE::EXPLOSION, parent->getPos(), 10, 4.0f);
+			addEffectToList(PID, parent->getTeam(), BID, EFFECT_TYPE::VACUUM, parent->getPos(), 10, 4.0f);
 			break;
 		}
 		case BULLET_TYPE::THERMITE_GRENADE:
