@@ -665,7 +665,7 @@ public:
 			uiPtr->changeColorTeam();
 			if (gamePtr->getPlayer(p_conID)->getRole()->getRole() == ROLES::NROFROLES)
 			{
-				if (uiPtr->getRoleBool())
+				if (!uiPtr->getRoleBool())
 				{
 					uiPtr->setFirstMenuSet(false);
 					uiPtr->setMenu(InGameUI::ClassSelect);

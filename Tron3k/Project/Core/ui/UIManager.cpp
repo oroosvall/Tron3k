@@ -247,7 +247,7 @@ void UIManager::inGameRender()
 }
 
 
-//Add and remove menus CHANGE THIS function
+//Add and remove menus
 void UIManager::setMenu(int menuId)
 {
 	if (menuId > -1 && menuId < nrOfMenus)
