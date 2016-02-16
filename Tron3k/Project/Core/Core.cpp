@@ -2310,9 +2310,6 @@ void Core::handleCulling()
 				}
 				else
 				{
-					if (p->getJustRespawned())
-						lastPlayerPos = p->getPos();
-
 					int newRoom = renderPipe->portalIntersection((float*)&lastPlayerPos, (float*)&p->getPos(), p->roomID);
 					if (newRoom != -1)
 					{
