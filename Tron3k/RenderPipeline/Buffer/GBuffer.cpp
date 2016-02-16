@@ -88,6 +88,7 @@ void Gbuffer::init(int x, int y, int nrTex, bool depth)
 	uniformBufferLightPos_spotlightVolume = glGetUniformBlockIndex(spotligtVolumeShader, "Light");
 	spotID = glGetUniformLocation(spotligtVolumeShader, "spotlightID");
 	spotlightVP = glGetUniformLocation(spotligtVolumeShader, "ViewProjMatrix");
+	uniformEyePos_spotlightVolume = glGetUniformLocation(spotligtVolumeShader, "eyepos");
 	spotvol_Position = glGetUniformLocation(spotligtVolumeShader, "Position");
 	spotvol_Diffuse = glGetUniformLocation(spotligtVolumeShader, "Diffuse");
 	spotvol_Normal = glGetUniformLocation(spotligtVolumeShader, "Normal");
@@ -269,7 +270,7 @@ void Gbuffer::render(/*glm::vec3 playerPos, glm::vec3 playerDir*/)
 	//	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	//}
 
-	glDisable(GL_DEPTH_TEST);
+	
 
 	if (nrOfLights > 0)
 	{
@@ -281,13 +282,23 @@ void Gbuffer::render(/*glm::vec3 playerPos, glm::vec3 playerDir*/)
 		glProgramUniform1i(spotligtVolumeShader, spotvol_Normal, 3);
 		glProgramUniform1i(spotligtVolumeShader, spotvol_GlowMap, 4);
 
+		glProgramUniform3fv(spotligtVolumeShader, uniformEyePos_spotlightVolume, 1, &eyePos[0]);
+
+		glEnable(GL_BLEND);
+		glBlendEquation(GL_FUNC_ADD);
+		glBlendFunc(GL_ONE, GL_ONE);
+		glDisable(GL_DEPTH_TEST);
+		glCullFace(GL_FRONT);
+		glEnable(GL_CULL_FACE);
 		//for each spotlight
 		for (int n = 0; n < nrOfLights; n++)
 		{
 			glProgramUniform1i(spotligtVolumeShader, spotID, n);
 			glDrawArrays(GL_POINTS, 0, 1);
 		}
+		glCullFace(GL_BACK);
 		glEnable(GL_DEPTH_TEST);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 }
 
