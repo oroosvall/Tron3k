@@ -839,9 +839,9 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 	}
 	else //We have yet to pick a class, so stop fucking moving
 	{
-		pos.x = 0.0f;
-		pos.y = -4.5f;
-		pos.z = 0.0f;
+		pos.x = 9999.0f;
+		pos.y = 9999.0f;
+		pos.z = 9999.0f;
 	}
 
 	return msg;
