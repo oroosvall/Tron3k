@@ -1324,7 +1324,7 @@ void RenderPipeline::updateTakeDamageEffect(float dt)
 	}
 }
 
-void RenderPipeline::renderMinimap(float* yourPos, float* yourdir, float* teammates, int nrOfTeammates, int team)
+void RenderPipeline::renderMinimap(float* yourPos, float* yourdir, float* teammates, int nrOfTeammates, int activeCap)
 {
 	//init render
 	glUseProgram(uiShader);
@@ -1352,10 +1352,29 @@ void RenderPipeline::renderMinimap(float* yourPos, float* yourdir, float* teamma
 	glProgramUniform3fv(uiShader, uniformPivotLocation, 1, &piv[0]);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
-	//render player markers
+	//render active cappoint marker
+	asd.textureID = contMan.activeCapTexture;
+	TextureManager::gTm->bind(asd, uiShader, ui_Texture);
 
-	asd.lastTextureSlot = GL_TEXTURE0;
-	asd.state = TEXTURE_LOADED;
+	if (activeCap == 0)
+	{
+		minimapRenderMat[0].w = 0.432f;
+		minimapRenderMat[1].w = -0.05;
+	}
+	else
+	{
+		minimapRenderMat[0].w = -0.363f;
+		minimapRenderMat[1].w = -0.105f;	
+	}
+
+	//scale
+	minimapRenderMat[0].x = contMan.activeCapScale.x + ((sin(timepass * 2) + 1) * 0.01f);
+	minimapRenderMat[1].y = contMan.activeCapScale.y + ((sin(timepass * 2) + 1) * 0.01f);
+	glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, &minimapRenderMat[0][0]);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+
+	//render player markers
 	asd.textureID = contMan.youarehereTexture;
 	TextureManager::gTm->bind(asd, uiShader, ui_Texture);
 

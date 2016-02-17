@@ -86,6 +86,8 @@ public:
 	float youareherescaleX;
 	float youareherescaleY;
 	GLuint teamishereTexture;
+	GLuint activeCapTexture;
+	vec2 activeCapScale;
 	vec2 mapBotcord;
 	vec2 mapTopcord;
 

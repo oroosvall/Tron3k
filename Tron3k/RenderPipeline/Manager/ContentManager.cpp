@@ -32,7 +32,9 @@ void ContentManager::init()
 	minimapScaleY = float(yy) / 1080;
 	mapBotcord = vec2(-185, 160);
 	mapTopcord = vec2(165, -38);
-	
+	activeCapTexture = loadTexture("GameFiles/Textures/minimap/activecap.png", true, (int*)&xx, (int*)&yy);
+	activeCapScale = vec2(float(xx) / 1920.0f, float(yy) / 1080.0f);
+
 	//scoreboard
 	score_team_orange = loadTexture("GameFiles/Textures/scoreboard/team_orange.png");
 	score_team_green = loadTexture("GameFiles/Textures/scoreboard/team_green.png", true, (int*)&xx, (int*)&yy);

@@ -2844,7 +2844,10 @@ void Core::minimapRender()
 
 		vec3 playerposs = p->getPos();
 		vec3 playerdirr = p->getDir();
-		renderPipe->renderMinimap(&playerposs.x, &playerdirr.x, &data[0].x, membersize, 0);
+
+		KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
+
+		renderPipe->renderMinimap(&playerposs.x, &playerdirr.x, &data[0].x, membersize, koth->getCapturePoint());
 		delete[] data;
 	}
 }
