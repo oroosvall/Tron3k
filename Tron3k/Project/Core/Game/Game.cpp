@@ -72,6 +72,12 @@ void Game::init(int max_connections, int state, Console* con)
 	freecam = false;
 	spectateID = -1;
 	decalCounter = 0;
+
+	fragMessages.push_back(" was fragged by ");
+	fragMessages.push_back(" was blown to pieces by ");
+	fragMessages.push_back(" was served a metal breakfast by ");
+	fragMessages.push_back(" was stopped in their tracks by ");
+	fragMessages.push_back(" said hi to ");
 }
 
 void Game::loadRoles()
@@ -1788,10 +1794,11 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 			if (p->getHP() == 0 && p->isAlive())
 			{
 				p->IdiedThisFrame();
+				string fragMessage = fragMessages[rand() % fragMessages.size()];
 				if (playerList[hi.bulletPID] != nullptr)
-					console->printMsg(p->getName() + " was fragged by " + playerList[hi.bulletPID]->getName() + "!", "System", 'S');
+					console->printMsg(p->getName() + fragMessage + playerList[hi.bulletPID]->getName() + "!", "System", 'S');
 				else
-					console->printMsg(p->getName() + " was fragged by a quitter!", "System", 'S');
+					console->printMsg(p->getName() + fragMessage + " a quitter!", "System", 'S');
 				playerList[hi.bulletPID]->addKill();
 				playerList[hi.bulletPID]->IncreaseFrags();
 				playerList[hi.bulletPID]->ZeroDeaths();
@@ -1951,10 +1958,11 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 		if (p->getHP() == 0 && p->isAlive())
 		{
 			p->IdiedThisFrame();
+			string fragMessage = fragMessages[rand() % fragMessages.size()];
 			if (playerList[hi.effectPID] != nullptr)
-				console->printMsg(p->getName() + " was fragged by " + playerList[hi.effectPID]->getName() + "!", "System", 'S');
+				console->printMsg(p->getName() + fragMessage + playerList[hi.effectPID]->getName() + "!", "System", 'S');
 			else
-				console->printMsg(p->getName() + " was fragged by a quitter!", "System", 'S');
+				console->printMsg(p->getName() + fragMessage + " a quitter!", "System", 'S');
 			playerList[hi.effectPID]->addKill();
 			playerList[hi.effectPID]->IncreaseFrags();
 			playerList[hi.effectPID]->ZeroDeaths();

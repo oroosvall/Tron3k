@@ -143,6 +143,8 @@ private:
 
 	string suicideMessages[5] = { " gave up on life", " short circuited", " had a battery attack", " took a swim", " is swimming with the fishes" };
 
+	std::vector<string> fragMessages;
+
 	int maxTeamSize = 5;
 	int maxSpec = 5;
 	void removeConIDfromTeams(int conID);
