@@ -16,10 +16,10 @@ bool BatteryFields::shoot()
 
 	if (rldTimer < FLT_EPSILON)
 	{
-		if (firingSpeedCurrentDelay < FLT_EPSILON && currentClipAmmo > 0)
+		if (shootingDelay < FLT_EPSILON && currentClipAmmo > 0)
 		{
-			currentClipAmmo--;
 			firingSpeedCurrentDelay = firingSpeed;
+			shootingDelay = 2.0f;
 			ableToShoot = true;
 			if (weaponType == WEAPON_TYPE::BATTERYWPN_SLOW)
 				weaponType = WEAPON_TYPE::BATTERYWPN_SPEED;
@@ -42,21 +42,19 @@ void BatteryFields::init()
 {
 	weaponType = WEAPON_TYPE::BATTERYWPN_SPEED;
 
-	maxClipSize = 2;
+	maxClipSize = 1;
 	currentClipAmmo = maxClipSize;
 
 	currentBulletId = 0;
 
 	firingSpeed = 1.0f;
 	firingSpeedCurrentDelay = 0;
-
-	reloadTime = 1.5f;
-	rldTimer = 0;
 }
 
 int BatteryFields::update(float deltaTime)
 {
 	countDownFiringSpeed(deltaTime);
 	countDownReloadTimer(deltaTime);
+	shootingDelay -= deltaTime;
 	return 0;
 }

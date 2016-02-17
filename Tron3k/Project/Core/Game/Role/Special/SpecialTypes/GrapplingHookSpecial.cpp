@@ -9,7 +9,7 @@ GrapplingHookSpecial::~GrapplingHookSpecial(){}
 void GrapplingHookSpecial::init()
 {
 	specialType = SPECIAL_TYPE::GRAPPLINGHOOKSPECIAL;
-	activationCost = 15.0f;
+	activationCost = 30.0f;
 	key = GLFW_KEY_LEFT_SHIFT;
 }
 
@@ -29,7 +29,7 @@ bool GrapplingHookSpecial::allowedToActivate(Player* p)
 	if (cooldown < FLT_EPSILON)
 	{
 		p->movmentSpecialAnimUse();
-		cooldown = 2.0f;
+		cooldown = 1.0f;
 		allowed = true;
 	}
 

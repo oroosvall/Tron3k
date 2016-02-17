@@ -9,6 +9,7 @@
 class BatteryFields : public Weapon
 {
 private:
+	float shootingDelay = 0.0f;
 public:
 	BatteryFields();
 	~BatteryFields();
