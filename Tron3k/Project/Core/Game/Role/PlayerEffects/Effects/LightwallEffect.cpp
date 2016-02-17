@@ -41,7 +41,7 @@ int LightwallEffect::update(float dt)
 				if (myCols[i].y < 0.6f)//collides with wall or roof
 				{
 					vec3 thecol = vec3(myCols[i]);
-					if (dot(normalize(thecol), playerVel) < 1.0f)
+					if (dot(normalize(thecol), playerVel) < 0.3f && dot(normalize(thecol), playerVel) > -0.3f)
 					{
 						int x = 0;
 					}
