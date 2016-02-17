@@ -2105,8 +2105,8 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 				break;
 			case BULLET_TYPE::GRAPPLING_HOOK:
 				temp = normalize(b->getPos() - playerList[hi.bulletPID]->getPos());
-				temp*= 3.0f;
-				temp.y += temp.y*3.5f + 4.0f;
+				temp*= 2.5f;
+				temp.y += temp.y*3.5f + 5.0f;
 				playerList[hi.bulletPID]->setVelocity(temp);
 				playerList[hi.bulletPID]->setGrounded(false);
 

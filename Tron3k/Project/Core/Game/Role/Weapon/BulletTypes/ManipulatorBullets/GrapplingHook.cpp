@@ -5,7 +5,7 @@ GrapplingHook::GrapplingHook(glm::vec3 position, glm::vec3 direction, int pID, i
 {
 	initValues(position, direction, pID, bID, tID);
 	vel = glm::vec3(90.0f);
-	ttl = 6.0f;
+	ttl = 0.5f;
 	damage = 0;
 }
 
