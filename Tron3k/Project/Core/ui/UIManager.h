@@ -130,9 +130,9 @@ public:
 	bool isThereAMenuUp();
 
 	//hideAble exclusive
-	void hideOrShow(int id, bool show);
-	void changeText(int id, std::string text);
-	void changeTexture(int id, int textureId);
+	void renderHideAble();
+	void hideOrShowHideAble(int id, bool show);
+	void changeTextureHideAble(int id, int textureId);
 
 	struct HUDvalues
 	{

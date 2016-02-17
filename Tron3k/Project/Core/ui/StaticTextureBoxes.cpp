@@ -3,6 +3,8 @@
 StaticTextureBoxes::StaticTextureBoxes()
 {
 	uiRender = nullptr;
+	textureRes = nullptr;
+	textureIndexList = nullptr;
 	center = glm::vec2(0.0f, 0.0f);
 	textureInUse = -1;
 	worldMatrix = { 1, 0, 0, 0,

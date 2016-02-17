@@ -163,6 +163,9 @@ public:
 	void setfps(int fps);
 
 	~Core();
+
+	//temp
+	bool showOrHide = false;
 };
 
 #endif

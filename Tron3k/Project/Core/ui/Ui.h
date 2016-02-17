@@ -37,7 +37,7 @@ enum scaleAndText
 	LoseTicketsMeter //ScaleBar
 };
 
-enum Hideable
+enum hideAbleObj
 {
 	Announcer
 };
@@ -45,12 +45,14 @@ enum Hideable
 class UI
 {
 private:
+	//Other class objects
 	IRenderPipeline *uiRender;
+	Console* console;
 
 	//Lists
 	std::vector<glm::vec2>* textureRes;
 	std::vector<UIElements*> UiObjects;
-	std::vector<int> textObjRenderId;
+	std::vector<int> textObjIds;
 	int* textureIdList;
 
 	//Counters
@@ -61,14 +63,15 @@ private:
 	int menuId;
 	int textIdList[11];
 
-	Console* console;
+	//Hideable stuff
+	std::vector<StaticTextureBoxes*> hideAbleObjects;
+	std::vector<int> hideAbleIds;
 
 	//	Functions
 	//Load from file
 	bool loadUI(std::string fileName, int winX, int winY);
-
-	void removeMenu();
 	//Clean up
+	void removeMenu();
 	//Convert
 	glm::vec2 fileCoordToScreenSpace(glm::vec2 pos);
 
@@ -82,6 +85,7 @@ public:
 	
 	void renderMenu();
 	void renderIngame();
+	
 
 	void clean();
 
@@ -91,9 +95,6 @@ public:
 	void mouseHover(glm::vec2 pos);
 
 	void changeColorTeam(int whichTex);
-
-	void hideWindow(int id);
-	void showWindow(int id);
 
 	void setTextureId(std::vector<GLuint> uiTextureIds);
 
@@ -105,6 +106,12 @@ public:
 	void clearText(int id);
 
 	void scaleBar(int id, float procentOfMax, bool fromRight);
+
+	//Hideable stuff
+	void renderHideable();
+	void hideObject(int id);
+	void showObject(int id);
+	void changeHideAbleTexture(int objId, int whichTex);
 };
 
 #endif

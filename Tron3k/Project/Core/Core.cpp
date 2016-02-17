@@ -2182,6 +2182,20 @@ void Core::inGameUIUpdate() //Ingame ui update
 
 		if (koth->getState() == ROUND) //Tickets meter should only work during the rounds which is why this check is here.
 		{
+			//if (uiManager->HUD.ticketLostTimer == 9)
+			//{
+			//	if (showOrHide)
+			//	{
+			//		uiManager->changeTextureHideAble(hideAbleObj::Announcer, 1);
+			//		showOrHide = false;
+			//	}
+			//	else
+			//	{
+			//		uiManager->changeTextureHideAble(hideAbleObj::Announcer, 0);
+			//		showOrHide = true;
+			//	}
+			//}
+
 			if (!uiManager->HUD.firstSecondEachRound) //If it isn't the first second of the round
 			{
 				if (uiManager->HUD.ticketLostTimer == 0)
@@ -2221,6 +2235,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 		}
 	}
 
+	//uiManager->renderHideAble();
 	uiManager->inGameRender();
 
 	double x = (0.0);

@@ -23,8 +23,8 @@ void UI::renderMenu()
 		UiObjects[i]->renderQuad(i);
 
 
-	for (int i = 0; i < textObjRenderId.size(); i++)
-		UiObjects[textObjRenderId[i]]->renderText(i);
+	for (int i = 0; i < textObjIds.size(); i++)
+		UiObjects[textObjIds[i]]->renderText(i);
 }
 
 void UI::renderIngame()
@@ -33,8 +33,8 @@ void UI::renderIngame()
 	for (int i = 0; i < UiObjects.size(); i++)
 		UiObjects[i]->renderQuad(i);
 
-	for (int i = 0; i < textObjRenderId.size(); i++)
-		UiObjects[textObjRenderId[i]]->renderText(i);
+	for (int i = 0; i < textObjIds.size(); i++)
+		UiObjects[textObjIds[i]]->renderText(i);
 }
 
 void UI::init(std::string fileName, Console* console, IRenderPipeline* uiRender, std::vector<glm::vec2>* textureRes, int winX, int winY)
@@ -44,13 +44,11 @@ void UI::init(std::string fileName, Console* console, IRenderPipeline* uiRender,
 	this->console = console;
 
 	for (int i = 0; i < 11; i++)
-	{
 		textIdList[i] = -1;
-	}
 
 	bool result = loadUI(fileName, winX, winY);
 	if (!result)
-		console->printMsg("Error: LoadUI in UI was unsucessfull","System",'S');
+		console->printMsg("Error: LoadUI in UI.init was unsucessfull","System",'S');
 }
 
 //Needs to be modified
@@ -166,17 +164,28 @@ bool UI::loadUI(std::string fileName, int winX, int winY)
 			}
 			else if (classId == 1) //StaticTextBox
 			{
-				if (textId == "abilityMeter")
-					textIdList[9] = counter;
-				else if(textId == "loseTicketsMeter")
-					textIdList[10] = counter;
+				if (menuId != 10) //??
+				{
+					if (textId == "abilityMeter")
+						textIdList[9] = counter;
+					else if (textId == "loseTicketsMeter")
+						textIdList[10] = counter;
 
-				UiObjects.push_back(new StaticTextureBoxes(xy, textureArray, tmpCounter, uiRender, textureRes[0]));
-				textureIdList[counter] = textureArray[0];
-				result = true;
-				counter++;
-				delete[] textureArray;
-				textureArray = nullptr;
+					UiObjects.push_back(new StaticTextureBoxes(xy, textureArray, tmpCounter, uiRender, textureRes[0]));
+					textureIdList[counter] = textureArray[0];
+					result = true;
+					counter++;
+					delete[] textureArray;
+					textureArray = nullptr;
+				}
+				else
+				{
+					hideAbleObjects.push_back(new StaticTextureBoxes(xy, textureArray, tmpCounter, uiRender, textureRes[0]));
+					hideAbleIds.push_back(hideAbleObjects.size() - 1);
+					delete[] textureArray;
+					textureArray = nullptr;
+					result = true;
+				}
 			}
 			else if (classId == 3) //Slider
 			{
@@ -191,7 +200,7 @@ bool UI::loadUI(std::string fileName, int winX, int winY)
 			else if(classId == 4) //InputBox
 			{
 				UiObjects.push_back(new InputBox(xy, textureId1, textureId2, uniqueKey, uiRender, textureRes[0][textureId1], winX, winY, offsetTextSize));
-				textObjRenderId.push_back(counter);
+				textObjIds.push_back(counter);
 				textureIdList[counter] = textureId1;
 				result = true;
 
@@ -236,6 +245,13 @@ void UI::clean()
 	if (textureIdList != nullptr)
 		delete[] textureIdList;
 
+	for (size_t i = 0; i < hideAbleObjects.size(); i++)
+		if (hideAbleObjects[i] != nullptr)
+		{
+			delete hideAbleObjects[i];
+			hideAbleObjects[i] = nullptr;
+		}
+	hideAbleIds.clear();
 
 	textureIdList = nullptr;
 	console = nullptr;
@@ -278,7 +294,7 @@ void UI::mouseHover(glm::vec2 pos)
 
 void UI::changeTex(int objId, int whichTex)
 {
-	if(objId < UiObjects.size())
+	if(objId > -1 && objId < UiObjects.size())
 		UiObjects[objId]->changeTexUsed(whichTex);
 }
 
@@ -286,15 +302,6 @@ void UI::changeColorTeam(int whichTex)
 {
 	for (int i = 0; i < UiObjects.size(); i++)
 		UiObjects[i]->changeTexUsed(whichTex);
-}
-
-void UI::hideWindow(int id)
-{
-	
-}
-void UI::showWindow(int id)
-{
-	
 }
 
 //Empty
@@ -306,9 +313,10 @@ void UI::removeMenu()
 void UI::setTextureId(std::vector<GLuint> uiTextureIds)
 {
 	for (int i = 0; i < UiObjects.size(); i++)
-	{
 		UiObjects[i]->setTexture(uiTextureIds);
-	}
+
+	for (int i = 0; i < hideAbleObjects.size(); i++)
+		hideAbleObjects[i]->setTexture(uiTextureIds);
 }
 
 void UI::setWindowResolution(int winX, int winY)
@@ -346,4 +354,42 @@ void UI::scaleBar(int id, float procentOfMax, bool fromRight)
 {
 	if (textIdList[id] > -1)
 		UiObjects[textIdList[id]]->scaleBar(procentOfMax, fromRight);
+}
+
+
+//Hideable stuff
+void UI::renderHideable()
+{
+	for (int i = 0; i < hideAbleIds.size(); i++)
+		hideAbleObjects[hideAbleIds[i]]->renderQuad(i);
+}
+void UI::hideObject(int id)
+{
+	if (id > -1 && id < hideAbleObjects.size())
+	{
+		for (int i = id; i < hideAbleIds.size() - 1; i++)
+			hideAbleIds[i] = hideAbleIds[i + 1];
+		hideAbleIds.pop_back();
+	}
+}
+void UI::showObject(int id)
+{
+	bool found = false;
+
+	if (id > -1 && id < hideAbleObjects.size())
+	{
+		for (int i = 0; i < hideAbleIds.size() && !found; i++)
+			if (hideAbleIds[i] = id)
+				found = true;
+
+		if (!found)
+			hideAbleIds.push_back(id);
+
+	}
+}
+
+void UI::changeHideAbleTexture(int objId, int whichTex)
+{
+	if (objId > -1 && objId < hideAbleObjects.size())
+		hideAbleObjects[objId]->changeTexUsed(whichTex);
 }

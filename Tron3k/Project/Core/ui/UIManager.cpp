@@ -14,7 +14,7 @@ UIManager::UIManager()
 	textureRes = new std::vector<glm::vec2>;
 	nrOfOpenedMenus = 0;
 
-	hideAbleFileName = "hideAble.txt";
+	hideAbleFileName = "GameFiles/UIFiles/HideAble.txt";
 	hideAbleMenuActive = false;
 
 	teamColor = 0;
@@ -37,6 +37,7 @@ UIManager::UIManager()
 }
 UIManager::~UIManager() 
 {
+	hideAble.clean();
 	if (renderPipe != nullptr)
 	{
 		renderPipe->ui_textureRelease(uiTextureIds);
@@ -299,6 +300,7 @@ void UIManager::setMenu(int menuId)
 void UIManager::removeAllMenus()
 {
 	nrOfMenus = 0;
+	hideAble.clean();
 	if (openedMenus != nullptr)
 		delete[] openedMenus;
 	if(menus != nullptr)
@@ -522,29 +524,31 @@ bool UIManager::isThereAMenuUp()
 }
 
 //hideAble exclusive
-void UIManager::hideOrShow(int id, bool show)
+void UIManager::renderHideAble()
+{
+	if (hideAbleMenuActive)
+	{
+		renderPipe->ui_InGameRenderInit();
+		hideAble.renderHideable();
+	}
+}
+
+void UIManager::hideOrShowHideAble(int id, bool show)
 {
 	if (hideAbleMenuActive)
 	{
 		if (!show)
-			hideAble.hideWindow(id);
+			hideAble.hideObject(id);
 		else
-			hideAble.showWindow(id);
+			hideAble.showObject(id);
 	}
 	else
-		console->printMsg("Function hideOrShow in UIManager, Hideablemenu isn't active", "System", 'S');
+		console->printMsg("Function hideOrShowHideAble in UIManager, Hideablemenu isn't active", "System", 'S');
 }
-void UIManager::changeText(int id, std::string text)
+void UIManager::changeTextureHideAble(int id, int textureId)
 {
 	if (hideAbleMenuActive)
-		hideAble.setText(text, id);
+		hideAble.changeHideAbleTexture(id, textureId);
 	else
-		console->printMsg("Function changeText in UIManager, Hideablemenu isn't active", "System", 'S');
-}
-void UIManager::changeTexture(int id, int textureId)
-{
-	if (hideAbleMenuActive)
-		hideAble.changeTex(id, textureId);
-	else
-		console->printMsg("Function changeTexture in UIManager, Hideablemenu isn't active", "System", 'S');
+		console->printMsg("Function changeTextureHideAble in UIManager, Hideablemenu isn't active", "System", 'S');
 }
