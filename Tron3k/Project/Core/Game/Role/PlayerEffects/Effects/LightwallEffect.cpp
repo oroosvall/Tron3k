@@ -23,19 +23,42 @@ int LightwallEffect::update(float dt)
 		if (lifeTime < FLT_EPSILON)
 			return 1;
 
-		if (lifeTime < 14.5f && !collidable)
+		if (lifeTime < 0.5f && !collidable)
 		{
 			collidable = true;
 		}
 	}
-	else
+	if(myPlayer->getLockedControls())//else
 	{
 		glm::vec3 curVel = normalize(myPlayer->getVelocity());
 		if (dot(curVel, playerVel) < 1.0-FLT_EPSILON)
 		{
+			int colSize = 0;
+			vec4* myCols = myPlayer->getCollisionNormalsForFrame(colSize);
+
+			for (int i = 0; i < colSize; i++)
+			{
+				if (myCols[i].y < 0.6f)//collides with wall or roof
+				{
+					vec3 thecol = vec3(myCols[i]);
+					if (dot(normalize(thecol), playerVel) < 1.0f)
+					{
+						int x = 0;
+					}
+				}
+			}
+			if (int x = 0 > 0.9f)
+			{
+				//Effect shall continue as new one
+				endPoint = myPlayer->getPos();
+				expandDong = false;
+				lifeTime = 15.0f;
+				if (length(endPoint - pos) < 1.5f)
+					return 2;
+			}
 			endPoint = myPlayer->getPos();
 			expandDong = false;
-			lifeTime = 15.0f;
+			lifeTime = 1.0f;
 			if (length(endPoint - pos) < 1.5f)
 				return 1;
 		}
