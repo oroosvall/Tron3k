@@ -164,10 +164,29 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 	resetQuery();
 
-	pdata.maxparticles = 10;
-	pdata.dir = glm::vec3(1, 0, 0);
-	pdata.lifetime = 5.0f;
+	pdata.maxparticles = 100;
+	pdata.dir = normalize(glm::vec3(1, 1, 1));
+	pdata.lifetime = 20.0f;
 	pdata.gravity = 1.0f;
+	pdata.emission = 0.1f;
+	pdata.force = 1.0f;
+
+	std::ifstream file;
+	file.open("Gamefiles/ParticleSystems/hitspark1.ps", std::ios::binary | std::ios::in);
+
+	//Read header
+	ExportHeader exHeader;
+	file.read((char*)&exHeader, sizeof(exHeader));
+
+	//Read texture name
+	char* f = (char*)malloc(exHeader.texturesize + 1);
+	file.read(f, sizeof(char) * exHeader.texturesize);
+	f[exHeader.texturesize] = 0;
+
+	free(f);
+
+	//Read Particle System
+	file.read((char*)&pdata, sizeof(ParticleSystemData));
 
 	particleTest.Initialize(glm::vec3(0,5,0), &pdata, &particleCS);
 
@@ -280,7 +299,7 @@ void RenderPipeline::reloadShaders()
 	//Water shader
 	std::string shaderNamesWater[] = { "GameFiles/Shaders/Water_vs.glsl", "GameFiles/Shaders/Water_fs.glsl" };
 	GLenum shaderTypesWater[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
-	CreateProgram(temp, shaderNamesWater, shaderTypesWater, 2);
+	//CreateProgram(temp, shaderNamesWater, shaderTypesWater, 2);
 	if (temp != 0)
 	{
 		waterShader = temp;
@@ -501,9 +520,10 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 		//ss << "Buffer binds: " << bufferBinds << "\n";
 		//ss << "Shader binds: " << shaderBinds << "\n";
 		//ss << "State changes: " << stateChange << "\n";
-		//ss << "Total uptime:" << timepass << "\n";
+		ss << "Total uptime:" << timepass << "\n";
+		ss << "Dt:" << dt << "\n";
 		//ss << result << "\n";
-		if (counter > 1.0f)
+		if (counter > 0.0001f)
 		{
 			//result = getQueryResult();
 			fps = 0;
@@ -602,7 +622,8 @@ void RenderPipeline::finalizeRender()
 	glUseProgram(particleShader);
 	cam.setViewProjMat(particleShader, particleViewProj);
 	//glProgramUniformMatrix4fv(particleShader, particleViewProj, 1, GL_FALSE, (GLfloat*)&glm::mat4());
-	glProgramUniform2f(particleShader, particleSize, 0.1f, 0.1f);
+	vec2 size = particleTest.m_size;
+	glProgramUniform2f(particleShader, particleSize, size.x, size.y);
 
 	glProgramUniform3f(particleShader, particleCam, gBuffer->eyePos.x, gBuffer->eyePos.y, gBuffer->eyePos.z);
 	

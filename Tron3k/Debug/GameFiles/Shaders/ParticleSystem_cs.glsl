@@ -20,14 +20,16 @@ uniform float deltaTime;
 uniform float force;
 uniform float drag;
 uniform float gravity;
-uniform float emission;
+uniform int emission;
 
 uniform bool continuous;
 uniform bool omni;
 
-uniform vec3 initialPos; // w == 0.0f
+uniform vec3 initialPos;
+uniform vec3 sysDir;
 
-shared uint indexCounter;
+shared int emit;
+shared uint nextEmitIndex;
 shared uint arrayLenght;
 shared uint passCount;
 
@@ -39,7 +41,8 @@ void main()
 	// shared setup
 	if(gl_LocalInvocationIndex == 0)
 	{
-		indexCounter = 0;
+		emit = emission;
+		//nextEmitIndex = p[iter].pos.w; // ??
 		arrayLenght = p.length();
 		passCount = (arrayLenght + threadCount - 1) / threadCount;
 	}
@@ -53,15 +56,46 @@ void main()
 	{
 		p[iter].dir.w -= deltaTime;
 		
+		float percent = p[iter].dir.w / lifetime;
+		
 		//p[iter].pos.xyz = p[iter].pos.xyz + p[iter].dir.xyz*force;
-		p[iter].pos.y -= gravity*deltaTime;
+		
+		vec3 oldP = p[iter].pos.xyz;
+		vec3 vel = normalize( p[iter].initialDir.xyz)*deltaTime;
+		
+		p[iter].pos.y += ((-9.81f + percent*10 ) * gravity) * deltaTime;
+		
+		p[iter].pos.x -= vel.x * force;
+		p[iter].pos.y += vel.y * force;
+		p[iter].pos.z -= vel.z * force;
+		
+		p[iter].dir.xyz = normalize(oldP - p[iter].pos.xyz);
+		
+		
 		//if(continuous)
 		//{
-			if(p[iter].dir.w < -1.0f)
+			if(p[iter].dir.w < 0.0f)
 			{
-				//p[iter].dir = p[iter].initialDir;
-				p[iter].pos.xyz = vec3(0,0,0);
-				p[iter].dir.w = lifetime;
+				//0 means all emit at the same pos
+				if(emit == 0)
+				{
+					p[iter].dir = p[iter].initialDir;
+					p[iter].pos.xyz = vec3(0,0,0);
+					p[iter].dir.w = lifetime;
+				}
+				
+				//-1 means only one emits at a time
+				else if (emit == -1)
+				{
+					//atomic
+					int old = atomicExchange(emit, 1);
+					if(old == -1)
+					{
+						p[iter].dir = p[iter].initialDir;
+						p[iter].pos.xyz = vec3(0,0,0);
+						p[iter].dir.w = lifetime;
+					}
+				}
 			}
 		//}
 	}

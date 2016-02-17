@@ -7,6 +7,12 @@ struct Particle
 	glm::vec4 iDir;
 };
 
+struct ExportHeader
+{
+	int totalsize;
+	int texturesize;
+};
+
 struct ParticleSystemData
 {
 	glm::vec3 dir;

@@ -14,11 +14,15 @@ public:
 
 	void Release();
 
+	glm::vec2 m_size;
+
 private:
 	ParticleSystemData* m_data;
 	std::vector<Particle> m_vertices;
-	glm::vec2 m_size;
 
+	glm::vec3 m_pos;
+
+	float m_currentEmission;
 
 	//Uniforms
 	GLuint* m_program;	//shaders

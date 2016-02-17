@@ -1096,6 +1096,18 @@ void Core::roamHandleCmds(std::string com)
 			console.printMsg("/sens <positive decimal number>", "", ' ');
 
 		}
+		else if (token == "/slow")
+		{
+			if (cheatsOn)
+			{
+				ss >> token;
+				if (token.size() > 0)
+				{
+					float slow = atof(token.c_str());
+					playbackSpeed = slow;
+				}
+			}
+		}
 		else if (token == "/cheats")
 		{
 			if (cheatsOn)
