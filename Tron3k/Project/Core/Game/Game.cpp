@@ -1227,6 +1227,10 @@ void Game::addBulletToList(int conID, int teamId, int bulletId, BULLET_TYPE bt, 
 		b = new BatterySpeedShot(pos, dir, conID, bulletId, teamId);
 		break;
 	case BULLET_TYPE::LINK_SHOT:
+		rightV *= 0.2;
+		upV *= -0.15f;
+		dirMod *= 0.8f;
+		pos += upV + rightV + dirMod;
 		b = new LinkShot(pos, dir, conID, bulletId, teamId);
 		break;
 	case BULLET_TYPE::VACUUM_GRENADE:
