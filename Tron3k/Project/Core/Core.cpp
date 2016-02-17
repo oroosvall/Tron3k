@@ -2677,6 +2677,33 @@ void Core::scoreboardRender()
 	renderPipe->renderScoreBoard(membersTeam1[0].size(), membersTeam2[0].size());
 	Player* p = 0;
 
+	int sortedID[20];
+
+	if (membersTeam1[0].size() > 0)
+	{
+		sortedID[0] = membersTeam1[0][0];
+		//insertion sort
+		for (int n = 1; n < membersTeam1[0].size(); n++)
+		{
+			sortedID[n] = membersTeam1[0][n];
+			
+			for (int k = n; k > 0; k--)
+			{
+				if (game->getPlayer(sortedID[k])->getKills() > game->getPlayer(sortedID[k - 1])->getKills())
+				{
+					//swap
+					int temp = sortedID[k];
+					sortedID[k] = sortedID[k - 1];
+					sortedID[k - 1] = temp;
+				}
+				else
+				{
+					break;
+				}
+			}
+		}
+	}
+
 	if (membersTeam1[0].size() > 0)
 	{
 		//team 1
@@ -2693,7 +2720,7 @@ void Core::scoreboardRender()
 
 		for (int n = 0; n < membersTeam1[0].size(); n++)
 		{
-			p = game->getPlayer(membersTeam1[0][n]);
+			p = game->getPlayer(sortedID[n]);
 			if (p)
 			{
 				//render name
@@ -2718,6 +2745,33 @@ void Core::scoreboardRender()
 		}
 	}
 
+	//sort team 2
+
+	if (membersTeam2[0].size() > 0)
+	{
+		sortedID[0] = membersTeam2[0][0];
+		//insertion sort
+		for (int n = 1; n < membersTeam2[0].size(); n++)
+		{
+			sortedID[n] = membersTeam2[0][n];
+
+			for (int k = n; k > 0; k--)
+			{
+				if (game->getPlayer(sortedID[k])->getKills() > game->getPlayer(sortedID[k - 1])->getKills())
+				{
+					//swap
+					int temp = sortedID[k];
+					sortedID[k] = sortedID[k - 1];
+					sortedID[k - 1] = temp;
+				}
+				else
+				{
+					break;
+				}
+			}
+		}
+	}
+
 	//team 2
 	if (membersTeam2[0].size() > 0)
 	{
@@ -2734,7 +2788,7 @@ void Core::scoreboardRender()
 
 		for (int n = 0; n < membersTeam2[0].size(); n++)
 		{
-			p = game->getPlayer(membersTeam2[0][n]);
+			p = game->getPlayer(sortedID[n]);
 			if (p)
 			{
 				//render name
