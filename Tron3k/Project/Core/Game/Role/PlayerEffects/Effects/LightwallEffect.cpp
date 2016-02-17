@@ -36,10 +36,6 @@ int LightwallEffect::update(float dt)
 			int colSize = 0;
 			vec4* myCols = myPlayer->getCollisionNormalsForFrame(colSize);
 
-			if (colSize == 0)
-				int x = 0;
-			else
-				int x = 0;
 			for (int i = 0; i < colSize; i++)
 			{
 				if (myCols[i].y < 0.6f)//collides with wall or roof

@@ -798,7 +798,10 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 	}
 
 	AABBSingle* roomBox;
-
+	origPos = bulletPos - (bulletVel * bulletDir * dt);
+	bPos = bulletPos;
+	ePos = bulletPos + bulletDir * rad;
+	sPos = origPos - bulletDir * rad;
 	for (unsigned int i = 1; i < roomBoxes.size(); i++)
 	{
 		//culling player intersection tests vs room aabbs
