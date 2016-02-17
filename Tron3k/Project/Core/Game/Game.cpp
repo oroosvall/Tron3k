@@ -2124,7 +2124,7 @@ void Game::handleBulletHitEffectEvent(BulletHitEffectInfo hi)
 {
 	int arraypos = -1;
 	Bullet* b = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, arraypos);
-	if (hi.bt == BULLET_TYPE::BATTERY_SLOW_SHOT || hi.bt == BULLET_TYPE::BATTERY_SPEED_SHOT || BULLET_TYPE::LINK_SHOT) //Battery Field exceptions
+	if (hi.bt == BULLET_TYPE::BATTERY_SLOW_SHOT || hi.bt == BULLET_TYPE::BATTERY_SPEED_SHOT || hi.bt == BULLET_TYPE::LINK_SHOT) //Battery Field exceptions
 	{
 		if (hi.et == EFFECT_TYPE::BATTERY_SLOW || hi.et == EFFECT_TYPE::BATTERY_SPEED)
 		{

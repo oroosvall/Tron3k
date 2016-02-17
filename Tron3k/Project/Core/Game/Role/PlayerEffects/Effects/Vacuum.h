@@ -6,7 +6,7 @@
 class Vacuum : public Effect
 {
 private:
-	float rad = 6.0f;
+	float rad = 12.0f;
 public:
 	Vacuum();
 	void init(int pid, int eid, glm::vec3 position);
