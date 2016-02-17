@@ -49,7 +49,7 @@ void main()
 	vec3 LightDirection = Position0.xyz - lights[spotlightID].Position;
 	float Distance = length(LightDirection);
 	
-	float spotlength = 5.0f * 1.3f;
+	float spotlength = 20.0f * 1.5f;
 	
 	if(Distance < spotlength)
 	{
@@ -91,6 +91,7 @@ void main()
 			Diffuse0 = texture(Diffuse, UV);
 			fragment_color = fragment_color * Diffuse0 + specularAddetive;
 		}
-		//fragment_color += vec4(lights[spotlightID].Color, 1) * 0.1f;
+		
 	}
+	//fragment_color += vec4(lights[spotlightID].Color, 1) * 0.1f;
 }

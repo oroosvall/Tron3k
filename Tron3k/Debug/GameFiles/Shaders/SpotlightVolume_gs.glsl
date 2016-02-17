@@ -30,8 +30,8 @@ vec3 down;
 void main() 
 {	
 
-	float spotlength = 5.0f;
-	float halfwidth = 5.0f;
+	float spotlength = 20.0f;
+	float halfwidth = 20.0f;
 	
 	vec3 spot_pos = lights[spotlightID].Position;
 	vec3 spot_normal = lights[spotlightID].Direction * spotlength;

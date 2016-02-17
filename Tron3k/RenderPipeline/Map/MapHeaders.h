@@ -436,6 +436,8 @@ struct Chunk
 		roomID = -1;
 		color = { 1, 1, 1 };
 		staticIntes = 1;
+		nrStaticSpotlights = 0;
+		nrStaticPointlights = 0;
 	}
 
 	void addProp(int id, glm::mat4 matrix)
@@ -476,7 +478,13 @@ struct Chunk
 		l.AmbientIntensity = light.ambientIntensity;
 		l.Direction = vec3(light.dx, light.dy, light.dz);
 		if (length(l.Direction) > 0.001f)
+		{
+			nrStaticSpotlights++;
 			l.Direction = normalize(l.Direction);
+		}
+		else
+			nrStaticPointlights++;
+
 		l.Cutoff = light.coneAngle / glm::pi<float>();
 		l.attenuation = vec4(light.ax, light.ay, light.az, light.aw);
 		//l.Cutoff = -1.0f;
@@ -513,6 +521,9 @@ struct Chunk
 	vector<PortalData> portals;
 
 	vector<SpotLight> lights;
+	int nrStaticSpotlights;
+	int nrStaticPointlights;
+
 
 	ChunkCollision collisionMesh;
 

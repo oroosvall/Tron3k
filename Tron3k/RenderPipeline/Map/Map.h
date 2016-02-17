@@ -77,6 +77,10 @@ public:
 	TextureManager* tm;
 
 	vector<Chunk> chunks;
+
+	int nrTotalStaticSpotlights = 0;
+	int nrTotalStaticPointlights = 0;
+
 	int currentChunk;
 	int roomCount;
 

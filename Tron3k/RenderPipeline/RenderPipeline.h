@@ -247,6 +247,9 @@ public:
 	virtual void updateTakeDamageEffect(float dt);
 	virtual void renderMinimap(float* yourPos, float* yourdir, float* teammates, int nrOfTeammates, int activeCap);
 	virtual void renderScoreBoard(int team1size, int team2size);
+	virtual void pushStaticLights();
+	virtual void clearDynamicLights();
+	virtual void renderLightvolumes();
 };
 
 

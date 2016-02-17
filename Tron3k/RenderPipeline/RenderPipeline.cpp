@@ -139,6 +139,10 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 	gBuffer->init(WindowWidth, WindowHeight, 5, true);
 
+	//at this point map is loaded and g.buffer initialized
+	//send the static lights and dont clear them every frame
+	pushStaticLights();
+
 	for (size_t i = 0; i < 5*AnimationState::none; i++)
 	{
 		anims.keyFrameLenghts[i] = contMan.keyFrameLengths[i];
@@ -492,10 +496,9 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	gBuffer->eyePos.y = y;
 	gBuffer->eyePos.z = z;
 
-	gBuffer->clearLights();
+	clearDynamicLights();
 	
 	std::stringstream ss;
-
 
 	glUseProgram(particleCS);
 
@@ -600,21 +603,6 @@ void RenderPipeline::finalizeRender()
 	glDepthMask(GL_TRUE);
 	//glEnable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
-
-	//system("CLS");
-
-	//push the lights of the rendered chunks
-	for (int n = 0; n < contMan.nrChunks; n++)
-		if (contMan.renderedChunks[n] == true)
-		{
-			if (n > 0)
-			{
-				int count = contMan.testMap.chunks[n].lights.size();
-				if (count > 0)
-					gBuffer->pushLights(&contMan.testMap.chunks[n].lights[0], count);
-			//printf("Chunk : %d Lights: %d \n", n, count);
-			}
-		}
 	
 	glDisable(GL_BLEND);
 	glDisable(GL_CULL_FACE);
@@ -643,6 +631,8 @@ void RenderPipeline::finalizeRender()
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
 	gBuffer->render();
+
+	renderLightvolumes();
 	
 	glUseProgram(textShader);
 	glProgramUniformMatrix4fv(textShader, textShaderModel, 1, GL_FALSE, (GLfloat*)&glm::mat4());
@@ -1545,4 +1535,108 @@ void RenderPipeline::renderScoreBoard(int team1size, int team2size)
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	}
 
+}
+
+void RenderPipeline::pushStaticLights()
+{
+	contMan.testMap.nrTotalStaticPointlights = 0;
+	contMan.testMap.nrTotalStaticSpotlights = 0;
+	
+	for (int c = 0; c < contMan.nrChunks; c++)
+	{
+		contMan.testMap.nrTotalStaticPointlights += contMan.testMap.chunks[c].nrStaticPointlights;
+		contMan.testMap.nrTotalStaticSpotlights += contMan.testMap.chunks[c].nrStaticSpotlights;
+
+		int sizel = contMan.testMap.chunks[c].lights.size();
+		for (int l = 0; l < sizel; l++)
+		{
+			gBuffer->pushLights(&contMan.testMap.chunks[c].lights[l], 1);
+		}
+	}
+}
+
+void RenderPipeline::clearDynamicLights()
+{
+	gBuffer->nrOfPointLights = contMan.testMap.nrTotalStaticPointlights;
+	gBuffer->nrOfSpotLights = contMan.testMap.nrTotalStaticSpotlights;
+}
+
+void RenderPipeline::renderLightvolumes()
+{
+	glUseProgram(gBuffer->spotVolShader);
+
+	glBindBuffer(GL_UNIFORM_BUFFER, gBuffer->spotVolBuffer);
+	glBindBufferBase(GL_UNIFORM_BUFFER, gBuffer->spotVolBufferPos, gBuffer->spotVolBuffer);
+
+	glProgramUniform3fv(gBuffer->spotVolShader, gBuffer->spotVolEye, 1, &gBuffer->eyePos[0]);
+
+	glEnable(GL_BLEND);
+	glBlendEquation(GL_FUNC_ADD);
+	glBlendFunc(GL_ONE, GL_ONE);
+	glDisable(GL_DEPTH_TEST);
+	glCullFace(GL_FRONT);
+	glEnable(GL_CULL_FACE);
+	
+	int lightcounter = 0;
+	int nrstatic;
+	//for each chunks
+	int nrofchunks = contMan.nrChunks;
+	for (int c = 0; c < nrofchunks; c++)
+	{
+		nrstatic = contMan.testMap.chunks[c].nrStaticSpotlights;
+		// if this chunk was rendered, render the lightvolumes of that chunk
+		if (contMan.renderedChunks[c])
+		{
+			for (int l = 0; l < nrstatic; l++)
+			{
+				glProgramUniform1i(gBuffer->spotVolShader, gBuffer->spotID, lightcounter + l );
+				glDrawArrays(GL_POINTS, 0, 1);
+			}
+		}
+		lightcounter += nrstatic;
+	}
+
+	//render remaining dynamic lights
+	int sizedynamic = gBuffer->nrOfSpotLights - lightcounter;
+	for (int l = 0; l < sizedynamic; l++)
+	{
+		glProgramUniform1i(gBuffer->spotVolShader, gBuffer->spotID, lightcounter + l);
+		glDrawArrays(GL_POINTS, 0, 1);
+	}
+
+	glUseProgram(gBuffer->pointVolShader);
+
+	glBindBuffer(GL_UNIFORM_BUFFER, gBuffer->pointVolBuffer);
+	glBindBufferBase(GL_UNIFORM_BUFFER, gBuffer->pointVolBufferPos, gBuffer->pointVolBuffer);
+
+	glProgramUniform3fv(gBuffer->pointVolShader, gBuffer->pointVolEye, 1, &gBuffer->eyePos[0]);
+
+	lightcounter = 0;
+
+	//for each chunks
+	for (int c = 0; c < nrofchunks; c++)
+	{
+		int nrstatic = contMan.testMap.chunks[c].nrStaticPointlights;
+		// if this chunk was rendered, render the lightvolumes of that chunk
+		if (contMan.renderedChunks[c])
+		{
+			for (int l = 0; l < nrstatic; l++)
+			{
+				glProgramUniform1i(gBuffer->pointVolShader, gBuffer->pointID, lightcounter + l);
+				glDrawArrays(GL_POINTS, 0, 1);
+			}
+		}
+		lightcounter += nrstatic;
+	}
+	//render remaining dynamic lights
+	sizedynamic = gBuffer->nrOfPointLights - lightcounter;
+	for (int l = 0; l < sizedynamic; l++)
+	{
+		glProgramUniform1i(gBuffer->pointVolShader, gBuffer->pointID, lightcounter + l);
+		glDrawArrays(GL_POINTS, 0, 1);
+	}
+
+	glCullFace(GL_BACK);
+	glEnable(GL_DEPTH_TEST);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }

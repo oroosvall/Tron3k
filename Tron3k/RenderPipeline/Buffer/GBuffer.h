@@ -65,9 +65,6 @@ public:
 	GLuint* shaderPtr;
 	GLuint* portal_shaderPtr;
 
-	//Light variables
-	int nrOfSpotLights;
-	int nrOfPointLights;
 	glm::vec3 eyePos;
 	GLuint uniformEyePos;
 
@@ -79,8 +76,9 @@ public:
 	GLuint glowReduce;
 
 	RenderTarget glowTexture;
-
 	
+	int nrOfSpotLights = 0;
+	int nrOfPointLights = 0;
 
 private:
 

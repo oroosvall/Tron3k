@@ -95,6 +95,11 @@ void Gbuffer::init(int x, int y, int nrTex, bool depth)
 	spotvol_Normal = glGetUniformLocation(spotVolShader, "Normal");
 	spotvol_GlowMap = glGetUniformLocation(spotVolShader, "GlowMap");
 
+	glProgramUniform1i(spotVolShader, spotvol_Position, 1);
+	glProgramUniform1i(spotVolShader, spotvol_Diffuse, 2);
+	glProgramUniform1i(spotVolShader, spotvol_Normal, 3);
+	glProgramUniform1i(spotVolShader, spotvol_GlowMap, 4);
+
 	//pointlight volumes
 	spotVolBuffer = glGetUniformBlockIndex(pointVolShader, "Light");
 	pointID = glGetUniformLocation(pointVolShader, "pointlightID");
@@ -104,6 +109,11 @@ void Gbuffer::init(int x, int y, int nrTex, bool depth)
 	pointvol_Diffuse = glGetUniformLocation(pointVolShader, "Diffuse");
 	pointvol_Normal = glGetUniformLocation(pointVolShader, "Normal");
 	pointvol_GlowMap = glGetUniformLocation(pointVolShader, "GlowMap");
+
+	glProgramUniform1i(pointVolShader, pointvol_Position, 1);
+	glProgramUniform1i(pointVolShader, pointvol_Diffuse, 2);
+	glProgramUniform1i(pointVolShader, pointvol_Normal, 3);
+	glProgramUniform1i(pointVolShader, pointvol_GlowMap, 4);
 
 	uBlitLightPixelX  = glGetUniformLocation(*shaderPtr, "pixeluvX");
 	uBlitLightPixelY = glGetUniformLocation(*shaderPtr, "pixeluvY");
@@ -294,84 +304,6 @@ void Gbuffer::render(/*glm::vec3 playerPos, glm::vec3 playerDir*/)
 	//	glProgramUniform1i(*shaderPtr, uniformUse, n);
 	//	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	//}
-
-	if (nrOfSpotLights > 0)
-	{
-		//render lightvolumes
-		glUseProgram(spotVolShader);
-
-		glBindBuffer(GL_UNIFORM_BUFFER, spotVolBuffer);
-		glBindBufferBase(GL_UNIFORM_BUFFER, spotVolBufferPos, spotVolBuffer);
-
-		glProgramUniform1i(spotVolShader, spotvol_Position, 1);
-		glProgramUniform1i(spotVolShader, spotvol_Diffuse, 2);
-		glProgramUniform1i(spotVolShader, spotvol_Normal, 3);
-		glProgramUniform1i(spotVolShader, spotvol_GlowMap, 4);
-
-		glProgramUniform3fv(spotVolShader, spotVolEye, 1, &eyePos[0]);
-
-		glEnable(GL_BLEND);
-		glBlendEquation(GL_FUNC_ADD);
-		glBlendFunc(GL_ONE, GL_ONE);
-		glDisable(GL_DEPTH_TEST);
-		glCullFace(GL_FRONT);
-		glEnable(GL_CULL_FACE);
-		//for each spotlight
-		for (int n = 0; n < nrOfSpotLights; n++)
-		{
-			glProgramUniform1i(spotVolShader, spotID, n);
-			glDrawArrays(GL_POINTS, 0, 1);
-		}
-
-		if (nrOfPointLights == 0)
-		{
-			glCullFace(GL_BACK);
-			glEnable(GL_DEPTH_TEST);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		}
-	}
-
-	if (nrOfPointLights > 0)
-	{
- 		if (nrOfSpotLights == 0) // needs to be initialized
-		{
-			glEnable(GL_BLEND);
-			glBlendEquation(GL_FUNC_ADD);
-			glBlendFunc(GL_ONE, GL_ONE);
-			glDisable(GL_DEPTH_TEST);
-			glCullFace(GL_FRONT);
-			glEnable(GL_CULL_FACE);
-		}
-
-		glUseProgram(pointVolShader);
-
-		glBindBuffer(GL_UNIFORM_BUFFER, pointVolBuffer);
-		glBindBufferBase(GL_UNIFORM_BUFFER, pointVolBufferPos, pointVolBuffer);
-
-		glProgramUniform1i(pointVolShader, pointvol_Position, 1);
-		glProgramUniform1i(pointVolShader, pointvol_Diffuse, 2);
-		glProgramUniform1i(pointVolShader, pointvol_Normal, 3);
-		glProgramUniform1i(pointVolShader, pointvol_GlowMap, 4);
-
-		glProgramUniform3fv(pointVolShader, pointVolEye, 1, &eyePos[0]);
-
-		for (int n = 0; n < nrOfPointLights; n++)
-		{
-			glProgramUniform1i(pointVolShader, pointID, n);
-			glDrawArrays(GL_POINTS, 0, 1);
-		}
-
-		glCullFace(GL_BACK);
-		glEnable(GL_DEPTH_TEST);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	}
-}
-
-void Gbuffer::clearLights()
-{
-	//printf("Nr of Lights %d \n", nrOfLights);
-	nrOfSpotLights = 0;
-	nrOfPointLights = 0;
 }
 
 void Gbuffer::clearBuffers()
