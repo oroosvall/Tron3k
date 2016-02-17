@@ -59,7 +59,7 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->soundList[SOUNDS::soundEffectLightWall].loadFromFile("GameFiles/Sound/soundEffectLightWall.ogg");
 		singleton->soundList[SOUNDS::soundEffectYouDied].loadFromFile("GameFiles/Sound/soundEffectYouDied.ogg");
 		singleton->soundList[SOUNDS::soundEffectHunterJump].loadFromFile("GameFiles/Sound/soundEffectHunterJump.ogg");
-		singleton->soundList[SOUNDS::soundEffectAlarm].loadFromFile("GameFiles/Sound/soundEffectAlarm.ogg");
+		singleton->soundList[SOUNDS::soundEffectOcean].loadFromFile("GameFiles/Sound/soundEffectOcean.ogg");
 		singleton->soundList[SOUNDS::soundEffectFlies].loadFromFile("GameFiles/Sound/soundEffectFlies.ogg");
 		singleton->soundList[SOUNDS::soundEffectFrogs].loadFromFile("GameFiles/Sound/soundEffectFrogs.ogg");
 		singleton->soundList[SOUNDS::soundEffectNeonSign].loadFromFile("GameFiles/Sound/soundEffectNeonSign.ogg");
@@ -251,7 +251,7 @@ int SoundPlayer::playMapSounds()
 			mapSounds[1].setVolume(50);
 			mapSounds[1].setAttenuation(80);
 			mapSounds[1].setMinDistance(25.0f);
-			mapSounds[2].setBuffer(soundList[SOUNDS::soundEffectAlarm]);
+			mapSounds[2].setBuffer(soundList[SOUNDS::soundEffectOcean]);
 			mapSounds[2].setPosition(73, 1.55, 4);
 			mapSounds[2].setVolume(20);
 			mapSounds[2].setAttenuation(20);

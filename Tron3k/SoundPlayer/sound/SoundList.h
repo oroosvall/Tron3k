@@ -32,7 +32,7 @@ enum SOUNDS
 	soundEffectLightWall,
 	soundEffectYouDied,
 	soundEffectHunterJump,
-	soundEffectAlarm,
+	soundEffectOcean,
 	soundEffectFlies,
 	soundEffectFrogs,
 	soundEffectNeonSign,
