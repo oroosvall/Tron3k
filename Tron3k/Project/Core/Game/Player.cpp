@@ -433,6 +433,7 @@ bool Player::removeSpecificModifier(MODIFIER_TYPE mt)
 
 PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool spectating)
 {
+	clearCollisionNormals(); //Doesn't actually clear the array, just manually sets size to 0. This is to speed things up a little.
 	diedThisFrame = false;
 	PLAYERMSG msg = NONE;
 	if (role.getRole() != NROFROLES)
@@ -762,7 +763,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			movePlayer(dt, olddir, freecam, spectating); //This moves the player regardless of what we might end up colliding with
 
 
-			clearCollisionNormals(); //Doesn't actually clear the array, just manually sets size to 0. This is to speed things up a little.
+			
 			clearEffectCollNormals();
 		} // end of local player check
 		else
