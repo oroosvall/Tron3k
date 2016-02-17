@@ -21,8 +21,6 @@ void Lightwall::init()
 
 int Lightwall::update(float deltaTime)
 {
-	if (cooldown > 0.0f)
-		cooldown -= deltaTime;
 	if (myRole->isGainingSpecial())
 	{
 		activated = false;
@@ -32,28 +30,19 @@ int Lightwall::update(float deltaTime)
 
 bool Lightwall::allowedToActivate(Player* p)
 {
-	if (!p->getRole()->getIfBusy())
+	if (!p->getRole()->getIfBusy() && !activated)
 	{
 		if (p->getGrounded())
 		{
-			if (activated && cooldown < FLT_EPSILON)
-			{
-				if (p->getRole()->getSpecialMeter() > 15.0f)
-				{
-					int currentSpecial = p->getRole()->getSpecialMeter();
-					p->getRole()->setSpecialMeter(currentSpecial - 15.0f);
-				}
-			}
-			else if (p->getRole()->getSpecialMeter() - 100.0f < FLT_EPSILON && p->getRole()->getSpecialMeter() - 100.0f > -FLT_EPSILON)
+			float special = p->getRole()->getSpecialMeter();
+			if (special > 25.0f)
 			{
 				activated = true;
-				p->getRole()->setSpecialMeter(92.0f);
 			}
 
-			if (activated && cooldown < FLT_EPSILON)
+			if (activated)
 			{
 				specialId++;
-				cooldown = 0.7f;
 				return true;
 			}
 		}

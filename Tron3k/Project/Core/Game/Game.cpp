@@ -295,20 +295,6 @@ void Game::update(float dt)
 					allEffectTimeOuts.push_back(toi);
 				}
 			}
-			else if (msg == 2)
-			{
-				//this is lightwall only, and it's if velocity changes, but changes little enough that it continues
-				EffectTimeOutInfo toi;
-				toi.et = EFFECT_TYPE(i);
-				toi.effectID = eid;
-				toi.effectPID = pid;
-				toi.pos = effects[i][c]->getPos();
-				allEffectTimeOuts.push_back(toi);
-				//old effect times out
-
-				//TO BE ADDED: NEW EFFECT
-				registerSpecial(playerList[pid]);
-			}
 			if (effects[i][c]->desynced())
 			{
 				int arraypos = -1;

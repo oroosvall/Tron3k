@@ -4,7 +4,7 @@
 void LightWallLockedControls::init(Player* myTarget)
 {
 	type = MODIFIER_TYPE::LIGHTWALLCONTROLLOCK;
-	lightWallSpeed = 2.0f;
+	lightWallSpeed = 2.5f;
 
 	target = myTarget;
 	lifeTime = -1;
@@ -45,7 +45,7 @@ int LightWallLockedControls::setData(float dt)
 {
 	bool kill = false;
 	float specialLower = target->getRole()->getSpecialMeter();
-	specialLower -= 20.0f*dt;
+	specialLower -= 40.0f*dt;
 	target->setVelocity(vel);
 	target->getRole()->setSpecialMeter(specialLower);
 
@@ -53,11 +53,12 @@ int LightWallLockedControls::setData(float dt)
 		kill = true;
 	if (Input::getInput()->justPressed(GLFW_MOUSE_BUTTON_LEFT))
 		kill = true;
+	if (Input::getInput()->justPressed(GLFW_KEY_E))
+		kill = true;
 
 	if (kill)
 	{
 		target->getRole()->activateMeterGain();
-		target->getRole()->setSpecialMeter(0.0f);
 		return 1;
 	}
 	return 0;
