@@ -36,8 +36,6 @@ enum TeamColors
 	TeamTwo = 2
 };
 
-
-
 class UIManager
 {
 private:
@@ -48,6 +46,7 @@ private:
 
 	//Menu attributes
 	UI* menus;
+	UI hideAble;
 	int nrOfMenus;
 	int maxMenus;
 	int* openedMenus;
@@ -55,9 +54,12 @@ private:
 	int currentMenu;
 
 	bool firstMenu;
+	bool hideAbleMenuActive;
 
 	int winX;
 	int winY;
+
+	std::string hideAbleFileName;
 
 	//Lists of file names
 	std::string* fileNamesListFirstGroup; //First set of menus(Those you can use before going ingame)
@@ -125,6 +127,13 @@ public:
 	int getNrOfOpenedMenus();
 	int getCurrentMenu();
 
+	bool isThereAMenuUp();
+
+	//hideAble exclusive
+	void hideOrShow(int id, bool show);
+	void changeText(int id, std::string text);
+	void changeTexture(int id, int textureId);
+
 	struct HUDvalues
 	{
 		int HP;
@@ -140,8 +149,6 @@ public:
 		int loseTicketPer;
 		bool firstSecondEachRound;
 	}HUD;
-
-	bool isThereAMenuUp();
 };
 
 #endif

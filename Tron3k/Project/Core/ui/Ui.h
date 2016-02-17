@@ -37,6 +37,11 @@ enum scaleAndText
 	LoseTicketsMeter //ScaleBar
 };
 
+enum Hideable
+{
+	Announcer
+};
+
 class UI
 {
 private:
@@ -87,7 +92,8 @@ public:
 
 	void changeColorTeam(int whichTex);
 
-	void hideWindow();
+	void hideWindow(int id);
+	void showWindow(int id);
 
 	void setTextureId(std::vector<GLuint> uiTextureIds);
 

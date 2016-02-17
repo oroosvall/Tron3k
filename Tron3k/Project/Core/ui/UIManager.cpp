@@ -14,6 +14,9 @@ UIManager::UIManager()
 	textureRes = new std::vector<glm::vec2>;
 	nrOfOpenedMenus = 0;
 
+	hideAbleFileName = "hideAble.txt";
+	hideAbleMenuActive = false;
+
 	teamColor = 0;
 
 	firstMenu = false;
@@ -241,11 +244,12 @@ void UIManager::menuRender()
 void UIManager::inGameRender()
 {
 	renderPipe->disableDepthTest();
+	//hideAble.renderIngame();
+
 	for (int i = 0; i < nrOfOpenedMenus; i++)
 		menus[openedMenus[i]].renderIngame();
 	renderPipe->enableDepthTest();
 }
-
 
 //Add and remove menus
 void UIManager::setMenu(int menuId)
@@ -325,6 +329,7 @@ bool UIManager::LoadNextSet(int whichMenuGroup, int winX, int winY)
 				menus[i].setTextureId(uiTextureIds);
 				nrOfMenus++;
 			}
+			hideAbleMenuActive = false;
 			break;
 		}
 		case 1: //Second Group
@@ -335,9 +340,18 @@ bool UIManager::LoadNextSet(int whichMenuGroup, int winX, int winY)
 			openedMenus = new int[nrOfFileNamesSecondGroup];
 			for (int i = 0; i < nrOfFileNamesSecondGroup; i++)
 			{
-				menus[i].init(fileNamesListSecondGroup[i], console, renderPipe, textureRes, winX, winY);
-				menus[i].setTextureId(uiTextureIds);
-				nrOfMenus++;
+				if (fileNamesListSecondGroup[i] != hideAbleFileName)
+				{
+					menus[i].init(fileNamesListSecondGroup[i], console, renderPipe, textureRes, winX, winY);
+					menus[i].setTextureId(uiTextureIds);
+					nrOfMenus++;
+				}
+				else
+				{
+					hideAble.init(fileNamesListSecondGroup[i], console, renderPipe, textureRes, winX, winY);
+					hideAble.setTextureId(uiTextureIds);
+					hideAbleMenuActive = true;
+				}
 			}
 			break;
 		}
@@ -505,4 +519,32 @@ bool UIManager::isThereAMenuUp()
 		returnValue = false;
 
 	return returnValue;
+}
+
+//hideAble exclusive
+void UIManager::hideOrShow(int id, bool show)
+{
+	if (hideAbleMenuActive)
+	{
+		if (!show)
+			hideAble.hideWindow(id);
+		else
+			hideAble.showWindow(id);
+	}
+	else
+		console->printMsg("Function hideOrShow in UIManager, Hideablemenu isn't active", "System", 'S');
+}
+void UIManager::changeText(int id, std::string text)
+{
+	if (hideAbleMenuActive)
+		hideAble.setText(text, id);
+	else
+		console->printMsg("Function changeText in UIManager, Hideablemenu isn't active", "System", 'S');
+}
+void UIManager::changeTexture(int id, int textureId)
+{
+	if (hideAbleMenuActive)
+		hideAble.changeTex(id, textureId);
+	else
+		console->printMsg("Function changeTexture in UIManager, Hideablemenu isn't active", "System", 'S');
 }

@@ -288,10 +288,13 @@ void UI::changeColorTeam(int whichTex)
 		UiObjects[i]->changeTexUsed(whichTex);
 }
 
-//Empty
-void hideWindow()
+void UI::hideWindow(int id)
 {
-
+	
+}
+void UI::showWindow(int id)
+{
+	
 }
 
 //Empty
