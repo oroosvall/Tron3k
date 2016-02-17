@@ -10,5 +10,6 @@
 #include "BatteryFieldSlow.h"
 #include "BatteryFieldSpeed.h"
 #include "Vacuum.h"
+#include "CleanseNova.h"
 
 #endif

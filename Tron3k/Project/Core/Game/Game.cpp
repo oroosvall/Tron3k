@@ -260,6 +260,7 @@ void Game::update(float dt)
 
 	if (gameState == Gamestate::ROAM)
 	{
+		checkEffectVEffectCollision();
 		checkPlayerVWorldCollision(dt);
 		checkBulletVWorldCollision(dt);
 		checkPlayerVEffectCollision();
@@ -275,6 +276,7 @@ void Game::update(float dt)
 	}
 	else if (gameState == Gamestate::SERVER)
 	{
+		checkEffectVEffectCollision();
 		checkBulletVWorldCollision(dt);
 		checkPlayerVBulletCollision();
 		checkPlayerVEffectCollision();
@@ -486,9 +488,6 @@ void Game::updateEffectBox(Effect* effect)
 
 		break;
 	case EFFECT_TYPE::BATTERY_SPEED:
-
-		break;
-	case EFFECT_TYPE::CLEANSEEXPLOSION:
 
 		break;
 	case EFFECT_TYPE::THERMITE_CLOUD:
@@ -1009,7 +1008,33 @@ void Game::checkBulletVEffectCollision(float dt)
 
 void Game::checkEffectVEffectCollision()
 {
-	//bool E-coli = physics->checkEffectVEffectCollision(eType1, eType2, eid1, eid2, pid1, pid2);
+	for (unsigned int i = 0; i < effects[EFFECT_TYPE::CLEANSENOVA].size(); i++)
+	{
+		int cleansepid = -1, cleanseeid = -1;
+		effects[EFFECT_TYPE::CLEANSENOVA][i]->getId(cleansepid, cleanseeid);
+		for (unsigned int t = 0; t < EFFECT_TYPE::NROFEFFECTS; t++)
+		{
+			if (t != EFFECT_TYPE::CLEANSENOVA)
+			{
+				for (unsigned int k = 0; k < effects[t].size(); k++)
+				{
+					int pid = -1, eid = -1;
+					effects[t][k]->getId(pid, eid);
+					bool e_coli = physics->checkEffectVEffectCollision(EFFECT_TYPE::CLEANSENOVA, EFFECT_TYPE(t), cleanseeid, eid, cleansepid, pid);
+					if (e_coli)
+					{
+						EffectTimeOutInfo toi;
+						toi.effectID = eid;
+						toi.effectPID = pid;
+						toi.et = EFFECT_TYPE(t);
+						toi.pos = effects[t][k]->getPos();
+						allEffectTimeOuts.push_back(toi);
+					}
+				}
+			}
+		}
+	}
+	
 
 	//Use this line, etype1, eid1 and pid1 are for the thing, the 2s are for the other things, the lightwalls etc
 	//so thing1 is the thing removing effects.
@@ -1447,8 +1472,6 @@ void Game::handleSpecialAbilityUse(int conID, int teamId, int sID, SPECIAL_TYPE 
 	}
 	break;
 	case SPECIAL_TYPE::THUNDERDOME:
-		if (!p->isLocal())
-			p->setDir(dir);
 		addEffectToList(conID, teamId, sID, EFFECT_TYPE::THUNDER_DOME, pos, 0, 0.0f);
 		break;
 	case SPECIAL_TYPE::MULTIJUMP:
@@ -1556,6 +1579,11 @@ void Game::handleSpecialAbilityUse(int conID, int teamId, int sID, SPECIAL_TYPE 
 		addBulletToList(conID, teamId, 0, BULLET_TYPE::GRAPPLING_HOOK, pos, dir);
 	}
 	break;
+	case SPECIAL_TYPE::CLEANSESPECIAL:
+	{
+		addEffectToList(conID, teamId, 0, EFFECT_TYPE::CLEANSENOVA, p->getPos(), 0, 0.0f);
+	}
+	break;
 	}
 }
 
@@ -1599,6 +1627,9 @@ void Game::addEffectToList(int conID, int teamId, int effectId, EFFECT_TYPE et, 
 		break;
 	case EFFECT_TYPE::VACUUM:
 		e = new Vacuum();
+		break;
+	case EFFECT_TYPE::CLEANSENOVA:
+		e = new CleanseNova();
 		break;
 	case EFFECT_TYPE::HEALTHPACK:
 		e = new HealthPack();
@@ -1661,6 +1692,13 @@ void Game::addEffectToPhysics(Effect* effect)
 		eBox.push_back(effect->getPos().z);
 		eBox.push_back(effect->getInterestingVariable());
 		physics->receiveEffectBox(eBox, EFFECT_TYPE::BATTERY_SPEED, pid, eid);
+		break;
+	case EFFECT_TYPE::CLEANSENOVA:
+		eBox.push_back(effect->getPos().x);
+		eBox.push_back(effect->getPos().y);
+		eBox.push_back(effect->getPos().z);
+		eBox.push_back(effect->getInterestingVariable());
+		physics->receiveEffectBox(eBox, EFFECT_TYPE::CLEANSENOVA, pid, eid);
 		break;
 	case EFFECT_TYPE::HEALTHPACK:
 		eBox.push_back(effect->getPos().x);
@@ -1886,6 +1924,9 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 			{
 				p->addModifier(MODIFIER_TYPE::BATTERYSPEEDMOD);
 			}
+			break;
+		case EFFECT_TYPE::CLEANSENOVA:
+			p->cleanseModifiers();
 			break;
 		case EFFECT_TYPE::HEALTHPACK:
 			if (gameState == SERVER)

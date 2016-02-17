@@ -30,6 +30,7 @@
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effect.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\BatteryFieldSlow.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\BatteryFieldSpeed.cpp" />
+    <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\CleanseNova.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\Explosion.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\HealthPack.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\LightwallEffect.cpp" />
@@ -48,6 +49,7 @@
     <ClCompile Include="Core\Game\Role\PlayerEffects\Modifiers\TrueGrit.cpp" />
     <ClCompile Include="Core\Game\Role\Role.cpp" />
     <ClCompile Include="Core\Game\Role\Special\Special.cpp" />
+    <ClCompile Include="Core\Game\Role\Special\SpecialTypes\CleanseNovaSpecial.cpp" />
     <ClCompile Include="Core\Game\Role\Special\SpecialTypes\Dash.cpp" />
     <ClCompile Include="Core\Game\Role\Special\SpecialTypes\GrapplingHookSpecial.cpp" />
     <ClCompile Include="Core\Game\Role\Special\SpecialTypes\HackingDartSpecial.cpp" />
@@ -114,6 +116,7 @@
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\AllEffects.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\BatteryFieldSlow.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\BatteryFieldSpeed.h" />
+    <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\CleanseNova.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\Explosion.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\HealthPack.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\LightwallEffect.h" />
@@ -134,6 +137,7 @@
     <ClInclude Include="Core\Game\Role\Role.h" />
     <ClInclude Include="Core\Game\Role\Special\Special.h" />
     <ClInclude Include="Core\Game\Role\Special\SpecialTypes\AllSpecials.h" />
+    <ClInclude Include="Core\Game\Role\Special\SpecialTypes\CleanseNovaSpecial.h" />
     <ClInclude Include="Core\Game\Role\Special\SpecialTypes\Dash.h" />
     <ClInclude Include="Core\Game\Role\Special\SpecialTypes\GrapplingHookSpecial.h" />
     <ClInclude Include="Core\Game\Role\Special\SpecialTypes\HackingDartSpecial.h" />

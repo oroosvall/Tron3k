@@ -143,7 +143,7 @@ void Role::loadRoleSpecifics(int _role)
 			break;
 		case MANIPULATOR:
 			role = 4;
-			specialAbility = new Lightwall(this);
+			specialAbility = new CleanseNovaSpecial(this);
 			specialAbility->init();
 			mobility = new GrapplingHookSpecial();
 			mobility->init();

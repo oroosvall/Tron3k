@@ -1910,8 +1910,13 @@ void Core::renderWorld(float dt)
 					renderPipe->renderExploEffect(&pos.x, asd->explosionRenderRad(), 0, &dgColor.x);
 				}
 				break;
-				case CLEANSEEXPLOSION:
-					break;
+				case CLEANSENOVA:
+				{
+					CleanseNova* asd = (CleanseNova*)eff[i];
+					vec3 pos = asd->getPos();
+					renderPipe->renderExploEffect(&pos.x, asd->renderRad(), 0, &dgColor.x);
+				}
+				break;
 				case BATTERY_SLOW:
 				{
 					BatteryFieldSlow* asd = (BatteryFieldSlow*)eff[i];
