@@ -32,18 +32,21 @@ bool Lightwall::allowedToActivate(Player* p)
 {
 	if (!p->getRole()->getIfBusy() && !activated)
 	{
-		if (p->getGrounded())
+		if (!p->searchModifier(MODIFIER_TYPE::LIGHTWALLCONTROLLOCK))
 		{
-			float special = p->getRole()->getSpecialMeter();
-			if (special > 25.0f)
+			if (p->getGrounded())
 			{
-				activated = true;
-			}
+				float special = p->getRole()->getSpecialMeter();
+				if (special > 25.0f)
+				{
+					activated = true;
+				}
 
-			if (activated)
-			{
-				specialId++;
-				return true;
+				if (activated)
+				{
+					specialId++;
+					return true;
+				}
 			}
 		}
 	}
