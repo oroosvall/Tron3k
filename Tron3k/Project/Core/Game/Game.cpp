@@ -916,7 +916,7 @@ void Game::checkBulletVEffectCollision(float dt)
 					//glm::vec3 vel = bullets[b][j]->getPos()->getVelocity();
 				}
 
-				if (BULLET_TYPE(b) == BULLET_TYPE::BATTERY_SLOW_SHOT || BULLET_TYPE(b) == BULLET_TYPE::BATTERY_SPEED_SHOT || BULLET_TYPE::LINK_SHOT)
+				if (BULLET_TYPE(b) == BULLET_TYPE::BATTERY_SLOW_SHOT || BULLET_TYPE(b) == BULLET_TYPE::BATTERY_SPEED_SHOT || BULLET_TYPE(b) == BULLET_TYPE::LINK_SHOT)
 				{
 					for (int c = 0; c < effects[EFFECT_TYPE::BATTERY_SLOW].size(); c++)
 					{
@@ -1710,7 +1710,7 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 			console->printMsg(p->getName() + " gave up on life.", "System", 'S');
 			return 0;
 		}
-		if (hi.bt != BULLET_TYPE::CLUSTERLING)	//Any bullets that should not detonate on contact
+		if (hi.bt != BULLET_TYPE::CLUSTERLING && hi.bt != BULLET_TYPE::BATTERY_SLOW_SHOT && hi.bt != BULLET_TYPE::BATTERY_SPEED_SHOT)	//Any bullets that should not detonate on contact
 		{
 			glm::vec3 pos = playerList[hi.playerHit]->getPos();
 			if (gameState != Gamestate::SERVER)
@@ -1790,10 +1790,13 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 			{
 				if (hi.et == EFFECT_TYPE::HEALTHPACK)
 					GetSound()->playExternalSound(SOUNDS::soundEffectHP, pos.x, pos.y, pos.z);
-				else if (!p->isLocal())
-					GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHit, pos.x, pos.y, pos.z);
-				else
+				else if (hi.et != EFFECT_TYPE::BATTERY_SLOW && hi.et != EFFECT_TYPE::BATTERY_SPEED)
+				{
+					if(!p->isLocal())
+						GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHit, pos.x, pos.y, pos.z);
+					else
 					GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHitSelf, pos.x, pos.y, pos.z);
+				}
 			}
 		}
 
