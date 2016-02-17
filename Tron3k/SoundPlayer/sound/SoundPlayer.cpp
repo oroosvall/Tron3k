@@ -111,7 +111,11 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->soundList[SOUNDS::soundEffectBruteDashStereo].loadFromFile("GameFiles/Sound/soundEffectBruteDashStereo.ogg");
 		singleton->soundList[SOUNDS::soundEffectLinkGunStereo].loadFromFile("GameFiles/Sound/soundEffectLinkGunStereo.ogg");
 		singleton->soundList[SOUNDS::soundStepsManipulatorStereo].loadFromFile("GameFiles/Sound/soundStepsManipulatorStereo.ogg");
-
+		singleton->soundList[SOUNDS::soundEffectStalkerChange].loadFromFile("GameFiles/Sound/soundEffectStalkerChange.ogg");
+		singleton->soundList[SOUNDS::soundEffectStalkerChangeBack].loadFromFile("GameFiles/Sound/soundEffectStalkerChangeBack.ogg");
+		singleton->soundList[SOUNDS::soundEffectBigExplosion].loadFromFile("GameFiles/Sound/soundEffectBigExplosion.ogg");
+		singleton->soundList[SOUNDS::soundEffectFieldsStereo].loadFromFile("GameFiles/Sound/soundEffectFieldsStereo.ogg");
+		singleton->soundList[SOUNDS::soundEffectFields].loadFromFile("GameFiles/Sound/soundEffectFields.ogg");
 		initialized = true;
 	}
 }

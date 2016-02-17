@@ -1432,10 +1432,29 @@ void Game::handleWeaponFire(int conID, int teamId, int bulletId, WEAPON_TYPE wea
 		break;
 
 	case WEAPON_TYPE::BATTERYWPN_SLOW:
+		if (gameState != Gamestate::SERVER)
+			if (conID == localPlayerId || conID == spectateID)
+			{
+				GetSound()->playExternalSound(SOUNDS::soundEffectFieldsStereo, pos.x, pos.y, pos.z);
+			}
+
+			else
+				GetSound()->playExternalSound(SOUNDS::soundEffectFields, pos.x, pos.y, pos.z);
+
 		addBulletToList(conID, teamId, bulletId, BULLET_TYPE::BATTERY_SLOW_SHOT, pos, dir);
+		
 		break;
 
 	case WEAPON_TYPE::BATTERYWPN_SPEED:
+		if (gameState != Gamestate::SERVER)
+			if (conID == localPlayerId || conID == spectateID)
+			{
+				GetSound()->playExternalSound(SOUNDS::soundEffectFieldsStereo, pos.x, pos.y, pos.z);
+			}
+
+			else
+				GetSound()->playExternalSound(SOUNDS::soundEffectFields, pos.x, pos.y, pos.z);
+
 		addBulletToList(conID, teamId, bulletId, BULLET_TYPE::BATTERY_SPEED_SHOT, pos, dir);
 		break;
 	}
@@ -2225,9 +2244,23 @@ void Game::handleBulletHitEffectEvent(BulletHitEffectInfo hi)
 			if (e != nullptr)
 			{
 				if (hi.bt == (BULLET_TYPE::LINK_SHOT))
+				{
 					addEffectToList(hi.effectPID, hi.bulletTeam, hi.effectID, EFFECT_TYPE::EXPLOSION, e->getPos(), 30, 10.0f);
+					if (GetSound())
+					{
+						GetSound()->playExternalSound(SOUNDS::soundEffectClusterGrenade, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+					}
+				}
+					
 				else
+				{
 					addEffectToList(hi.effectPID, hi.bulletTeam, hi.effectID, EFFECT_TYPE::EXPLOSION, e->getPos(), 15, 5.0f);
+					if (GetSound())
+					{
+						GetSound()->playExternalSound(SOUNDS::soundEffectClusterlingExplosion, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
+					}
+				}
+					
 				removeEffect(hi.et, apos);
 			}
 			if (b != nullptr)
@@ -2362,7 +2395,10 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 		}
 		case BULLET_TYPE::BATTERY_SLOW_SHOT:
 			if (parent->getSpawnAdditionals())
+			{
 				addEffectToList(PID, parent->getTeam(), BID, EFFECT_TYPE::BATTERY_SLOW, parent->getPos(), 0, 0.0f);
+			}
+				
 			break;
 		case BULLET_TYPE::BATTERY_SPEED_SHOT:
 			if (parent->getSpawnAdditionals())

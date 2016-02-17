@@ -3,6 +3,7 @@
 
 #include<sfml/Audio.hpp>
 #include "Weapon/WeaponTypes/AllWeapons.h"
+#include "../../SoundPlayer/sound/SoundPlayer.h"
 #include "Special/Special.h"
 #include "Special/SpecialTypes/AllSpecials.h"
 #include "PlayerEffects/Modifiers/AllModifiers.h"

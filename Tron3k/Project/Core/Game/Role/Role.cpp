@@ -227,6 +227,19 @@ void Role::swapWeaponLocal(int swapTo)
 {
 	currentWpn = swapTo;
 	swapWeaponTimer = 0.5f;
+
+	if (this->role == 2 && GetSound())
+	{
+		if (currentWpn == 1)
+		{
+			GetSound()->playUserGeneratedSound(SOUNDS::soundEffectStalkerChange);
+		}
+		else
+		{
+			GetSound()->playUserGeneratedSound(SOUNDS::soundEffectStalkerChangeBack);
+		}
+		
+	}
 }
 
 Weapon* Role::getCurrentWeapon()

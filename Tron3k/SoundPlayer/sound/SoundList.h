@@ -88,6 +88,11 @@ enum SOUNDS
 	soundEffectBruteDashStereo,
 	soundEffectLinkGunStereo,
 	soundStepsManipulatorStereo,
+	soundEffectStalkerChange,
+	soundEffectStalkerChangeBack,
+	soundEffectBigExplosion,
+	soundEffectFieldsStereo,
+	soundEffectFields,
 
 	nrOfSounds //leave last
 };
