@@ -1760,7 +1760,7 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 			p->setHP(0);
 			p->addDeath();
 			int randomiser = rand() % 5;
-			console->printMsg(p->getName() + deathMessages, "System", 'S');
+			console->printMsg(p->getName() + suicideMessages[randomiser], "System", 'S');
 			return 0;
 		}
 		if (hi.bt != BULLET_TYPE::CLUSTERLING && hi.bt != BULLET_TYPE::BATTERY_SLOW_SHOT && hi.bt != BULLET_TYPE::BATTERY_SPEED_SHOT)	//Any bullets that should not detonate on contact
