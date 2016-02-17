@@ -80,6 +80,7 @@ void Game::init(int max_connections, int state, Console* con)
 	suicideMessages.push_back(" is swimming with the fishes.");
 	suicideMessages.push_back(" didn't want to play anymore.");
 	suicideMessages.push_back(" pulled their own plug.");
+	suicideMessages.push_back(" expired.");
 
 	fragMessages.push_back(" was fragged by ");
 	fragMessages.push_back(" was shredded by ");
@@ -91,6 +92,7 @@ void Game::init(int max_connections, int state, Console* con)
 	fragMessages.push_back(" was short-circuited by ");
 	fragMessages.push_back(" was recycled by ");
 	fragMessages.push_back(" is in robot hell thanks to ");
+	fragMessages.push_back(" was scrapped for parts by ");
 }
 
 void Game::loadRoles()
