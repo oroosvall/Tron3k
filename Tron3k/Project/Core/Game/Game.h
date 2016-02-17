@@ -141,6 +141,8 @@ private:
 	std::vector<int> teamOne;
 	std::vector<int> teamTwo;
 
+	string deathMessages = { " Gave up on life" };
+
 	int maxTeamSize = 5;
 	int maxSpec = 5;
 	void removeConIDfromTeams(int conID);
