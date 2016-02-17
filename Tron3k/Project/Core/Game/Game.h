@@ -141,7 +141,7 @@ private:
 	std::vector<int> teamOne;
 	std::vector<int> teamTwo;
 
-	string suicideMessages[5] = { " gave up on life", " short circuited", " had a battery attack", " took a swim", " is swimming with the fishes" };
+	std::vector<string> suicideMessages;
 
 	std::vector<string> fragMessages;
 

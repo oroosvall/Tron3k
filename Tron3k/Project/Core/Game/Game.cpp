@@ -73,11 +73,19 @@ void Game::init(int max_connections, int state, Console* con)
 	spectateID = -1;
 	decalCounter = 0;
 
+	suicideMessages.push_back(" gave up on life.");
+	suicideMessages.push_back(" short circuited!");
+	suicideMessages.push_back(" had a battery attack!");
+	suicideMessages.push_back(" took a swim!");
+	suicideMessages.push_back(" is swimming with the fishes.");
+	suicideMessages.push_back(" didn't want to play anymore.");
+
 	fragMessages.push_back(" was fragged by ");
-	fragMessages.push_back(" was blown to pieces by ");
-	fragMessages.push_back(" was served a metal breakfast by ");
+	fragMessages.push_back(" was shredded by ");
+	fragMessages.push_back(" was served a neon breakfast by ");
 	fragMessages.push_back(" was stopped in their tracks by ");
 	fragMessages.push_back(" said hi to ");
+	fragMessages.push_back(" was disassembled by ");
 }
 
 void Game::loadRoles()
@@ -1778,8 +1786,7 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 		{
 			p->setHP(0);
 			p->addDeath();
-			int randomiser = rand() % 5;
-			console->printMsg(p->getName() + suicideMessages[randomiser], "System", 'S');
+			console->printMsg(p->getName() + suicideMessages[rand() % suicideMessages.size()], "System", 'S');
 			return 0;
 		}
 		if (hi.bt != BULLET_TYPE::CLUSTERLING && hi.bt != BULLET_TYPE::BATTERY_SLOW_SHOT && hi.bt != BULLET_TYPE::BATTERY_SPEED_SHOT)	//Any bullets that should not detonate on contact
