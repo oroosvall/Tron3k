@@ -1563,6 +1563,22 @@ void RenderPipeline::clearDynamicLights()
 
 void RenderPipeline::renderLightvolumes()
 {
+	//preformance test
+
+	//SpotLight light;
+	//light.Direction = vec3(0);
+	//light.DiffuseIntensity = 1.0f;
+	//vec3 origin = vec3(50, 0.5f, 63);
+	//for (int n = 0; n < 100; n++)
+	//{
+	//	light.Color = vec3(float(n) / 100.0f, 1 - float(n) / 100.0f, 0.5f);
+	//	light.Position = origin;
+	//	light.Position.x += sin(timepass + float(n) / 20.0f) * 20;
+	//	light.Position.y += sin(timepass * 4 + float(n) / 20.0f);
+	//	light.Position.z += cos(timepass + float(n) / 20.0f) * 20;
+	//	gBuffer->pushLights(&light, 1);
+	//}
+
 	glUseProgram(gBuffer->spotVolShader);
 
 	glBindBuffer(GL_UNIFORM_BUFFER, gBuffer->spotVolBuffer);
