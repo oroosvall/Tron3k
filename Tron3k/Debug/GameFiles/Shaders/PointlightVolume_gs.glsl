@@ -23,7 +23,7 @@ layout (std140) uniform Light
 
 void main() 
 {	
-	float size = 20.0f;
+	float size = 5.0f;
 	vec4 point_pos = vec4(lights[pointlightID].Position, 1);
 	
 	vec4 pos0 = ViewProjMatrix * (point_pos + vec4(size, size, -size, 0));

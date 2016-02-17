@@ -41,7 +41,7 @@ float gMatSpecularIntensity = 0.4;
 void main()
 {
 	fragment_color = vec4(0);
-	float size = 20.0f;
+	float size = 5.0f;
 	
 	vec2 UV = gl_FragCoord.xy / gScreenSize;
 	//fragment_color = vec4(lights[spotlightID].Color, 1) * 0.1 + texture(Diffuse, UV);

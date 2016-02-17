@@ -49,7 +49,7 @@ void main()
 	vec3 LightDirection = Position0.xyz - lights[spotlightID].Position;
 	float Distance = length(LightDirection);
 	
-	float spotlength = 20.0f * 1.5f;
+	float spotlength = 5.0f * 1.5f;
 	
 	if(Distance < spotlength)
 	{
