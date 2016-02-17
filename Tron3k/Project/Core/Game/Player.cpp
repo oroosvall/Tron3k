@@ -607,8 +607,6 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 						}
 					}
 
-					areWeScrolling = i->getScrollValue();
-
 					if (!role.getIfBusy())
 					{
 						if (i->justPressed(GLFW_KEY_R))
