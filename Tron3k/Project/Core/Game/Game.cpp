@@ -1839,9 +1839,9 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 				vec3 normalFromVacuum = normalize(hi.playerPos - hi.hitPos);
 				vec3 newVel = vec3(0);
 				if (theEffect != nullptr)
-					newVel = -normalFromVacuum*theEffect->getInterestingVariable() / 3.0f;
+					newVel = -normalFromVacuum*theEffect->getInterestingVariable() / 6.0f;
 				else
-					newVel = -normalFromVacuum / 3.0f; //If, by any chance, the effect got removed before this occured, we use a default explosion value of 1.0
+					newVel = -normalFromVacuum / 6.0f; //If, by any chance, the effect got removed before this occured, we use a default explosion value of 1.0
 				if (p->getGrounded())
 				{
 					p->setGrounded(false);
