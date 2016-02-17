@@ -1633,6 +1633,7 @@ void Game::addEffectToList(int conID, int teamId, int effectId, EFFECT_TYPE et, 
 		e = new Vacuum();
 		break;
 	case EFFECT_TYPE::CLEANSENOVA:
+		teamId = 0;
 		e = new CleanseNova();
 		break;
 	case EFFECT_TYPE::HEALTHPACK:

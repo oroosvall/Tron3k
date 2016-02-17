@@ -1914,6 +1914,7 @@ void Core::renderWorld(float dt)
 				{
 					CleanseNova* asd = (CleanseNova*)eff[i];
 					vec3 pos = asd->getPos();
+					dgColor = CLEANSENOVACOLOR;
 					renderPipe->renderExploEffect(&pos.x, asd->renderRad(), 0, &dgColor.x);
 				}
 				break;

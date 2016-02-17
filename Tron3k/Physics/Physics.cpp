@@ -1142,7 +1142,7 @@ bool Physics::checkEffectVEffectCollision(unsigned int eType1, unsigned int eTyp
 						}
 						else if (eType2 == 1)//ThunderDome aka sphere
 						{
-							vec4 col = checkSpherevSpheretdCollision(sphere, effectBoxes[i]->getSphere());
+							vec4 col = checkSpherevSphereCollision(sphere, effectBoxes[i]->getSphere());
 							if (col != vec4(0, 0, 0, 0))
 								collided = true;
 						}
