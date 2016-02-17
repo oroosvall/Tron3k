@@ -599,10 +599,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 								{
 									GetSound()->playJump(role.getRole(), pos.x, pos.y, pos.z);
 								}
-								
-							}
-							
-								
+							}	
 						}
 					}
 

@@ -10,7 +10,7 @@ void LightWallLockedControls::init(Player* myTarget)
 	lifeTime = -1;
 
 	glm::vec2 dir = glm::vec2(target->getDir().x, target->getDir().z);
-	//dir = normalize(dir);		Unnecessary?
+	dir = normalize(dir);
 
 	vel = glm::vec3(dir.x, 0.0f, dir.y)*lightWallSpeed;
 	target->setVelocity(vel);
