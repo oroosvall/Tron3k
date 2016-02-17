@@ -86,6 +86,8 @@ enum SOUNDS
 	soundFootStepsStereo,
 	soundEffectDiscGunStereo,
 	soundEffectBruteDashStereo,
+	soundEffectLinkGunStereo,
+	soundStepsManipulatorStereo,
 
 	nrOfSounds //leave last
 };

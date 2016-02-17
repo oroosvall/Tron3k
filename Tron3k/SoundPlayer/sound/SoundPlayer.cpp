@@ -109,6 +109,8 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->soundList[SOUNDS::soundEffectTrapperMultiJumpStereo].loadFromFile("GameFiles/Sound/soundEffectTrapperMultiJumpStereo.ogg");
 		singleton->soundList[SOUNDS::soundFootStepsStereo].loadFromFile("GameFiles/Sound/soundFootStepsStereo.ogg");
 		singleton->soundList[SOUNDS::soundEffectBruteDashStereo].loadFromFile("GameFiles/Sound/soundEffectBruteDashStereo.ogg");
+		singleton->soundList[SOUNDS::soundEffectLinkGunStereo].loadFromFile("GameFiles/Sound/soundEffectLinkGunStereo.ogg");
+		singleton->soundList[SOUNDS::soundStepsManipulatorStereo].loadFromFile("GameFiles/Sound/soundStepsManipulatorStereo.ogg");
 
 		initialized = true;
 	}
@@ -679,6 +681,11 @@ void SoundPlayer::PlayStereoFootsteps(int role)
 	if (role == 3)
 	{
 		playUserGeneratedSound(SOUNDS::soundEffectBruteStepsStereo);
+	}
+
+	if (role == 4)
+	{
+		playUserGeneratedSound(SOUNDS::soundStepsManipulatorStereo);
 	}
 
 }

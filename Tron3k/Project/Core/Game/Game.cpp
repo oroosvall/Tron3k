@@ -1356,7 +1356,12 @@ void Game::handleWeaponFire(int conID, int teamId, int bulletId, WEAPON_TYPE wea
 
 	case WEAPON_TYPE::LINK_GUN:
 		if (gameState != Gamestate::SERVER)
-			if (GetSound())
+			if (conID == localPlayerId || conID == spectateID)
+			{
+				GetSound()->playExternalSound(SOUNDS::soundEffectLinkGunStereo, pos.x, pos.y, pos.z);
+			}
+
+			else
 				GetSound()->playExternalSound(SOUNDS::soundEffectLinkGun, pos.x, pos.y, pos.z);
 		addBulletToList(conID, teamId, bulletId, BULLET_TYPE::LINK_SHOT, pos, dir);
 		break;
