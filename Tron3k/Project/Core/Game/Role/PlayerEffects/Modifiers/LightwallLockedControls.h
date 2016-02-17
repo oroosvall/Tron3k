@@ -9,6 +9,7 @@ private:
 	float lightWallSpeed;
 	glm::vec3 vel;
 public:
+	~LightWallLockedControls();
 	void init(Player* myTarget);
 	int getData(float dt);
 	int setData(float dt);

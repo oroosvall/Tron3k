@@ -17,6 +17,10 @@ void LightWallLockedControls::init(Player* myTarget)
 	target->getRole()->shutOffMeterGain();
 }
 
+LightWallLockedControls::~LightWallLockedControls()
+{
+	target->getRole()->activateMeterGain();
+}
 
 int LightWallLockedControls::getData(float dt)
 {
