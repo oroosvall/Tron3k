@@ -307,14 +307,54 @@ int SoundPlayer::playMapSounds()
 			mapSounds[11].setVolume(20);
 			mapSounds[11].setAttenuation(5);
 			mapSounds[11].setMinDistance(2.0f);
-			mapSounds[12].setBuffer(soundList[SOUNDS::soundEffectNeonSign]);
-			mapSounds[12].setPosition(-10.3, 5.6, 63.2);
-			mapSounds[12].setVolume(20);
-			mapSounds[12].setAttenuation(5);
-			mapSounds[12].setMinDistance(2.0f);
+			mapSounds[13].setBuffer(soundList[SOUNDS::soundEffectNeonSign]);
+			mapSounds[13].setPosition(-10.3, 5.6, 63.2);
+			mapSounds[13].setVolume(20);
+			mapSounds[13].setAttenuation(5);
+			mapSounds[13].setMinDistance(2.0f);
+			mapSounds[14].setBuffer(soundList[SOUNDS::soundEffectNeonSign]);
+			mapSounds[14].setPosition(9.7, 1.45, 84.6);
+			mapSounds[14].setVolume(20);
+			mapSounds[14].setAttenuation(5);
+			mapSounds[14].setMinDistance(2.0f);
+			mapSounds[15].setBuffer(soundList[SOUNDS::soundEffectNeonSign]);
+			mapSounds[15].setPosition(9.7, 1.45, 80.4);
+			mapSounds[15].setVolume(20);
+			mapSounds[15].setAttenuation(5);
+			mapSounds[15].setMinDistance(2.0f);
+			mapSounds[16].setBuffer(soundList[SOUNDS::soundEffectNeonSign]);
+			mapSounds[16].setPosition(16, 2, 60);
+			mapSounds[16].setVolume(20);
+			mapSounds[16].setAttenuation(5);
+			mapSounds[16].setMinDistance(2.0f);
+			mapSounds[17].setBuffer(soundList[SOUNDS::soundEffectNeonSign]);
+			mapSounds[17].setPosition(22.27, 1.45, 67.8);
+			mapSounds[17].setVolume(20);
+			mapSounds[17].setAttenuation(5);
+			mapSounds[17].setMinDistance(2.0f);
+			mapSounds[18].setBuffer(soundList[SOUNDS::soundEffectNeonSign]);
+			mapSounds[18].setPosition(25.3, 1.45, 68);
+			mapSounds[18].setVolume(20);
+			mapSounds[18].setAttenuation(5);
+			mapSounds[18].setMinDistance(2.0f);
+			mapSounds[19].setBuffer(soundList[SOUNDS::soundEffectNeonSign]);
+			mapSounds[19].setPosition(31.45, 1.45, 67.6);
+			mapSounds[19].setVolume(20);
+			mapSounds[19].setAttenuation(5);
+			mapSounds[19].setMinDistance(2.0f);
+			mapSounds[20].setBuffer(soundList[SOUNDS::soundEffectNeonSign]);
+			mapSounds[20].setPosition(34, 2, 67.9);
+			mapSounds[20].setVolume(20);
+			mapSounds[20].setAttenuation(5);
+			mapSounds[20].setMinDistance(2.0f);
+			mapSounds[21].setBuffer(soundList[SOUNDS::soundEffectNeonSign]);
+			mapSounds[21].setPosition(33, 1.8, 60);
+			mapSounds[21].setVolume(20);
+			mapSounds[21].setAttenuation(5);
+			mapSounds[21].setMinDistance(2.0f);
 			
 
-			for (int i = 0; i < 13; i++)
+			for (int i = 0; i < 22; i++)
 			{
 				mapSounds[i].setLoop(true);
 				mapSounds[i].play();
