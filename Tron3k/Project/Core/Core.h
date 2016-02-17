@@ -151,6 +151,8 @@ public:
 	
 	vec3 TEAMONECOLOR = vec3(1.0f, 0.5f, 0.0f);
 	vec3 TEAMTWOCOLOR = vec3(0.0f, 0.9f, 0.0f);
+	vec3 SPEEDBUBBLECOLOR = vec3(0.9f, 0.0f, 0.0f);
+	vec3 SLOWBUBBLECOLOR = vec3(0.0f, 0.4f, 1.0f);
 
 	void init();
 	void update(float dt);

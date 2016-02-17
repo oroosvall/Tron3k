@@ -1846,9 +1846,9 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 				{
 					p->setGrounded(false);
 					if (theEffect != nullptr)
-						newVel.y = theEffect->getInterestingVariable()*1.5f; //3.0f and 1.5f are arbitrary values
+						newVel.y = theEffect->getInterestingVariable()*0.5f;
 					else
-						newVel.y = 1.5f;
+						newVel.y = 0.5f;
 				}
 
 				p->setVelocity(newVel);

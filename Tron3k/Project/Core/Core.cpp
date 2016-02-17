@@ -1916,6 +1916,7 @@ void Core::renderWorld(float dt)
 				{
 					BatteryFieldSlow* asd = (BatteryFieldSlow*)eff[i];
 					vec3 pos = asd->getPos();
+					dgColor = SLOWBUBBLECOLOR;
 					renderPipe->renderExploEffect(&pos.x, asd->renderRad(), 0, &dgColor.x);
 				}
 					break;
@@ -1923,6 +1924,7 @@ void Core::renderWorld(float dt)
 				{
 					BatteryFieldSpeed* asd = (BatteryFieldSpeed*)eff[i];
 					vec3 pos = asd->getPos();
+					dgColor = SPEEDBUBBLECOLOR;
 					renderPipe->renderExploEffect(&pos.x, asd->renderRad(), 0, &dgColor.x);
 				}
 					break;
