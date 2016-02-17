@@ -271,11 +271,11 @@ int SoundPlayer::playMapSounds()
 			mapSounds[5].setVolume(10);
 			mapSounds[5].setAttenuation(10);
 			mapSounds[5].setMinDistance(4.0f);
-			mapSounds[6].setBuffer(soundList[SOUNDS::soundEffectCrows]);
+			/*mapSounds[6].setBuffer(soundList[SOUNDS::soundEffectCrows]);
 			mapSounds[6].setPosition(35, 1.55, 15);
 			mapSounds[6].setVolume(20);
 			mapSounds[6].setAttenuation(20);
-			mapSounds[6].setMinDistance(40.0f);
+			mapSounds[6].setMinDistance(40.0f);*/
 			mapSounds[7].setBuffer(soundList[SOUNDS::soundEffectFlies]);
 			mapSounds[7].setPosition(-32, 1.55, 47);
 			mapSounds[7].setVolume(30);
