@@ -746,8 +746,14 @@ void Core::upClient(float dt)
 			//Fetch current player position
 			//Add to topology packet
 			Player* local = game->getPlayer(top->getConId());
+			glm::vec3 pos = local->getPos();
+			if (!local->isAlive())
+			{
+				if (pos.y < -4.5f)
+					pos.y = -4.5f;
+			}
 
-			top->frame_pos(top->getConId(), local->getPos(), local->getDir(), local->getVelocity(), local->roomID);
+			top->frame_pos(top->getConId(), pos, local->getDir(), local->getVelocity(), local->roomID);
 
 			if (game->weaponSwitchReady())
 			{

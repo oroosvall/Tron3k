@@ -42,11 +42,6 @@ void Player::setName(std::string newName)
 
 void Player::setGoalPos(glm::vec3 newPos)
 {
-	if (!isDead)
-	{
-		if (newPos.y < -6.0f)
-			return;
-	}
 	goalpos = newPos;
 	oldPos = pos;
 	goalTimer = 0.0f;
