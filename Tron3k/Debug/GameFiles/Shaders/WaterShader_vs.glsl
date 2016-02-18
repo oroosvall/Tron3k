@@ -2,11 +2,13 @@
 layout(location = 0) in vec3 vertex_pos;
 layout(location = 1) in vec2 vertex_uv;
 
-out vec2 uv;
-out vec2 uv2;
+layout (location = 0) out vec4 pos;
+layout (location = 1) out vec2 uv;
+layout (location = 2) out vec2 uv2;
 
 uniform mat4 MVP;
 uniform float anim;
+uniform int type;
 
 void main()
 {
@@ -15,8 +17,16 @@ void main()
 	uv = vertex_uv;
 	uv2 = vertex_uv;
 	
-	//Animate
-	uv.x = uv.x + anim/10;
-	uv.y = uv.y - anim;
-	uv2.x = uv2.x - anim/2;
+	//Sign
+	if (type == 0)
+	{
+		uv.x = uv.x + anim;
+	}
+
+	//Water
+	if (type == 1)
+	{
+		uv.y = uv.y - anim / 10;
+		uv2.x = uv2.x - anim / 2;
+	}
 }

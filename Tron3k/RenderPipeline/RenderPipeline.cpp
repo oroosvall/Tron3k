@@ -950,7 +950,7 @@ void RenderPipeline::renderCapturePoint(int capPointID)
 	contMan.renderCapturePoint(capPointID, regularShader, worldMat[0], uniformTextureLocation[0], uniformNormalLocation[0], uniformGlowSpecLocation[0]);
 }
 
-void RenderPipeline::renderWater()
+void RenderPipeline::renderAnimatedTexture()
 {
 	//uvAnim = uvAnim + 0.1f * delta;
 	glDisable(GL_BLEND);

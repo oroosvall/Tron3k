@@ -14,6 +14,8 @@
 
 #include "ParticleSystem\ParticleSystem.h"
 
+#include "AnimatedTexture.h"
+
 enum SETTING_INPUT
 {
 	CLEAR_COLOR_IN = PipelineValues::FLOAT3,
@@ -37,6 +39,7 @@ private:
 
 	ContentManager contMan;
 	AnimManager anims;
+	AnimatedTexture animTexture;
 
 	//LightWall lw;
 
@@ -201,7 +204,7 @@ public:
 
 	virtual void renderCapturePoint(int capPointID);
 
-	virtual void renderWater();
+	virtual void renderAnimatedTexture();
 
 	virtual void forceReset() {};
 

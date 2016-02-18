@@ -152,6 +152,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AnimatedTexture.cpp" />
     <ClCompile Include="BlitQuad.cpp" />
     <ClCompile Include="Buffer\GBuffer.cpp" />
     <ClCompile Include="Buffer\RenderTarget.cpp" />
@@ -176,6 +177,7 @@
     <ClCompile Include="Utils\TimeQuery.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AnimatedTexture.h" />
     <ClInclude Include="BlitQuad.h" />
     <ClInclude Include="Buffer\GBuffer.h" />
     <ClInclude Include="Buffer\RenderTarget.h" />
