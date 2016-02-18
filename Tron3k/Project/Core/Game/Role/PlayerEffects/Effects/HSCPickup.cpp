@@ -5,12 +5,14 @@ HSCPickup::HSCPickup() {}
 void HSCPickup::init(int pid, int eid, glm::vec3 position)
 {
 	type = EFFECT_TYPE::HSCPICKUP;
+	lifeTime = 999.0f;
 	playerId = 254; effectId = eid; pos = position;
 }
 
 int HSCPickup::update(float dt)
 {
-	cooldown -= dt;
+	if(cooldown > -FLT_EPSILON)
+		cooldown -= dt;
 	return 0;
 }
 

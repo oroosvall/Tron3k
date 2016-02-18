@@ -74,9 +74,9 @@ void Game::init(int max_connections, int state, Console* con)
 	decalCounter = 0;
 
 	addEffectToList(0, 0, 0, EFFECT_TYPE::HSCPICKUP, vec3(50.87f, 1.6f, 10.7f), 0, 6.0f);
-	addEffectToList(0, 0, 0, EFFECT_TYPE::HSCPICKUP, vec3(10.68f, 1.6f, 46.85f), 0, 6.0f);
-	addEffectToList(0, 0, 0, EFFECT_TYPE::HSCPICKUP, vec3(-34.86f, 1.6f, 67.0f), 0, 6.0f);
-	addEffectToList(0, 0, 0, EFFECT_TYPE::HSCPICKUP, vec3(44.05f, 1.7f, 98.19f), 0, 6.0f);
+	addEffectToList(0, 0, 1, EFFECT_TYPE::HSCPICKUP, vec3(10.68f, 1.6f, 46.85f), 0, 6.0f);
+	addEffectToList(0, 0, 2, EFFECT_TYPE::HSCPICKUP, vec3(-34.86f, 1.6f, 67.0f), 0, 6.0f);
+	addEffectToList(0, 0, 3, EFFECT_TYPE::HSCPICKUP, vec3(44.05f, 1.7f, 98.19f), 0, 6.0f);
 
 	suicideMessages.push_back(" gave up on life.");
 	suicideMessages.push_back(" short circuited!");
