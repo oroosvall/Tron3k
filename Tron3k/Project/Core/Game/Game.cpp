@@ -73,6 +73,8 @@ void Game::init(int max_connections, int state, Console* con)
 	spectateID = -1;
 	decalCounter = 0;
 
+	addEffectToList(0, 0, 0, EFFECT_TYPE::HSCPICKUP, vec3(50.87f, 1.6f, 10.7f), 0, 3.0f);
+
 	suicideMessages.push_back(" gave up on life.");
 	suicideMessages.push_back(" short circuited!");
 	suicideMessages.push_back(" had a battery attack!");
@@ -1685,6 +1687,9 @@ void Game::addEffectToList(int conID, int teamId, int effectId, EFFECT_TYPE et, 
 		break;
 	case EFFECT_TYPE::HEALTHPACK:
 		e = new HealthPack();
+		break;
+	case EFFECT_TYPE::HSCPICKUP:
+		e = new HSCPickup;
 		break;
 	}
 	e->init(conID, effectId, pos);

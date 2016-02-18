@@ -5,7 +5,7 @@ HSCPickup::HSCPickup() {}
 void HSCPickup::init(int pid, int eid, glm::vec3 position)
 {
 	type = EFFECT_TYPE::HSCPICKUP;
-	playerId = pid; effectId = eid; pos = position;
+	playerId = 254; effectId = eid; pos = position;
 }
 
 int HSCPickup::update(float dt)

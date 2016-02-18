@@ -1976,6 +1976,17 @@ void Core::renderWorld(float dt)
 					renderPipe->renderExploEffect(&pos.x, eff[i]->getInterestingVariable(), 0, &dgColor.x);
 				}
 				break;
+				case HSCPICKUP:
+				{
+					HSCPickup* temp = (HSCPickup*)eff[i];
+					if (!temp->onCooldown())
+					{
+						vec3 pos = eff[i]->getPos();
+						dgColor = vec3(1.0f, 0, 1.0f);
+						renderPipe->renderExploEffect(&pos.x, eff[i]->getInterestingVariable(), 0, &dgColor.x);
+					}
+				}
+				break;
 				}
 			}
 		}
