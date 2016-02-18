@@ -2235,7 +2235,7 @@ void Game::handleBulletHitEffectEvent(BulletHitEffectInfo hi)
 			{
 				if (hi.bt == (BULLET_TYPE::LINK_SHOT))
 				{
-					addEffectToList(hi.effectPID, hi.bulletTeam, hi.effectID, EFFECT_TYPE::EXPLOSION, e->getPos(), 30, 10.0f);
+					addEffectToList(hi.effectPID, hi.bulletTeam, hi.effectID, EFFECT_TYPE::EXPLOSION, e->getPos(), 30, 8.0f);
 					if (GetSound())
 					{
 						GetSound()->playExternalSound(SOUNDS::soundEffectClusterGrenade, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
