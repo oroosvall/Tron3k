@@ -12,8 +12,8 @@ private:
 public:
 	HSCPickup();
 	void init(int pid, int eid, glm::vec3 position);
-	//void setInterestingVariable(float f) { exploRadius = f; }
-	//float getInterestingVariable() { return exploRadius; }
+	void setInterestingVariable(float f) { rad = f; }
+	float getInterestingVariable() { return rad; }
 	int update(float dt);
 
 	bool onCooldown();

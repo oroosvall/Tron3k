@@ -13,7 +13,7 @@ int HSCPickup::update(float dt)
 	cooldown -= dt;
 	if (cooldown < FLT_EPSILON)
 	{
-		return 1;
+		return 0;
 	}
 	return 0;
 }

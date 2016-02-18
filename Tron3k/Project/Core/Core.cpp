@@ -1892,7 +1892,6 @@ void Core::renderWorld(float dt)
 			for (unsigned int i = 0; i < eff.size(); i++)
 			{
 				EFFECT_TYPE type = eff[i]->getType();
-
 				int pid, eid;
 				eff[i]->getId(pid, eid);
 				int team = eff[i]->getTeam();

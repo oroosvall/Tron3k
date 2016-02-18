@@ -1690,7 +1690,7 @@ void Game::addEffectToList(int conID, int teamId, int effectId, EFFECT_TYPE et, 
 		e = new HealthPack();
 		break;
 	case EFFECT_TYPE::HSCPICKUP:
-		e = new HSCPickup;
+		e = new HSCPickup();
 		break;
 	}
 	e->init(conID, effectId, pos);
@@ -1770,7 +1770,7 @@ void Game::addEffectToPhysics(Effect* effect)
 		eBox.push_back(effect->getPos().y);
 		eBox.push_back(effect->getPos().z);
 		eBox.push_back(effect->getInterestingVariable());
-		physics->receiveEffectBox(eBox, EFFECT_TYPE::HEALTHPACK, pid, eid);
+		physics->receiveEffectBox(eBox, EFFECT_TYPE::HSCPICKUP, pid, eid);
 		break;
 	}
 }
