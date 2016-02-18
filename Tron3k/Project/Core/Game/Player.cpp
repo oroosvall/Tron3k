@@ -436,7 +436,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 {
 	diedThisFrame = false;
 	PLAYERMSG msg = NONE;
-	if (role.getRole() != NROFROLES)
+	if (role.getRole() != NROFROLES || spectating)
 	{
 		modifiersGetData(dt); //Dont Remove Please!
 
