@@ -1904,6 +1904,7 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 			{
 				if (hi.et == EFFECT_TYPE::HEALTHPACK)
 					GetSound()->playExternalSound(SOUNDS::soundEffectHP, pos.x, pos.y, pos.z);
+				
 				else if (hi.et != EFFECT_TYPE::BATTERY_SLOW && hi.et != EFFECT_TYPE::BATTERY_SPEED)
 				{
 					if(!p->isLocal())
@@ -2015,6 +2016,11 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 				p->getRole()->setSpecialMeter(100);
 				p->getRole()->getConsumable()->reset();
 				tester->startCooldown();
+
+				if (gameState != SERVER && GetSound() && hi.playerHit == localPlayerId)
+				{
+					GetSound()->playExternalSound(SOUNDS::soundEffectHSCPickup, pos.x, pos.y, pos.z);
+				}
 			}
 		}
 			break;
