@@ -41,7 +41,7 @@ float gMatSpecularIntensity = 0.4;
 void main()
 {
 	fragment_color = vec4(0);
-	float size = 5.0f;
+	float size = lights[pointlightID].attenuation.w;
 	
 	vec2 UV = gl_FragCoord.xy / gScreenSize;
 	//fragment_color = vec4(lights[spotlightID].Color, 1) * 0.1 + texture(Diffuse, UV);
@@ -72,12 +72,12 @@ void main()
 			if (SpecularFactor > 0)
 			{
 				float Distance = length(Position0.xyz - lights[pointlightID].Position);
-				float Attenuation = 1.0f / pow(max(0.0f, 1.0f - (Distance/80)), 5);
+				float Attenuation = 1.0f / pow(max(0.0f, 1.0f - (Distance/size)), lights[pointlightID].AmbientIntensity);
 				specularAddetive = (vec4(lights[pointlightID].Color, 1.0f) * ( 1 - Normal0.w) * SpecularFactor) / Attenuation;
 			}
 		
 			//pointlight attenuations
-			fragment_color *= pow(max(0.0f, 1.0f - (Distance/80)), 10);
+			fragment_color *= pow(max(0.0f, 1.0f - (Distance/size)), lights[pointlightID].AmbientIntensity);
 		
 			Diffuse0 = texture(Diffuse, UV);
 			fragment_color = fragment_color * Diffuse0 + specularAddetive;
