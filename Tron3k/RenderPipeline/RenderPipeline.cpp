@@ -165,6 +165,8 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 	uiQuad.Init(vec3(-1, -1, 0), vec3(1, 1, 0));
 
+	animTexture.Init();
+
 	//glGenBuffers(1, &decal_struct_UBO);
 	//int maxDecals = 50;
 	//glBindBuffer(GL_UNIFORM_BUFFER, decal_struct_UBO);
@@ -508,6 +510,8 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	contMan.update(dt);
 
 	updateTakeDamageEffect(dt);
+
+	animTexture.Update(dT);
 
 	gBuffer->eyePosLast = gBuffer->eyePos;
 	gBuffer->eyePos.x = x;

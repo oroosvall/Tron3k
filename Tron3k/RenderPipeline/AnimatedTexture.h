@@ -30,7 +30,7 @@ public:
 	~AnimatedTexture();
 	void Release();
 
-	void Initialize(int);
+	void Initialize();
 	void Update(float);
 
 	GLuint m_shader;

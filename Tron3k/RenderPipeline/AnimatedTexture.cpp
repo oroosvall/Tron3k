@@ -8,7 +8,7 @@ AnimatedTexture::~AnimatedTexture()
 {
 }
 
-void AnimatedTexture::Initialize(int amount)
+void AnimatedTexture::Initialize()
 {
 
 /*	AnimatedObject sign;
