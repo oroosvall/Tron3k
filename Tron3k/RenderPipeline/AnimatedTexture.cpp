@@ -57,3 +57,17 @@ void AnimatedTexture::Update(float dT)
 		}
 	}
 }
+
+void AnimatedTexture::Render()
+{
+	for (int i = 0; i < objects.size(); i++)
+	{
+		AnimatedObject* o = &objects[i];
+
+		glDisable(GL_BLEND);
+		glUseProgram(m_shader);
+		glProgramUniform1f(m_shader, shaderOffset, o->offset);
+		//actually render
+
+	}
+}

@@ -312,7 +312,7 @@ void RenderPipeline::reloadShaders()
 	//CreateProgram(temp, shaderNamesWater, shaderTypesWater, 2);
 	if (temp != 0)
 	{
-		waterShader = temp;
+		animatedTexShader = temp;
 		temp = 0;
 	}
 
@@ -468,7 +468,7 @@ void RenderPipeline::release()
 	glDeleteShader(animationShader);
 	glDeleteShader(uiShader);
 	glDeleteShader(decal_Shader);
-	glDeleteShader(waterShader);
+	glDeleteShader(animatedTexShader);
 	uiQuad.release();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -963,10 +963,7 @@ void RenderPipeline::renderCapturePoint(int capPointID)
 
 void RenderPipeline::renderAnimatedTexture()
 {
-	//uvAnim = uvAnim + 0.1f * delta;
-	glDisable(GL_BLEND);
-	glUseProgram(waterShader);
-	glProgramUniform1f(waterShader, uniformUVAnim, uvAnim);
+	//animTexture.Render();
 }
 
 void RenderPipeline::renderAnimation(int playerID, int roleID, void* world, AnimationState animState, float* dgColor, float sgInten, bool first, bool primary, int roomID)

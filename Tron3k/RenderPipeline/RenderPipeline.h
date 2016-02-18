@@ -84,6 +84,9 @@ private:
 	GLuint portal_World;
 	GLuint portal_VP;
 
+	GLuint animatedTexShader;
+	GLuint uniformAnimatedTex;
+
 	BlitQuad uiQuad;
 
 	GLuint worldMat[2];
@@ -106,10 +109,6 @@ private:
 	GLuint uniformGlowSelf;
 
 	GLuint uniformKeyMatrixLocation;
-
-	GLuint waterShader;
-	GLuint uniformUVAnim;
-	float uvAnim = 0.0f;
 
 	//particle shaders
 	GLuint particleCS;

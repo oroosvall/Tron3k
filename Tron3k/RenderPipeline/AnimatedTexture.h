@@ -19,7 +19,6 @@ struct AnimatedObject
 	float offset;
 	float timer;
 	float maxtimer;
-
 	float segments;
 };
 
@@ -32,6 +31,7 @@ public:
 
 	void Init();
 	void Update(float);
+	void Render();
 
 	GLuint m_shader;
 	GLuint shaderOffset;
