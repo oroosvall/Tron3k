@@ -116,6 +116,7 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->soundList[SOUNDS::soundEffectBigExplosion].loadFromFile("GameFiles/Sound/soundEffectBigExplosion.ogg");
 		singleton->soundList[SOUNDS::soundEffectFieldsStereo].loadFromFile("GameFiles/Sound/soundEffectFieldsStereo.ogg");
 		singleton->soundList[SOUNDS::soundEffectFields].loadFromFile("GameFiles/Sound/soundEffectFields.ogg");
+		singleton->soundList[SOUNDS::soundEffectBatteryFields].loadFromFile("GameFiles/Sound/soundEffectBatteryFields.ogg");
 		initialized = true;
 	}
 }

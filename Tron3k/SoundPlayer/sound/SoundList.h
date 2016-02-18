@@ -93,6 +93,7 @@ enum SOUNDS
 	soundEffectBigExplosion,
 	soundEffectFieldsStereo,
 	soundEffectFields,
+	soundEffectBatteryFields,
 
 	nrOfSounds //leave last
 };
