@@ -96,6 +96,7 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool spectatin
 	{
 		GetSound()->setLocalPlayerPos(cam->getPos());
 		GetSound()->setLocalPlayerDir(cam->getDir());
+		cout << cam->getPos().x << "      " << cam->getPos().z << endl;
 	}
 
 	if ((vel.x != 0 || vel.z != 0) && this->grounded)
@@ -721,8 +722,8 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 
 
-			//if (i->justPressed(GLFW_KEY_O))
-				//role.setHealth(0);
+			if (i->justPressed(GLFW_KEY_O))
+				role.setHealth(0);
 
 			if (role.getHealth() <= 0 && !isDead && role.getRole() != ROLES::NROFROLES)
 			{
