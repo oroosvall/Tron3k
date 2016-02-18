@@ -725,7 +725,7 @@ void Game::checkPlayerVEffectCollision()
 	if (gameState == Gamestate::ROAM || gameState == Gamestate::SERVER)
 	{
 		//Collision for all non-wall effects
-
+		bool notDoingWrongThings = true;
 		for (int j = 0; j < max_con; j++)
 		{
 			if (playerList[j] != nullptr)
@@ -744,16 +744,28 @@ void Game::checkPlayerVEffectCollision()
 								collNormals = physics->checkPlayerVEffectCollision(playerList[j]->getPos(), t, eid);
 								if (collNormals != vec4(0, 0, 0, 0))
 								{
-									effects[t][i]->thisPlayerHit(j);
-									EffectHitPlayerInfo hi;
-									hi.playerHit = j;
-									hi.effectPID = pid;
-									hi.effectID = eid;
-									hi.et = EFFECT_TYPE(t);
-									hi.hitPos = effects[t][i]->getPos();
-									hi.playerPos = playerList[j]->getPos();
-									hi.newHPtotal = -1;
-									allEffectHitsOnPlayers.push_back(hi);
+									if (effects[t][i]->getType() == EFFECT_TYPE::HSCPICKUP)
+									{
+										HSCPickup* temp = (HSCPickup*)effects[t][i];
+										if (temp->onCooldown())
+										{
+											notDoingWrongThings = false;
+										}
+									}
+									if (notDoingWrongThings)
+									{
+										effects[t][i]->thisPlayerHit(j);
+										EffectHitPlayerInfo hi;
+										hi.playerHit = j;
+										hi.effectPID = pid;
+										hi.effectID = eid;
+										hi.et = EFFECT_TYPE(t);
+										hi.hitPos = effects[t][i]->getPos();
+										hi.playerPos = playerList[j]->getPos();
+										hi.newHPtotal = -1;
+										allEffectHitsOnPlayers.push_back(hi);
+									}
+									
 								}
 							}
 						}
