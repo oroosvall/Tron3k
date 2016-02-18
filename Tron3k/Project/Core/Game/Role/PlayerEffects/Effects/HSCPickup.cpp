@@ -13,6 +13,15 @@ int HSCPickup::update(float dt)
 {
 	if(cooldown > -FLT_EPSILON)
 		cooldown -= dt;
+	if (!resetted)
+	{
+		if (cooldown < FLT_EPSILON)
+		{
+			resetted = true;
+			playersHitByMe.clear();
+		}
+	}
+
 	return 0;
 }
 

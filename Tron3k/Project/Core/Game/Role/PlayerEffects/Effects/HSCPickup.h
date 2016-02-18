@@ -6,9 +6,10 @@
 class HSCPickup : public Effect
 {
 private:
-	float rad = 6.0f;
-	float maxCooldown = 20.0f;
+	float rad = 3.0f;
+	float maxCooldown = 30.0f;
 	float cooldown = maxCooldown;
+	bool resetted = true;
 public:
 	HSCPickup();
 	void init(int pid, int eid, glm::vec3 position);
@@ -17,7 +18,7 @@ public:
 	int update(float dt);
 
 	bool onCooldown();
-	void startCooldown() { cooldown = maxCooldown; };
+	void startCooldown() { cooldown = maxCooldown; resetted = false; };
 	float getCooldown() { return cooldown; };
 	float renderRad();
 	void setTeam() { teamId = 0; };
