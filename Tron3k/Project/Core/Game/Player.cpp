@@ -923,11 +923,11 @@ void Player::reloadCurrentWeapon()
 	{
 		if (GetSound())
 		{
-			if (this->role.getRole() == 0)
+			if (animRole == 0)
 				GetSound()->playUserGeneratedSound(SOUNDS::soundEffectTrapperReload);
-			else if (this->role.getRole() == 2)
+			else if (animRole == 2)
 				GetSound()->playUserGeneratedSound(SOUNDS::soundEffectStalkerReload);
-			else if (this->role.getRole() == 3)
+			else if (animRole == 3)
 				GetSound()->playUserGeneratedSound(SOUNDS::soundEffectPunisherReload);
 
 		}
