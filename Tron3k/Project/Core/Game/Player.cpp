@@ -96,7 +96,6 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool spectatin
 	{
 		GetSound()->setLocalPlayerPos(cam->getPos());
 		GetSound()->setLocalPlayerDir(cam->getDir());
-		cout << cam->getPos().x << "      " << cam->getPos().z << endl;
 	}
 
 	if ((vel.x != 0 || vel.z != 0) && this->grounded)
