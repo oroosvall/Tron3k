@@ -49,7 +49,7 @@ void main()
 	vec3 LightDirection = Position0.xyz - lights[spotlightID].Position;
 	float Distance = length(LightDirection);
 	
-	float spotlength = 5.0f * 1.5f;
+	float spotlength = lights[spotlightID].attenuation.z;
 	
 	if(Distance < spotlength)
 	{
@@ -93,5 +93,5 @@ void main()
 		}
 		
 	}
-	//fragment_color += vec4(lights[spotlightID].Color, 1) * 0.1f;
+	fragment_color += vec4(lights[spotlightID].Color, 1) * 0.1f;
 }
