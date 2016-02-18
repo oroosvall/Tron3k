@@ -1,9 +1,11 @@
 #include "ParticleSystem.h"
 
-void ParticleSystem::Initialize(glm::vec3 pos, ParticleSystemData* ps, GLuint* program)
+void ParticleSystem::Initialize(glm::vec3 pos, ParticleSystemData* ps, GLuint* program, ParticleShaderLocations* pLoc)
 {
 	m_program = program;
 	m_data = ps;
+
+	m_loc = pLoc;
 
 	m_size = glm::vec2(m_data->width, m_data->height);
 
@@ -44,25 +46,14 @@ void ParticleSystem::Initialize(glm::vec3 pos, ParticleSystemData* ps, GLuint* p
 	//iDir
 	glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4) * 3, BUFFER_OFFSET(sizeof(float) * 8));
 
-
-	deltaTime = glGetUniformLocation(*m_program, "deltaTime");
-	lifetime = glGetUniformLocation(*m_program, "lifetime");
-	force = glGetUniformLocation(*m_program, "force");
-	drag = glGetUniformLocation(*m_program, "drag");
-	gravity = glGetUniformLocation(*m_program, "gravity");
-	emission = glGetUniformLocation(*m_program, "emission");
-	continuous = glGetUniformLocation(*m_program, "continuous");
-	omni = glGetUniformLocation(*m_program, "omni");
-	initialPos = glGetUniformLocation(*m_program, "initialPos");
-
-	glProgramUniform1f(*m_program, lifetime, m_data->lifetime);
-	glProgramUniform1f(*m_program, force, m_data->force);
-	glProgramUniform1f(*m_program, drag, m_data->drag);
-	glProgramUniform1f(*m_program, gravity, m_data->gravity);
-	glProgramUniform1i(*m_program, emission, m_data->emission);
-	glProgramUniform1f(*m_program, continuous, m_data->continuous);
-	glProgramUniform1f(*m_program, omni, m_data->omni);
-	glProgramUniform3f(*m_program, initialPos, pos.x, pos.y, pos.z);
+	glProgramUniform1f(*m_program, m_loc->lifetime, m_data->lifetime);
+	glProgramUniform1f(*m_program, m_loc->force, m_data->force);
+	glProgramUniform1f(*m_program, m_loc->drag, m_data->drag);
+	glProgramUniform1f(*m_program, m_loc->gravity, m_data->gravity);
+	glProgramUniform1i(*m_program, m_loc->emission, m_data->emission);
+	glProgramUniform1f(*m_program, m_loc->continuous, m_data->continuous);
+	glProgramUniform1f(*m_program, m_loc->omni, m_data->omni);
+	glProgramUniform3f(*m_program, m_loc->initialPos, pos.x, pos.y, pos.z);
 	
 	m_pos = pos;
 
@@ -87,29 +78,19 @@ void ParticleSystem::Update(float dT)
 		emit = 0;
 	}
 
-	deltaTime = glGetUniformLocation(*m_program, "deltaTime");
-	lifetime = glGetUniformLocation(*m_program, "lifetime");
-	force = glGetUniformLocation(*m_program, "force");
-	drag = glGetUniformLocation(*m_program, "drag");
-	gravity = glGetUniformLocation(*m_program, "gravity");
-	emission = glGetUniformLocation(*m_program, "emission");
-	continuous = glGetUniformLocation(*m_program, "continuous");
-	omni = glGetUniformLocation(*m_program, "omni");
-	initialPos = glGetUniformLocation(*m_program, "initialPos");
-
-	glProgramUniform1f(*m_program, lifetime, m_data->lifetime);
-	glProgramUniform1f(*m_program, force, m_data->force);
-	glProgramUniform1f(*m_program, drag, m_data->drag);
-	glProgramUniform1f(*m_program, gravity, m_data->gravity);
-	glProgramUniform1i(*m_program, emission, m_data->emission);
-	glProgramUniform1f(*m_program, continuous, m_data->continuous);
-	glProgramUniform1f(*m_program, omni, m_data->omni);
-	glProgramUniform3f(*m_program, initialPos, m_pos.x, m_pos.y, m_pos.z);
+	glProgramUniform1f(*m_program, m_loc->lifetime, m_data->lifetime);
+	glProgramUniform1f(*m_program, m_loc->force, m_data->force);
+	glProgramUniform1f(*m_program, m_loc->drag, m_data->drag);
+	glProgramUniform1f(*m_program, m_loc->gravity, m_data->gravity);
+	glProgramUniform1i(*m_program, m_loc->emission, m_data->emission);
+	glProgramUniform1f(*m_program, m_loc->continuous, m_data->continuous);
+	glProgramUniform1f(*m_program, m_loc->omni, m_data->omni);
+	glProgramUniform3f(*m_program, m_loc->initialPos, m_pos.x, m_pos.y, m_pos.z);
 
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, m_vbo);
 
-	glProgramUniform1f(*m_program, deltaTime, dT);
-	glProgramUniform1i(*m_program, emission, emit);
+	glProgramUniform1f(*m_program, m_loc->deltaTime, dT);
+	glProgramUniform1i(*m_program, m_loc->emission, emit);
 
 	glDispatchCompute(1, 1, 1);
 }

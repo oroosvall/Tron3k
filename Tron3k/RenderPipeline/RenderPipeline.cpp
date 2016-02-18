@@ -192,7 +192,7 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	//Read Particle System
 	file.read((char*)&pdata, sizeof(ParticleSystemData));
 
-	particleTest.Initialize(glm::vec3(0,5,0), &pdata, &particleCS);
+	particleTest.Initialize(glm::vec3(0,5,0), &pdata, &particleCS, &pLoc);
 
 	initialized = true;
 	return true;
@@ -433,6 +433,18 @@ void RenderPipeline::reloadShaders()
 		particleCS = temp;
 		temp = 0;
 	}
+
+	pLoc = {
+		(GLuint)glGetUniformLocation(particleCS, "deltaTime"),
+		(GLuint)glGetUniformLocation(particleCS, "lifetime"),
+		(GLuint)glGetUniformLocation(particleCS, "force"),
+		(GLuint)glGetUniformLocation(particleCS, "drag"),
+		(GLuint)glGetUniformLocation(particleCS, "gravity"),
+		(GLuint)glGetUniformLocation(particleCS, "emission"),
+		(GLuint)glGetUniformLocation(particleCS, "continuous"),
+		(GLuint)glGetUniformLocation(particleCS, "omni"),
+		(GLuint)glGetUniformLocation(particleCS, "initialPos"),
+	};
 
 	std::cout << "Done loading shaders\n";
 

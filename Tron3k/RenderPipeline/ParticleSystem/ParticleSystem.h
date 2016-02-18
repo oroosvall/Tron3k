@@ -8,7 +8,7 @@
 class ParticleSystem
 {
 public:
-	void Initialize(glm::vec3, ParticleSystemData*, GLuint*);
+	void Initialize(glm::vec3, ParticleSystemData*, GLuint*, ParticleShaderLocations*);
 	void Update(float);
 	void Draw();
 
@@ -20,6 +20,8 @@ private:
 	ParticleSystemData* m_data;
 	std::vector<Particle> m_vertices;
 
+	ParticleShaderLocations* m_loc;
+
 	glm::vec3 m_pos;
 
 	float m_currentEmission;
@@ -28,16 +30,5 @@ private:
 	GLuint* m_program;	//shaders
 	GLuint m_vbo;
 	GLuint m_vao;
-
-	GLuint lifetime;
-	GLuint deltaTime;
-	GLuint force;
-	GLuint drag;
-	GLuint gravity;
-	GLuint emission;
-	GLuint continuous;
-	GLuint omni;		
-	GLuint initialPos;
-	GLuint bufferLocation;
 };
 #endif

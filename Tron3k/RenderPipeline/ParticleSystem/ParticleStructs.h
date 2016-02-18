@@ -27,3 +27,17 @@ struct ParticleSystemData
 	bool continuous;
 	bool omni;
 };
+
+typedef struct ParticleShaderLocations
+{
+	GLuint deltaTime;
+	GLuint lifetime;
+	GLuint force;
+	GLuint drag;
+	GLuint gravity;
+	GLuint emission;
+	GLuint continuous;
+	GLuint omni;
+	GLuint initialPos;
+
+} ParticleShaderLocations;

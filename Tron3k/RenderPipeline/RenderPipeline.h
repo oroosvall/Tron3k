@@ -110,6 +110,9 @@ private:
 
 	//particle shaders
 	GLuint particleCS;
+
+	ParticleShaderLocations pLoc;
+
 	GLuint particleShader;
 	GLuint particleSize;
 	GLuint particleViewProj;
