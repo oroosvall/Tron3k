@@ -511,7 +511,7 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 
 	updateTakeDamageEffect(dt);
 
-	animTexture.Update(dT);
+	//animTexture.Update(dt);
 
 	gBuffer->eyePosLast = gBuffer->eyePos;
 	gBuffer->eyePos.x = x;
