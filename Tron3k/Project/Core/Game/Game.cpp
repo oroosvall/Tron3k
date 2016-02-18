@@ -2399,6 +2399,10 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 		case BULLET_TYPE::VACUUM_GRENADE:
 		{
 			addEffectToList(PID, parent->getTeam(), BID, EFFECT_TYPE::VACUUM, parent->getPos(), 10, 4.0f);
+
+			if (GetSoundActivated())
+				GetSound()->playExternalSound(SOUNDS::soundEffectVacuumGrenade, parent->getPos().x, parent->getPos().y, parent->getPos().z);
+
 			break;
 		}
 		case BULLET_TYPE::THERMITE_GRENADE:
