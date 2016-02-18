@@ -11,10 +11,6 @@ void HSCPickup::init(int pid, int eid, glm::vec3 position)
 int HSCPickup::update(float dt)
 {
 	cooldown -= dt;
-	if (cooldown < FLT_EPSILON)
-	{
-		return 0;
-	}
 	return 0;
 }
 
