@@ -116,9 +116,28 @@ vec3 Physics::checkOBBvOBBCollision(CollideMesh mesh1, CollideMesh mesh2)
 	return collided;
 }
 
-vec3 Physics::checkOBBvCylinderCollision(CollideMesh mesh1, CollideMesh mesh2)
+vec3 Physics::checkOBBvCylinderCollision(Cylinder pMesh, OBB objMesh)
 {
 	glm::vec3 collided = glm::vec3(0, 0, 0);
+
+	//CIRCLE V PLANEEEEEEEEEEEEEEEEEEEEEEEEE
+
+	vec3 cNormal = vec3(0, 1, 0);
+	vec3 pNorm = vec3(0);
+	vec3 ang = vec3(0);
+	for (int i = 0; i < 6; i++)
+	{
+		//TODO: ADD THINGS
+		pNorm = objMesh.planes[i].n;
+
+		ang = cross(cNormal, pNorm);
+
+		if (length(ang) < 0.001f) //planes are parallell
+		{
+
+		}
+	}
+
 	return collided;
 }
 

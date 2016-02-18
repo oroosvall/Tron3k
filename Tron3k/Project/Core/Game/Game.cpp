@@ -219,31 +219,7 @@ void Game::update(float dt)
 		}
 	}
 
-	if (gameState == Gamestate::ROAM)
-	{
-		checkEffectVEffectCollision();
-		checkPlayerVWorldCollision(dt);
-		checkBulletVWorldCollision(dt);
-		checkPlayerVEffectCollision();
-		checkBulletVEffectCollision(dt);
-		checkPlayerVCapCollision();
-	}
-	else if (gameState == Gamestate::CLIENT)
-	{
-		checkPvPCollision();
-		checkPlayerVWorldCollision(dt);
-		checkPlayerVEffectCollision();
-		checkFootsteps(dt);
-	}
-	else if (gameState == Gamestate::SERVER)
-	{
-		checkEffectVEffectCollision();
-		checkBulletVWorldCollision(dt);
-		checkPlayerVBulletCollision();
-		checkPlayerVEffectCollision();
-		checkBulletVEffectCollision(dt);
-		checkPlayerVCapCollision();
-	}
+	
 
 	for (unsigned int i = 0; i < BULLET_TYPE::NROFBULLETS; i++)
 	{
@@ -302,6 +278,32 @@ void Game::update(float dt)
 				removeEffect(EFFECT_TYPE(i), arraypos);
 			}
 		}
+	}
+
+	if (gameState == Gamestate::ROAM)
+	{
+		checkEffectVEffectCollision();
+		checkPlayerVWorldCollision(dt);
+		checkBulletVWorldCollision(dt);
+		checkPlayerVEffectCollision();
+		checkBulletVEffectCollision(dt);
+		checkPlayerVCapCollision();
+	}
+	else if (gameState == Gamestate::CLIENT)
+	{
+		checkPvPCollision();
+		checkPlayerVWorldCollision(dt);
+		checkPlayerVEffectCollision();
+		checkFootsteps(dt);
+	}
+	else if (gameState == Gamestate::SERVER)
+	{
+		checkEffectVEffectCollision();
+		checkBulletVWorldCollision(dt);
+		checkPlayerVBulletCollision();
+		checkPlayerVEffectCollision();
+		checkBulletVEffectCollision(dt);
+		checkPlayerVCapCollision();
 	}
 
 	for (int c = 0; c < max_con; c++)
