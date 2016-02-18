@@ -337,6 +337,7 @@ public:
 	float lastDT = 0;
 
 	void clearAllPlayerKD();
+	void resetAllPickups();
 };
 
 #endif

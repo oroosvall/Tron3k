@@ -471,6 +471,7 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 		}
 		else if (state == PREROUND)
 		{
+			gamePtr->resetAllPickups();
 			if (round == 1)
 				gamePtr->clearAllPlayerKD();
 

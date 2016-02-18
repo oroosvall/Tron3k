@@ -2598,3 +2598,14 @@ void Game::clearAllPlayerKD()
 			playerList[c]->clearKD();
 	}
 }
+
+void Game::resetAllPickups()
+{
+	int size = effects[EFFECT_TYPE::HSCPICKUP].size();
+	HSCPickup* temp;
+	for (int i = 0; i < size; i++)
+	{
+		temp = (HSCPickup*)effects[EFFECT_TYPE::HSCPICKUP][i];
+		temp->startCooldown();
+	}
+}
