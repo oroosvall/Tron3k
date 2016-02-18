@@ -163,21 +163,24 @@ void Map::renderChunk(GLuint shader, GLuint shaderLocation, GLuint diffuseLocati
 			tm->bindDefault(shader, glowLocation, GLOW_FB);
 
 		//glActiveTexture(GL_TEXTURE0);
+		//glProgramUniform1i(shader, diffuseLocation, 0);
 		//if(mat.textureMapIndex != -1)
 		//	glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].textureMapIndex].textureID);
 		//else
 		//	glBindTexture(GL_TEXTURE_2D, blank_diffuse);
 		//glActiveTexture(GL_TEXTURE0 + 1);
+		//glProgramUniform1i(shader, normalLocation, 1);
 		//if (mat.normalMapIndex != -1)
 		//	glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].normalMapIndex].textureID);
 		//else
 		//	glBindTexture(GL_TEXTURE_2D, blank_normal);
 		//glActiveTexture(GL_TEXTURE0 + 2);
+		//glProgramUniform1i(shader, glowLocation, 2);
 		//if (mat.specularMapIndex != -1)
 		//	glBindTexture(GL_TEXTURE_2D, tex[materials[meshes[meshID].material].specularMapIndex].textureID);
 		//else
 		//	glBindTexture(GL_TEXTURE_2D, blank_glow);
-		
+		//
 		glBindVertexArray(meshes[meshID].vertexArray);
 		glBindBuffer(GL_ARRAY_BUFFER, meshes[meshID].vertexBuffer);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshes[meshID].indexBuffer);

@@ -547,6 +547,10 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 		//ss << "State changes: " << stateChange << "\n";
 		ss << "Total uptime:" << timepass << "\n";
 		ss << "Dt:" << dt << "\n";
+
+		ss << "ManagerBinds:" << texManBinds << "\n";
+		ss << "OtherBinds:" << illegalBinds << "\n";
+
 		//ss << result << "\n";
 		if (counter > 0.0001f)
 		{
@@ -566,6 +570,9 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	bufferBinds = 0;
 	shaderBinds = 0;
 	stateChange = 0;
+
+	texManBinds = 0;
+	illegalBinds = 0;
 
 	startTimer("Frame : Total");
 	renderFrameTimeID = startTimer("Frame : Render only");
@@ -1211,7 +1218,7 @@ void RenderPipeline::ui_renderQuad(float* mat, float* pivot, GLuint textureID, f
 		temp.lastTextureSlot = GL_TEXTURE0;
 		temp.textureID = textureID;
 		TextureManager::gTm->bind(temp, uiShader, ui_Texture);
-		glBindTexture(GL_TEXTURE_2D, textureID);
+		//glBindTexture(GL_TEXTURE_2D, textureID);
 		glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, mat);
 		glProgramUniform3fv(uiShader, uniformPivotLocation, 1, pivot);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);

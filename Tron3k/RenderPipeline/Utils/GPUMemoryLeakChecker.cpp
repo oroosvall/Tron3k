@@ -33,6 +33,9 @@ unsigned int shaderBinds = 0;
 
 unsigned int stateChange = 0;
 
+ unsigned int texManBinds;
+ unsigned int illegalBinds;
+
 GLuint lastProgram = 0;
 GLenum currentActiveTexture = GL_TEXTURE0;
 
@@ -222,8 +225,17 @@ void glActiveTexture_D(GLenum texture)
 	}
 }
 
-void glBindTexture_D(GLenum target, GLuint texture)
+void glBindTexture_D(GLenum target, GLuint texture,const char* funcName)
 {
+	if (!(funcName == "bind" || funcName == "bindDefault"))
+	{
+		//printf("I blame you for broken stuff %s\n", funcName);
+		illegalBinds++;
+	}
+	else
+	{
+		texManBinds++;
+	}
 	//if (textureBindMap[currentActiveTexture - GL_TEXTURE0] != texture)
 	//{
 		textureBinds++;
@@ -515,7 +527,7 @@ void glDisable_D(GLenum state)
 #define glBufferData(target, size, data, usage) glBufferData_D(target, size, data, usage)
 
 #define glActiveTexture(texture) glActiveTexture_D(texture)
-#define glBindTexture(target, texture) glBindTexture_D(target, texture)
+#define glBindTexture(target, texture) glBindTexture_D(target, texture, __func__)
 
 #define glBindBuffer(target, buffer)	glBindBuffer_D(target, buffer) 
 

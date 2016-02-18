@@ -65,14 +65,14 @@ void TextureManager::update(float dt)
 		if (textureList[i].state == TEXTURE_LOADED)
 		{
 			textureList[i].timeNotUsed += dt;
-			if (textureList[i].timeNotUsed > 30.0f)
-			{
-				printf("Texture %d have not been used for 30 seconds unloading\n", i);
-				glDeleteTextures(1, &textureList[i].textureID);
-				textureList[i].textureID = 0;
-				textureList[i].state = TEXTURE_UNLOADED;
-				textureList[i].timeNotUsed = 0.0f;
-			}
+			//if (textureList[i].timeNotUsed > 30.0f)
+			//{
+			//	printf("Texture %d have not been used for 30 seconds unloading\n", i);
+			//	glDeleteTextures(1, &textureList[i].textureID);
+			//	textureList[i].textureID = 0;
+			//	textureList[i].state = TEXTURE_UNLOADED;
+			//	textureList[i].timeNotUsed = 0.0f;
+			//}
 		}
 	}
 
@@ -195,7 +195,7 @@ void TextureManager::bindDefault(GLuint shader, GLuint textureLocation, TEXTURE_
 	//f (textureSlotBinds[*slot - GL_TEXTURE0] != texture)
 	//
 		*slot = GL_TEXTURE0 + textureUnitCounter;
-		textureUnitCounter = ((textureUnitCounter + 1) % maxTextureUnitSize);
+		textureUnitCounter = ((textureUnitCounter + 1) % (maxTextureUnitSize-1));
 
 	//	textureSlotBinds[*slot - GL_TEXTURE0] = texture;
 	//}
@@ -210,12 +210,12 @@ void TextureManager::bindDefault(GLuint shader, GLuint textureLocation, TEXTURE_
 void TextureManager::bind(TextureInfo &ti, GLuint shader, GLuint textureLocation)
 {
 	GLuint texture = ti.textureID;
-	GLuint slot = ti.lastTextureSlot;
+	GLuint slot = 0;// ti.lastTextureSlot;
 
 	//if (textureSlotBinds[slot - GL_TEXTURE0] != texture)
 	//{
 		slot = GL_TEXTURE0 + textureUnitCounter;
-		textureUnitCounter = ((textureUnitCounter + 1) % maxTextureUnitSize);
+		textureUnitCounter = ((textureUnitCounter + 1) % (maxTextureUnitSize-1));
 
 	//	textureSlotBinds[slot - GL_TEXTURE0] = texture;
 	//	ti.lastTextureSlot = slot;

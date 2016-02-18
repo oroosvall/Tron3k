@@ -22,7 +22,7 @@ struct SharedFileHDR
 	uint32_t SPCountTeamA;
 	uint32_t SPCountTeamB;
 	uint32_t SPCountTeamFFA;
-	//uint32_t particleSystemCount;
+	uint32_t particleSystemCount;
 };
 
 struct CharacterHeader

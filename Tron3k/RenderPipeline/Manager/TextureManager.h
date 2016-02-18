@@ -46,7 +46,6 @@ private:
 
 	GLuint* textureSlotBinds;
 	int maxTextureUnitSize;
-	int textureUnitCounter;
 
 	GLuint defaultDiffuse;
 	GLuint defaultNormal;
@@ -59,6 +58,8 @@ private:
 	GLuint defaultGlowSlot;
 
 public:
+
+	int textureUnitCounter;
 
 	void init();
 	void release();
