@@ -13,10 +13,9 @@ struct AnimatedObject
 	glm::mat4 worldMat;
 	int roomID;
 	int textureID;
-	int meshID;
 	int type;
 
-	float offset;
+	vec2 offsets;
 	float timer;
 	float maxtimer;
 
@@ -26,15 +25,20 @@ struct AnimatedObject
 class AnimatedTexture
 {
 public:
+	AnimatedObject test;
+
 	AnimatedTexture();
 	~AnimatedTexture();
 	void Release();
 
-	void Initialize(int);
+	void Initialize();
 	void Update(float);
+	void render();
 
-	GLuint m_shader;
-	GLuint shaderOffset;
+	GLuint animQuadShader;
+	GLuint animQuadUVset;
+	GLuint animQuadWorld;
+	GLuint animQuadVP;
 
 private:
 	std::vector<AnimatedObject> objects;

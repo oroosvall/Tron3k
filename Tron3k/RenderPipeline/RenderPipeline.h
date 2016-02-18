@@ -107,10 +107,6 @@ private:
 
 	GLuint uniformKeyMatrixLocation;
 
-	GLuint waterShader;
-	GLuint uniformUVAnim;
-	float uvAnim = 0.0f;
-
 	//particle shaders
 	GLuint particleCS;
 
@@ -203,8 +199,6 @@ public:
 	virtual void renderCrosshair(CROSSHAIR_TYPE cross);
 
 	virtual void renderCapturePoint(int capPointID);
-
-	virtual void renderAnimatedTexture();
 
 	virtual void forceReset() {};
 
