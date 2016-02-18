@@ -1987,6 +1987,19 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 			if (theEffect != nullptr)
 				removeEffect(EFFECT_TYPE::HEALTHPACK, effectPosInArray);
 			break;
+		case EFFECT_TYPE::HSCPICKUP:
+		{
+			HSCPickup* tester = (HSCPickup*)theEffect;
+			if (!tester->onCooldown())
+			{
+				if (gameState == SERVER)
+					p->setHP(p->getMaxHP());
+				p->getRole()->setSpecialMeter(100);
+				p->getRole()->getConsumable()->reset();
+				tester->startCooldown();
+			}
+		}
+			break;
 		default:
 			break;
 		}

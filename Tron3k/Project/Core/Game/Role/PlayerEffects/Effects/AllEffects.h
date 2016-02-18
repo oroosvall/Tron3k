@@ -11,5 +11,6 @@
 #include "BatteryFieldSpeed.h"
 #include "Vacuum.h"
 #include "CleanseNova.h"
+#include "HSCPickup.h"
 
 #endif
