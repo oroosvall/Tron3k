@@ -2001,6 +2001,15 @@ void Core::renderWorld(float dt)
 		renderPipe->disableDepthTest();
 		renderPipe->enableBlend();
 
+		renderPipe->renderCrosshair(CROSSHAIR_TRAPPER_P);
+
+		if (game->getPlayer(game->GetLocalPlayerId())->hitMarker > 0.0f)
+		{
+			renderPipe->renderCrosshair(CROSSHAIR_SHANKER_P);
+			game->getPlayer(game->GetLocalPlayerId())->hitMarker -= dt;
+		}
+		
+
 		//name rendering
 		if (current == CLIENT)
 		{

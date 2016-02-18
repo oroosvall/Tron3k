@@ -27,7 +27,6 @@ void ParticleSystem::Initialize(glm::vec3 pos, ParticleSystemData* ps, GLuint* p
 		m_vertices.push_back(p);
 	}
 
-
 	glGenBuffers(1, &m_vbo);
 	glGenVertexArrays(1, &m_vao);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);

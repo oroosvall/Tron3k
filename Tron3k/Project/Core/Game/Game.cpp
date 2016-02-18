@@ -1841,6 +1841,7 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 			Bullet* theBullet = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, bulletPosInArray);
 
 			p->hitByBullet(theBullet, hi.bt, hi.newHPtotal);
+			playerList[hi.bulletPID]->hitMarker = 0.25f;
 			if (p->getHP() == 0 && p->isAlive())
 			{
 				p->IdiedThisFrame();

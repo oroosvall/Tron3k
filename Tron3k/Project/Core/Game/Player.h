@@ -246,6 +246,8 @@ public:
 	int GetConsecutiveDeaths() { return this->consecutiveDeaths; };
 
 	bool allahuAkhbar();
+
+	float hitMarker;
 };
 
 #endif

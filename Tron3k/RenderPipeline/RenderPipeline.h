@@ -154,8 +154,10 @@ private:
 	mat4 minimapRenderMat;
 
 	Crosshair* cross;
+	Crosshair* crossHit;
 
 	GLuint crosshairTexture;
+	GLuint crosshairHitTexture;
 
 	ParticleSystem particleTest;
 	ParticleSystemData pdata;

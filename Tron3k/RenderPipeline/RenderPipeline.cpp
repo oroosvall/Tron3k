@@ -103,10 +103,14 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	chatText = new Text(chatHistoryText + chatTypeText, 11, fontTexture, vec2(10, 420));
 
 	cross = new Crosshair();
+	crossHit = new Crosshair();
 	unsigned int x, y;
 	crosshairTexture = TextureManager::gTm->createTexture("GameFiles/Textures/Crosshairs/Crosshair.png");
+	crosshairHitTexture = loadTexture("GameFiles/Textures/Crosshairs/Crosshair_hit.png");
 	bool success = TextureManager::gTm->PNGSize("GameFiles/Textures/Crosshairs/Crosshair.png", x, y);
 	cross->init(x, y);
+	success = TextureManager::gTm->PNGSize("GameFiles/Textures/Crosshairs/Crosshair_hit.png", x, y);
+	crossHit->init(x, y);
 
 	ptex = TextureManager::gTm->createTexture("GameFiles/Textures/Particles/arrow.png");
 
@@ -476,7 +480,9 @@ void RenderPipeline::release()
 	contMan.release();
 
 	cross->release();
+	crossHit->release();
 	delete cross;
+	delete crossHit;
 
 	particleTest.Release();
 
@@ -665,7 +671,6 @@ void RenderPipeline::finalizeRender()
 	
 	//uglyCrosshairSolution->draw();
 
-	renderCrosshair(CROSSHAIR_TRAPPER_P);
 	glDisable(GL_BLEND);
 
 	stopTimer(renderFrameTimeID);
@@ -799,12 +804,24 @@ void RenderPipeline::renderCrosshair(CROSSHAIR_TYPE cross)
 	glProgramUniformMatrix4fv(textShader, textShaderVP, 1, GL_FALSE, (GLfloat*)&glm::mat4());
 	glProgramUniform3f(textShader, textShaderOffset, 0, 0, 0);
 
-	//switch (cross)
-	//{
-	//case CROSSHAIR_TRAPPER_P:
-	//	break;
-	//case CROSSHAIR_SHANKER_P:
-	//	break;
+	switch (cross)
+	{
+	case CROSSHAIR_TRAPPER_P:
+		TextureManager::gTm->bindTexture(crosshairTexture, textShader, textShaderLocation, DIFFUSE_FB);
+		this->cross->draw();
+		break;
+	case CROSSHAIR_SHANKER_P:
+	{
+		TextureInfo asd;
+		asd.lastTextureSlot = GL_TEXTURE0;
+		asd.state = TEXTURE_LOADED;
+		asd.textureID = crosshairHitTexture;
+
+		TextureManager::gTm->bind(asd, textShader, textShaderLocation);
+
+		this->crossHit->draw();
+		break;
+	}
 	//case CROSSHAIR_SHANKER_S:
 	//	break;
 	//case CROSSHAIR_BRUTE_P:
@@ -813,12 +830,10 @@ void RenderPipeline::renderCrosshair(CROSSHAIR_TYPE cross)
 	//	break;
 	//case CROSSHAIR_NONE:
 	//	break;
-	//default:
-	//	break;
-	//}
-	TextureManager::gTm->bindTexture(crosshairTexture, textShader, textShaderLocation, DIFFUSE_FB);
-
-	this->cross->draw();
+	default:
+		break;
+	}
+	
 }
 
 void RenderPipeline::renderEffects()
@@ -1577,19 +1592,19 @@ void RenderPipeline::renderLightvolumes()
 {
 	//preformance test
 
-	//SpotLight light;
-	//light.Direction = vec3(0);
-	//light.DiffuseIntensity = 1.0f;
-	//vec3 origin = vec3(50, 0.5f, 63);
-	//for (int n = 0; n < 100; n++)
-	//{
-	//	light.Color = vec3(float(n) / 100.0f, 1 - float(n) / 100.0f, 0.5f);
-	//	light.Position = origin;
-	//	light.Position.x += sin(timepass + float(n) / 20.0f) * 20;
-	//	light.Position.y += sin(timepass * 4 + float(n) / 20.0f);
-	//	light.Position.z += cos(timepass + float(n) / 20.0f) * 20;
-	//	gBuffer->pushLights(&light, 1);
-	//}
+	SpotLight light;
+	light.Direction = vec3(0);
+	light.DiffuseIntensity = 1.0f;
+	vec3 origin = vec3(50, 0.5f, 63);
+	for (int n = 0; n < 100; n++)
+	{
+		light.Color = vec3(float(n) / 100.0f, 1 - float(n) / 100.0f, 0.5f);
+		light.Position = origin;
+		light.Position.x += sin(timepass + float(n) / 20.0f) * 20;
+		light.Position.y += sin(timepass * 4 + float(n) / 20.0f);
+		light.Position.z += cos(timepass + float(n) / 20.0f) * 20;
+		gBuffer->pushLights(&light, 1);
+	}
 
 	glUseProgram(gBuffer->spotVolShader);
 
