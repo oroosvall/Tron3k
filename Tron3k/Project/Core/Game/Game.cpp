@@ -1664,6 +1664,12 @@ void Game::handleSpecialAbilityUse(int conID, int teamId, int sID, SPECIAL_TYPE 
 	case SPECIAL_TYPE::CLEANSESPECIAL:
 	{
 		addEffectToList(conID, teamId, 0, EFFECT_TYPE::CLEANSENOVA, p->getPos(), 0, 0.0f);
+		if (conID == localPlayerId || conID == spectateID)
+		{
+			GetSound()->playExternalSound(SOUNDS::soundEffectCleanseNovaStereo, pos.x, pos.y, pos.z);
+		}
+		else
+			GetSound()->playExternalSound(SOUNDS::soundEffectCleanseNova, pos.x, pos.y, pos.z);
 	}
 	break;
 	}
@@ -1939,7 +1945,7 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 				if (hi.et == EFFECT_TYPE::HEALTHPACK)
 					GetSound()->playExternalSound(SOUNDS::soundEffectHP, pos.x, pos.y, pos.z);
 				
-				else if (hi.et != EFFECT_TYPE::BATTERY_SLOW && hi.et != EFFECT_TYPE::BATTERY_SPEED && hi.et != EFFECT_TYPE::HSCPICKUP)
+				else if (hi.et != EFFECT_TYPE::BATTERY_SLOW && hi.et != EFFECT_TYPE::BATTERY_SPEED && hi.et != EFFECT_TYPE::HSCPICKUP && hi.et != EFFECT_TYPE::CLEANSENOVA)
 				{
 					if(!p->isLocal())
 						GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHit, pos.x, pos.y, pos.z);
@@ -2294,6 +2300,9 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 				temp.y += temp.y*3.5f + 5.0f;
 				playerList[hi.bulletPID]->setVelocity(temp);
 				playerList[hi.bulletPID]->setGrounded(false);
+
+				if (GetSoundActivated())
+					GetSound()->playExternalSound(SOUNDS::soundEffectGrapplingHook, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
 
 				removeBullet(hi.bt, arraypos);
 				break;

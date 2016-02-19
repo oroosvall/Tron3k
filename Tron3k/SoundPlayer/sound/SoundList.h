@@ -95,6 +95,9 @@ enum SOUNDS
 	soundEffectFields,
 	soundEffectBatteryFields,
 	soundEffectHSCPickup,
+	soundEffectCleanseNova,
+	soundEffectCleanseNovaStereo,
+	soundEffectGrapplingHook,
 
 	nrOfSounds //leave last
 };

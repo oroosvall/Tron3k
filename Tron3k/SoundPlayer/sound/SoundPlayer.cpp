@@ -118,6 +118,9 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->soundList[SOUNDS::soundEffectFields].loadFromFile("GameFiles/Sound/soundEffectFields.ogg");
 		singleton->soundList[SOUNDS::soundEffectBatteryFields].loadFromFile("GameFiles/Sound/soundEffectBatteryFields.ogg");
 		singleton->soundList[SOUNDS::soundEffectHSCPickup].loadFromFile("GameFiles/Sound/soundEffectHSCPickup.ogg");
+		singleton->soundList[SOUNDS::soundEffectCleanseNova].loadFromFile("GameFiles/Sound/soundEffectCleanseNova.ogg");
+		singleton->soundList[SOUNDS::soundEffectCleanseNovaStereo].loadFromFile("GameFiles/Sound/soundEffectCleanseNovaStereo.ogg");
+		singleton->soundList[SOUNDS::soundEffectGrapplingHook].loadFromFile("GameFiles/Sound/soundEffectGrapplingHook.ogg");
 		initialized = true;
 	}
 }
@@ -731,6 +734,7 @@ void SoundPlayer::PlayStereoFootsteps(int role)
 
 	if (role == 4)
 	{
+		//cout << nrOfSoundsPlaying << endl;
 		playUserGeneratedSound(SOUNDS::soundStepsManipulatorStereo);
 	}
 
