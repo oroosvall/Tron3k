@@ -23,7 +23,7 @@ void AnimatedTexture::init()
 	objects.push_back(AnimatedObject());
 	objects[n].textureID = TextureManager::gTm->createTexture("GameFiles/Textures/animatedSigns/matrxtext.png");
 	objects[n].init_standing_down(vec3(94.8f, 22.3f + 20, 53.6f), vec3(94.8f, 14.3f + 10, 59.3f));
-	objects[n].init_time_segments(10, 0, 2.0f);
+	objects[n].init_time_segments(4, 0, 2.0f);
 
 	n++;
 	objects.push_back(AnimatedObject());
