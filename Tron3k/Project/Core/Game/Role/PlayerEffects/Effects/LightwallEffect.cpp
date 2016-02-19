@@ -38,6 +38,5 @@ int LightwallEffect::update(float dt)
 		if (expandDong)
 			endPoint = myPlayer->getPos();
 	}
-
 	return 0;
 }

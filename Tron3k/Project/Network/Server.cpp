@@ -344,6 +344,25 @@ void Server::in_new_connection(Packet* rec, Uint8 conID)
 		}
 	}
 
+	/*
+	SEND COOLDOWNS ON PICKUPS
+	*/
+	std::vector<Effect*> effects = gamePtr->getEffects(EFFECT_TYPE::HSCPICKUP);
+	HSCPickup* hsc = nullptr;
+	for (int c = 0; c < effects.size(); c++)
+	{
+		hsc = (HSCPickup*)effects[c];
+		*out << hsc->getCooldown();
+	}
+
+	effects = gamePtr->getEffects(EFFECT_TYPE::DOUBLEDAMAGEPICKUP);
+	DoubleDamagePickup* dd = nullptr;
+	for (int c = 0; c < effects.size(); c++)
+	{
+		dd = (DoubleDamagePickup*)effects[c];
+		*out << dd->getCooldown();
+	}
+
 	//reply to the connection
 	con[conID].send(out);
 	delete out;
