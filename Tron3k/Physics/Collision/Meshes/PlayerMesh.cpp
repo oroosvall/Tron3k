@@ -11,9 +11,9 @@ PlayerMesh::PlayerMesh()
 	aabb.min = vec3(-1, -1, -1);
 
 	cylinder.height = 1.0f;
-	cylinder.radius = 1.0f;
+	cylinder.radius = 0.5f;
 
-	sphere.radius = 1.0f;
+	sphere.radius = 0.5f;
 }
 
 PlayerMesh::PlayerMesh(vec3 pos)
@@ -27,9 +27,9 @@ PlayerMesh::PlayerMesh(vec3 pos)
 	aabb.min = pos + vec3(-1, -1, -1);
 
 	cylinder.height = 1.0f;
-	cylinder.radius = 1.0f;
+	cylinder.radius = 0.5f;
 
-	sphere.radius = 1.0f;
+	sphere.radius = 0.5f;
 }
 
 PlayerMesh::PlayerMesh(vec3 pos, AABBSingle aabb, Sphere sphere, Cylinder cylinder)

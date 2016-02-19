@@ -126,8 +126,8 @@ vec4 Physics::checkOBBvCylinderCollision(Cylinder pMesh, OBB objMesh)
 	vec3 pNorm = vec3(0);
 	vec3 ang = vec3(0);
 
-	vec3 cylLine = (pMesh.pos + (pMesh.height / 2)) - (pMesh.pos - (pMesh.height / 2));
-
+	vec3 cylLine = (pMesh.pos + (pMesh.height)) - (pMesh.pos - (pMesh.height));
+	objMesh.setPlanes();
 	for (int i = 0; i < 6; i++)
 	{
 		//TODO: ADD THINGS
@@ -135,52 +135,56 @@ vec4 Physics::checkOBBvCylinderCollision(Cylinder pMesh, OBB objMesh)
 
 		ang = cross(cNormal, pNorm);
 
-		vec3 lvP = checkLinevPlaneCollision((pMesh.pos + (pMesh.height / 2)), (pMesh.pos - (pMesh.height / 2)), objMesh.planes[i].p[0], objMesh.planes[i].p[1], objMesh.planes[i].p[2], objMesh.planes[i].n);
+		vec3 pMax = pMesh.pos;
+		vec3 pMin = pMesh.pos;
+		pMax.y += pMesh.height;
+		pMin.y -= pMesh.height;
+		vec3 lvP = checkLinevPlaneCollision(pMin, pMax, objMesh.planes[i].p[0], objMesh.planes[i].p[1], objMesh.planes[i].p[2], objMesh.planes[i].n);
 
 		if (length(lvP) > 0.00001f)
-			if (dot(lvP - objMesh.planes[i].p[0], objMesh.planes[i].n) < 0.01f)
+		{
+		//	if (dot(lvP - objMesh.planes[i].p[0], objMesh.planes[i].n) < 0.01f)
 			{
-				if (dot(normalize(lvP), objMesh.planes[i].n) < 0.0f)
+				//if (dot(normalize(lvP), objMesh.planes[i].n) < 0.0f)
 					//if (length(bPos - sPos) > (length((lvP/* - (bulletDir * rad)*/)-sPos)))
 						//bPos = lvP;// -theOBB->planes[p].n * rad;// - bulletDir * rad;
 
-					collided = vec4(normalize(lvP), length(lvP));
+					collided = vec4(normalize(lvP - pMin), length(lvP - pMin));
 			}
-
-		if (length(collided) > 0.001f)
-		{
-			//we have collided with a plane above/beneath us
-			return collided;
+			
 		}
-		else
-		{
-			//now we will check the sides... oh boy
-			//we do this by checking from pos and count it as a sphere, I guess?
-			vec4 norm = getSpherevOBBNorms(pMesh.pos, pMesh.radius, &objMesh);
-			//vec3 dir = normalize(vec3(t));
-			//norm.w = pMesh.radius - norm.w; //penetration depth instead of collision distance 
-			if (norm.w + FLT_EPSILON >= 0 - FLT_EPSILON && norm.w - FLT_EPSILON <= pMesh.radius + FLT_EPSILON)
-			{
-				//t = vec4(dir, t.w + 0.2f);
-				//bulletPos = bPos;
-				return norm;
-			}
-		}
-		/*
-		if (length(ang) < 0.001f) //planes are parallell
-		{
-			if (pMesh.pos.y - (pMesh.height / 2) - FLT_EPSILON < objMesh.planes[i].p[0].y + FLT_EPSILON && pMesh.pos.y + (pMesh.height / 2) + FLT_EPSILON > objMesh.planes[i].p[0].y - FLT_EPSILON)
-			{
-				//a point of the plane is within the cylinder
-
-			}
-			else
-			{
-				//
-			}
-		}*/
+		
 	}
+		//now we will check the sides... oh boy
+		//we do this by checking from pos and count it as a sphere, I guess?
+		vec4 norm = getSpherevOBBNorms(pMesh.pos, pMesh.radius, &objMesh);
+		//vec3 dir = normalize(vec3(t));
 
+		norm.w = pMesh.radius - norm.w; //penetration depth instead of collision distance 
+										//if (norm.w + FLT_EPSILON >= 0 - FLT_EPSILON && norm.w - FLT_EPSILON <= pMesh.radius + FLT_EPSILON)
+		{
+			//t = vec4(dir, t.w + 0.2f);
+			//bulletPos = bPos;
+			if (length(collided) > 0.001f)
+			{
+				//we have collided with a plane above/beneath us
+				return collided;
+			}
+			return norm;
+		}
+	/*
+	if (length(ang) < 0.001f) //planes are parallell
+	{
+	if (pMesh.pos.y - (pMesh.height / 2) - FLT_EPSILON < objMesh.planes[i].p[0].y + FLT_EPSILON && pMesh.pos.y + (pMesh.height / 2) + FLT_EPSILON > objMesh.planes[i].p[0].y - FLT_EPSILON)
+	{
+	//a point of the plane is within the cylinder
+
+	}
+	else
+	{
+	//
+	}
+	}*/
 	return collided;
 }
 
@@ -673,10 +677,10 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos, vec3 playerDir,
 
 			for (int n = 0; n < size; n++)
 			{
-				
+
 				t = getSpherevOBBNorms(playerPos, rad, roomBoxes[0].getSpecificBox(j)->getOBB(n));
-				//t = checkOBBvCylinderCollision(playerBox.getCylinder(), *roomBoxes[0].getSpecificBox(j)->getOBB(n));
-				t.w = rad - t.w; //penetration depth instead of collision distance 
+				t = checkOBBvCylinderCollision(playerBox.getCylinder(), *roomBoxes[0].getSpecificBox(j)->getOBB(n));
+				//t.w = rad - t.w; //penetration depth instead of collision distance 
 				if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 				{
 					t = vec4(normalize(vec3(t)), t.w);
@@ -689,8 +693,8 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos, vec3 playerDir,
 				else
 				{
 					t = getSpherevOBBNorms(origPos, rad, roomBoxes[0].getSpecificBox(j)->getOBB(n));
-					//t = checkOBBvCylinderCollision(playerBox.getCylinder(), *roomBoxes[0].getSpecificBox(j)->getOBB(n));
-					t.w = rad - t.w; //penetration depth instead of collision distance 
+					t = checkOBBvCylinderCollision(playerBox.getCylinder(), *roomBoxes[0].getSpecificBox(j)->getOBB(n));
+					//t.w = rad - t.w; //penetration depth instead of collision distance 
 					if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 					{
 						t = vec4(normalize(vec3(t)), t.w);
@@ -729,8 +733,8 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos, vec3 playerDir,
 					for (int n = 0; n < size; n++)
 					{
 						t = getSpherevOBBNorms(playerPos, rad, roomBoxes[i].getSpecificBox(j)->getOBB(n));
-						//t = checkOBBvCylinderCollision(playerBox.getCylinder(), *roomBoxes[i].getSpecificBox(j)->getOBB(n));
-						t.w = rad - t.w; //penetration depth instead of collision distance 
+						t = checkOBBvCylinderCollision(playerBox.getCylinder(), *roomBoxes[i].getSpecificBox(j)->getOBB(n));
+						//t.w = rad - t.w; //penetration depth instead of collision distance 
 						if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 						{
 							t = vec4(normalize(vec3(t)), t.w);
@@ -743,8 +747,8 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos, vec3 playerDir,
 						else
 						{
 							t = getSpherevOBBNorms(origPos, rad, roomBoxes[i].getSpecificBox(j)->getOBB(n));
-						//	t = checkOBBvCylinderCollision(playerBox.getCylinder(), *roomBoxes[i].getSpecificBox(j)->getOBB(n));
-							t.w = rad - t.w; //penetration depth instead of collision distance 
+							t = checkOBBvCylinderCollision(playerBox.getCylinder(), *roomBoxes[i].getSpecificBox(j)->getOBB(n));
+						//	t.w = rad - t.w; //penetration depth instead of collision distance 
 							if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 							{
 								t = vec4(normalize(vec3(t)), t.w);

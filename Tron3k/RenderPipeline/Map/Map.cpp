@@ -514,17 +514,19 @@ int Map::portalintersection(glm::vec3* oldPos, glm::vec3* newPos, int in_current
 	vec3 dir = *newPos - *oldPos;
 	float len = length(dir);
 	dir = normalize(dir);
-
-	for (size_t n = 0; n < chunks[in_currentChunk].portals.size(); n++)
-		if (chunks[in_currentChunk].portals[n].intersects(*oldPos, dir, len))
-		{
-			if (chunks[in_currentChunk].portals[n].bridgedRooms[0] == in_currentChunk)
-				in_currentChunk = chunks[in_currentChunk].portals[n].bridgedRooms[1];
-			else
-				in_currentChunk = chunks[in_currentChunk].portals[n].bridgedRooms[0];
-			return in_currentChunk;
-		}
 	
+	//if (in_currentChunk < chunks.size())
+	{
+		for (size_t n = 0; n < chunks[in_currentChunk].portals.size(); n++)
+			if (chunks[in_currentChunk].portals[n].intersects(*oldPos, dir, len))
+			{
+				if (chunks[in_currentChunk].portals[n].bridgedRooms[0] == in_currentChunk)
+					in_currentChunk = chunks[in_currentChunk].portals[n].bridgedRooms[1];
+				else
+					in_currentChunk = chunks[in_currentChunk].portals[n].bridgedRooms[0];
+				return in_currentChunk;
+			}
+	}
 	//no intersection
 	return -1;
 }
