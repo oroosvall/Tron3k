@@ -178,7 +178,8 @@ void ContentManager::release()
 			for (int b = 0; b < nrObb; b++)
 				testMap.chunks[c].collisionRender.abbRender[a].obbBoxesR[b].release();
 		}
-		testMap.chunks[c].roomOnlyRender.abbRender[0].abbBoxR.release();
+		if(testMap.chunks[c].roomOnlyRender.abbRender.size())
+			testMap.chunks[c].roomOnlyRender.abbRender[0].abbBoxR.release();
 	}
 
 	for (int i = 0; i < 5; i++)

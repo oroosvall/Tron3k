@@ -440,6 +440,8 @@ void RenderPipeline::reloadShaders()
 		temp = 0;
 	}
 
+	ZeroMemory((char*)&pLoc, sizeof(pLoc));
+
 	pLoc = {
 		(GLuint)glGetUniformLocation(particleCS, "deltaTime"),
 		(GLuint)glGetUniformLocation(particleCS, "lifetime"),
@@ -1405,7 +1407,7 @@ void RenderPipeline::renderMinimap(float* yourPos, float* yourdir, float* teamma
 	if (activeCap == 0)
 	{
 		minimapRenderMat[0].w = 0.432f;
-		minimapRenderMat[1].w = -0.05;
+		minimapRenderMat[1].w = -0.05f;
 	}
 	else
 	{

@@ -45,14 +45,14 @@ void ParticleSystem::Initialize(glm::vec3 pos, ParticleSystemData* ps, GLuint* p
 	//iDir
 	glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4) * 3, BUFFER_OFFSET(sizeof(float) * 8));
 
-	glProgramUniform1f(*m_program, m_loc->lifetime, m_data->lifetime);
-	glProgramUniform1f(*m_program, m_loc->force, m_data->force);
-	glProgramUniform1f(*m_program, m_loc->drag, m_data->drag);
-	glProgramUniform1f(*m_program, m_loc->gravity, m_data->gravity);
-	glProgramUniform1i(*m_program, m_loc->emission, m_data->emission);
-	glProgramUniform1f(*m_program, m_loc->continuous, m_data->continuous);
-	glProgramUniform1f(*m_program, m_loc->omni, m_data->omni);
-	glProgramUniform3f(*m_program, m_loc->initialPos, pos.x, pos.y, pos.z);
+	//glProgramUniform1f(*m_program, m_loc->lifetime, m_data->lifetime);
+	//glProgramUniform1f(*m_program, m_loc->force, m_data->force);
+	//glProgramUniform1f(*m_program, m_loc->drag, m_data->drag);
+	//glProgramUniform1f(*m_program, m_loc->gravity, m_data->gravity);
+	//glProgramUniform1f(*m_program, m_loc->emission, m_data->emission);
+	//glProgramUniform1i(*m_program, m_loc->continuous, m_data->continuous);
+	//glProgramUniform1i(*m_program, m_loc->omni, m_data->omni);
+	//glProgramUniform3f(*m_program, m_loc->initialPos, m_pos.x, m_pos.y, m_pos.z);
 	
 	m_pos = pos;
 
@@ -81,9 +81,9 @@ void ParticleSystem::Update(float dT)
 	glProgramUniform1f(*m_program, m_loc->force, m_data->force);
 	glProgramUniform1f(*m_program, m_loc->drag, m_data->drag);
 	glProgramUniform1f(*m_program, m_loc->gravity, m_data->gravity);
-	glProgramUniform1i(*m_program, m_loc->emission, m_data->emission);
-	glProgramUniform1f(*m_program, m_loc->continuous, m_data->continuous);
-	glProgramUniform1f(*m_program, m_loc->omni, m_data->omni);
+	glProgramUniform1f(*m_program, m_loc->emission, m_data->emission);
+	glProgramUniform1i(*m_program, m_loc->continuous, m_data->continuous);
+	glProgramUniform1i(*m_program, m_loc->omni, m_data->omni);
 	glProgramUniform3f(*m_program, m_loc->initialPos, m_pos.x, m_pos.y, m_pos.z);
 
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, m_vbo);

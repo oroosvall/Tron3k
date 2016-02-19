@@ -114,6 +114,16 @@ void Map::release()
 		delete[] capturePoints;
 	}
 
+	if (particleStuff)
+	{
+		for (int i = 0; i < particleCount; i++)
+		{
+			delete[]particleStuff[i].fileName;
+		}
+
+		delete[] particleStuff;
+	}
+
 	if (spA)
 		delete[] spA;
 	if (spB)
@@ -234,7 +244,7 @@ void Map::renderCapturePoint(GLuint shader,GLuint shaderLocation, GLuint diffuse
 	
 	if (capturePointID < capCount && capturePoints[capturePointID].meshCount != 0)
 	{
-		for (size_t i = 0; i < capturePoints[capturePointID].meshCount; i++)
+		for (int i = 0; i < capturePoints[capturePointID].meshCount; i++)
 		{
 			glBindVertexArray(capturePoints[capturePointID].meshes[i].vertexArray);
 			glBindBuffer(GL_ARRAY_BUFFER, capturePoints[capturePointID].meshes[i].vertexBuffer);
@@ -495,15 +505,46 @@ void Map::loadMap(std::string mapName)
 	inFile.read((char*)spFFA, sizeof(SpawnPoint) * spFFACount);
 
 
+	roomCount--;
+
 	chunkAABB = new ABB[roomCount];
-
+	
 	inFile.read((char*)chunkAABB, sizeof(ABB) * (roomCount));
-
+	
 	for (int i = 0; i < roomCount; i++)
 	{
 		chunks[i].roomBox = chunkAABB[i];
 		chunks[i].addRoomBoxRender(chunkAABB[i]);
 	}
+
+	unsigned int* particleNames = new unsigned int[fileHeader.particleSystemCount];
+	
+	inFile.read((char*)particleNames, sizeof(unsigned int) * (fileHeader.particleSystemCount));
+	
+	particleStuff = new ParticleSystem_sdf[fileHeader.particleSystemCount];
+	
+	particleCount = fileHeader.particleSystemCount;
+
+	for(unsigned int i = 0; i < fileHeader.particleSystemCount; i++)
+	{
+		glm::vec3 pos;
+		int roomid;
+		char* name;
+	
+		inFile.read((char*)&pos, sizeof(glm::vec3));
+		inFile.read((char*)&roomid, sizeof(int));
+	
+		name = new char[particleNames[i]];
+	
+		inFile.read(name, sizeof(char)*particleNames[i]);
+	
+		particleStuff[i].pos = pos;
+		particleStuff[i].room = roomid;
+		particleStuff[i].fileName = name;
+	
+	}
+
+	delete []particleNames;
 
 	inFile.close();
 

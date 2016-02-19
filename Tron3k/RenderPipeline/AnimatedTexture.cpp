@@ -29,7 +29,7 @@ void AnimatedTexture::Init()
 
 void AnimatedTexture::Update(float dT)
 {
-	for (int i = 0; i < objects.size(); i++)
+	for (size_t i = 0; i < objects.size(); i++)
 	{
 		AnimatedObject* o = &objects[i];
 
@@ -60,7 +60,7 @@ void AnimatedTexture::Update(float dT)
 
 void AnimatedTexture::Render()
 {
-	for (int i = 0; i < objects.size(); i++)
+	for (size_t i = 0; i < objects.size(); i++)
 	{
 		AnimatedObject* o = &objects[i];
 

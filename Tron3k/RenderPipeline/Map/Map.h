@@ -78,6 +78,9 @@ public:
 
 	vector<Chunk> chunks;
 
+	ParticleSystem_sdf* particleStuff;
+	int particleCount;
+
 	int nrTotalStaticSpotlights = 0;
 	int nrTotalStaticPointlights = 0;
 
