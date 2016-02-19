@@ -1580,6 +1580,7 @@ void Game::handleSpecialAbilityUse(int conID, int teamId, int sID, SPECIAL_TYPE 
 		{
 			vel.y += 7.0f;
 		}
+		p->setGrounded(false);
 		p->setVelocity(vel);
 	}
 	break;
