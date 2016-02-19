@@ -180,6 +180,8 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 void RenderPipeline::reloadShaders()
 {
+	animTexture.init();
+
 	std::cout << "Loading shaders\n";
 
 	GLuint temp;
@@ -633,7 +635,7 @@ void RenderPipeline::finalizeRender()
 	
 	glProgramUniform1fv(glowShaderTweeks, uniformGlowTimeDelta, 1, &delta);
 
-	gBuffer->preRender(glowShaderTweeks, uniformGlowTexture, uniformGlowSelf);
+	//gBuffer->preRender(glowShaderTweeks, uniformGlowTexture, uniformGlowSelf);
 
 	//GBuffer Render
 	glBindFramebuffer(GL_FRAMEBUFFER, NULL);

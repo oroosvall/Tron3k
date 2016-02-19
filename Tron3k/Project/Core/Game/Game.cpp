@@ -1580,6 +1580,7 @@ void Game::handleSpecialAbilityUse(int conID, int teamId, int sID, SPECIAL_TYPE 
 		{
 			vel.y += 7.0f;
 		}
+		p->setGrounded(false);
 		p->setVelocity(vel);
 	}
 	break;
@@ -1666,12 +1667,13 @@ void Game::handleSpecialAbilityUse(int conID, int teamId, int sID, SPECIAL_TYPE 
 	case SPECIAL_TYPE::CLEANSESPECIAL:
 	{
 		addEffectToList(conID, teamId, 0, EFFECT_TYPE::CLEANSENOVA, p->getPos(), 0, 0.0f);
-		if (conID == localPlayerId || conID == spectateID)
-		{
-			GetSound()->playExternalSound(SOUNDS::soundEffectCleanseNovaStereo, pos.x, pos.y, pos.z);
-		}
-		else
-			GetSound()->playExternalSound(SOUNDS::soundEffectCleanseNova, pos.x, pos.y, pos.z);
+		if(GetSound())
+			if (conID == localPlayerId || conID == spectateID)
+			{
+				GetSound()->playExternalSound(SOUNDS::soundEffectCleanseNovaStereo, pos.x, pos.y, pos.z);
+			}
+			else
+				GetSound()->playExternalSound(SOUNDS::soundEffectCleanseNova, pos.x, pos.y, pos.z);
 	}
 	break;
 	}
@@ -1687,14 +1689,14 @@ void Game::addEffectToList(int conID, int teamId, int effectId, EFFECT_TYPE et, 
 	{
 	case EFFECT_TYPE::LIGHT_WALL:
 		e = new LightwallEffect(p);
-		if (conID == localPlayerId || conID == spectateID)
-		{
-			if(GetSound())
-				GetSound()->playExternalSound(SOUNDS::soundEffectLightWallStereo, pos.x, pos.y, pos.z);
-		}
+		if (GetSound())
+			if (conID == localPlayerId || conID == spectateID)
+			{
+					GetSound()->playExternalSound(SOUNDS::soundEffectLightWallStereo, pos.x, pos.y, pos.z);
+			}
 
-		else
-			GetSound()->playExternalSound(SOUNDS::soundEffectLightWall, pos.x, pos.y, pos.z);
+			else
+				GetSound()->playExternalSound(SOUNDS::soundEffectLightWall, pos.x, pos.y, pos.z);
 		break;
 	case EFFECT_TYPE::THUNDER_DOME:
 		e = new ThunderDomeEffect(p);

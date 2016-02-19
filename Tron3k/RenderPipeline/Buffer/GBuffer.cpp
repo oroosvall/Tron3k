@@ -275,14 +275,14 @@ void Gbuffer::render(/*glm::vec3 playerPos, glm::vec3 playerDir*/)
 	for (int i = 0; i < nrTextures; i++)
 	{
 		glActiveTexture(GL_TEXTURE0 + i);
-		if (i == 4)
-		{
-			glBindTexture(GL_TEXTURE_2D, glowTexture.getTargetId());
-		}
-		else
-		{
+		//if (i == 4)
+		//{
+		//	glBindTexture(GL_TEXTURE_2D, glowTexture.getTargetId());
+		//}
+		//else
+		//{
 			glBindTexture(GL_TEXTURE_2D, rTexture[i].getTargetId());
-		}
+		//}
 		glProgramUniform1i(*shaderPtr, uniformBitsList[i], i);
 	}
 

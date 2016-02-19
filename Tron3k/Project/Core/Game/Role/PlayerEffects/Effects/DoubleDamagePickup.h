@@ -7,7 +7,7 @@
 class DoubleDamagePickup : public Effect
 {
 private:
-	float rad = 4.0f;
+	float rad = 2.0f;
 	float maxCooldown = 90.0f;
 	float cooldown = maxCooldown;
 	bool resetted = true;
