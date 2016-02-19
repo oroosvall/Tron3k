@@ -350,18 +350,24 @@ void ContentManager::renderMisc(int renderID, GLuint shader, GLuint textureLocat
 		glDisable(GL_DEPTH_TEST);
 		//glEnable(GL_BLEND);
 
-		//glActiveTexture(GL_TEXTURE0);
+		glActiveTexture(GL_TEXTURE0);
 		//glBindTexture(GL_TEXTURE_2D, skyTexture);
-		//
-		//glActiveTexture(GL_TEXTURE0 + 1);
+		glProgramUniform1i(shader, textureLocation, 0);
+		tm.bindTextureOnly(skyTexture, DIFFUSE_FB);
+		
+		glActiveTexture(GL_TEXTURE0 + 1);
+		glProgramUniform1i(shader, normalLocation, 1);
+		tm.bindDefaultOnly(NORMAL_FB);
 		//glBindTexture(GL_TEXTURE_2D, blank_normal);
-		//
-		//glActiveTexture(GL_TEXTURE0 + 2);
+		
+		glActiveTexture(GL_TEXTURE0 + 2);
+		glProgramUniform1i(shader, glowSpecLocation, 1);
+		tm.bindDefaultOnly(GLOW_FB);
 		//glBindTexture(GL_TEXTURE_2D, blank_glow);
 
-		tm.bindTexture(skyTexture, shader, textureLocation, DIFFUSE_FB);
-		tm.bindDefault(shader, normalLocation, NORMAL_FB);
-		tm.bindDefault(shader, glowSpecLocation, GLOW_FB);
+		//tm.bindTexture(skyTexture, shader, textureLocation, DIFFUSE_FB);
+		//tm.bindDefault(shader, normalLocation, NORMAL_FB);
+		//tm.bindDefault(shader, glowSpecLocation, GLOW_FB);
 
 		glBindVertexArray(skybox.vao);
 		glBindBuffer(GL_ARRAY_BUFFER, skybox.vbo);
