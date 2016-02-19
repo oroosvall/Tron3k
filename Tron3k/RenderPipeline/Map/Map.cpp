@@ -4,6 +4,9 @@
 
 #include "../Streaming/TextureStreamer.h"
 
+GLuint compute = 0;
+ParticleShaderLocations locations = { 0 };
+
 void CapturePoint::buildABBS()
 {
 	renderBigAbb.abbBoxR.init_ABB(bigAABB);
@@ -63,6 +66,39 @@ void Map::init(TextureManager* _tm)
 		tex[i].textureID = tm->createTexture("GameFiles/Textures/map/" + std::string(tex[i].textureName));
 	}
 	
+	for (int i = 0; i < particleCount; i++)
+	{
+
+		std::ifstream file;
+		file.open("Gamefiles/ParticleSystems/"+ std::string(particleStuff[i].fileName), std::ios::binary | std::ios::in);
+
+		if (file.is_open())
+		{
+
+			ExportHeader exHeader;
+			file.read((char*)&exHeader, sizeof(exHeader));
+
+			//Read texture name
+			char* f = (char*)malloc(exHeader.texturesize + 1);
+			file.read(f, sizeof(char) * exHeader.texturesize);
+			f[exHeader.texturesize] = 0;
+
+			free(f);
+
+			ParticleSystemData pdata;
+			//Read Particle System
+			file.read((char*)&pdata, sizeof(ParticleSystemData));
+
+			int roomID = particleStuff[i].room;
+			chunks[roomID].particleSystemData.push_back(pdata);
+			int ind = chunks[roomID].particleSystemData.size()-1;
+
+			ParticleSystem pSys;
+			pSys.Initialize(particleStuff[i].pos, &chunks[roomID].particleSystemData[ind], &compute, &locations);
+			chunks[roomID].particleSystem.push_back(pSys);
+		}
+	}
+
 }
 
 void Map::release()
@@ -103,6 +139,12 @@ void Map::release()
 		{
 			chunks[i].portals[p].visualPortal.release();
 		}
+
+		for (size_t p = 0; p < chunks[i].particleSystem.size(); p++)
+		{
+			chunks[i].particleSystem[i].Release();
+		}
+
 	}
 
 	if (capturePoints)
@@ -112,6 +154,16 @@ void Map::release()
 			capturePoints[i].release();
 		}
 		delete[] capturePoints;
+	}
+
+	if (particleStuff)
+	{
+		for (int i = 0; i < particleCount; i++)
+		{
+			delete[]particleStuff[i].fileName;
+		}
+
+		delete[] particleStuff;
 	}
 
 	if (spA)
@@ -127,6 +179,29 @@ void Map::release()
 	//	bbPoints = nullptr;
 	//}
 
+}
+
+void Map::update(float dt)
+{
+	glUseProgram(compute);
+	for (size_t i = 0; i < chunks.size(); i++)
+	{
+		for (size_t p = 0; p < chunks[i].particleSystem.size(); p++)
+		{
+			chunks[i].particleSystem[i].Update(dt);
+		}
+	}
+}
+
+void Map::renderParticles()
+{
+	for (size_t i = 0; i < chunks.size(); i++)
+	{
+		for (size_t p = 0; p < chunks[i].particleSystem.size(); p++)
+		{
+			chunks[i].particleSystem[i].Draw();
+		}
+	}
 }
 
 void Map::renderChunk(GLuint shader, GLuint shaderLocation, GLuint diffuseLocation, GLuint normalLocation, GLuint glowLocation, int chunkID)
@@ -234,7 +309,7 @@ void Map::renderCapturePoint(GLuint shader,GLuint shaderLocation, GLuint diffuse
 	
 	if (capturePointID < capCount && capturePoints[capturePointID].meshCount != 0)
 	{
-		for (size_t i = 0; i < capturePoints[capturePointID].meshCount; i++)
+		for (int i = 0; i < capturePoints[capturePointID].meshCount; i++)
 		{
 			glBindVertexArray(capturePoints[capturePointID].meshes[i].vertexArray);
 			glBindBuffer(GL_ARRAY_BUFFER, capturePoints[capturePointID].meshes[i].vertexBuffer);
@@ -495,15 +570,48 @@ void Map::loadMap(std::string mapName)
 	inFile.read((char*)spFFA, sizeof(SpawnPoint) * spFFACount);
 
 
+	roomCount--;
+
 	chunkAABB = new ABB[roomCount];
-
+	
 	inFile.read((char*)chunkAABB, sizeof(ABB) * (roomCount));
-
+	
 	for (int i = 0; i < roomCount; i++)
 	{
 		chunks[i].roomBox = chunkAABB[i];
 		chunks[i].addRoomBoxRender(chunkAABB[i]);
 	}
+
+	unsigned int* particleNames = new unsigned int[fileHeader.particleSystemCount];
+	
+	inFile.read((char*)particleNames, sizeof(unsigned int) * (fileHeader.particleSystemCount));
+	
+	particleStuff = new ParticleSystem_sdf[fileHeader.particleSystemCount];
+	
+	particleCount = fileHeader.particleSystemCount;
+
+	for(unsigned int i = 0; i < fileHeader.particleSystemCount; i++)
+	{
+		glm::vec3 pos;
+		int roomid;
+		char* name;
+	
+		inFile.read((char*)&pos, sizeof(glm::vec3));
+		inFile.read((char*)&roomid, sizeof(int));
+	
+		name = new char[particleNames[i]+1];
+	
+		inFile.read(name, sizeof(char)*particleNames[i]);
+		
+		name[particleNames[i]] = 0;
+
+		particleStuff[i].pos = pos;
+		particleStuff[i].room = roomid;
+		particleStuff[i].fileName = name;
+	
+	}
+
+	delete []particleNames;
 
 	inFile.close();
 

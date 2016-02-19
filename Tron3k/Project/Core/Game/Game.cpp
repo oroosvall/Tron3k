@@ -2499,11 +2499,9 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 			if (parent->getSpawnAdditionals())
 			{
 				addEffectToList(PID, parent->getTeam(), BID, EFFECT_TYPE::BATTERY_SPEED, parent->getPos(), 0, 0.0f);
-
 				if (GetSoundActivated())
 					GetSound()->playExternalSound(SOUNDS::soundEffectBatteryFields, parent->getPos().x, parent->getPos().y, parent->getPos().z);
 			}
-				addEffectToList(PID, parent->getTeam(), BID, EFFECT_TYPE::BATTERY_SPEED, parent->getPos(), 0, 0.0f);
 			break;
 		}
 		delete bullets[bt][posInArray];

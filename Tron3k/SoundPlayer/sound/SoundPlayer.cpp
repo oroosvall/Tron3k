@@ -740,3 +740,7 @@ void SoundPlayer::PlayStereoFootsteps(int role)
 
 }
 
+void SoundPlayer::SetFading(bool fading)
+{
+	this->fading = fading;
+}

@@ -12,7 +12,7 @@ struct AnimatedObject
 {
 	glm::mat4 worldMat;
 	int roomID;
-	int textureID;
+	unsigned int textureID;
 	
 	int type;
 
@@ -27,6 +27,32 @@ struct AnimatedObject
 	float segments;
 
 	int currentSegment = 0;
+
+	void init_standing_right(vec3 topRight, vec3 topLeft)
+	{
+		worldMat[0] = glm::vec4(topRight, 1);
+		worldMat[1] = glm::vec4(topRight.x, topLeft.y, topRight.z, 1);
+		worldMat[2] = glm::vec4(topLeft.x, topRight.y, topLeft.z, 1);
+		worldMat[3] = glm::vec4(topLeft, 1);
+	}
+
+	void init_standing_down(vec3 topRight, vec3 topLeft)
+	{
+		worldMat[0] = glm::vec4(topRight.x, topLeft.y, topRight.z, 1);
+		worldMat[1] = glm::vec4(topLeft, 1);
+		worldMat[2] = glm::vec4(topRight, 1);
+		worldMat[3] = glm::vec4(topLeft.x, topRight.y, topLeft.z, 1);
+	}
+	
+	void init_time_segments(float _segments, float _freezeTime, float _swapTime)
+	{
+		segments = _segments;
+		offsets.x = 0;
+		offsets.y = 1.0f / segments;
+		freezeTimer = _freezeTime;
+		swapTimer = _swapTime;
+		timer = freezeTimer;
+	}
 
 	void update(float dt)
 	{
@@ -58,10 +84,10 @@ struct AnimatedObject
 				return;
 			}
 
-			float scroll = (1 - (timer / swapTimer)) / segments;
+			float scroll = (1.0f - (timer / swapTimer)) / segments;
 
 			offsets.x = (currentSegment / segments) + scroll;
-			offsets.y = ((currentSegment + 1) / segments) + scroll;
+			offsets.y = ((currentSegment + 1.0f) / segments) + scroll;
 		}
 	}
 };
@@ -69,12 +95,11 @@ struct AnimatedObject
 class AnimatedTexture
 {
 public:
-	AnimatedObject test;
 
 	AnimatedTexture();
 	~AnimatedTexture();
 
-	void Update(float);
+	void update(float);
 	void render();
 	void init();
 

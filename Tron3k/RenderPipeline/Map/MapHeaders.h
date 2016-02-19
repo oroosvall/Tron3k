@@ -7,6 +7,8 @@
 #include "../Lights.h"
 #include <vector>
 
+#include "../ParticleSystem/ParticleSystem.h"
+
 using std::vector;
 
 struct SharedFileHDR
@@ -529,6 +531,10 @@ struct Chunk
 	vector<PortalData> portals;
 
 	vector<SpotLight> lights;
+
+	vector<ParticleSystem> particleSystem;
+	vector<ParticleSystemData> particleSystemData;
+
 	int nrStaticSpotlights;
 	int nrStaticPointlights;
 

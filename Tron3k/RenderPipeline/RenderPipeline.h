@@ -161,8 +161,6 @@ private:
 	GLuint crosshairTexture;
 	GLuint crosshairHitTexture;
 
-	ParticleSystem particleTest;
-	ParticleSystemData pdata;
 	GLuint ptex;
 
 public:
