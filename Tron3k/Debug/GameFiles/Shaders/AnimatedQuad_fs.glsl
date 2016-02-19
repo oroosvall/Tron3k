@@ -11,8 +11,8 @@ void main ()
 {
 	
 	GlowMap = texture(tex, uv);
-	DiffuseOut = GlowMap;
-	DiffuseOut.w = 1f;
+	//DiffuseOut = GlowMap;
+	//DiffuseOut.w = 1f;
 	GlowMap.w = 0.9f;
 	
 	
