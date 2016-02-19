@@ -508,6 +508,7 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 		}
 		else if (state == ROUND)
 		{
+			gamePtr->resetAllPickups();
 			if (GetSound())
 			{
 				GetSound()->setVolumeSound(50);
