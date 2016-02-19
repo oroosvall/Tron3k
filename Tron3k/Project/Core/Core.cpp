@@ -2368,15 +2368,15 @@ void Core::handleCulling()
 				//printf("RoomIntersect Cam setRoomID %d", interarr[0]);
 			}
 		}
-		else
-		{
-			int newRoom = renderPipe->portalIntersection((float*)&lastCampos, (float*)&cam->getPos(), cam->roomID);
-			if (newRoom != -1)
-			{
-				cam->roomID = newRoom;
-				//printf("Portal Cam setRoomID %d", newRoom);
-			}
-		}
+		//else
+		//{
+		//	int newRoom = renderPipe->portalIntersection((float*)&lastCampos, (float*)&cam->getPos(), cam->roomID);
+		//	if (newRoom != -1)
+		//	{
+		//		cam->roomID = newRoom;
+		//		//printf("Portal Cam setRoomID %d", newRoom);
+		//	}
+		//}
 
 		if (game->freecam == false)
 		{
@@ -2401,16 +2401,16 @@ void Core::handleCulling()
 						//printf("RoomIntersect Player setRoomID %d", interarr[0]);
 					}
 				}
-				else
-				{
-					int newRoom = renderPipe->portalIntersection((float*)&lastPlayerPos, (float*)&p->getPos(), p->roomID);
-					if (newRoom != -1)
-					{
-						p->roomID = newRoom;
-						//printf("Portal Player setRoomID %d", interarr[0]);
-					}
-					lastPlayerPos = p->getPos();
-				}
+				//else
+				//{
+				//	int newRoom = renderPipe->portalIntersection((float*)&lastPlayerPos, (float*)&p->getPos(), p->roomID);
+				//	if (newRoom != -1)
+				//	{
+				//		p->roomID = newRoom;
+				//		//printf("Portal Player setRoomID %d", interarr[0]);
+				//	}
+				//	lastPlayerPos = p->getPos();
+				//}
 			}
 		}
 	}
