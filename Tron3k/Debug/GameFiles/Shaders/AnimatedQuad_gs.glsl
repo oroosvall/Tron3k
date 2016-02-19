@@ -12,19 +12,19 @@ uniform mat4 vp;
 void main() 
 {
 		gl_Position = vp * world[0];
-		UV = vec2(0, 0);
+		UV = vec2(UVset.x, 0);
 		EmitVertex();
 		
 		gl_Position = vp * world[1];
-		UV = vec2(0, 1);
+		UV = vec2(UVset.x, 1);
 		EmitVertex();
 
 		gl_Position = vp * world[2];
-		UV = vec2(1, 0);
+		UV = vec2(UVset.y, 0);
 		EmitVertex();
 		
 		gl_Position = vp * world[3];
-		UV = vec2(1, 1);
+		UV = vec2(UVset.y, 1);
 		EmitVertex();
 		
 		EndPrimitive();

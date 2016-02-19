@@ -511,6 +511,7 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	cam.setViewProjMat(animTexture.animQuadShader, animTexture.animQuadVP);
 
 	contMan.update(dt);
+	animTexture.Update(dt);
 
 	updateTakeDamageEffect(dt);
 

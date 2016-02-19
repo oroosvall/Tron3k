@@ -21,7 +21,6 @@ void AnimatedTexture::Initialize()
 
 	AnimatedObject water;
 	water.type = 1;
-	water.maxtimer = 1.0f;
 	water.worldMat = mat4(1.0f);
 	objects.push_back(water);
 
@@ -30,38 +29,21 @@ void AnimatedTexture::Initialize()
 	test.worldMat[2] = glm::vec4(5,5,0,1);
 	test.worldMat[3] = glm::vec4(5,0,0,1);
 	test.offsets.x = 0;
-	test.offsets.y = 1;
+	test.offsets.y = 1.0f / 5.0f;
+	test.freezeTimer = 0.2f;
+	test.swapTimer = 0.0f;
+	test.segments = 5.0f;
+	test.timer = test.freezeTimer;
+	test.freezeMode = true;
+	test.currentSegment = 0;
 }
 
 void AnimatedTexture::Update(float dT)
 {
-	//for (int i = 0; i < objects.size(); i++)
-	//{
-	//	AnimatedObject* o = &objects[i];
-	//
-	//	//Timer calculations
-	//	o->timer -= dT;
-	//
-	//	//Sign
-	//	if (o->type == 0)
-	//	{
-	//		if (o->timer < 0)
-	//		{
-	//			//swap
-	//			o->timer = o->maxtimer;
-	//
-	//			//Set offset
-	//			float movement = 1.0f / o->segments;
-	//			o->offset += movement;
-	//		}
-	//	}
-	//
-	//	//Water
-	//	else
-	//	{
-	//		o->offset += 0.001f * dT;
-	//	}
-	//}
+	test.update(dT);
+
+
+	
 }
 
 void AnimatedTexture::render()
