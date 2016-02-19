@@ -246,8 +246,8 @@ int SoundPlayer::playMapSounds()
 				return -1;
 			}
 			theCantinaSong.setPosition(45, 1.55, 95);
-			theCantinaSong.setAttenuation(80);
-			theCantinaSong.setVolume(20);
+			theCantinaSong.setAttenuation(90);
+			theCantinaSong.setVolume(50);
 			theCantinaSong.play();
 			theCantinaSong.setLoop(true);
 			theCantinaSong.setMinDistance(9.5);
