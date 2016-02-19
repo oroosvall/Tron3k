@@ -118,6 +118,9 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->soundList[SOUNDS::soundEffectFields].loadFromFile("GameFiles/Sound/soundEffectFields.ogg");
 		singleton->soundList[SOUNDS::soundEffectBatteryFields].loadFromFile("GameFiles/Sound/soundEffectBatteryFields.ogg");
 		singleton->soundList[SOUNDS::soundEffectHSCPickup].loadFromFile("GameFiles/Sound/soundEffectHSCPickup.ogg");
+		singleton->soundList[SOUNDS::soundEffectCleanseNova].loadFromFile("GameFiles/Sound/soundEffectCleanseNova.ogg");
+		singleton->soundList[SOUNDS::soundEffectCleanseNovaStereo].loadFromFile("GameFiles/Sound/soundEffectCleanseNovaStereo.ogg");
+		singleton->soundList[SOUNDS::soundEffectGrapplingHook].loadFromFile("GameFiles/Sound/soundEffectGrapplingHook.ogg");
 		initialized = true;
 	}
 }
@@ -243,8 +246,8 @@ int SoundPlayer::playMapSounds()
 				return -1;
 			}
 			theCantinaSong.setPosition(45, 1.55, 95);
-			theCantinaSong.setAttenuation(80);
-			theCantinaSong.setVolume(20);
+			theCantinaSong.setAttenuation(90);
+			theCantinaSong.setVolume(50);
 			theCantinaSong.play();
 			theCantinaSong.setLoop(true);
 			theCantinaSong.setMinDistance(9.5);
@@ -731,6 +734,7 @@ void SoundPlayer::PlayStereoFootsteps(int role)
 
 	if (role == 4)
 	{
+		//cout << nrOfSoundsPlaying << endl;
 		playUserGeneratedSound(SOUNDS::soundStepsManipulatorStereo);
 	}
 

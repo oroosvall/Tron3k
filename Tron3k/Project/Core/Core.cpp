@@ -1986,6 +1986,18 @@ void Core::renderWorld(float dt)
 					}
 				}
 				break;
+				case DOUBLEDAMAGEPICKUP:
+				{
+					DoubleDamagePickup* temp = (DoubleDamagePickup*)eff[i];
+					if (!temp->onCooldown())
+					{
+						vec3 pos = eff[i]->getPos();
+						dgColor = vec3(1.0f, 0, 0);
+						renderPipe->renderExploEffect(&pos.x, eff[i]->getInterestingVariable(), 0, &dgColor.x);
+
+					}
+				}
+				break;
 				}
 			}
 		}
@@ -2356,15 +2368,15 @@ void Core::handleCulling()
 				//printf("RoomIntersect Cam setRoomID %d", interarr[0]);
 			}
 		}
-		else
-		{
-			int newRoom = renderPipe->portalIntersection((float*)&lastCampos, (float*)&cam->getPos(), cam->roomID);
-			if (newRoom != -1)
-			{
-				cam->roomID = newRoom;
-				//printf("Portal Cam setRoomID %d", newRoom);
-			}
-		}
+		//else
+		//{
+		//	int newRoom = renderPipe->portalIntersection((float*)&lastCampos, (float*)&cam->getPos(), cam->roomID);
+		//	if (newRoom != -1)
+		//	{
+		//		cam->roomID = newRoom;
+		//		//printf("Portal Cam setRoomID %d", newRoom);
+		//	}
+		//}
 
 		if (game->freecam == false)
 		{
@@ -2389,16 +2401,16 @@ void Core::handleCulling()
 						//printf("RoomIntersect Player setRoomID %d", interarr[0]);
 					}
 				}
-				else
-				{
-					int newRoom = renderPipe->portalIntersection((float*)&lastPlayerPos, (float*)&p->getPos(), p->roomID);
-					if (newRoom != -1)
-					{
-						p->roomID = newRoom;
-						//printf("Portal Player setRoomID %d", interarr[0]);
-					}
-					lastPlayerPos = p->getPos();
-				}
+				//else
+				//{
+				//	int newRoom = renderPipe->portalIntersection((float*)&lastPlayerPos, (float*)&p->getPos(), p->roomID);
+				//	if (newRoom != -1)
+				//	{
+				//		p->roomID = newRoom;
+				//		//printf("Portal Player setRoomID %d", interarr[0]);
+				//	}
+				//	lastPlayerPos = p->getPos();
+				//}
 			}
 		}
 	}

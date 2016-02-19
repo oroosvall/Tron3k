@@ -74,9 +74,11 @@ void Game::init(int max_connections, int state, Console* con)
 	decalCounter = 0;
 
 	addEffectToList(0, 0, 0, EFFECT_TYPE::HSCPICKUP, vec3(50.87f, 1.6f, 10.7f), 0,  3.0f);
-	addEffectToList(0, 0, 1, EFFECT_TYPE::HSCPICKUP, vec3(10.68f, 1.6f, 46.85f), 0, 3.0f);
+	addEffectToList(0, 0, 1, EFFECT_TYPE::HSCPICKUP, vec3(-81.8f, 1.45f, 45.85f), 0, 3.0f);
 	addEffectToList(0, 0, 2, EFFECT_TYPE::HSCPICKUP, vec3(-34.86f, 1.6f, 67.0f), 0, 3.0f);
 	addEffectToList(0, 0, 3, EFFECT_TYPE::HSCPICKUP, vec3(44.05f, 1.7f, 98.19f), 0, 3.0f);
+
+	addEffectToList(0, 0, 0, EFFECT_TYPE::DOUBLEDAMAGEPICKUP, vec3(-4.6, 1.45, 69.23), 0, 4.0f);
 
 	suicideMessages.push_back(" gave up on life.");
 	suicideMessages.push_back(" short circuited!");
@@ -552,7 +554,6 @@ void Game::checkFootsteps(float dt)
 				glm::vec3 vel;
 				pos = playerList[i]->getPos();
 				vel = playerList[i]->getVelocity();
-				cout << vel.x << "     " << vel.z << endl;
 				if (vel.x > 0.5 || vel.x < -0.5  || vel.z > 0.5 || vel.z < -0.5)
 				{
 					playerList[i]->setFootstepsCountdown();
@@ -744,12 +745,23 @@ void Game::checkPlayerVEffectCollision()
 								collNormals = physics->checkPlayerVEffectCollision(playerList[j]->getPos(), t, eid);
 								if (collNormals != vec4(0, 0, 0, 0))
 								{
-									if (effects[t][i]->getType() == EFFECT_TYPE::HSCPICKUP)
+									if (effects[t][i]->getType() == EFFECT_TYPE::HSCPICKUP || effects[t][i]->getType() == EFFECT_TYPE::DOUBLEDAMAGEPICKUP)
 									{
-										HSCPickup* temp = (HSCPickup*)effects[t][i];
-										if (temp->onCooldown())
+										if (effects[t][i]->getType() == EFFECT_TYPE::HSCPICKUP)
 										{
-											notDoingWrongThings = false;
+											HSCPickup* temp = (HSCPickup*)effects[t][i];
+											if (temp->onCooldown())
+											{
+												notDoingWrongThings = false;
+											}
+										}
+										if (effects[t][i]->getType() == EFFECT_TYPE::DOUBLEDAMAGEPICKUP)
+										{
+											DoubleDamagePickup* temp = (DoubleDamagePickup*)effects[t][i];
+											if (temp->onCooldown())
+											{
+												notDoingWrongThings = false;
+											}
 										}
 									}
 									if (notDoingWrongThings)
@@ -1651,6 +1663,12 @@ void Game::handleSpecialAbilityUse(int conID, int teamId, int sID, SPECIAL_TYPE 
 	case SPECIAL_TYPE::CLEANSESPECIAL:
 	{
 		addEffectToList(conID, teamId, 0, EFFECT_TYPE::CLEANSENOVA, p->getPos(), 0, 0.0f);
+		if (conID == localPlayerId || conID == spectateID)
+		{
+			GetSound()->playExternalSound(SOUNDS::soundEffectCleanseNovaStereo, pos.x, pos.y, pos.z);
+		}
+		else
+			GetSound()->playExternalSound(SOUNDS::soundEffectCleanseNova, pos.x, pos.y, pos.z);
 	}
 	break;
 	}
@@ -1707,6 +1725,8 @@ void Game::addEffectToList(int conID, int teamId, int effectId, EFFECT_TYPE et, 
 	case EFFECT_TYPE::HSCPICKUP:
 		e = new HSCPickup();
 		break;
+	case EFFECT_TYPE::DOUBLEDAMAGEPICKUP:
+		e = new DoubleDamagePickup();
 	}
 	e->init(conID, effectId, pos);
 	e->setTeam(teamId);
@@ -1787,6 +1807,13 @@ void Game::addEffectToPhysics(Effect* effect)
 		eBox.push_back(effect->getInterestingVariable());
 		physics->receiveEffectBox(eBox, EFFECT_TYPE::HSCPICKUP, pid, eid);
 		break;
+	case EFFECT_TYPE::DOUBLEDAMAGEPICKUP:
+		eBox.push_back(effect->getPos().x);
+		eBox.push_back(effect->getPos().y);
+		eBox.push_back(effect->getPos().z);
+		eBox.push_back(effect->getInterestingVariable());
+		physics->receiveEffectBox(eBox, EFFECT_TYPE::DOUBLEDAMAGEPICKUP, pid, eid);
+		break;
 	}
 }
 
@@ -1854,7 +1881,13 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 			int bulletPosInArray = -1;
 
 			Bullet* theBullet = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, bulletPosInArray);
-
+			if (playerList[hi.bulletPID] != nullptr && gameState == SERVER)
+			{
+				if (playerList[hi.bulletPID]->searchModifier(MODIFIER_TYPE::DOUBLEDAMAGEMOD))
+				{
+					p->setHP(p->getHP() - theBullet->getDamage());
+				}
+			}
 			p->hitByBullet(theBullet, hi.bt, hi.newHPtotal);
 			playerList[hi.bulletPID]->hitMarker = 0.25f;
 			if (p->getHP() == 0 && p->isAlive())
@@ -1917,7 +1950,7 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 				if (hi.et == EFFECT_TYPE::HEALTHPACK)
 					GetSound()->playExternalSound(SOUNDS::soundEffectHP, pos.x, pos.y, pos.z);
 				
-				else if (hi.et != EFFECT_TYPE::BATTERY_SLOW && hi.et != EFFECT_TYPE::BATTERY_SPEED && hi.et != EFFECT_TYPE::HSCPICKUP)
+				else if (hi.et != EFFECT_TYPE::BATTERY_SLOW && hi.et != EFFECT_TYPE::BATTERY_SPEED && hi.et != EFFECT_TYPE::HSCPICKUP && hi.et != EFFECT_TYPE::CLEANSENOVA)
 				{
 					if(!p->isLocal())
 						GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHit, pos.x, pos.y, pos.z);
@@ -2036,6 +2069,18 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 			}
 		}
 			break;
+		case EFFECT_TYPE::DOUBLEDAMAGEPICKUP:
+		{
+			DoubleDamagePickup* tester = (DoubleDamagePickup*)theEffect;
+			if (!tester->onCooldown())
+			{
+				tester->startCooldown();
+				p->addModifier(MODIFIER_TYPE::DOUBLEDAMAGEMOD);
+
+				//Insert double damage announcer here
+			}
+		}
+		break;
 		default:
 			break;
 		}
@@ -2261,6 +2306,9 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 				temp.y += temp.y*3.5f + 5.0f;
 				playerList[hi.bulletPID]->setVelocity(temp);
 				playerList[hi.bulletPID]->setGrounded(false);
+
+				if (GetSoundActivated())
+					GetSound()->playExternalSound(SOUNDS::soundEffectGrapplingHook, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
 
 				removeBullet(hi.bt, arraypos);
 				break;
@@ -2625,5 +2673,13 @@ void Game::resetAllPickups()
 	{
 		temp = (HSCPickup*)effects[EFFECT_TYPE::HSCPICKUP][i];
 		temp->startCooldown();
+
+	}
+	int size2 = effects[EFFECT_TYPE::DOUBLEDAMAGEPICKUP].size();
+	DoubleDamagePickup* temp2;
+	for (int i = 0; i < size2; i++)
+	{
+		temp2 = (DoubleDamagePickup*)effects[EFFECT_TYPE::DOUBLEDAMAGEPICKUP][i];
+		temp2->startCooldown();
 	}
 }

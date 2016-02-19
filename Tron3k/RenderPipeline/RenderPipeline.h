@@ -161,8 +161,6 @@ private:
 	GLuint crosshairTexture;
 	GLuint crosshairHitTexture;
 
-	ParticleSystem particleTest;
-	ParticleSystemData pdata;
 	GLuint ptex;
 
 public:
@@ -202,8 +200,6 @@ public:
 	virtual void renderCrosshair(CROSSHAIR_TYPE cross);
 
 	virtual void renderCapturePoint(int capPointID);
-
-	virtual void renderAnimatedTexture();
 
 	virtual void forceReset() {};
 

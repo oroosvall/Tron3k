@@ -165,7 +165,7 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 	uiQuad.Init(vec3(-1, -1, 0), vec3(1, 1, 0));
 
-	animTexture.Init();
+	animTexture.init();
 
 	//glGenBuffers(1, &decal_struct_UBO);
 	//int maxDecals = 50;
@@ -173,32 +173,6 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	//glBufferData(GL_UNIFORM_BUFFER, maxDecals * sizeof(float) * 12, NULL, GL_DYNAMIC_DRAW);
 
 	resetQuery();
-
-	pdata.maxparticles = 100;
-	pdata.dir = normalize(glm::vec3(1, 1, 1));
-	pdata.lifetime = 20.0f;
-	pdata.gravity = 1.0f;
-	pdata.emission = 0.1f;
-	pdata.force = 1.0f;
-
-	std::ifstream file;
-	file.open("Gamefiles/ParticleSystems/hitspark1.ps", std::ios::binary | std::ios::in);
-
-	//Read header
-	ExportHeader exHeader;
-	file.read((char*)&exHeader, sizeof(exHeader));
-
-	//Read texture name
-	char* f = (char*)malloc(exHeader.texturesize + 1);
-	file.read(f, sizeof(char) * exHeader.texturesize);
-	f[exHeader.texturesize] = 0;
-
-	free(f);
-
-	//Read Particle System
-	file.read((char*)&pdata, sizeof(ParticleSystemData));
-
-	particleTest.Initialize(glm::vec3(0,5,0), &pdata, &particleCS, &pLoc);
 
 	initialized = true;
 	return true;
@@ -306,15 +280,18 @@ void RenderPipeline::reloadShaders()
 		temp = 0;
 	}
 
-	//Water shader
-	std::string shaderNamesWater[] = { "GameFiles/Shaders/Water_vs.glsl", "GameFiles/Shaders/Water_fs.glsl" };
-	GLenum shaderTypesWater[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
-	//CreateProgram(temp, shaderNamesWater, shaderTypesWater, 2);
+	//AnimQuad shader
+	std::string shaderNamesAnimquad[] = { "GameFiles/Shaders/AnimatedQuad_vs.glsl", "GameFiles/Shaders/AnimatedQuad_gs.glsl", "GameFiles/Shaders/AnimatedQuad_fs.glsl" };
+	GLenum shaderTypesAnimquad[] = { GL_VERTEX_SHADER, GL_GEOMETRY_SHADER, GL_FRAGMENT_SHADER };
+	CreateProgram(temp, shaderNamesAnimquad, shaderTypesAnimquad, 3);
 	if (temp != 0)
 	{
-		animatedTexShader = temp;
+		animTexture.animQuadShader = temp;
 		temp = 0;
 	}
+	animTexture.animQuadWorld = glGetUniformLocation(animTexture.animQuadShader, "world");
+	animTexture.animQuadVP = glGetUniformLocation(animTexture.animQuadShader, "vp");
+	animTexture.animQuadUVset = glGetUniformLocation(animTexture.animQuadShader, "UVset");
 
 	//pointlight volume shader
 	std::string shaderNamesPointVolume[] = { "GameFiles/Shaders/pointlightVolume_vs.glsl", "GameFiles/Shaders/pointlightVolume_gs.glsl", "GameFiles/Shaders/pointlightVolume_fs.glsl" };
@@ -473,7 +450,7 @@ void RenderPipeline::release()
 	glDeleteShader(animationShader);
 	glDeleteShader(uiShader);
 	glDeleteShader(decal_Shader);
-	glDeleteShader(animatedTexShader);
+	glDeleteShader(animTexture.animQuadShader);
 	uiQuad.release();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -490,9 +467,6 @@ void RenderPipeline::release()
 	crossHit->release();
 	delete cross;
 	delete crossHit;
-
-	particleTest.Release();
-
 	reportGPULeaks();
 
 	delete this; // yes this is safe
@@ -511,8 +485,10 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	cam.setViewProjMat(gBuffer->spotVolShader, gBuffer->spotVolVP);
 	cam.setViewProjMat(gBuffer->pointVolShader, gBuffer->pointVolVP);
 	cam.setViewProjMat(portalShaderV2, portal_VP);
+	cam.setViewProjMat(animTexture.animQuadShader, animTexture.animQuadVP);
 
 	contMan.update(dt);
+	animTexture.Update(dt);
 
 	updateTakeDamageEffect(dt);
 
@@ -526,10 +502,6 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	clearDynamicLights();
 	
 	std::stringstream ss;
-
-	glUseProgram(particleCS);
-
-	particleTest.Update(dt);
 
 	terminateQuery();
 	
@@ -627,6 +599,11 @@ void RenderPipeline::render()
 
 	contMan.renderChunks(regularShader, worldMat[0], uniformTextureLocation[0], uniformNormalLocation[0], uniformGlowSpecLocation[0], uniformDynamicGlowColorLocation[0], uniformStaticGlowIntensityLocation[0],  *gBuffer->portal_shaderPtr, gBuffer->portal_model, portalShaderV2, portal_World);
 	
+	//render animated signs
+	contMan.bindDecalTexture();
+	//animTexture.render();
+
+
 	stopTimer(chunkRender);
 	//glDepthMask(GL_TRUE);glEnable(GL_CULL_FACE);glDisable(GL_BLEND);)
 	//renderEffects();
@@ -644,7 +621,7 @@ void RenderPipeline::finalizeRender()
 	glUseProgram(particleShader);
 	cam.setViewProjMat(particleShader, particleViewProj);
 	//glProgramUniformMatrix4fv(particleShader, particleViewProj, 1, GL_FALSE, (GLfloat*)&glm::mat4());
-	vec2 size = particleTest.m_size;
+	vec2 size = vec2(0.5, 0.5);
 	glProgramUniform2f(particleShader, particleSize, size.x, size.y);
 
 	glProgramUniform3f(particleShader, particleCam, gBuffer->eyePos.x, gBuffer->eyePos.y, gBuffer->eyePos.z);
@@ -963,11 +940,6 @@ void RenderPipeline::renderCapturePoint(int capPointID)
 	glProgramUniform1f(regularShader, uniformStaticGlowIntensityLocation[0], 1.0f);
 	glProgramUniform3fv(regularShader, uniformDynamicGlowColorLocation[0], 1, (GLfloat*)contMan.testMap.getCapPointColor(capPointID));
 	contMan.renderCapturePoint(capPointID, regularShader, worldMat[0], uniformTextureLocation[0], uniformNormalLocation[0], uniformGlowSpecLocation[0]);
-}
-
-void RenderPipeline::renderAnimatedTexture()
-{
-	//animTexture.Render();
 }
 
 void RenderPipeline::renderAnimation(int playerID, int roleID, void* world, AnimationState animState, float* dgColor, float sgInten, bool first, bool primary, int roomID)
@@ -1604,19 +1576,21 @@ void RenderPipeline::renderLightvolumes()
 {
 	//preformance test
 
-	SpotLight light;
-	light.Direction = vec3(0);
-	light.DiffuseIntensity = 1.0f;
-	vec3 origin = vec3(50, 0.5f, 63);
-	for (int n = 0; n < 100; n++)
-	{
-		light.Color = vec3(float(n) / 100.0f, 1 - float(n) / 100.0f, 0.5f);
-		light.Position = origin;
-		light.Position.x += sin(timepass + float(n) / 20.0f) * 20;
-		light.Position.y += sin(timepass * 4 + float(n) / 20.0f);
-		light.Position.z += cos(timepass + float(n) / 20.0f) * 20;
-		gBuffer->pushLights(&light, 1);
-	}
+	//SpotLight light;
+	//light.Direction = vec3(0);
+	//light.DiffuseIntensity = 1.0f;
+	//vec3 origin = vec3(50, 0.5f, 63);
+	//light.attenuation.w = 4.0f;
+	//light.AmbientIntensity = 1.0f;
+	//for (int n = 0; n < 100; n++)
+	//{
+	//	light.Color = vec3(float(n) / 100.0f, 1 - float(n) / 100.0f, 0.5f);
+	//	light.Position = origin;
+	//	light.Position.x += sin(timepass + float(n) / 20.0f) * 20;
+	//	light.Position.y += sin(timepass * 4 + float(n) / 20.0f);
+	//	light.Position.z += cos(timepass + float(n) / 20.0f) * 20;
+	//	gBuffer->pushLights(&light, 1);
+	//}
 
 	glUseProgram(gBuffer->spotVolShader);
 
