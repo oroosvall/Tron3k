@@ -106,6 +106,7 @@ public:
 
 	void update(float dt);
 
+	void renderParticles();
 	void renderChunks(GLuint shader, GLuint shaderLocation, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation, GLuint DglowColor, GLuint SglowColor, GLuint collision_portal_shader, GLuint collision_portal_world, GLuint portal, GLuint portal_world);
 
 	void renderBullet(int bid);

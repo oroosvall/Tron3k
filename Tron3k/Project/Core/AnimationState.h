@@ -20,6 +20,7 @@ enum AnimationState
 	first_secondary_throw, 			//			| Destroyer |          | Brute | Manipulator |
 	first_secondary_switch,			//      	| Destroyer | Shankbot | Brute | Manipulator |
 	first_secondary_switch_IN,		//      	|           |          | Brute |             |
+	first_secondary_fire_left,		// 			|			|		   |	   | Manipulator |
 
 	third_primary_idle,				// Trapper	| Destroyer | Shankbot | Brute | Manipulator |
 	third_primary_run,				// Trapper	| Destroyer | Shankbot | Brute | Manipulator |
@@ -86,6 +87,7 @@ int static getAnimRank(AnimationState test)
 	case first_primary_throw:			return 1;
 	case first_primary_switch:			return 1;
 	case first_primary_switch_IN:		return 1;
+	case first_secondary_fire_left:		return 1;
 
 	case first_secondary_idle:			return 0;
 	case first_secondary_run:			return 0;

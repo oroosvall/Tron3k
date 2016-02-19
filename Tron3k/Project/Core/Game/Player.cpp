@@ -435,7 +435,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 {
 	diedThisFrame = false;
 	PLAYERMSG msg = NONE;
-	if (role.getRole() != NROFROLES)
+	if (role.getRole() != NROFROLES || spectating)
 	{
 		modifiersGetData(dt); //Dont Remove Please!
 
@@ -721,8 +721,8 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 
 
-			//if (i->justPressed(GLFW_KEY_O))
-				//role.setHealth(0);
+			/*if (i->justPressed(GLFW_KEY_O))
+				role.setHealth(0);*/
 
 			if (role.getHealth() <= 0 && !isDead && role.getRole() != ROLES::NROFROLES)
 			{
@@ -923,11 +923,11 @@ void Player::reloadCurrentWeapon()
 	{
 		if (GetSound())
 		{
-			if (this->role.getRole() == 0)
+			if (animRole == 0)
 				GetSound()->playUserGeneratedSound(SOUNDS::soundEffectTrapperReload);
-			else if (this->role.getRole() == 2)
+			else if (animRole == 2)
 				GetSound()->playUserGeneratedSound(SOUNDS::soundEffectStalkerReload);
-			else if (this->role.getRole() == 3)
+			else if (animRole == 3)
 				GetSound()->playUserGeneratedSound(SOUNDS::soundEffectPunisherReload);
 
 		}
@@ -965,6 +965,10 @@ void Player::shoot()
 		animOverideIfPriority(anim_first_current, AnimationState::first_secondary_fire);
 		if (animRole == ROLES::MOBILITY)
 			animOverideIfPriority(anim_third_current, AnimationState::third_shankbot_melee_standing);
+
+		if (animRole == ROLES::MANIPULATOR)
+			if (role.getCurrentWeapon()->getType() != WEAPON_TYPE::BATTERYWPN_SLOW)
+				animOverideIfPriority(anim_third_current, AnimationState::first_secondary_fire_left);
 	}
 
 	//Add a bullet recoil factor that is multiplied by a random number and smooth it out
@@ -1085,6 +1089,12 @@ void Player::addModifier(MODIFIER_TYPE mt)
 	case MODIFIER_TYPE::BATTERYSPEEDMOD:
 	{
 		m = new BatterySpeedMod();
+		myModifiers.push_back(m);
+	}
+	break;
+	case MODIFIER_TYPE::DOUBLEDAMAGEMOD:
+	{
+		m = new DoubleDamageMod();
 		myModifiers.push_back(m);
 	}
 	break;

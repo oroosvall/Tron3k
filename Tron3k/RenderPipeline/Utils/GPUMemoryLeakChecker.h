@@ -40,6 +40,9 @@ extern unsigned int shaderBinds;
 
 extern unsigned int stateChange;
 
+extern unsigned int texManBinds;
+extern unsigned int illegalBinds;
+
 
 #ifdef _DEBUG
 
@@ -60,7 +63,7 @@ void glDrawArrays_D(GLenum mode, GLint first, GLsizei count);
 void glBufferData_D(GLenum target, GLsizeiptr size, const GLvoid * data, GLenum usage);
 
 void glActiveTexture_D(GLenum texture);
-void glBindTexture_D(GLenum target, GLuint texture);
+void glBindTexture_D(GLenum target, GLuint texture, const char* funcName);
 
 void glBindBuffer_D(GLenum target, GLuint buffer);
 
@@ -120,10 +123,8 @@ void reportGPULeaks();
 
 #define glBufferData(target, size, data, usage) glBufferData_D(target, size, data, usage)
 
-#define glBindTexture(target, texture) glBindTexture_D(target, texture)
-
 #define glActiveTexture(texture) glActiveTexture_D(texture)
-#define glBindTexture(target, texture) glBindTexture_D(target, texture)
+#define glBindTexture(target, texture) glBindTexture_D(target, texture, __func__)
 
 #define glBindBuffer(target, buffer)	glBindBuffer_D(target, buffer) 
 

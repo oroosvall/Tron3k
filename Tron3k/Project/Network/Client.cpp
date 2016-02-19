@@ -133,6 +133,29 @@ void Client::in_new_connection(Packet* rec, Uint8 _conID)
 		}
 	}
 
+	/*
+	COOLDOWNS FOR PICKUPS
+	*/
+	std::vector<Effect*> effects = gamePtr->getEffects(EFFECT_TYPE::HSCPICKUP);
+	HSCPickup* hsc = nullptr;
+	float cd = 0.0f;
+	for (int c = 0; c < effects.size(); c++)
+	{
+		*rec >> cd;
+		hsc = (HSCPickup*)effects[c];
+		hsc->setCooldown(cd);
+	}
+	
+	effects = gamePtr->getEffects(EFFECT_TYPE::DOUBLEDAMAGEPICKUP);
+	DoubleDamagePickup* dd = nullptr;
+	for (int c = 0; c < effects.size(); c++)
+	{
+		*rec >> cd;
+		dd = (DoubleDamagePickup*)effects[c];
+		dd->setCooldown(cd);
+	}
+
+
 	temp = new Player();
 	temp->init("ClientName", glm::vec3(0, 0, 0), gamePtr->getPhysics());
 	gamePtr->createPlayer(temp, conID, 100, ROLES::NROFROLES, true);

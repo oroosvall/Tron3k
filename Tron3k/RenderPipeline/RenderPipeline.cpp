@@ -103,10 +103,14 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	chatText = new Text(chatHistoryText + chatTypeText, 11, fontTexture, vec2(10, 420));
 
 	cross = new Crosshair();
+	crossHit = new Crosshair();
 	unsigned int x, y;
 	crosshairTexture = TextureManager::gTm->createTexture("GameFiles/Textures/Crosshairs/Crosshair.png");
+	crosshairHitTexture = loadTexture("GameFiles/Textures/Crosshairs/Crosshair_hit.png");
 	bool success = TextureManager::gTm->PNGSize("GameFiles/Textures/Crosshairs/Crosshair.png", x, y);
 	cross->init(x, y);
+	success = TextureManager::gTm->PNGSize("GameFiles/Textures/Crosshairs/Crosshair_hit.png", x, y);
+	crossHit->init(x, y);
 
 	ptex = TextureManager::gTm->createTexture("GameFiles/Textures/Particles/arrow.png");
 
@@ -161,38 +165,14 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 	uiQuad.Init(vec3(-1, -1, 0), vec3(1, 1, 0));
 
+	animTexture.init();
+
 	//glGenBuffers(1, &decal_struct_UBO);
 	//int maxDecals = 50;
 	//glBindBuffer(GL_UNIFORM_BUFFER, decal_struct_UBO);
 	//glBufferData(GL_UNIFORM_BUFFER, maxDecals * sizeof(float) * 12, NULL, GL_DYNAMIC_DRAW);
 
 	resetQuery();
-
-	pdata.maxparticles = 100;
-	pdata.dir = normalize(glm::vec3(1, 1, 1));
-	pdata.lifetime = 20.0f;
-	pdata.gravity = 1.0f;
-	pdata.emission = 0.1f;
-	pdata.force = 1.0f;
-
-	std::ifstream file;
-	file.open("Gamefiles/ParticleSystems/hitspark1.ps", std::ios::binary | std::ios::in);
-
-	//Read header
-	ExportHeader exHeader;
-	file.read((char*)&exHeader, sizeof(exHeader));
-
-	//Read texture name
-	char* f = (char*)malloc(exHeader.texturesize + 1);
-	file.read(f, sizeof(char) * exHeader.texturesize);
-	f[exHeader.texturesize] = 0;
-
-	free(f);
-
-	//Read Particle System
-	file.read((char*)&pdata, sizeof(ParticleSystemData));
-
-	particleTest.Initialize(glm::vec3(0,5,0), &pdata, &particleCS);
 
 	initialized = true;
 	return true;
@@ -300,15 +280,18 @@ void RenderPipeline::reloadShaders()
 		temp = 0;
 	}
 
-	//Water shader
-	std::string shaderNamesWater[] = { "GameFiles/Shaders/Water_vs.glsl", "GameFiles/Shaders/Water_fs.glsl" };
-	GLenum shaderTypesWater[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
-	//CreateProgram(temp, shaderNamesWater, shaderTypesWater, 2);
+	//AnimQuad shader
+	std::string shaderNamesAnimquad[] = { "GameFiles/Shaders/AnimatedQuad_vs.glsl", "GameFiles/Shaders/AnimatedQuad_gs.glsl", "GameFiles/Shaders/AnimatedQuad_fs.glsl" };
+	GLenum shaderTypesAnimquad[] = { GL_VERTEX_SHADER, GL_GEOMETRY_SHADER, GL_FRAGMENT_SHADER };
+	CreateProgram(temp, shaderNamesAnimquad, shaderTypesAnimquad, 3);
 	if (temp != 0)
 	{
-		waterShader = temp;
+		animTexture.animQuadShader = temp;
 		temp = 0;
 	}
+	animTexture.animQuadWorld = glGetUniformLocation(animTexture.animQuadShader, "world");
+	animTexture.animQuadVP = glGetUniformLocation(animTexture.animQuadShader, "vp");
+	animTexture.animQuadUVset = glGetUniformLocation(animTexture.animQuadShader, "UVset");
 
 	//pointlight volume shader
 	std::string shaderNamesPointVolume[] = { "GameFiles/Shaders/pointlightVolume_vs.glsl", "GameFiles/Shaders/pointlightVolume_gs.glsl", "GameFiles/Shaders/pointlightVolume_fs.glsl" };
@@ -431,8 +414,25 @@ void RenderPipeline::reloadShaders()
 	if (temp != 0)
 	{
 		particleCS = temp;
+		compute = particleCS;
 		temp = 0;
 	}
+
+	ZeroMemory((char*)&pLoc, sizeof(pLoc));
+
+	pLoc = {
+		(GLuint)glGetUniformLocation(particleCS, "deltaTime"),
+		(GLuint)glGetUniformLocation(particleCS, "lifetime"),
+		(GLuint)glGetUniformLocation(particleCS, "force"),
+		(GLuint)glGetUniformLocation(particleCS, "drag"),
+		(GLuint)glGetUniformLocation(particleCS, "gravity"),
+		(GLuint)glGetUniformLocation(particleCS, "emission"),
+		(GLuint)glGetUniformLocation(particleCS, "continuous"),
+		(GLuint)glGetUniformLocation(particleCS, "omni"),
+		(GLuint)glGetUniformLocation(particleCS, "initialPos"),
+	};
+
+	locations = pLoc;
 
 	std::cout << "Done loading shaders\n";
 
@@ -450,7 +450,7 @@ void RenderPipeline::release()
 	glDeleteShader(animationShader);
 	glDeleteShader(uiShader);
 	glDeleteShader(decal_Shader);
-	glDeleteShader(waterShader);
+	glDeleteShader(animTexture.animQuadShader);
 	uiQuad.release();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -464,10 +464,9 @@ void RenderPipeline::release()
 	contMan.release();
 
 	cross->release();
+	crossHit->release();
 	delete cross;
-
-	particleTest.Release();
-
+	delete crossHit;
 	reportGPULeaks();
 
 	delete this; // yes this is safe
@@ -486,10 +485,14 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	cam.setViewProjMat(gBuffer->spotVolShader, gBuffer->spotVolVP);
 	cam.setViewProjMat(gBuffer->pointVolShader, gBuffer->pointVolVP);
 	cam.setViewProjMat(portalShaderV2, portal_VP);
+	cam.setViewProjMat(animTexture.animQuadShader, animTexture.animQuadVP);
 
 	contMan.update(dt);
+	animTexture.update(dt);
 
 	updateTakeDamageEffect(dt);
+
+	//animTexture.Update(dt);
 
 	gBuffer->eyePosLast = gBuffer->eyePos;
 	gBuffer->eyePos.x = x;
@@ -499,10 +502,6 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	clearDynamicLights();
 	
 	std::stringstream ss;
-
-	glUseProgram(particleCS);
-
-	particleTest.Update(dt);
 
 	terminateQuery();
 	
@@ -525,6 +524,10 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 		//ss << "State changes: " << stateChange << "\n";
 		ss << "Total uptime:" << timepass << "\n";
 		ss << "Dt:" << dt << "\n";
+
+		ss << "ManagerBinds:" << texManBinds << "\n";
+		ss << "OtherBinds:" << illegalBinds << "\n";
+
 		//ss << result << "\n";
 		if (counter > 0.0001f)
 		{
@@ -544,6 +547,9 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	bufferBinds = 0;
 	shaderBinds = 0;
 	stateChange = 0;
+
+	texManBinds = 0;
+	illegalBinds = 0;
 
 	startTimer("Frame : Total");
 	renderFrameTimeID = startTimer("Frame : Render only");
@@ -593,6 +599,10 @@ void RenderPipeline::render()
 
 	contMan.renderChunks(regularShader, worldMat[0], uniformTextureLocation[0], uniformNormalLocation[0], uniformGlowSpecLocation[0], uniformDynamicGlowColorLocation[0], uniformStaticGlowIntensityLocation[0],  *gBuffer->portal_shaderPtr, gBuffer->portal_model, portalShaderV2, portal_World);
 	
+	//render animated signs
+	animTexture.render();
+
+
 	stopTimer(chunkRender);
 	//glDepthMask(GL_TRUE);glEnable(GL_CULL_FACE);glDisable(GL_BLEND);)
 	//renderEffects();
@@ -610,15 +620,14 @@ void RenderPipeline::finalizeRender()
 	glUseProgram(particleShader);
 	cam.setViewProjMat(particleShader, particleViewProj);
 	//glProgramUniformMatrix4fv(particleShader, particleViewProj, 1, GL_FALSE, (GLfloat*)&glm::mat4());
-	vec2 size = particleTest.m_size;
+	vec2 size = vec2(0.5, 0.5);
 	glProgramUniform2f(particleShader, particleSize, size.x, size.y);
 
 	glProgramUniform3f(particleShader, particleCam, gBuffer->eyePos.x, gBuffer->eyePos.y, gBuffer->eyePos.z);
 	
 	TextureManager::gTm->bindTexture(ptex, particleShader, particleTexture, DIFFUSE_FB);
 
-	particleTest.Draw();
-
+	contMan.renderParticles();
 
 	glUseProgram(glowShaderTweeks);
 	
@@ -653,7 +662,6 @@ void RenderPipeline::finalizeRender()
 	
 	//uglyCrosshairSolution->draw();
 
-	renderCrosshair(CROSSHAIR_TRAPPER_P);
 	glDisable(GL_BLEND);
 
 	stopTimer(renderFrameTimeID);
@@ -787,12 +795,24 @@ void RenderPipeline::renderCrosshair(CROSSHAIR_TYPE cross)
 	glProgramUniformMatrix4fv(textShader, textShaderVP, 1, GL_FALSE, (GLfloat*)&glm::mat4());
 	glProgramUniform3f(textShader, textShaderOffset, 0, 0, 0);
 
-	//switch (cross)
-	//{
-	//case CROSSHAIR_TRAPPER_P:
-	//	break;
-	//case CROSSHAIR_SHANKER_P:
-	//	break;
+	switch (cross)
+	{
+	case CROSSHAIR_TRAPPER_P:
+		TextureManager::gTm->bindTexture(crosshairTexture, textShader, textShaderLocation, DIFFUSE_FB);
+		this->cross->draw();
+		break;
+	case CROSSHAIR_SHANKER_P:
+	{
+		TextureInfo asd;
+		asd.lastTextureSlot = GL_TEXTURE0;
+		asd.state = TEXTURE_LOADED;
+		asd.textureID = crosshairHitTexture;
+
+		TextureManager::gTm->bind(asd, textShader, textShaderLocation);
+
+		this->crossHit->draw();
+		break;
+	}
 	//case CROSSHAIR_SHANKER_S:
 	//	break;
 	//case CROSSHAIR_BRUTE_P:
@@ -801,12 +821,10 @@ void RenderPipeline::renderCrosshair(CROSSHAIR_TYPE cross)
 	//	break;
 	//case CROSSHAIR_NONE:
 	//	break;
-	//default:
-	//	break;
-	//}
-	TextureManager::gTm->bindTexture(crosshairTexture, textShader, textShaderLocation, DIFFUSE_FB);
-
-	this->cross->draw();
+	default:
+		break;
+	}
+	
 }
 
 void RenderPipeline::renderEffects()
@@ -921,14 +939,6 @@ void RenderPipeline::renderCapturePoint(int capPointID)
 	glProgramUniform1f(regularShader, uniformStaticGlowIntensityLocation[0], 1.0f);
 	glProgramUniform3fv(regularShader, uniformDynamicGlowColorLocation[0], 1, (GLfloat*)contMan.testMap.getCapPointColor(capPointID));
 	contMan.renderCapturePoint(capPointID, regularShader, worldMat[0], uniformTextureLocation[0], uniformNormalLocation[0], uniformGlowSpecLocation[0]);
-}
-
-void RenderPipeline::renderWater()
-{
-	//uvAnim = uvAnim + 0.1f * delta;
-	glDisable(GL_BLEND);
-	glUseProgram(waterShader);
-	glProgramUniform1f(waterShader, uniformUVAnim, uvAnim);
 }
 
 void RenderPipeline::renderAnimation(int playerID, int roleID, void* world, AnimationState animState, float* dgColor, float sgInten, bool first, bool primary, int roomID)
@@ -1180,7 +1190,7 @@ void RenderPipeline::ui_renderQuad(float* mat, float* pivot, GLuint textureID, f
 		temp.lastTextureSlot = GL_TEXTURE0;
 		temp.textureID = textureID;
 		TextureManager::gTm->bind(temp, uiShader, ui_Texture);
-		glBindTexture(GL_TEXTURE_2D, textureID);
+		//glBindTexture(GL_TEXTURE_2D, textureID);
 		glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, mat);
 		glProgramUniform3fv(uiShader, uniformPivotLocation, 1, pivot);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
@@ -1370,7 +1380,7 @@ void RenderPipeline::renderMinimap(float* yourPos, float* yourdir, float* teamma
 	if (activeCap == 0)
 	{
 		minimapRenderMat[0].w = 0.432f;
-		minimapRenderMat[1].w = -0.05;
+		minimapRenderMat[1].w = -0.05f;
 	}
 	else
 	{
@@ -1569,6 +1579,8 @@ void RenderPipeline::renderLightvolumes()
 	//light.Direction = vec3(0);
 	//light.DiffuseIntensity = 1.0f;
 	//vec3 origin = vec3(50, 0.5f, 63);
+	//light.attenuation.w = 4.0f;
+	//light.AmbientIntensity = 1.0f;
 	//for (int n = 0; n < 100; n++)
 	//{
 	//	light.Color = vec3(float(n) / 100.0f, 1 - float(n) / 100.0f, 0.5f);

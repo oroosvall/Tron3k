@@ -7,6 +7,8 @@
 #include "../Lights.h"
 #include <vector>
 
+#include "../ParticleSystem/ParticleSystem.h"
+
 using std::vector;
 
 struct SharedFileHDR
@@ -22,6 +24,7 @@ struct SharedFileHDR
 	uint32_t SPCountTeamA;
 	uint32_t SPCountTeamB;
 	uint32_t SPCountTeamFFA;
+	uint32_t particleSystemCount;
 };
 
 struct CharacterHeader
@@ -107,6 +110,13 @@ struct PortalDataRead
 	uint32_t bridgedRooms[2];
 	glm::vec4 positions[4];
 	//glm::mat4 transform;
+};
+
+struct ParticleSystem_sdf
+{
+	glm::vec3 pos;
+	int room;
+	char* fileName;
 };
 
 struct PortalData
@@ -521,6 +531,10 @@ struct Chunk
 	vector<PortalData> portals;
 
 	vector<SpotLight> lights;
+
+	vector<ParticleSystem> particleSystem;
+	vector<ParticleSystemData> particleSystemData;
+
 	int nrStaticSpotlights;
 	int nrStaticPointlights;
 

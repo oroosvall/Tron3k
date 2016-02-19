@@ -10,5 +10,6 @@
 #include "TrapperShareAmmo.h"
 #include "BatterySlow.h"
 #include "BatterySpeed.h"
+#include "DoubleDamageMod.h"
 
 #endif

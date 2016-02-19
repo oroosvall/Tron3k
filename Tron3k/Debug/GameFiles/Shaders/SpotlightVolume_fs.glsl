@@ -49,9 +49,9 @@ void main()
 	vec3 LightDirection = Position0.xyz - lights[spotlightID].Position;
 	float Distance = length(LightDirection);
 	
-	float spotlength = 5.0f * 1.5f;
+	float spotlength = lights[spotlightID].attenuation.z;
 	
-	if(Distance < spotlength)
+	if(Distance * 0.75f < spotlength)
 	{
 		Normal0 = texture(Normal, UV);
 		LightDirection = normalize(LightDirection);

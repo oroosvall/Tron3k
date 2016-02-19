@@ -80,7 +80,7 @@ void main()
 				if(emit == 0)
 				{
 					p[iter].dir = p[iter].initialDir;
-					p[iter].pos.xyz = vec3(0,0,0);
+					p[iter].pos.xyz = initialPos;
 					p[iter].dir.w = lifetime;
 				}
 				
@@ -92,7 +92,7 @@ void main()
 					if(old == -1)
 					{
 						p[iter].dir = p[iter].initialDir;
-						p[iter].pos.xyz = vec3(0,0,0);
+						p[iter].pos.xyz = initialPos;
 						p[iter].dir.w = lifetime;
 					}
 				}

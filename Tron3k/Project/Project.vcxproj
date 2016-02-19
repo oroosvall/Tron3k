@@ -31,8 +31,10 @@
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\BatteryFieldSlow.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\BatteryFieldSpeed.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\CleanseNova.cpp" />
+    <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\DoubleDamagePickup.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\Explosion.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\HealthPack.cpp" />
+    <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\HSCPickup.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\LightwallEffect.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\ThermiteCloud.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\ThunderDomeEffect.cpp" />
@@ -40,6 +42,7 @@
     <ClCompile Include="Core\Game\Role\PlayerEffects\Modifier.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Modifiers\BatterySlow.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Modifiers\BatterySpeed.cpp" />
+    <ClCompile Include="Core\Game\Role\PlayerEffects\Modifiers\DoubleDamageMod.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Modifiers\HackingDartModifier.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Modifiers\LightSpeed.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Modifiers\LightWallLockedControls.cpp" />
@@ -117,8 +120,10 @@
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\BatteryFieldSlow.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\BatteryFieldSpeed.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\CleanseNova.h" />
+    <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\DoubleDamagePickup.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\Explosion.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\HealthPack.h" />
+    <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\HSCPickup.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\LightwallEffect.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\ThermiteCloud.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\ThunderDomeEffect.h" />
@@ -127,6 +132,7 @@
     <ClInclude Include="Core\Game\Role\PlayerEffects\Modifiers\AllModifiers.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Modifiers\BatterySlow.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Modifiers\BatterySpeed.h" />
+    <ClInclude Include="Core\Game\Role\PlayerEffects\Modifiers\DoubleDamageMod.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Modifiers\HackingDartModifier.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Modifiers\LightSpeed.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Modifiers\LightWallLockedControls.h" />

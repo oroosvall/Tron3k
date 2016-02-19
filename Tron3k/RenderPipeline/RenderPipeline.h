@@ -14,6 +14,8 @@
 
 #include "ParticleSystem\ParticleSystem.h"
 
+#include "AnimatedTexture.h"
+
 enum SETTING_INPUT
 {
 	CLEAR_COLOR_IN = PipelineValues::FLOAT3,
@@ -37,6 +39,7 @@ private:
 
 	ContentManager contMan;
 	AnimManager anims;
+	AnimatedTexture animTexture;
 
 	//LightWall lw;
 
@@ -81,6 +84,9 @@ private:
 	GLuint portal_World;
 	GLuint portal_VP;
 
+	GLuint animatedTexShader;
+	GLuint uniformAnimatedTex;
+
 	BlitQuad uiQuad;
 
 	GLuint worldMat[2];
@@ -104,12 +110,11 @@ private:
 
 	GLuint uniformKeyMatrixLocation;
 
-	GLuint waterShader;
-	GLuint uniformUVAnim;
-	float uvAnim = 0.0f;
-
 	//particle shaders
 	GLuint particleCS;
+
+	ParticleShaderLocations pLoc;
+
 	GLuint particleShader;
 	GLuint particleSize;
 	GLuint particleViewProj;
@@ -151,11 +156,11 @@ private:
 	mat4 minimapRenderMat;
 
 	Crosshair* cross;
+	Crosshair* crossHit;
 
 	GLuint crosshairTexture;
+	GLuint crosshairHitTexture;
 
-	ParticleSystem particleTest;
-	ParticleSystemData pdata;
 	GLuint ptex;
 
 public:
@@ -195,8 +200,6 @@ public:
 	virtual void renderCrosshair(CROSSHAIR_TYPE cross);
 
 	virtual void renderCapturePoint(int capPointID);
-
-	virtual void renderWater();
 
 	virtual void forceReset() {};
 
