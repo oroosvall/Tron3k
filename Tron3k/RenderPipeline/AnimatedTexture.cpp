@@ -8,7 +8,7 @@ AnimatedTexture::~AnimatedTexture()
 {
 }
 
-void AnimatedTexture::Initialize()
+void AnimatedTexture::init()
 {
 
 /*	AnimatedObject sign;
@@ -42,8 +42,6 @@ void AnimatedTexture::Update(float dT)
 {
 	test.update(dT);
 
-
-	
 }
 
 void AnimatedTexture::render()

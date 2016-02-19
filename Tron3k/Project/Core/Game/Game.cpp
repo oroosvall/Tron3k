@@ -73,10 +73,10 @@ void Game::init(int max_connections, int state, Console* con)
 	spectateID = -1;
 	decalCounter = 0;
 
-	addEffectToList(0, 0, 0, EFFECT_TYPE::HSCPICKUP, vec3(50.87f, 1.6f, 10.7f), 0, 6.0f);
-	addEffectToList(0, 0, 1, EFFECT_TYPE::HSCPICKUP, vec3(10.68f, 1.6f, 46.85f), 0, 6.0f);
-	addEffectToList(0, 0, 2, EFFECT_TYPE::HSCPICKUP, vec3(-34.86f, 1.6f, 67.0f), 0, 6.0f);
-	addEffectToList(0, 0, 3, EFFECT_TYPE::HSCPICKUP, vec3(44.05f, 1.7f, 98.19f), 0, 6.0f);
+	addEffectToList(0, 0, 0, EFFECT_TYPE::HSCPICKUP, vec3(50.87f, 1.6f, 10.7f), 0,  3.0f);
+	addEffectToList(0, 0, 1, EFFECT_TYPE::HSCPICKUP, vec3(10.68f, 1.6f, 46.85f), 0, 3.0f);
+	addEffectToList(0, 0, 2, EFFECT_TYPE::HSCPICKUP, vec3(-34.86f, 1.6f, 67.0f), 0, 3.0f);
+	addEffectToList(0, 0, 3, EFFECT_TYPE::HSCPICKUP, vec3(44.05f, 1.7f, 98.19f), 0, 3.0f);
 
 	suicideMessages.push_back(" gave up on life.");
 	suicideMessages.push_back(" short circuited!");
@@ -725,7 +725,7 @@ void Game::checkPlayerVEffectCollision()
 	if (gameState == Gamestate::ROAM || gameState == Gamestate::SERVER)
 	{
 		//Collision for all non-wall effects
-
+		bool notDoingWrongThings = true;
 		for (int j = 0; j < max_con; j++)
 		{
 			if (playerList[j] != nullptr)
@@ -744,16 +744,28 @@ void Game::checkPlayerVEffectCollision()
 								collNormals = physics->checkPlayerVEffectCollision(playerList[j]->getPos(), t, eid);
 								if (collNormals != vec4(0, 0, 0, 0))
 								{
-									effects[t][i]->thisPlayerHit(j);
-									EffectHitPlayerInfo hi;
-									hi.playerHit = j;
-									hi.effectPID = pid;
-									hi.effectID = eid;
-									hi.et = EFFECT_TYPE(t);
-									hi.hitPos = effects[t][i]->getPos();
-									hi.playerPos = playerList[j]->getPos();
-									hi.newHPtotal = -1;
-									allEffectHitsOnPlayers.push_back(hi);
+									if (effects[t][i]->getType() == EFFECT_TYPE::HSCPICKUP)
+									{
+										HSCPickup* temp = (HSCPickup*)effects[t][i];
+										if (temp->onCooldown())
+										{
+											notDoingWrongThings = false;
+										}
+									}
+									if (notDoingWrongThings)
+									{
+										effects[t][i]->thisPlayerHit(j);
+										EffectHitPlayerInfo hi;
+										hi.playerHit = j;
+										hi.effectPID = pid;
+										hi.effectID = eid;
+										hi.et = EFFECT_TYPE(t);
+										hi.hitPos = effects[t][i]->getPos();
+										hi.playerPos = playerList[j]->getPos();
+										hi.newHPtotal = -1;
+										allEffectHitsOnPlayers.push_back(hi);
+									}
+									
 								}
 							}
 						}
@@ -1904,7 +1916,8 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 			{
 				if (hi.et == EFFECT_TYPE::HEALTHPACK)
 					GetSound()->playExternalSound(SOUNDS::soundEffectHP, pos.x, pos.y, pos.z);
-				else if (hi.et != EFFECT_TYPE::BATTERY_SLOW && hi.et != EFFECT_TYPE::BATTERY_SPEED)
+				
+				else if (hi.et != EFFECT_TYPE::BATTERY_SLOW && hi.et != EFFECT_TYPE::BATTERY_SPEED && hi.et != EFFECT_TYPE::HSCPICKUP)
 				{
 					if(!p->isLocal())
 						GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHit, pos.x, pos.y, pos.z);
@@ -2015,6 +2028,11 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 				p->getRole()->setSpecialMeter(100);
 				p->getRole()->getConsumable()->reset();
 				tester->startCooldown();
+
+				if (gameState != SERVER && GetSound() && hi.playerHit == localPlayerId)
+				{
+					GetSound()->playExternalSound(SOUNDS::soundEffectHSCPickup, pos.x, pos.y, pos.z);
+				}
 			}
 		}
 			break;

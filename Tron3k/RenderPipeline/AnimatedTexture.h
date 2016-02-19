@@ -73,11 +73,10 @@ public:
 
 	AnimatedTexture();
 	~AnimatedTexture();
-	void Release();
 
-	void Initialize();
 	void Update(float);
 	void render();
+	void init();
 
 	GLuint animQuadShader;
 	GLuint animQuadUVset;

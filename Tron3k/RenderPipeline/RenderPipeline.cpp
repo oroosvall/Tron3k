@@ -165,6 +165,8 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 	uiQuad.Init(vec3(-1, -1, 0), vec3(1, 1, 0));
 
+	animTexture.init();
+
 	//glGenBuffers(1, &decal_struct_UBO);
 	//int maxDecals = 50;
 	//glBindBuffer(GL_UNIFORM_BUFFER, decal_struct_UBO);
@@ -316,7 +318,6 @@ void RenderPipeline::reloadShaders()
 	animTexture.animQuadWorld = glGetUniformLocation(animTexture.animQuadShader, "world");
 	animTexture.animQuadVP = glGetUniformLocation(animTexture.animQuadShader, "vp");
 	animTexture.animQuadUVset = glGetUniformLocation(animTexture.animQuadShader, "UVset");
-	animTexture.Initialize();
 
 	//pointlight volume shader
 	std::string shaderNamesPointVolume[] = { "GameFiles/Shaders/pointlightVolume_vs.glsl", "GameFiles/Shaders/pointlightVolume_gs.glsl", "GameFiles/Shaders/pointlightVolume_fs.glsl" };
@@ -515,6 +516,8 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 
 	updateTakeDamageEffect(dt);
 
+	//animTexture.Update(dt);
+
 	gBuffer->eyePosLast = gBuffer->eyePos;
 	gBuffer->eyePos.x = x;
 	gBuffer->eyePos.y = y;
@@ -549,6 +552,10 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 		//ss << "State changes: " << stateChange << "\n";
 		ss << "Total uptime:" << timepass << "\n";
 		ss << "Dt:" << dt << "\n";
+
+		ss << "ManagerBinds:" << texManBinds << "\n";
+		ss << "OtherBinds:" << illegalBinds << "\n";
+
 		//ss << result << "\n";
 		if (counter > 0.0001f)
 		{
@@ -568,6 +575,9 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	bufferBinds = 0;
 	shaderBinds = 0;
 	stateChange = 0;
+
+	texManBinds = 0;
+	illegalBinds = 0;
 
 	startTimer("Frame : Total");
 	renderFrameTimeID = startTimer("Frame : Render only");
@@ -1210,7 +1220,7 @@ void RenderPipeline::ui_renderQuad(float* mat, float* pivot, GLuint textureID, f
 		temp.lastTextureSlot = GL_TEXTURE0;
 		temp.textureID = textureID;
 		TextureManager::gTm->bind(temp, uiShader, ui_Texture);
-		glBindTexture(GL_TEXTURE_2D, textureID);
+		//glBindTexture(GL_TEXTURE_2D, textureID);
 		glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, mat);
 		glProgramUniform3fv(uiShader, uniformPivotLocation, 1, pivot);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);

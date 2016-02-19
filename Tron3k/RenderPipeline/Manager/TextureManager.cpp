@@ -165,6 +165,41 @@ void TextureManager::bindTexture(unsigned int &textureID, GLuint shader, GLuint 
 
 }
 
+void TextureManager::bindTextureOnly(unsigned int &textureID, TEXTURE_FALLBACK fallback)
+{
+	if (!textureList.empty() && textureID < textureList.size())
+	{
+		TextureInfo* ti = &textureList[textureID];
+
+		if (ti->state == TEXTURE_UNLOADED)
+		{
+			if (addToStreamQueue(&textureID, ti->texturePath))
+			{
+				ti->state = TEXTURE_STREAMING;
+			}
+
+			bindDefaultOnly(fallback);
+
+		}
+		else if (ti->state == TEXTURE_STREAMING)
+		{
+			//bindDefault(shader, shaderLocation, fallback);
+		}
+		else if (ti->state == TEXTURE_LOADED)
+		{
+			glBindTexture(GL_TEXTURE_2D, ti->textureID);
+			ti->timeNotUsed = 0.0f;
+		}
+
+	}
+	else
+	{
+
+		bindDefaultOnly(fallback);
+
+	}
+}
+
 void TextureManager::bindDefault(GLuint shader, GLuint textureLocation, TEXTURE_FALLBACK fallback)
 {
 
@@ -195,7 +230,7 @@ void TextureManager::bindDefault(GLuint shader, GLuint textureLocation, TEXTURE_
 	//f (textureSlotBinds[*slot - GL_TEXTURE0] != texture)
 	//
 		*slot = GL_TEXTURE0 + textureUnitCounter;
-		textureUnitCounter = ((textureUnitCounter + 1) % maxTextureUnitSize);
+		textureUnitCounter = ((textureUnitCounter + 1) % (maxTextureUnitSize-1));
 
 	//	textureSlotBinds[*slot - GL_TEXTURE0] = texture;
 	//}
@@ -207,15 +242,39 @@ void TextureManager::bindDefault(GLuint shader, GLuint textureLocation, TEXTURE_
 
 }
 
+void TextureManager::bindDefaultOnly(TEXTURE_FALLBACK fallback)
+{
+
+	GLuint texture = 0;
+
+	if (fallback == DIFFUSE_FB)
+	{
+		texture = defaultDiffuse;
+	}
+	else if (fallback == NORMAL_FB)
+	{
+		texture = defaultNormal;
+	}
+	else if (fallback == NORMAL_FULL_FB)
+	{
+		texture = defaultNormal_full;
+	}
+	else if (fallback == GLOW_FB)
+	{
+		texture = defaultGlow;
+	}
+	glBindTexture(GL_TEXTURE_2D, texture);
+}
+
 void TextureManager::bind(TextureInfo &ti, GLuint shader, GLuint textureLocation)
 {
 	GLuint texture = ti.textureID;
-	GLuint slot = ti.lastTextureSlot;
+	GLuint slot = 0;// ti.lastTextureSlot;
 
 	//if (textureSlotBinds[slot - GL_TEXTURE0] != texture)
 	//{
 		slot = GL_TEXTURE0 + textureUnitCounter;
-		textureUnitCounter = ((textureUnitCounter + 1) % maxTextureUnitSize);
+		textureUnitCounter = ((textureUnitCounter + 1) % (maxTextureUnitSize-1));
 
 	//	textureSlotBinds[slot - GL_TEXTURE0] = texture;
 	//	ti.lastTextureSlot = slot;

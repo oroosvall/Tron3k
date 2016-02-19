@@ -27,7 +27,7 @@ int HSCPickup::update(float dt)
 
 float HSCPickup::renderRad()
 {
-	return rad;
+	return 10 * rad;
 }
 
 bool HSCPickup::onCooldown()

@@ -117,6 +117,7 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->soundList[SOUNDS::soundEffectFieldsStereo].loadFromFile("GameFiles/Sound/soundEffectFieldsStereo.ogg");
 		singleton->soundList[SOUNDS::soundEffectFields].loadFromFile("GameFiles/Sound/soundEffectFields.ogg");
 		singleton->soundList[SOUNDS::soundEffectBatteryFields].loadFromFile("GameFiles/Sound/soundEffectBatteryFields.ogg");
+		singleton->soundList[SOUNDS::soundEffectHSCPickup].loadFromFile("GameFiles/Sound/soundEffectHSCPickup.ogg");
 		initialized = true;
 	}
 }

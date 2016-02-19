@@ -211,7 +211,7 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 {
 	glUseProgram(shader);
 	//diffuse
-	glActiveTexture(GL_TEXTURE0);
+	//glActiveTexture(GL_TEXTURE0);
 	//glBindTexture(GL_TEXTURE_2D, textures[1].textureID);
 	//normal & dynamic glow
 

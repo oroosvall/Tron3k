@@ -93,5 +93,5 @@ void main()
 		}
 		
 	}
-	fragment_color += vec4(lights[spotlightID].Color, 1) * 0.1f;
+	//fragment_color += vec4(lights[spotlightID].Color, 1) * 0.1f;
 }

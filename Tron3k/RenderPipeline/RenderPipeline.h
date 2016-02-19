@@ -84,6 +84,9 @@ private:
 	GLuint portal_World;
 	GLuint portal_VP;
 
+	GLuint animatedTexShader;
+	GLuint uniformAnimatedTex;
+
 	BlitQuad uiQuad;
 
 	GLuint worldMat[2];

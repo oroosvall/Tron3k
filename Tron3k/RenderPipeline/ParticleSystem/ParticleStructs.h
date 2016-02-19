@@ -24,8 +24,8 @@ struct ParticleSystemData
 	float force;
 	float drag;
 	float gravity;
-	bool continuous;
-	bool omni;
+	int continuous;
+	int omni;
 };
 
 typedef struct ParticleShaderLocations

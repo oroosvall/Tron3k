@@ -94,6 +94,7 @@ enum SOUNDS
 	soundEffectFieldsStereo,
 	soundEffectFields,
 	soundEffectBatteryFields,
+	soundEffectHSCPickup,
 
 	nrOfSounds //leave last
 };
