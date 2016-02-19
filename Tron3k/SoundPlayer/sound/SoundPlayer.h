@@ -67,6 +67,7 @@ public:
 	static bool getSoundEnabler();
 	static bool getInitialized();
 
+	virtual void SetFading(bool);
 	virtual float getVolumeMusic();
 	virtual void setVolumeMusic(float volume);
 	virtual void setVolumeSound(float volume);

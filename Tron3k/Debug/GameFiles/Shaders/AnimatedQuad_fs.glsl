@@ -3,13 +3,19 @@ layout (location = 0) in vec2 uv;
 
 uniform sampler2D tex;
 //uniform int type;
-    
+   
+layout (location = 2) out vec4 DiffuseOut;
 layout (location = 4) out vec4 GlowMap;
 
 void main () 
 {
+	
 	GlowMap = texture(tex, uv);
-	GlowMap.w = 0.8f;
+	//DiffuseOut = GlowMap;
+	//DiffuseOut.w = 1f;
+	GlowMap.w = 0.9f;
+	
+	
 	////Water Shader
 	//if (type == 1)
 	//{

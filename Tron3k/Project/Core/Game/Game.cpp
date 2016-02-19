@@ -1443,25 +1443,27 @@ void Game::handleWeaponFire(int conID, int teamId, int bulletId, WEAPON_TYPE wea
 
 	case WEAPON_TYPE::LINK_GUN:
 		if (gameState != Gamestate::SERVER)
-			if (conID == localPlayerId || conID == spectateID)
-			{
-				GetSound()->playExternalSound(SOUNDS::soundEffectLinkGunStereo, pos.x, pos.y, pos.z);
-			}
+			if (GetSound())
+				if (conID == localPlayerId || conID == spectateID)
+				{
+					GetSound()->playExternalSound(SOUNDS::soundEffectLinkGunStereo, pos.x, pos.y, pos.z);
+				}
 
-			else
-				GetSound()->playExternalSound(SOUNDS::soundEffectLinkGun, pos.x, pos.y, pos.z);
+				else
+					GetSound()->playExternalSound(SOUNDS::soundEffectLinkGun, pos.x, pos.y, pos.z);
 		addBulletToList(conID, teamId, bulletId, BULLET_TYPE::LINK_SHOT, pos, dir);
 		break;
 
 	case WEAPON_TYPE::BATTERYWPN_SLOW:
 		if (gameState != Gamestate::SERVER)
-			if (conID == localPlayerId || conID == spectateID)
-			{
-				GetSound()->playExternalSound(SOUNDS::soundEffectFieldsStereo, pos.x, pos.y, pos.z);
-			}
-
-			else
-				GetSound()->playExternalSound(SOUNDS::soundEffectFields, pos.x, pos.y, pos.z);
+			if (GetSound())
+				if (conID == localPlayerId || conID == spectateID)
+				{
+				
+					GetSound()->playExternalSound(SOUNDS::soundEffectFieldsStereo, pos.x, pos.y, pos.z);
+				}
+				else
+					GetSound()->playExternalSound(SOUNDS::soundEffectFields, pos.x, pos.y, pos.z);
 
 		addBulletToList(conID, teamId, bulletId, BULLET_TYPE::BATTERY_SLOW_SHOT, pos, dir);
 		
@@ -1469,13 +1471,14 @@ void Game::handleWeaponFire(int conID, int teamId, int bulletId, WEAPON_TYPE wea
 
 	case WEAPON_TYPE::BATTERYWPN_SPEED:
 		if (gameState != Gamestate::SERVER)
-			if (conID == localPlayerId || conID == spectateID)
-			{
-				GetSound()->playExternalSound(SOUNDS::soundEffectFieldsStereo, pos.x, pos.y, pos.z);
-			}
+			if (GetSound())
+				if (conID == localPlayerId || conID == spectateID)
+				{
+					GetSound()->playExternalSound(SOUNDS::soundEffectFieldsStereo, pos.x, pos.y, pos.z);
+				}
 
-			else
-				GetSound()->playExternalSound(SOUNDS::soundEffectFields, pos.x, pos.y, pos.z);
+				else
+					GetSound()->playExternalSound(SOUNDS::soundEffectFields, pos.x, pos.y, pos.z);
 
 		addBulletToList(conID, teamId, bulletId, BULLET_TYPE::BATTERY_SPEED_SHOT, pos, dir);
 		break;
@@ -2499,11 +2502,9 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 			if (parent->getSpawnAdditionals())
 			{
 				addEffectToList(PID, parent->getTeam(), BID, EFFECT_TYPE::BATTERY_SPEED, parent->getPos(), 0, 0.0f);
-
 				if (GetSoundActivated())
 					GetSound()->playExternalSound(SOUNDS::soundEffectBatteryFields, parent->getPos().x, parent->getPos().y, parent->getPos().z);
 			}
-				addEffectToList(PID, parent->getTeam(), BID, EFFECT_TYPE::BATTERY_SPEED, parent->getPos(), 0, 0.0f);
 			break;
 		}
 		delete bullets[bt][posInArray];
