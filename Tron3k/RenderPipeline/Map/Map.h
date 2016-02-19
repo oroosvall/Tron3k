@@ -13,6 +13,9 @@
 
 using std::vector;
 
+extern GLuint compute;
+extern ParticleShaderLocations locations;
+
 struct CapturePoint
 {
 	int roomID;
@@ -78,6 +81,9 @@ public:
 
 	vector<Chunk> chunks;
 
+	ParticleSystem_sdf* particleStuff;
+	int particleCount;
+
 	int nrTotalStaticSpotlights = 0;
 	int nrTotalStaticPointlights = 0;
 
@@ -93,6 +99,9 @@ public:
 
 	void init(TextureManager* _tm);
 	void release();
+
+	void update(float dt);
+	void renderParticles();
 
 	void renderChunk(GLuint shader, GLuint shaderLocation, GLuint diffuseLocation, GLuint normalLocation, GLuint glowLocation, int chunkID);
 

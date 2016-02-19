@@ -38,7 +38,7 @@ void KingOfTheHill::init(Console* cptr, Game* gptr)
 	teamTwoScore = 0;
 	winScore = 5;
 
-	tokensPerTeam = 5;
+	tokensPerTeam = 20;
 
 	tickForCaptureScoring = 15.0f;
 	timerModifierForCaptureScoring = tickForCaptureScoring;
@@ -193,6 +193,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			teamOneSpawnTokens = teamTwoSpawnTokens = tokensPerTeam;
 			state = ROUND;
 			timerModifierForCaptureScoring = 15.0f;
+			gamePtr->resetAllPickups();
 		}
 		else
 		{
@@ -471,7 +472,6 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 		}
 		else if (state == PREROUND)
 		{
-			gamePtr->resetAllPickups();
 			if (round == 1)
 				gamePtr->clearAllPlayerKD();
 
@@ -508,6 +508,7 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 		}
 		else if (state == ROUND)
 		{
+			gamePtr->resetAllPickups();
 			if (GetSound())
 			{
 				GetSound()->setVolumeSound(50);

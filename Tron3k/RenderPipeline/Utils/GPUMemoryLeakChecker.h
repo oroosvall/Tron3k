@@ -123,8 +123,6 @@ void reportGPULeaks();
 
 #define glBufferData(target, size, data, usage) glBufferData_D(target, size, data, usage)
 
-#define glBindTexture(target, texture) glBindTexture_D(target, texture)
-
 #define glActiveTexture(texture) glActiveTexture_D(texture)
 #define glBindTexture(target, texture) glBindTexture_D(target, texture, __func__)
 

@@ -51,7 +51,7 @@ void main()
 	
 	float spotlength = lights[spotlightID].attenuation.z;
 	
-	if(Distance < spotlength)
+	if(Distance * 0.75f < spotlength)
 	{
 		Normal0 = texture(Normal, UV);
 		LightDirection = normalize(LightDirection);

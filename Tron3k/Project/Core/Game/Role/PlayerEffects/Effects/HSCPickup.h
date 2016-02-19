@@ -20,6 +20,7 @@ public:
 	bool onCooldown();
 	void startCooldown() { cooldown = maxCooldown; resetted = false; };
 	float getCooldown() { return cooldown; };
+	void setCooldown(float cd) { cooldown = cd; }
 	float renderRad();
 	void setTeam() { teamId = 0; };
 };

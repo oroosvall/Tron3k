@@ -159,7 +159,7 @@ private:
 	Physics* physics;
 	int localPlayerId = -1;
 
-	int musicVolumeForMenu = 30;
+	
 
 	void checkFootsteps(float dt);
 
@@ -234,6 +234,8 @@ public:
 
 	int nrOfPlayersReady();
 	void nrOfPlayersReadyReset();
+
+	int musicVolumeForMenu = 30;
 
 	Gamemode* getGameMode() { return gamemode; };
 	int GetGameState();

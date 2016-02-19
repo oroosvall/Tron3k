@@ -178,7 +178,8 @@ void ContentManager::release()
 			for (int b = 0; b < nrObb; b++)
 				testMap.chunks[c].collisionRender.abbRender[a].obbBoxesR[b].release();
 		}
-		testMap.chunks[c].roomOnlyRender.abbRender[0].abbBoxR.release();
+		if(testMap.chunks[c].roomOnlyRender.abbRender.size())
+			testMap.chunks[c].roomOnlyRender.abbRender[0].abbBoxR.release();
 	}
 
 	for (int i = 0; i < 5; i++)
@@ -200,11 +201,17 @@ void ContentManager::release()
 void ContentManager::update(float dt)
 {
 	tm.update(dt);
+	testMap.update(dt);
 }
 
 ContentManager::~ContentManager()
 {
 	
+}
+
+void ContentManager::renderParticles()
+{
+	testMap.renderParticles();
 }
 
 void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation, GLuint DglowColor, GLuint SglowColor, GLuint collision_portal_shader, GLuint collision_portal_world, GLuint portal_shader, GLuint portal_world)

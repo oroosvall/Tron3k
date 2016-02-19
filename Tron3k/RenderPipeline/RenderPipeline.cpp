@@ -174,32 +174,6 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 	resetQuery();
 
-	pdata.maxparticles = 100;
-	pdata.dir = normalize(glm::vec3(1, 1, 1));
-	pdata.lifetime = 20.0f;
-	pdata.gravity = 1.0f;
-	pdata.emission = 0.1f;
-	pdata.force = 1.0f;
-
-	std::ifstream file;
-	file.open("Gamefiles/ParticleSystems/hitspark1.ps", std::ios::binary | std::ios::in);
-
-	//Read header
-	ExportHeader exHeader;
-	file.read((char*)&exHeader, sizeof(exHeader));
-
-	//Read texture name
-	char* f = (char*)malloc(exHeader.texturesize + 1);
-	file.read(f, sizeof(char) * exHeader.texturesize);
-	f[exHeader.texturesize] = 0;
-
-	free(f);
-
-	//Read Particle System
-	file.read((char*)&pdata, sizeof(ParticleSystemData));
-
-	particleTest.Initialize(glm::vec3(0,5,0), &pdata, &particleCS, &pLoc);
-
 	initialized = true;
 	return true;
 }
@@ -440,8 +414,11 @@ void RenderPipeline::reloadShaders()
 	if (temp != 0)
 	{
 		particleCS = temp;
+		compute = particleCS;
 		temp = 0;
 	}
+
+	ZeroMemory((char*)&pLoc, sizeof(pLoc));
 
 	pLoc = {
 		(GLuint)glGetUniformLocation(particleCS, "deltaTime"),
@@ -454,6 +431,8 @@ void RenderPipeline::reloadShaders()
 		(GLuint)glGetUniformLocation(particleCS, "omni"),
 		(GLuint)glGetUniformLocation(particleCS, "initialPos"),
 	};
+
+	locations = pLoc;
 
 	std::cout << "Done loading shaders\n";
 
@@ -488,9 +467,6 @@ void RenderPipeline::release()
 	crossHit->release();
 	delete cross;
 	delete crossHit;
-
-	particleTest.Release();
-
 	reportGPULeaks();
 
 	delete this; // yes this is safe
@@ -526,10 +502,6 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	clearDynamicLights();
 	
 	std::stringstream ss;
-
-	glUseProgram(particleCS);
-
-	particleTest.Update(dt);
 
 	terminateQuery();
 	
@@ -628,7 +600,6 @@ void RenderPipeline::render()
 	contMan.renderChunks(regularShader, worldMat[0], uniformTextureLocation[0], uniformNormalLocation[0], uniformGlowSpecLocation[0], uniformDynamicGlowColorLocation[0], uniformStaticGlowIntensityLocation[0],  *gBuffer->portal_shaderPtr, gBuffer->portal_model, portalShaderV2, portal_World);
 	
 	//render animated signs
-	contMan.bindDecalTexture();
 	animTexture.render();
 
 
@@ -649,15 +620,14 @@ void RenderPipeline::finalizeRender()
 	glUseProgram(particleShader);
 	cam.setViewProjMat(particleShader, particleViewProj);
 	//glProgramUniformMatrix4fv(particleShader, particleViewProj, 1, GL_FALSE, (GLfloat*)&glm::mat4());
-	vec2 size = particleTest.m_size;
+	vec2 size = vec2(0.5, 0.5);
 	glProgramUniform2f(particleShader, particleSize, size.x, size.y);
 
 	glProgramUniform3f(particleShader, particleCam, gBuffer->eyePos.x, gBuffer->eyePos.y, gBuffer->eyePos.z);
 	
 	TextureManager::gTm->bindTexture(ptex, particleShader, particleTexture, DIFFUSE_FB);
 
-	particleTest.Draw();
-
+	contMan.renderParticles();
 
 	glUseProgram(glowShaderTweeks);
 	
@@ -1410,7 +1380,7 @@ void RenderPipeline::renderMinimap(float* yourPos, float* yourdir, float* teamma
 	if (activeCap == 0)
 	{
 		minimapRenderMat[0].w = 0.432f;
-		minimapRenderMat[1].w = -0.05;
+		minimapRenderMat[1].w = -0.05f;
 	}
 	else
 	{

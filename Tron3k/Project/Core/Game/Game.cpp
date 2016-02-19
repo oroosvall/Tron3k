@@ -554,7 +554,6 @@ void Game::checkFootsteps(float dt)
 				glm::vec3 vel;
 				pos = playerList[i]->getPos();
 				vel = playerList[i]->getVelocity();
-				cout << vel.x << "     " << vel.z << endl;
 				if (vel.x > 0.5 || vel.x < -0.5  || vel.z > 0.5 || vel.z < -0.5)
 				{
 					playerList[i]->setFootstepsCountdown();
@@ -2500,11 +2499,9 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 			if (parent->getSpawnAdditionals())
 			{
 				addEffectToList(PID, parent->getTeam(), BID, EFFECT_TYPE::BATTERY_SPEED, parent->getPos(), 0, 0.0f);
-
 				if (GetSoundActivated())
 					GetSound()->playExternalSound(SOUNDS::soundEffectBatteryFields, parent->getPos().x, parent->getPos().y, parent->getPos().z);
 			}
-				addEffectToList(PID, parent->getTeam(), BID, EFFECT_TYPE::BATTERY_SPEED, parent->getPos(), 0, 0.0f);
 			break;
 		}
 		delete bullets[bt][posInArray];

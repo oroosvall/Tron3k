@@ -16,7 +16,7 @@ void BatterySpeedMod::init(Player* myTarget)
 
 int BatterySpeedMod::getData(float dt)
 {
-	target->getPlayerCam()->setSensitivity(originalSens*1.2f);
+	target->getPlayerCam()->setSensitivity(originalSens*1.5f);
 	return 0;
 }
 
