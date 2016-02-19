@@ -2651,6 +2651,12 @@ void Core::disconnect()
 	glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	uiManager->LoadNextSet(UISets::Menu, winX, winY);
 	uiManager->setMenu(MainMenu::StartMenu);
+	if (GetSound())
+	{
+		GetSound()->playMusic(mainMenu);
+		GetSound()->setVolumeMusic(50);
+		GetSound()->SetFading(false);
+	}
 }
 
 void Core::showTeamSelect()
