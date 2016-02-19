@@ -1882,7 +1882,13 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 			int bulletPosInArray = -1;
 
 			Bullet* theBullet = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, bulletPosInArray);
-
+			if (playerList[hi.bulletPID] != nullptr && gameState == SERVER)
+			{
+				if (playerList[hi.bulletPID]->searchModifier(MODIFIER_TYPE::DOUBLEDAMAGEMOD))
+				{
+					p->setHP(p->getHP() - theBullet->getDamage());
+				}
+			}
 			p->hitByBullet(theBullet, hi.bt, hi.newHPtotal);
 			playerList[hi.bulletPID]->hitMarker = 0.25f;
 			if (p->getHP() == 0 && p->isAlive())
@@ -2070,6 +2076,7 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 			if (!tester->onCooldown())
 			{
 				tester->startCooldown();
+				p->addModifier(MODIFIER_TYPE::DOUBLEDAMAGEMOD);
 
 				//Insert double damage announcer here
 			}
@@ -2667,5 +2674,13 @@ void Game::resetAllPickups()
 	{
 		temp = (HSCPickup*)effects[EFFECT_TYPE::HSCPICKUP][i];
 		temp->startCooldown();
+
+	}
+	int size2 = effects[EFFECT_TYPE::DOUBLEDAMAGEPICKUP].size();
+	DoubleDamagePickup* temp2;
+	for (int i = 0; i < size2; i++)
+	{
+		temp2 = (DoubleDamagePickup*)effects[EFFECT_TYPE::DOUBLEDAMAGEPICKUP][i];
+		temp2->startCooldown();
 	}
 }
