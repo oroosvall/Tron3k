@@ -180,6 +180,8 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 void RenderPipeline::reloadShaders()
 {
+	animTexture.init();
+
 	std::cout << "Loading shaders\n";
 
 	GLuint temp;
