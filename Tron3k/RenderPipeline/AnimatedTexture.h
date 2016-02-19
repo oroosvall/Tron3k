@@ -13,7 +13,7 @@ struct AnimatedObject
 	glm::mat4 worldMat;
 	int roomID;
 	unsigned int textureID;
-	
+
 	int type;
 
 	vec2 offsets;
@@ -110,6 +110,7 @@ public:
 
 private:
 	std::vector<AnimatedObject> objects;
+	bool initialized = false;
 };
 
 #endif
