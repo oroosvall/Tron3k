@@ -81,7 +81,6 @@ void ParticleSystem::Update(float dT)
 	glProgramUniform1f(*m_program, m_loc->force, m_data->force);
 	glProgramUniform1f(*m_program, m_loc->drag, m_data->drag);
 	glProgramUniform1f(*m_program, m_loc->gravity, m_data->gravity);
-	glProgramUniform1f(*m_program, m_loc->emission, m_data->emission);
 	glProgramUniform1i(*m_program, m_loc->continuous, m_data->continuous);
 	glProgramUniform1i(*m_program, m_loc->omni, m_data->omni);
 	glProgramUniform3f(*m_program, m_loc->initialPos, m_pos.x, m_pos.y, m_pos.z);

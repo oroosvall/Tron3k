@@ -201,11 +201,17 @@ void ContentManager::release()
 void ContentManager::update(float dt)
 {
 	tm.update(dt);
+	testMap.update(dt);
 }
 
 ContentManager::~ContentManager()
 {
 	
+}
+
+void ContentManager::renderParticles()
+{
+	testMap.renderParticles();
 }
 
 void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation, GLuint DglowColor, GLuint SglowColor, GLuint collision_portal_shader, GLuint collision_portal_world, GLuint portal_shader, GLuint portal_world)

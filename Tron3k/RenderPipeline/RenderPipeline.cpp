@@ -437,6 +437,7 @@ void RenderPipeline::reloadShaders()
 	if (temp != 0)
 	{
 		particleCS = temp;
+		compute = particleCS;
 		temp = 0;
 	}
 
@@ -453,6 +454,8 @@ void RenderPipeline::reloadShaders()
 		(GLuint)glGetUniformLocation(particleCS, "omni"),
 		(GLuint)glGetUniformLocation(particleCS, "initialPos"),
 	};
+
+	locations = pLoc;
 
 	std::cout << "Done loading shaders\n";
 
@@ -648,8 +651,7 @@ void RenderPipeline::finalizeRender()
 	
 	TextureManager::gTm->bindTexture(ptex, particleShader, particleTexture, DIFFUSE_FB);
 
-	particleTest.Draw();
-
+	contMan.renderParticles();
 
 	glUseProgram(glowShaderTweeks);
 	
