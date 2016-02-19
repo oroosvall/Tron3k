@@ -31,6 +31,7 @@
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\BatteryFieldSlow.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\BatteryFieldSpeed.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\CleanseNova.cpp" />
+    <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\DoubleDamagePickup.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\Explosion.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\HealthPack.cpp" />
     <ClCompile Include="Core\Game\Role\PlayerEffects\Effects\HSCPickup.cpp" />
@@ -118,6 +119,7 @@
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\BatteryFieldSlow.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\BatteryFieldSpeed.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\CleanseNova.h" />
+    <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\DoubleDamagePickup.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\Explosion.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\HealthPack.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effects\HSCPickup.h" />

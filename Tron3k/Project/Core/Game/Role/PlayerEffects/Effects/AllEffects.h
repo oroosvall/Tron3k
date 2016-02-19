@@ -12,5 +12,6 @@
 #include "Vacuum.h"
 #include "CleanseNova.h"
 #include "HSCPickup.h"
+#include "DoubleDamagePickup.h"
 
 #endif

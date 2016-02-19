@@ -1986,6 +1986,18 @@ void Core::renderWorld(float dt)
 					}
 				}
 				break;
+				case DOUBLEDAMAGEPICKUP:
+				{
+					DoubleDamagePickup* temp = (DoubleDamagePickup*)eff[i];
+					if (!temp->onCooldown())
+					{
+						vec3 pos = eff[i]->getPos();
+						dgColor = vec3(1.0f, 0, 0);
+						renderPipe->renderExploEffect(&pos.x, eff[i]->getInterestingVariable(), 0, &dgColor.x);
+
+					}
+				}
+				break;
 				}
 			}
 		}

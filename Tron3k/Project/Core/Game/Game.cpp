@@ -74,9 +74,11 @@ void Game::init(int max_connections, int state, Console* con)
 	decalCounter = 0;
 
 	addEffectToList(0, 0, 0, EFFECT_TYPE::HSCPICKUP, vec3(50.87f, 1.6f, 10.7f), 0,  3.0f);
-	addEffectToList(0, 0, 1, EFFECT_TYPE::HSCPICKUP, vec3(10.68f, 1.6f, 46.85f), 0, 3.0f);
+	addEffectToList(0, 0, 1, EFFECT_TYPE::HSCPICKUP, vec3(-81.8f, 1.45f, 45.85f), 0, 3.0f);
 	addEffectToList(0, 0, 2, EFFECT_TYPE::HSCPICKUP, vec3(-34.86f, 1.6f, 67.0f), 0, 3.0f);
 	addEffectToList(0, 0, 3, EFFECT_TYPE::HSCPICKUP, vec3(44.05f, 1.7f, 98.19f), 0, 3.0f);
+
+	addEffectToList(0, 0, 0, EFFECT_TYPE::DOUBLEDAMAGEPICKUP, vec3(-4.6, 1.45, 69.23), 0, 4.0f);
 
 	suicideMessages.push_back(" gave up on life.");
 	suicideMessages.push_back(" short circuited!");
@@ -744,12 +746,23 @@ void Game::checkPlayerVEffectCollision()
 								collNormals = physics->checkPlayerVEffectCollision(playerList[j]->getPos(), t, eid);
 								if (collNormals != vec4(0, 0, 0, 0))
 								{
-									if (effects[t][i]->getType() == EFFECT_TYPE::HSCPICKUP)
+									if (effects[t][i]->getType() == EFFECT_TYPE::HSCPICKUP || effects[t][i]->getType() == EFFECT_TYPE::DOUBLEDAMAGEPICKUP)
 									{
-										HSCPickup* temp = (HSCPickup*)effects[t][i];
-										if (temp->onCooldown())
+										if (effects[t][i]->getType() == EFFECT_TYPE::HSCPICKUP)
 										{
-											notDoingWrongThings = false;
+											HSCPickup* temp = (HSCPickup*)effects[t][i];
+											if (temp->onCooldown())
+											{
+												notDoingWrongThings = false;
+											}
+										}
+										if (effects[t][i]->getType() == EFFECT_TYPE::DOUBLEDAMAGEPICKUP)
+										{
+											DoubleDamagePickup* temp = (DoubleDamagePickup*)effects[t][i];
+											if (temp->onCooldown())
+											{
+												notDoingWrongThings = false;
+											}
 										}
 									}
 									if (notDoingWrongThings)
@@ -1707,6 +1720,8 @@ void Game::addEffectToList(int conID, int teamId, int effectId, EFFECT_TYPE et, 
 	case EFFECT_TYPE::HSCPICKUP:
 		e = new HSCPickup();
 		break;
+	case EFFECT_TYPE::DOUBLEDAMAGEPICKUP:
+		e = new DoubleDamagePickup();
 	}
 	e->init(conID, effectId, pos);
 	e->setTeam(teamId);
@@ -1786,6 +1801,13 @@ void Game::addEffectToPhysics(Effect* effect)
 		eBox.push_back(effect->getPos().z);
 		eBox.push_back(effect->getInterestingVariable());
 		physics->receiveEffectBox(eBox, EFFECT_TYPE::HSCPICKUP, pid, eid);
+		break;
+	case EFFECT_TYPE::DOUBLEDAMAGEPICKUP:
+		eBox.push_back(effect->getPos().x);
+		eBox.push_back(effect->getPos().y);
+		eBox.push_back(effect->getPos().z);
+		eBox.push_back(effect->getInterestingVariable());
+		physics->receiveEffectBox(eBox, EFFECT_TYPE::DOUBLEDAMAGEPICKUP, pid, eid);
 		break;
 	}
 }
@@ -2036,6 +2058,17 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 			}
 		}
 			break;
+		case EFFECT_TYPE::DOUBLEDAMAGEPICKUP:
+		{
+			DoubleDamagePickup* tester = (DoubleDamagePickup*)theEffect;
+			if (!tester->onCooldown())
+			{
+				tester->startCooldown();
+
+				//Insert double damage announcer here
+			}
+		}
+		break;
 		default:
 			break;
 		}
