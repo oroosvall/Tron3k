@@ -16,6 +16,8 @@ StaticTextureBoxes::StaticTextureBoxes()
 
 	winX = 0;
 	winY = 0;
+	startWMX = 0;
+	startWMY = 0;
 }
 StaticTextureBoxes::StaticTextureBoxes(glm::vec2 center, int* textureId1, int nrOfTextures, IRenderPipeline* uiRender, std::vector<glm::vec2>  textRes)
 {
@@ -47,6 +49,10 @@ StaticTextureBoxes::StaticTextureBoxes(glm::vec2 center, int* textureId1, int nr
 	worldMatrix[0].x = xScale;
 	worldMatrix[1].y = yScale;
 
+	//backup
+	startWMX = worldMatrix[0].w;
+	startWMY = worldMatrix[1].w;
+
 }
 StaticTextureBoxes::~StaticTextureBoxes() 
 {
@@ -66,10 +72,16 @@ void StaticTextureBoxes::renderQuad(int id)
 	uiRender->ui_renderQuad((float*)&worldMatrix[0][0], (float*)&pivot.x, textureInUse, 1.0f, id);
 }
 
-void StaticTextureBoxes::setWorldMatrix(float x, float y, int id)
+void StaticTextureBoxes::setWorldMatrix(int id, float x, float y)
 {
-	worldMatrix[0].w = x;
-	worldMatrix[1].w = y;
+	worldMatrix[0].w += x;
+	worldMatrix[1].w += y;
+}
+
+void StaticTextureBoxes::resetWorldMatrix(int id)
+{
+	worldMatrix[0].w = startWMX;
+	worldMatrix[1].w = startWMY;
 }
 
 void StaticTextureBoxes::changeTexUsed(int id)

@@ -23,6 +23,8 @@ Button::Button()
 
 	winX = 0;
 	winY = 0;
+	startWMX = 0;
+	startWMY = 0;
 }
 
 Button::Button(glm::vec2 center, int textureId1, int textureId2, int uniqueKey, int hoverKey, IRenderPipeline* uiRender, glm::vec2 textRes1, glm::vec2 textRes2)
@@ -54,6 +56,9 @@ Button::Button(glm::vec2 center, int textureId1, int textureId2, int uniqueKey, 
 
 	pos[0] = glm::vec2(worldMatrix[0].w - worldMatrix[0].x, worldMatrix[1].w - worldMatrix[1].y);
 	pos[1] = glm::vec2(worldMatrix[0].w + worldMatrix[0].x, worldMatrix[1].w + worldMatrix[1].y);
+
+	startWMX = worldMatrix[0].w;
+	startWMY = worldMatrix[1].w;
 }
 
 Button::~Button() {}
@@ -68,10 +73,16 @@ void Button::renderQuad(int id)
 	uiRender->ui_renderQuad((float*)&worldMatrix[0][0], (float*)&pivot.x, textureIdInUse, 1.0f, id);
 }
 
-void Button::setWorldMatrix(float x, float y, int id)
+void Button::setWorldMatrix(int id, float x, float y)
 {
 	worldMatrix[0].w = x;
 	worldMatrix[1].w = y;
+}
+
+void Button::resetWorldMatrix(int id)
+{
+	worldMatrix[0].w = startWMX;
+	worldMatrix[1].w = startWMY;
 }
 
 void Button::changeTexUsed(int id) 

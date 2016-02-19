@@ -29,6 +29,8 @@ Slider::Slider()
 
 	winX = 0;
 	winY = 0;
+	startWMX = 0;
+	startWMY = 0;
 }
 Slider::Slider(glm::vec2 center, int textureId1, int textureId2, int uniqueKey, int objId1, int objId2, IRenderPipeline* uiRender, glm::vec2 textRes, glm::vec2 textRes2)
 {
@@ -61,6 +63,8 @@ Slider::Slider(glm::vec2 center, int textureId1, int textureId2, int uniqueKey, 
 	pos[0] = glm::vec2(worldMatrix[0][0].w - worldMatrix[0][0].x, worldMatrix[0][1].w - worldMatrix[0][1].y);
 	pos[1] = glm::vec2(worldMatrix[0][0].w + worldMatrix[0][0].x, worldMatrix[0][1].w + worldMatrix[0][1].y);
 
+	startWMX = worldMatrix[0][0].w;
+	startWMY = worldMatrix[0][1].w;
 
 	createAdditionalPoint();
 }
@@ -83,10 +87,16 @@ void Slider::renderQuad(int id)
 		uiRender->ui_renderQuad((float*)&worldMatrix[i][0][0], (float*)&pivot.x, textureIndexList[i], 1.0f, id);
 }
 
-void Slider::setWorldMatrix(float x, float y, int id)
+void Slider::setWorldMatrix(int id, float x, float y)
 {
 	worldMatrix[id][0].w = x;
 	worldMatrix[id][1].w = y;
+}
+
+void Slider::resetWorldMatrix(int id)
+{
+	worldMatrix[id][0].w = startWMX;
+	worldMatrix[id][1].w = startWMY;
 }
 
 //Empty

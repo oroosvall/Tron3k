@@ -408,3 +408,18 @@ void UI::changeHideAbleTexture(int objId, int whichTex)
 	if (objId > -1 && objId < hideAbleObjects.size())
 		hideAbleObjects[objId]->changeTexUsed(whichTex);
 }
+
+void UI::setHideableWorldMatrix(int id, glm::vec2 xy)
+{
+	float tX = xy.x;
+	float tY = xy.y;
+
+	if (id > -1 && id < hideAbleObjects.size())
+		if(xy.x > -1.1f && xy.y > -1.1f)
+			hideAbleObjects[id]->setWorldMatrix(id, tX, tY);
+}
+void UI::resetHidableWorldMatrix(int id)
+{
+	if (id > -1 && id < hideAbleObjects.size())
+		hideAbleObjects[id]->resetWorldMatrix(id);
+}

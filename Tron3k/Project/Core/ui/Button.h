@@ -29,6 +29,8 @@ private:
 
 	int winX;
 	int winY;
+	float startWMX;
+	float startWMY;
 
 public:
 	Button();
@@ -38,7 +40,8 @@ public:
 	virtual void renderQuad(int id);
 	virtual void renderText(int id);
 
-	virtual void setWorldMatrix(float x, float y, int id);
+	virtual void setWorldMatrix(int id, float x, float y);
+	virtual void resetWorldMatrix(int id);
 
 	virtual void changeTexUsed(int id);
 

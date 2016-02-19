@@ -35,6 +35,9 @@ private:
 
 	int yOffSet;
 	int xOffSet;
+
+	float startWMX;
+	float startWMY;
 public:
 	InputBox();
 	InputBox(glm::vec2 center, int textureId1, int textureId2, int uniqueKey, IRenderPipeline* uiRender, glm::vec2 textRes, int winX, int winY, glm::vec3 offSetsTextSize);
@@ -43,7 +46,8 @@ public:
 	virtual void renderQuad(int id);
 	virtual void renderText(int id);
 
-	virtual void setWorldMatrix(float x, float y, int id);
+	virtual void setWorldMatrix(int id, float x, float y);
+	virtual void resetWorldMatrix(int id);
 
 	virtual void changeTexUsed(int id);
 

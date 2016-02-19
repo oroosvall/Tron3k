@@ -133,6 +133,8 @@ public:
 	void renderHideAble();
 	void hideOrShowHideAble(int id, bool show);
 	void changeTextureHideAble(int id, int textureId);
+	void setHideableWorldMatrix(int id, glm::vec2 xy);
+	void resetHidableWorldMatrix(int id);
 
 	struct HUDvalues
 	{
@@ -155,6 +157,10 @@ public:
 		int scoreAdder2Counter;
 		int ticketReducer1Counter;
 		int ticketReducer2Counter;
+		bool moveTokenReducer1;
+		bool moveTokenReducer2;
+		bool movePointAdder1;
+		bool movePointAdder2;
 	}HUD;
 };
 

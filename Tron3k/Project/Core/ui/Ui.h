@@ -119,6 +119,8 @@ public:
 	void hideObject(int id);
 	void showObject(int id);
 	void changeHideAbleTexture(int objId, int whichTex);
+	void setHideableWorldMatrix(int id, glm::vec2 xy);
+	void resetHidableWorldMatrix(int id);
 };
 
 #endif

@@ -20,7 +20,8 @@ public:
 	virtual void renderQuad(int id) = 0;
 	virtual void renderText(int id) = 0;
 
-	virtual void setWorldMatrix(float x, float y, int id) = 0;
+	virtual void setWorldMatrix(int id, float x, float y) = 0;
+	virtual void resetWorldMatrix(int id) = 0;
 
 	virtual void changeTexUsed(int id) = 0;
 

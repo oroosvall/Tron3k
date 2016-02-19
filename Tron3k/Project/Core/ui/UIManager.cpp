@@ -40,6 +40,10 @@ UIManager::UIManager()
 	HUD.scoreAdder2Counter = 5;
 	HUD.ticketReducer1Counter = 5;
 	HUD.ticketReducer2Counter = 5;
+	HUD.moveTokenReducer1 = false;
+	HUD.moveTokenReducer2 = false;
+	HUD.movePointAdder1 = false;
+	HUD.movePointAdder2 = false;
 }
 UIManager::~UIManager() 
 {
@@ -570,4 +574,13 @@ void UIManager::changeTextureHideAble(int id, int textureId)
 		hideAble.changeHideAbleTexture(id, textureId);
 	else
 		console->printMsg("Function changeTextureHideAble in UIManager, Hideablemenu isn't active", "System", 'S');
+}
+
+void UIManager::setHideableWorldMatrix(int id, glm::vec2 xy)
+{
+	hideAble.setHideableWorldMatrix(id, xy);
+}
+void UIManager::resetHidableWorldMatrix(int id)
+{
+	hideAble.resetHidableWorldMatrix(id);
 }
