@@ -69,7 +69,9 @@ public:
 	unsigned int createTexture(std::string path);
 	bool PNGSize(const char* fileName, unsigned int &x, unsigned int &y);
 	void bindTexture(unsigned int &textureID, GLuint shader, GLuint shaderLocation, TEXTURE_FALLBACK fallback);
+	void bindTextureOnly(unsigned int &textureID, TEXTURE_FALLBACK fallback);
 	void bindDefault(GLuint shader, GLuint shaderLocation, TEXTURE_FALLBACK fallback);
+	void bindDefaultOnly(TEXTURE_FALLBACK fallback);
 
 	void bind(TextureInfo &ti, GLuint shader, GLuint shaderLocation);
 

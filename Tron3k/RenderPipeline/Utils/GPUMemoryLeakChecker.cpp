@@ -227,15 +227,15 @@ void glActiveTexture_D(GLenum texture)
 
 void glBindTexture_D(GLenum target, GLuint texture,const char* funcName)
 {
-	if (!(funcName == "bind" || funcName == "bindDefault"))
-	{
-		//printf("I blame you for broken stuff %s\n", funcName);
-		illegalBinds++;
-	}
-	else
-	{
-		texManBinds++;
-	}
+	//if (!(funcName == "bind" || funcName == "bindDefault" || funcName == "bindDefaultOnly" || funcName == "bindTextureOnly"))
+	//{
+	//	//printf("I blame you for broken stuff %s\n", funcName);
+	//	illegalBinds++;
+	//}
+	//else
+	//{
+	//	texManBinds++;
+	//}
 	//if (textureBindMap[currentActiveTexture - GL_TEXTURE0] != texture)
 	//{
 		textureBinds++;

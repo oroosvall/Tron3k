@@ -65,14 +65,14 @@ void TextureManager::update(float dt)
 		if (textureList[i].state == TEXTURE_LOADED)
 		{
 			textureList[i].timeNotUsed += dt;
-			//if (textureList[i].timeNotUsed > 30.0f)
-			//{
-			//	printf("Texture %d have not been used for 30 seconds unloading\n", i);
-			//	glDeleteTextures(1, &textureList[i].textureID);
-			//	textureList[i].textureID = 0;
-			//	textureList[i].state = TEXTURE_UNLOADED;
-			//	textureList[i].timeNotUsed = 0.0f;
-			//}
+			if (textureList[i].timeNotUsed > 30.0f)
+			{
+				printf("Texture %d have not been used for 30 seconds unloading\n", i);
+				glDeleteTextures(1, &textureList[i].textureID);
+				textureList[i].textureID = 0;
+				textureList[i].state = TEXTURE_UNLOADED;
+				textureList[i].timeNotUsed = 0.0f;
+			}
 		}
 	}
 
@@ -165,6 +165,41 @@ void TextureManager::bindTexture(unsigned int &textureID, GLuint shader, GLuint 
 
 }
 
+void TextureManager::bindTextureOnly(unsigned int &textureID, TEXTURE_FALLBACK fallback)
+{
+	if (!textureList.empty() && textureID < textureList.size())
+	{
+		TextureInfo* ti = &textureList[textureID];
+
+		if (ti->state == TEXTURE_UNLOADED)
+		{
+			if (addToStreamQueue(&textureID, ti->texturePath))
+			{
+				ti->state = TEXTURE_STREAMING;
+			}
+
+			bindDefaultOnly(fallback);
+
+		}
+		else if (ti->state == TEXTURE_STREAMING)
+		{
+			//bindDefault(shader, shaderLocation, fallback);
+		}
+		else if (ti->state == TEXTURE_LOADED)
+		{
+			glBindTexture(GL_TEXTURE_2D, ti->textureID);
+			ti->timeNotUsed = 0.0f;
+		}
+
+	}
+	else
+	{
+
+		bindDefaultOnly(fallback);
+
+	}
+}
+
 void TextureManager::bindDefault(GLuint shader, GLuint textureLocation, TEXTURE_FALLBACK fallback)
 {
 
@@ -205,6 +240,30 @@ void TextureManager::bindDefault(GLuint shader, GLuint textureLocation, TEXTURE_
 	
 	glProgramUniform1i(shader, textureLocation, *slot - GL_TEXTURE0);
 
+}
+
+void TextureManager::bindDefaultOnly(TEXTURE_FALLBACK fallback)
+{
+
+	GLuint texture = 0;
+
+	if (fallback == DIFFUSE_FB)
+	{
+		texture = defaultDiffuse;
+	}
+	else if (fallback == NORMAL_FB)
+	{
+		texture = defaultNormal;
+	}
+	else if (fallback == NORMAL_FULL_FB)
+	{
+		texture = defaultNormal_full;
+	}
+	else if (fallback == GLOW_FB)
+	{
+		texture = defaultGlow;
+	}
+	glBindTexture(GL_TEXTURE_2D, texture);
 }
 
 void TextureManager::bind(TextureInfo &ti, GLuint shader, GLuint textureLocation)
