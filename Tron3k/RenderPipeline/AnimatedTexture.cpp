@@ -8,52 +8,56 @@ AnimatedTexture::AnimatedTexture()
 
 AnimatedTexture::~AnimatedTexture()
 {
+
 }
 
 void AnimatedTexture::init()
 {
+	int n = 0;
+	objects.push_back(AnimatedObject());
+	objects[n].textureID = TextureManager::gTm->createTexture("GameFiles/Textures/animatedSigns/youmuSwing.png");
+	objects[n].init_standing_right(vec3(94.8f, 22.3f, 53.6f), vec3(94.8f, 14.3f, 64.3f));
+	objects[n].init_time_segments(5, 0.15f, 0);
+	
+	n++;
+	objects.push_back(AnimatedObject());
+	objects[n].textureID = TextureManager::gTm->createTexture("GameFiles/Textures/animatedSigns/matrxtext.png");
+	objects[n].init_standing_down(vec3(94.8f, 22.3f + 20, 53.6f), vec3(94.8f, 14.3f + 10, 59.3f));
+	objects[n].init_time_segments(10, 0, 2.0f);
 
-/*	AnimatedObject sign;
-	sign.type = 0;
-	sign.maxtimer = 1.0f;
-	sign.timer = sign.maxtimer;
-	sign.worldMat = mat4(1.0f);
-	objects.push_back(sign);
-	*/
-
-	AnimatedObject water;
-	water.type = 1;
-	water.worldMat = mat4(1.0f);
-	objects.push_back(water);
-
-	//youmuanim
-	test.worldMat[0] = glm::vec4(0,5,0,1);
-	test.worldMat[1] = glm::vec4(0,0,0,1);
-	test.worldMat[2] = glm::vec4(5,5,0,1);
-	test.worldMat[3] = glm::vec4(5,0,0,1);
-	test.segments = 5.0f;
-	test.offsets.x = 0;
-	test.offsets.y = 1.0f / test.segments;
-	test.freezeTimer = 0.2f;
-	test.swapTimer = 0.0f;
-	//TextureManager::
-	test.timer = test.freezeTimer;
+	n++;
+	objects.push_back(AnimatedObject());
+	objects[n].textureID = TextureManager::gTm->createTexture("GameFiles/Textures/animatedSigns/seasons.png");
+	objects[n].init_standing_right(vec3(94.8f, 22.3f + 20, 60.6f), vec3(94.8f, 14.3f + 10, 64.3f));
+	objects[n].init_time_segments(4, 2.0f, 0.5f);
+	
 }
 
-void AnimatedTexture::Update(float dT)
+void AnimatedTexture::update(float dT)
 {
-	test.update(dT);
+	int size = objects.size();
 
+	for (int n = 0; n < size; n++)
+	{
+		objects[n].update(dT);
+	}
 }
 
 void AnimatedTexture::render()
 {
 	glUseProgram(animQuadShader);
 	glDisable(GL_CULL_FACE);
+	glActiveTexture(GL_TEXTURE0);
 
-	glProgramUniformMatrix4fv(animQuadShader, animQuadWorld, 1, GL_FALSE, (GLfloat*)&test.worldMat[0][0]);
-	glProgramUniform2fv(animQuadShader, animQuadUVset, 1, (GLfloat*)&test.offsets[0]);
+	int size = objects.size();
 
-	glDrawArrays(GL_POINTS, 0, 1);
+	for (int n = 0; n < size; n++)
+	{
+		TextureManager::gTm->bindTextureOnly(objects[n].textureID, TEXTURE_FALLBACK::DIFFUSE_FB);
 
+		glProgramUniformMatrix4fv(animQuadShader, animQuadWorld, 1, GL_FALSE, (GLfloat*)&objects[n].worldMat[0][0]);
+		glProgramUniform2fv(animQuadShader, animQuadUVset, 1, (GLfloat*)&objects[n].offsets[0]);
+
+		glDrawArrays(GL_POINTS, 0, 1);
+	}
 }
