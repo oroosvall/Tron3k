@@ -633,7 +633,7 @@ void RenderPipeline::finalizeRender()
 	
 	glProgramUniform1fv(glowShaderTweeks, uniformGlowTimeDelta, 1, &delta);
 
-	gBuffer->preRender(glowShaderTweeks, uniformGlowTexture, uniformGlowSelf);
+	//gBuffer->preRender(glowShaderTweeks, uniformGlowTexture, uniformGlowSelf);
 
 	//GBuffer Render
 	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
