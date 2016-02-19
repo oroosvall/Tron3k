@@ -181,7 +181,7 @@ bool UI::loadUI(std::string fileName, int winX, int winY)
 				else
 				{
 					hideAbleObjects.push_back(new StaticTextureBoxes(xy, textureArray, tmpCounter, uiRender, textureRes[0]));
-					hideAbleIds.push_back(hideAbleObjects.size() - 1);
+					//hideAbleIds.push_back(hideAbleObjects.size() - 1);
 					delete[] textureArray;
 					textureArray = nullptr;
 					result = true;
@@ -252,6 +252,7 @@ void UI::clean()
 			hideAbleObjects[i] = nullptr;
 		}
 	hideAbleIds.clear();
+	hideAbleObjects.clear();
 
 	textureIdList = nullptr;
 	console = nullptr;
@@ -365,21 +366,35 @@ void UI::renderHideable()
 }
 void UI::hideObject(int id)
 {
+	bool found = false;
+	int index = -1;
+
 	if (id > -1 && id < hideAbleObjects.size())
 	{
-		for (int i = id; i < hideAbleIds.size() - 1; i++)
-			hideAbleIds[i] = hideAbleIds[i + 1];
-		hideAbleIds.pop_back();
+		for (int i = 0; i < hideAbleIds.size() && !found; i++)
+		{
+			if (hideAbleIds[i] == id)
+			{
+				found = true;
+				index = i;
+			}
+		}
+
+		if (found && (index > -1 && index < hideAbleIds.size()))
+		{
+			hideAbleIds[index] = hideAbleIds[hideAbleIds.size() - 1];
+			hideAbleIds.pop_back();
+		}
 	}
 }
 void UI::showObject(int id)
 {
 	bool found = false;
 
-	if (id > -1 && id < hideAbleObjects.size())
+  	if (id > -1 && id < hideAbleObjects.size())
 	{
 		for (int i = 0; i < hideAbleIds.size() && !found; i++)
-			if (hideAbleIds[i] = id)
+			if (hideAbleIds[i] == id)
 				found = true;
 
 		if (!found)

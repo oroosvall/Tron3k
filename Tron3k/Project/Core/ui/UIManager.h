@@ -139,15 +139,22 @@ public:
 		int HP;
 		int ammo;
 		float specialMeter;
+		float maxSpecialMeter;
 		int teamOneTokens;
 		int teamTwoTokens;
 		int maxTokens;
-		int teamOneRoundWins;
-		int teamTwoRoundWins;
+		int teamOneScore;
+		int teamTwoScore;
 		int time;
 		int ticketLostTimer;
 		int loseTicketPer;
 		bool firstSecondEachRound;
+		bool scoreChanged;
+		int bannerCounter;
+		int scoreAdder1Counter;
+		int scoreAdder2Counter;
+		int ticketReducer1Counter;
+		int ticketReducer2Counter;
 	}HUD;
 };
 

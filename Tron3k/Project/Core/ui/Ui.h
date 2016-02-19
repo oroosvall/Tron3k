@@ -39,8 +39,15 @@ enum scaleAndText
 
 enum hideAbleObj
 {
-	Announcer
+	Banner,
+	ScoreAdderTeam1,
+	ScoreAdderTeam2,
+	TicketReducerTeam1,
+	TicketReducerTeam2
 };
+
+//ScoreTeam1,
+//ScoreTeam2,
 
 class UI
 {

@@ -2,6 +2,8 @@
 
 void Core::init()
 {
+	firstTimeInEnd = false;
+	lowTicketsFirstTime = false;
 	uitmpcounter = 0;
 
 	glfwInit();
@@ -415,7 +417,8 @@ void Core::upRoam(float dt)
 		game->freecam = true;
 		delete p;
 
-		uiManager->HUD.specialMeter = 100.0f;
+		uiManager->HUD.maxSpecialMeter = 100.0f;
+		uiManager->HUD.specialMeter = 0.0f;
 		game->getPlayer(game->GetLocalPlayerId())->setLockedControls(true);
 		subState++;
 		break;
@@ -600,7 +603,8 @@ void Core::upClient(float dt)
 			showTeamSelect();
 
 			subState++;
-			uiManager->HUD.specialMeter = 100.0f;
+			uiManager->HUD.specialMeter = 0.0f;
+			uiManager->HUD.maxSpecialMeter = 100.0f;
 			uiManager->HUD.loseTicketPer = 14;
 
 			KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
@@ -618,6 +622,10 @@ void Core::upClient(float dt)
 		}
 
 		//update game
+		KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
+		KOTHSTATE tmp = koth->getState();
+
+		Player* localp = game->getPlayer(top->getConId());
 
 		float newDt = dt;
 		if (game)
@@ -653,14 +661,66 @@ void Core::upClient(float dt)
 
 					//CameraInput::getCam()->setPlaybackSpeed(1.0f);
 				}
+
+				//Checks it was the end of the match
+				if (firstTimeInEnd && tmp == KOTHSTATE::ENDMATCH)
+				{
+					GAMEMODE_MSG tMode = k->getLastMsg();
+					int tTeam = localp->getTeam();
+
+					if (tMode == GAMEMODE_MSG::MATCH_WIN_TEAM1)
+					{
+						if (tTeam == 1)
+						{
+							uiManager->changeTextureHideAble(hideAbleObj::Banner, BannerTextureIDs::Victory);
+							uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
+						}
+						else if (tTeam == 2)
+						{
+							uiManager->changeTextureHideAble(hideAbleObj::Banner, BannerTextureIDs::Defeat);
+							uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
+						}
+						uiManager->HUD.bannerCounter = 0;
+						firstTimeInEnd = false;
+					}
+					else if (tMode == GAMEMODE_MSG::MATCH_WIN_TEAM2)
+					{
+						if (tTeam == 1)
+						{
+							uiManager->changeTextureHideAble(hideAbleObj::Banner, BannerTextureIDs::Defeat);
+							uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
+						}
+						else if (tTeam == 2)
+						{
+							uiManager->changeTextureHideAble(hideAbleObj::Banner, BannerTextureIDs::Victory);
+							uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
+						}
+						uiManager->HUD.bannerCounter = 0;
+						firstTimeInEnd = false;
+					}
+					else if (tMode == GAMEMODE_MSG::MATCH_DRAW)
+					{
+						uiManager->changeTextureHideAble(hideAbleObj::Banner, BannerTextureIDs::Victory);
+						uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
+						uiManager->HUD.bannerCounter = 0;
+						firstTimeInEnd = false;
+					}
+				}
+
+				//Rights out the of round.
+				if (firstTimeInEnd && tmp == KOTHSTATE::ENDROUND)
+				{
+					if (localp->getTeam() != 0)
+					{
+						uiManager->changeTextureHideAble(hideAbleObj::Banner, BannerTextureIDs::EndOfRound);
+						uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
+						uiManager->HUD.bannerCounter = 0;
+						firstTimeInEnd = false;
+					}
+				}
 			}
 		}
 		game->update(newDt);
-
-		KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
-		KOTHSTATE tmp = koth->getState();
-
-		Player* localp = game->getPlayer(top->getConId());
 
 		if (kothState != tmp)
 		{
@@ -704,6 +764,9 @@ void Core::upClient(float dt)
 					uiManager->clearText(6);
 					uiManager->setText("00:00", scaleAndText::Time); //time
 				}
+				uiManager->HUD.teamOneTokens = koth->getRespawnTokens(1);
+				uiManager->HUD.teamTwoTokens = koth->getRespawnTokens(2);
+
 
 				uiManager->scaleBar(scaleAndText::HP, 1.0f, false);
 				uiManager->scaleBar(scaleAndText::TicketBar1, (float)(koth->getRespawnTokens(1)) / (float)(koth->getMaxTokensPerTeam()), false);
@@ -712,6 +775,16 @@ void Core::upClient(float dt)
 
 				uiManager->setRoleBool(true);
 				uiManager->setHoverCheckBool(false);
+
+				if(koth->getCapturePoint() == 0)
+					uiManager->changeTextureHideAble(hideAbleObj::Banner, BannerTextureIDs::ParkinAreaActive);
+				else
+					uiManager->changeTextureHideAble(hideAbleObj::Banner, BannerTextureIDs::MarketActive);
+				uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
+				uiManager->HUD.bannerCounter = 0;
+
+				firstTimeInEnd = true;
+				lowTicketsFirstTime = true;
 			}
 			kothState = tmp;
 		}
@@ -2076,13 +2149,13 @@ void Core::inGameUIUpdate() //Ingame ui update
 
 	bool playerExist = false;
 
-	if (tClass != ROLES::NROFROLES)
+	if (tClass != ROLES::NROFROLES) //Checks so its acually a player and not a spectator
 		if (tTeam != 0)
 			playerExist = true;
 
 	if (playerExist)
 	{
-		if (local->getHP() != uiManager->HUD.HP)
+		if (local->getHP() != uiManager->HUD.HP) //Health
 		{
 			uiManager->HUD.HP = local->getHP();
 			uiManager->clearText(scaleAndText::HP);
@@ -2094,20 +2167,13 @@ void Core::inGameUIUpdate() //Ingame ui update
 			else
 				console.printMsg("Error: Function inGameUIUpdate in Core, local player maxHp has a value of 0 or below", "System", 'S');
 		}
-		if (local->getSpecialMeter() != uiManager->HUD.specialMeter)
+		if (local->getSpecialMeter() != uiManager->HUD.specialMeter) //Special Meter
 		{
-			if (uiManager->HUD.specialMeter > 0)
-			{
-				float procent = local->getSpecialMeter() / uiManager->HUD.specialMeter;
-				uiManager->scaleBar(scaleAndText::AbilityMeter, procent, true);
-			}
-			else
-			{
-				uiManager->scaleBar(scaleAndText::AbilityMeter, 0.0f, true);
-				console.printMsg("Error: Function inGameUIUpdate in Core, HUD.specialMeter has a value of 0 or below", "System", 'S');
-			}
+			uiManager->HUD.specialMeter = local->getSpecialMeter();
+			float procent = local->getSpecialMeter() / uiManager->HUD.maxSpecialMeter;
+			uiManager->scaleBar(scaleAndText::AbilityMeter, procent, true);
 		}
-		if (local->getAmmo() != uiManager->HUD.ammo)
+		if (local->getAmmo() != uiManager->HUD.ammo) //Ammo
 		{
 			uiManager->HUD.ammo = local->getAmmo();
 			std::string nText = std::to_string(uiManager->HUD.ammo) + "/" + std::to_string(local->getMaxAmmo());
@@ -2116,50 +2182,90 @@ void Core::inGameUIUpdate() //Ingame ui update
 		}
 	} //player stats on HUD end
 
-	  //game mode stats on HUD
-	if (koth->getRespawnTokens(1) != uiManager->HUD.teamOneTokens)
+	 //Checks if the teams token number have changed.
+	if (koth->getRespawnTokens(1) != uiManager->HUD.teamOneTokens) //Team 1
 	{
 		uiManager->HUD.teamOneTokens = koth->getRespawnTokens(1);
 		uiManager->clearText(scaleAndText::TicketBar1);
 		uiManager->setText(std::to_string(uiManager->HUD.teamOneTokens), scaleAndText::TicketBar1);
+		
 		if ((float)(uiManager->HUD.maxTokens) > 0)
 			uiManager->scaleBar(scaleAndText::TicketBar1, (float)uiManager->HUD.teamOneTokens / (float)(uiManager->HUD.maxTokens), true);
 		else
 			console.printMsg("Error: Function inGameUIUpdate in Core, HUD.maxTokens has a value of 0 or below", "System", 'S');
+
+		if (koth->getState() == KOTHSTATE::ROUND)
+		{
+			uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam1, true);
+			uiManager->HUD.ticketReducer1Counter = 0;
+		}
+
+		uiManager->HUD.scoreChanged = true;
 	}
-	if (koth->getRespawnTokens(2) != uiManager->HUD.teamTwoTokens)
+	if (koth->getRespawnTokens(2) != uiManager->HUD.teamTwoTokens) //Team 2
 	{
 		uiManager->HUD.teamTwoTokens = koth->getRespawnTokens(2);
 		uiManager->clearText(scaleAndText::TicketBar2);
 		uiManager->setText(std::to_string(uiManager->HUD.teamTwoTokens), scaleAndText::TicketBar2);
+		
 		if ((float)(uiManager->HUD.maxTokens) > 0)
 			uiManager->scaleBar(scaleAndText::TicketBar2, (float)(uiManager->HUD.teamTwoTokens) / (float)(uiManager->HUD.maxTokens), true);
 		else
 			console.printMsg("Error: Function inGameUIUpdate in Core, HUD.maxTokens has a value of 0 or below", "System", 'S');
+
+		if (koth->getState() == KOTHSTATE::ROUND)
+		{
+			uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam2, true);
+			uiManager->HUD.ticketReducer2Counter = 0;
+		}
+
+		uiManager->HUD.scoreChanged = true;
 	}
-	if (koth->getRoundWins(1) != uiManager->HUD.teamOneRoundWins)
+
+	//Checks if the teams score have changed.
+	if (koth->getRoundWins(1) != uiManager->HUD.teamOneScore) //Team 1
 	{
 		if (koth->getRoundWins(1) != -1)
 		{
-			uiManager->HUD.teamOneRoundWins = koth->getRoundWins(1);
+			int difference = koth->getRoundWins(1) - uiManager->HUD.teamOneScore;
+
+			uiManager->HUD.teamOneScore = koth->getRoundWins(1);
 			uiManager->clearText(scaleAndText::Wins1);
-			uiManager->setText(std::to_string(uiManager->HUD.teamOneRoundWins), scaleAndText::Wins1);
+			uiManager->setText(std::to_string(uiManager->HUD.teamOneScore), scaleAndText::Wins1);
+
+			if (difference > 0 && difference < 4)
+			{
+				uiManager->changeTextureHideAble(hideAbleObj::ScoreAdderTeam1, difference - 1);
+				uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam1, true);
+				uiManager->HUD.scoreAdder1Counter = 0;
+			}
 		}
 		else
 			console.printMsg("Error: Function inGameUIUpdate in Core, koth->getRoundWins(1) has a value of -1", "System", 'S');
 	}
-	if (koth->getRoundWins(2) != uiManager->HUD.teamTwoRoundWins)
+	if (koth->getRoundWins(2) != uiManager->HUD.teamTwoScore) //Team 2
 	{
 		if (koth->getRoundWins(2) != -1)
 		{
-			uiManager->HUD.teamTwoRoundWins = koth->getRoundWins(2);
+			int difference = koth->getRoundWins(2) - uiManager->HUD.teamTwoScore;
+
+			uiManager->HUD.teamTwoScore = koth->getRoundWins(2);
 			uiManager->clearText(scaleAndText::Wins2);
-			uiManager->setText(std::to_string(uiManager->HUD.teamTwoRoundWins), scaleAndText::Wins2);
+			uiManager->setText(std::to_string(uiManager->HUD.teamTwoScore), scaleAndText::Wins2);
+
+			if (difference > 0 && difference < 4)
+			{
+				uiManager->changeTextureHideAble(hideAbleObj::ScoreAdderTeam2, difference - 1);
+				uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam2, true);
+				uiManager->HUD.scoreAdder2Counter = 0;
+			}
 		}
 		else
 			console.printMsg("Error: Function inGameUIUpdate in Core, koth->getRoundWins(1) has a value of -1", "System", 'S');
 	}
-	if (int(koth->getTimer()) != uiManager->HUD.time) //Not done
+
+	//Does this check so the code only runs one time each second
+	if (int(koth->getTimer()) != uiManager->HUD.time)
 	{
 		uiManager->HUD.time = int(koth->getTimer());
 
@@ -2182,20 +2288,6 @@ void Core::inGameUIUpdate() //Ingame ui update
 
 		if (koth->getState() == ROUND) //Tickets meter should only work during the rounds which is why this check is here.
 		{
-			//if (uiManager->HUD.ticketLostTimer == 9)
-			//{
-			//	if (showOrHide)
-			//	{
-			//		uiManager->changeTextureHideAble(hideAbleObj::Announcer, 1);
-			//		showOrHide = false;
-			//	}
-			//	else
-			//	{
-			//		uiManager->changeTextureHideAble(hideAbleObj::Announcer, 0);
-			//		showOrHide = true;
-			//	}
-			//}
-
 			if (!uiManager->HUD.firstSecondEachRound) //If it isn't the first second of the round
 			{
 				if (uiManager->HUD.ticketLostTimer == 0)
@@ -2233,9 +2325,90 @@ void Core::inGameUIUpdate() //Ingame ui update
 			uiManager->HUD.ticketLostTimer = 14;
 			uiManager->scaleBar(scaleAndText::LoseTicketsMeter, 1.0f, true);
 		}
+
+		if (uiManager->HUD.bannerCounter == 3)
+		{
+			uiManager->hideOrShowHideAble(hideAbleObj::Banner, false);
+			uiManager->HUD.bannerCounter = 4;
+		}
+		else
+			uiManager->HUD.bannerCounter++;
+		if (uiManager->HUD.scoreAdder1Counter == 2)
+		{
+			uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam1, false);
+			uiManager->HUD.scoreAdder1Counter = 3;
+		}
+		else
+			uiManager->HUD.scoreAdder1Counter++;
+		if (uiManager->HUD.scoreAdder2Counter == 2)
+		{
+			uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam2, false);
+			uiManager->HUD.scoreAdder2Counter = 3;
+		}
+		else
+			uiManager->HUD.scoreAdder2Counter++;
+		if (uiManager->HUD.ticketReducer1Counter == 2)
+		{
+			uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam1, false);
+			uiManager->HUD.ticketReducer1Counter = 3;
+		}
+		else
+			uiManager->HUD.ticketReducer1Counter++;
+		if (uiManager->HUD.ticketReducer2Counter == 2)
+		{
+			uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam2, false);
+			uiManager->HUD.ticketReducer2Counter = 3;
+		}
+		else
+			uiManager->HUD.ticketReducer2Counter++;
 	}
 
-	//uiManager->renderHideAble();
+	//Checks to see if the banners "Final Assult" or Hold Your Ground" should be shown.
+	if (lowTicketsFirstTime && uiManager->HUD.scoreChanged) 
+	{
+		if (uiManager->HUD.teamOneTokens <= 3 && uiManager->HUD.teamTwoTokens <= 3)
+		{
+			uiManager->changeTextureHideAble(hideAbleObj::Banner, BannerTextureIDs::FinalAssult);
+			uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
+			uiManager->HUD.bannerCounter = 0;
+			lowTicketsFirstTime = false;
+		}
+		else if (uiManager->HUD.teamOneTokens <= 3)
+		{
+			if (tTeam == 1)
+			{
+				uiManager->changeTextureHideAble(hideAbleObj::Banner, BannerTextureIDs::FinalAssult);
+				uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
+			}
+			else
+			{
+				uiManager->changeTextureHideAble(hideAbleObj::Banner, BannerTextureIDs::HoldYourGround);
+				uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
+			}
+			uiManager->HUD.bannerCounter = 0;
+			lowTicketsFirstTime = false;
+		}
+		else if (uiManager->HUD.teamTwoTokens <= 3)
+		{
+			if (tTeam == 2)
+			{
+				uiManager->changeTextureHideAble(hideAbleObj::Banner, BannerTextureIDs::FinalAssult);
+				uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
+			}
+			else
+			{
+				uiManager->changeTextureHideAble(hideAbleObj::Banner, BannerTextureIDs::HoldYourGround);
+				uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
+			}
+			uiManager->HUD.bannerCounter = 0;
+			lowTicketsFirstTime = false;
+		}
+		uiManager->HUD.scoreChanged = false;
+	}
+	else
+		uiManager->HUD.scoreChanged = false;
+
+	uiManager->renderHideAble();
 	uiManager->inGameRender();
 
 	double x = (0.0);

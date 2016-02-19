@@ -4,6 +4,24 @@
 #include <GL\glew.h>
 #include "UIElements.h"
 
+enum BannerTextureIDs
+{
+	Victory,
+	Defeat,
+	ParkinAreaActive,
+	MarketActive,
+	HoldYourGround,
+	FinalAssult,
+	EndOfRound
+};
+
+enum ScoreAdderTextureIDs
+{
+	ScoreAdder1,
+	ScoreAdder2,
+	ScoreAdder3
+};
+
 class StaticTextureBoxes : public UIElements
 {
 private:

@@ -25,8 +25,8 @@ UIManager::UIManager()
 	HUD.HP = 1;
 	HUD.ammo = 0;
 	HUD.specialMeter = 0.0f;
-	HUD.teamOneRoundWins = 0;
-	HUD.teamTwoRoundWins = 0;
+	HUD.teamOneScore = 0;
+	HUD.teamTwoScore = 0;
 	HUD.teamOneTokens = 0;
 	HUD.teamTwoTokens = 0;
 	HUD.maxTokens = 0;
@@ -34,6 +34,12 @@ UIManager::UIManager()
 	HUD.ticketLostTimer = 0;
 	HUD.loseTicketPer = 1;
 	HUD.firstSecondEachRound = true;
+	HUD.scoreChanged = false;
+	HUD.bannerCounter = 5;
+	HUD.scoreAdder1Counter = 5;
+	HUD.scoreAdder2Counter = 5;
+	HUD.ticketReducer1Counter = 5;
+	HUD.ticketReducer2Counter = 5;
 }
 UIManager::~UIManager() 
 {
@@ -147,6 +153,19 @@ void UIManager::init(Console* console, int winX, int winY)
 	texturePaths.push_back("GameFiles/Textures/UITextures/ClassSelect/class_selection_trapper_hover.png"); //51
 	texturePaths.push_back("GameFiles/Textures/UITextures/ClassSelect/class_selection_stalker_hover.png"); //52
 	texturePaths.push_back("GameFiles/Textures/UITextures/ClassSelect/class_selection_punisher_hover.png"); //53
+
+	//Temp
+	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/Victory.png"); //54
+	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/Defeat.png"); //55
+	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/ParkingArea.png"); //56
+	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/Market.png"); //57
+	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/HoldCapturePoint.png"); //58
+	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/FinalAssult.png"); //59
+	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/TicketReducer.png"); //60
+	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/ScoreAdder1.png"); //61
+	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/ScoreAdder2.png"); //62
+	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/ScoreAdder3.png"); //63
+	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/EndofRound.png"); //64
 
 	//Släng in allt detta i en fil och läs in ifrån den vid här och lägg det i temp namn vector som sedans cleanas upp.
 

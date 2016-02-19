@@ -768,7 +768,8 @@ public:
 					uiPtr->setText("00:00", scaleAndText::Time); //time
 				}
 
-				uiPtr->HUD.specialMeter = 100.0f;
+				uiPtr->HUD.specialMeter = 0.0f;
+				uiPtr->HUD.maxSpecialMeter = 100.0f;
 
 				uiPtr->scaleBar(scaleAndText::TicketBar1, (float)(koth->getRespawnTokens(1)) / (float)(koth->getMaxTokensPerTeam()), false);
 				uiPtr->scaleBar(scaleAndText::TicketBar2, (float)(koth->getRespawnTokens(2)) / (float)(koth->getMaxTokensPerTeam()), false);
@@ -813,6 +814,18 @@ public:
 			}
 		}
 		gamePtr->allowPlayerRespawn(p_conID, respawnPosition);
+
+		KingOfTheHill* koth = (KingOfTheHill*)gamePtr->getGameMode();
+
+
+		if (koth->getState() == KOTHSTATE::ROUND)
+		{
+			if (p->getTeam() == 1)
+				uiPtr->hideOrShowHideAble(hideAbleObj::TicketReducerTeam1, true);
+			else if (p->getTeam() == 2)
+				uiPtr->hideOrShowHideAble(hideAbleObj::TicketReducerTeam2, true);
+		}
+
 
 		if (isClient == false)
 		{
