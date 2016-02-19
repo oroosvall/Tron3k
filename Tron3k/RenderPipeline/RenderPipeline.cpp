@@ -165,7 +165,7 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 	uiQuad.Init(vec3(-1, -1, 0), vec3(1, 1, 0));
 
-	animTexture.Init();
+	animTexture.init();
 
 	//glGenBuffers(1, &decal_struct_UBO);
 	//int maxDecals = 50;
@@ -306,15 +306,18 @@ void RenderPipeline::reloadShaders()
 		temp = 0;
 	}
 
-	//Water shader
-	std::string shaderNamesWater[] = { "GameFiles/Shaders/Water_vs.glsl", "GameFiles/Shaders/Water_fs.glsl" };
-	GLenum shaderTypesWater[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
-	//CreateProgram(temp, shaderNamesWater, shaderTypesWater, 2);
+	//AnimQuad shader
+	std::string shaderNamesAnimquad[] = { "GameFiles/Shaders/AnimatedQuad_vs.glsl", "GameFiles/Shaders/AnimatedQuad_gs.glsl", "GameFiles/Shaders/AnimatedQuad_fs.glsl" };
+	GLenum shaderTypesAnimquad[] = { GL_VERTEX_SHADER, GL_GEOMETRY_SHADER, GL_FRAGMENT_SHADER };
+	CreateProgram(temp, shaderNamesAnimquad, shaderTypesAnimquad, 3);
 	if (temp != 0)
 	{
-		animatedTexShader = temp;
+		animTexture.animQuadShader = temp;
 		temp = 0;
 	}
+	animTexture.animQuadWorld = glGetUniformLocation(animTexture.animQuadShader, "world");
+	animTexture.animQuadVP = glGetUniformLocation(animTexture.animQuadShader, "vp");
+	animTexture.animQuadUVset = glGetUniformLocation(animTexture.animQuadShader, "UVset");
 
 	//pointlight volume shader
 	std::string shaderNamesPointVolume[] = { "GameFiles/Shaders/pointlightVolume_vs.glsl", "GameFiles/Shaders/pointlightVolume_gs.glsl", "GameFiles/Shaders/pointlightVolume_fs.glsl" };
@@ -468,7 +471,7 @@ void RenderPipeline::release()
 	glDeleteShader(animationShader);
 	glDeleteShader(uiShader);
 	glDeleteShader(decal_Shader);
-	glDeleteShader(animatedTexShader);
+	glDeleteShader(animTexture.animQuadShader);
 	uiQuad.release();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -506,8 +509,10 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	cam.setViewProjMat(gBuffer->spotVolShader, gBuffer->spotVolVP);
 	cam.setViewProjMat(gBuffer->pointVolShader, gBuffer->pointVolVP);
 	cam.setViewProjMat(portalShaderV2, portal_VP);
+	cam.setViewProjMat(animTexture.animQuadShader, animTexture.animQuadVP);
 
 	contMan.update(dt);
+	animTexture.Update(dt);
 
 	updateTakeDamageEffect(dt);
 
@@ -622,6 +627,11 @@ void RenderPipeline::render()
 
 	contMan.renderChunks(regularShader, worldMat[0], uniformTextureLocation[0], uniformNormalLocation[0], uniformGlowSpecLocation[0], uniformDynamicGlowColorLocation[0], uniformStaticGlowIntensityLocation[0],  *gBuffer->portal_shaderPtr, gBuffer->portal_model, portalShaderV2, portal_World);
 	
+	//render animated signs
+	contMan.bindDecalTexture();
+	animTexture.render();
+
+
 	stopTimer(chunkRender);
 	//glDepthMask(GL_TRUE);glEnable(GL_CULL_FACE);glDisable(GL_BLEND);)
 	//renderEffects();
@@ -959,11 +969,6 @@ void RenderPipeline::renderCapturePoint(int capPointID)
 	glProgramUniform1f(regularShader, uniformStaticGlowIntensityLocation[0], 1.0f);
 	glProgramUniform3fv(regularShader, uniformDynamicGlowColorLocation[0], 1, (GLfloat*)contMan.testMap.getCapPointColor(capPointID));
 	contMan.renderCapturePoint(capPointID, regularShader, worldMat[0], uniformTextureLocation[0], uniformNormalLocation[0], uniformGlowSpecLocation[0]);
-}
-
-void RenderPipeline::renderAnimatedTexture()
-{
-	//animTexture.Render();
 }
 
 void RenderPipeline::renderAnimation(int playerID, int roleID, void* world, AnimationState animState, float* dgColor, float sgInten, bool first, bool primary, int roomID)

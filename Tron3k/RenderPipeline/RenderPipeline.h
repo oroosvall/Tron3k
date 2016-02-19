@@ -203,8 +203,6 @@ public:
 
 	virtual void renderCapturePoint(int capPointID);
 
-	virtual void renderAnimatedTexture();
-
 	virtual void forceReset() {};
 
 	virtual void setChatHistoryText(std::string text);
