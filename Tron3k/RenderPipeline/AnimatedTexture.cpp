@@ -1,7 +1,9 @@
 #include "AnimatedTexture.h"
+#include "Manager/TextureManager.h"
 
 AnimatedTexture::AnimatedTexture()
 {
+
 }
 
 AnimatedTexture::~AnimatedTexture()
@@ -24,18 +26,18 @@ void AnimatedTexture::init()
 	water.worldMat = mat4(1.0f);
 	objects.push_back(water);
 
+	//youmuanim
 	test.worldMat[0] = glm::vec4(0,5,0,1);
 	test.worldMat[1] = glm::vec4(0,0,0,1);
 	test.worldMat[2] = glm::vec4(5,5,0,1);
 	test.worldMat[3] = glm::vec4(5,0,0,1);
+	test.segments = 5.0f;
 	test.offsets.x = 0;
-	test.offsets.y = 1.0f / 5.0f;
+	test.offsets.y = 1.0f / test.segments;
 	test.freezeTimer = 0.2f;
 	test.swapTimer = 0.0f;
-	test.segments = 5.0f;
+	//TextureManager::
 	test.timer = test.freezeTimer;
-	test.freezeMode = true;
-	test.currentSegment = 0;
 }
 
 void AnimatedTexture::Update(float dT)

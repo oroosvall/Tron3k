@@ -1609,6 +1609,8 @@ void RenderPipeline::renderLightvolumes()
 	light.Direction = vec3(0);
 	light.DiffuseIntensity = 1.0f;
 	vec3 origin = vec3(50, 0.5f, 63);
+	light.attenuation.w = 4.0f;
+	light.AmbientIntensity = 1.0f;
 	for (int n = 0; n < 100; n++)
 	{
 		light.Color = vec3(float(n) / 100.0f, 1 - float(n) / 100.0f, 0.5f);

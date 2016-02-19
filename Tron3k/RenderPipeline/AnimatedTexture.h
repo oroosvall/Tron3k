@@ -22,11 +22,11 @@ struct AnimatedObject
 	float freezeTimer;
 	float swapTimer;
 
-	bool freezeMode;
+	bool freezeMode = true;
 
 	float segments;
 
-	int currentSegment;
+	int currentSegment = 0;
 
 	void update(float dt)
 	{
