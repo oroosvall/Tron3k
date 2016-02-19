@@ -554,7 +554,6 @@ void Game::checkFootsteps(float dt)
 				glm::vec3 vel;
 				pos = playerList[i]->getPos();
 				vel = playerList[i]->getVelocity();
-				cout << vel.x << "     " << vel.z << endl;
 				if (vel.x > 0.5 || vel.x < -0.5  || vel.z > 0.5 || vel.z < -0.5)
 				{
 					playerList[i]->setFootstepsCountdown();
