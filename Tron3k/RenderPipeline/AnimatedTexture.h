@@ -28,22 +28,30 @@ struct AnimatedObject
 
 	int currentSegment = 0;
 
-	void init_standing_right(vec3 topRight, vec3 topLeft)
+	void init_standing_right(vec3 topLeft, vec3 botRight)
 	{
-		worldMat[0] = glm::vec4(topRight, 1);
-		worldMat[1] = glm::vec4(topRight.x, topLeft.y, topRight.z, 1);
-		worldMat[2] = glm::vec4(topLeft.x, topRight.y, topLeft.z, 1);
-		worldMat[3] = glm::vec4(topLeft, 1);
+		worldMat[0] = glm::vec4(topLeft, 1);
+		worldMat[1] = glm::vec4(topLeft.x, botRight.y, topLeft.z, 1);
+		worldMat[2] = glm::vec4(botRight.x, topLeft.y, botRight.z, 1);
+		worldMat[3] = glm::vec4(botRight, 1);
 	}
 
-	void init_standing_down(vec3 topRight, vec3 topLeft)
+	void init_standing_down(vec3 topLeft, vec3 botRight)
 	{
-		worldMat[0] = glm::vec4(topRight.x, topLeft.y, topRight.z, 1);
-		worldMat[1] = glm::vec4(topLeft, 1);
-		worldMat[2] = glm::vec4(topRight, 1);
-		worldMat[3] = glm::vec4(topLeft.x, topRight.y, topLeft.z, 1);
+		worldMat[0] = glm::vec4(topLeft.x, botRight.y, topLeft.z, 1);
+		worldMat[1] = glm::vec4(botRight, 1);
+		worldMat[2] = glm::vec4(topLeft, 1);
+		worldMat[3] = glm::vec4(botRight.x, topLeft.y, botRight.z, 1);
 	}
 	
+	void init_ground(vec3 topLeft, vec3 botRight)
+	{
+		worldMat[0] = glm::vec4(topLeft, 1);
+		worldMat[1] = glm::vec4(topLeft.x, topLeft.y, botRight.z, 1);
+		worldMat[2] = glm::vec4(botRight.x, botRight.y, topLeft.z, 1);
+		worldMat[3] = glm::vec4(botRight, 1);
+	}
+
 	void init_time_segments(float _segments, float _freezeTime, float _swapTime)
 	{
 		segments = _segments;
