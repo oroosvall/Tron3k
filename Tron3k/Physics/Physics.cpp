@@ -1553,7 +1553,7 @@ void Physics::cullingPointvsRoom(glm::vec3* pos, int* arr_interIDs, int& interCo
 	interCount = 0;
 
 	int roomBoxesSize = (int)roomBoxes.size();
-	for (int i = 1; i < roomBoxesSize; i++)
+	for (int i = 0; i < roomBoxesSize; i++)
 	{
 		if (pos->x > roomBoxes[i].getAABB()->min.x && pos->x < roomBoxes[i].getAABB()->max.x)//x
 			if (pos->y > roomBoxes[i].getAABB()->min.y && pos->y < roomBoxes[i].getAABB()->max.y)//y
