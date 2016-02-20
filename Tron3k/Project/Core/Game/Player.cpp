@@ -624,6 +624,8 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 									animOverideIfPriority(anim_third_current, AnimationState::third_secondary_switch);
 									animOverideIfPriority(anim_first_current, AnimationState::first_primary_switch_IN);
 								}
+								else if(animRole == ROLES::MANIPULATOR)
+									animOverideIfPriority(anim_third_current, AnimationState::third_secondary_switch);
 
 								animSwapActive = true;
 								areWeScrolling = 0.0;
@@ -657,11 +659,14 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 									role.swapWeaponLocal(1);
 									animOverideIfPriority(anim_first_current, AnimationState::first_primary_switch);
 								}
+
 								if (animRole == ROLES::BRUTE)
 								{
 									animOverideIfPriority(anim_first_current, AnimationState::first_secondary_switch_IN);
 									animOverideIfPriority(anim_third_current, AnimationState::third_primary_switch);
 								}
+								else if (animRole == ROLES::MANIPULATOR)
+									animOverideIfPriority(anim_third_current, AnimationState::third_primary_switch);
 
 								animSwapActive = true;
 
@@ -1127,7 +1132,6 @@ void Player::respawn(glm::vec3 respawnPos, glm::vec3 _dir, int _roomID)
 	role.returnToLife();
 
 	roomID = _roomID;
-	//printf("Now in room %d", _roomID);
 
 	if (isLocalPlayer)
 		cam->roomID = _roomID;

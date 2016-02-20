@@ -275,12 +275,12 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 				{
 					portal = &testMap.chunks[n].portals[p];
 
+					//dont render if it bridges between chunks that are already in the rendernextqueue
 					if (renderNextChunks[portal->bridgedRooms[0]] == false ||
 						renderNextChunks[portal->bridgedRooms[1]] == false)
 					{
 						if (portal->waiting == false)
 						{
-							//dont render if it bridges between chunks that are already in the rendernextqueue
 							portal->render(portal_shader, portal_world);
 							portal->rendered = true;
 							portal->waiting = true;
