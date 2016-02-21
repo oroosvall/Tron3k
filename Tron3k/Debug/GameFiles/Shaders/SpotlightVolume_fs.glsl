@@ -96,8 +96,8 @@ void main()
 	
 	// Light volume effect
 	
-	vec3 eyesToLightSouce = normalize(lights[spotlightID].Position - eyepos);
-	float dotAngle = dot(lights[spotlightID].Direction, eyesToLightSouce);
-	if(dotAngle < 0)
-		fragment_color += vec4(lights[spotlightID].Color, 1) * pow(interpolDist, 5)* dotAngle * dotAngle * dotAngle * dotAngle * dotAngle * dotAngle;
+	vec3 lightSouceToEye = normalize(eyepos - lights[spotlightID].Position);
+	float dotAngle = dot(lights[spotlightID].Direction, lightSouceToEye);
+	if(dotAngle > 0)
+		fragment_color += vec4(lights[spotlightID].Color, 1) * pow(interpolDist, 5) * pow(dotAngle, 6);
 }
