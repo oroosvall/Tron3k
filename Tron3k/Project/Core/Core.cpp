@@ -1840,7 +1840,7 @@ void Core::renderWorld(float dt)
 					else //(bullets[i]->getTeam() == 2)
 					{
 						renderPipe->renderBullet(c, bullets[i]->getWorldMat(), &TEAMTWOCOLOR.x, 0.0f);
-						light.Color = TEAMTWOCOLOR;
+						light.Color = TEAMONECOLOR;
 						light.Position = bullets[i]->getPos();
 						renderPipe->addLight(&light, 0);
 					}
@@ -1854,11 +1854,10 @@ void Core::renderWorld(float dt)
 				std::vector<Bullet*> bullets = game->getBullets(BULLET_TYPE(c));
 				for (unsigned int i = 0; i < bullets.size(); i++)
 				{
-					if (bullets[i]->getTeam() == 1)
-						renderPipe->renderBullet(c, bullets[i]->getWorldMat(), &TEAMTWOCOLOR.x, 0.0f);
-
-					else //if (bullets[i]->getTeam() == 2)
-						renderPipe->renderBullet(c, bullets[i]->getWorldMat(), &TEAMTWOCOLOR.x, 0.0f);
+					renderPipe->renderBullet(c, bullets[i]->getWorldMat(), &TEAMTWOCOLOR.x, 0.0f);
+					light.Color = TEAMONECOLOR;
+					light.Position = bullets[i]->getPos();
+					renderPipe->addLight(&light, 0);
 				}
 			}
 		}
@@ -1869,11 +1868,10 @@ void Core::renderWorld(float dt)
 				std::vector<Bullet*> bullets = game->getBullets(BULLET_TYPE(c));
 				for (unsigned int i = 0; i < bullets.size(); i++)
 				{
-					if (bullets[i]->getTeam() == 1)
-						renderPipe->renderBullet(c, bullets[i]->getWorldMat(), &TEAMONECOLOR.x, 0.0f);
-
-					else // if (bullets[i]->getTeam() == 2)
-						renderPipe->renderBullet(c, bullets[i]->getWorldMat(), &TEAMONECOLOR.x, 0.0f);
+					renderPipe->renderBullet(c, bullets[i]->getWorldMat(), &TEAMONECOLOR.x, 0.0f);
+					light.Color = TEAMONECOLOR;
+					light.Position = bullets[i]->getPos();
+					renderPipe->addLight(&light, 0);
 				}
 			}
 		} // render bullets end
