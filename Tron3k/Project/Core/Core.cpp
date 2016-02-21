@@ -1840,7 +1840,7 @@ void Core::renderWorld(float dt)
 					else //(bullets[i]->getTeam() == 2)
 					{
 						renderPipe->renderBullet(c, bullets[i]->getWorldMat(), &TEAMTWOCOLOR.x, 0.0f);
-						light.Color = TEAMONECOLOR;
+						light.Color = TEAMTWOCOLOR;
 						light.Position = bullets[i]->getPos();
 						renderPipe->addLight(&light, 0);
 					}
@@ -1855,7 +1855,7 @@ void Core::renderWorld(float dt)
 				for (unsigned int i = 0; i < bullets.size(); i++)
 				{
 					renderPipe->renderBullet(c, bullets[i]->getWorldMat(), &TEAMTWOCOLOR.x, 0.0f);
-					light.Color = TEAMONECOLOR;
+					light.Color = TEAMTWOCOLOR;
 					light.Position = bullets[i]->getPos();
 					renderPipe->addLight(&light, 0);
 				}
