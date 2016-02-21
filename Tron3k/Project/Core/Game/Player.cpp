@@ -968,12 +968,18 @@ void Player::shoot()
 	else // secondary fire
 	{
 		animOverideIfPriority(anim_first_current, AnimationState::first_secondary_fire);
+
 		if (animRole == ROLES::MOBILITY)
 			animOverideIfPriority(anim_third_current, AnimationState::third_shankbot_melee_standing);
 
 		if (animRole == ROLES::MANIPULATOR)
-			if (role.getCurrentWeapon()->getType() != WEAPON_TYPE::BATTERYWPN_SLOW)
-				animOverideIfPriority(anim_third_current, AnimationState::first_secondary_fire_left);
+		{
+			if (role.getCurrentWeapon()->getType() == WEAPON_TYPE::BATTERYWPN_SLOW)
+				animOverideIfPriority(anim_first_current, AnimationState::first_secondary_fire);
+
+			if (role.getCurrentWeapon()->getType() == WEAPON_TYPE::BATTERYWPN_SPEED)
+				animOverideIfPriority(anim_first_current, AnimationState::first_secondary_fire_left);
+		}
 	}
 
 	//Add a bullet recoil factor that is multiplied by a random number and smooth it out
