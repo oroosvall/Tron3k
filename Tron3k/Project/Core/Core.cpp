@@ -1983,6 +1983,10 @@ void Core::renderWorld(float dt)
 					else
 						dgColor = TEAMONECOLOR;
 					renderPipe->renderExploEffect(&pos.x, eff[i]->getInterestingVariable(), 0, &dgColor.x);
+
+					light.Color = dgColor;
+					light.Position = eff[i]->getPos();
+					renderPipe->addLight(&light, 0);
 				}
 				break;
 				case HSCPICKUP:
@@ -1993,6 +1997,10 @@ void Core::renderWorld(float dt)
 						vec3 pos = eff[i]->getPos();
 						dgColor = vec3(1.0f, 0, 1.0f);
 						renderPipe->renderExploEffect(&pos.x, eff[i]->getInterestingVariable(), 0, &dgColor.x);
+
+						light.Color = dgColor;
+						light.Position = eff[i]->getPos();
+						renderPipe->addLight(&light, 0);
 					}
 				}
 				break;
@@ -2004,6 +2012,10 @@ void Core::renderWorld(float dt)
 						vec3 pos = eff[i]->getPos();
 						dgColor = vec3(1.0f, 0, 0);
 						renderPipe->renderExploEffect(&pos.x, eff[i]->getInterestingVariable(), 0, &dgColor.x);
+
+						light.Color = dgColor;
+						light.Position = eff[i]->getPos();
+						renderPipe->addLight(&light, 0);
 
 					}
 				}
