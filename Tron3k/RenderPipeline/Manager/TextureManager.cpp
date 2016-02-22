@@ -54,7 +54,7 @@ void TextureManager::update(float dt)
 {
 	unsigned int pos = 0;
 	GLuint texture = uploadStreamedData(pos);
-	if (texture)
+	if (texture && pos < textureList.size())
 	{
 		textureList[pos].textureID = texture;
 		textureList[pos].state = TEXTURE_LOADED;
