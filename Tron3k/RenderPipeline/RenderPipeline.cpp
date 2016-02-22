@@ -622,21 +622,11 @@ void RenderPipeline::finalizeRender()
 	glUseProgram(particleShader);
 	cam.setViewProjMat(particleShader, particleViewProj);
 	//glProgramUniformMatrix4fv(particleShader, particleViewProj, 1, GL_FALSE, (GLfloat*)&glm::mat4());
-	vec2 size = vec2(0.5, 0.5);
-	glProgramUniform2f(particleShader, particleSize, size.x, size.y);
-
+	
 	glProgramUniform3f(particleShader, particleCam, gBuffer->eyePos.x, gBuffer->eyePos.y, gBuffer->eyePos.z);
 	
-	TextureManager::gTm->bindTexture(ptex, particleShader, particleTexture, DIFFUSE_FB);
-
-	contMan.renderParticles();
-
-	glUseProgram(glowShaderTweeks);
+	contMan.renderParticles(particleShader, particleTexture, particleSize);
 	
-	glProgramUniform1fv(glowShaderTweeks, uniformGlowTimeDelta, 1, &delta);
-
-	//gBuffer->preRender(glowShaderTweeks, uniformGlowTexture, uniformGlowSelf);
-
 	//GBuffer Render
 	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);

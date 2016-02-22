@@ -16,6 +16,8 @@ public:
 
 	glm::vec2 m_size;
 
+	GLuint m_texture;
+
 private:
 	ParticleSystemData* m_data;
 	std::vector<Particle> m_vertices;
