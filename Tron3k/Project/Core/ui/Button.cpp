@@ -156,7 +156,7 @@ void Button::setTexture(std::vector<GLuint> uiTextureIds)
 	textureIdInUse = textureIdList[0];
 }
 
-void Button::scaleBar(float procentOfMax, bool fromRight)
+void Button::scaleBar(int id, float procentOfMax, bool fromRight)
 {
 	pivot = glm::vec3(1.0f, 0.0f, 0.0f);
 

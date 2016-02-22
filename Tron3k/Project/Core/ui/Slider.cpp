@@ -144,7 +144,7 @@ void Slider::setTexture(std::vector<GLuint> uiTextureIds)
 	}
 }
 
-void Slider::scaleBar(float procentOfMax, bool fromRight) //
+void Slider::scaleBar(int id, float procentOfMax, bool fromRight) //
 {
 	pivot = glm::vec3(1.0f, 0.0f, 0.0f);
 

@@ -147,7 +147,7 @@ void InputBox::setTexture(std::vector<GLuint> uiTextureIds)
 	textureIdInUse = textureIdList[0];
 }
 
-void InputBox::scaleBar(float procentOfMax, bool fromRight)
+void InputBox::scaleBar(int id, float procentOfMax, bool fromRight)
 {
 	pivot = glm::vec3(1.0f, 0.0f, 0.0f);
 

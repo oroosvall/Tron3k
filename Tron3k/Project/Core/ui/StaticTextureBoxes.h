@@ -31,7 +31,8 @@ private:
 	int* textureIndexList;
 	int textureInUse;
 	int uniqueKey;
-	glm::mat4 worldMatrix;
+	std::vector<glm::mat4> worldMatrix;
+	glm::mat4 originalWM;
 	int nrOfTextures;
 	glm::vec3 pivot;
 
@@ -51,6 +52,9 @@ public:
 	virtual void setWorldMatrix(int id, float x, float y);
 	virtual void resetWorldMatrix(int id);
 
+	int addNewWM();
+	void deleteOldestWM();
+
 	virtual void changeTexUsed(int id);
 
 	virtual void fromPosToQuadScreen(glm::vec2 positions, int id);
@@ -61,7 +65,7 @@ public:
 
 	virtual void setTexture(std::vector<GLuint> uiTextureIds);
 
-	virtual void scaleBar(float procentOfMax, bool fromRight);
+	virtual void scaleBar(int id, float procentOfMax, bool fromRight);
 
 	virtual void setWindowResolution(int winX, int winY);
 

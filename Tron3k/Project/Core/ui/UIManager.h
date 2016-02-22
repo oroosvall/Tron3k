@@ -133,8 +133,10 @@ public:
 	void renderHideAble();
 	void hideOrShowHideAble(int id, bool show);
 	void changeTextureHideAble(int id, int textureId);
-	void setHideableWorldMatrix(int id, glm::vec2 xy);
-	void resetHidableWorldMatrix(int id);
+	void setHideableWorldMatrix(int id, int wmId, glm::vec2 xy);
+	void resetHidableWorldMatrix(int id, int wmId);
+	int addNewWM(int id);
+	void deleteOldestWM(int id);
 
 	struct HUDvalues
 	{
@@ -161,6 +163,7 @@ public:
 		bool moveTokenReducer2;
 		bool movePointAdder1;
 		bool movePointAdder2;
+		vector<int> wmIdList;
 	}HUD;
 };
 

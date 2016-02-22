@@ -237,9 +237,7 @@ void UIManager::init(Console* console, int winX, int winY)
 	this->winX = winX;
 	this->winY = winY;
 
-	LoadNextSet(UISets::Menu, winX, winY); //Load the first set of menus.
 	firstMenu = false;
-	setMenu(MainMenu::StartMenu); //Set start menu as the current menu
 }
 
 void UIManager::loadInTexture()
@@ -333,6 +331,12 @@ void UIManager::removeAllMenus()
 	
 	currentMenu = 0;
 	nrOfOpenedMenus = 0;
+	hideAbleMenuActive = false;
+	HUD.scoreChanged = false;
+	HUD.moveTokenReducer1 = false;
+	HUD.moveTokenReducer2 = false;
+	HUD.movePointAdder1 = false;
+	HUD.movePointAdder2 = false;
 }
 bool UIManager::LoadNextSet(int whichMenuGroup, int winX, int winY)
 {
@@ -576,11 +580,20 @@ void UIManager::changeTextureHideAble(int id, int textureId)
 		console->printMsg("Function changeTextureHideAble in UIManager, Hideablemenu isn't active", "System", 'S');
 }
 
-void UIManager::setHideableWorldMatrix(int id, glm::vec2 xy)
+void UIManager::setHideableWorldMatrix(int id, int wmId, glm::vec2 xy)
 {
-	hideAble.setHideableWorldMatrix(id, xy);
+	hideAble.setHideableWorldMatrix(id, wmId,  xy);
 }
-void UIManager::resetHidableWorldMatrix(int id)
+void UIManager::resetHidableWorldMatrix(int id, int wmId)
 {
-	hideAble.resetHidableWorldMatrix(id);
+	hideAble.resetHidableWorldMatrix(id, wmId);
+}
+
+int UIManager::addNewWM(int id)
+{
+	return hideAble.addNewWM(id);
+}
+void UIManager::deleteOldestWM(int id)
+{
+	hideAble.deleteOldestWM(id);
 }

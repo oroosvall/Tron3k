@@ -33,7 +33,7 @@ public:
 
 	virtual void setTexture(std::vector<GLuint> uiTextureIds) = 0;
 
-	virtual void scaleBar(float procentOfMax, bool fromRight) = 0;
+	virtual void scaleBar(int id, float procentOfMax, bool fromRight) = 0;
 
 	virtual void setWindowResolution(int winX, int winY) = 0;
 

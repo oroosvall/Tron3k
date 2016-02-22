@@ -354,7 +354,7 @@ void UI::clearText(int id)
 void UI::scaleBar(int id, float procentOfMax, bool fromRight)
 {
 	if (textIdList[id] > -1)
-		UiObjects[textIdList[id]]->scaleBar(procentOfMax, fromRight);
+		UiObjects[textIdList[id]]->scaleBar(id, procentOfMax, fromRight);
 }
 
 
@@ -409,17 +409,28 @@ void UI::changeHideAbleTexture(int objId, int whichTex)
 		hideAbleObjects[objId]->changeTexUsed(whichTex);
 }
 
-void UI::setHideableWorldMatrix(int id, glm::vec2 xy)
+void UI::setHideableWorldMatrix(int id, int wmId, glm::vec2 xy)
 {
 	float tX = xy.x;
 	float tY = xy.y;
 
 	if (id > -1 && id < hideAbleObjects.size())
 		if(xy.x > -1.1f && xy.y > -1.1f)
-			hideAbleObjects[id]->setWorldMatrix(id, tX, tY);
+			hideAbleObjects[id]->setWorldMatrix(wmId, tX, tY);
 }
-void UI::resetHidableWorldMatrix(int id)
+void UI::resetHidableWorldMatrix(int id, int wmId)
 {
 	if (id > -1 && id < hideAbleObjects.size())
-		hideAbleObjects[id]->resetWorldMatrix(id);
+		hideAbleObjects[id]->resetWorldMatrix(wmId);
+}
+int UI::addNewWM(int id)
+{
+	if (id > -1 && id < hideAbleObjects.size())
+		return hideAbleObjects[id]->addNewWM();
+	return -1;
+}
+void UI::deleteOldestWM(int id)
+{
+	if (id > -1 && id < hideAbleObjects.size())
+		hideAbleObjects[id]->deleteOldestWM();
 }
