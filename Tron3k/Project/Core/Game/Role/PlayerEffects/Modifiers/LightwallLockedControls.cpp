@@ -25,7 +25,7 @@ LightWallLockedControls::~LightWallLockedControls()
 int LightWallLockedControls::getData(float dt)
 {
 	bool kill = false;
-	if (!target->getGrounded())
+	if (!target->getGrounded() || !target->getAnimState_t_c() == AnimationState::third_primary_air)
 		kill = true;
 	if (target->getVelocity().x != vel.x || target->getVelocity().z != vel.z)
 		kill = true;
