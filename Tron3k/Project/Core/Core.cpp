@@ -1822,27 +1822,46 @@ void Core::renderWorld(float dt)
 		renderPipe->stopExecTimer(playerTime);
 		//*** Render Bullets ***
 
+		int cullArr[2];
+		int cullhit;
+
 		if (hackedTeam == -1)
 		{
 			for (int c = 0; c < BULLET_TYPE::NROFBULLETS; c++)
 			{
 				std::vector<Bullet*> bullets = game->getBullets(BULLET_TYPE(c));
+
+				if (c == BULLET_TYPE::SHOTGUN_PELLET)
+				{
+					light.AmbientIntensity = 3.0f;
+					light.attenuation.w = 3.0f;
+				}
+				else
+				{
+					light.AmbientIntensity = 0.6f;
+					light.attenuation.w = 4.0f;
+				}
+
 				for (unsigned int i = 0; i < bullets.size(); i++)
 				{
+					game->getPhysics()->cullingPointvsRoom(&bullets[i]->getPos(), cullArr, cullhit, 1);
+					if (cullhit != 1)
+						cullArr[0] = 0;
+
 					if (bullets[i]->getTeam() == 1)
 					{
 						renderPipe->renderBullet(c, bullets[i]->getWorldMat(), &TEAMONECOLOR.x, 0.0f);
-						light.Color = TEAMONECOLOR;
+						light.Color = TEAMONECOLOR; // +vec3(0.2f, 0.2f, 0.2f);
 						light.Position = bullets[i]->getPos();
-						renderPipe->addLight(&light, 0);
+						renderPipe->addLight(&light, cullArr[0]);
 					}
 
 					else //(bullets[i]->getTeam() == 2)
 					{
 						renderPipe->renderBullet(c, bullets[i]->getWorldMat(), &TEAMTWOCOLOR.x, 0.0f);
-						light.Color = TEAMTWOCOLOR;
+						light.Color = TEAMTWOCOLOR; // +vec3(0.2f, 0.2f, 0.2f);
 						light.Position = bullets[i]->getPos();
-						renderPipe->addLight(&light, 0);
+						renderPipe->addLight(&light, cullArr[0]);
 					}
 				}
 			}
