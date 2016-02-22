@@ -133,8 +133,10 @@ bool TextureManager::PNGSize(const char* fileName, unsigned int &x, unsigned int
 }
 
 
-void TextureManager::bindTexture(unsigned int &textureID, GLuint shader, GLuint shaderLocation, TEXTURE_FALLBACK fallback)
+void TextureManager::bindTexture(unsigned int &textureID, GLuint shader, GLuint shaderLocation, TEXTURE_FALLBACK fallback, bool invokeUpdate)
 {
+	if (invokeUpdate)
+		update(0);
 	if (!textureList.empty() && textureID < textureList.size())
 	{
 		TextureInfo* ti = &textureList[textureID];
@@ -165,8 +167,10 @@ void TextureManager::bindTexture(unsigned int &textureID, GLuint shader, GLuint 
 
 }
 
-void TextureManager::bindTextureOnly(unsigned int &textureID, TEXTURE_FALLBACK fallback)
+void TextureManager::bindTextureOnly(unsigned int &textureID, TEXTURE_FALLBACK fallback, bool invokeUpdate)
 {
+	if (invokeUpdate)
+		update(0);
 	if (!textureList.empty() && textureID < textureList.size())
 	{
 		TextureInfo* ti = &textureList[textureID];
@@ -184,6 +188,7 @@ void TextureManager::bindTextureOnly(unsigned int &textureID, TEXTURE_FALLBACK f
 		else if (ti->state == TEXTURE_STREAMING)
 		{
 			//bindDefault(shader, shaderLocation, fallback);
+			bindDefaultOnly(fallback);
 		}
 		else if (ti->state == TEXTURE_LOADED)
 		{
