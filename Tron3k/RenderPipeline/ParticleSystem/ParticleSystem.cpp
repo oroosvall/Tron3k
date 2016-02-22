@@ -56,6 +56,8 @@ void ParticleSystem::Initialize(glm::vec3 pos, ParticleSystemData* ps, GLuint* p
 	
 	m_pos = pos;
 
+	m_counter = 0;
+	m_alive = false;
 }
 
 
@@ -66,6 +68,11 @@ void ParticleSystem::Update(float dT)
 	{
 		m_currentEmission = m_data->emission;
 		emit = -1;
+
+		if (!m_data->continuous)
+		{
+			m_counter++;
+		}
 	}
 	else
 	{
@@ -75,6 +82,11 @@ void ParticleSystem::Update(float dT)
 	if (m_data->emission == 0.0f)
 	{
 		emit = 0;
+	}
+
+	if (m_counter == m_data->maxparticles)
+	{
+		m_alive = true;
 	}
 
 	glProgramUniform1f(*m_program, m_loc->lifetime, m_data->lifetime);

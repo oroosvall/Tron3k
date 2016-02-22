@@ -1,4 +1,4 @@
-#version 410
+#version 420
 layout(location = 0) in vec3 VertexPos;
 layout(location = 1) in vec2 VertexUV;
 layout(location = 2) in vec3 VertexNormal;
