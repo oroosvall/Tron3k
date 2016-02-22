@@ -97,7 +97,7 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 	fontTexture = loadTexture("GameFiles/Font/font16.png", false);
 
-	debugText = new Text("", 16, fontTexture, vec2(10, 24));
+	debugText = new Text("", 10, fontTexture, vec2(10, 24));
 	chatHistoryText = ".\n.\n.\n.\n.\n";
 	chatTypeText = "..";
 	chatText = new Text(chatHistoryText + chatTypeText, 11, fontTexture, vec2(10, 420));
@@ -511,32 +511,33 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	{
 		ss << "Draw count: " << drawCount << "\n";
 		ss << "Primitive count: " << primitiveCount << "\n";
-		//ss << "Buffer count: " << genBufferPeak << "\n";
-		//ss << "Vao count: " << genVaoPeak << "\n";
-		//ss << "Texture count: " << genTexturePeak << "\n";
+		ss << "Buffer count: " << genBufferPeak << "\n";
+		ss << "Vao count: " << genVaoPeak << "\n";
+		ss << "Texture count: " << genTexturePeak << "\n";
 		//ss << "Memory usage: " << memusage << "(B)\n";
 		ss << "Memory usage(tot): " << memusageT / 1024.0f / 1024.0f << "(MB)\n";
 		ss << "Memory usage(tex): " << memusageTex / 1024.0f / 1024.0f << "(MB)\n";
 		ss << "Memory usage(buf): " << memusageMesh / 1024.0f / 1024.0f << "(MB)\n";
 		ss << "FPS: " << fps << "\n";
 		ss << "Portals (" << (contMan.f_portal_culling ? "on" : "off") << ")\n";
-		//ss << "Texture binds: " << textureBinds << "\n";
-		//ss << "Buffer binds: " << bufferBinds << "\n";
-		//ss << "Shader binds: " << shaderBinds << "\n";
-		//ss << "State changes: " << stateChange << "\n";
+		ss << "Texture binds: " << textureBinds << "\n";
+		ss << "Buffer binds: " << bufferBinds << "\n";
+		ss << "Shader binds: " << shaderBinds << "\n";
+		ss << "State changes: " << stateChange << "\n";
 		ss << "Total uptime:" << timepass << "\n";
 		ss << "Dt:" << dt << "\n";
 
-		ss << "ManagerBinds:" << texManBinds << "\n";
-		ss << "OtherBinds:" << illegalBinds << "\n";
+		//ss << "ManagerBinds:" << texManBinds << "\n";
+		//ss << "OtherBinds:" << illegalBinds << "\n";
 
-		//ss << result << "\n";
-		if (counter > 0.0001f)
+		ss << result << "\n";
+		if (counter > 1.0f)
 		{
-			//result = getQueryResult();
+			result = getQueryResult();
 			fps = 0;
 			counter = 0;
 			debugText->setText(ss.str());
+			
 		}
 		fps++;
 	}
