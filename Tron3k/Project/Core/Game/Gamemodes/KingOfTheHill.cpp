@@ -326,7 +326,10 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			{
 				if (round == 2)
 				{
-					capturePoint = (capturePoint + 1) % 2;
+					if (capturePoint == 0)
+						capturePoint = 1;
+					else
+						capturePoint = 0;
 				}
 				else if (round == 3)
 					capturePoint = rand() % 2;
