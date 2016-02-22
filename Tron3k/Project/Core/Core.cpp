@@ -61,7 +61,7 @@ void Core::init()
 
 Core::~Core()
 {
-	if (game != nullptr)
+	if (game != nullptr && current != SERVER)
 	{
 		if (game->getPlayer(game->GetLocalPlayerId()) != nullptr)
 			saveControls();
@@ -120,15 +120,19 @@ void Core::update(float dt)
 		justAFrameCounter = 0;
 	}
 
-	if (!controlsLoaded)
+	if (!controlsLoaded && current != SERVER)
 	{
 		if (game != nullptr)
 		{
-			Player* p = game->getPlayer(game->GetLocalPlayerId());
-			if (p != nullptr)
+			int id = game->GetLocalPlayerId();
+			if (id != -1)
 			{
-				loadControls();
-				controlsLoaded = true;
+				Player* p = game->getPlayer(id);
+				if (p != nullptr)
+				{
+					loadControls();
+					controlsLoaded = true;
+				}
 			}
 		}
 	}

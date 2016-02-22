@@ -170,6 +170,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			capturePoint = rand() % 2;
 			state = PREROUND;
 			clearTeams();
+			round = 1;
 			std::vector<int>* teamOne = gamePtr->getTeamConIds(1);
 			std::vector<int>* teamTwo = gamePtr->getTeamConIds(2);
 			for (int c = 0; c < teamOne->size(); c++)
@@ -240,6 +241,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			}
 			if (allDead)
 			{
+				round++;
 				if (timer > 31.0f)
 					teamTwoScore += 3;
 				else if (timer > 16.0f)
@@ -269,6 +271,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			}
 			if (allDead)
 			{
+				round++;
 				if (timer > 31.0f)
 					teamOneScore += 3;
 				else if (timer > 16.0f)
@@ -289,6 +292,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 
 		if (timer < FLT_EPSILON || msg == MATCH_DRAW || msg == MATCH_WIN_TEAM1 || msg == MATCH_WIN_TEAM2 || allDead)
 		{
+			round++;
 			state = ENDROUND;
 			timer = 4.0f;
 		}
@@ -320,7 +324,13 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
  			timer -= dt;
 			if (timer < FLT_EPSILON)
 			{
-				capturePoint = rand() % 2;
+				if (round == 2)
+				{
+					capturePoint = (capturePoint + 1) % 2;
+				}
+				else if (round == 3)
+					capturePoint = rand() % 2;
+
 				state = PREROUND;
 				timer = 15.0f;
 
