@@ -38,7 +38,7 @@ void KingOfTheHill::init(Console* cptr, Game* gptr)
 	teamTwoScore = 0;
 	winScore = 5;
 
-	tokensPerTeam = 20;
+	tokensPerTeam = 2;
 
 	tickForCaptureScoring = 15.0f;
 	timerModifierForCaptureScoring = tickForCaptureScoring;
@@ -241,7 +241,6 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			}
 			if (allDead)
 			{
-				round++;
 				if (timer > 31.0f)
 					teamTwoScore += 3;
 				else if (timer > 16.0f)
@@ -271,7 +270,6 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			}
 			if (allDead)
 			{
-				round++;
 				if (timer > 31.0f)
 					teamOneScore += 3;
 				else if (timer > 16.0f)
