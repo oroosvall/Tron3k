@@ -1210,6 +1210,14 @@ void Core::roamHandleCmds(std::string com)
 					serverCam->setSensitivity(sens);
 			}
 		}
+		else if (token == "/fullscreen")
+		{
+			if (fullscreen)
+				fullscreen = false;
+			else
+				fullscreen = true;
+			recreate = true;
+		}
 
 		else if (token == "/cleanup")
 		{
