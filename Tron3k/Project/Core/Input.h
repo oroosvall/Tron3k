@@ -13,6 +13,11 @@ I may choose to extend this to apply to all special characters, including those 
 #define SWE_KEY_APOSTROPHE GLFW_KEY_BACKSLASH
 #define SWE_KEY_DASH GLFW_KEY_SLASH
 
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
 class Input
 {
 private:
@@ -60,6 +65,7 @@ public:
 	static void release(); //Must be called at the termination of the game
 
 	char keyToChar(int key); //Translates a key's assigned character to an actual char
+	int getGLFWkeyFromString(string n);
 };
 
 #endif

@@ -503,7 +503,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 						är mindre än tillåtet innan speed läggs till.
 						Detta på alla knappar, inte bara W och S.
 						*/
-						if (i->getKeyInfo(GLFW_KEY_W))
+						if (i->getKeyInfo(controls.forward))
 						{
 							//if (length(glm::vec2(airVelocity.x, airVelocity.z)) < role.getMovementSpeed()*0.1f)
 							//{
@@ -511,7 +511,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 							//}
 						}
 
-						if (i->getKeyInfo(GLFW_KEY_S))
+						if (i->getKeyInfo(controls.back))
 						{
 							//if (length(glm::vec2(airVelocity.x, airVelocity.z)) < role.getMovementSpeed()*0.1f)
 							//{
@@ -519,15 +519,15 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 							//}
 						}
 
-						if (!(i->getKeyInfo(GLFW_KEY_A) && i->getKeyInfo(GLFW_KEY_D)))
+						if (!(i->getKeyInfo(controls.left) && i->getKeyInfo(controls.right)))
 						{
-							if (i->getKeyInfo(GLFW_KEY_A))
+							if (i->getKeyInfo(controls.left))
 							{
 								vec3 left = cross(vec3(0, 1, 0), dir);
 								if (length(left) > 0)
 									vel += normalize(left)*dt*0.4f;
 							}
-							if (i->getKeyInfo(GLFW_KEY_D))
+							if (i->getKeyInfo(controls.right))
 							{
 								vec3 right = cross(dir, vec3(0, 1, 0));
 								if (length(right) > 0)
@@ -537,24 +537,24 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					}
 					else if (grounded)
 					{
-						if (i->getKeyInfo(GLFW_KEY_W))
+						if (i->getKeyInfo(controls.forward))
 						{
 							tempvec += normalize(vec2(dir.x, dir.z));
 						}
 
-						if (i->getKeyInfo(GLFW_KEY_S))
+						if (i->getKeyInfo(controls.back))
 						{
 							tempvec += -normalize(vec2(dir.x, dir.z));
 						}
 
-						if (!(i->getKeyInfo(GLFW_KEY_A) && i->getKeyInfo(GLFW_KEY_D)))
+						if (!(i->getKeyInfo(controls.left) && i->getKeyInfo(controls.right)))
 						{
-							if (i->getKeyInfo(GLFW_KEY_A))
+							if (i->getKeyInfo(controls.left))
 							{
 								vec3 left = cross(vec3(0, 1, 0), dir);
 								tempvec += normalize(vec2(left.x, left.z));
 							}
-							if (i->getKeyInfo(GLFW_KEY_D))
+							if (i->getKeyInfo(controls.right))
 							{
 								vec3 right = cross(dir, vec3(0, 1, 0));
 								tempvec += normalize(vec2(right.x, right.z));
@@ -571,7 +571,18 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 
 					Special* mobility = role.getMobilityAbility();
-					if (i->justPressed(mobility->getActivationKey()))
+					bool mobileActivate = false;
+					if (mobility->isThisOnJumpKey())
+					{
+						if (i->justPressed(controls.jump))
+							mobileActivate = true;
+					}
+					else
+					{
+						if (i->justPressed(controls.mobility))
+							mobileActivate = true;
+					}
+					if (mobileActivate)
 					{
 						if (mobility->allowedToActivate(this))
 						{
@@ -583,7 +594,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 						}
 					}
 
-					if (i->getKeyInfo(GLFW_KEY_SPACE))
+					if (i->getKeyInfo(controls.jump))
 					{
 						if (grounded)
 						{
@@ -605,13 +616,13 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 					if (!role.getIfBusy())
 					{
-						if (i->justPressed(GLFW_KEY_R))
+						if (i->justPressed(controls.reload))
 						{
 							reloadCurrentWeapon();
 						}
 						int areWeScrolling = i->getScrollValue();
 
-						if (areWeScrolling < 0.0 || i->justPressed(GLFW_KEY_1))
+						if (areWeScrolling < 0.0 || i->justPressed(controls.weaponone))
 						{
 							if (role.getWeaponNRequiped() != 0)
 							{
@@ -632,7 +643,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 							}
 						}
 
-						if (areWeScrolling > 0.0 || i->justPressed(GLFW_KEY_2))
+						if (areWeScrolling > 0.0 || i->justPressed(controls.weapontwo))
 						{
 							if (role.getWeaponNRequiped() != 1)
 							{
@@ -673,7 +684,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 							}
 						}
 
-						if (i->getKeyInfo(GLFW_MOUSE_BUTTON_LEFT))		//Temp
+						if (i->getKeyInfo(controls.fire))		//Temp
 						{
 							if (role.getCurrentWeapon()->shoot())
 							{
@@ -686,7 +697,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 							}
 						}
 
-						if (i->justPressed(GLFW_KEY_Q))
+						if (i->justPressed(controls.item))
 						{
 
 							Consumable* c = role.getConsumable();
@@ -698,7 +709,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 						}
 					}
-					if (i->justPressed(GLFW_KEY_E))
+					if (i->justPressed(controls.special))
 					{
 						if (role.getSpecialAbility()->allowedToActivate(this))
 						{
@@ -1291,11 +1302,11 @@ void Player::movementAnimationChecks(float dt)
 				//Third person
 
 				// strafe left
-				if (i->getKeyInfo(GLFW_KEY_A) && !i->getKeyInfo(GLFW_KEY_W) && !i->getKeyInfo(GLFW_KEY_S))
+				if (i->getKeyInfo(controls.left) && !i->getKeyInfo(controls.forward) && !i->getKeyInfo(controls.back))
 					animOverideIfPriority(anim_third_current, AnimationState::third_primary_strafe_left);
 
 				// strafe right
-				else if (i->getKeyInfo(GLFW_KEY_D) && !i->getKeyInfo(GLFW_KEY_W) && !i->getKeyInfo(GLFW_KEY_S))
+				else if (i->getKeyInfo(controls.right) && !i->getKeyInfo(controls.forward) && !i->getKeyInfo(controls.back))
 					animOverideIfPriority(anim_third_current, AnimationState::third_primary_strafe_right);
 
 				//check if we are running backwards
@@ -1317,11 +1328,11 @@ void Player::movementAnimationChecks(float dt)
 				//Third person
 
 				// strafe left
-				if (i->getKeyInfo(GLFW_KEY_A) && !i->getKeyInfo(GLFW_KEY_W) && !i->getKeyInfo(GLFW_KEY_S))
+				if (i->getKeyInfo(controls.left) && !i->getKeyInfo(controls.forward) && !i->getKeyInfo(controls.back))
 					animOverideIfPriority(anim_third_current, AnimationState::third_secondary_strafe_left);
 
 				// strafe right
-				else if (i->getKeyInfo(GLFW_KEY_D) && !i->getKeyInfo(GLFW_KEY_W) && !i->getKeyInfo(GLFW_KEY_S))
+				else if (i->getKeyInfo(controls.right) && !i->getKeyInfo(controls.forward) && !i->getKeyInfo(controls.back))
 					animOverideIfPriority(anim_third_current, AnimationState::third_secondary_strafe_right);
 
 				//check if we are running backwards

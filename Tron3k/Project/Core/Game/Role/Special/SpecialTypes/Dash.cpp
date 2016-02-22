@@ -6,7 +6,6 @@ void Dash::init()
 	timer = -1;
 	activationCost = 25;
 	specialType = SPECIAL_TYPE::DASH;
-	key = GLFW_KEY_LEFT_SHIFT;
 }
 
 int Dash::update(float dt)

@@ -29,6 +29,7 @@ class Core
 {
 private:
 	bool settingsLoaded = false;
+	bool controlsLoaded = false;
 	int uitmpcounter;
 	float slowmode = 1.0f;
 	float slowdownFactor = 0.8f;
@@ -114,6 +115,9 @@ private:
 	string _name;
 	void loadSettings();
 	void saveSettings();
+
+	void loadControls();
+	void saveControls();
 
 	//Relays BoundingBoxes to Physics
 	bool sendChunkBoxes(int chunkID);
