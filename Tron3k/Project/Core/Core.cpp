@@ -2591,6 +2591,21 @@ void Core::createWindow(int x, int y, bool fullscreen)
 
 	if (renderPipe)
 	{
+		for (size_t i = 0; i < MAX_CONNECT; i++)
+		{
+			renderPipe->removeTextObject(namePlates[i]);
+		}
+
+		delete uiManager;
+		renderPipe->release();
+		
+		renderPipe = nullptr;
+
+		uiManager = new UIManager();
+		initPipeline();
+		uiManager->init(&console, winX, winY);
+
+
 		PipelineValues pv;
 		pv.type = pv.INT2;
 		pv.xy[0] = winX;

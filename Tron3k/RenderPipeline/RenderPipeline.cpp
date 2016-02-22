@@ -444,6 +444,12 @@ void RenderPipeline::release()
 {
 	// place delete code here
 
+	for (size_t i = 0; i < textObjects.size(); i++)
+	{
+		if (textObjects[i])
+			delete textObjects[i];
+	}
+
 	glDeleteBuffers(1, &lwVertexDataId);
 	glDeleteVertexArrays(1, &lwVertexAttribute);
 
@@ -1265,6 +1271,7 @@ void RenderPipeline::setTextPos(int id, glm::vec2 pos)
 void RenderPipeline::removeTextObject(int id)
 {
 	delete textObjects[id];
+	textObjects[id] = 0;
 }
 
 void RenderPipeline::renderTextObject(int id)
