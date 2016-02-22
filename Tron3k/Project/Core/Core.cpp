@@ -27,7 +27,6 @@ void Core::init()
 
 	recreate = false;
 	fullscreen = false;
-	winX = winY = 800;
 	//winX = winY = 1000;
 	winX = 1280; winY = 720;
 	//winX = 1920, winY = 1080;
@@ -65,6 +64,12 @@ void Core::init()
 
 Core::~Core()
 {
+	if (game != nullptr && current != SERVER)
+	{
+		if (game->getPlayer(game->GetLocalPlayerId()) != nullptr)
+			saveControls();
+	}
+
 	if (game != nullptr)
 		game->release();
 	if (top != nullptr)
@@ -117,6 +122,24 @@ void Core::update(float dt)
 		justAFrameCounterActivated = false;;
 		justAFrameCounter = 0;
 	}
+
+	if (!controlsLoaded && current != SERVER)
+	{
+		if (game != nullptr)
+		{
+			int id = game->GetLocalPlayerId();
+			if (id != -1)
+			{
+				Player* p = game->getPlayer(id);
+				if (p != nullptr)
+				{
+					loadControls();
+					controlsLoaded = true;
+				}
+			}
+		}
+	}
+
 	cursorBlink += dt;
 	if (recreate)
 		createWindow(winX, winY, fullscreen);
@@ -1276,6 +1299,14 @@ void Core::roamHandleCmds(std::string com)
 					serverCam->setSensitivity(sens);
 			}
 		}
+		else if (token == "/fullscreen")
+		{
+			if (fullscreen)
+				fullscreen = false;
+			else
+				fullscreen = true;
+			recreate = true;
+		}
 
 		else if (token == "/cleanup")
 		{
@@ -1647,9 +1678,14 @@ void Core::saveSettings()
 		file << "IP: " << _addrs.toString() << endl;
 		file << "Port: " << _port << endl;
 		if (GetSoundActivated() == 1)
-			file << "Sound: " << "1" << endl;
+			file << "Sound: 1" << endl;
 		else
-			file << "Sound: " << "0" << endl;
+			file << "Sound: 0" << endl;
+
+		if (fullscreen)
+			file << "Fullscreen: 1" << endl;
+		else
+			file << "Fullscreen: 0" << endl;
 
 		float sens = serverCam->getSensitivity();
 		file << "Sensitivity: " << sens;
@@ -1691,6 +1727,15 @@ void Core::loadSettings()
 					GetSound()->playMusic(mainMenu);
 				}
 			}
+			else if (in == "Fullscreen:")
+			{
+				bool isFull = atoi(in2.c_str());
+				if (isFull != fullscreen)
+				{
+					recreate = true;
+					fullscreen = isFull;
+				}
+			}
 			else if (in == "Sensitivity:")
 			{
 				float sens = atof(in2.c_str());
@@ -1708,6 +1753,76 @@ void Core::loadSettings()
 		saveSettings(); //save file with default values
 	}
 
+}
+
+void Core::loadControls()
+{
+	fstream file("GameFiles/Config/controls.ini");
+	Player* p = game->getPlayer(game->GetLocalPlayerId());
+	if (file.is_open())
+	{
+		string in;
+		string in2;
+		while (getline(file, in))
+		{
+			stringstream ss(in);
+			ss >> in;
+			ss >> in2;
+			if (in == "Fire:")
+				p->controls.fire = i->getGLFWkeyFromString(in2);
+			else if (in == "Forward:")
+				p->controls.forward = i->getGLFWkeyFromString(in2);
+			else if (in == "Back:")
+				p->controls.back = i->getGLFWkeyFromString(in2);
+			else if (in == "Left:")
+				p->controls.left = i->getGLFWkeyFromString(in2);
+			else if (in == "Right:")
+				p->controls.right = i->getGLFWkeyFromString(in2);
+			else if (in == "Jump:")
+				p->controls.jump = i->getGLFWkeyFromString(in2);
+			else if (in == "Reload:")
+				p->controls.reload = i->getGLFWkeyFromString(in2);
+			else if (in == "WeaponOne:")
+				p->controls.weaponone = i->getGLFWkeyFromString(in2);
+			else if (in == "WeaponTwo:")
+				p->controls.weapontwo = i->getGLFWkeyFromString(in2);
+			else if (in == "Consumable:")
+				p->controls.item = i->getGLFWkeyFromString(in2);
+			else if (in == "Mobility:")
+				p->controls.mobility = i->getGLFWkeyFromString(in2);
+			else if (in == "Super:")
+				p->controls.special = i->getGLFWkeyFromString(in2);
+		}
+		file.close();
+	}
+	else
+	{
+		saveControls(); //save file with default values
+	}
+}
+
+void Core::saveControls()
+{
+	/*Player* p = game->getPlayer(game->GetLocalPlayerId());
+	fstream file;
+	file.open("GameFiles/Config/controls.ini", fstream::trunc | fstream::out);
+
+	if (file.is_open())
+	{
+		file << "Fire: " << p->controls.fire << endl;
+		file << "Forward: " << p->controls.forward << endl;
+		file << "Back: " << p->controls.back << endl;
+		file << "Left: " << p->controls.left << endl;
+		file << "Right: " << p->controls.right << endl;
+		file << "Jump: " << p->controls.jump << endl;
+		file << "Reload: " << p->controls.reload << endl;
+		file << "WeaponOne: " << p->controls.weaponone << endl;
+		file << "WeaponTwo: " << p->controls.weapontwo << endl;
+		file << "Consumable: " << p->controls.item << endl;
+		file << "Mobility: " << p->controls.mobility << endl;
+		file << "Super: " << p->controls.special;
+		file.close();
+	}*/
 }
 
 void Core::renderWorld(float dt)
@@ -1911,27 +2026,46 @@ void Core::renderWorld(float dt)
 		renderPipe->stopExecTimer(playerTime);
 		//*** Render Bullets ***
 
+		int cullArr[2];
+		int cullhit;
+
 		if (hackedTeam == -1)
 		{
 			for (int c = 0; c < BULLET_TYPE::NROFBULLETS; c++)
 			{
 				std::vector<Bullet*> bullets = game->getBullets(BULLET_TYPE(c));
+
+				if (c == BULLET_TYPE::SHOTGUN_PELLET)
+				{
+					light.AmbientIntensity = 3.0f;
+					light.attenuation.w = 3.0f;
+				}
+				else
+				{
+					light.AmbientIntensity = 0.6f;
+					light.attenuation.w = 4.0f;
+				}
+
 				for (unsigned int i = 0; i < bullets.size(); i++)
 				{
+					game->getPhysics()->cullingPointvsRoom(&bullets[i]->getPos(), cullArr, cullhit, 1);
+					if (cullhit != 1)
+						cullArr[0] = 0;
+
 					if (bullets[i]->getTeam() == 1)
 					{
 						renderPipe->renderBullet(c, bullets[i]->getWorldMat(), &TEAMONECOLOR.x, 0.0f);
-						light.Color = TEAMONECOLOR;
+						light.Color = TEAMONECOLOR; // +vec3(0.2f, 0.2f, 0.2f);
 						light.Position = bullets[i]->getPos();
-						renderPipe->addLight(&light, 0);
+						renderPipe->addLight(&light, cullArr[0]);
 					}
 
 					else //(bullets[i]->getTeam() == 2)
 					{
 						renderPipe->renderBullet(c, bullets[i]->getWorldMat(), &TEAMTWOCOLOR.x, 0.0f);
-						light.Color = TEAMTWOCOLOR;
+						light.Color = TEAMTWOCOLOR; // +vec3(0.2f, 0.2f, 0.2f);
 						light.Position = bullets[i]->getPos();
-						renderPipe->addLight(&light, 0);
+						renderPipe->addLight(&light, cullArr[0]);
 					}
 				}
 			}
@@ -2678,7 +2812,9 @@ void Core::handleCulling()
 void Core::createWindow(int x, int y, bool fullscreen)
 {
 	if (win != 0)
+	{
 		removeWindow();
+	}
 	if (!fullscreen)
 		win = glfwCreateWindow(
 			x, y, "ASUM PROJECT", NULL, NULL);
@@ -2697,6 +2833,21 @@ void Core::createWindow(int x, int y, bool fullscreen)
 
 	if (renderPipe)
 	{
+		for (size_t i = 0; i < MAX_CONNECT; i++)
+		{
+			renderPipe->removeTextObject(namePlates[i]);
+		}
+
+		delete uiManager;
+		renderPipe->release();
+		
+		renderPipe = nullptr;
+
+		uiManager = new UIManager();
+		initPipeline();
+		uiManager->init(&console, winX, winY);
+
+
 		PipelineValues pv;
 		pv.type = pv.INT2;
 		pv.xy[0] = winX;

@@ -97,7 +97,7 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 	fontTexture = loadTexture("GameFiles/Font/font16.png", false);
 
-	debugText = new Text("", 16, fontTexture, vec2(10, 24));
+	debugText = new Text("", 10, fontTexture, vec2(10, 24));
 	chatHistoryText = ".\n.\n.\n.\n.\n";
 	chatTypeText = "..";
 	chatText = new Text(chatHistoryText + chatTypeText, 11, fontTexture, vec2(10, 420));
@@ -444,6 +444,12 @@ void RenderPipeline::release()
 {
 	// place delete code here
 
+	for (size_t i = 0; i < textObjects.size(); i++)
+	{
+		if (textObjects[i])
+			delete textObjects[i];
+	}
+
 	glDeleteBuffers(1, &lwVertexDataId);
 	glDeleteVertexArrays(1, &lwVertexAttribute);
 
@@ -511,32 +517,33 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	{
 		ss << "Draw count: " << drawCount << "\n";
 		ss << "Primitive count: " << primitiveCount << "\n";
-		//ss << "Buffer count: " << genBufferPeak << "\n";
-		//ss << "Vao count: " << genVaoPeak << "\n";
-		//ss << "Texture count: " << genTexturePeak << "\n";
+		ss << "Buffer count: " << genBufferPeak << "\n";
+		ss << "Vao count: " << genVaoPeak << "\n";
+		ss << "Texture count: " << genTexturePeak << "\n";
 		//ss << "Memory usage: " << memusage << "(B)\n";
 		ss << "Memory usage(tot): " << memusageT / 1024.0f / 1024.0f << "(MB)\n";
 		ss << "Memory usage(tex): " << memusageTex / 1024.0f / 1024.0f << "(MB)\n";
 		ss << "Memory usage(buf): " << memusageMesh / 1024.0f / 1024.0f << "(MB)\n";
 		ss << "FPS: " << fps << "\n";
 		ss << "Portals (" << (contMan.f_portal_culling ? "on" : "off") << ")\n";
-		//ss << "Texture binds: " << textureBinds << "\n";
-		//ss << "Buffer binds: " << bufferBinds << "\n";
-		//ss << "Shader binds: " << shaderBinds << "\n";
-		//ss << "State changes: " << stateChange << "\n";
+		ss << "Texture binds: " << textureBinds << "\n";
+		ss << "Buffer binds: " << bufferBinds << "\n";
+		ss << "Shader binds: " << shaderBinds << "\n";
+		ss << "State changes: " << stateChange << "\n";
 		ss << "Total uptime:" << timepass << "\n";
 		ss << "Dt:" << dt << "\n";
 
-		ss << "ManagerBinds:" << texManBinds << "\n";
-		ss << "OtherBinds:" << illegalBinds << "\n";
+		//ss << "ManagerBinds:" << texManBinds << "\n";
+		//ss << "OtherBinds:" << illegalBinds << "\n";
 
-		//ss << result << "\n";
-		if (counter > 0.0001f)
+		ss << result << "\n";
+		if (counter > 1.0f)
 		{
-			//result = getQueryResult();
+			result = getQueryResult();
 			fps = 0;
 			counter = 0;
 			debugText->setText(ss.str());
+			
 		}
 		fps++;
 	}
@@ -622,21 +629,11 @@ void RenderPipeline::finalizeRender()
 	glUseProgram(particleShader);
 	cam.setViewProjMat(particleShader, particleViewProj);
 	//glProgramUniformMatrix4fv(particleShader, particleViewProj, 1, GL_FALSE, (GLfloat*)&glm::mat4());
-	vec2 size = vec2(0.5, 0.5);
-	glProgramUniform2f(particleShader, particleSize, size.x, size.y);
-
+	
 	glProgramUniform3f(particleShader, particleCam, gBuffer->eyePos.x, gBuffer->eyePos.y, gBuffer->eyePos.z);
 	
-	TextureManager::gTm->bindTexture(ptex, particleShader, particleTexture, DIFFUSE_FB);
-
-	contMan.renderParticles();
-
-	glUseProgram(glowShaderTweeks);
+	contMan.renderParticles(particleShader, particleTexture, particleSize);
 	
-	glProgramUniform1fv(glowShaderTweeks, uniformGlowTimeDelta, 1, &delta);
-
-	//gBuffer->preRender(glowShaderTweeks, uniformGlowTexture, uniformGlowSelf);
-
 	//GBuffer Render
 	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
@@ -1274,6 +1271,7 @@ void RenderPipeline::setTextPos(int id, glm::vec2 pos)
 void RenderPipeline::removeTextObject(int id)
 {
 	delete textObjects[id];
+	textObjects[id] = 0;
 }
 
 void RenderPipeline::renderTextObject(int id)

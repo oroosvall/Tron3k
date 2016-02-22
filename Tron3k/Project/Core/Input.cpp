@@ -1013,6 +1013,183 @@ char Input::keyToChar(int key)
 	}
 }
 
+int Input::getGLFWkeyFromString(string n)
+{
+	transform(n.begin(), n.end(), n.begin(), ::toupper);
+	if (n == "Q")
+		return GLFW_KEY_Q;
+	if (n == "W")
+		return GLFW_KEY_W;
+	if (n == "E")
+		return GLFW_KEY_E;
+	if (n == "R")
+		return GLFW_KEY_R;
+	if (n == "T")
+		return GLFW_KEY_T;
+	if (n == "Y")
+		return GLFW_KEY_Y;
+	if (n == "U")
+		return GLFW_KEY_U;
+	if (n == "I")
+		return GLFW_KEY_I;
+	if (n == "O")
+		return GLFW_KEY_O;
+	if (n == "P")
+		return GLFW_KEY_P;
+
+	if (n == "A")
+		return GLFW_KEY_A;
+	if (n == "S")
+		return GLFW_KEY_S;
+	if (n == "D")
+		return GLFW_KEY_D;
+	if (n == "F")
+		return GLFW_KEY_F;
+	if (n == "G")
+		return GLFW_KEY_G;
+	if (n == "H")
+		return GLFW_KEY_H;
+	if (n == "J")
+		return GLFW_KEY_J;
+	if (n == "K")
+		return GLFW_KEY_K;
+	if (n == "L")
+		return GLFW_KEY_L;
+
+	if (n == "Z")
+		return GLFW_KEY_Z;
+	if (n == "X")
+		return GLFW_KEY_X;
+	if (n == "C")
+		return GLFW_KEY_C;
+	if (n == "V")
+		return GLFW_KEY_V;
+	if (n == "B")
+		return GLFW_KEY_B;
+	if (n == "N")
+		return GLFW_KEY_N;
+	if (n == "M")
+		return GLFW_KEY_J;
+
+	if (n == "1")
+		return GLFW_KEY_1;
+	if (n == "2")
+		return GLFW_KEY_2;
+	if (n == "3")
+		return GLFW_KEY_3;
+	if (n == "4")
+		return GLFW_KEY_4;
+	if (n == "5")
+		return GLFW_KEY_5;
+	if (n == "6")
+		return GLFW_KEY_6;
+	if (n == "7")
+		return GLFW_KEY_7;
+	if (n == "8")
+		return GLFW_KEY_8;
+	if (n == "9")
+		return GLFW_KEY_9;
+	if (n == "0")
+		return GLFW_KEY_0;
+
+	if (n == "NUM1")
+		return GLFW_KEY_KP_1;
+	if (n == "NUM2")
+		return GLFW_KEY_KP_2;
+	if (n == "NUM3")
+		return GLFW_KEY_KP_3;
+	if (n == "NUM4")
+		return GLFW_KEY_KP_4;
+	if (n == "NUM5")
+		return GLFW_KEY_KP_5;
+	if (n == "NUM6")
+		return GLFW_KEY_KP_6;
+	if (n == "NUM7")
+		return GLFW_KEY_KP_7;
+	if (n == "NUM8")
+		return GLFW_KEY_KP_8;
+	if (n == "NUM9")
+		return GLFW_KEY_KP_9;
+	if (n == "NUM0")
+		return GLFW_KEY_KP_0;
+
+	if (n == "PERIOD" || n == ".")
+		return GLFW_KEY_PERIOD;
+	if (n == "COMMA" || n == ",")
+		return GLFW_KEY_COMMA;
+	if (n == "DASH" || n == "-")
+		return SWE_KEY_DASH;
+	if (n == "APOSTROPHE" || n == "'")
+		return SWE_KEY_APOSTROPHE;
+	if (n == "PLUS" || n == "+")
+		return SWE_KEY_PLUS;
+	if (n == "TAB")
+		return GLFW_KEY_TAB;
+	if (n == "SHIFT")
+		return GLFW_KEY_LEFT_SHIFT;
+	if (n == "CTRL")
+		return GLFW_KEY_LEFT_CONTROL;
+	if (n == "ALT")
+		return GLFW_KEY_LEFT_ALT;
+	if (n == "SPACE")
+		return GLFW_KEY_SPACE;
+	if (n == "ENTER")
+		return GLFW_KEY_ENTER;
+
+	if (n == "F1")
+		return GLFW_KEY_F1;
+	if (n == "F2")
+		return GLFW_KEY_F2;
+	if (n == "F3")
+		return GLFW_KEY_F3;
+	if (n == "F4")
+		return GLFW_KEY_F4;
+	if (n == "F5")
+		return GLFW_KEY_F5;
+	if (n == "F6")
+		return GLFW_KEY_F6;
+	if (n == "F7")
+		return GLFW_KEY_F7;
+	if (n == "F8")
+		return GLFW_KEY_F8;
+	if (n == "F9")
+		return GLFW_KEY_F9;
+	if (n == "F10")
+		return GLFW_KEY_F10;
+	if (n == "F11")
+		return GLFW_KEY_F11;
+	if (n == "F12")
+		return GLFW_KEY_F12;
+
+	if (n == "M1")
+		return GLFW_MOUSE_BUTTON_1;
+	if (n == "M2")
+		return GLFW_MOUSE_BUTTON_2;
+	if (n == "M3")
+		return GLFW_MOUSE_BUTTON_3;
+	if (n == "M4")
+		return GLFW_MOUSE_BUTTON_4;
+	if (n == "M5")
+		return GLFW_MOUSE_BUTTON_5;
+	if (n == "M6")
+		return GLFW_MOUSE_BUTTON_6;
+	if (n == "M7")
+		return GLFW_MOUSE_BUTTON_7;
+	if (n == "M8")
+		return GLFW_MOUSE_BUTTON_8;
+
+	if (n == "UP")
+		return GLFW_KEY_UP;
+	if (n == "DOWN")
+		return GLFW_KEY_DOWN;
+	if (n == "LEFT")
+		return GLFW_KEY_LEFT;
+	if (n == "RIGHT")
+		return GLFW_KEY_RIGHT;
+
+	return 0;
+}
+
 void Input::centerCursor(int centerx, int centeryr)
 {
 	glfwSetCursorPos(window, centerx, centeryr);

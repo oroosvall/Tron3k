@@ -27,6 +27,22 @@
 
 enum PLAYERMSG { NONE, SHOOT, USEITEM, SPECIALUSE, MOBILITYUSE, WPNSWITCH, DEATH, PLAYERRESPAWN};
 
+struct PlayerControlSettings
+{
+	int fire = GLFW_MOUSE_BUTTON_1;
+	int forward = GLFW_KEY_W;
+	int back = GLFW_KEY_S;
+	int left = GLFW_KEY_A;
+	int right = GLFW_KEY_D;
+	int jump = GLFW_KEY_SPACE;
+	int reload = GLFW_KEY_R;
+	int weaponone = GLFW_KEY_1;
+	int weapontwo = GLFW_KEY_2;
+	int item = GLFW_KEY_Q;
+	int mobility = GLFW_KEY_LEFT_SHIFT;
+	int special = GLFW_KEY_E;
+};
+
 class Player : public GameObject
 {
 private:
@@ -247,6 +263,7 @@ public:
 
 	bool allahuAkhbar();
 
+	PlayerControlSettings controls;
 	float hitMarker;
 };
 
