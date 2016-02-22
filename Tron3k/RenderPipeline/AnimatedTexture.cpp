@@ -54,13 +54,10 @@ void AnimatedTexture::init()
 	if (!initialized)
 	{
 		objects.push_back(AnimatedObject());
-		objects[n].textureID = TextureManager::gTm->createTexture("GameFiles/Textures/animatedSigns/water.png");
+		objects[n].textureID = TextureManager::gTm->createTexture("GameFiles/Textures/animatedSigns/discoFloor.png");
 	}
-	objects[n].worldMat[0] = vec4( -50.0f, 4.0f, 53.0f, 1 );
-	objects[n].worldMat[1] = vec4( -50.0f, 4.0f, 65.0f, 1 );
-	objects[n].worldMat[2] = vec4( -50.0f , 8.0f , 58.0f , 1 );
-	objects[n].worldMat[3] = vec4( -50.0f, 8.0f, 60.0f, 1 );
-	objects[n].init_time_segments(1, 0.0f, 1.0f);
+	objects[n].init_ground(vec3(39.5f, 0.2f , 96), vec3(46.5f, 0.2f, 102));
+	objects[n].init_time_segments(5, 0.6f, 0.0f);
 
 	initialized = true;
 }

@@ -2,7 +2,7 @@
 layout(points) in;
 layout(triangle_strip, max_vertices = 8) out;
 
-//layout (location = 0) out vec2 UV; 
+layout (location = 0) out float interpolDist; 
 
 uniform mat4 ViewProjMatrix;
 uniform int spotlightID;
@@ -41,12 +41,15 @@ void main()
 	
 	//0
 	gl_Position = ViewProjMatrix * vec4(spot_pos - down - right + spot_normal, 1);
+	interpolDist = 0.0f;
 	EmitVertex();
 	//1
 	gl_Position = ViewProjMatrix * vec4(spot_pos, 1);
+	interpolDist = 1.0f;
 	EmitVertex();
 	//2
 	gl_Position = ViewProjMatrix * vec4(spot_pos - down + right + spot_normal, 1);
+	interpolDist = 0.0f;
 	EmitVertex();
 	//3
 	gl_Position = ViewProjMatrix * vec4(spot_pos + down + right + spot_normal, 1);
@@ -59,9 +62,11 @@ void main()
 	EmitVertex();
 	//6
 	gl_Position = ViewProjMatrix * vec4(spot_pos, 1);
-	EmitVertex();
+	interpolDist = 1.0f;
+	EmitVertex();	
 	//7
 	gl_Position = ViewProjMatrix * vec4(spot_pos + down + right + spot_normal, 1);
+	interpolDist = 0.0f;
 	EmitVertex();
 	
 	EndPrimitive();

@@ -1703,6 +1703,7 @@ void Core::renderWorld(float dt)
 		vec3 camPos = cam->getPos();
 		vec3 camDir = cam->getDir();
 		bool force3rd = false;
+
 		/*		if (i->getKeyInfo(GLFW_KEY_P))
 		{
 		cam->setCam(vec3(-6, 1.5f, 33), vec3(0, 0, -1));
@@ -1840,7 +1841,8 @@ void Core::renderWorld(float dt)
 					light.Direction = vec3(0.0f);//p->getDir();
 					light.Color = dgColor;
 					light.DiffuseIntensity = 0.2f;
-					light.AmbientIntensity = 0.0f;
+					light.AmbientIntensity = 0.5f;
+					light.attenuation.w = 5.0f;
 					renderPipe->addLight(&light, p->roomID);
 
 					if (p->forceDeathAnim > 0)
@@ -1901,10 +1903,20 @@ void Core::renderWorld(float dt)
 				for (unsigned int i = 0; i < bullets.size(); i++)
 				{
 					if (bullets[i]->getTeam() == 1)
+					{
 						renderPipe->renderBullet(c, bullets[i]->getWorldMat(), &TEAMONECOLOR.x, 0.0f);
+						light.Color = TEAMONECOLOR;
+						light.Position = bullets[i]->getPos();
+						renderPipe->addLight(&light, 0);
+					}
 
-					else if (bullets[i]->getTeam() == 2)
+					else //(bullets[i]->getTeam() == 2)
+					{
 						renderPipe->renderBullet(c, bullets[i]->getWorldMat(), &TEAMTWOCOLOR.x, 0.0f);
+						light.Color = TEAMTWOCOLOR;
+						light.Position = bullets[i]->getPos();
+						renderPipe->addLight(&light, 0);
+					}
 				}
 			}
 		}
@@ -1915,11 +1927,10 @@ void Core::renderWorld(float dt)
 				std::vector<Bullet*> bullets = game->getBullets(BULLET_TYPE(c));
 				for (unsigned int i = 0; i < bullets.size(); i++)
 				{
-					if (bullets[i]->getTeam() == 1)
-						renderPipe->renderBullet(c, bullets[i]->getWorldMat(), &TEAMTWOCOLOR.x, 0.0f);
-
-					else if (bullets[i]->getTeam() == 2)
-						renderPipe->renderBullet(c, bullets[i]->getWorldMat(), &TEAMTWOCOLOR.x, 0.0f);
+					renderPipe->renderBullet(c, bullets[i]->getWorldMat(), &TEAMTWOCOLOR.x, 0.0f);
+					light.Color = TEAMTWOCOLOR;
+					light.Position = bullets[i]->getPos();
+					renderPipe->addLight(&light, 0);
 				}
 			}
 		}
@@ -1930,11 +1941,10 @@ void Core::renderWorld(float dt)
 				std::vector<Bullet*> bullets = game->getBullets(BULLET_TYPE(c));
 				for (unsigned int i = 0; i < bullets.size(); i++)
 				{
-					if (bullets[i]->getTeam() == 1)
-						renderPipe->renderBullet(c, bullets[i]->getWorldMat(), &TEAMONECOLOR.x, 0.0f);
-
-					else if (bullets[i]->getTeam() == 2)
-						renderPipe->renderBullet(c, bullets[i]->getWorldMat(), &TEAMONECOLOR.x, 0.0f);
+					renderPipe->renderBullet(c, bullets[i]->getWorldMat(), &TEAMONECOLOR.x, 0.0f);
+					light.Color = TEAMONECOLOR;
+					light.Position = bullets[i]->getPos();
+					renderPipe->addLight(&light, 0);
 				}
 			}
 		} // render bullets end
@@ -2046,6 +2056,10 @@ void Core::renderWorld(float dt)
 					else
 						dgColor = TEAMONECOLOR;
 					renderPipe->renderExploEffect(&pos.x, eff[i]->getInterestingVariable(), 0, &dgColor.x);
+
+					light.Color = dgColor;
+					light.Position = eff[i]->getPos();
+					renderPipe->addLight(&light, 0);
 				}
 				break;
 				case HSCPICKUP:
@@ -2056,6 +2070,10 @@ void Core::renderWorld(float dt)
 						vec3 pos = eff[i]->getPos();
 						dgColor = vec3(1.0f, 0, 1.0f);
 						renderPipe->renderExploEffect(&pos.x, eff[i]->getInterestingVariable(), 0, &dgColor.x);
+
+						light.Color = dgColor;
+						light.Position = eff[i]->getPos();
+						renderPipe->addLight(&light, 0);
 					}
 				}
 				break;
@@ -2067,6 +2085,10 @@ void Core::renderWorld(float dt)
 						vec3 pos = eff[i]->getPos();
 						dgColor = vec3(1.0f, 0, 0);
 						renderPipe->renderExploEffect(&pos.x, eff[i]->getInterestingVariable(), 0, &dgColor.x);
+
+						light.Color = dgColor;
+						light.Position = eff[i]->getPos();
+						renderPipe->addLight(&light, 0);
 
 					}
 				}
