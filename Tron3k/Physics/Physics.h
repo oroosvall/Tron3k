@@ -63,7 +63,7 @@ private:
 	//--------OBB Collisions--------//
 	glm::vec3 checkOBBvOBBCollision(CollideMesh mesh1, CollideMesh mesh2); //Probably not needed
 	
-	glm::vec4 checkOBBvCylinderCollision(Cylinder pMesh, OBB objMesh);
+	glm::vec4 checkOBBvCylinderCollision(Cylinder pMesh, OBB* objMesh);
 	glm::vec3 checkOBBvAngledCylinderCollision(CollideMesh mesh1, CollideMesh mesh2);
 	
 	
