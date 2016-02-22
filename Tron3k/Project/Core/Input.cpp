@@ -1133,6 +1133,8 @@ int Input::getGLFWkeyFromString(string n)
 		return GLFW_KEY_LEFT_ALT;
 	if (n == "SPACE")
 		return GLFW_KEY_SPACE;
+	if (n == "ENTER")
+		return GLFW_KEY_ENTER;
 
 	if (n == "F1")
 		return GLFW_KEY_F1;
