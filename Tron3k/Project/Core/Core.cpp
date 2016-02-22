@@ -25,7 +25,6 @@ void Core::init()
 
 	recreate = false;
 	fullscreen = false;
-	winX = winY = 800;
 	//winX = winY = 1000;
 	winX = 1280; winY = 720;
 	//winX = 1920, winY = 1080;
@@ -1582,9 +1581,14 @@ void Core::saveSettings()
 		file << "IP: " << _addrs.toString() << endl;
 		file << "Port: " << _port << endl;
 		if (GetSoundActivated() == 1)
-			file << "Sound: " << "1" << endl;
+			file << "Sound: 1" << endl;
 		else
-			file << "Sound: " << "0" << endl;
+			file << "Sound: 0" << endl;
+
+		if (fullscreen)
+			file << "Fullscreen: 1" << endl;
+		else
+			file << "Fullscreen: 0" << endl;
 
 		float sens = serverCam->getSensitivity();
 		file << "Sensitivity: " << sens;
@@ -1624,6 +1628,15 @@ void Core::loadSettings()
 				{
 					InitSound(CreateSound(), activateSound);
 					GetSound()->playMusic(mainMenu);
+				}
+			}
+			else if (in == "Fullscreen:")
+			{
+				bool isFull = atoi(in2.c_str());
+				if (isFull != fullscreen)
+				{
+					recreate = true;
+					fullscreen = isFull;
 				}
 			}
 			else if (in == "Sensitivity:")
@@ -2557,7 +2570,9 @@ void Core::handleCulling()
 void Core::createWindow(int x, int y, bool fullscreen)
 {
 	if (win != 0)
+	{
 		removeWindow();
+	}
 	if (!fullscreen)
 		win = glfwCreateWindow(
 			x, y, "ASUM PROJECT", NULL, NULL);
