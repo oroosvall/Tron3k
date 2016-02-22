@@ -24,17 +24,40 @@ void AnimatedTexture::init()
 	objects[n].init_time_segments(5, 0.15f, 0);
 	
 	n++;
-	objects.push_back(AnimatedObject());
-	//if()
-	objects[n].textureID = TextureManager::gTm->createTexture("GameFiles/Textures/animatedSigns/matrxtext.png");
+	if (!initialized)
+	{
+		objects.push_back(AnimatedObject());
+		objects[n].textureID = TextureManager::gTm->createTexture("GameFiles/Textures/animatedSigns/matrxtext.png");
+	}
 	objects[n].init_standing_down(vec3(94.8f, 22.3f + 20, 53.6f), vec3(94.8f, 14.3f + 10, 59.3f));
 	objects[n].init_time_segments(4, 0, 2.0f);
 
 	n++;
-	objects.push_back(AnimatedObject());
-	objects[n].textureID = TextureManager::gTm->createTexture("GameFiles/Textures/animatedSigns/seasons.png");
+	if (!initialized)
+	{
+		objects.push_back(AnimatedObject());
+		objects[n].textureID = TextureManager::gTm->createTexture("GameFiles/Textures/animatedSigns/discoWallAnimated.png");
+	}
+	objects[n].init_standing_right(vec3(40.0f, 4.0f, 94.6f), vec3(46.0f, 1.0f, 94.6f));
+	objects[n].init_time_segments(9, 0.4f, 0);
+
+	n++;
+	if (!initialized)
+	{
+		objects.push_back(AnimatedObject());
+		objects[n].textureID = TextureManager::gTm->createTexture("GameFiles/Textures/animatedSigns/seasons.png");
+	}
 	objects[n].init_standing_right(vec3(94.8f, 22.3f + 20, 60.6f), vec3(94.8f, 14.3f + 10, 64.3f));
 	objects[n].init_time_segments(4, 2.0f, 0.5f);
+
+	n++;
+	if (!initialized)
+	{
+		objects.push_back(AnimatedObject());
+		objects[n].textureID = TextureManager::gTm->createTexture("GameFiles/Textures/animatedSigns/discoFloor.png");
+	}
+	objects[n].init_ground(vec3(39.5f, 0.2f , 96), vec3(46.5f, 0.2f, 102));
+	objects[n].init_time_segments(5, 0.6f, 0.0f);
 
 	initialized = true;
 }

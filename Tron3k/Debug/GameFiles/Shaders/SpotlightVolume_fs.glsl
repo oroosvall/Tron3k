@@ -1,6 +1,7 @@
 #version 410
 
-//layout (location = 0) in vec2 UV; 
+layout (location = 0) in float interpolDist;
+
 out vec4 fragment_color;
 
 
@@ -83,15 +84,20 @@ void main()
 			//spotlight                            
 			float SpotFactor = dot(LightDirection, lights[spotlightID].Direction);                                      
 			
-			if (SpotFactor > lights[spotlightID].Cutoff)                                                                                       
-				fragment_color *= (1.0 - (1.0 - SpotFactor) * 1.0/(1.0 - lights[spotlightID].Cutoff));                                                                                                       
+			if (SpotFactor > lights[spotlightID].Cutoff)  		
+				fragment_color *= (1.0 - (1.0 - SpotFactor) * 1.0/(1.0 - lights[spotlightID].Cutoff)); 			
 			else                                                                                
 				fragment_color = vec4(0);
 		
 			Diffuse0 = texture(Diffuse, UV);
 			fragment_color = fragment_color * Diffuse0 + specularAddetive;
 		}
-		
 	}
-	//fragment_color += vec4(lights[spotlightID].Color, 1) * 0.1f;
+	
+	// Light volume effect
+	
+	vec3 lightSouceToEye = normalize(eyepos - lights[spotlightID].Position);
+	float dotAngle = dot(lights[spotlightID].Direction, lightSouceToEye);
+	if(dotAngle > 0)
+		fragment_color += vec4(lights[spotlightID].Color, 1) * pow(interpolDist, 5) * pow(dotAngle, 6);
 }

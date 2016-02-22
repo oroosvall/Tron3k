@@ -87,7 +87,6 @@ int static getAnimRank(AnimationState test)
 	case first_primary_throw:			return 1;
 	case first_primary_switch:			return 1;
 	case first_primary_switch_IN:		return 1;
-	case first_secondary_fire_left:		return 1;
 
 	case first_secondary_idle:			return 0;
 	case first_secondary_run:			return 0;
@@ -97,6 +96,7 @@ int static getAnimRank(AnimationState test)
 	case first_secondary_throw:			return 1;
 	case first_secondary_switch:		return 1;
 	case first_secondary_switch_IN:		return 1;
+	case first_secondary_fire_left:		return 1;
 
 	case third_primary_idle:			return 0;
 	case third_primary_run:				return 0;
