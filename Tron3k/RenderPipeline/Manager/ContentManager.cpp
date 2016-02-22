@@ -237,17 +237,25 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 		renderedChunks[n] = false;
 	}
 
+	//system("cls");
+	//glDisable(GL_DEPTH_TEST);
 	//render chunks logged from last frame
 	for (int n = 0; n < nrChunks; n++)
 	{
 		if (renderNextChunks[n] || f_portal_culling == false)
 		{
+			//if (n != 0)
+			//	continue;
 			//Glow values for world
 			glProgramUniform3fv(shader, DglowColor, 1, (GLfloat*)&testMap.chunks[n].color[0]);
 			glProgramUniform1f(shader, SglowColor, testMap.chunks[n].staticIntes);
-			if (f_render_chunks)
-				testMap.renderChunk(shader, shaderLocation, textureLocation, normalLocation, glowSpecLocation, n);
+			if (n == 0)
+			{
+				if (f_render_chunks)
+					testMap.renderChunk(shader, shaderLocation, textureLocation, normalLocation, glowSpecLocation, n);
+			}
 			renderedChunks[n] = true;
+			//printf("Chunk %d \n", n);
 		}
 	}
 
@@ -276,22 +284,22 @@ void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint t
 					portal = &testMap.chunks[n].portals[p];
 
 					//dont render if it bridges between chunks that are already in the rendernextqueue
-					if (renderNextChunks[portal->bridgedRooms[0]] == false ||
-						renderNextChunks[portal->bridgedRooms[1]] == false)
-					{
-						if (portal->waiting == false)
-						{
-							portal->render(portal_shader, portal_world);
-							portal->rendered = true;
-							portal->waiting = true;
-						}
-						if (portal->rendered && portal->passedCulling())
-						{
-							renderNextChunks[portal->bridgedRooms[0]] = true;
-							renderNextChunks[portal->bridgedRooms[1]] = true;
-						}
-						
-					}
+					//if (renderNextChunks[portal->bridgedRooms[0]] == false ||
+					//	renderNextChunks[portal->bridgedRooms[1]] == false)
+					//{
+					//	if (portal->waiting == false)
+					//	{
+					//		portal->render(portal_shader, portal_world);
+					//		portal->rendered = true;
+					//		portal->waiting = true;
+					//	}
+					//	if (portal->rendered && portal->passedCulling())
+					//	{
+					//		renderNextChunks[portal->bridgedRooms[0]] = true;
+					//		renderNextChunks[portal->bridgedRooms[1]] = true;
+					//	}
+					//	
+					//}
 				}
 			}
 		}

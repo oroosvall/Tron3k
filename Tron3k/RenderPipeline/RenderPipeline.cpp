@@ -633,7 +633,7 @@ void RenderPipeline::finalizeRender()
 
 	gBuffer->render();
 
-	renderLightvolumes();
+	//renderLightvolumes();
 	
 	glUseProgram(textShader);
 	glProgramUniformMatrix4fv(textShader, textShaderModel, 1, GL_FALSE, (GLfloat*)&glm::mat4());
