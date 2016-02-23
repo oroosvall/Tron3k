@@ -598,7 +598,7 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	renderFrameTimeID = startTimer("Frame : Render only");
 
 	counter += dt;
-
+	textTimer -= dt;
 }
 
 int RenderPipeline::portalIntersection(float* pos1, float* pos2, int in_chunk)
@@ -703,7 +703,10 @@ void RenderPipeline::finalizeRender()
 	glEnable(GL_BLEND);
 
 	debugText->draw();
-	chatText->draw();
+	if (textTimer > 0.0f)
+	{
+		chatText->draw();
+	}
 	
 	//uglyCrosshairSolution->draw();
 
@@ -1236,12 +1239,14 @@ void RenderPipeline::setChatHistoryText(std::string text)
 {
 	chatHistoryText = text;
 	chatText->setText(chatHistoryText + chatTypeText);
+	textTimer = 2.0f;
 }
 
 void RenderPipeline::setChatTypeMessage(std::string text)
 {
 	chatTypeText = text;
 	chatText->setText(chatHistoryText + chatTypeText);
+	textTimer = 2.0f;
 }
 
 void RenderPipeline::ui_initRender()

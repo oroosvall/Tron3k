@@ -82,6 +82,8 @@ void Text::fillBuffer()
 	int lineBreakPos = 0;
 
 	int size = fontSize;
+
+	float scale = 1.0f;
 	
 	float offsetX = 0;
 	float offsetY = 0;
@@ -95,23 +97,60 @@ void Text::fillBuffer()
 			switch (character)
 			{
 			case '.':
-			case ',':
+				scale = 1.4f;
+				break;	
+			case ',':	
+				scale = 1.4f;
+				break;	
+			case '-':	
+				scale = 1.4f;
+				break;	
+			case '+':	
+				scale = 1.4f;
+				break;	
+			case '*':	
+				scale = 1.4f;
+				break;	
+			case '"':	
+				scale = 1.4f;
+				break;	
+			case '|':	
+				scale = 1.4f;
+				break;	
+			case ':':	
+				scale = 1.8f;
+				break;	
+			case ';':	
+				scale = 1.4f;
+				break;	
+			case '`':	
+				scale = 1.4f;
+				break;	
+			case '´':	
+				scale = 1.4f;
+				break;	
+			case 'l':	
+				scale = 1.4f;
+				break;	
+			case 'I':	
+				scale = 1.4f;
+				break;	
 			case 'i':
-			case '!':
-			case ':':
-			case ';':
-			case 'l':
-				size = fontSize / 2;
+				scale = 1.4f;
 				break;
-			case 'I':
+			case '!':
+				scale = 1.4f;
+				break;
 			case ' ':
-				size = (int)(fontSize / 1.2f);
+				scale = 1.8f;
 				break;
 			default:
-				size = fontSize;
+				scale = 1.0f;
 				break;
 			}
-			
+
+			size = fontSize / scale;
+
 			vec2 halfScreen = vec2(Text::ScreenResWidth / 2, Text::ScreenResHeight / 2);
 
 			vertex_up_right = vec2(screenPos.x + offsetX + size, screenPos.y + fontSize - (fontSize)*nrOfLineBreaks - offsetY);
@@ -137,8 +176,8 @@ void Text::fillBuffer()
 			float uv_y = (character / 16) / 16.0f;
 
 			uv_up_left = vec2(uv_x, 1.0f - uv_y);
-			uv_up_right = vec2(uv_x + 1.0f / 16.0f, 1.0f - uv_y);
-			uv_down_right = vec2(uv_x + 1.0f / 16.0f, 1.0f - (uv_y + 1.0f / 16.0f));
+			uv_up_right = vec2(uv_x + 1.0f / 16.0f / scale, 1.0f - uv_y);
+			uv_down_right = vec2(uv_x + 1.0f / 16.0f / scale, 1.0f - (uv_y + 1.0f / 16.0f));
 			uv_down_left = vec2(uv_x, 1.0f - (uv_y + 1.0f / 16.0f));
 
 			Float5 vert = { 0.0f };

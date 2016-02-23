@@ -124,6 +124,8 @@ bool DDSTexture::uploadTexture(GLuint &id)
 void* loadTextureData(std::string texturePath, int &format, int &xres, int &yres, int &size)
 {
 
+	printf("Loading texture %s\n", texturePath.c_str());
+
 	int x;
 	int y;
 	int comp;
@@ -132,17 +134,18 @@ void* loadTextureData(std::string texturePath, int &format, int &xres, int &yres
 
 	if (hasEnding(texturePath, ".dds") || hasEnding(texturePath, ".DDS"))
 	{
-		printf("Loading dds texture %s\n", texturePath.c_str());
+		//printf("Loading dds texture %s\n", texturePath.c_str());
 
 		DDSTexture tex;
 		tex.load(texturePath);
+		printf("Texture size: %d\n", size);
 
 		return tex.getDataPtr(size, xres, yres, format);
 
 	}
 	else
 	{
-		printf("Loading other texture %s\n", texturePath.c_str());
+		//printf("Loading other texture %s\n", texturePath.c_str());
 
 		stbi_uc* image = stbi_load(texturePath.c_str(), &x, &y, &comp, 4);
 
@@ -165,6 +168,7 @@ void* loadTextureData(std::string texturePath, int &format, int &xres, int &yres
 			ZeroMemory(data, size);
 
 		format = GL_COMPRESSED_RGBA;
+		printf("Texture size: %d\n", size);
 
 		stbi_image_free(image);
 
@@ -178,7 +182,7 @@ GLuint loadTexture(std::string texturePath, bool PNGuploadComrpessint, int* xres
 	int x;
 	int y;
 	int comp;
-	
+	printf("Loading texture %s\n", texturePath.c_str());
 	stbi_uc* image = stbi_load(texturePath.c_str(), &x, &y, &comp, 4);
 
 	if(xres)
@@ -190,7 +194,7 @@ GLuint loadTexture(std::string texturePath, bool PNGuploadComrpessint, int* xres
 
 	if (hasEnding(texturePath, ".dds") || hasEnding(texturePath, ".DDS"))
 	{
-		printf("Loading dds texture %s\n", texturePath.c_str());
+		//printf("Loading dds texture %s\n", texturePath.c_str());
 
 		glGenTextures(1, &textureID);
 		DDSTexture tex;
@@ -200,7 +204,7 @@ GLuint loadTexture(std::string texturePath, bool PNGuploadComrpessint, int* xres
 	}
 	else
 	{
-		printf("Loading other texture %s\n", texturePath.c_str());
+		//printf("Loading other texture %s\n", texturePath.c_str());
 
 		glGenTextures(1, &textureID);
 		glBindTexture(GL_TEXTURE_2D, textureID);
