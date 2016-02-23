@@ -815,10 +815,11 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 					t.w = rad - t.w; //penetration depth instead of collision distance 
 					if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 					{
-						bPos -= dir* rad;
+						
 						if (dot(dir, normalize(bPos - sPos)) > -0.0001f)
 							dir *= -1;
 						t = vec4(dir, t.w + 0.2f);
+						bPos -= dir* rad;
 						bulletPos = bPos;
 						return t;
 					}
@@ -829,10 +830,10 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 					t.w = rad - t.w;
 					if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 					{
-						bPos -= dir* rad;
 						if (dot(dir, normalize(bPos - sPos)) > -0.0001f)
 							dir *= -1;
 						t = vec4(dir, t.w + 0.2f);
+						bPos -= dir* rad;
 						bulletPos = bPos;
 						return t;
 					}
@@ -842,7 +843,6 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 					t.w = rad - t.w; //penetration depth instead of collision distance 
 					if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 					{
-						bPos -= dir* rad;
 						if (dot(dir, normalize(bulletPos - sPos)) > -0.0001f)
 							dir *= -1;
 						t = vec4(dir, t.w + 0.2f);
@@ -853,7 +853,6 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 					t.w = rad - t.w;
 					if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 					{
-						bPos -= dir* rad;
 						if (dot(dir, normalize(origPos - sPos)) > -0.0001f)
 							dir *= -1;
 						t = vec4(dir, t.w + 0.2f);
@@ -920,10 +919,10 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 								t.w = rad - t.w; //penetration depth instead of collision distance 
 								if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 								{
-									bPos -= dir* rad;
 									if (dot(dir, bPos - sPos) > -0.0001f)
 										dir *= -1;
 									t = vec4(dir, t.w + 0.2f);
+									bPos -= dir* rad;
 									bulletPos = bPos;
 									return t;
 								}
@@ -934,10 +933,10 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 								t.w = rad - t.w;
 								if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 								{
-									bPos -= dir* rad;
 									if (dot(dir, bPos - sPos) > -0.0001f)
 										dir *= -1;
 									t = vec4(dir, t.w + 0.2f);
+									bPos -= dir* rad;
 									bulletPos = bPos;
 									return t;
 								}
@@ -947,7 +946,6 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 								t.w = rad - t.w; //penetration depth instead of collision distance 
 								if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 								{
-									bPos -= dir* rad;
 									if (dot(dir, bulletPos - sPos) > -0.0001f)
 										dir *= -1;
 									t = vec4(dir, t.w + 0.2f);
@@ -959,7 +957,6 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 								t.w = rad - t.w;
 								if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 								{
-									bPos -= dir* rad;
 									if (dot(dir, origPos - sPos) > -0.0001f)
 										dir *= -1;
 									t = vec4(dir, t.w + 0.2f);
@@ -1354,14 +1351,14 @@ void Physics::receiveEffectBox(std::vector<float> eBox, unsigned int etype, int 
 
 		vec3 n = normalize(cross(up, fwd));
 
-		obbl.corners[0] = glm::vec4(pos1.x - 0.25f * n.x, pos.y - eBox[3], pos1.z + 0.25f * n.z, 1.0f);
-		obbl.corners[1] = glm::vec4(pos1.x + 0.25f * n.x, pos.y - eBox[3], pos1.z + 0.25f * n.z, 1.0f);
-		obbl.corners[2] = glm::vec4(pos1.x - 0.25f * n.x, pos.y + eBox[3], pos1.z + 0.25f * n.z, 1.0f);
-		obbl.corners[3] = glm::vec4(pos1.x + 0.25f * n.x, pos.y + eBox[3], pos1.z + 0.25f * n.z, 1.0f);
-		obbl.corners[4] = glm::vec4(pos2.x - 0.25f * n.x, pos.y + eBox[3], pos2.z - 0.25f * n.z, 1.0f);
-		obbl.corners[5] = glm::vec4(pos2.x + 0.25f * n.x, pos.y + eBox[3], pos2.z - 0.25f * n.z, 1.0f);
-		obbl.corners[6] = glm::vec4(pos2.x - 0.25f * n.x, pos.y - eBox[3], pos2.z - 0.25f * n.z, 1.0f);
-		obbl.corners[7] = glm::vec4(pos2.x + 0.25f * n.x, pos.y - eBox[3], pos2.z - 0.25f * n.z, 1.0f);
+		obbl.corners[0] = glm::vec4(pos1.x - 0.15f * n.x, pos.y - eBox[3], pos1.z + 0.15f * n.z, 1.0f);
+		obbl.corners[1] = glm::vec4(pos1.x + 0.15f * n.x, pos.y - eBox[3], pos1.z + 0.15f * n.z, 1.0f);
+		obbl.corners[2] = glm::vec4(pos1.x - 0.15f * n.x, pos.y + eBox[3], pos1.z + 0.15f * n.z, 1.0f);
+		obbl.corners[3] = glm::vec4(pos1.x + 0.15f * n.x, pos.y + eBox[3], pos1.z + 0.15f * n.z, 1.0f);
+		obbl.corners[4] = glm::vec4(pos2.x - 0.15f * n.x, pos.y + eBox[3], pos2.z - 0.15f * n.z, 1.0f);
+		obbl.corners[5] = glm::vec4(pos2.x + 0.15f * n.x, pos.y + eBox[3], pos2.z - 0.15f * n.z, 1.0f);
+		obbl.corners[6] = glm::vec4(pos2.x - 0.15f * n.x, pos.y - eBox[3], pos2.z - 0.15f * n.z, 1.0f);
+		obbl.corners[7] = glm::vec4(pos2.x + 0.15f * n.x, pos.y - eBox[3], pos2.z - 0.15f * n.z, 1.0f);
 
 		/*float angle;
 

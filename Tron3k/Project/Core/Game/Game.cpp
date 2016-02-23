@@ -497,7 +497,7 @@ void Game::updateEffectBox(Effect* effect)
 			((LightwallEffect*)(effect))->getId(pid, eid);
 			physics->removeEffect(eid, pid, EFFECT_TYPE::LIGHT_WALL);
 			glm::vec3 sPos, gPos;
-			float height = 2.5f;
+			float height = 1.8f;
 
 			gPos = ((LightwallEffect*)(effect))->getEndPoint();
 			sPos = ((LightwallEffect*)(effect))->getPos();
