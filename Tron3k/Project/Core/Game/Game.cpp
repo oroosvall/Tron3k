@@ -2259,7 +2259,7 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 				b->setDir(temp);
 				break;
 			case BULLET_TYPE::THERMITE_GRENADE:
-				if (b->getBounces() > 3)
+				if (b->getBounces() > 1)
 				{
 					removeBullet(hi.bt, arraypos);
 					break;
