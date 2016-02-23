@@ -28,6 +28,7 @@
 class Core
 {
 private:
+
 	bool settingsLoaded = false;
 	bool controlsLoaded = false;
 	int uitmpcounter;

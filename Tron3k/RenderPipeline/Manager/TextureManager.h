@@ -25,6 +25,7 @@ enum TEXTURE_FALLBACK
 
 struct TextureInfo
 {
+	unsigned int streamingID;
 	GLuint textureID;
 	std::string texturePath;
 

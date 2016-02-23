@@ -466,6 +466,11 @@ void RenderPipeline::release()
 			delete textObjects[i];
 	}
 
+	for (size_t i = 0; i < dynamicParticleSystems.size(); i++)
+	{
+		dynamicParticleSystems[i].Release();
+	}
+
 	glDeleteBuffers(1, &lwVertexDataId);
 	glDeleteVertexArrays(1, &lwVertexAttribute);
 
@@ -512,6 +517,17 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	cam.setViewProjMat(animTexture.animQuadShader, animTexture.animQuadVP);
 
 	contMan.update(dt);
+	glUseProgram(particleCS);
+	for (size_t p = 0; p < dynamicParticleSystems.size(); p++)
+	{
+		dynamicParticleSystems[p].Update(dt);
+		if (dynamicParticleSystems[p].m_alive)
+		{
+			dynamicParticleSystems[p].Release();
+			dynamicParticleSystems.erase(dynamicParticleSystems.begin() + p);
+		}
+	}
+
 	animTexture.update(dt);
 
 	updateTakeDamageEffect(dt);
@@ -650,6 +666,18 @@ void RenderPipeline::finalizeRender()
 	
 	contMan.renderParticles(particleShader, particleTexture, particleSize);
 	
+	for (size_t i = 0; i < dynamicParticleSystems.size(); i++)
+	{
+		vec2 size = dynamicParticleSystems[i].m_size;
+		glProgramUniform2f(particleShader, particleSize, size.x, size.y);
+
+		glActiveTexture(GL_TEXTURE0);
+		glProgramUniform1i(particleShader, particleTexture, 0);
+
+		TextureManager::gTm->bindTextureOnly(dynamicParticleSystems[i].m_texture, DIFFUSE_FB);
+		dynamicParticleSystems[i].Draw();
+	}
+
 	//GBuffer Render
 	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
@@ -1002,6 +1030,56 @@ bool RenderPipeline::setSetting(PIPELINE_SETTINGS type, PipelineValues value)
 	return true;
 }
 
+void RenderPipeline::createTimedParticleEffect(PARTICLE_EFFECTS peffect, vec3 pos)
+{
+	std::string path = "Gamefiles/ParticleSystems/explosion1.ps";
+
+	//switch (peffect)
+	//{
+	//case PARTICLE_HIT:
+	//	break;
+	//case PARTICLE_EXPLODE:
+	//	break;
+	//case PARTICLE_HACKED:
+	//	break;
+	//default:
+	//	break;
+	//}
+
+	std::ifstream file;
+	file.open(path, std::ios::binary | std::ios::in);
+
+	if (file.is_open() && false)
+	{
+
+		ExportHeader exHeader;
+		file.read((char*)&exHeader, sizeof(exHeader));
+
+		//Read texture name
+		char* f = (char*)malloc(exHeader.texturesize + 1);
+		file.read(f, sizeof(char) * exHeader.texturesize);
+		f[exHeader.texturesize] = 0;
+
+		GLuint texID = TextureManager::gTm->createTexture("Gamefiles/Textures/particles/arrow.png");
+		unsigned int x = 0, y = 0;
+		TextureManager::gTm->PNGSize("Gamefiles/Textures/particles/arrow.png", x, y);
+		free(f);
+
+		ParticleSystemData pdata;
+		//Read Particle System
+		file.read((char*)&pdata, sizeof(ParticleSystemData));
+
+		pdata.continuous = false; // force single time
+		
+		ParticleSystem pSys;
+		pSys.Initialize(pos, pdata, &compute, &locations);
+		pSys.m_texture = texID;
+		dynamicParticleSystems.push_back(pSys);
+	}
+	file.close();
+
+}
+
 SETTING_INPUT RenderPipeline::getType(PIPELINE_SETTINGS type) const
 {
 
@@ -1189,7 +1267,16 @@ void RenderPipeline::ui_InGameRenderInit()
 
 void RenderPipeline::ui_loadTexture(unsigned int* texid, char* filepath, int* xres, int* yres)
 {
-	*texid = loadTexture(std::string(filepath), true, xres, yres);
+	unsigned int x;
+	unsigned int y;
+	TextureManager::gTm->PNGSize(filepath, x, y);
+
+	*xres = x;
+	*yres = y;
+
+	*texid = TextureManager::gTm->createTexture(filepath);
+
+	//*texid = loadTexture(std::string(filepath), true, xres, yres);
 }
 
 void RenderPipeline::ui_renderQuad(float* mat, float* pivot, GLuint textureID, float transp, int i)
@@ -1198,14 +1285,16 @@ void RenderPipeline::ui_renderQuad(float* mat, float* pivot, GLuint textureID, f
 	{
 		glm::mat4* world = (glm::mat4*)mat;
 
-		//glActiveTexture(GL_TEXTURE0);
+		glActiveTexture(GL_TEXTURE0);
+		TextureManager::gTm->bindTextureOnly(textureID, DIFFUSE_FB, true);
+		glProgramUniform1i(uiShader, ui_Texture, 0);
 
-		TextureInfo temp;
-		temp.state = TEXTURE_LOADED;
-		temp.lastTextureSlot = GL_TEXTURE0;
-		temp.textureID = textureID;
-		TextureManager::gTm->bind(temp, uiShader, ui_Texture);
-		//glBindTexture(GL_TEXTURE_2D, textureID);
+		//TextureInfo temp;
+		//temp.state = TEXTURE_LOADED;
+		//temp.lastTextureSlot = GL_TEXTURE0;
+		//temp.textureID = textureID;
+		//TextureManager::gTm->bind(temp, uiShader, ui_Texture);
+		////glBindTexture(GL_TEXTURE_2D, textureID);
 		glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, mat);
 		glProgramUniform3fv(uiShader, uniformPivotLocation, 1, pivot);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);

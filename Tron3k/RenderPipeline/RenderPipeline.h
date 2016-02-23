@@ -167,6 +167,8 @@ private:
 
 	GLuint ptex;
 
+	vector<ParticleSystem> dynamicParticleSystems;
+
 public:
 
 	RenderPipeline() {};
@@ -195,6 +197,9 @@ public:
 	virtual std::string getStatus() { return ""; };
 
 	virtual bool setSetting(PIPELINE_SETTINGS type, PipelineValues value);
+
+	virtual void createTimedParticleEffect(PARTICLE_EFFECTS peffect, vec3 pos);
+
 	virtual void renderWallEffect(void* pos1, void* pos2, float uvStartOffset, float* dgColor);
 	virtual void renderExploEffect(float* pos, float rad, float transp, float* dgColor);
 	virtual void renderThunderDomeEffect(float* pos, float rad, float transp, float* dgColor);

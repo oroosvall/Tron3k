@@ -56,6 +56,7 @@ void Core::init()
 
 	nameNrOfKeys = 0;
 	ipNrOfKeys = 0;
+	
 }
 
 Core::~Core()
@@ -679,6 +680,14 @@ void Core::upClient(float dt)
 			}
 		}
 		game->update(newDt);
+
+		std::vector<glm::vec3> hitpositions = game->getAllBulletHitPlayerPos();
+		for (size_t i = 0; i < hitpositions.size(); i++)
+		{
+			renderPipe->createTimedParticleEffect(PARTICLE_HIT, hitpositions[i]);
+		}
+
+		game->clearAllBulletHitPlayerPos();
 
 		KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
 		KOTHSTATE tmp = koth->getState();

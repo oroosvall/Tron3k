@@ -72,8 +72,8 @@ void main()
 		p[iter].dir.xyz = normalize(oldP - p[iter].pos.xyz);
 		
 		
-		//if(continuous)
-		//{
+		if(continuous)
+		{
 			if(p[iter].dir.w < 0.0f)
 			{
 				//0 means all emit at the same pos
@@ -97,7 +97,7 @@ void main()
 					}
 				}
 			}
-		//}
+		}
 	}
 	
 	
