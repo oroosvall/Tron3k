@@ -1476,7 +1476,10 @@ void Core::clientHandleCmds(std::string com)
 		}
 		if (token == "/ready")
 		{
-			top->command_gamemode_ready(top->getConId());
+			if (game->getPlayer(game->GetLocalPlayerId())->getRole()->getRole() != ROLES::NROFROLES)
+				top->command_gamemode_ready(top->getConId());
+			else
+				console.printMsg("Choose a class first, dumbfuck", "System", 'S');
 		}
 		else if (token == "/name")
 		{
@@ -2475,16 +2478,19 @@ void Core::inGameUIUpdate() //Ingame ui update
 			uiManager->HUD.bannerCounter++;
 		if (uiManager->HUDTime.counterListScore1.size() > 0)
 		{
-			if (uiManager->HUDTime.counterListScore1[0] == 2)
+			for (int i = 0; i < uiManager->HUDTime.counterListScore1.size(); i++)
 			{
-				uiManager->deleteOldestWM(hideAbleObj::ScoreAdderTeam1);
-				if (uiManager->HUDTime.wmIdListScore1.size() < 1)
-					uiManager->HUDTime.movePointAdder1 = false;
+				if (uiManager->HUDTime.counterListScore1[i] == 2)
+				{
+					uiManager->deleteOldestWM(hideAbleObj::ScoreAdderTeam1);
+					if (uiManager->HUDTime.wmIdListScore1.size() < 1)
+						uiManager->HUDTime.movePointAdder1 = false;
 
-				if (uiManager->HUDTime.wmIdListScore1.size() > 0)
-					uiManager->HUDTime.wmIdListScore1.erase(uiManager->HUDTime.wmIdListScore1.begin());
+					if (uiManager->HUDTime.wmIdListScore1.size() > 0)
+						uiManager->HUDTime.wmIdListScore1.erase(uiManager->HUDTime.wmIdListScore1.begin());
 
-				uiManager->HUDTime.counterListScore1.erase(uiManager->HUDTime.counterListScore1.begin());
+					uiManager->HUDTime.counterListScore1.erase(uiManager->HUDTime.counterListScore1.begin());
+				}
 			}
 			for (size_t i = 0; i < uiManager->HUDTime.counterListScore1.size(); i++)
 				uiManager->HUDTime.counterListScore1[i]++;
@@ -2492,16 +2498,19 @@ void Core::inGameUIUpdate() //Ingame ui update
 
 		if (uiManager->HUDTime.counterListScore2.size() > 0)
 		{
-			if (uiManager->HUDTime.counterListScore2[0] == 2)
+			for (int i = 0; i < uiManager->HUDTime.counterListScore2.size(); i++)
 			{
-				uiManager->deleteOldestWM(hideAbleObj::ScoreAdderTeam2);
-				if (uiManager->HUDTime.wmIdListScore2.size() < 1)
-					uiManager->HUDTime.movePointAdder2 = false;
+				if (uiManager->HUDTime.counterListScore2[i] == 2)
+				{
+					uiManager->deleteOldestWM(hideAbleObj::ScoreAdderTeam2);
+					if (uiManager->HUDTime.wmIdListScore2.size() < 1)
+						uiManager->HUDTime.movePointAdder2 = false;
 
-				if(uiManager->HUDTime.wmIdListScore2.size() > 0)
-					uiManager->HUDTime.wmIdListScore2.erase(uiManager->HUDTime.wmIdListScore2.begin());
+					if (uiManager->HUDTime.wmIdListScore2.size() > 0)
+						uiManager->HUDTime.wmIdListScore2.erase(uiManager->HUDTime.wmIdListScore2.begin());
 
-				uiManager->HUDTime.counterListScore2.erase(uiManager->HUDTime.counterListScore2.begin());
+					uiManager->HUDTime.counterListScore2.erase(uiManager->HUDTime.counterListScore2.begin());
+				}
 			}
 			for (size_t i = 0; i < uiManager->HUDTime.counterListScore2.size(); i++)
 				uiManager->HUDTime.counterListScore2[i]++;
@@ -2509,17 +2518,20 @@ void Core::inGameUIUpdate() //Ingame ui update
 
 		if (uiManager->HUDTime.counterListTicket1.size() > 0)
 		{
-			if (uiManager->HUDTime.counterListTicket1[0] == 2)
+			for (int i = 0; i < uiManager->HUDTime.counterListTicket1.size(); i++)
 			{
-				uiManager->deleteOldestWM(hideAbleObj::TicketReducerTeam1);
-				
-				if (uiManager->HUDTime.wmIdListTicket1.size() < 1)
-					uiManager->HUDTime.moveTokenReducer1 = false;
+				if (uiManager->HUDTime.counterListTicket1[i] == 2)
+				{
+					uiManager->deleteOldestWM(hideAbleObj::TicketReducerTeam1);
 
-				if(uiManager->HUDTime.wmIdListTicket1.size() > 0)
-					uiManager->HUDTime.wmIdListTicket1.erase(uiManager->HUDTime.wmIdListTicket1.begin());
+					if (uiManager->HUDTime.wmIdListTicket1.size() < 1)
+						uiManager->HUDTime.moveTokenReducer1 = false;
 
-				uiManager->HUDTime.counterListTicket1.erase(uiManager->HUDTime.counterListTicket1.begin());
+					if (uiManager->HUDTime.wmIdListTicket1.size() > 0)
+						uiManager->HUDTime.wmIdListTicket1.erase(uiManager->HUDTime.wmIdListTicket1.begin());
+
+					uiManager->HUDTime.counterListTicket1.erase(uiManager->HUDTime.counterListTicket1.begin());
+				}
 			}
 			for (size_t i = 0; i < uiManager->HUDTime.counterListTicket1.size(); i++)
 				uiManager->HUDTime.counterListTicket1[i]++;
@@ -2527,16 +2539,19 @@ void Core::inGameUIUpdate() //Ingame ui update
 
 		if (uiManager->HUDTime.counterListTicket2.size() > 0)
 		{
-			if (uiManager->HUDTime.counterListTicket2[0] == 2)
+			for (int i = 0; i < uiManager->HUDTime.counterListTicket2.size(); i++)
 			{
-				uiManager->deleteOldestWM(hideAbleObj::TicketReducerTeam2);
-				if (uiManager->HUDTime.wmIdListTicket2.size() < 1)
-					uiManager->HUDTime.moveTokenReducer2 = false;
+				if (uiManager->HUDTime.counterListTicket2[i] == 2)
+				{
+					uiManager->deleteOldestWM(hideAbleObj::TicketReducerTeam2);
+					if (uiManager->HUDTime.wmIdListTicket2.size() < 1)
+						uiManager->HUDTime.moveTokenReducer2 = false;
 
-				if (uiManager->HUDTime.wmIdListTicket2.size() > 0)
-					uiManager->HUDTime.wmIdListTicket2.erase(uiManager->HUDTime.wmIdListTicket2.begin());
+					if (uiManager->HUDTime.wmIdListTicket2.size() > 0)
+						uiManager->HUDTime.wmIdListTicket2.erase(uiManager->HUDTime.wmIdListTicket2.begin());
 
-				uiManager->HUDTime.counterListTicket2.erase(uiManager->HUDTime.counterListTicket2.begin());
+					uiManager->HUDTime.counterListTicket2.erase(uiManager->HUDTime.counterListTicket2.begin());
+				}
 			}
 			for (size_t i = 0; i < uiManager->HUDTime.counterListTicket2.size(); i++)
 				uiManager->HUDTime.counterListTicket2[i]++;
