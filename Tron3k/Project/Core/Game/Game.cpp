@@ -1275,13 +1275,17 @@ void Game::addBulletToList(int conID, int teamId, int bulletId, BULLET_TYPE bt, 
 		b = new Clusterling(pos, dir, conID, bulletId, teamId);
 		break;
 	case BULLET_TYPE::BATTERY_SLOW_SHOT:
-		rightV *= 0.2;
-		pos += rightV;
+		rightV *= 0.25;
+		upV *= -0.18f;
+		dirMod *= 0.6f;
+		pos += upV + rightV + dirMod;
 		b = new BatterySlowShot(pos, dir, conID, bulletId, teamId);
 		break;
 	case BULLET_TYPE::BATTERY_SPEED_SHOT:
-		rightV *= -0.2;
-		pos += rightV;
+		rightV *= -0.25;
+		upV *= -0.18f;
+		dirMod *= 0.6f;
+		pos += upV + rightV + dirMod;
 		b = new BatterySpeedShot(pos, dir, conID, bulletId, teamId);
 		break;
 	case BULLET_TYPE::LINK_SHOT:
