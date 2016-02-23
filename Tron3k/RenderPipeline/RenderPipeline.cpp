@@ -1267,16 +1267,7 @@ void RenderPipeline::ui_InGameRenderInit()
 
 void RenderPipeline::ui_loadTexture(unsigned int* texid, char* filepath, int* xres, int* yres)
 {
-	unsigned int x;
-	unsigned int y;
-	TextureManager::gTm->PNGSize(filepath, x, y);
-
-	*xres = x;
-	*yres = y;
-
-	*texid = TextureManager::gTm->createTexture(filepath);
-
-	//*texid = loadTexture(std::string(filepath), true, xres, yres);
+	*texid = loadTexture(std::string(filepath), true, xres, yres);
 }
 
 void RenderPipeline::ui_renderQuad(float* mat, float* pivot, GLuint textureID, float transp, int i)
@@ -1285,16 +1276,12 @@ void RenderPipeline::ui_renderQuad(float* mat, float* pivot, GLuint textureID, f
 	{
 		glm::mat4* world = (glm::mat4*)mat;
 
-		glActiveTexture(GL_TEXTURE0);
-		TextureManager::gTm->bindTextureOnly(textureID, DIFFUSE_FB, true);
-		glProgramUniform1i(uiShader, ui_Texture, 0);
-
-		//TextureInfo temp;
-		//temp.state = TEXTURE_LOADED;
-		//temp.lastTextureSlot = GL_TEXTURE0;
-		//temp.textureID = textureID;
-		//TextureManager::gTm->bind(temp, uiShader, ui_Texture);
-		////glBindTexture(GL_TEXTURE_2D, textureID);
+		TextureInfo temp;
+		temp.state = TEXTURE_LOADED;
+		temp.lastTextureSlot = GL_TEXTURE0;
+		temp.textureID = textureID;
+		TextureManager::gTm->bind(temp, uiShader, ui_Texture);
+		//glBindTexture(GL_TEXTURE_2D, textureID);
 		glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, mat);
 		glProgramUniform3fv(uiShader, uniformPivotLocation, 1, pivot);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
