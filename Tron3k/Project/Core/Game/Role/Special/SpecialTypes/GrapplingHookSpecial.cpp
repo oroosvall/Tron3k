@@ -10,7 +10,6 @@ void GrapplingHookSpecial::init()
 {
 	specialType = SPECIAL_TYPE::GRAPPLINGHOOKSPECIAL;
 	activationCost = 30.0f;
-	key = GLFW_KEY_LEFT_SHIFT;
 }
 
 int GrapplingHookSpecial::update(float deltaTime)

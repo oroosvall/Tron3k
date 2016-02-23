@@ -21,7 +21,6 @@ public:
 
 	void bind(GLuint index);
 
-	void preRender(GLuint shader, GLuint texture, GLuint self);
 	void render(/*glm::vec3 playerPos, glm::vec3 playerDir*/);
 
 	void clearLights();
@@ -73,10 +72,6 @@ public:
 	GLuint portal_vp;
 	GLuint portal_model;
 
-	GLuint glowReduce;
-
-	RenderTarget glowTexture;
-	
 	int nrOfSpotLights = 0;
 	int nrOfPointLights = 0;
 

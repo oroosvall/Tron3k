@@ -11,7 +11,7 @@ class Special
 		SPECIAL_TYPE specialType;
 		int specialId = -1;
 		int activationCost;
-		int key;
+		bool isOnJumpKey = false;
 	public:
 		virtual void init() = 0;
 
@@ -22,8 +22,8 @@ class Special
 		int getSpecialId();
 
 		virtual bool allowedToActivate(Player* p) = 0;
-		int getActivationKey() { return key; };
+		bool isThisOnJumpKey() { return isOnJumpKey; };
 
-		int getActivationCost() { return activationCost; }
+		int getActivationCost() { return activationCost; };
 };
 #endif
