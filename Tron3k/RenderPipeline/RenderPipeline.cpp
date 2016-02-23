@@ -1246,7 +1246,8 @@ void RenderPipeline::setChatTypeMessage(std::string text)
 {
 	chatTypeText = text;
 	chatText->setText(chatHistoryText + chatTypeText);
-	textTimer = 2.0f;
+	if(chatTypeText.size())
+		textTimer = 2.0f;
 }
 
 void RenderPipeline::ui_initRender()
