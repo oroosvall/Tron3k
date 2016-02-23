@@ -986,10 +986,11 @@ void Player::shoot()
 		if (animRole == ROLES::MANIPULATOR)
 		{
 			if (role.getCurrentWeapon()->getType() == WEAPON_TYPE::BATTERYWPN_SLOW)
+				animOverideIfPriority(anim_first_current, AnimationState::first_secondary_fire);
+
+			else
 				animOverideIfPriority(anim_first_current, AnimationState::first_secondary_fire_left);
 				
-			if (role.getCurrentWeapon()->getType() == WEAPON_TYPE::BATTERYWPN_SPEED)
-				animOverideIfPriority(anim_first_current, AnimationState::first_secondary_fire);
 		}
 	}
 
@@ -1061,67 +1062,57 @@ void Player::addModifier(MODIFIER_TYPE mt)
 	{
 	case LIGHTWALLCONTROLLOCK:
 	{
-		removeSpecificModifier(LIGHTWALLCONTROLLOCK);
 		m = new LightWallLockedControls();
-		myModifiers.push_back(m);
 	}
 	break;
 	case MODIFIER_TYPE::HACKINGDARTMODIFIER:
 	{
 		m = new HackingDartModifier();
-		myModifiers.push_back(m);
 	}
 	break;
 	case MODIFIER_TYPE::LIGHTSPEEDMODIFIER:
 	{
 		m = new LightSpeed();
-		myModifiers.push_back(m);
 	}
 	break;
 	case MODIFIER_TYPE::OVERCHARGEMODIFIER:
 	{
 		m = new Overcharge();
-		myModifiers.push_back(m);
 	}
 	break;
 	case MODIFIER_TYPE::SPRINTCONTROLLOCK:
 	{
 		m = new SprintControlLock;
-		myModifiers.push_back(m);
 	}
 	break;
 	case MODIFIER_TYPE::TRUEGRITMODIFIER:
 	{
 		m = new TrueGrit();
-		myModifiers.push_back(m);
 	}
 	break;
 	case MODIFIER_TYPE::TRAPPERSHAREAMMO:
 	{
 		m = new TrapperShareAmmo();
-		myModifiers.push_back(m);
 	}
 	break;
 	case MODIFIER_TYPE::BATTERYSLOWMOD:
 	{
 		m = new BatterySlowMod();
-		myModifiers.push_back(m);
 	}
 	break;
 	case MODIFIER_TYPE::BATTERYSPEEDMOD:
 	{
 		m = new BatterySpeedMod();
-		myModifiers.push_back(m);
 	}
 	break;
 	case MODIFIER_TYPE::DOUBLEDAMAGEMOD:
 	{
 		m = new DoubleDamageMod();
-		myModifiers.push_back(m);
 	}
 	break;
 	}
-	myModifiers[myModifiers.size() - 1]->init(this);
+	m->init(this);
+	myModifiers.push_back(m);
 }
 
 void Player::setRole(Role role)

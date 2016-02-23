@@ -8,7 +8,7 @@
 class ParticleSystem
 {
 public:
-	void Initialize(glm::vec3, ParticleSystemData*, GLuint*, ParticleShaderLocations*);
+	void Initialize(glm::vec3, ParticleSystemData, GLuint*, ParticleShaderLocations*);
 	void Update(float);
 	void Draw();
 
@@ -22,8 +22,9 @@ public:
 	int m_counter;
 
 private:
-	ParticleSystemData* m_data;
-	std::vector<Particle> m_vertices;
+	ParticleSystemData m_data;
+	//std::vector<Particle> m_vertices;
+	Particle* m_vertices;
 
 	ParticleShaderLocations* m_loc;
 

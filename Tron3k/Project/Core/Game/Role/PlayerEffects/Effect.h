@@ -39,6 +39,6 @@ public:
 
 	EFFECT_TYPE getType() { return type; };
 
-	bool desynced() { if (lifeTime < -0.2f)return true; return false; };
+	bool desynced() { if (lifeTime < -0.1f)return true; return false; };
 };
 #endif

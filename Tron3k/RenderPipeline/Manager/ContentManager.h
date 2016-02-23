@@ -51,6 +51,7 @@ private:
 	MiscMesh shankerBullet;
 	MiscMesh shankerSpecial;
 	MiscMesh bruteThunderDome;
+	MiscMesh explosionMesh;
 
 	struct TriangleVertex
 	{

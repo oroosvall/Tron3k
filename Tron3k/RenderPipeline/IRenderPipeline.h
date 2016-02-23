@@ -49,6 +49,13 @@ enum CROSSHAIR_TYPE
 	CROSSHAIR_NONE,
 };
 
+enum PARTICLE_EFFECTS
+{
+	PARTICLE_HIT,
+	PARTICLE_EXPLODE,
+	PARTICLE_HACKED,
+};
+
 struct PipelineValues
 {
 	enum {INT2, BOOL, FLOAT, FLOAT3} type;
@@ -87,8 +94,11 @@ public:
 	PipelineValues getSettings(PIPELINE_SETTINGS type);
 	virtual bool setSetting(PIPELINE_SETTINGS type, PipelineValues value) = 0;
 
+	virtual void createTimedParticleEffect(PARTICLE_EFFECTS peffect, glm::vec3 pos) = 0;
+
 	virtual void renderWallEffect(void* pos1, void* pos2, float uvStartOffset, float* dgColor) = 0;
-	virtual void renderExploEffect(float* pos, float rad, float transp, float* dgColor) = 0;
+	virtual void initRenderExplo() = 0;
+	virtual void renderExploEffect(float* pos, float rad, float transp, float* dgColor, bool solid) = 0;
 	virtual void renderThunderDomeEffect(float* pos, float rad, float transp, float* dgColor) = 0;
 
 	virtual void renderDecals(void* data, int size) = 0;

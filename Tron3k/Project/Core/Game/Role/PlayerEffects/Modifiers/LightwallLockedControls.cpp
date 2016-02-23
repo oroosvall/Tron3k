@@ -13,6 +13,7 @@ void LightWallLockedControls::init(Player* myTarget)
 	dir = normalize(dir);
 
 	vel = glm::vec3(dir.x, 0.0f, dir.y)*lightWallSpeed;
+	normvel = normalize(vel);
 	target->setVelocity(vel);
 	target->getRole()->shutOffMeterGain();
 }
@@ -25,11 +26,20 @@ LightWallLockedControls::~LightWallLockedControls()
 int LightWallLockedControls::getData(float dt)
 {
 	bool kill = false;
-	if (!target->getGrounded() || target->getAnimState_t_c() == AnimationState::third_primary_jump_begin)
+	glm::vec3 newVel = target->getVelocity();
+	if (length(newVel) < FLT_EPSILON)
 		kill = true;
-	if (target->getVelocity().x != vel.x || target->getVelocity().z != vel.z)
-		kill = true;
+	else
+	{
+		newVel = normalize(newVel);
+		if (newVel.x != normvel.x || newVel.z != normvel.z)
+			kill = true;
+	}
+	//if (target->getVelocity().x != vel.x || target->getVelocity().z != vel.z)
+	//	kill = true;
 	if (target->getRole()->getSpecialMeter() <= 0)
+		kill = true;
+	if (!target->getGrounded())
 		kill = true;
 
 	if (kill)
@@ -49,12 +59,15 @@ int LightWallLockedControls::setData(float dt)
 	target->setVelocity(vel);
 	target->getRole()->setSpecialMeter(specialLower);
 
-	if (Input::getInput()->justPressed(GLFW_KEY_SPACE))
-		kill = true;
-	if (Input::getInput()->justPressed(GLFW_MOUSE_BUTTON_LEFT))
-		kill = true;
-	if (Input::getInput()->justPressed(GLFW_KEY_E))
-		kill = true;
+	if (target->isLocal())
+	{
+		if (Input::getInput()->justPressed(GLFW_KEY_SPACE))
+			kill = true;
+		if (Input::getInput()->justPressed(GLFW_MOUSE_BUTTON_LEFT))
+			kill = true;
+		if (Input::getInput()->justPressed(GLFW_KEY_E))
+			kill = true;
+	}
 
 	if (kill)
 	{

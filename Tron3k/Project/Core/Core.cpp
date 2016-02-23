@@ -60,6 +60,7 @@ void Core::init()
 
 	nameNrOfKeys = 0;
 	ipNrOfKeys = 0;
+	
 }
 
 Core::~Core()
@@ -111,6 +112,8 @@ Core::~Core()
 
 void Core::update(float dt)
 {
+	timepass += dt;
+
 	if (shitBool && justAFrameCounterActivated)
 	{
 		justAFrameCounter++;
@@ -196,10 +199,11 @@ void Core::update(float dt)
 				{
 					if (current != SERVER)
 					{
-						if (!console.getInChatMode() && cursorInvisible)
+						if (!console.getInChatMode())
 						{
-							p->setLockedControls(false);
 							renderPipe->setChatTypeMessage("");
+							if (cursorInvisible)
+								p->setLockedControls(false);
 						}
 						else if (console.getInChatMode())
 						{
@@ -772,11 +776,28 @@ void Core::upClient(float dt)
 		}
 		game->update(newDt);
 
+		std::vector<glm::vec3> hitpositions = game->getAllBulletHitPlayerPos();
+		for (size_t i = 0; i < hitpositions.size(); i++)
+		{
+			renderPipe->createTimedParticleEffect(PARTICLE_HIT, hitpositions[i]);
+		}
+
+		game->clearAllBulletHitPlayerPos();
+
+		KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
+		KOTHSTATE tmp = koth->getState();
+
+		Player* localp = game->getPlayer(top->getConId());
+
+
 		if (kothState != tmp)
 		{
 			if (tmp == KOTHSTATE::PREROUND)
 			{
-				top->command_role_change(top->getConId(), 1);
+				if (localp->getRole()->getRole() == ROLES::NROFROLES)
+				{
+					top->command_role_change(top->getConId(), 1);
+				}
 				//dont show class select when in spectate
 				if (localp->getTeam() != 0)
 					showClassSelect();
@@ -887,7 +908,7 @@ void Core::upClient(float dt)
 					pos.y = -4.5f;
 			}
 
-			top->frame_pos(top->getConId(), pos, local->getDir(), local->getVelocity(), local->roomID);
+			top->frame_playerdata(top->getConId(), pos, local->getDir(), local->getVelocity(), local->getGrounded(), local->getSpecialMeter(), local->roomID);
 
 			if (game->weaponSwitchReady())
 			{
@@ -2132,142 +2153,8 @@ void Core::renderWorld(float dt)
 		renderPipe->render();
 
 		// render effects
-		float herpderpOffset = 0;
-
-		if (hackedTeam == 1)
-			dgColor = TEAMTWOCOLOR;
-		else if (hackedTeam == 2)
-			dgColor = TEAMONECOLOR;
-
 		int effectTime = renderPipe->startExecTimer("Effects & decals");
-
-		for (int c = 0; c < EFFECT_TYPE::NROFEFFECTS; c++)
-		{
-			std::vector<Effect*> eff = game->getEffects(EFFECT_TYPE(c));
-			for (unsigned int i = 0; i < eff.size(); i++)
-			{
-				EFFECT_TYPE type = eff[i]->getType();
-				int pid, eid;
-				eff[i]->getId(pid, eid);
-				int team = eff[i]->getTeam();
-
-				if (hackedTeam == -1)
-				{
-					if (team == 1)
-						dgColor = TEAMONECOLOR;
-					else if (team == 2)
-						dgColor = TEAMTWOCOLOR;
-				}
-
-				switch (type)
-				{
-				case LIGHT_WALL:
-				{
-					LightwallEffect* asd = (LightwallEffect*)eff[i];
-					renderPipe->renderWallEffect(&asd->getPos(), &asd->getEndPoint(), herpderpOffset, &dgColor.x);
-					herpderpOffset += glm::distance(asd->getPos(), asd->getEndPoint());
-				}
-				break;
-				case THUNDER_DOME:
-				{
-					ThunderDomeEffect* asd = (ThunderDomeEffect*)eff[i];
-					vec3 pos = asd->getPos();
-					renderPipe->renderThunderDomeEffect(&pos.x, asd->explotionRenderRad(), 0, &dgColor.x);
-				}
-				break;
-				case EXPLOSION:
-				{
-					Explosion* asd = (Explosion*)eff[i];
-					vec3 pos = asd->getPos();
-					renderPipe->renderExploEffect(&pos.x, asd->explosionRenderRad(), 0, &dgColor.x);
-				}
-				break;
-				case CLEANSENOVA:
-				{
-					CleanseNova* asd = (CleanseNova*)eff[i];
-					vec3 pos = asd->getPos();
-					dgColor = CLEANSENOVACOLOR;
-					renderPipe->renderExploEffect(&pos.x, asd->renderRad(), 0, &dgColor.x);
-				}
-				break;
-				case BATTERY_SLOW:
-				{
-					BatteryFieldSlow* asd = (BatteryFieldSlow*)eff[i];
-					vec3 pos = asd->getPos();
-					dgColor = SLOWBUBBLECOLOR;
-					renderPipe->renderExploEffect(&pos.x, asd->renderRad(), 0, &dgColor.x);
-				}
-					break;
-				case BATTERY_SPEED:
-				{
-					BatteryFieldSpeed* asd = (BatteryFieldSpeed*)eff[i];
-					vec3 pos = asd->getPos();
-					dgColor = SPEEDBUBBLECOLOR;
-					renderPipe->renderExploEffect(&pos.x, asd->renderRad(), 0, &dgColor.x);
-				}
-					break;
-				case THERMITE_CLOUD:
-				{
-					ThermiteCloud* asd = (ThermiteCloud*)eff[i];
-					vec3 pos = asd->getPos();
-					renderPipe->renderExploEffect(&pos.x, asd->explosionRenderRad(), 0, &dgColor.x);
-				}
-				break;
-				case VACUUM:
-				{
-					Vacuum* asd = (Vacuum*)eff[i];
-					vec3 pos = asd->getPos();
-					renderPipe->renderExploEffect(&pos.x, asd->renderRad(), 0, &dgColor.x);
-				}
-				break;
-				case HEALTHPACK:
-				{
-					vec3 pos = eff[i]->getPos();
-					if (eff[i]->getTeam() == 1)
-						dgColor = TEAMTWOCOLOR;
-					else
-						dgColor = TEAMONECOLOR;
-					renderPipe->renderExploEffect(&pos.x, eff[i]->getInterestingVariable(), 0, &dgColor.x);
-
-					light.Color = dgColor;
-					light.Position = eff[i]->getPos();
-					renderPipe->addLight(&light, 0);
-				}
-				break;
-				case HSCPICKUP:
-				{
-					HSCPickup* temp = (HSCPickup*)eff[i];
-					if (!temp->onCooldown())
-					{
-						vec3 pos = eff[i]->getPos();
-						dgColor = vec3(1.0f, 0, 1.0f);
-						renderPipe->renderExploEffect(&pos.x, eff[i]->getInterestingVariable(), 0, &dgColor.x);
-
-						light.Color = dgColor;
-						light.Position = eff[i]->getPos();
-						renderPipe->addLight(&light, 0);
-					}
-				}
-				break;
-				case DOUBLEDAMAGEPICKUP:
-				{
-					DoubleDamagePickup* temp = (DoubleDamagePickup*)eff[i];
-					if (!temp->onCooldown())
-					{
-						vec3 pos = eff[i]->getPos();
-						dgColor = vec3(1.0f, 0, 0);
-						renderPipe->renderExploEffect(&pos.x, eff[i]->getInterestingVariable(), 0, &dgColor.x);
-
-						light.Color = dgColor;
-						light.Position = eff[i]->getPos();
-						renderPipe->addLight(&light, 0);
-
-					}
-				}
-				break;
-				}
-			}
-		}
+		effectsRender(hackedTeam);
 
 		// render Decals
 		renderPipe->renderDecals(game->getAllDecalRenderInfo(), game->getNrOfDecals());
@@ -3394,5 +3281,293 @@ void Core::minimapRender()
 
 		renderPipe->renderMinimap(&playerposs.x, &playerdirr.x, &data[0].x, membersize, koth->getCapturePoint());
 		delete[] data;
+	}
+}
+
+void Core::effectsRender(int hackedTeam)
+{
+	vec3 color;
+	float lightwallOffset = 0;
+	SpotLight light;
+	int team;
+	float percentLifeleft = 0;
+	float rad = 0;
+
+	light.Direction = vec3(0.0f);
+	light.DiffuseIntensity = 0.2f;
+	light.AmbientIntensity = 0.5f;
+	light.attenuation.w = 5.0f;
+
+	if (hackedTeam == 1)
+		color = TEAMTWOCOLOR;
+	else if (hackedTeam == 2)
+		color = TEAMONECOLOR;
+
+	//Light wall (Lightwall Shader)
+	std::vector<Effect*> eff = game->getEffects(EFFECT_TYPE( EFFECT_TYPE::LIGHT_WALL));
+	for (unsigned int i = 0; i < eff.size(); i++)
+	{
+		EFFECT_TYPE type = eff[i]->getType();
+		int pid, eid;
+		eff[i]->getId(pid, eid);
+		team = eff[i]->getTeam();
+
+		if (hackedTeam == -1)
+		{
+			if (team == 1)
+				color = TEAMONECOLOR;
+			else if (team == 2)
+				color = TEAMTWOCOLOR;
+		}
+
+		LightwallEffect* asd = (LightwallEffect*)eff[i];
+		renderPipe->renderWallEffect(&asd->getPos(), &asd->getEndPoint(), lightwallOffset, &color.x);
+		lightwallOffset += glm::distance(asd->getPos(), asd->getEndPoint());
+	}
+
+	renderPipe->initRenderExplo();
+
+	// Thunderdome
+	eff = game->getEffects(EFFECT_TYPE(EFFECT_TYPE::THUNDER_DOME));
+	for (unsigned int i = 0; i < eff.size(); i++)
+	{
+		team = eff[i]->getTeam();
+
+		if (hackedTeam == -1)
+		{
+			if (team == 1)
+				color = TEAMONECOLOR;
+			else if (team == 2)
+				color = TEAMTWOCOLOR;
+		}
+
+		ThunderDomeEffect* asd = (ThunderDomeEffect*)eff[i];
+		vec3 pos = asd->getPos();
+		renderPipe->renderThunderDomeEffect(&pos.x, asd->explotionRenderRad(), 1, &color.x);
+	}
+
+	// Explosion shader objects	
+	for (int c = EXPLOSION; c < NROFEFFECTS; c++)
+	{
+		switch (c)
+		{
+		case EXPLOSION:
+		{
+			eff = game->getEffects(EFFECT_TYPE(c));
+			for (int i = 0; i < eff.size(); i++)
+			{
+				team = eff[i]->getTeam();
+
+				if (hackedTeam == -1)
+				{
+					if (team == 1)
+						color = TEAMONECOLOR;
+					else if (team == 2)
+						color = TEAMTWOCOLOR;
+				}
+
+				Explosion* asd = (Explosion*)eff[i];
+				vec3 pos = asd->getPos();
+
+				rad = asd->explosionRenderRad(&percentLifeleft);
+				renderPipe->renderExploEffect(&pos.x, rad * 1.3f, percentLifeleft, &color.x, false);
+				light.attenuation.w = rad * 2 + 2.0f;
+				light.Position = pos;
+				light.DiffuseIntensity = 1.0f;
+				if (percentLifeleft < 0.5f)
+					light.DiffuseIntensity = (percentLifeleft * 2);
+
+				light.Color = color;
+				light.AmbientIntensity = 1.0f;
+				renderPipe->addLight(&light, 0);
+			}
+		}
+		break;
+		case CLEANSENOVA:
+		{
+			eff = game->getEffects(EFFECT_TYPE(c));
+			for (int i = 0; i < eff.size(); i++)
+			{
+				CleanseNova* asd = (CleanseNova*)eff[i];
+				vec3 pos = asd->getPos();
+				color = CLEANSENOVACOLOR;
+				float inten = asd->lifepercentageleft();
+
+				renderPipe->renderExploEffect(&pos.x, asd->renderRad(), inten, &color.x, true);
+				light.attenuation.w = asd->renderRad();
+				light.Color = color;
+				light.Position = pos;
+				light.DiffuseIntensity = inten;
+				light.AmbientIntensity = 1.0f;
+				renderPipe->addLight(&light, 0);
+			}
+		}
+		break;
+		case BATTERY_SLOW:
+		{
+			eff = game->getEffects(EFFECT_TYPE(c));
+			for (int i = 0; i < eff.size(); i++)
+			{
+				BatteryFieldSlow* asd = (BatteryFieldSlow*)eff[i];
+				vec3 pos = asd->getPos();
+				color = SLOWBUBBLECOLOR;
+				renderPipe->renderExploEffect(&pos.x, asd->renderRad(), 1, &color.x, true);
+				light.attenuation.w = asd->renderRad();
+				light.Color = color;
+				light.Position = pos;
+				light.AmbientIntensity = 0.1f;
+				renderPipe->addLight(&light, 0);
+			}
+		}
+		break;
+		case BATTERY_SPEED:
+		{
+			eff = game->getEffects(EFFECT_TYPE(c));
+			for (int i = 0; i < eff.size(); i++)
+			{
+				BatteryFieldSpeed* asd = (BatteryFieldSpeed*)eff[i];
+				vec3 pos = asd->getPos();
+				color = SPEEDBUBBLECOLOR;
+				renderPipe->renderExploEffect(&pos.x, asd->renderRad(), 1, &color.x, true);
+				light.attenuation.w = asd->renderRad();
+				light.Color = color;
+				light.Position = pos;
+				light.AmbientIntensity = 0.1f;
+				renderPipe->addLight(&light, 0);
+			}
+		}
+		break;
+		case THERMITE_CLOUD:
+		{
+			eff = game->getEffects(EFFECT_TYPE(c));
+			for (int i = 0; i < eff.size(); i++)
+			{
+				team = eff[i]->getTeam();
+
+				if (hackedTeam == -1)
+				{
+					if (team == 1)
+						color = TEAMONECOLOR;
+					else if (team == 2)
+						color = TEAMTWOCOLOR;
+				}
+
+				ThermiteCloud* asd = (ThermiteCloud*)eff[i];
+				vec3 pos = asd->getPos();
+
+				float inten = asd->lifetimepercentleft();
+
+				if (inten > 0.8)
+					inten = 1 - ((inten - 0.8f) / 0.2f);
+				else if (inten < 0.2)
+					inten = inten / 0.2f;
+				else
+					inten = 1.0f;
+
+				renderPipe->renderExploEffect(&pos.x, asd->explosionRenderRad(), inten, &color.x, true);
+				light.attenuation.w = asd->explosionRenderRad() * 3;
+				light.DiffuseIntensity = ((sin(timepass * 5) + 1) * 0.5f + 0.3f) * inten;
+				light.Color = color;
+				light.Position = pos;
+				light.AmbientIntensity = 2.0f;
+				renderPipe->addLight(&light, 0);
+			}
+		}
+		break;
+		case VACUUM:
+		{
+			eff = game->getEffects(EFFECT_TYPE(c));
+			for (int i = 0; i < eff.size(); i++)
+			{
+				team = eff[i]->getTeam();
+				if (hackedTeam == -1)
+				{
+					if (team == 1)
+						color = TEAMONECOLOR;
+					else if (team == 2)
+						color = TEAMTWOCOLOR;
+				}
+
+				Vacuum* asd = (Vacuum*)eff[i];
+				vec3 pos = asd->getPos();
+				float inten =  1 - asd->lifepercentageleft();
+				renderPipe->renderExploEffect(&pos.x, asd->renderRad(), inten, &color.x, false);
+				light.attenuation.w = asd->renderRad();
+				light.Color = color;
+				light.Position = pos;
+				light.AmbientIntensity = 0.1f;
+				renderPipe->addLight(&light, 0);
+			}
+		}
+		break;
+		case HEALTHPACK:
+		{
+			eff = game->getEffects(EFFECT_TYPE(c));
+			for (int i = 0; i < eff.size(); i++)
+			{
+				vec3 pos = eff[i]->getPos();
+				if (eff[i]->getTeam() == 1)
+					color = TEAMTWOCOLOR;
+				else
+					color = TEAMONECOLOR;
+				renderPipe->renderExploEffect(&pos.x, eff[i]->getInterestingVariable(), 1, &color.x, true);
+
+				light.attenuation.w = eff[i]->getInterestingVariable();
+				light.Color = color;
+				light.Position = pos;
+				light.DiffuseIntensity = 0.5f;
+				light.attenuation.w = 5.0f;
+				light.AmbientIntensity = 1.0f;
+				renderPipe->addLight(&light, 0);
+			}
+		}
+		break;
+		case HSCPICKUP:
+		{
+			eff = game->getEffects(EFFECT_TYPE(c));
+			for (int i = 0; i < eff.size(); i++)
+			{
+				HSCPickup* temp = (HSCPickup*)eff[i];
+				if (!temp->onCooldown())
+				{
+					vec3 pos = eff[i]->getPos();
+					color = vec3(1.0f, 0, 1.0f);
+					renderPipe->renderExploEffect(&pos.x, temp->renderRad(), 1, &color.x, true);
+
+					light.attenuation.w = temp->renderRad();
+					light.Color = color;
+					light.Position = pos;
+					light.DiffuseIntensity = 0.5f;
+					light.attenuation.w = 5.0f;
+					light.AmbientIntensity = 1.0f;
+					renderPipe->addLight(&light, 0);
+				}
+			}
+		}
+		break;
+		case DOUBLEDAMAGEPICKUP:
+		{
+			eff = game->getEffects(EFFECT_TYPE(c));
+			for (int i = 0; i < eff.size(); i++)
+			{
+				DoubleDamagePickup* temp = (DoubleDamagePickup*)eff[i];
+				if (!temp->onCooldown())
+				{
+					vec3 pos = eff[i]->getPos();
+					color = vec3(1.0f, 0, 0);
+					renderPipe->renderExploEffect(&pos.x, temp->renderRad(), 1, &color.x, true);
+
+					light.attenuation.w = temp->renderRad();
+					light.Color = color;
+					light.Position = pos;
+					light.DiffuseIntensity = 0.5f;
+					light.attenuation.w = 5.0f;
+					light.AmbientIntensity = 1.0f;
+					renderPipe->addLight(&light, 0);
+				}
+			}
+		}
+		break;
+		}
 	}
 }

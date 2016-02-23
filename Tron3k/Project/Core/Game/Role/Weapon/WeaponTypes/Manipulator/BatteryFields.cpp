@@ -19,7 +19,7 @@ bool BatteryFields::shoot()
 		if (shootingDelay < FLT_EPSILON && currentClipAmmo > 0)
 		{
 			firingSpeedCurrentDelay = firingSpeed;
-			shootingDelay = 2.0f;
+			shootingDelay = 1.0f;
 			ableToShoot = true;
 			if (weaponType == WEAPON_TYPE::BATTERYWPN_SLOW)
 				weaponType = WEAPON_TYPE::BATTERYWPN_SPEED;

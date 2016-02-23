@@ -74,6 +74,18 @@ void TextureManager::update(float dt)
 				textureList[i].timeNotUsed = 0.0f;
 			}
 		}
+		else if (textureList[i].state == TEXTURE_STREAMING)
+		{
+			textureList[i].timeNotUsed += dt;
+			if (textureList[i].timeNotUsed > 5.0f)
+			{
+				printf("Texture %d have not been loaded in 5 seconds marking as unloaded\n", i);
+				glDeleteTextures(1, &textureList[i].textureID);
+				textureList[i].textureID = 0;
+				textureList[i].state = TEXTURE_UNLOADED;
+				textureList[i].timeNotUsed = 0.0f;
+			}
+		}
 	}
 
 
@@ -93,7 +105,20 @@ unsigned int TextureManager::createTexture(std::string path)
 
 	int retVal = textureList.size();
 
-	textureList.push_back(ti);
+	bool found = false;
+
+	ti.streamingID = retVal;
+
+	for (size_t i = 0; i < textureList.size() && !found; i++)
+	{
+		if (textureList[i].texturePath == path)
+		{
+			retVal = i;
+			found = true;
+		}
+	}
+	if(!found)
+		textureList.push_back(ti);
 
 	return retVal;
 
@@ -177,7 +202,7 @@ void TextureManager::bindTextureOnly(unsigned int &textureID, TEXTURE_FALLBACK f
 
 		if (ti->state == TEXTURE_UNLOADED)
 		{
-			if (addToStreamQueue(&textureID, ti->texturePath))
+			if (addToStreamQueue(&ti->streamingID, ti->texturePath))
 			{
 				ti->state = TEXTURE_STREAMING;
 			}

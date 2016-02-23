@@ -533,7 +533,6 @@ struct Chunk
 	vector<SpotLight> lights;
 
 	vector<ParticleSystem> particleSystem;
-	vector<ParticleSystemData> particleSystemData;
 
 	int nrStaticSpotlights;
 	int nrStaticPointlights;

@@ -305,6 +305,23 @@ void RenderPipeline::reloadShaders()
 		temp = 0;
 	}
 
+	//explosion shader
+	std::string shaderNamesPointExplosion[] = { "GameFiles/Shaders/explosion_shader_vs.glsl", "GameFiles/Shaders/explosion_shader_fs.glsl" };
+	GLenum shaderTypesExplosion[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
+	CreateProgram(temp, shaderNamesPointExplosion, shaderTypesExplosion, 2);
+	if (temp != 0)
+	{
+		exploShader = temp;
+		temp = 0;
+	}
+	//exploshader uniform locations
+	exploWorld = glGetUniformLocation(exploShader, "WorldMatrix");
+	exploVP = glGetUniformLocation(exploShader, "ViewProjMatrix");
+	exploTexture = glGetUniformLocation(exploShader, "normalSample");
+	exploTimepass = glGetUniformLocation(exploShader, "timepass");
+	exploDynCol = glGetUniformLocation(exploShader, "dynamicGlowColor");
+	exploInten = glGetUniformLocation(exploShader, "inten");
+
 	//UI shaderLocations
 	ui_Texture = glGetUniformLocation(uiShader, "textureSample");
 	ui_World = glGetUniformLocation(uiShader, "WorldMatrix");
@@ -450,6 +467,11 @@ void RenderPipeline::release()
 			delete textObjects[i];
 	}
 
+	for (size_t i = 0; i < dynamicParticleSystems.size(); i++)
+	{
+		dynamicParticleSystems[i].Release();
+	}
+
 	glDeleteBuffers(1, &lwVertexDataId);
 	glDeleteVertexArrays(1, &lwVertexAttribute);
 
@@ -494,8 +516,20 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	cam.setViewProjMat(gBuffer->pointVolShader, gBuffer->pointVolVP);
 	cam.setViewProjMat(portalShaderV2, portal_VP);
 	cam.setViewProjMat(animTexture.animQuadShader, animTexture.animQuadVP);
+	cam.setViewProjMat(exploShader, exploVP);
 
 	contMan.update(dt);
+	glUseProgram(particleCS);
+	for (size_t p = 0; p < dynamicParticleSystems.size(); p++)
+	{
+		dynamicParticleSystems[p].Update(dt);
+		if (dynamicParticleSystems[p].m_alive)
+		{
+			dynamicParticleSystems[p].Release();
+			dynamicParticleSystems.erase(dynamicParticleSystems.begin() + p);
+		}
+	}
+
 	animTexture.update(dt);
 
 	updateTakeDamageEffect(dt);
@@ -634,6 +668,18 @@ void RenderPipeline::finalizeRender()
 	
 	contMan.renderParticles(particleShader, particleTexture, particleSize);
 	
+	for (size_t i = 0; i < dynamicParticleSystems.size(); i++)
+	{
+		vec2 size = dynamicParticleSystems[i].m_size;
+		glProgramUniform2f(particleShader, particleSize, size.x, size.y);
+
+		glActiveTexture(GL_TEXTURE0);
+		glProgramUniform1i(particleShader, particleTexture, 0);
+
+		TextureManager::gTm->bindTextureOnly(dynamicParticleSystems[i].m_texture, DIFFUSE_FB);
+		dynamicParticleSystems[i].Draw();
+	}
+
 	//GBuffer Render
 	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
@@ -698,19 +744,19 @@ void RenderPipeline::renderWallEffect(void* pos1, void* pos2, float uvStartOffse
 
 }
 
-void RenderPipeline::renderExploEffect(float* pos, float rad, float transp, float* dgColor)
+void RenderPipeline::initRenderExplo()
 {
-	glUseProgram(regularShader);
+	glUseProgram(exploShader);
+	glProgramUniform1i(exploShader, exploTexture, 1);
+	glProgramUniform1f(exploShader, exploTimepass, timepass);
+}
 
-	//Glow values for player
-	glProgramUniform1f(regularShader, uniformStaticGlowIntensityLocation[0], transp);
-	glProgramUniform3fv(regularShader, uniformDynamicGlowColorLocation[0], 1, (GLfloat*)&dgColor[0]);
-
-	glProgramUniform1f(regularShader, uniformGlowTrail[0], 0.3f);
-
-	glProgramUniform1i(regularShader, uniformTextureLocation[0], 0);
-	glProgramUniform1i(regularShader, uniformNormalLocation[0], 1);
-	glProgramUniform1i(regularShader, uniformGlowSpecLocation[0], 2);
+void RenderPipeline::renderExploEffect(float* pos, float rad, float transp, float* dgColor, bool solid)
+{
+	if(solid == false)
+		glProgramUniform1f(exploShader, exploTimepass, timepass * 15);
+	else
+		glProgramUniform1f(exploShader, exploTimepass, timepass);
 
 	//set temp objects worldmat
 	glm::mat4 mat;
@@ -723,24 +769,17 @@ void RenderPipeline::renderExploEffect(float* pos, float rad, float transp, floa
 	mat[1].y = rad;
 	mat[2].z = rad;
 
-	glProgramUniformMatrix4fv(regularShader, worldMat[0], 1, GL_FALSE, (GLfloat*)&mat[0][0]);
+	//Glow values for object
+	glProgramUniform1f(exploShader, exploInten, transp);
+	glProgramUniformMatrix4fv(exploShader, exploWorld, 1, GL_FALSE, (GLfloat*)&mat[0][0]);
+	glProgramUniform3fv(exploShader, exploDynCol, 1, (GLfloat*)&dgColor[0]);
 
-	contMan.renderBullet(GRENADE_SHOT);
+	contMan.renderBullet(-1);
 }
 
 void RenderPipeline::renderThunderDomeEffect(float* pos, float rad, float transp, float* dgColor)
 {
-	glUseProgram(regularShader);
-
-	//Glow values for player
-	glProgramUniform1f(regularShader, uniformStaticGlowIntensityLocation[0], transp);
-	glProgramUniform3fv(regularShader, uniformDynamicGlowColorLocation[0], 1, (GLfloat*)&dgColor[0]);
-
-	glProgramUniform1f(regularShader, uniformGlowTrail[0], 0.3f);
-
-	glProgramUniform1i(regularShader, uniformTextureLocation[0], 0);
-	glProgramUniform1i(regularShader, uniformNormalLocation[0], 1);
-	glProgramUniform1i(regularShader, uniformGlowSpecLocation[0], 2);
+	glProgramUniform1f(exploShader, exploTimepass, timepass * 0.5f);
 
 	//set temp objects worldmat
 	glm::mat4 mat;
@@ -753,9 +792,13 @@ void RenderPipeline::renderThunderDomeEffect(float* pos, float rad, float transp
 	mat[1].y = rad;
 	mat[2].z = rad;
 
-	glProgramUniformMatrix4fv(regularShader, worldMat[0], 1, GL_FALSE, (GLfloat*)&mat[0][0]);
+	//Glow values for object
+	glProgramUniform1f(exploShader, exploInten, transp);
+	glProgramUniformMatrix4fv(exploShader, exploWorld, 1, GL_FALSE, (GLfloat*)&mat[0][0]);
+	glProgramUniform3fv(exploShader, exploDynCol, 1, (GLfloat*)&dgColor[0]);
 
-	contMan.renderThunderDome();
+	//contMan.renderThunderDome();
+	contMan.renderBullet(-1);
 }
 
 void RenderPipeline::renderDecals(void* data, int size)
@@ -986,6 +1029,56 @@ bool RenderPipeline::setSetting(PIPELINE_SETTINGS type, PipelineValues value)
 	return true;
 }
 
+void RenderPipeline::createTimedParticleEffect(PARTICLE_EFFECTS peffect, vec3 pos)
+{
+	std::string path = "Gamefiles/ParticleSystems/explosion1.ps";
+
+	//switch (peffect)
+	//{
+	//case PARTICLE_HIT:
+	//	break;
+	//case PARTICLE_EXPLODE:
+	//	break;
+	//case PARTICLE_HACKED:
+	//	break;
+	//default:
+	//	break;
+	//}
+
+	std::ifstream file;
+	file.open(path, std::ios::binary | std::ios::in);
+
+	if (file.is_open() && false)
+	{
+
+		ExportHeader exHeader;
+		file.read((char*)&exHeader, sizeof(exHeader));
+
+		//Read texture name
+		char* f = (char*)malloc(exHeader.texturesize + 1);
+		file.read(f, sizeof(char) * exHeader.texturesize);
+		f[exHeader.texturesize] = 0;
+
+		GLuint texID = TextureManager::gTm->createTexture("Gamefiles/Textures/particles/arrow.png");
+		unsigned int x = 0, y = 0;
+		TextureManager::gTm->PNGSize("Gamefiles/Textures/particles/arrow.png", x, y);
+		free(f);
+
+		ParticleSystemData pdata;
+		//Read Particle System
+		file.read((char*)&pdata, sizeof(ParticleSystemData));
+
+		pdata.continuous = false; // force single time
+		
+		ParticleSystem pSys;
+		pSys.Initialize(pos, pdata, &compute, &locations);
+		pSys.m_texture = texID;
+		dynamicParticleSystems.push_back(pSys);
+	}
+	file.close();
+
+}
+
 SETTING_INPUT RenderPipeline::getType(PIPELINE_SETTINGS type) const
 {
 
@@ -1181,8 +1274,6 @@ void RenderPipeline::ui_renderQuad(float* mat, float* pivot, GLuint textureID, f
 	if (contMan.f_render_gui)
 	{
 		glm::mat4* world = (glm::mat4*)mat;
-
-		//glActiveTexture(GL_TEXTURE0);
 
 		TextureInfo temp;
 		temp.state = TEXTURE_LOADED;

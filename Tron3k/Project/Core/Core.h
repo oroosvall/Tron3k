@@ -28,6 +28,7 @@
 class Core
 {
 private:
+
 	bool settingsLoaded = false;
 	bool controlsLoaded = false;
 	int uitmpcounter;
@@ -104,6 +105,8 @@ private:
 	void handleCulling();
 	void scoreboardRender();
 	void minimapRender();
+	void effectsRender(int hackedTeam);
+
 	void createWindow(int x, int y, bool fullscreen);
 	void removeWindow();
 

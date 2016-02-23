@@ -28,8 +28,17 @@ int BatterySlowMod::setData(float dt)
 		vel.x *= slowFactor;
 		vel.z *= slowFactor;
 		target->setVelocity(vel);
+		airSpeed.x = 0.0f; airSpeed.y = 0.0f; airSpeed.z = 0.0f;
 	}
-	target->setVelocity(vel);
+	else
+	{
+		if (glm::length(airSpeed) < FLT_EPSILON)
+		{
+			airSpeed = vel*slowFactor;
+		}
+		airSpeed.y -= 6.0f*dt;  //This is to simulate gravity
+		target->setVelocity(airSpeed);
+	}
 	lifeTime -= dt;
 	target->getPlayerCam()->setSensitivity(originalSens);
 
