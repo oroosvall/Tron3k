@@ -25,17 +25,12 @@ LightWallLockedControls::~LightWallLockedControls()
 int LightWallLockedControls::getData(float dt)
 {
 	bool kill = false;
-	if (target->getAnimState_t_c() == AnimationState::third_primary_jump_begin)
-		kill = true;
 	if (target->getVelocity().x != vel.x || target->getVelocity().z != vel.z)
 		kill = true;
-	if (target->isLocal())
-	{
-		if (target->getRole()->getSpecialMeter() <= 0)
-			kill = true;
-		if (!target->getGrounded())
-			kill = true;
-	}
+	if (target->getRole()->getSpecialMeter() <= 0)
+		kill = true;
+	if (!target->getGrounded())
+		kill = true;
 
 	if (kill)
 	{

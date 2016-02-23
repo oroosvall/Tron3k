@@ -776,7 +776,7 @@ void Core::upClient(float dt)
 					pos.y = -4.5f;
 			}
 
-			top->frame_pos(top->getConId(), pos, local->getDir(), local->getVelocity(), local->roomID);
+			top->frame_playerdata(top->getConId(), pos, local->getDir(), local->getVelocity(), local->getGrounded(), local->getSpecialMeter(), local->roomID);
 
 			if (game->weaponSwitchReady())
 			{
