@@ -6,7 +6,7 @@ void Explosion::init(int pid, int eid, glm::vec3 position)
 {
 	type = EFFECT_TYPE::EXPLOSION;
 	playerId = pid; effectId = eid; pos = position;
-	lifeTime = 0.1f;
+	lifeTime = 0.2f;
 }
 
 int Explosion::update(float dt)
@@ -19,7 +19,8 @@ int Explosion::update(float dt)
 	return 0;
 }
 
-float Explosion::explosionRenderRad()
+float Explosion::explosionRenderRad(float* percentLifeLeft)
 {
-	return 10*exploRadius *(1 - (lifeTime / 0.1f));
+	*percentLifeLeft = lifeTime / 0.2f;
+	return exploRadius * (1 - (lifeTime / 0.2f));
 }

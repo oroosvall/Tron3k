@@ -17,6 +17,6 @@ public:
 
 	int getDamage() { return damage; }; //WOOO DAMAGE YO
 	void setDamage(int dmg) { damage = dmg; };
-	float explosionRenderRad();
+	float explosionRenderRad(float* percentLifeLeft);
 };
 #endif

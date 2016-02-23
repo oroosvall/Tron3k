@@ -88,6 +88,7 @@ void ContentManager::init()
 	shankerBullet.load("GameFiles/CharacterFiles/primary_shanker.bin");
 	shankerSpecial.load("GameFiles/CharacterFiles/special_shanker.bin");
 	bruteThunderDome.load("GameFiles/CharacterFiles/special_Punisher.bin");
+	explosionMesh.load("GameFiles/CharacterFiles/explosion_sphere.bin");
 
 	//Skybox
 	skybox.init(0, 0, 0);
@@ -191,8 +192,8 @@ void ContentManager::release()
 	trapperConsume.release();
 	shankerBullet.release();
 	shankerSpecial.release();
-
 	bruteThunderDome.release();
+	explosionMesh.release();
 
 	tm.release();
 
@@ -413,6 +414,7 @@ void ContentManager::renderBullet(int bid)
 	case BULLET_TYPE::HACKING_DART:
 		shankerSpecial.draw();
 	default:
+		explosionMesh.draw();
 		break;
 	}
 	
