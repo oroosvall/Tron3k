@@ -6,9 +6,9 @@
 class BatterySlowMod : public Modifier
 {
 private:
-	float slowFactor = 0.6f;
-	glm::vec3 oldDir;
+	float slowFactor = 0.4f;
 	glm::vec3 vel;
+	glm::vec3 airSpeed;
 	float originalSens;
 public:
 	~BatterySlowMod();

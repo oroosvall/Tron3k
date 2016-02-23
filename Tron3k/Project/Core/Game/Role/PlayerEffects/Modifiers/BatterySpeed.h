@@ -6,9 +6,10 @@
 class BatterySpeedMod : public Modifier
 {
 private:
-	float speedFactor = 1.9f;
+	float speedFactor = 1.6f;
 	glm::vec3 oldDir;
 	glm::vec3 vel;
+	glm::vec3 airSpeed;
 	float originalSens;
 public:
 	~BatterySpeedMod();
