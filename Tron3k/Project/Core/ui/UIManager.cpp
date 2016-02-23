@@ -25,8 +25,8 @@ UIManager::UIManager()
 	HUD.HP = 1;
 	HUD.ammo = 0;
 	HUD.specialMeter = 0.0f;
-	HUD.teamOneRoundWins = 0;
-	HUD.teamTwoRoundWins = 0;
+	HUD.teamOneScore = 0;
+	HUD.teamTwoScore = 0;
 	HUD.teamOneTokens = 0;
 	HUD.teamTwoTokens = 0;
 	HUD.maxTokens = 0;
@@ -34,6 +34,12 @@ UIManager::UIManager()
 	HUD.ticketLostTimer = 0;
 	HUD.loseTicketPer = 1;
 	HUD.firstSecondEachRound = true;
+	HUD.scoreChanged = false;
+	HUD.bannerCounter = 5;
+	HUDTime.moveTokenReducer1 = false;
+	HUDTime.moveTokenReducer2 = false;
+	HUDTime.movePointAdder1 = false;
+	HUDTime.movePointAdder2 = false;
 }
 UIManager::~UIManager() 
 {
@@ -148,6 +154,19 @@ void UIManager::init(Console* console, int winX, int winY)
 	texturePaths.push_back("GameFiles/Textures/UITextures/ClassSelect/class_selection_stalker_hover.png"); //52
 	texturePaths.push_back("GameFiles/Textures/UITextures/ClassSelect/class_selection_punisher_hover.png"); //53
 
+	//Temp
+	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/Victory.png"); //54
+	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/Defeat.png"); //55
+	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/ParkingArea.png"); //56
+	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/Market.png"); //57
+	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/HoldCapturePoint.png"); //58
+	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/FinalAssult.png"); //59
+	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/TicketReducer.png"); //60
+	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/ScoreAdder1.png"); //61
+	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/ScoreAdder2.png"); //62
+	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/ScoreAdder3.png"); //63
+	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/EndofRound.png"); //64
+
 	//Släng in allt detta i en fil och läs in ifrån den vid här och lägg det i temp namn vector som sedans cleanas upp.
 
 
@@ -214,9 +233,7 @@ void UIManager::init(Console* console, int winX, int winY)
 	this->winX = winX;
 	this->winY = winY;
 
-	LoadNextSet(UISets::Menu, winX, winY); //Load the first set of menus.
 	firstMenu = false;
-	setMenu(MainMenu::StartMenu); //Set start menu as the current menu
 }
 
 void UIManager::loadInTexture()
@@ -310,6 +327,12 @@ void UIManager::removeAllMenus()
 	
 	currentMenu = 0;
 	nrOfOpenedMenus = 0;
+	hideAbleMenuActive = false;
+	HUD.scoreChanged = false;
+	HUDTime.moveTokenReducer1 = false;
+	HUDTime.moveTokenReducer2 = false;
+	HUDTime.movePointAdder1 = false;
+	HUDTime.movePointAdder2 = false;
 }
 bool UIManager::LoadNextSet(int whichMenuGroup, int winX, int winY)
 {
@@ -545,10 +568,28 @@ void UIManager::hideOrShowHideAble(int id, bool show)
 	else
 		console->printMsg("Function hideOrShowHideAble in UIManager, Hideablemenu isn't active", "System", 'S');
 }
-void UIManager::changeTextureHideAble(int id, int textureId)
+void UIManager::changeTextureHideAble(int id, int wmID, int textureId)
 {
 	if (hideAbleMenuActive)
-		hideAble.changeHideAbleTexture(id, textureId);
+		hideAble.changeHideAbleTexture(id, wmID, textureId);
 	else
 		console->printMsg("Function changeTextureHideAble in UIManager, Hideablemenu isn't active", "System", 'S');
+}
+
+void UIManager::setHideableWorldMatrix(int id, int wmId, glm::vec2 xy)
+{
+	hideAble.setHideableWorldMatrix(id, wmId,  xy);
+}
+void UIManager::resetHidableWorldMatrix(int id, int wmId)
+{
+	hideAble.resetHidableWorldMatrix(id, wmId);
+}
+
+int UIManager::addNewWM(int id)
+{
+	return hideAble.addNewWM(id);
+}
+void UIManager::deleteOldestWM(int id)
+{
+	hideAble.deleteOldestWM(id);
 }

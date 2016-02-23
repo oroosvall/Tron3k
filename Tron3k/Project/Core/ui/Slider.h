@@ -22,6 +22,8 @@ private:
 
 	int winX;
 	int winY;
+	float startWMX;
+	float startWMY;
 
 	void createAdditionalPoint();
 public:
@@ -32,9 +34,10 @@ public:
 	virtual void renderQuad(int id);
 	virtual void renderText(int id);
 
-	virtual void setWorldMatrix(float x, float y, int id);
+	virtual void setWorldMatrix(int id, float x, float y);
+	virtual void resetWorldMatrix(int id);
 
-	virtual void changeTexUsed(int id);
+	virtual void changeTexUsed(int id, int wmID);
 
 	virtual void fromPosToQuadScreen(glm::vec2 positions, int id);
 
@@ -44,7 +47,7 @@ public:
 
 	virtual void setTexture(std::vector<GLuint> uiTextureIds);
 
-	virtual void scaleBar(float procentOfMax, bool fromRight);
+	virtual void scaleBar(int id, float procentOfMax, bool fromRight);
 
 	virtual void setWindowResolution(int winX, int winY);
 

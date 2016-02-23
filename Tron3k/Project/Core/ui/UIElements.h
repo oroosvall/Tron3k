@@ -20,9 +20,10 @@ public:
 	virtual void renderQuad(int id) = 0;
 	virtual void renderText(int id) = 0;
 
-	virtual void setWorldMatrix(float x, float y, int id) = 0;
+	virtual void setWorldMatrix(int id, float x, float y) = 0;
+	virtual void resetWorldMatrix(int id) = 0;
 
-	virtual void changeTexUsed(int id) = 0;
+	virtual void changeTexUsed(int id, int wmID) = 0;
 
 	virtual void fromPosToQuadScreen(glm::vec2 positions, int id) = 0;
 
@@ -32,7 +33,7 @@ public:
 
 	virtual void setTexture(std::vector<GLuint> uiTextureIds) = 0;
 
-	virtual void scaleBar(float procentOfMax, bool fromRight) = 0;
+	virtual void scaleBar(int id, float procentOfMax, bool fromRight) = 0;
 
 	virtual void setWindowResolution(int winX, int winY) = 0;
 

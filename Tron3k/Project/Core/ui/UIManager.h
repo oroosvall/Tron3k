@@ -132,23 +132,46 @@ public:
 	//hideAble exclusive
 	void renderHideAble();
 	void hideOrShowHideAble(int id, bool show);
-	void changeTextureHideAble(int id, int textureId);
+	void changeTextureHideAble(int id, int wmID, int textureId);
+	void setHideableWorldMatrix(int id, int wmId, glm::vec2 xy);
+	void resetHidableWorldMatrix(int id, int wmId);
+	int addNewWM(int id);
+	void deleteOldestWM(int id);
 
 	struct HUDvalues
 	{
 		int HP;
 		int ammo;
 		float specialMeter;
+		float maxSpecialMeter;
 		int teamOneTokens;
 		int teamTwoTokens;
 		int maxTokens;
-		int teamOneRoundWins;
-		int teamTwoRoundWins;
+		int teamOneScore;
+		int teamTwoScore;
 		int time;
 		int ticketLostTimer;
 		int loseTicketPer;
 		bool firstSecondEachRound;
+		bool scoreChanged;
+		int bannerCounter;
 	}HUD;
+
+	struct HUDTimeValues
+	{
+		vector<int> wmIdListTicket1;
+		vector<int> wmIdListTicket2;
+		vector<int> wmIdListScore1;
+		vector<int> wmIdListScore2;
+		vector<int> counterListTicket1;
+		vector<int> counterListTicket2;
+		vector<int> counterListScore1;
+		vector<int> counterListScore2;
+		bool moveTokenReducer1;
+		bool moveTokenReducer2;
+		bool movePointAdder1;
+		bool movePointAdder2;
+	} HUDTime;
 };
 
 #endif
