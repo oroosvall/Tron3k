@@ -41,6 +41,12 @@ BulletMesh::~BulletMesh()
 
 }
 
+void BulletMesh::setSize(float modifier)
+{
+	aabb.max = aabb.pos + worldSize * modifier;
+	aabb.min = aabb.pos - worldSize * modifier;
+}
+
 void BulletMesh::setPos(vec3 pos)
 {
 	this->pos = pos;

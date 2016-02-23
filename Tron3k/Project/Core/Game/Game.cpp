@@ -829,7 +829,15 @@ void Game::checkPlayerVBulletCollision()
 						if ((bullets[b][j]->getTeam() != playerList[i]->getTeam() && playerList[i]->getTeam() != 0) || (playerList[pid]->searchModifier(MODIFIER_TYPE::HACKINGDARTMODIFIER) && pid != i)) //Don't shoot same team, don't shoot spectators
 						{
 							if (playerList[i]->isAlive()) //Don't shoot dead people
-								collides = physics->checkPlayerVBulletCollision(playerList[i]->getPos() - (vec3(0, playerList[i]->getRole()->getBoxModifier(), 0)), bullets[b][j]->getPos(), this->playerList[i]->getRole()->GetSize());
+							{
+								float modifier = 1.0f;
+								if (b == BULLET_TYPE::GRENADE_SHOT || b == BULLET_TYPE::CLUSTERLING)
+									modifier = 2.5f;
+								if (b == BULLET_TYPE::MELEE_ATTACK)
+									modifier = 1.5f;
+								collides = physics->checkPlayerVBulletCollision(playerList[i]->getPos() - (vec3(0, playerList[i]->getRole()->getBoxModifier(), 0)), bullets[b][j]->getPos(), this->playerList[i]->getRole()->GetSize(), modifier);
+								
+							}
 						}
 						if (collides != glm::vec3(0, 0, 0))
 						{
