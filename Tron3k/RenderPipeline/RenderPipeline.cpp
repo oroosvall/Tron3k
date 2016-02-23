@@ -305,6 +305,22 @@ void RenderPipeline::reloadShaders()
 		temp = 0;
 	}
 
+	//explosion shader
+	std::string shaderNamesPointExplosion[] = { "GameFiles/Shaders/explosion_shader_vs.glsl", "GameFiles/Shaders/explosion_shader_fs.glsl" };
+	GLenum shaderTypesExplosion[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
+	CreateProgram(temp, shaderNamesPointExplosion, shaderTypesExplosion, 2);
+	if (temp != 0)
+	{
+		exploShader = temp;
+		temp = 0;
+	}
+	//exploshader uniform locations
+	exploWorld = glGetUniformLocation(exploShader, "WorldMatrix");
+	exploVP = glGetUniformLocation(exploShader, "ViewProjMatrix");
+	exploTexture = glGetUniformLocation(exploShader, "normalSample");
+	exploTimepass = glGetUniformLocation(exploShader, "timepass");
+	exploDynCol = glGetUniformLocation(exploShader, "dynamicGlowColor");
+
 	//UI shaderLocations
 	ui_Texture = glGetUniformLocation(uiShader, "textureSample");
 	ui_World = glGetUniformLocation(uiShader, "WorldMatrix");

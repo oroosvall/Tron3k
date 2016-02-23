@@ -65,15 +65,19 @@ private:
 	GLuint animationShader;
 	GLuint glowShaderTweeks;
 
+	GLuint exploShader;
+	GLuint exploWorld;
+	GLuint exploVP;
+	GLuint exploTexture;
+	GLuint exploTimepass;
+	GLuint exploDynCol;
+
+
 	GLuint uiShader;
 	GLuint ui_Texture;
 	GLuint ui_World;
 
 	GLuint decal_Shader;
-	//GLuint decal_struct_UBO;
-	//GLuint decal_struct_UBO_index;
-	//GLuint decal_Uniformtexsample;
-	//GLuint decal_nrDecals;
 	GLuint decal_viewProj;
 	GLuint decal_pos;
 	GLuint decal_normal;

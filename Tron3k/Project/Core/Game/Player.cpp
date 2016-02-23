@@ -986,10 +986,11 @@ void Player::shoot()
 		if (animRole == ROLES::MANIPULATOR)
 		{
 			if (role.getCurrentWeapon()->getType() == WEAPON_TYPE::BATTERYWPN_SLOW)
+				animOverideIfPriority(anim_first_current, AnimationState::first_secondary_fire);
+
+			else
 				animOverideIfPriority(anim_first_current, AnimationState::first_secondary_fire_left);
 				
-			if (role.getCurrentWeapon()->getType() == WEAPON_TYPE::BATTERYWPN_SPEED)
-				animOverideIfPriority(anim_first_current, AnimationState::first_secondary_fire);
 		}
 	}
 

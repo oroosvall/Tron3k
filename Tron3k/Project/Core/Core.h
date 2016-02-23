@@ -102,6 +102,8 @@ private:
 	void handleCulling();
 	void scoreboardRender();
 	void minimapRender();
+	void effectsRender(int hackedTeam);
+
 	void createWindow(int x, int y, bool fullscreen);
 	void removeWindow();
 
