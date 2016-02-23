@@ -44,7 +44,7 @@ void WallJump::init()
 {
 	this->activationCost = 20;
 	specialType = SPECIAL_TYPE::WALLJUMP;
-	key = GLFW_KEY_SPACE;
+	isOnJumpKey = true;
 }
 
 int WallJump::update(float deltaTime)

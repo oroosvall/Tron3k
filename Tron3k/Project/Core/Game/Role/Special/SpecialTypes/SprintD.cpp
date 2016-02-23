@@ -6,7 +6,6 @@ void SprintD::init()
 	timer = 0;
 	activationCost = 25;
 	specialType = SPECIAL_TYPE::SPRINTD;
-	key = GLFW_KEY_LEFT_SHIFT;
 }
 
 int SprintD::update(float dt)

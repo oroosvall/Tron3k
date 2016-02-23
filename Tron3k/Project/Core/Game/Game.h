@@ -210,6 +210,8 @@ private:
 	std::vector<BulletTimeOutInfo> allBulletTimeOuts;
 	std::vector<EffectTimeOutInfo> allEffectTimeOuts;
 
+	std::vector<glm::vec3> allBulletHitPlayerPos;
+
 	void checkPvPCollision();
 	void checkPlayerVBulletCollision();
 	void checkPlayerVWorldCollision(float dt);
@@ -319,6 +321,9 @@ public:
 	std::vector<EffectTimeOutInfo> getAllTimedOutEffects() { return allEffectTimeOuts; };
 	void clearTimedOutEffects() { allEffectTimeOuts.clear(); };
 	void handleEffectTimeOuts(EffectTimeOutInfo hi);
+
+	std::vector<glm::vec3> getAllBulletHitPlayerPos() { return allBulletHitPlayerPos; };
+	void clearAllBulletHitPlayerPos() { allBulletHitPlayerPos.clear(); };
 
 	unsigned int getNrOfDecals();
 	Decal_GameInfo* getAllDecalGameInfo();

@@ -97,7 +97,7 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 	fontTexture = loadTexture("GameFiles/Font/font16.png", false);
 
-	debugText = new Text("", 16, fontTexture, vec2(10, 24));
+	debugText = new Text("", 10, fontTexture, vec2(10, 24));
 	chatHistoryText = ".\n.\n.\n.\n.\n";
 	chatTypeText = "..";
 	chatText = new Text(chatHistoryText + chatTypeText, 11, fontTexture, vec2(10, 420));
@@ -305,6 +305,22 @@ void RenderPipeline::reloadShaders()
 		temp = 0;
 	}
 
+	//explosion shader
+	std::string shaderNamesPointExplosion[] = { "GameFiles/Shaders/explosion_shader_vs.glsl", "GameFiles/Shaders/explosion_shader_fs.glsl" };
+	GLenum shaderTypesExplosion[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
+	CreateProgram(temp, shaderNamesPointExplosion, shaderTypesExplosion, 2);
+	if (temp != 0)
+	{
+		exploShader = temp;
+		temp = 0;
+	}
+	//exploshader uniform locations
+	exploWorld = glGetUniformLocation(exploShader, "WorldMatrix");
+	exploVP = glGetUniformLocation(exploShader, "ViewProjMatrix");
+	exploTexture = glGetUniformLocation(exploShader, "normalSample");
+	exploTimepass = glGetUniformLocation(exploShader, "timepass");
+	exploDynCol = glGetUniformLocation(exploShader, "dynamicGlowColor");
+
 	//UI shaderLocations
 	ui_Texture = glGetUniformLocation(uiShader, "textureSample");
 	ui_World = glGetUniformLocation(uiShader, "WorldMatrix");
@@ -444,6 +460,17 @@ void RenderPipeline::release()
 {
 	// place delete code here
 
+	for (size_t i = 0; i < textObjects.size(); i++)
+	{
+		if (textObjects[i])
+			delete textObjects[i];
+	}
+
+	for (size_t i = 0; i < dynamicParticleSystems.size(); i++)
+	{
+		dynamicParticleSystems[i].Release();
+	}
+
 	glDeleteBuffers(1, &lwVertexDataId);
 	glDeleteVertexArrays(1, &lwVertexAttribute);
 
@@ -490,6 +517,17 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	cam.setViewProjMat(animTexture.animQuadShader, animTexture.animQuadVP);
 
 	contMan.update(dt);
+	glUseProgram(particleCS);
+	for (size_t p = 0; p < dynamicParticleSystems.size(); p++)
+	{
+		dynamicParticleSystems[p].Update(dt);
+		if (dynamicParticleSystems[p].m_alive)
+		{
+			dynamicParticleSystems[p].Release();
+			dynamicParticleSystems.erase(dynamicParticleSystems.begin() + p);
+		}
+	}
+
 	animTexture.update(dt);
 
 	updateTakeDamageEffect(dt);
@@ -511,32 +549,33 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	{
 		ss << "Draw count: " << drawCount << "\n";
 		ss << "Primitive count: " << primitiveCount << "\n";
-		//ss << "Buffer count: " << genBufferPeak << "\n";
-		//ss << "Vao count: " << genVaoPeak << "\n";
-		//ss << "Texture count: " << genTexturePeak << "\n";
+		ss << "Buffer count: " << genBufferPeak << "\n";
+		ss << "Vao count: " << genVaoPeak << "\n";
+		ss << "Texture count: " << genTexturePeak << "\n";
 		//ss << "Memory usage: " << memusage << "(B)\n";
 		ss << "Memory usage(tot): " << memusageT / 1024.0f / 1024.0f << "(MB)\n";
 		ss << "Memory usage(tex): " << memusageTex / 1024.0f / 1024.0f << "(MB)\n";
 		ss << "Memory usage(buf): " << memusageMesh / 1024.0f / 1024.0f << "(MB)\n";
 		ss << "FPS: " << fps << "\n";
 		ss << "Portals (" << (contMan.f_portal_culling ? "on" : "off") << ")\n";
-		//ss << "Texture binds: " << textureBinds << "\n";
-		//ss << "Buffer binds: " << bufferBinds << "\n";
-		//ss << "Shader binds: " << shaderBinds << "\n";
-		//ss << "State changes: " << stateChange << "\n";
+		ss << "Texture binds: " << textureBinds << "\n";
+		ss << "Buffer binds: " << bufferBinds << "\n";
+		ss << "Shader binds: " << shaderBinds << "\n";
+		ss << "State changes: " << stateChange << "\n";
 		ss << "Total uptime:" << timepass << "\n";
 		ss << "Dt:" << dt << "\n";
 
-		ss << "ManagerBinds:" << texManBinds << "\n";
-		ss << "OtherBinds:" << illegalBinds << "\n";
+		//ss << "ManagerBinds:" << texManBinds << "\n";
+		//ss << "OtherBinds:" << illegalBinds << "\n";
 
-		//ss << result << "\n";
-		if (counter > 0.0001f)
+		ss << result << "\n";
+		if (counter > 1.0f)
 		{
-			//result = getQueryResult();
+			result = getQueryResult();
 			fps = 0;
 			counter = 0;
 			debugText->setText(ss.str());
+			
 		}
 		fps++;
 	}
@@ -622,20 +661,22 @@ void RenderPipeline::finalizeRender()
 	glUseProgram(particleShader);
 	cam.setViewProjMat(particleShader, particleViewProj);
 	//glProgramUniformMatrix4fv(particleShader, particleViewProj, 1, GL_FALSE, (GLfloat*)&glm::mat4());
-	vec2 size = vec2(0.5, 0.5);
-	glProgramUniform2f(particleShader, particleSize, size.x, size.y);
-
+	
 	glProgramUniform3f(particleShader, particleCam, gBuffer->eyePos.x, gBuffer->eyePos.y, gBuffer->eyePos.z);
 	
-	TextureManager::gTm->bindTexture(ptex, particleShader, particleTexture, DIFFUSE_FB);
-
-	contMan.renderParticles();
-
-	glUseProgram(glowShaderTweeks);
+	contMan.renderParticles(particleShader, particleTexture, particleSize);
 	
-	glProgramUniform1fv(glowShaderTweeks, uniformGlowTimeDelta, 1, &delta);
+	for (size_t i = 0; i < dynamicParticleSystems.size(); i++)
+	{
+		vec2 size = dynamicParticleSystems[i].m_size;
+		glProgramUniform2f(particleShader, particleSize, size.x, size.y);
 
-	//gBuffer->preRender(glowShaderTweeks, uniformGlowTexture, uniformGlowSelf);
+		glActiveTexture(GL_TEXTURE0);
+		glProgramUniform1i(particleShader, particleTexture, 0);
+
+		TextureManager::gTm->bindTextureOnly(dynamicParticleSystems[i].m_texture, DIFFUSE_FB);
+		dynamicParticleSystems[i].Draw();
+	}
 
 	//GBuffer Render
 	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
@@ -989,6 +1030,56 @@ bool RenderPipeline::setSetting(PIPELINE_SETTINGS type, PipelineValues value)
 	return true;
 }
 
+void RenderPipeline::createTimedParticleEffect(PARTICLE_EFFECTS peffect, vec3 pos)
+{
+	std::string path = "Gamefiles/ParticleSystems/explosion1.ps";
+
+	//switch (peffect)
+	//{
+	//case PARTICLE_HIT:
+	//	break;
+	//case PARTICLE_EXPLODE:
+	//	break;
+	//case PARTICLE_HACKED:
+	//	break;
+	//default:
+	//	break;
+	//}
+
+	std::ifstream file;
+	file.open(path, std::ios::binary | std::ios::in);
+
+	if (file.is_open() && false)
+	{
+
+		ExportHeader exHeader;
+		file.read((char*)&exHeader, sizeof(exHeader));
+
+		//Read texture name
+		char* f = (char*)malloc(exHeader.texturesize + 1);
+		file.read(f, sizeof(char) * exHeader.texturesize);
+		f[exHeader.texturesize] = 0;
+
+		GLuint texID = TextureManager::gTm->createTexture("Gamefiles/Textures/particles/arrow.png");
+		unsigned int x = 0, y = 0;
+		TextureManager::gTm->PNGSize("Gamefiles/Textures/particles/arrow.png", x, y);
+		free(f);
+
+		ParticleSystemData pdata;
+		//Read Particle System
+		file.read((char*)&pdata, sizeof(ParticleSystemData));
+
+		pdata.continuous = false; // force single time
+		
+		ParticleSystem pSys;
+		pSys.Initialize(pos, pdata, &compute, &locations);
+		pSys.m_texture = texID;
+		dynamicParticleSystems.push_back(pSys);
+	}
+	file.close();
+
+}
+
 SETTING_INPUT RenderPipeline::getType(PIPELINE_SETTINGS type) const
 {
 
@@ -1176,7 +1267,16 @@ void RenderPipeline::ui_InGameRenderInit()
 
 void RenderPipeline::ui_loadTexture(unsigned int* texid, char* filepath, int* xres, int* yres)
 {
-	*texid = loadTexture(std::string(filepath), true, xres, yres);
+	unsigned int x;
+	unsigned int y;
+	TextureManager::gTm->PNGSize(filepath, x, y);
+
+	*xres = x;
+	*yres = y;
+
+	*texid = TextureManager::gTm->createTexture(filepath);
+
+	//*texid = loadTexture(std::string(filepath), true, xres, yres);
 }
 
 void RenderPipeline::ui_renderQuad(float* mat, float* pivot, GLuint textureID, float transp, int i)
@@ -1185,14 +1285,16 @@ void RenderPipeline::ui_renderQuad(float* mat, float* pivot, GLuint textureID, f
 	{
 		glm::mat4* world = (glm::mat4*)mat;
 
-		//glActiveTexture(GL_TEXTURE0);
+		glActiveTexture(GL_TEXTURE0);
+		TextureManager::gTm->bindTextureOnly(textureID, DIFFUSE_FB, true);
+		glProgramUniform1i(uiShader, ui_Texture, 0);
 
-		TextureInfo temp;
-		temp.state = TEXTURE_LOADED;
-		temp.lastTextureSlot = GL_TEXTURE0;
-		temp.textureID = textureID;
-		TextureManager::gTm->bind(temp, uiShader, ui_Texture);
-		//glBindTexture(GL_TEXTURE_2D, textureID);
+		//TextureInfo temp;
+		//temp.state = TEXTURE_LOADED;
+		//temp.lastTextureSlot = GL_TEXTURE0;
+		//temp.textureID = textureID;
+		//TextureManager::gTm->bind(temp, uiShader, ui_Texture);
+		////glBindTexture(GL_TEXTURE_2D, textureID);
 		glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, mat);
 		glProgramUniform3fv(uiShader, uniformPivotLocation, 1, pivot);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
@@ -1274,6 +1376,7 @@ void RenderPipeline::setTextPos(int id, glm::vec2 pos)
 void RenderPipeline::removeTextObject(int id)
 {
 	delete textObjects[id];
+	textObjects[id] = 0;
 }
 
 void RenderPipeline::renderTextObject(int id)

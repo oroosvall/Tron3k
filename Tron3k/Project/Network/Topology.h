@@ -386,12 +386,13 @@ public:
 		*package << Uint8(NET_FRAME::NAME_CHANGE) << conid << name;
 	}
 
-	virtual void frame_pos(Uint8 conid, glm::vec3 cPos, glm::vec3 cDir, glm::vec3 cVel, Uint8 roomID)
+	virtual void frame_playerdata(Uint8 conid, glm::vec3 cPos, glm::vec3 cDir, glm::vec3 cVel, bool grounded, float special, Uint8 roomID)
 	{
 		*package << Uint8(NET_FRAME::POS) << conid <<
 			cPos.x << cPos.y << cPos.z <<
 			cDir.x << cDir.y << cDir.z <<
 			cVel.x << cVel.y << cVel.z <<
+			Uint8(grounded) << special <<
 			roomID;
 	}
 
@@ -466,17 +467,20 @@ public:
 			consolePtr->printMsg("ERROR in_frame_name", "System", 'S');
 	}
 
-	virtual void in_frame_pos(Packet* rec)
+	virtual void in_frame_playerdata(Packet* rec)
 	{
 		Uint8 p_conID;
 		glm::vec3 p_pos;
 		glm::vec3 p_dir;
 		glm::vec3 p_vel;
+		bool ground;
+		float special;
 		Uint8 p_roomid;
 		*rec >> p_conID;
 		*rec >> p_pos.x >> p_pos.y >> p_pos.z;
 		*rec >> p_dir.x >> p_dir.y >> p_dir.z;
 		*rec >> p_vel.x >> p_vel.y >> p_vel.z;
+		*rec >> ground >> special;
 		*rec >> p_roomid;
 
 		Player* p = gamePtr->getPlayer(p_conID);
@@ -484,8 +488,9 @@ public:
 		{
 			p->setGoalPos(p_pos);
 			p->setGoalDir(p_dir);
-			if (!p->isLocal())
-				p->setVelocity(p_vel);
+			p->setVelocity(p_vel);
+			p->setGrounded(ground);
+			p->getRole()->setSpecialMeter(special);
 			p->roomID = p_roomid;
 		}
 		else

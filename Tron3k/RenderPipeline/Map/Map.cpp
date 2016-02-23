@@ -83,6 +83,9 @@ void Map::init(TextureManager* _tm)
 			file.read(f, sizeof(char) * exHeader.texturesize);
 			f[exHeader.texturesize] = 0;
 
+			GLuint texID = tm->createTexture(std::string(f));
+			unsigned int x = 0, y = 0;
+			tm->PNGSize(f, x, y);
 			free(f);
 
 			ParticleSystemData pdata;
@@ -90,11 +93,11 @@ void Map::init(TextureManager* _tm)
 			file.read((char*)&pdata, sizeof(ParticleSystemData));
 
 			int roomID = particleStuff[i].room;
-			chunks[roomID].particleSystemData.push_back(pdata);
-			int ind = chunks[roomID].particleSystemData.size()-1;
 
 			ParticleSystem pSys;
-			pSys.Initialize(particleStuff[i].pos, &chunks[roomID].particleSystemData[ind], &compute, &locations);
+			pSys.Initialize(particleStuff[i].pos, pdata, &compute, &locations);
+			pSys.m_size = vec2(x, y);
+			pSys.m_texture = texID;
 			chunks[roomID].particleSystem.push_back(pSys);
 		}
 	}
@@ -193,13 +196,22 @@ void Map::update(float dt)
 	}
 }
 
-void Map::renderParticles()
+void Map::renderParticles(GLuint shader, GLuint textureLoc, GLuint particleSize)
 {
 	for (size_t i = 0; i < chunks.size(); i++)
 	{
 		for (size_t p = 0; p < chunks[i].particleSystem.size(); p++)
 		{
-			chunks[i].particleSystem[i].Draw();
+			vec2 size = chunks[i].particleSystem[p].m_size;
+			glProgramUniform2f(shader, particleSize, size.x, size.y);
+			GLuint tex = chunks[i].particleSystem[p].m_texture;
+
+			glActiveTexture(GL_TEXTURE0);
+			glProgramUniform1i(shader, textureLoc, 0);
+
+			tm->bindTextureOnly(tex, DIFFUSE_FB);
+
+			chunks[i].particleSystem[p].Draw();
 		}
 	}
 }

@@ -28,7 +28,9 @@
 class Core
 {
 private:
+
 	bool settingsLoaded = false;
+	bool controlsLoaded = false;
 	int uitmpcounter;
 	float slowmode = 1.0f;
 	float slowdownFactor = 0.8f;
@@ -101,6 +103,8 @@ private:
 	void handleCulling();
 	void scoreboardRender();
 	void minimapRender();
+	void effectsRender(int hackedTeam);
+
 	void createWindow(int x, int y, bool fullscreen);
 	void removeWindow();
 
@@ -114,6 +118,9 @@ private:
 	string _name;
 	void loadSettings();
 	void saveSettings();
+
+	void loadControls();
+	void saveControls();
 
 	//Relays BoundingBoxes to Physics
 	bool sendChunkBoxes(int chunkID);

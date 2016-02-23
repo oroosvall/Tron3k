@@ -1275,13 +1275,17 @@ void Game::addBulletToList(int conID, int teamId, int bulletId, BULLET_TYPE bt, 
 		b = new Clusterling(pos, dir, conID, bulletId, teamId);
 		break;
 	case BULLET_TYPE::BATTERY_SLOW_SHOT:
-		rightV *= 0.2;
-		pos += rightV;
+		rightV *= 0.25;
+		upV *= -0.18f;
+		dirMod *= 0.6f;
+		pos += upV + rightV + dirMod;
 		b = new BatterySlowShot(pos, dir, conID, bulletId, teamId);
 		break;
 	case BULLET_TYPE::BATTERY_SPEED_SHOT:
-		rightV *= -0.2;
-		pos += rightV;
+		rightV *= -0.25;
+		upV *= -0.18f;
+		dirMod *= 0.6f;
+		pos += upV + rightV + dirMod;
 		b = new BatterySpeedShot(pos, dir, conID, bulletId, teamId);
 		break;
 	case BULLET_TYPE::LINK_SHOT:
@@ -1549,8 +1553,6 @@ void Game::handleSpecialAbilityUse(int conID, int teamId, int sID, SPECIAL_TYPE 
 		if (!p->isLocal())
 			p->setDir(dir);
 		p->addModifier(MODIFIER_TYPE::LIGHTWALLCONTROLLOCK);
-		int arraypos = -1;
-		//Effect* lwe = getSpecificEffect(conID, sID - 1, EFFECT_TYPE::LIGHT_WALL, arraypos);
 		addEffectToList(conID, teamId, sID, EFFECT_TYPE::LIGHT_WALL, pos, 0, 0.0f);
 
 	}
@@ -1895,6 +1897,7 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 			}
 			p->hitByBullet(theBullet, hi.bt, hi.newHPtotal);
 			playerList[hi.bulletPID]->hitMarker = 0.25f;
+			allBulletHitPlayerPos.push_back(theBullet->getPos());
 			if (p->getHP() == 0 && p->isAlive())
 			{
 				p->IdiedThisFrame();
@@ -2348,7 +2351,7 @@ void Game::handleBulletHitEffectEvent(BulletHitEffectInfo hi)
 					
 				else
 				{
-					addEffectToList(hi.effectPID, hi.bulletTeam, hi.effectID, EFFECT_TYPE::EXPLOSION, e->getPos(), 15, 5.0f);
+					addEffectToList(hi.effectPID, hi.bulletTeam, hi.effectID, EFFECT_TYPE::EXPLOSION, e->getPos(), 25, 5.0f);
 					if (GetSound())
 					{
 						GetSound()->playExternalSound(SOUNDS::soundEffectClusterlingExplosion, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);

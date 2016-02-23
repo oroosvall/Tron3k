@@ -65,15 +65,19 @@ private:
 	GLuint animationShader;
 	GLuint glowShaderTweeks;
 
+	GLuint exploShader;
+	GLuint exploWorld;
+	GLuint exploVP;
+	GLuint exploTexture;
+	GLuint exploTimepass;
+	GLuint exploDynCol;
+
+
 	GLuint uiShader;
 	GLuint ui_Texture;
 	GLuint ui_World;
 
 	GLuint decal_Shader;
-	//GLuint decal_struct_UBO;
-	//GLuint decal_struct_UBO_index;
-	//GLuint decal_Uniformtexsample;
-	//GLuint decal_nrDecals;
 	GLuint decal_viewProj;
 	GLuint decal_pos;
 	GLuint decal_normal;
@@ -163,6 +167,8 @@ private:
 
 	GLuint ptex;
 
+	vector<ParticleSystem> dynamicParticleSystems;
+
 public:
 
 	RenderPipeline() {};
@@ -191,6 +197,9 @@ public:
 	virtual std::string getStatus() { return ""; };
 
 	virtual bool setSetting(PIPELINE_SETTINGS type, PipelineValues value);
+
+	virtual void createTimedParticleEffect(PARTICLE_EFFECTS peffect, vec3 pos);
+
 	virtual void renderWallEffect(void* pos1, void* pos2, float uvStartOffset, float* dgColor);
 	virtual void renderExploEffect(float* pos, float rad, float transp, float* dgColor);
 	virtual void renderThunderDomeEffect(float* pos, float rad, float transp, float* dgColor);

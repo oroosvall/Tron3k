@@ -12,7 +12,7 @@ void BatteryFieldSpeed::init(int pid, int eid, glm::vec3 position)
 	pos = position;
 	type = EFFECT_TYPE::BATTERY_SPEED;
 	debuffTimer = 0.3f;
-	lifeTime = 4.0f;
+	lifeTime = 2.0f;
 }
 
 int BatteryFieldSpeed::update(float dt)

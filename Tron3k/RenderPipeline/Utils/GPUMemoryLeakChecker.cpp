@@ -59,7 +59,7 @@ void glGenBuffers_D(GLsizei n, GLuint* id, char* file, int line)
 	buf.line = line;
 	buf.free = false;
 
-	genBufferChecks.push_back(buf);
+	//genBufferChecks.push_back(buf);
 	genBufferPeak++;
 }
 
@@ -74,7 +74,7 @@ void glGenVertexArray_D(GLsizei n, GLuint* id, char* file, int line)
 	buf.line = line;
 	buf.free = false;
 	
-	genVertexArrayChecks.push_back(buf);
+	//genVertexArrayChecks.push_back(buf);
 	genVaoPeak++;
 }
 
@@ -95,29 +95,36 @@ void glGenTexture_D(GLsizei n, GLuint* id, char* file, int line)
 
 void glDeleteBuffers_D(GLsizei n, GLuint* id)
 {
-	for (size_t i = 0; i < genBufferChecks.size(); i++)
-	{
-		if (genBufferChecks[i].bufferID == *id)
-		{
+	//for (size_t i = 0; i < genBufferChecks.size(); i++)
+	//{
+	//	if (genBufferChecks[i].bufferID == *id)
+	//	{
+			GLint oldBufferSize = 0;
+			glBindBuffer(GL_ARRAY_BUFFER, *id);
+			glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &oldBufferSize);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+			memusageMesh -= oldBufferSize;
+			memusageT -= oldBufferSize;
 			glDeleteBuffers(n, id);
-			genBufferChecks.erase(genBufferChecks.begin()+i);
-			break;
-		}
-	}
+	//		genBufferChecks.erase(genBufferChecks.begin()+i);
+	//		break;
+	//	}
+	//}
 	genBufferPeak--;
 }
 
 void glDeleteVertexArray_D(GLsizei n, GLuint* id)
 {
-	for (size_t i = 0; i < genVertexArrayChecks.size(); i++)
-	{
-		if (genVertexArrayChecks[i].bufferID == *id)
-		{
+	//for (size_t i = 0; i < genVertexArrayChecks.size(); i++)
+	//{
+	//	if (genVertexArrayChecks[i].bufferID == *id)
+	//	{
 			glDeleteVertexArrays(n, id);
-			genVertexArrayChecks.erase(genVertexArrayChecks.begin() + i);
-			break;
-		}
-	}
+	//		genVertexArrayChecks.erase(genVertexArrayChecks.begin() + i);
+	//		break;
+	//	}
+	//}
 	genVaoPeak--;
 }
 
@@ -167,7 +174,7 @@ void glDeleteTexture_D(GLsizei n, GLuint* id)
 			memusageTex -= oldSize;
 			memusageT -= oldSize;
 
-			printf("Size freed %d\n", oldSize);
+			//printf("Size freed %d\n", oldSize);
 
 			glDeleteTextures(n, id);
 			genTextureCheck.erase(genTextureCheck.begin() + i);
@@ -465,7 +472,7 @@ void reportGPULeaks()
 	{
 		//breakLaptopBySlammingItClosedCauseIWasWatchingPornAtWork();
 		// if break here u have gpu mem leaks, press break and check console
-		DebugBreak();
+		//DebugBreak();
 	}
 
 }

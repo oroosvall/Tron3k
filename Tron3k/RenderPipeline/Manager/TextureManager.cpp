@@ -54,7 +54,7 @@ void TextureManager::update(float dt)
 {
 	unsigned int pos = 0;
 	GLuint texture = uploadStreamedData(pos);
-	if (texture)
+	if (texture && pos < textureList.size())
 	{
 		textureList[pos].textureID = texture;
 		textureList[pos].state = TEXTURE_LOADED;
@@ -68,6 +68,18 @@ void TextureManager::update(float dt)
 			if (textureList[i].timeNotUsed > 30.0f)
 			{
 				printf("Texture %d have not been used for 30 seconds unloading\n", i);
+				glDeleteTextures(1, &textureList[i].textureID);
+				textureList[i].textureID = 0;
+				textureList[i].state = TEXTURE_UNLOADED;
+				textureList[i].timeNotUsed = 0.0f;
+			}
+		}
+		else if (textureList[i].state == TEXTURE_STREAMING)
+		{
+			textureList[i].timeNotUsed += dt;
+			if (textureList[i].timeNotUsed > 5.0f)
+			{
+				printf("Texture %d have not been loaded in 5 seconds marking as unloaded\n", i);
 				glDeleteTextures(1, &textureList[i].textureID);
 				textureList[i].textureID = 0;
 				textureList[i].state = TEXTURE_UNLOADED;
@@ -93,7 +105,20 @@ unsigned int TextureManager::createTexture(std::string path)
 
 	int retVal = textureList.size();
 
-	textureList.push_back(ti);
+	bool found = false;
+
+	ti.streamingID = retVal;
+
+	for (size_t i = 0; i < textureList.size() && !found; i++)
+	{
+		if (textureList[i].texturePath == path)
+		{
+			retVal = i;
+			found = true;
+		}
+	}
+	if(!found)
+		textureList.push_back(ti);
 
 	return retVal;
 
@@ -133,8 +158,10 @@ bool TextureManager::PNGSize(const char* fileName, unsigned int &x, unsigned int
 }
 
 
-void TextureManager::bindTexture(unsigned int &textureID, GLuint shader, GLuint shaderLocation, TEXTURE_FALLBACK fallback)
+void TextureManager::bindTexture(unsigned int &textureID, GLuint shader, GLuint shaderLocation, TEXTURE_FALLBACK fallback, bool invokeUpdate)
 {
+	if (invokeUpdate)
+		update(0);
 	if (!textureList.empty() && textureID < textureList.size())
 	{
 		TextureInfo* ti = &textureList[textureID];
@@ -165,15 +192,17 @@ void TextureManager::bindTexture(unsigned int &textureID, GLuint shader, GLuint 
 
 }
 
-void TextureManager::bindTextureOnly(unsigned int &textureID, TEXTURE_FALLBACK fallback)
+void TextureManager::bindTextureOnly(unsigned int &textureID, TEXTURE_FALLBACK fallback, bool invokeUpdate)
 {
+	if (invokeUpdate)
+		update(0);
 	if (!textureList.empty() && textureID < textureList.size())
 	{
 		TextureInfo* ti = &textureList[textureID];
 
 		if (ti->state == TEXTURE_UNLOADED)
 		{
-			if (addToStreamQueue(&textureID, ti->texturePath))
+			if (addToStreamQueue(&ti->streamingID, ti->texturePath))
 			{
 				ti->state = TEXTURE_STREAMING;
 			}
@@ -184,6 +213,7 @@ void TextureManager::bindTextureOnly(unsigned int &textureID, TEXTURE_FALLBACK f
 		else if (ti->state == TEXTURE_STREAMING)
 		{
 			//bindDefault(shader, shaderLocation, fallback);
+			bindDefaultOnly(fallback);
 		}
 		else if (ti->state == TEXTURE_LOADED)
 		{
