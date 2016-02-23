@@ -59,12 +59,15 @@ int LightWallLockedControls::setData(float dt)
 	target->setVelocity(vel);
 	target->getRole()->setSpecialMeter(specialLower);
 
-	if (Input::getInput()->justPressed(GLFW_KEY_SPACE))
-		kill = true;
-	if (Input::getInput()->justPressed(GLFW_MOUSE_BUTTON_LEFT))
-		kill = true;
-	if (Input::getInput()->justPressed(GLFW_KEY_E))
-		kill = true;
+	if (target->isLocal())
+	{
+		if (Input::getInput()->justPressed(GLFW_KEY_SPACE))
+			kill = true;
+		if (Input::getInput()->justPressed(GLFW_MOUSE_BUTTON_LEFT))
+			kill = true;
+		if (Input::getInput()->justPressed(GLFW_KEY_E))
+			kill = true;
+	}
 
 	if (kill)
 	{

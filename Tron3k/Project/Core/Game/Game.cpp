@@ -1553,8 +1553,6 @@ void Game::handleSpecialAbilityUse(int conID, int teamId, int sID, SPECIAL_TYPE 
 		if (!p->isLocal())
 			p->setDir(dir);
 		p->addModifier(MODIFIER_TYPE::LIGHTWALLCONTROLLOCK);
-		int arraypos = -1;
-		//Effect* lwe = getSpecificEffect(conID, sID - 1, EFFECT_TYPE::LIGHT_WALL, arraypos);
 		addEffectToList(conID, teamId, sID, EFFECT_TYPE::LIGHT_WALL, pos, 0, 0.0f);
 
 	}
