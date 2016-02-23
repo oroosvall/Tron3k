@@ -43,6 +43,8 @@ private:
 
 	//LightWall lw;
 
+	float textTimer = 0;
+
 	Text* debugText;
 	Text* chatText;
 
@@ -71,6 +73,7 @@ private:
 	GLuint exploTexture;
 	GLuint exploTimepass;
 	GLuint exploDynCol;
+	GLuint exploInten;
 
 
 	GLuint uiShader;
@@ -201,7 +204,9 @@ public:
 	virtual void createTimedParticleEffect(PARTICLE_EFFECTS peffect, vec3 pos);
 
 	virtual void renderWallEffect(void* pos1, void* pos2, float uvStartOffset, float* dgColor);
-	virtual void renderExploEffect(float* pos, float rad, float transp, float* dgColor);
+
+	virtual void initRenderExplo();
+	virtual void renderExploEffect(float* pos, float rad, float transp, float* dgColor, bool solid);
 	virtual void renderThunderDomeEffect(float* pos, float rad, float transp, float* dgColor);
 
 	virtual void renderDecals(void* data, int size);

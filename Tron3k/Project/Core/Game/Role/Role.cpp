@@ -296,7 +296,7 @@ string Role::getRoleAsString()
 	case ROLES::DESTROYER:		return "Destroyer";
 	case ROLES::MOBILITY:		return "Stalker";
 	case ROLES::BRUTE:			return "Punisher";
-	case ROLES::MANIPULATOR:	return "Manipualtor";
-	case ROLES::NROFROLES:		return "vampir = nullprt";
+	case ROLES::MANIPULATOR:	return "Manipulator";
+	case ROLES::NROFROLES:		return "Class Select";
 	}
 }

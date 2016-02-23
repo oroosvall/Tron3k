@@ -44,7 +44,6 @@ void main()
 	float size = lights[pointlightID].attenuation.w;
 	
 	vec2 UV = gl_FragCoord.xy / gScreenSize;
-	//fragment_color = vec4(lights[spotlightID].Color, 1) * 0.1 + texture(Diffuse, UV);
 	
 	Position0 = texture(Position, UV).xyz;
 	

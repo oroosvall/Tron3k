@@ -320,6 +320,7 @@ void RenderPipeline::reloadShaders()
 	exploTexture = glGetUniformLocation(exploShader, "normalSample");
 	exploTimepass = glGetUniformLocation(exploShader, "timepass");
 	exploDynCol = glGetUniformLocation(exploShader, "dynamicGlowColor");
+	exploInten = glGetUniformLocation(exploShader, "inten");
 
 	//UI shaderLocations
 	ui_Texture = glGetUniformLocation(uiShader, "textureSample");
@@ -515,6 +516,7 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	cam.setViewProjMat(gBuffer->pointVolShader, gBuffer->pointVolVP);
 	cam.setViewProjMat(portalShaderV2, portal_VP);
 	cam.setViewProjMat(animTexture.animQuadShader, animTexture.animQuadVP);
+	cam.setViewProjMat(exploShader, exploVP);
 
 	contMan.update(dt);
 	glUseProgram(particleCS);
@@ -596,7 +598,7 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	renderFrameTimeID = startTimer("Frame : Render only");
 
 	counter += dt;
-
+	textTimer -= dt;
 }
 
 int RenderPipeline::portalIntersection(float* pos1, float* pos2, int in_chunk)
@@ -701,7 +703,10 @@ void RenderPipeline::finalizeRender()
 	glEnable(GL_BLEND);
 
 	debugText->draw();
-	chatText->draw();
+	if (textTimer > 0.0f)
+	{
+		chatText->draw();
+	}
 	
 	//uglyCrosshairSolution->draw();
 
@@ -742,19 +747,19 @@ void RenderPipeline::renderWallEffect(void* pos1, void* pos2, float uvStartOffse
 
 }
 
-void RenderPipeline::renderExploEffect(float* pos, float rad, float transp, float* dgColor)
+void RenderPipeline::initRenderExplo()
 {
-	glUseProgram(regularShader);
+	glUseProgram(exploShader);
+	glProgramUniform1i(exploShader, exploTexture, 1);
+	glProgramUniform1f(exploShader, exploTimepass, timepass);
+}
 
-	//Glow values for player
-	glProgramUniform1f(regularShader, uniformStaticGlowIntensityLocation[0], transp);
-	glProgramUniform3fv(regularShader, uniformDynamicGlowColorLocation[0], 1, (GLfloat*)&dgColor[0]);
-
-	glProgramUniform1f(regularShader, uniformGlowTrail[0], 0.3f);
-
-	glProgramUniform1i(regularShader, uniformTextureLocation[0], 0);
-	glProgramUniform1i(regularShader, uniformNormalLocation[0], 1);
-	glProgramUniform1i(regularShader, uniformGlowSpecLocation[0], 2);
+void RenderPipeline::renderExploEffect(float* pos, float rad, float transp, float* dgColor, bool solid)
+{
+	if(solid == false)
+		glProgramUniform1f(exploShader, exploTimepass, timepass * 15);
+	else
+		glProgramUniform1f(exploShader, exploTimepass, timepass);
 
 	//set temp objects worldmat
 	glm::mat4 mat;
@@ -767,24 +772,17 @@ void RenderPipeline::renderExploEffect(float* pos, float rad, float transp, floa
 	mat[1].y = rad;
 	mat[2].z = rad;
 
-	glProgramUniformMatrix4fv(regularShader, worldMat[0], 1, GL_FALSE, (GLfloat*)&mat[0][0]);
+	//Glow values for object
+	glProgramUniform1f(exploShader, exploInten, transp);
+	glProgramUniformMatrix4fv(exploShader, exploWorld, 1, GL_FALSE, (GLfloat*)&mat[0][0]);
+	glProgramUniform3fv(exploShader, exploDynCol, 1, (GLfloat*)&dgColor[0]);
 
-	contMan.renderBullet(GRENADE_SHOT);
+	contMan.renderBullet(-1);
 }
 
 void RenderPipeline::renderThunderDomeEffect(float* pos, float rad, float transp, float* dgColor)
 {
-	glUseProgram(regularShader);
-
-	//Glow values for player
-	glProgramUniform1f(regularShader, uniformStaticGlowIntensityLocation[0], transp);
-	glProgramUniform3fv(regularShader, uniformDynamicGlowColorLocation[0], 1, (GLfloat*)&dgColor[0]);
-
-	glProgramUniform1f(regularShader, uniformGlowTrail[0], 0.3f);
-
-	glProgramUniform1i(regularShader, uniformTextureLocation[0], 0);
-	glProgramUniform1i(regularShader, uniformNormalLocation[0], 1);
-	glProgramUniform1i(regularShader, uniformGlowSpecLocation[0], 2);
+	glProgramUniform1f(exploShader, exploTimepass, timepass * 0.5f);
 
 	//set temp objects worldmat
 	glm::mat4 mat;
@@ -797,9 +795,13 @@ void RenderPipeline::renderThunderDomeEffect(float* pos, float rad, float transp
 	mat[1].y = rad;
 	mat[2].z = rad;
 
-	glProgramUniformMatrix4fv(regularShader, worldMat[0], 1, GL_FALSE, (GLfloat*)&mat[0][0]);
+	//Glow values for object
+	glProgramUniform1f(exploShader, exploInten, transp);
+	glProgramUniformMatrix4fv(exploShader, exploWorld, 1, GL_FALSE, (GLfloat*)&mat[0][0]);
+	glProgramUniform3fv(exploShader, exploDynCol, 1, (GLfloat*)&dgColor[0]);
 
-	contMan.renderThunderDome();
+	//contMan.renderThunderDome();
+	contMan.renderBullet(-1);
 }
 
 void RenderPipeline::renderDecals(void* data, int size)
@@ -1237,12 +1239,15 @@ void RenderPipeline::setChatHistoryText(std::string text)
 {
 	chatHistoryText = text;
 	chatText->setText(chatHistoryText + chatTypeText);
+	textTimer = 2.0f;
 }
 
 void RenderPipeline::setChatTypeMessage(std::string text)
 {
 	chatTypeText = text;
 	chatText->setText(chatHistoryText + chatTypeText);
+	if(chatTypeText.size())
+		textTimer = 2.0f;
 }
 
 void RenderPipeline::ui_initRender()
@@ -1267,16 +1272,7 @@ void RenderPipeline::ui_InGameRenderInit()
 
 void RenderPipeline::ui_loadTexture(unsigned int* texid, char* filepath, int* xres, int* yres)
 {
-	unsigned int x;
-	unsigned int y;
-	TextureManager::gTm->PNGSize(filepath, x, y);
-
-	*xres = x;
-	*yres = y;
-
-	*texid = TextureManager::gTm->createTexture(filepath);
-
-	//*texid = loadTexture(std::string(filepath), true, xres, yres);
+	*texid = loadTexture(std::string(filepath), true, xres, yres);
 }
 
 void RenderPipeline::ui_renderQuad(float* mat, float* pivot, GLuint textureID, float transp, int i)
@@ -1285,16 +1281,12 @@ void RenderPipeline::ui_renderQuad(float* mat, float* pivot, GLuint textureID, f
 	{
 		glm::mat4* world = (glm::mat4*)mat;
 
-		glActiveTexture(GL_TEXTURE0);
-		TextureManager::gTm->bindTextureOnly(textureID, DIFFUSE_FB, true);
-		glProgramUniform1i(uiShader, ui_Texture, 0);
-
-		//TextureInfo temp;
-		//temp.state = TEXTURE_LOADED;
-		//temp.lastTextureSlot = GL_TEXTURE0;
-		//temp.textureID = textureID;
-		//TextureManager::gTm->bind(temp, uiShader, ui_Texture);
-		////glBindTexture(GL_TEXTURE_2D, textureID);
+		TextureInfo temp;
+		temp.state = TEXTURE_LOADED;
+		temp.lastTextureSlot = GL_TEXTURE0;
+		temp.textureID = textureID;
+		TextureManager::gTm->bind(temp, uiShader, ui_Texture);
+		//glBindTexture(GL_TEXTURE_2D, textureID);
 		glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, mat);
 		glProgramUniform3fv(uiShader, uniformPivotLocation, 1, pivot);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);

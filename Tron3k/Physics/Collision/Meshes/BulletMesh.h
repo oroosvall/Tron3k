@@ -27,6 +27,8 @@ public:
 	vec3 getWorldSize() { return worldSize; };
 	void setWorldSize(vec3 size) { worldSize = size; };
 
+	void setSize(float modifier);
+
 	vec3 getBulletSize() { return bulletSize; };
 	void setBulletSize(vec3 size) { bulletSize = size; };
 

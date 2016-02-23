@@ -19,5 +19,6 @@ public:
 
 	int getDamage() { return damage; }; //WOOO DAMAGE YO
 	float explosionRenderRad();
+	float lifetimepercentleft();
 };
 #endif

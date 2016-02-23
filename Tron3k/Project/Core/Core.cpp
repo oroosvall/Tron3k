@@ -108,6 +108,8 @@ Core::~Core()
 
 void Core::update(float dt)
 {
+	timepass += dt;
+
 	if (shitBool && justAFrameCounterActivated)
 	{
 		justAFrameCounter++;
@@ -193,10 +195,11 @@ void Core::update(float dt)
 				{
 					if (current != SERVER)
 					{
-						if (!console.getInChatMode() && cursorInvisible)
+						if (!console.getInChatMode())
 						{
-							p->setLockedControls(false);
 							renderPipe->setChatTypeMessage("");
+							if (cursorInvisible)
+								p->setLockedControls(false);
 						}
 						else if (console.getInChatMode())
 						{
@@ -698,7 +701,10 @@ void Core::upClient(float dt)
 		{
 			if (tmp == KOTHSTATE::PREROUND)
 			{
-				top->command_role_change(top->getConId(), 1);
+				if (localp->getRole()->getRole() == ROLES::NROFROLES)
+				{
+					top->command_role_change(top->getConId(), 1);
+				}
 				//dont show class select when in spectate
 				if (localp->getTeam() != 0)
 					showClassSelect();
@@ -2976,6 +2982,8 @@ void Core::effectsRender(int hackedTeam)
 	float lightwallOffset = 0;
 	SpotLight light;
 	int team;
+	float percentLifeleft = 0;
+	float rad = 0;
 
 	light.Direction = vec3(0.0f);
 	light.DiffuseIntensity = 0.2f;
@@ -3009,7 +3017,9 @@ void Core::effectsRender(int hackedTeam)
 		lightwallOffset += glm::distance(asd->getPos(), asd->getEndPoint());
 	}
 
-	// Thunderdome (regular shader)
+	renderPipe->initRenderExplo();
+
+	// Thunderdome
 	eff = game->getEffects(EFFECT_TYPE(EFFECT_TYPE::THUNDER_DOME));
 	for (unsigned int i = 0; i < eff.size(); i++)
 	{
@@ -3025,7 +3035,7 @@ void Core::effectsRender(int hackedTeam)
 
 		ThunderDomeEffect* asd = (ThunderDomeEffect*)eff[i];
 		vec3 pos = asd->getPos();
-		renderPipe->renderThunderDomeEffect(&pos.x, asd->explotionRenderRad(), 0, &color.x);
+		renderPipe->renderThunderDomeEffect(&pos.x, asd->explotionRenderRad(), 1, &color.x);
 	}
 
 	// Explosion shader objects	
@@ -3050,7 +3060,18 @@ void Core::effectsRender(int hackedTeam)
 
 				Explosion* asd = (Explosion*)eff[i];
 				vec3 pos = asd->getPos();
-				renderPipe->renderExploEffect(&pos.x, asd->explosionRenderRad(), 0, &color.x);
+
+				rad = asd->explosionRenderRad(&percentLifeleft);
+				renderPipe->renderExploEffect(&pos.x, rad * 1.3f, percentLifeleft, &color.x, false);
+				light.attenuation.w = rad * 2 + 2.0f;
+				light.Position = pos;
+				light.DiffuseIntensity = 1.0f;
+				if (percentLifeleft < 0.5f)
+					light.DiffuseIntensity = (percentLifeleft * 2);
+
+				light.Color = color;
+				light.AmbientIntensity = 1.0f;
+				renderPipe->addLight(&light, 0);
 			}
 		}
 		break;
@@ -3062,7 +3083,15 @@ void Core::effectsRender(int hackedTeam)
 				CleanseNova* asd = (CleanseNova*)eff[i];
 				vec3 pos = asd->getPos();
 				color = CLEANSENOVACOLOR;
-				renderPipe->renderExploEffect(&pos.x, asd->renderRad(), 0, &color.x);
+				float inten = asd->lifepercentageleft();
+
+				renderPipe->renderExploEffect(&pos.x, asd->renderRad(), inten, &color.x, true);
+				light.attenuation.w = asd->renderRad();
+				light.Color = color;
+				light.Position = pos;
+				light.DiffuseIntensity = inten;
+				light.AmbientIntensity = 1.0f;
+				renderPipe->addLight(&light, 0);
 			}
 		}
 		break;
@@ -3074,7 +3103,12 @@ void Core::effectsRender(int hackedTeam)
 				BatteryFieldSlow* asd = (BatteryFieldSlow*)eff[i];
 				vec3 pos = asd->getPos();
 				color = SLOWBUBBLECOLOR;
-				renderPipe->renderExploEffect(&pos.x, asd->renderRad(), 0, &color.x);
+				renderPipe->renderExploEffect(&pos.x, asd->renderRad(), 1, &color.x, true);
+				light.attenuation.w = asd->renderRad();
+				light.Color = color;
+				light.Position = pos;
+				light.AmbientIntensity = 0.1f;
+				renderPipe->addLight(&light, 0);
 			}
 		}
 		break;
@@ -3086,7 +3120,12 @@ void Core::effectsRender(int hackedTeam)
 				BatteryFieldSpeed* asd = (BatteryFieldSpeed*)eff[i];
 				vec3 pos = asd->getPos();
 				color = SPEEDBUBBLECOLOR;
-				renderPipe->renderExploEffect(&pos.x, asd->renderRad(), 0, &color.x);
+				renderPipe->renderExploEffect(&pos.x, asd->renderRad(), 1, &color.x, true);
+				light.attenuation.w = asd->renderRad();
+				light.Color = color;
+				light.Position = pos;
+				light.AmbientIntensity = 0.1f;
+				renderPipe->addLight(&light, 0);
 			}
 		}
 		break;
@@ -3107,7 +3146,23 @@ void Core::effectsRender(int hackedTeam)
 
 				ThermiteCloud* asd = (ThermiteCloud*)eff[i];
 				vec3 pos = asd->getPos();
-				renderPipe->renderExploEffect(&pos.x, asd->explosionRenderRad(), 0, &color.x);
+
+				float inten = asd->lifetimepercentleft();
+
+				if (inten > 0.8)
+					inten = 1 - ((inten - 0.8f) / 0.2f);
+				else if (inten < 0.2)
+					inten = inten / 0.2f;
+				else
+					inten = 1.0f;
+
+				renderPipe->renderExploEffect(&pos.x, asd->explosionRenderRad(), inten, &color.x, true);
+				light.attenuation.w = asd->explosionRenderRad() * 3;
+				light.DiffuseIntensity = ((sin(timepass * 5) + 1) * 0.5f + 0.3f) * inten;
+				light.Color = color;
+				light.Position = pos;
+				light.AmbientIntensity = 2.0f;
+				renderPipe->addLight(&light, 0);
 			}
 		}
 		break;
@@ -3116,10 +3171,24 @@ void Core::effectsRender(int hackedTeam)
 			eff = game->getEffects(EFFECT_TYPE(c));
 			for (int i = 0; i < eff.size(); i++)
 			{
+				team = eff[i]->getTeam();
+				if (hackedTeam == -1)
+				{
+					if (team == 1)
+						color = TEAMONECOLOR;
+					else if (team == 2)
+						color = TEAMTWOCOLOR;
+				}
 
 				Vacuum* asd = (Vacuum*)eff[i];
 				vec3 pos = asd->getPos();
-				renderPipe->renderExploEffect(&pos.x, asd->renderRad(), 0, &color.x);
+				float inten =  1 - asd->lifepercentageleft();
+				renderPipe->renderExploEffect(&pos.x, asd->renderRad(), inten, &color.x, false);
+				light.attenuation.w = asd->renderRad();
+				light.Color = color;
+				light.Position = pos;
+				light.AmbientIntensity = 0.1f;
+				renderPipe->addLight(&light, 0);
 			}
 		}
 		break;
@@ -3133,10 +3202,14 @@ void Core::effectsRender(int hackedTeam)
 					color = TEAMTWOCOLOR;
 				else
 					color = TEAMONECOLOR;
-				renderPipe->renderExploEffect(&pos.x, eff[i]->getInterestingVariable(), 0, &color.x);
+				renderPipe->renderExploEffect(&pos.x, eff[i]->getInterestingVariable(), 1, &color.x, true);
 
+				light.attenuation.w = eff[i]->getInterestingVariable();
 				light.Color = color;
-				light.Position = eff[i]->getPos();
+				light.Position = pos;
+				light.DiffuseIntensity = 0.5f;
+				light.attenuation.w = 5.0f;
+				light.AmbientIntensity = 1.0f;
 				renderPipe->addLight(&light, 0);
 			}
 		}
@@ -3151,12 +3224,15 @@ void Core::effectsRender(int hackedTeam)
 				{
 					vec3 pos = eff[i]->getPos();
 					color = vec3(1.0f, 0, 1.0f);
-					renderPipe->renderExploEffect(&pos.x, eff[i]->getInterestingVariable(), 0, &color.x);
+					renderPipe->renderExploEffect(&pos.x, temp->renderRad(), 1, &color.x, true);
 
+					light.attenuation.w = temp->renderRad();
 					light.Color = color;
-					light.Position = eff[i]->getPos();
+					light.Position = pos;
+					light.DiffuseIntensity = 0.5f;
+					light.attenuation.w = 5.0f;
+					light.AmbientIntensity = 1.0f;
 					renderPipe->addLight(&light, 0);
-
 				}
 			}
 		}
@@ -3171,12 +3247,15 @@ void Core::effectsRender(int hackedTeam)
 				{
 					vec3 pos = eff[i]->getPos();
 					color = vec3(1.0f, 0, 0);
-					renderPipe->renderExploEffect(&pos.x, eff[i]->getInterestingVariable(), 0, &color.x);
+					renderPipe->renderExploEffect(&pos.x, temp->renderRad(), 1, &color.x, true);
 
+					light.attenuation.w = temp->renderRad();
 					light.Color = color;
-					light.Position = eff[i]->getPos();
+					light.Position = pos;
+					light.DiffuseIntensity = 0.5f;
+					light.attenuation.w = 5.0f;
+					light.AmbientIntensity = 1.0f;
 					renderPipe->addLight(&light, 0);
-
 				}
 			}
 		}
