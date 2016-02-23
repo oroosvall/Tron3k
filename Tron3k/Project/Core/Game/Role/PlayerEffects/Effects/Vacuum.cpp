@@ -6,7 +6,7 @@ void Vacuum::init(int pid, int eid, glm::vec3 position)
 {
 	type = EFFECT_TYPE::VACUUM;
 	playerId = pid; effectId = eid; pos = position;
-	lifeTime = 0.1f;
+	lifeTime = 0.2f;
 }
 
 int Vacuum::update(float dt)
@@ -21,5 +21,10 @@ int Vacuum::update(float dt)
 
 float Vacuum::renderRad()
 {
-	return 10* rad * (lifeTime / 0.1f);
+	return rad * (lifeTime / 0.2f);
+}
+
+float Vacuum::lifepercentageleft()
+{
+	return lifeTime / 0.2f;
 }

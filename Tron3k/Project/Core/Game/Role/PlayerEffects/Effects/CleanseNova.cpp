@@ -6,7 +6,7 @@ void CleanseNova::init(int pid, int eid, glm::vec3 position)
 {
 	type = EFFECT_TYPE::CLEANSENOVA;
 	playerId = pid; effectId = eid; pos = position;
-	lifeTime = 0.2f;
+	lifeTime = 0.3f;
 }
 
 int CleanseNova::update(float dt)
@@ -21,5 +21,10 @@ int CleanseNova::update(float dt)
 
 float CleanseNova::renderRad()
 {
-	return 10 * rad *(1 - (lifeTime / 0.1f));
+		return rad * (1 - (lifeTime / 0.3f));
+}
+
+float CleanseNova::lifepercentageleft()
+{
+	return (lifeTime / 0.3f);
 }

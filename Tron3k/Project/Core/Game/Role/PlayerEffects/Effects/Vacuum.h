@@ -14,5 +14,6 @@ public:
 	int update(float dt);
 
 	float renderRad();
+	float lifepercentageleft();
 };
 #endif
