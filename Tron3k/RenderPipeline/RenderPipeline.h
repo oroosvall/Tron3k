@@ -43,6 +43,8 @@ private:
 
 	//LightWall lw;
 
+	float textTimer = 0;
+
 	Text* debugText;
 	Text* chatText;
 
