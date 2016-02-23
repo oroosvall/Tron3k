@@ -118,7 +118,7 @@ public:
 	void renderHideable();
 	void hideObject(int id);
 	void showObject(int id);
-	void changeHideAbleTexture(int objId, int whichTex);
+	void changeHideAbleTexture(int objId, int wmID, int whichTex);
 	void setHideableWorldMatrix(int id, int wmId, glm::vec2 xy);
 	void resetHidableWorldMatrix(int id, int wmId);
 	int addNewWM(int id);

@@ -49,7 +49,7 @@ public:
 	virtual void setWorldMatrix(int id, float x, float y);
 	virtual void resetWorldMatrix(int id);
 
-	virtual void changeTexUsed(int id);
+	virtual void changeTexUsed(int id, int wmID);
 
 	virtual void fromPosToQuadScreen(glm::vec2 positions, int id);
 

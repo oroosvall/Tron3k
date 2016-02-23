@@ -22,6 +22,12 @@ StaticTextureBoxes::StaticTextureBoxes()
 }
 StaticTextureBoxes::StaticTextureBoxes(glm::vec2 center, int* textureId1, int nrOfTextures, IRenderPipeline* uiRender, std::vector<glm::vec2>  textRes)
 {
+	originalWM = { 1, 0, 0, 0,
+		0, 1, 0, 0,
+		0, 0, 1, 0,
+		0, 0, 0, 1 };
+	worldMatrix.push_back(originalWM);
+
 	this->uiRender = uiRender;
 	this->center = center;
 	textureRes = new glm::vec2[nrOfTextures];
@@ -114,20 +120,20 @@ void StaticTextureBoxes::deleteOldestWM()
 		worldMatrix.pop_back();
 }
 
-void StaticTextureBoxes::changeTexUsed(int id)
+void StaticTextureBoxes::changeTexUsed(int id, int wmID)
 {
-	if (id > -1 && id < worldMatrix.size())
+	if (wmID > -1 && wmID < worldMatrix.size())
 	{
 		float xScale = textureRes[id].x / 1980;
 		float yScale = textureRes[id].y / 1080;
 
 		// setpos
-		worldMatrix[id][0].w = center.x;
-		worldMatrix[id][1].w = center.y;
-		worldMatrix[id][2].w = 0.0f;
+		worldMatrix[wmID][0].w = center.x;
+		worldMatrix[wmID][1].w = center.y;
+		worldMatrix[wmID][2].w = 0.0f;
 		// set scale
-		worldMatrix[id][0].x = xScale;
-		worldMatrix[id][1].y = yScale;
+		worldMatrix[wmID][0].x = xScale;
+		worldMatrix[wmID][1].y = yScale;
 
 		textureInUse = textureIndexList[id];
 	}
@@ -178,7 +184,7 @@ void StaticTextureBoxes::scaleBar(int id, float procentOfMax, bool fromRight)
 	pivot = glm::vec3(1.0f, 0.0f, 0.0f);
 
 	float scale = (textureRes[0].x * procentOfMax) / 1920.0f;
-	worldMatrix[id][0].x = scale;
+	worldMatrix[0][0].x = scale;
 
 	float fullLength = textureRes[0].x / 1920.0f;
 	pivot.x = fullLength - scale;

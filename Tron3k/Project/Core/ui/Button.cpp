@@ -85,7 +85,7 @@ void Button::resetWorldMatrix(int id)
 	worldMatrix[1].w = startWMY;
 }
 
-void Button::changeTexUsed(int id) 
+void Button::changeTexUsed(int id, int wmID)
 {
 	float xScale = textureRes[id].x / 1980;
 	float yScale = textureRes[id].y / 1080;
@@ -137,12 +137,12 @@ void Button::hoverCheck(glm::vec2 mpos)
 		if (mpos.x > pos[0].x && mpos.x < pos[1].x)
 		{
 			if (mpos.y > pos[0].y && mpos.y < pos[1].y)
-				changeTexUsed(1);
+				changeTexUsed(1, 0);
 			else if (textureIdInUse != textureIdList[0])
-				changeTexUsed(0);
+				changeTexUsed(0, 0);
 		}
 		else if (textureIdInUse != textureIdList[0])
-			changeTexUsed(0);
+			changeTexUsed(0, 0);
 	}
 
 }

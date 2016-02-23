@@ -100,7 +100,7 @@ void Slider::resetWorldMatrix(int id)
 }
 
 //Empty
-void Slider::changeTexUsed(int id)
+void Slider::changeTexUsed(int id, int wmID)
 {
 }
 

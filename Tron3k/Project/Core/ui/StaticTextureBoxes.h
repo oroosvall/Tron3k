@@ -55,7 +55,7 @@ public:
 	int addNewWM();
 	void deleteOldestWM();
 
-	virtual void changeTexUsed(int id);
+	virtual void changeTexUsed(int id, int wmID);
 
 	virtual void fromPosToQuadScreen(glm::vec2 positions, int id);
 

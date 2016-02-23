@@ -572,10 +572,10 @@ void UIManager::hideOrShowHideAble(int id, bool show)
 	else
 		console->printMsg("Function hideOrShowHideAble in UIManager, Hideablemenu isn't active", "System", 'S');
 }
-void UIManager::changeTextureHideAble(int id, int textureId)
+void UIManager::changeTextureHideAble(int id, int wmID, int textureId)
 {
 	if (hideAbleMenuActive)
-		hideAble.changeHideAbleTexture(id, textureId);
+		hideAble.changeHideAbleTexture(id, wmID, textureId);
 	else
 		console->printMsg("Function changeTextureHideAble in UIManager, Hideablemenu isn't active", "System", 'S');
 }

@@ -296,13 +296,13 @@ void UI::mouseHover(glm::vec2 pos)
 void UI::changeTex(int objId, int whichTex)
 {
 	if(objId > -1 && objId < UiObjects.size())
-		UiObjects[objId]->changeTexUsed(whichTex);
+		UiObjects[objId]->changeTexUsed(whichTex, 0);
 }
 
 void UI::changeColorTeam(int whichTex)
 {
 	for (int i = 0; i < UiObjects.size(); i++)
-		UiObjects[i]->changeTexUsed(whichTex);
+		UiObjects[i]->changeTexUsed(whichTex, 0);
 }
 
 //Empty
@@ -351,10 +351,10 @@ void UI::clearText(int id)
 		UiObjects[textIdList[id]]->cleanText();
 }
 
-void UI::scaleBar(int id, float procentOfMax, bool fromRight)
+void UI::scaleBar(int id,  float procentOfMax, bool fromRight)
 {
 	if (textIdList[id] > -1)
-		UiObjects[textIdList[id]]->scaleBar(id, procentOfMax, fromRight);
+		UiObjects[textIdList[id]]->scaleBar(0, procentOfMax, fromRight);
 }
 
 
@@ -403,10 +403,10 @@ void UI::showObject(int id)
 	}
 }
 
-void UI::changeHideAbleTexture(int objId, int whichTex)
+void UI::changeHideAbleTexture(int objId, int wmID, int whichTex)
 {
 	if (objId > -1 && objId < hideAbleObjects.size())
-		hideAbleObjects[objId]->changeTexUsed(whichTex);
+		hideAbleObjects[objId]->changeTexUsed(whichTex, wmID);
 }
 
 void UI::setHideableWorldMatrix(int id, int wmId, glm::vec2 xy)

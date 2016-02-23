@@ -697,12 +697,12 @@ void Core::upClient(float dt)
 					{
 						if (tTeam == 1)
 						{
-							uiManager->changeTextureHideAble(hideAbleObj::Banner, BannerTextureIDs::Victory);
+							uiManager->changeTextureHideAble(hideAbleObj::Banner, 0, BannerTextureIDs::Victory);
 							uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
 						}
 						else if (tTeam == 2)
 						{
-							uiManager->changeTextureHideAble(hideAbleObj::Banner, BannerTextureIDs::Defeat);
+							uiManager->changeTextureHideAble(hideAbleObj::Banner, 0, BannerTextureIDs::Defeat);
 							uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
 						}
 						uiManager->HUD.bannerCounter = 0;
@@ -712,12 +712,12 @@ void Core::upClient(float dt)
 					{
 						if (tTeam == 1)
 						{
-							uiManager->changeTextureHideAble(hideAbleObj::Banner, BannerTextureIDs::Defeat);
+							uiManager->changeTextureHideAble(hideAbleObj::Banner, 0, BannerTextureIDs::Defeat);
 							uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
 						}
 						else if (tTeam == 2)
 						{
-							uiManager->changeTextureHideAble(hideAbleObj::Banner, BannerTextureIDs::Victory);
+							uiManager->changeTextureHideAble(hideAbleObj::Banner, 0, BannerTextureIDs::Victory);
 							uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
 						}
 						uiManager->HUD.bannerCounter = 0;
@@ -725,7 +725,7 @@ void Core::upClient(float dt)
 					}
 					else if (tMode == GAMEMODE_MSG::MATCH_DRAW)
 					{
-						uiManager->changeTextureHideAble(hideAbleObj::Banner, BannerTextureIDs::Victory);
+						uiManager->changeTextureHideAble(hideAbleObj::Banner, 0, BannerTextureIDs::Victory);
 						uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
 						uiManager->HUD.bannerCounter = 0;
 						firstTimeInEnd = false;
@@ -737,7 +737,7 @@ void Core::upClient(float dt)
 				{
 					if (localp->getTeam() != 0)
 					{
-						uiManager->changeTextureHideAble(hideAbleObj::Banner, BannerTextureIDs::EndOfRound);
+						uiManager->changeTextureHideAble(hideAbleObj::Banner, 0, BannerTextureIDs::EndOfRound);
 						uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
 						uiManager->HUD.bannerCounter = 0;
 					}
@@ -810,9 +810,9 @@ void Core::upClient(float dt)
 				uiManager->setHoverCheckBool(false);
 
 				if(koth->getCapturePoint() == 0)
-					uiManager->changeTextureHideAble(hideAbleObj::Banner, BannerTextureIDs::ParkinAreaActive);
+					uiManager->changeTextureHideAble(hideAbleObj::Banner, 0, BannerTextureIDs::ParkinAreaActive);
 				else
-					uiManager->changeTextureHideAble(hideAbleObj::Banner, BannerTextureIDs::MarketActive);
+					uiManager->changeTextureHideAble(hideAbleObj::Banner, 0, BannerTextureIDs::MarketActive);
 				uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
 				uiManager->HUD.bannerCounter = 0;
 
@@ -2446,13 +2446,13 @@ void Core::inGameUIUpdate() //Ingame ui update
 
 			if (difference > 0 && difference < 4)
 			{
-				uiManager->changeTextureHideAble(hideAbleObj::ScoreAdderTeam1, difference - 1);
-				uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam1, true);
-				uiManager->HUD.scoreAdder1Counter = 0;
-				uiManager->HUD.movePointAdder1 = true;
 				int tmp = uiManager->addNewWM(hideAbleObj::ScoreAdderTeam1);
 				if (tmp != -1)
 					uiManager->HUD.wmIdList.push_back(tmp);
+				uiManager->changeTextureHideAble(hideAbleObj::ScoreAdderTeam1, uiManager->HUD.wmIdList.size() - 1, difference - 1);
+				uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam1, true);
+				uiManager->HUD.scoreAdder1Counter = 0;
+				uiManager->HUD.movePointAdder1 = true;
 			}
 		}
 		else
@@ -2470,13 +2470,13 @@ void Core::inGameUIUpdate() //Ingame ui update
 
 			if (difference > 0 && difference < 4)
 			{
-				uiManager->changeTextureHideAble(hideAbleObj::ScoreAdderTeam2, difference - 1);
-				uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam2, true);
-				uiManager->HUD.scoreAdder2Counter = 0;
-				uiManager->HUD.movePointAdder2 = true;
 				int tmp = uiManager->addNewWM(hideAbleObj::ScoreAdderTeam2);
 				if (tmp != -1)
 					uiManager->HUD.wmIdList.push_back(tmp);
+				uiManager->changeTextureHideAble(hideAbleObj::ScoreAdderTeam2, uiManager->HUD.wmIdList.size() - 1, difference - 1);
+				uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam2, true);
+				uiManager->HUD.scoreAdder2Counter = 0;
+				uiManager->HUD.movePointAdder2 = true;
 			}
 		}
 		else
@@ -2604,7 +2604,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 	{
 		if (uiManager->HUD.teamOneTokens <= 3 && uiManager->HUD.teamTwoTokens <= 3)
 		{
-			uiManager->changeTextureHideAble(hideAbleObj::Banner, BannerTextureIDs::FinalAssult);
+			uiManager->changeTextureHideAble(hideAbleObj::Banner, 0, BannerTextureIDs::FinalAssult);
 			uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
 			uiManager->HUD.bannerCounter = 0;
 			lowTicketsFirstTime = false;
@@ -2613,12 +2613,12 @@ void Core::inGameUIUpdate() //Ingame ui update
 		{
 			if (tTeam == 1)
 			{
-				uiManager->changeTextureHideAble(hideAbleObj::Banner, BannerTextureIDs::FinalAssult);
+				uiManager->changeTextureHideAble(hideAbleObj::Banner, 0, BannerTextureIDs::FinalAssult);
 				uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
 			}
 			else
 			{
-				uiManager->changeTextureHideAble(hideAbleObj::Banner, BannerTextureIDs::HoldYourGround);
+				uiManager->changeTextureHideAble(hideAbleObj::Banner, 0, BannerTextureIDs::HoldYourGround);
 				uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
 			}
 			uiManager->HUD.bannerCounter = 0;
@@ -2628,12 +2628,12 @@ void Core::inGameUIUpdate() //Ingame ui update
 		{
 			if (tTeam == 2)
 			{
-				uiManager->changeTextureHideAble(hideAbleObj::Banner, BannerTextureIDs::FinalAssult);
+				uiManager->changeTextureHideAble(hideAbleObj::Banner, 0, BannerTextureIDs::FinalAssult);
 				uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
 			}
 			else
 			{
-				uiManager->changeTextureHideAble(hideAbleObj::Banner, BannerTextureIDs::HoldYourGround);
+				uiManager->changeTextureHideAble(hideAbleObj::Banner, 0, BannerTextureIDs::HoldYourGround);
 				uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
 			}
 			uiManager->HUD.bannerCounter = 0;

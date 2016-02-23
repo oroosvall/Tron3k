@@ -105,7 +105,7 @@ void InputBox::resetWorldMatrix(int id)
 	worldMatrix[1].w = startWMY;
 }
 
-void InputBox::changeTexUsed(int id)
+void InputBox::changeTexUsed(int id, int wmID)
 {
 	if(id > -1 && id < 2)
 		textureIdInUse = textureIdList[id];
