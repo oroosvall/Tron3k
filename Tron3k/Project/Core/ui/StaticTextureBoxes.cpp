@@ -118,7 +118,7 @@ void StaticTextureBoxes::deleteOldestWM()
 	//Delete the oldest wm since it goes away first
 	int tmpSize = worldMatrix.size();
 	if(tmpSize > 0)
-		worldMatrix.pop_back();
+		worldMatrix.erase(worldMatrix.begin());
 }
 
 void StaticTextureBoxes::changeTexUsed(int id, int wmID)

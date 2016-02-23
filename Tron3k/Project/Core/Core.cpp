@@ -784,12 +784,6 @@ void Core::upClient(float dt)
 
 		game->clearAllBulletHitPlayerPos();
 
-		KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
-		KOTHSTATE tmp = koth->getState();
-
-		Player* localp = game->getPlayer(top->getConId());
-
-
 		if (kothState != tmp)
 		{
 			if (tmp == KOTHSTATE::PREROUND)
@@ -2491,11 +2485,9 @@ void Core::inGameUIUpdate() //Ingame ui update
 					uiManager->HUDTime.wmIdListScore1.erase(uiManager->HUDTime.wmIdListScore1.begin());
 
 				uiManager->HUDTime.counterListScore1.erase(uiManager->HUDTime.counterListScore1.begin());
-
 			}
-			else
-				for (size_t i = 0; i < uiManager->HUDTime.counterListScore1.size(); i++)
-					uiManager->HUDTime.counterListScore1[i]++;
+			for (size_t i = 0; i < uiManager->HUDTime.counterListScore1.size(); i++)
+				uiManager->HUDTime.counterListScore1[i]++;
 		}
 
 		if (uiManager->HUDTime.counterListScore2.size() > 0)
@@ -2511,9 +2503,8 @@ void Core::inGameUIUpdate() //Ingame ui update
 
 				uiManager->HUDTime.counterListScore2.erase(uiManager->HUDTime.counterListScore2.begin());
 			}
-			else
-				for (size_t i = 0; i < uiManager->HUDTime.counterListScore2.size(); i++)
-					uiManager->HUDTime.counterListScore2[i]++;
+			for (size_t i = 0; i < uiManager->HUDTime.counterListScore2.size(); i++)
+				uiManager->HUDTime.counterListScore2[i]++;
 		}
 
 		if (uiManager->HUDTime.counterListTicket1.size() > 0)
@@ -2530,9 +2521,8 @@ void Core::inGameUIUpdate() //Ingame ui update
 
 				uiManager->HUDTime.counterListTicket1.erase(uiManager->HUDTime.counterListTicket1.begin());
 			}
-			else
-				for (size_t i = 0; i < uiManager->HUDTime.counterListTicket1.size(); i++)
-					uiManager->HUDTime.counterListTicket1[i]++;
+			for (size_t i = 0; i < uiManager->HUDTime.counterListTicket1.size(); i++)
+				uiManager->HUDTime.counterListTicket1[i]++;
 		}
 
 		if (uiManager->HUDTime.counterListTicket2.size() > 0)
@@ -2548,9 +2538,8 @@ void Core::inGameUIUpdate() //Ingame ui update
 
 				uiManager->HUDTime.counterListTicket2.erase(uiManager->HUDTime.counterListTicket2.begin());
 			}
-			else
-				for (size_t i = 0; i < uiManager->HUDTime.counterListTicket2.size(); i++)
-					uiManager->HUDTime.counterListTicket2[i]++;
+			for (size_t i = 0; i < uiManager->HUDTime.counterListTicket2.size(); i++)
+				uiManager->HUDTime.counterListTicket2[i]++;
 		}
 	}
 
