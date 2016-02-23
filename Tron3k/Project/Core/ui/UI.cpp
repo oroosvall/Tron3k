@@ -181,10 +181,11 @@ bool UI::loadUI(std::string fileName, int winX, int winY)
 				else
 				{
 					hideAbleObjects.push_back(new StaticTextureBoxes(xy, textureArray, tmpCounter, uiRender, textureRes[0]));
-					hideAbleIds.push_back(hideAbleObjects.size() - 1);
 					delete[] textureArray;
 					textureArray = nullptr;
 					result = true;
+					if((hideAbleObjects.size() - 1) != hideAbleObj::Banner)
+						hideAbleObjects[hideAbleObjects.size() - 1]->deleteOldestWM();
 				}
 			}
 			else if (classId == 3) //Slider
@@ -252,6 +253,7 @@ void UI::clean()
 			hideAbleObjects[i] = nullptr;
 		}
 	hideAbleIds.clear();
+	hideAbleObjects.clear();
 
 	textureIdList = nullptr;
 	console = nullptr;
@@ -295,13 +297,13 @@ void UI::mouseHover(glm::vec2 pos)
 void UI::changeTex(int objId, int whichTex)
 {
 	if(objId > -1 && objId < UiObjects.size())
-		UiObjects[objId]->changeTexUsed(whichTex);
+		UiObjects[objId]->changeTexUsed(whichTex, 0);
 }
 
 void UI::changeColorTeam(int whichTex)
 {
 	for (int i = 0; i < UiObjects.size(); i++)
-		UiObjects[i]->changeTexUsed(whichTex);
+		UiObjects[i]->changeTexUsed(whichTex, 0);
 }
 
 //Empty
@@ -350,10 +352,10 @@ void UI::clearText(int id)
 		UiObjects[textIdList[id]]->cleanText();
 }
 
-void UI::scaleBar(int id, float procentOfMax, bool fromRight)
+void UI::scaleBar(int id,  float procentOfMax, bool fromRight)
 {
 	if (textIdList[id] > -1)
-		UiObjects[textIdList[id]]->scaleBar(procentOfMax, fromRight);
+		UiObjects[textIdList[id]]->scaleBar(0, procentOfMax, fromRight);
 }
 
 
@@ -365,21 +367,35 @@ void UI::renderHideable()
 }
 void UI::hideObject(int id)
 {
+	bool found = false;
+	int index = -1;
+
 	if (id > -1 && id < hideAbleObjects.size())
 	{
-		for (int i = id; i < hideAbleIds.size() - 1; i++)
-			hideAbleIds[i] = hideAbleIds[i + 1];
-		hideAbleIds.pop_back();
+		for (int i = 0; i < hideAbleIds.size() && !found; i++)
+		{
+			if (hideAbleIds[i] == id)
+			{
+				found = true;
+				index = i;
+			}
+		}
+
+		if (found && (index > -1 && index < hideAbleIds.size()))
+		{
+			hideAbleIds[index] = hideAbleIds[hideAbleIds.size() - 1];
+			hideAbleIds.pop_back();
+		}
 	}
 }
 void UI::showObject(int id)
 {
 	bool found = false;
 
-	if (id > -1 && id < hideAbleObjects.size())
+  	if (id > -1 && id < hideAbleObjects.size())
 	{
 		for (int i = 0; i < hideAbleIds.size() && !found; i++)
-			if (hideAbleIds[i] = id)
+			if (hideAbleIds[i] == id)
 				found = true;
 
 		if (!found)
@@ -388,8 +404,34 @@ void UI::showObject(int id)
 	}
 }
 
-void UI::changeHideAbleTexture(int objId, int whichTex)
+void UI::changeHideAbleTexture(int objId, int wmID, int whichTex)
 {
 	if (objId > -1 && objId < hideAbleObjects.size())
-		hideAbleObjects[objId]->changeTexUsed(whichTex);
+		hideAbleObjects[objId]->changeTexUsed(whichTex, wmID);
+}
+
+void UI::setHideableWorldMatrix(int id, int wmId, glm::vec2 xy)
+{
+	float tX = xy.x;
+	float tY = xy.y;
+
+	if (id > -1 && id < hideAbleObjects.size())
+		if(xy.x > -1.1f && xy.y > -1.1f)
+			hideAbleObjects[id]->setWorldMatrix(wmId, tX, tY);
+}
+void UI::resetHidableWorldMatrix(int id, int wmId)
+{
+	if (id > -1 && id < hideAbleObjects.size())
+		hideAbleObjects[id]->resetWorldMatrix(wmId);
+}
+int UI::addNewWM(int id)
+{
+	if (id > -1 && id < hideAbleObjects.size())
+		return hideAbleObjects[id]->addNewWM();
+	return -1;
+}
+void UI::deleteOldestWM(int id)
+{
+	if (id > -1 && id < hideAbleObjects.size())
+		hideAbleObjects[id]->deleteOldestWM();
 }

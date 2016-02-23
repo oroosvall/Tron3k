@@ -39,8 +39,15 @@ enum scaleAndText
 
 enum hideAbleObj
 {
-	Announcer
+	Banner,
+	ScoreAdderTeam1,
+	ScoreAdderTeam2,
+	TicketReducerTeam1,
+	TicketReducerTeam2
 };
+
+//ScoreTeam1,
+//ScoreTeam2,
 
 class UI
 {
@@ -111,7 +118,11 @@ public:
 	void renderHideable();
 	void hideObject(int id);
 	void showObject(int id);
-	void changeHideAbleTexture(int objId, int whichTex);
+	void changeHideAbleTexture(int objId, int wmID, int whichTex);
+	void setHideableWorldMatrix(int id, int wmId, glm::vec2 xy);
+	void resetHidableWorldMatrix(int id, int wmId);
+	int addNewWM(int id);
+	void deleteOldestWM(int id);
 };
 
 #endif

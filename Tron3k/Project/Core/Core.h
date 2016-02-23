@@ -69,6 +69,8 @@ private:
 	Gamestate last;
 	int subState;
 	int lastSubState;
+	bool firstTimeInEnd;
+	bool lowTicketsFirstTime;
 
 	//network
 	float tick_timer;
