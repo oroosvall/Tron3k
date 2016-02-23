@@ -10,7 +10,7 @@ PlayerMesh::PlayerMesh()
 	aabb.max = vec3(1, 1, 1);
 	aabb.min = vec3(-1, -1, -1);
 
-	cylinder.height = 1.0f;
+	cylinder.height = 0.9f;
 	cylinder.radius = 0.5f;
 
 	sphere.radius = 0.5f;
@@ -26,7 +26,7 @@ PlayerMesh::PlayerMesh(vec3 pos)
 	aabb.max = pos + vec3(1, 1, 1);
 	aabb.min = pos + vec3(-1, -1, -1);
 
-	cylinder.height = 1.0f;
+	cylinder.height = 0.9f;
 	cylinder.radius = 0.5f;
 
 	sphere.radius = 0.5f;

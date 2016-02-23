@@ -119,7 +119,7 @@ vec3 Physics::checkOBBvOBBCollision(CollideMesh mesh1, CollideMesh mesh2)
 vec4 Physics::checkOBBvCylinderCollision(Cylinder pMesh, OBB* objMesh)
 {
 	glm::vec4 collided = glm::vec4(0, 0, 0, 0);
-
+	collided.w = 9999;
 	bool col = false;
 
 	vec3 cNormal = vec3(0, 1, 0);
@@ -144,38 +144,64 @@ vec4 Physics::checkOBBvCylinderCollision(Cylinder pMesh, OBB* objMesh)
 		vec3 p = pMax - pMin;
 		vec3 lvP = checkLinevPlaneCollision(pMin, pMax, objMesh->planes[i].p[0], objMesh->planes[i].p[1], objMesh->planes[i].p[2], objMesh->planes[i].n);
 
+		if (i == 4)
+			int fitta = 3;
 		//Cases, see my wall for reference //Albin
 		//CASE 1:
-		if (length(lvP) > 0.00001f && length(lvP - pMesh.pos) > 0.01f)
+		if (length(lvP) > 0.001f)
 		{
-			if (dot(lvP - objMesh->planes[i].p[0], objMesh->planes[i].n) < 0.01f)//Point is in plane
+			vec3 p1 = lvP - objMesh->planes[i].p[0];
+			vec3 p2 = objMesh->planes[i].p[1] - objMesh->planes[i].p[0];
+			vec3 n = cross(p1, p2);
+			if (dot(n, objMesh->planes[i].n) > 0.99f || dot(n, objMesh->planes[i].n) < -0.99f)//Point is in plane
 			{
-				float d = dot(normalize(lvP - pMin), normalize(p));
-				if (dot(/*objMesh.planes[i].n*/normalize(lvP - pMin), normalize(p)) > 0.99f)// || dot(normalize(lvP - pMin), normalize(p)) < -0.95f)
+				if (dot(normalize(p), objMesh->planes[i].n) > 0.00f);// || dot(normalize(p), objMesh->planes[i].n) < -0.01f)
 				{
-					if (dot(objMesh->planes[i].n, normalize(p)) > 0.99f || dot(objMesh->planes[i].n, normalize(p)) < -0.99f)
+					float d = dot(normalize(lvP - pMin), normalize(p));
+					if (dot(/*objMesh.planes[i].n*/normalize(lvP - pMin), normalize(p)) > 0.98f)// || dot(normalize(lvP - pMin), normalize(p)) < -0.95f)
+					{
 						//plane is beneath us, and straight, I guess How do we know if it's not straight?
 						//oh yeah, check against the lvP - p line. Smart thinking there buddy
 						//there. if lvP is more or less straight beneath us, and in plane, then we're standing on top of or right below a plane
 							//yes? no? mbbe
-						if (length(pMesh.pos - pMin) < length(pMesh.pos - lvP))
+						/*if (pMesh.height - length(lvP - pMesh.pos) >collided.w)
 						{
-							if (collided.w == 0 || length(lvP - pMin) > collided.w)
-								//if(i == 4)
-							{
-								collided = vec4(objMesh->planes[i].n, length(lvP - pMesh.pos));
-								col = true;
-							}
-						}
-						else
+							if(dot(lvP - pMesh.pos, objMesh->planes[i].n) > 0)
+							collided = vec4(normalize(p), pMesh.height - length(lvP - pMesh.pos));
+							else
+								collided = vec4(normalize(p), pMesh.height - length(lvP - pMesh.pos));
+							col = true;
+						}*/
+					}
+				}
+			}
+		}
+
+		//FLOOR CASE:
+		if (i == 4)
+		{
+			if (length(lvP) > 0.0f && length(lvP - pMesh.pos) <= pMesh.height && !col)//collision
+			{
+				if (dot(lvP - objMesh->planes[i].p[0], objMesh->planes[i].n) < 0.00001f && dot(lvP - objMesh->planes[i].p[0], objMesh->planes[i].n) > -0.00001f)//poiny is in plane
+				{
+					if (objMesh->planes[i].n.y > 0.4f)
+					{
+						//floor.
+						if (pMesh.height - length(lvP - pMesh.pos) < collided.w)
 						{
-							if (collided.w == 0 || length(lvP - pMin) > collided.w)
-								//if(i == 4)
-							{
-								collided = vec4(objMesh->planes[i].n, length(lvP - pMin));
-								col = true;
-							}
+							collided = vec4(normalize(p), pMesh.height - length(lvP - pMesh.pos));
+							col = true;
 						}
+					}
+					//	else if (objMesh->planes[i].n.y < -0.4f)
+						//{
+							//roof
+							//if (pMesh.height - length(lvP - pMesh.pos) < collided.w)
+							//{
+								//collided = vec4(-normalize(p), pMesh.height - length(lvP - pMesh.pos));
+								//col = true;
+							//}
+				//}
 				}
 			}
 		}
@@ -194,37 +220,38 @@ vec4 Physics::checkOBBvCylinderCollision(Cylinder pMesh, OBB* objMesh)
 		//TODO: ADD THINGS
 	}
 	//the lines
-	for (int i = 0; i < 12; i++)
+	if (!col)
 	{
-		//line v circle...
-		//We pretend the circle is a plane and use the lvP check. We then draw the line between cylPos and lvP and check if it fits the radius
-		vec3 plane1 = pMesh.pos;
-		vec3 plane2 = plane1;
-		vec3 plane3 = plane1;
-		plane1.z += pMesh.radius;
-		plane1.x -= pMesh.radius;
-		plane2.x += pMesh.radius;
-		plane2.z += pMesh.radius;
-		plane3.x += pMesh.radius;
-		plane3.z -= pMesh.radius;
-		vec3 planeN = normalize(cross(normalize(plane1 - plane2), normalize(plane3 - plane2)));
-
-		vec3 lvP = checkLinevPlaneCollision(objMesh->lines[i].point1, objMesh->lines[i].point2, plane3, plane2, plane1, planeN);
-
-		vec2 xzdif = vec2(lvP.x, lvP.z);
-		float yDif = lvP.y;
-
-		xzdif -= vec2(pMesh.pos.x, pMesh.pos.z);
-		yDif -= pMesh.pos.y;
-
-		//if (!col)
+		for (int i = 0; i < 12; i++)
 		{
-			if (yDif < pMesh.height)
-				if (length(xzdif) <= pMesh.radius)
-				{
-					//line collision!
-					collided = vec4(normalize(lvP - pMesh.pos), length(lvP - pMesh.pos));
-				}
+			//line v circle...
+			//We pretend the circle is a plane and use the lvP check. We then draw the line between cylPos and lvP and check if it fits the radius
+			vec3 plane1 = pMesh.pos;
+			vec3 plane2 = plane1;
+			vec3 plane3 = plane1;
+			plane1.z += pMesh.radius;
+			plane1.x -= pMesh.radius;
+			plane2.x += pMesh.radius;
+			plane2.z += pMesh.radius;
+			plane3.x += pMesh.radius;
+			plane3.z -= pMesh.radius;
+			vec3 planeN = normalize(cross(normalize(plane1 - plane2), normalize(plane3 - plane2)));
+
+			vec3 lvP = checkLinevPlaneCollision(objMesh->lines[i].point1, objMesh->lines[i].point2, plane3, plane2, plane1, planeN);
+
+			vec2 xzdif = vec2(lvP.x, lvP.z);
+			float yDif = lvP.y;
+
+			xzdif -= vec2(pMesh.pos.x, pMesh.pos.z);
+			yDif -= pMesh.pos.y;
+
+
+			if (length(xzdif) <= pMesh.radius)
+			{
+				//line collision!
+
+				collided = vec4(normalize(lvP - pMesh.pos), length(lvP.y - pMesh.pos.y));
+			}
 
 		}
 	}
@@ -238,12 +265,14 @@ vec4 Physics::checkOBBvCylinderCollision(Cylinder pMesh, OBB* objMesh)
 	{
 		//t = vec4(dir, t.w + 0.2f);
 		//bulletPos = bPos;
+		if (collided.w > 999)
+			return vec4(0);
 		if (length(collided) > 0.001f)
 		{
 			//we have collided with a plane above/beneath us
 			return collided;
 		}
-		return norm;
+		//return norm;
 	}
 	/*
 	if (length(ang) < 0.001f) //planes are parallell
@@ -757,10 +786,10 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos, vec3 playerDir,
 				if (t != vec4(0))//t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 				{
 					t = vec4(normalize(vec3(t)), t.w);
-					if (t.y > 0.98f)
-						t.y = 1;
-					else if (t.y < -0.98f)
-						t.y = -1;
+					//	if (t.y > 0.98f)
+						//	t.y = 1;
+						//else if (t.y < -0.98f)
+							//t.y = -1;
 					cNorms.push_back(t);
 				}
 				else
@@ -793,7 +822,7 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos, vec3 playerDir,
 			if (box.max.y > roomBox->min.y && box.min.y < roomBox->max.y)//y
 				if (box.max.z > roomBox->min.z && box.min.z < roomBox->max.z)//y
 					passed = true;
-		passed = false;
+		//passed = false;
 		if (passed)
 		{
 			//each abb
@@ -811,10 +840,10 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos, vec3 playerDir,
 						if (t != vec4(0))//(t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 						{
 							t = vec4(normalize(vec3(t)), t.w);
-							if (t.y > 0.98f)
-								t.y = 1;
-							else if (t.y < -0.98f)
-								t.y = -1;
+							//if (t.y > 0.98f)
+								//t.y = 1;
+							//else if (t.y < -0.98f)
+								//t.y = -1;
 							cNorms.push_back(t);
 						}
 						else
