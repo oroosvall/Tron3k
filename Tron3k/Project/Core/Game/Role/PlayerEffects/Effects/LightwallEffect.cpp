@@ -25,11 +25,6 @@ int LightwallEffect::update(float dt)
 	}
 	if (expandDong)//else
 	{
-		/*glm::vec3 curVel = myPlayer->getVelocity();
-		if (dot(curVel, playerVel) < 1.0 - FLT_EPSILON || kill ||
-			myPlayer->getAnimState_t_c() == AnimationState::third_primary_jump_begin)
-		{*/
-
 		if (!myPlayer->searchModifier(MODIFIER_TYPE::LIGHTWALLCONTROLLOCK))
 		{
 			endPoint = myPlayer->getPos() + playerVel;

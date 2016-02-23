@@ -776,8 +776,6 @@ void Core::upClient(float dt)
 					pos.y = -4.5f;
 			}
 
-			top->frame_playerdata(top->getConId(), pos, local->getDir(), local->getVelocity(), local->getGrounded(), local->getSpecialMeter(), local->roomID);
-
 			if (game->weaponSwitchReady())
 			{
 				int swaploc = -1;
@@ -810,6 +808,8 @@ void Core::upClient(float dt)
 				CONSUMABLE_TYPE ct = game->getConsumableUsed(top->getConId());
 				top->frame_consumable(ct, top->getConId(), local->getPos(), local->getDir(), local->getTeam());
 			}
+
+			top->frame_playerdata(top->getConId(), pos, local->getDir(), local->getVelocity(), local->getGrounded(), local->getSpecialMeter(), local->roomID);
 
 			//send animstates
 			top->frame_anim(top->getConId(), local->getAnimState_f_p(), local->getAnimState_t_p());
