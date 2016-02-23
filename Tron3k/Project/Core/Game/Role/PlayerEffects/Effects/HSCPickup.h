@@ -6,7 +6,7 @@
 class HSCPickup : public Effect
 {
 private:
-	float rad = 2.0f;
+	float rad = 0.5;
 	float maxCooldown = 30.0f;
 	float cooldown = maxCooldown;
 	bool resetted = true;
