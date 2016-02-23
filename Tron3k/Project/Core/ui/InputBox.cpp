@@ -27,6 +27,8 @@ InputBox::InputBox()
 	winY = 0;
 	yOffSet = 0;
 	xOffSet = 0;
+	startWMX = 0;
+	startWMY = 0;
 }
 InputBox::InputBox(glm::vec2 center, int textureId1, int textureId2,int uniqueKey, IRenderPipeline* uiRender, glm::vec2 textRes, int winX, int winY, glm::vec3 offSetsTextSize)
 {
@@ -73,7 +75,8 @@ InputBox::InputBox(glm::vec2 center, int textureId1, int textureId2,int uniqueKe
 	//double tX = (x / (double)winX) * 2 - 1.0; // (x/ResolutionX) * 2 - 1
 	//double tY = (-y / (double)winY) * 2 + 1.0; // (y/ResolutionY) * 2 - 1
 
-
+	startWMX = worldMatrix[0].w;
+	startWMY = worldMatrix[1].w;
 }
 InputBox::~InputBox()
 {
@@ -90,13 +93,19 @@ void InputBox::renderQuad(int id)
 	uiRender->ui_renderQuad((float*)&worldMatrix[0][0], (float*)&pivot.x, textureIdInUse, 1.0f, id);
 }
 
-void InputBox::setWorldMatrix(float x, float y, int id)
+void InputBox::setWorldMatrix(int id, float x, float y)
 {
 	worldMatrix[0].w = x;
 	worldMatrix[1].w = y;
 }
 
-void InputBox::changeTexUsed(int id)
+void InputBox::resetWorldMatrix(int id)
+{
+	worldMatrix[0].w = startWMX;
+	worldMatrix[1].w = startWMY;
+}
+
+void InputBox::changeTexUsed(int id, int wmID)
 {
 	if(id > -1 && id < 2)
 		textureIdInUse = textureIdList[id];
@@ -138,7 +147,7 @@ void InputBox::setTexture(std::vector<GLuint> uiTextureIds)
 	textureIdInUse = textureIdList[0];
 }
 
-void InputBox::scaleBar(float procentOfMax, bool fromRight)
+void InputBox::scaleBar(int id, float procentOfMax, bool fromRight)
 {
 	pivot = glm::vec3(1.0f, 0.0f, 0.0f);
 
