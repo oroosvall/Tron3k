@@ -25,9 +25,13 @@ int LightwallEffect::update(float dt)
 	}
 	if (expandDong)//else
 	{
-		glm::vec3 curVel = myPlayer->getVelocity();
-		if (dot(curVel, playerVel) < 1.0 - FLT_EPSILON)
+		if (myPlayer->searchModifier(MODIFIER_TYPE::LIGHTWALLCONTROLLOCK))
 		{
+
+		//}
+		//glm::vec3 curVel = myPlayer->getVelocity();
+		//if (dot(curVel, playerVel) < 1.0 - FLT_EPSILON)
+		//{
 			endPoint = myPlayer->getPos() + playerVel;
 			expandDong = false;
 			collidable = true;
