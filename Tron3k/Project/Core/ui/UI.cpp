@@ -181,10 +181,11 @@ bool UI::loadUI(std::string fileName, int winX, int winY)
 				else
 				{
 					hideAbleObjects.push_back(new StaticTextureBoxes(xy, textureArray, tmpCounter, uiRender, textureRes[0]));
-					//hideAbleIds.push_back(hideAbleObjects.size() - 1);
 					delete[] textureArray;
 					textureArray = nullptr;
 					result = true;
+					if((hideAbleObjects.size() - 1) != hideAbleObj::Banner)
+						hideAbleObjects[hideAbleObjects.size() - 1]->deleteOldestWM();
 				}
 			}
 			else if (classId == 3) //Slider

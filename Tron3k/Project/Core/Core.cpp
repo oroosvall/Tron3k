@@ -730,6 +730,19 @@ void Core::upClient(float dt)
 						uiManager->HUD.bannerCounter = 0;
 						firstTimeInEnd = false;
 					}
+
+					firstTimeInEnd = false;
+					lowTicketsFirstTime = false;
+					uiManager->HUD.scoreChanged = false;
+					uiManager->HUDTime.movePointAdder1 = false;
+					uiManager->HUDTime.movePointAdder2 = false;
+					uiManager->HUDTime.moveTokenReducer1 = false;
+					uiManager->HUDTime.moveTokenReducer2 = false;
+					uiManager->HUD.firstSecondEachRound = false;
+					uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam1, false);
+					uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam2, false);
+					uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam1, false);
+					uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam2, false);
 				}
 
 				//Rights out the of round.
@@ -745,11 +758,15 @@ void Core::upClient(float dt)
 					firstTimeInEnd = false;
 					lowTicketsFirstTime = false;
 					uiManager->HUD.scoreChanged = false;
-					uiManager->HUD.movePointAdder1 = false;
-					uiManager->HUD.movePointAdder2 = false;
-					uiManager->HUD.moveTokenReducer1 = false;
-					uiManager->HUD.moveTokenReducer2 = false;
+					uiManager->HUDTime.movePointAdder1 = false;
+					uiManager->HUDTime.movePointAdder2 = false;
+					uiManager->HUDTime.moveTokenReducer1 = false;
+					uiManager->HUDTime.moveTokenReducer2 = false;
 					uiManager->HUD.firstSecondEachRound = false;
+					uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam1, false);
+					uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam2, false);
+					uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam1, false);
+					uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam2, false);
 				}
 			}
 		}
@@ -819,11 +836,16 @@ void Core::upClient(float dt)
 				firstTimeInEnd = true;
 				lowTicketsFirstTime = true;
 				uiManager->HUD.scoreChanged = false;
-				uiManager->HUD.movePointAdder1 = false;
-				uiManager->HUD.movePointAdder2 = false;
-				uiManager->HUD.moveTokenReducer1 = false;
-				uiManager->HUD.moveTokenReducer2 = false;
+				uiManager->HUDTime.movePointAdder1 = false;
+				uiManager->HUDTime.movePointAdder2 = false;
+				uiManager->HUDTime.moveTokenReducer1 = false;
+				uiManager->HUDTime.moveTokenReducer2 = false;
 				uiManager->HUD.firstSecondEachRound = true;
+				uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
+				uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam1, true);
+				uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam2, true);
+				uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam1, true);
+				uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam2, true);
 			}
 			kothState = tmp;
 		}
@@ -2372,8 +2394,10 @@ void Core::inGameUIUpdate() //Ingame ui update
 		}
 		if (local->getSpecialMeter() != uiManager->HUD.specialMeter) //Special Meter
 		{
+			float procent = 0.0f;
 			uiManager->HUD.specialMeter = local->getSpecialMeter();
-			float procent = local->getSpecialMeter() / uiManager->HUD.maxSpecialMeter;
+			if(uiManager->HUD.maxSpecialMeter > 0)
+				procent = local->getSpecialMeter() / uiManager->HUD.maxSpecialMeter;
 			uiManager->scaleBar(scaleAndText::AbilityMeter, procent, true);
 		}
 		if (local->getAmmo() != uiManager->HUD.ammo) //Ammo
@@ -2399,12 +2423,15 @@ void Core::inGameUIUpdate() //Ingame ui update
 
 		if (koth->getState() == KOTHSTATE::ROUND)
 		{
- 			uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam1, true);
-			uiManager->HUD.ticketReducer1Counter = 0;
-			uiManager->HUD.moveTokenReducer1 = true;
 			int tmp = uiManager->addNewWM(hideAbleObj::TicketReducerTeam1);
 			if (tmp != -1)
-				uiManager->HUD.wmIdList.push_back(tmp);
+			{
+				if (uiManager->HUDTime.wmIdListTicket1.size() == 0)
+					uiManager->HUDTime.moveTokenReducer1 = true;
+
+				uiManager->HUDTime.wmIdListTicket1.push_back(tmp);
+				uiManager->HUDTime.counterListTicket1.push_back(0);
+			}
 		}
 
 		uiManager->HUD.scoreChanged = true;
@@ -2422,12 +2449,15 @@ void Core::inGameUIUpdate() //Ingame ui update
 
 		if (koth->getState() == KOTHSTATE::ROUND)
 		{
-			uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam2, true);
-			uiManager->HUD.ticketReducer2Counter = 0;
-			uiManager->HUD.moveTokenReducer2 = true;
 			int tmp = uiManager->addNewWM(hideAbleObj::TicketReducerTeam2);
 			if (tmp != -1)
-				uiManager->HUD.wmIdList.push_back(tmp);
+			{
+				if (uiManager->HUDTime.wmIdListTicket2.size() == 0)
+					uiManager->HUDTime.moveTokenReducer2 = true;
+
+				uiManager->HUDTime.wmIdListTicket2.push_back(tmp);
+				uiManager->HUDTime.counterListTicket2.push_back(0);
+			}
 		}
 
 		uiManager->HUD.scoreChanged = true;
@@ -2448,11 +2478,15 @@ void Core::inGameUIUpdate() //Ingame ui update
 			{
 				int tmp = uiManager->addNewWM(hideAbleObj::ScoreAdderTeam1);
 				if (tmp != -1)
-					uiManager->HUD.wmIdList.push_back(tmp);
-				uiManager->changeTextureHideAble(hideAbleObj::ScoreAdderTeam1, uiManager->HUD.wmIdList.size() - 1, difference - 1);
-				uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam1, true);
-				uiManager->HUD.scoreAdder1Counter = 0;
-				uiManager->HUD.movePointAdder1 = true;
+				{
+					if (uiManager->HUDTime.wmIdListScore1.size() == 0)
+						uiManager->HUDTime.movePointAdder1 = true;
+
+					uiManager->HUDTime.wmIdListScore1.push_back(tmp);
+					uiManager->HUDTime.counterListScore1.push_back(0);
+
+					uiManager->changeTextureHideAble(hideAbleObj::ScoreAdderTeam1, uiManager->HUDTime.wmIdListScore1.size() - 1, difference - 1);
+				}
 			}
 		}
 		else
@@ -2472,11 +2506,15 @@ void Core::inGameUIUpdate() //Ingame ui update
 			{
 				int tmp = uiManager->addNewWM(hideAbleObj::ScoreAdderTeam2);
 				if (tmp != -1)
-					uiManager->HUD.wmIdList.push_back(tmp);
-				uiManager->changeTextureHideAble(hideAbleObj::ScoreAdderTeam2, uiManager->HUD.wmIdList.size() - 1, difference - 1);
-				uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam2, true);
-				uiManager->HUD.scoreAdder2Counter = 0;
-				uiManager->HUD.movePointAdder2 = true;
+				{
+					if (uiManager->HUDTime.wmIdListScore2.size() == 0)
+						uiManager->HUDTime.movePointAdder2 = true;
+
+					uiManager->HUDTime.wmIdListScore2.push_back(tmp);
+					uiManager->HUDTime.counterListScore2.push_back(0);
+
+					uiManager->changeTextureHideAble(hideAbleObj::ScoreAdderTeam2, uiManager->HUDTime.wmIdListScore2.size() - 1, difference - 1);
+				}
 			}
 		}
 		else
@@ -2545,6 +2583,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 			uiManager->scaleBar(scaleAndText::LoseTicketsMeter, 1.0f, true);
 		}
 
+		//Counters
 		if (uiManager->HUD.bannerCounter == 3)
 		{
 			uiManager->hideOrShowHideAble(hideAbleObj::Banner, false);
@@ -2553,50 +2592,79 @@ void Core::inGameUIUpdate() //Ingame ui update
 		}
 		else
 			uiManager->HUD.bannerCounter++;
-		if (uiManager->HUD.scoreAdder1Counter == 2)
+		if (uiManager->HUDTime.counterListScore1.size() > 0)
 		{
-			uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam1, false);
-			uiManager->HUD.scoreAdder1Counter = 3;
-			//uiManager->resetHidableWorldMatrix(hideAbleObj::ScoreAdderTeam1, 0); //The 0 is WorldMatrix index since it lies in a vector
-			uiManager->HUD.movePointAdder1 = false;
-			uiManager->deleteOldestWM(uiManager->HUD.wmIdList[0]);
-			uiManager->HUD.wmIdList.erase(uiManager->HUD.wmIdList.begin());
+			if (uiManager->HUDTime.counterListScore1[0] == 2)
+			{
+				uiManager->deleteOldestWM(hideAbleObj::ScoreAdderTeam1);
+				if (uiManager->HUDTime.wmIdListScore1.size() < 1)
+					uiManager->HUDTime.movePointAdder1 = false;
+
+				if (uiManager->HUDTime.wmIdListScore1.size() > 0)
+					uiManager->HUDTime.wmIdListScore1.erase(uiManager->HUDTime.wmIdListScore1.begin());
+
+				uiManager->HUDTime.counterListScore1.erase(uiManager->HUDTime.counterListScore1.begin());
+
+			}
+			else
+				for (size_t i = 0; i < uiManager->HUDTime.counterListScore1.size(); i++)
+					uiManager->HUDTime.counterListScore1[i]++;
 		}
-		else
-			uiManager->HUD.scoreAdder1Counter++;
-		if (uiManager->HUD.scoreAdder2Counter == 2)
+
+		if (uiManager->HUDTime.counterListScore2.size() > 0)
 		{
-			uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam2, false);
-			uiManager->HUD.scoreAdder2Counter = 3;
-			//uiManager->resetHidableWorldMatrix(hideAbleObj::ScoreAdderTeam2, 0); //The 0 is WorldMatrix index since it lies in a vector
-			uiManager->HUD.movePointAdder2 = false;
-			uiManager->deleteOldestWM(uiManager->HUD.wmIdList[0]);
-			uiManager->HUD.wmIdList.erase(uiManager->HUD.wmIdList.begin());
+			if (uiManager->HUDTime.counterListScore2[0] == 2)
+			{
+				uiManager->deleteOldestWM(hideAbleObj::ScoreAdderTeam2);
+				if (uiManager->HUDTime.wmIdListScore2.size() < 1)
+					uiManager->HUDTime.movePointAdder2 = false;
+
+				if(uiManager->HUDTime.wmIdListScore2.size() > 0)
+					uiManager->HUDTime.wmIdListScore2.erase(uiManager->HUDTime.wmIdListScore2.begin());
+
+				uiManager->HUDTime.counterListScore2.erase(uiManager->HUDTime.counterListScore2.begin());
+			}
+			else
+				for (size_t i = 0; i < uiManager->HUDTime.counterListScore2.size(); i++)
+					uiManager->HUDTime.counterListScore2[i]++;
 		}
-		else
-			uiManager->HUD.scoreAdder2Counter++;
-		if (uiManager->HUD.ticketReducer1Counter == 2)
+
+		if (uiManager->HUDTime.counterListTicket1.size() > 0)
 		{
-			uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam1, false);
-			uiManager->HUD.ticketReducer1Counter = 3;
-			//uiManager->resetHidableWorldMatrix(hideAbleObj::TicketReducerTeam1, 0); //The 0 is WorldMatrix index since it lies in a vector
-			uiManager->HUD.moveTokenReducer1 = false;
-			uiManager->deleteOldestWM(uiManager->HUD.wmIdList[0]);
-			uiManager->HUD.wmIdList.erase(uiManager->HUD.wmIdList.begin());
+			if (uiManager->HUDTime.counterListTicket1[0] == 2)
+			{
+				uiManager->deleteOldestWM(hideAbleObj::TicketReducerTeam1);
+				
+				if (uiManager->HUDTime.wmIdListTicket1.size() < 1)
+					uiManager->HUDTime.moveTokenReducer1 = false;
+
+				if(uiManager->HUDTime.wmIdListTicket1.size() > 0)
+					uiManager->HUDTime.wmIdListTicket1.erase(uiManager->HUDTime.wmIdListTicket1.begin());
+
+				uiManager->HUDTime.counterListTicket1.erase(uiManager->HUDTime.counterListTicket1.begin());
+			}
+			else
+				for (size_t i = 0; i < uiManager->HUDTime.counterListTicket1.size(); i++)
+					uiManager->HUDTime.counterListTicket1[i]++;
 		}
-		else
-			uiManager->HUD.ticketReducer1Counter++;
-		if (uiManager->HUD.ticketReducer2Counter == 2)
+
+		if (uiManager->HUDTime.counterListTicket2.size() > 0)
 		{
-			uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam2, false);
-			uiManager->HUD.ticketReducer2Counter = 3;
-			//uiManager->resetHidableWorldMatrix(hideAbleObj::TicketReducerTeam2, 0); //The 0 is WorldMatrix index since it lies in a vector
-			uiManager->HUD.moveTokenReducer2 = false;
-			uiManager->deleteOldestWM(uiManager->HUD.wmIdList[0]);
-			uiManager->HUD.wmIdList.erase(uiManager->HUD.wmIdList.begin());
+			if (uiManager->HUDTime.counterListTicket2[0] == 2)
+			{
+				uiManager->deleteOldestWM(hideAbleObj::TicketReducerTeam2);
+				if (uiManager->HUDTime.wmIdListTicket2.size() < 1)
+					uiManager->HUDTime.moveTokenReducer2 = false;
+
+				if (uiManager->HUDTime.wmIdListTicket2.size() > 0)
+					uiManager->HUDTime.wmIdListTicket2.erase(uiManager->HUDTime.wmIdListTicket2.begin());
+
+				uiManager->HUDTime.counterListTicket2.erase(uiManager->HUDTime.counterListTicket2.begin());
+			}
+			else
+				for (size_t i = 0; i < uiManager->HUDTime.counterListTicket2.size(); i++)
+					uiManager->HUDTime.counterListTicket2[i]++;
 		}
-		else
-			uiManager->HUD.ticketReducer2Counter++;
 	}
 
 	//Checks to see if the banners "Final Assult" or Hold Your Ground" should be shown.
@@ -2642,18 +2710,18 @@ void Core::inGameUIUpdate() //Ingame ui update
 	}
 	uiManager->HUD.scoreChanged = false;
 
-	if (uiManager->HUD.moveTokenReducer1)
-		for (int i = 0; i < uiManager->HUD.wmIdList.size(); i++)
+	if (uiManager->HUDTime.moveTokenReducer1)
+		for (int i = 0; i < uiManager->HUDTime.wmIdListTicket1.size(); i++)
 			uiManager->setHideableWorldMatrix(hideAbleObj::TicketReducerTeam1, i, glm::vec2(0.001f, 0.0f));
-	if (uiManager->HUD.moveTokenReducer2)
-		for (int i = 0; i < uiManager->HUD.wmIdList.size(); i++)
+	if (uiManager->HUDTime.moveTokenReducer2)
+		for (int i = 0; i < uiManager->HUDTime.wmIdListTicket2.size(); i++)
 			uiManager->setHideableWorldMatrix(hideAbleObj::TicketReducerTeam2, i, glm::vec2(0.001f, 0.0f));
-	if (uiManager->HUD.movePointAdder1)
-		for (int i = 0; i < uiManager->HUD.wmIdList.size(); i++)
-			uiManager->setHideableWorldMatrix(hideAbleObj::ScoreAdderTeam1, i, glm::vec2(0.0f, 0.001f));
-	if (uiManager->HUD.movePointAdder2)
-		for (int i = 0; i < uiManager->HUD.wmIdList.size(); i++)
-			uiManager->setHideableWorldMatrix(hideAbleObj::ScoreAdderTeam2, i, glm::vec2(0.0f, 0.001f));
+	if (uiManager->HUDTime.movePointAdder1)
+		for (int i = 0; i < uiManager->HUDTime.wmIdListScore1.size(); i++)
+			uiManager->setHideableWorldMatrix(hideAbleObj::ScoreAdderTeam1, i, glm::vec2(0.0f, -0.001f));
+	if (uiManager->HUDTime.movePointAdder2)
+		for (int i = 0; i < uiManager->HUDTime.wmIdListScore2.size(); i++)
+			uiManager->setHideableWorldMatrix(hideAbleObj::ScoreAdderTeam2, i, glm::vec2(0.0f, -0.001f));
 
 
 	uiManager->renderHideAble();

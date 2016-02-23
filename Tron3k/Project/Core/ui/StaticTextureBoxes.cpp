@@ -116,7 +116,8 @@ int StaticTextureBoxes::addNewWM()
 void StaticTextureBoxes::deleteOldestWM()
 {
 	//Delete the oldest wm since it goes away first
-	if(worldMatrix.size() > 0)
+	int tmpSize = worldMatrix.size();
+	if(tmpSize > 0)
 		worldMatrix.pop_back();
 }
 

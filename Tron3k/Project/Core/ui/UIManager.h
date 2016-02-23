@@ -155,16 +155,23 @@ public:
 		bool firstSecondEachRound;
 		bool scoreChanged;
 		int bannerCounter;
-		int scoreAdder1Counter;
-		int scoreAdder2Counter;
-		int ticketReducer1Counter;
-		int ticketReducer2Counter;
+	}HUD;
+
+	struct HUDTimeValues
+	{
+		vector<int> wmIdListTicket1;
+		vector<int> wmIdListTicket2;
+		vector<int> wmIdListScore1;
+		vector<int> wmIdListScore2;
+		vector<int> counterListTicket1;
+		vector<int> counterListTicket2;
+		vector<int> counterListScore1;
+		vector<int> counterListScore2;
 		bool moveTokenReducer1;
 		bool moveTokenReducer2;
 		bool movePointAdder1;
 		bool movePointAdder2;
-		vector<int> wmIdList;
-	}HUD;
+	} HUDTime;
 };
 
 #endif

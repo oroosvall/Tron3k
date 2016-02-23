@@ -36,14 +36,10 @@ UIManager::UIManager()
 	HUD.firstSecondEachRound = true;
 	HUD.scoreChanged = false;
 	HUD.bannerCounter = 5;
-	HUD.scoreAdder1Counter = 5;
-	HUD.scoreAdder2Counter = 5;
-	HUD.ticketReducer1Counter = 5;
-	HUD.ticketReducer2Counter = 5;
-	HUD.moveTokenReducer1 = false;
-	HUD.moveTokenReducer2 = false;
-	HUD.movePointAdder1 = false;
-	HUD.movePointAdder2 = false;
+	HUDTime.moveTokenReducer1 = false;
+	HUDTime.moveTokenReducer2 = false;
+	HUDTime.movePointAdder1 = false;
+	HUDTime.movePointAdder2 = false;
 }
 UIManager::~UIManager() 
 {
@@ -333,10 +329,10 @@ void UIManager::removeAllMenus()
 	nrOfOpenedMenus = 0;
 	hideAbleMenuActive = false;
 	HUD.scoreChanged = false;
-	HUD.moveTokenReducer1 = false;
-	HUD.moveTokenReducer2 = false;
-	HUD.movePointAdder1 = false;
-	HUD.movePointAdder2 = false;
+	HUDTime.moveTokenReducer1 = false;
+	HUDTime.moveTokenReducer2 = false;
+	HUDTime.movePointAdder1 = false;
+	HUDTime.movePointAdder2 = false;
 }
 bool UIManager::LoadNextSet(int whichMenuGroup, int winX, int winY)
 {
