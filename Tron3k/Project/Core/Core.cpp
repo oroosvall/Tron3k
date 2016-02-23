@@ -193,10 +193,11 @@ void Core::update(float dt)
 				{
 					if (current != SERVER)
 					{
-						if (!console.getInChatMode() && cursorInvisible)
+						if (!console.getInChatMode())
 						{
-							p->setLockedControls(false);
 							renderPipe->setChatTypeMessage("");
+							if (cursorInvisible)
+								p->setLockedControls(false);
 						}
 						else if (console.getInChatMode())
 						{
@@ -698,7 +699,10 @@ void Core::upClient(float dt)
 		{
 			if (tmp == KOTHSTATE::PREROUND)
 			{
-				top->command_role_change(top->getConId(), 1);
+				if (localp->getRole()->getRole() == ROLES::NROFROLES)
+				{
+					top->command_role_change(top->getConId(), 1);
+				}
 				//dont show class select when in spectate
 				if (localp->getTeam() != 0)
 					showClassSelect();
