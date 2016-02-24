@@ -6,21 +6,26 @@ enum AnimationState
 	first_primary_idle,				// Trapper	| Destroyer	| Shankbot | Brute | Manipulator |
 	first_primary_run, 				// Trapper	| Destroyer	| Shankbot | Brute | Manipulator |
 	first_primary_fire,				// Trapper	| Destroyer	| Shankbot | Brute | Manipulator |	
-	first_primary_air, 				// Trapper	| Destroyer	| Shankbot | Brute | Manipulator |
 	first_primary_reload,			// Trapper	| Destroyer	| Shankbot | Brute | Manipulator |
 	first_primary_throw, 			// Trapper	| use fire?	|		   | Brute | Manipulator |
 	first_primary_switch,			//      	| Destroyer	| Shankbot | Brute | Manipulator |
-	first_primary_switch_IN,		//      	|           |          | Brute |             |
+	first_primary_switch_IN,		//      	|           |          | Brute | Manipulator |
 
 	first_secondary_idle, 			//			| Destroyer | Shankbot | Brute | Manipulator |
 	first_secondary_run,			//			| Destroyer | Shankbot | Brute | Manipulator |
 	first_secondary_fire,			// Trapper	| Destroyer | Shankbot | Brute | Manipulator |
-	first_secondary_air,			//			| Destroyer | Shankbot | Brute | Manipulator |
 	first_secondary_reload,			//			| Destroyer |		   | Brute | Manipulator |
 	first_secondary_throw, 			//			| Destroyer |          | Brute | Manipulator |
 	first_secondary_switch,			//      	| Destroyer | Shankbot | Brute | Manipulator |
-	first_secondary_switch_IN,		//      	|           |          | Brute |             |
+	first_secondary_switch_IN,		//      	|           |          | Brute | Manipulator |
+
+	//manip
+	first_secondary_idle_left,		// 			|			|		   |	   | Manipulator |
+	first_secondary_run_left,		// 			|			|		   |	   | Manipulator |
 	first_secondary_fire_left,		// 			|			|		   |	   | Manipulator |
+	first_secondary_death_left,		// 			|			|		   |	   | Manipulator |
+
+
 
 	third_primary_idle,				// Trapper	| Destroyer | Shankbot | Brute | Manipulator |
 	third_primary_run,				// Trapper	| Destroyer | Shankbot | Brute | Manipulator |
@@ -81,7 +86,6 @@ int static getAnimRank(AnimationState test)
 	{
 	case first_primary_idle:			return 0;
 	case first_primary_run:				return 0;
-	case first_primary_air:				return 0;
 	case first_primary_fire:			return 1;
 	case first_primary_reload:			return 1;
 	case first_primary_throw:			return 1;
@@ -90,14 +94,17 @@ int static getAnimRank(AnimationState test)
 
 	case first_secondary_idle:			return 0;
 	case first_secondary_run:			return 0;
-	case first_secondary_air:			return 0;
 	case first_secondary_fire:			return 1;
 	case first_secondary_reload:		return 1;
 	case first_secondary_throw:			return 1;
 	case first_secondary_switch:		return 1;
 	case first_secondary_switch_IN:		return 1;
-	case first_secondary_fire_left:		return 1;
 
+	case first_secondary_idle_left:		return 0;
+	case first_secondary_run_left:		return 0;
+	case first_secondary_fire_left:		return 1;
+	case first_secondary_death_left:	return 2;
+		
 	case third_primary_idle:			return 0;
 	case third_primary_run:				return 0;
 	case third_primary_run_rev:			return 0;

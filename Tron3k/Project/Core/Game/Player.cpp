@@ -626,17 +626,21 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 						{
 							if (role.getWeaponNRequiped() != 0)
 							{
-								role.swapWeaponLocal(0);
-								msg = WPNSWITCH;
-
 								animOverideIfPriority(anim_first_current, AnimationState::first_secondary_switch);
 								if (animRole == ROLES::BRUTE)
 								{
 									animOverideIfPriority(anim_third_current, AnimationState::third_secondary_switch);
 									animOverideIfPriority(anim_first_current, AnimationState::first_primary_switch_IN);
 								}
-								else if(animRole == ROLES::MANIPULATOR)
+								else if (animRole == ROLES::MANIPULATOR)
+								{
 									animOverideIfPriority(anim_third_current, AnimationState::third_secondary_switch);
+									if (role.getCurrentWeapon()->getType() == WEAPON_TYPE::BATTERYWPN_SLOW)
+										animOverideIfPriority(anim_first_current, AnimationState::first_secondary_switch_IN);
+								}
+
+								role.swapWeaponLocal(0);
+								msg = WPNSWITCH;	
 
 								animSwapActive = true;
 								areWeScrolling = 0.0;
@@ -677,7 +681,11 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 									animOverideIfPriority(anim_third_current, AnimationState::third_primary_switch);
 								}
 								else if (animRole == ROLES::MANIPULATOR)
+								{
 									animOverideIfPriority(anim_third_current, AnimationState::third_primary_switch);
+									if (role.getCurrentWeapon()->getType() == WEAPON_TYPE::BATTERYWPN_SLOW)
+										animOverideIfPriority(anim_first_current, AnimationState::first_primary_switch_IN);
+								}
 
 								animSwapActive = true;
 
@@ -737,8 +745,8 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 
 
-			/*if (i->justPressed(GLFW_KEY_O))
-				role.setHealth(0);*/
+			if (i->justPressed(GLFW_KEY_O))
+				role.setHealth(0);
 
 			if (role.getHealth() <= 0 && !isDead && role.getRole() != ROLES::NROFROLES)
 			{
@@ -1281,6 +1289,17 @@ bool Player::getAnimPrimary()
 
 void Player::movementAnimationChecks(float dt)
 {
+	//manipulator checks
+	bool manipSecondLeft = false;
+	
+	if (animRole == ROLES::MANIPULATOR)
+		if (animPrimary == false)
+			if (role.getCurrentWeapon()->getType() == WEAPON_TYPE::BATTERYWPN_SLOW)
+			{
+				manipSecondLeft = true;
+				animOverideIfPriority(anim_first_current, AnimationState::first_secondary_idle_left);
+			}
+
 	if (grounded)
 	{
 		//Run checks
@@ -1319,6 +1338,9 @@ void Player::movementAnimationChecks(float dt)
 			else // brute and manipulator secondary weapon case
 			{
 				animOverideIfPriority(anim_first_current, AnimationState::first_secondary_run);
+
+				if(manipSecondLeft)
+					animOverideIfPriority(anim_first_current, AnimationState::first_secondary_run_left);
 
 				//Third person
 
@@ -1433,7 +1455,11 @@ void Player::movementAnimationChecks(float dt)
 			if(animPrimary)
 				animOverideIfPriority(anim_first_current, AnimationState::first_primary_death);
 			else
+			{
 				animOverideIfPriority(anim_first_current, AnimationState::first_secondary_death);
+				if(manipSecondLeft)
+					animOverideIfPriority(anim_first_current, AnimationState::first_secondary_death_left);
+			}
 		}
 		else
 		{
