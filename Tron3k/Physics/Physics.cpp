@@ -241,7 +241,7 @@ glm::vec4 Physics::checkSpherevSpheretdCollision(Sphere mesh1, Sphere mesh2)
 		//collision
 		vec3 d = normalize(dist);
 
-		//if(inside)
+		//if(inside)sd
 		if (abs(length(dist) - minRad) < abs(length(dist) - radius))
 		{
 			return (vec4(normalize(dist), -abs(minRad - length(dist)))); //works for when we're inside sphere

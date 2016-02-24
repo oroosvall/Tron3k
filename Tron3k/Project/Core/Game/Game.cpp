@@ -295,7 +295,6 @@ void Game::update(float dt)
 		checkBulletVWorldCollision(dt);
 		checkPlayerVEffectCollision();
 		checkPlayerVCapCollision();
-
 	}
 	else if (gameState == Gamestate::CLIENT)
 	{
@@ -303,16 +302,15 @@ void Game::update(float dt)
 		checkPlayerVWorldCollision(dt);
 		checkPlayerVEffectCollision();
 		checkFootsteps(dt);
-
 	}
 	else if (gameState == Gamestate::SERVER)
 	{
+		checkPlayerVBulletCollision();
+		checkPlayerVCapCollision();
+		checkBulletVWorldCollision(dt);
+		checkPlayerVEffectCollision();
 		checkEffectVEffectCollision();
 		checkBulletVEffectCollision(dt);
-		checkBulletVWorldCollision(dt);
-		checkPlayerVBulletCollision();
-		checkPlayerVEffectCollision();
-		checkPlayerVCapCollision();
 	}
 
 	for (int c = 0; c < max_con; c++)
