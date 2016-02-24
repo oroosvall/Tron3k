@@ -1842,10 +1842,18 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 			playerList[hi.bulletPID]->hitMarker = 0.25f;
 			if (theBullet != nullptr)
 			{
-				int k = 0;
 				HitPosAndDir hpad;
 				hpad.pos = theBullet->getPos();
-				hpad.dir = glm::normalize(theBullet->getDir());
+				vec3 dir = glm::normalize(theBullet->getDir());
+				vec3 n = hpad.pos - p->getPos();
+				n.y *= -1;
+				hpad.dir = -reflect(dir, normalize(n));
+				//hpad.dir = normalize(n);
+				if(p->getTeam() == 1)
+					hpad.color = TEAMONECOLOR;
+				else if(p->getTeam() == 2)
+					hpad.color = TEAMTWOCOLOR;
+				else hpad.color = vec3(1.0f, 1.0f, 1.0f);
 				allBulletHitPlayerPos.push_back(hpad);
 			}
 			if (p->getHP() == 0 && p->isAlive())

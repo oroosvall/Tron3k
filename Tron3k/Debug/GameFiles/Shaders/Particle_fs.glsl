@@ -7,10 +7,13 @@ layout(location = 2) in vec3 normal;
 
 uniform sampler2D tex;
 
+uniform int glow;
+uniform vec3 blendcolor;
+
 layout (location = 4) out vec4 GlowMap;
 
 void main () 
 {
 	vec4 color = texture(tex, uv_frag);
-	GlowMap = color;
+	GlowMap = color * vec4(blendcolor, 1.0f);
 }

@@ -125,6 +125,7 @@ struct HitPosAndDir
 {
 	glm::vec3 pos;
 	glm::vec3 dir;
+	glm::vec3 color;
 };
 
 class Game

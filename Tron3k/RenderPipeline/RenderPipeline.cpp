@@ -425,7 +425,8 @@ void RenderPipeline::reloadShaders()
 	particleSize = glGetUniformLocation(particleShader, "size");
 	particleViewProj = glGetUniformLocation(particleShader, "VP");
 	particleTexture = glGetUniformLocation(particleShader, "tex");
-
+	particleGlow = glGetUniformLocation(particleShader, "glow");
+	particleColor = glGetUniformLocation(particleShader, "blendcolor");
 
 	particleShaders[0] = "GameFiles/Shaders/ParticleSystem_cs.glsl";
 	particleshaderTypes[0] = GL_COMPUTE_SHADER;
@@ -664,10 +665,13 @@ void RenderPipeline::finalizeRender()
 	//glProgramUniformMatrix4fv(particleShader, particleViewProj, 1, GL_FALSE, (GLfloat*)&glm::mat4());
 	
 	glProgramUniform3f(particleShader, particleCam, gBuffer->eyePos.x, gBuffer->eyePos.y, gBuffer->eyePos.z);
-	
+	glProgramUniform3f(particleShader, particleColor, 1.0f, 1.0f, 1.0f);
+
 	glEnable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	glProgramUniform1i(particleShader, particleGlow, 0);
 
 	glDepthMask(GL_FALSE);
 
@@ -676,7 +680,9 @@ void RenderPipeline::finalizeRender()
 	for (size_t i = 0; i < dynamicParticleSystems.size(); i++)
 	{
 		vec2 size = dynamicParticleSystems[i].m_size;
+		vec3 color = dynamicParticleSystems[i].m_color;
 		glProgramUniform2f(particleShader, particleSize, size.x, size.y); 
+		glProgramUniform3f(particleShader, particleColor, color.x, color.y, color.z);
 
 		glActiveTexture(GL_TEXTURE0);
 		glProgramUniform1i(particleShader, particleTexture, 0);
@@ -1041,7 +1047,7 @@ bool RenderPipeline::setSetting(PIPELINE_SETTINGS type, PipelineValues value)
 	return true;
 }
 
-void RenderPipeline::createTimedParticleEffect(PARTICLE_EFFECTS peffect, vec3 pos, glm::vec3 dir)
+void RenderPipeline::createTimedParticleEffect(PARTICLE_EFFECTS peffect, vec3 pos, glm::vec3 dir, glm::vec3 color)
 {
 	std::string path = "Gamefiles/ParticleSystems/trapperBulletHit.ps";
 
@@ -1087,6 +1093,7 @@ void RenderPipeline::createTimedParticleEffect(PARTICLE_EFFECTS peffect, vec3 po
 		ParticleSystem pSys;
 		pSys.Initialize(pos, pdata, &compute, &locations);
 		pSys.m_texture = texID;
+		pSys.m_color = color;
 		dynamicParticleSystems.push_back(pSys);
 	}
 	file.close();

@@ -839,7 +839,7 @@ void Core::upClient(float dt)
 		std::vector<HitPosAndDir> hitpositions = game->getAllBulletHitPlayerPos();
 		for (size_t i = 0; i < hitpositions.size(); i++)
 		{
-			renderPipe->createTimedParticleEffect(PARTICLE_HIT, hitpositions[i].pos, hitpositions[i].dir);
+			renderPipe->createTimedParticleEffect(PARTICLE_HIT, hitpositions[i].pos, hitpositions[i].dir, hitpositions[i].color);
 		}
 
 		game->clearAllBulletHitPlayerPos();
