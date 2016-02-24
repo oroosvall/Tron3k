@@ -651,7 +651,7 @@ vec3 Physics::checkPlayerVBulletCollision(vec3 playerPos, vec3 bulletPos, vec3 s
 	vec3 collide = vec3(0, 0, 0);// checkAABBCollision(playerBox, bulletBox);
 
 	if (checkAABBvAABBCollision(playerBox.getAABB(), bulletBox.getAABB()))
-		return normalize(playerPos - bulletPos);
+		return normalize(bulletPos - playerPos);
 
 	return collide;
 }
