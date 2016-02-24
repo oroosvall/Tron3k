@@ -1,5 +1,6 @@
 #version 410
 layout (location = 0) in vec2 uv;
+layout (location = 1) in vec3 worldPos;
 
 uniform sampler2D tex;
 uniform float timepass;
@@ -16,7 +17,7 @@ void main ()
 		GlowMap = texture(tex, uv);
 		//DiffuseOut = GlowMap;
 		//DiffuseOut.w = 1f;
-		GlowMap.w = 0.9f;
+		GlowMap.w = 1.0f;
 	}
 	else
 	{
@@ -30,11 +31,11 @@ void main ()
 		UV2 *= tile;
 
 		//Animate UV1
-		UV1.x += (timepass / 20);
-		UV1.y += (timepass / 10);
+		UV1.x += (timepass / 40);
+		UV1.y += (timepass / 50);
 
 		//Animate UV2
-		UV2 -= (timepass / 30);
+		UV2 -= (timepass / 50);
 
 
 		GlowMap = texture(tex, UV1);
@@ -47,12 +48,11 @@ void main ()
 
 		if ((GlowMap.x + GlowMap.y + GlowMap.z) > 2.0f)
 		{
-			GlowMap = GlowMap + newdistance * 0.2f;
+			GlowMap.xyz = GlowMap.xyz + newdistance * 0.5f;
 
-			if (newdistance < 5.0f && newdistance > 0.3f)
+			if (newdistance > 0.2f && newdistance < 0.4f)
 			{
-				GlowMap += newdistance * 0.3f;
-				GlowMap.w = newdistance;
+				GlowMap += newdistance * 0.5f;
 			}
 		}
 
@@ -60,9 +60,9 @@ void main ()
 		GlowMap *= texture(tex, UV2);
 
 		//Restrict dark & light
-		newdistance = clamp(newdistance, 0.0f, 0.35f);
+		newdistance = clamp(newdistance, 0.0f, 0.4f);
 		
 		//Darker based on distance
-		GlowMap -= newdistance * 1.5f;
+		GlowMap -= newdistance * 1.8f;
 	}
 }
