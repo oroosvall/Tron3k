@@ -34,7 +34,6 @@ UIManager::UIManager()
 	HUD.ticketLostTimer = 0;
 	HUD.loseTicketPer = 1;
 	HUD.firstSecondEachRound = true;
-	HUD.scoreChanged = false;
 	HUD.bannerCounter = 5;
 	HUDTime.moveTokenReducer1 = false;
 	HUDTime.moveTokenReducer2 = false;
@@ -328,7 +327,6 @@ void UIManager::removeAllMenus()
 	currentMenu = 0;
 	nrOfOpenedMenus = 0;
 	hideAbleMenuActive = false;
-	HUD.scoreChanged = false;
 	HUDTime.moveTokenReducer1 = false;
 	HUDTime.moveTokenReducer2 = false;
 	HUDTime.movePointAdder1 = false;

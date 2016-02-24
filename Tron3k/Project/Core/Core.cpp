@@ -737,7 +737,6 @@ void Core::upClient(float dt)
 
 					firstTimeInEnd = false;
 					lowTicketsFirstTime = false;
-					uiManager->HUD.scoreChanged = false;
 					uiManager->HUDTime.movePointAdder1 = false;
 					uiManager->HUDTime.movePointAdder2 = false;
 					uiManager->HUDTime.moveTokenReducer1 = false;
@@ -761,7 +760,6 @@ void Core::upClient(float dt)
 
 					firstTimeInEnd = false;
 					lowTicketsFirstTime = false;
-					uiManager->HUD.scoreChanged = false;
 					uiManager->HUDTime.movePointAdder1 = false;
 					uiManager->HUDTime.movePointAdder2 = false;
 					uiManager->HUDTime.moveTokenReducer1 = false;
@@ -771,6 +769,50 @@ void Core::upClient(float dt)
 					uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam2, false);
 					uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam1, false);
 					uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam2, false);
+				}
+
+				//Checks to see if the banners "Final Assult" or Hold Your Ground" should be shown.
+				if (lowTicketsFirstTime && tmp == KOTHSTATE::OVERTIME)
+				{
+					int tTeam = localp->getTeam();
+
+					if (uiManager->HUD.teamOneTokens <= 0 && uiManager->HUD.teamTwoTokens <= 0)
+					{
+						uiManager->changeTextureHideAble(hideAbleObj::Banner, 0, BannerTextureIDs::FinalAssult);
+						uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
+						uiManager->HUD.bannerCounter = 0;
+						lowTicketsFirstTime = false;
+					}
+					else if (uiManager->HUD.teamOneTokens <= 0)
+					{
+						if (tTeam == 1)
+						{
+							uiManager->changeTextureHideAble(hideAbleObj::Banner, 0, BannerTextureIDs::FinalAssult);
+							uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
+						}
+						else
+						{
+							uiManager->changeTextureHideAble(hideAbleObj::Banner, 0, BannerTextureIDs::HoldYourGround);
+							uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
+						}
+						uiManager->HUD.bannerCounter = 0;
+						lowTicketsFirstTime = false;
+					}
+					else if (uiManager->HUD.teamTwoTokens <= 0)
+					{
+						if (tTeam == 2)
+						{
+							uiManager->changeTextureHideAble(hideAbleObj::Banner, 0, BannerTextureIDs::FinalAssult);
+							uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
+						}
+						else
+						{
+							uiManager->changeTextureHideAble(hideAbleObj::Banner, 0, BannerTextureIDs::HoldYourGround);
+							uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
+						}
+						uiManager->HUD.bannerCounter = 0;
+						lowTicketsFirstTime = false;
+					}
 				}
 			}
 		}
@@ -850,7 +892,6 @@ void Core::upClient(float dt)
 
 				firstTimeInEnd = true;
 				lowTicketsFirstTime = true;
-				uiManager->HUD.scoreChanged = false;
 				uiManager->HUDTime.movePointAdder1 = false;
 				uiManager->HUDTime.movePointAdder2 = false;
 				uiManager->HUDTime.moveTokenReducer1 = false;
@@ -2317,9 +2358,8 @@ void Core::inGameUIUpdate() //Ingame ui update
 				uiManager->HUDTime.counterListTicket1.push_back(0);
 			}
 		}
-
-		uiManager->HUD.scoreChanged = true;
 	}
+
 	if (koth->getRespawnTokens(2) != uiManager->HUD.teamTwoTokens) //Team 2
 	{
 		uiManager->HUD.teamTwoTokens = koth->getRespawnTokens(2);
@@ -2343,8 +2383,6 @@ void Core::inGameUIUpdate() //Ingame ui update
 				uiManager->HUDTime.counterListTicket2.push_back(0);
 			}
 		}
-
-		uiManager->HUD.scoreChanged = true;
 	}
 
 	//Checks if the teams score have changed.
@@ -2557,49 +2595,6 @@ void Core::inGameUIUpdate() //Ingame ui update
 				uiManager->HUDTime.counterListTicket2[i]++;
 		}
 	}
-
-	//Checks to see if the banners "Final Assult" or Hold Your Ground" should be shown.
-	if (lowTicketsFirstTime && uiManager->HUD.scoreChanged) 
-	{
-		if (uiManager->HUD.teamOneTokens <= 3 && uiManager->HUD.teamTwoTokens <= 3)
-		{
-			uiManager->changeTextureHideAble(hideAbleObj::Banner, 0, BannerTextureIDs::FinalAssult);
-			uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
-			uiManager->HUD.bannerCounter = 0;
-			lowTicketsFirstTime = false;
-		}
-		else if (uiManager->HUD.teamOneTokens <= 3)
-		{
-			if (tTeam == 1)
-			{
-				uiManager->changeTextureHideAble(hideAbleObj::Banner, 0, BannerTextureIDs::FinalAssult);
-				uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
-			}
-			else
-			{
-				uiManager->changeTextureHideAble(hideAbleObj::Banner, 0, BannerTextureIDs::HoldYourGround);
-				uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
-			}
-			uiManager->HUD.bannerCounter = 0;
-			lowTicketsFirstTime = false;
-		}
-		else if (uiManager->HUD.teamTwoTokens <= 3)
-		{
-			if (tTeam == 2)
-			{
-				uiManager->changeTextureHideAble(hideAbleObj::Banner, 0, BannerTextureIDs::FinalAssult);
-				uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
-			}
-			else
-			{
-				uiManager->changeTextureHideAble(hideAbleObj::Banner, 0, BannerTextureIDs::HoldYourGround);
-				uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
-			}
-			uiManager->HUD.bannerCounter = 0;
-			lowTicketsFirstTime = false;
-		}
-	}
-	uiManager->HUD.scoreChanged = false;
 
 	if (uiManager->HUDTime.moveTokenReducer1)
 		for (int i = 0; i < uiManager->HUDTime.wmIdListTicket1.size(); i++)

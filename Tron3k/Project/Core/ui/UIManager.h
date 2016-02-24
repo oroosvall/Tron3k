@@ -153,7 +153,6 @@ public:
 		int ticketLostTimer;
 		int loseTicketPer;
 		bool firstSecondEachRound;
-		bool scoreChanged;
 		int bannerCounter;
 	}HUD;
 
