@@ -38,7 +38,7 @@ void KingOfTheHill::init(Console* cptr, Game* gptr)
 	teamTwoScore = 0;
 	winScore = 5;
 
-	tokensPerTeam = 2;
+	tokensPerTeam = 20;
 
 	tickForCaptureScoring = 15.0f;
 	timerModifierForCaptureScoring = tickForCaptureScoring;
@@ -164,10 +164,12 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 
 		//WARMUP is the pre-game, before the first round has begun. Once the game starts, we don't go here
 	case WARMUP:
+		teamOneSpawnTokens = teamTwoSpawnTokens = 0;
 		if (gamePtr->nrOfPlayersReady() >= playersReadyNeeded)
 		{
 			timer = 15.0f; //20 seconds in the pre-round
 			capturePoint = rand() % 2;
+			teamOneSpawnTokens = teamTwoSpawnTokens = tokensPerTeam;
 			state = PREROUND;
 			clearTeams();
 			round = 1;
@@ -190,8 +192,6 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 		if (timer < FLT_EPSILON) //Time is up!
 		{
 			timer = 0.0f;
-
-			teamOneSpawnTokens = teamTwoSpawnTokens = tokensPerTeam;
 			state = ROUND;
 			timerModifierForCaptureScoring = 15.0f;
 			gamePtr->resetAllPickups();
@@ -213,6 +213,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 		{
 			consolePtr->printMsg("OVERTIME BEGINS", "System", 'S');
 			state = OVERTIME;
+			pointsLeftThisRound = 3;
 			timer = 46.0f;
 			timerModifierForCaptureScoring = 30.0f;
 		}
@@ -241,9 +242,9 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			}
 			if (allDead)
 			{
-				if (timer > 31.0f)
+				if (pointsLeftThisRound == 3)
 					teamTwoScore += 3;
-				else if (timer > 16.0f)
+				else if (pointsLeftThisRound == 2)
 					teamTwoScore += 2;
 				else
 					teamTwoScore++;
@@ -270,9 +271,9 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			}
 			if (allDead)
 			{
-				if (timer > 31.0f)
+				if (pointsLeftThisRound == 3)
 					teamOneScore += 3;
-				else if (timer > 16.0f)
+				else if (pointsLeftThisRound == 2)
 					teamOneScore += 2;
 				else
 					teamOneScore++;
@@ -285,6 +286,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 		if (timer - timerModifierForCaptureScoring < 0.0f) //15 seconds have passed and we should now proceed with scoring for capture point control
 		{
 			msg = roundScoring();
+			pointsLeftThisRound--;
 			timerModifierForCaptureScoring -= tickForCaptureScoring;
 		}
 
@@ -322,16 +324,17 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
  			timer -= dt;
 			if (timer < FLT_EPSILON)
 			{
-				if (round == 2)
+				if (round%2 == 0)
 				{
 					if (capturePoint == 0)
 						capturePoint = 1;
 					else
 						capturePoint = 0;
 				}
-				else if (round == 3)
+				else
 					capturePoint = rand() % 2;
 
+				teamOneSpawnTokens = teamTwoSpawnTokens = tokensPerTeam;
 				state = PREROUND;
 				timer = 15.0f;
 
@@ -358,6 +361,15 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			commencePlayed = false;
 			gamePtr->nrOfPlayersReadyReset();
 			gamePtr->clearAllPlayerKD();
+
+			for (int c = 0; c < teamOnePlayers.size(); c++)
+			{
+				gamePtr->allowPlayerRespawn(teamOnePlayers[c], c % 5);
+			}
+			for (int c = 0; c < teamTwoPlayers.size(); c++)
+			{
+				gamePtr->allowPlayerRespawn(teamTwoPlayers[c], c % 5);
+			}
 		}
 		else
 			timer -= dt;
@@ -548,8 +560,31 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 		{
 			if (GetSoundActivated())
 			{
-				GetSound()->playUserGeneratedSound(SOUNDS::announcerCommence);
 				GetSound()->playUserGeneratedSound(SOUNDS::SoundForOvertime);
+
+				if (gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
+				{
+					if (teamOneSpawnTokens == 0)
+					{
+						GetSound()->playUserGeneratedSound(SOUNDS::announcerFinalAssault);
+					}
+					else
+					{
+						GetSound()->playUserGeneratedSound(SOUNDS::announcerDefendTheObjective);
+					}
+				}
+
+				else if (gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 2)
+				{
+					if (teamTwoSpawnTokens == 0)
+					{
+						GetSound()->playUserGeneratedSound(SOUNDS::announcerFinalAssault);
+					}
+					else
+					{
+						GetSound()->playUserGeneratedSound(SOUNDS::announcerDefendTheObjective);
+					}
+				}
 			}
 			timer = 30.0f;
 		}

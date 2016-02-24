@@ -66,8 +66,8 @@ void main()
 		
 		vec3 v = pos;
 		
-		up *= size.y;
-		right *= size.x;
+		up *= (size.y / 2);
+		right *= (size.x / 2);
 		
 		v = pos;
 		v -= right;

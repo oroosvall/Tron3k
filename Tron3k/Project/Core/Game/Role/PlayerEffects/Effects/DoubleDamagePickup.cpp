@@ -16,7 +16,11 @@ int DoubleDamagePickup::update(float dt)
 	if (!resetted)
 	{
 		if (cooldown < FLT_EPSILON)
-		{
+		{	
+			if (GetSound())
+			{
+				GetSound()->playExternalSound(SOUNDS::announcerDoubleDamageSpawned, pos.x, pos.y, pos.z);
+			}
 			resetted = true;
 			playersHitByMe.clear();
 		}
@@ -27,7 +31,7 @@ int DoubleDamagePickup::update(float dt)
 
 float DoubleDamagePickup::renderRad()
 {
-	return rad;
+	return rad*0.5f;
 }
 
 bool DoubleDamagePickup::onCooldown()

@@ -7,10 +7,10 @@
 class DoubleDamagePickup : public Effect
 {
 private:
-	float rad = 0.5f;
+	float rad = 1.0f;
 	float maxCooldown = 90.0f;
 	float cooldown = maxCooldown;
-	bool resetted = true;
+	bool resetted = false;
 public:
 	DoubleDamagePickup();
 	void init(int pid, int eid, glm::vec3 position);

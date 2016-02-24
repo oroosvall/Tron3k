@@ -241,7 +241,7 @@ glm::vec4 Physics::checkSpherevSpheretdCollision(Sphere mesh1, Sphere mesh2)
 		//collision
 		vec3 d = normalize(dist);
 
-		//if(inside)
+		//if(inside)sd
 		if (abs(length(dist) - minRad) < abs(length(dist) - radius))
 		{
 			return (vec4(normalize(dist), -abs(minRad - length(dist)))); //works for when we're inside sphere
@@ -474,7 +474,7 @@ std::vector<vec3> Physics::getCollisionNormal(AABB* aabb1, AABB* aabb2)
 
 }
 
-vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb)
+vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb, bool isBullet)
 {
 	vec4 t;
 	vec4 closest;
@@ -524,6 +524,14 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb)
 					closest.w = t.w;
 				}
 		}
+		if (closest.w < FLT_MAX && isBullet)
+		{
+			vec3 direc = normalize(obb->lines[n].plane1Normal + obb->lines[n].plane2Normal);
+			
+				closest.x = direc.x;
+				closest.y = direc.y;
+				closest.z = direc.z;
+		}
 	}
 	//if we found a line intersection it will always be closer
 	//than all the corner intersections
@@ -541,6 +549,12 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb)
 		if (test_len <= closest.w)
 		{
 			closest.x = test.x; closest.y = test.y; closest.z = test.z;
+			if (isBullet)
+			{
+				closest.x = obb->cornerNorms[n].x;
+				closest.y = obb->cornerNorms[n].y;
+				closest.z = obb->cornerNorms[n].z;
+			}
 			closest.w = test_len;
 		}
 	}
@@ -553,6 +567,8 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb)
 
 	bool outside = false;
 	vec3 smallest = vec3(999999, 999999, 999999);
+	int planeN = -1;
+	float l = 0.0f;
 	for (int n = 0; n < 6 && !outside; n++)
 	{
 		//Are we inside the obb?
@@ -565,14 +581,23 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb)
 			//behind plane
 			//do stuff
 			if (length(smallest) > length(dir))
+			{
 				smallest = dir;
+				planeN = n;
+			}
 		}
 		else
 			outside = true;
 	}
+	if (planeN != -1)
+	{
+		smallest = obb->planes[planeN].n;
+		vec3 p = obb->planes[planeN].p[0];
+		l = length(p - pos);
+	}
 
 	if (!outside)
-		closest = vec4(normalize(smallest), length(smallest));
+		closest = vec4(normalize(smallest), l);
 	else
 		return vec4(FLT_MAX);
 
@@ -640,7 +665,7 @@ vec3 Physics::checkPlayerVBulletCollision(vec3 playerPos, vec3 bulletPos, vec3 s
 	vec3 collide = vec3(0, 0, 0);// checkAABBCollision(playerBox, bulletBox);
 
 	if (checkAABBvAABBCollision(playerBox.getAABB(), bulletBox.getAABB()))
-		return normalize(playerPos - bulletPos);
+		return normalize(bulletPos - playerPos);
 
 	return collide;
 }
@@ -811,61 +836,44 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 				{
 					//bPos -= bulletDir * rad;
 					//WE HAVE COLLISION
-					t = getSpherevOBBNorms(bPos, rad, theOBB);
+					t = getSpherevOBBNorms(bPos, rad, theOBB, true);
 					vec3 dir = normalize(vec3(t));
 					t.w = rad - t.w; //penetration depth instead of collision distance 
 					if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 					{
-						
-						//if (dot(dir, normalize(bPos - sPos)) > -0.000f)
-						//	dir *= -1;
 						t = vec4(dir, t.w + 0.2f);
 						bPos -= dir* rad;
-						//bulletPos = bPos;
-						
-						//return t;
 						posAdjs.push_back(bPos);
 						cNorms.push_back(t);
 					}
 
 					bPos = bPos - (rad * normalize(bulletDir) * 0.99f);
-					t = getSpherevOBBNorms(bPos, rad, theOBB);
+					t = getSpherevOBBNorms(bPos, rad, theOBB, true);
 					dir = normalize(vec3(t));
 					t.w = rad - t.w;
 					if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 					{
-						//if (dot(dir, normalize(bPos - sPos)) > -0.000f)
-						//	dir *= -1;
 						t = vec4(dir, t.w + 0.2f);
 						bPos -= dir* rad;
-						//bulletPos = bPos;
-						//return t;
 						cNorms.push_back(t);
 						posAdjs.push_back(bPos);
 					}
 
-					t = getSpherevOBBNorms(bulletPos, rad, theOBB);
+					t = getSpherevOBBNorms(bulletPos, rad, theOBB, true);
 					dir = normalize(vec3(t));
 					t.w = rad - t.w; //penetration depth instead of collision distance 
 					if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 					{
-						//if (dot(dir, normalize(bulletPos - sPos)) > -0.000f)
-						//	dir *= -1;
 						t = vec4(dir, t.w + 0.2f);
-						//return t;
 						cNorms.push_back(t);
 						posAdjs.push_back(bulletPos);
 					}
-					t = getSpherevOBBNorms(origPos, rad, theOBB);
+					t = getSpherevOBBNorms(origPos, rad, theOBB, true);
 					dir = normalize(vec3(t));
 					t.w = rad - t.w;
 					if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 					{
-						//if (dot(dir, normalize(origPos - sPos)) > -0.000f)
-							//dir *= -1;
 						t = vec4(dir, t.w + 0.2f);
-						//bulletPos = origPos;
-						//return t;
 						cNorms.push_back(t);
 						posAdjs.push_back(origPos);
 					}
@@ -924,62 +932,46 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 							{
 								//bPos -= bulletDir * rad;
 								//WE HAVE COLLISION
-								t = getSpherevOBBNorms(bPos, rad, theOBB);
+								t = getSpherevOBBNorms(bPos, rad, theOBB, true);
 								vec3 dir = normalize(vec3(t));
 								t.w = rad - t.w; //penetration depth instead of collision distance 
 								if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 								{
-									//if (dot(dir, bPos - sPos) > -0.000f)
-									//	dir *= -1;
 									t = vec4(dir, t.w + 0.2f);
 									bPos -= dir* rad;
-									//bulletPos = bPos;
-									//return t;
 									cNorms.push_back(t);
 									posAdjs.push_back(bPos);
 								}
 
 								bPos = bPos - (rad * normalize(bulletDir) * 0.99f);
-								t = getSpherevOBBNorms(bPos, rad, theOBB);
+								t = getSpherevOBBNorms(bPos, rad, theOBB, true);
 								dir = normalize(vec3(t));
 								t.w = rad - t.w;
 								if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 								{
-								//	if (dot(dir, bPos - sPos) > -0.000f)
-								//		dir *= -1;
 									t = vec4(dir, t.w + 0.2f);
 									bPos -= dir* rad;
-									//bulletPos = bPos;
-									//return t;
 									posAdjs.push_back(bPos); 
 									cNorms.push_back(t);
 								}
 
-								t = getSpherevOBBNorms(bulletPos, rad, theOBB);
+								t = getSpherevOBBNorms(bulletPos, rad, theOBB, true);
 								dir = normalize(vec3(t));
 								t.w = rad - t.w; //penetration depth instead of collision distance 
 								if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 								{
-								//	if (dot(dir, bulletPos - sPos) > -0.00f)
-										//dir *= -1;
 									t = vec4(dir, t.w + 0.2f);
 									cNorms.push_back(t);
-									//return t;
 									posAdjs.push_back(bulletPos);
 								}
 
-								t = getSpherevOBBNorms(origPos, rad, theOBB);
+								t = getSpherevOBBNorms(origPos, rad, theOBB, true);
 								dir = normalize(vec3(t));
 								t.w = rad - t.w;
 								if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 								{
-									//if (dot(dir, origPos - sPos) > -0.000f)
-										//dir *= -1;
 									t = vec4(dir, t.w + 0.2f);
-									
-									//bulletPos = origPos;
 									cNorms.push_back(t);
-									//return t;
 									posAdjs.push_back(origPos);
 								}
 							}

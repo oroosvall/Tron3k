@@ -295,6 +295,8 @@ void RenderPipeline::reloadShaders()
 	animTexture.animQuadWorld = glGetUniformLocation(animTexture.animQuadShader, "world");
 	animTexture.animQuadVP = glGetUniformLocation(animTexture.animQuadShader, "vp");
 	animTexture.animQuadUVset = glGetUniformLocation(animTexture.animQuadShader, "UVset");
+	animTexture.animQuadTime = glGetUniformLocation(animTexture.animQuadShader, "timepass");
+	animTexture.animQuadType = glGetUniformLocation(animTexture.animQuadShader, "type");
 
 	//pointlight volume shader
 	std::string shaderNamesPointVolume[] = { "GameFiles/Shaders/pointlightVolume_vs.glsl", "GameFiles/Shaders/pointlightVolume_gs.glsl", "GameFiles/Shaders/pointlightVolume_fs.glsl" };
@@ -425,7 +427,8 @@ void RenderPipeline::reloadShaders()
 	particleSize = glGetUniformLocation(particleShader, "size");
 	particleViewProj = glGetUniformLocation(particleShader, "VP");
 	particleTexture = glGetUniformLocation(particleShader, "tex");
-
+	particleGlow = glGetUniformLocation(particleShader, "glow");
+	particleColor = glGetUniformLocation(particleShader, "blendcolor");
 
 	particleShaders[0] = "GameFiles/Shaders/ParticleSystem_cs.glsl";
 	particleshaderTypes[0] = GL_COMPUTE_SHADER;
@@ -450,6 +453,8 @@ void RenderPipeline::reloadShaders()
 		(GLuint)glGetUniformLocation(particleCS, "continuous"),
 		(GLuint)glGetUniformLocation(particleCS, "omni"),
 		(GLuint)glGetUniformLocation(particleCS, "initialPos"),
+		(GLuint)glGetUniformLocation(particleCS, "spread"),
+		(GLuint)glGetUniformLocation(particleCS, "sysDir"),
 	};
 
 	locations = pLoc;
@@ -653,11 +658,7 @@ void RenderPipeline::render()
 
 void RenderPipeline::finalizeRender()
 {
-	glDepthMask(GL_TRUE);
 	//glEnable(GL_CULL_FACE);
-	glDisable(GL_BLEND);
-	
-	glDisable(GL_BLEND);
 	glDisable(GL_CULL_FACE);
 
 	glUseProgram(particleShader);
@@ -665,13 +666,24 @@ void RenderPipeline::finalizeRender()
 	//glProgramUniformMatrix4fv(particleShader, particleViewProj, 1, GL_FALSE, (GLfloat*)&glm::mat4());
 	
 	glProgramUniform3f(particleShader, particleCam, gBuffer->eyePos.x, gBuffer->eyePos.y, gBuffer->eyePos.z);
-	
+	glProgramUniform3f(particleShader, particleColor, 1.0f, 1.0f, 1.0f);
+
+	glEnable(GL_BLEND);
+	glEnable(GL_DEPTH_TEST);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	glProgramUniform1i(particleShader, particleGlow, 0);
+
+	glDepthMask(GL_FALSE);
+
 	contMan.renderParticles(particleShader, particleTexture, particleSize);
-	
+
 	for (size_t i = 0; i < dynamicParticleSystems.size(); i++)
 	{
 		vec2 size = dynamicParticleSystems[i].m_size;
-		glProgramUniform2f(particleShader, particleSize, size.x, size.y);
+		vec3 color = dynamicParticleSystems[i].m_color;
+		glProgramUniform2f(particleShader, particleSize, size.x, size.y); 
+		glProgramUniform3f(particleShader, particleColor, color.x, color.y, color.z);
 
 		glActiveTexture(GL_TEXTURE0);
 		glProgramUniform1i(particleShader, particleTexture, 0);
@@ -679,6 +691,10 @@ void RenderPipeline::finalizeRender()
 		TextureManager::gTm->bindTextureOnly(dynamicParticleSystems[i].m_texture, DIFFUSE_FB);
 		dynamicParticleSystems[i].Draw();
 	}
+
+	glDepthMask(GL_TRUE);
+
+	glDisable(GL_BLEND);
 
 	//GBuffer Render
 	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
@@ -1024,9 +1040,9 @@ bool RenderPipeline::setSetting(PIPELINE_SETTINGS type, PipelineValues value)
 	return true;
 }
 
-void RenderPipeline::createTimedParticleEffect(PARTICLE_EFFECTS peffect, vec3 pos)
+void RenderPipeline::createTimedParticleEffect(PARTICLE_EFFECTS peffect, vec3 pos, glm::vec3 dir, glm::vec3 color)
 {
-	std::string path = "Gamefiles/ParticleSystems/explosion1.ps";
+	std::string path = "Gamefiles/ParticleSystems/trapperBulletHit.ps";
 
 	//switch (peffect)
 	//{
@@ -1043,7 +1059,7 @@ void RenderPipeline::createTimedParticleEffect(PARTICLE_EFFECTS peffect, vec3 po
 	std::ifstream file;
 	file.open(path, std::ios::binary | std::ios::in);
 
-	if (file.is_open() && false)
+	if (file.is_open())
 	{
 
 		ExportHeader exHeader;
@@ -1054,9 +1070,10 @@ void RenderPipeline::createTimedParticleEffect(PARTICLE_EFFECTS peffect, vec3 po
 		file.read(f, sizeof(char) * exHeader.texturesize);
 		f[exHeader.texturesize] = 0;
 
-		GLuint texID = TextureManager::gTm->createTexture("Gamefiles/Textures/particles/arrow.png");
+		GLuint texID = TextureManager::gTm->createTexture("Gamefiles/Textures/particles/" + std::string(f));
 		unsigned int x = 0, y = 0;
-		TextureManager::gTm->PNGSize("Gamefiles/Textures/particles/arrow.png", x, y);
+		std::string str = "Gamefiles/Textures/particles/" + std::string(f);
+		TextureManager::gTm->PNGSize(str.c_str(), x, y);
 		free(f);
 
 		ParticleSystemData pdata;
@@ -1064,10 +1081,12 @@ void RenderPipeline::createTimedParticleEffect(PARTICLE_EFFECTS peffect, vec3 po
 		file.read((char*)&pdata, sizeof(ParticleSystemData));
 
 		pdata.continuous = false; // force single time
-		
+		pdata.dir = dir;
+
 		ParticleSystem pSys;
 		pSys.Initialize(pos, pdata, &compute, &locations);
 		pSys.m_texture = texID;
+		pSys.m_color = color;
 		dynamicParticleSystems.push_back(pSys);
 	}
 	file.close();

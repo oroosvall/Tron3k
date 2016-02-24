@@ -21,6 +21,7 @@ uniform float force;
 uniform float drag;
 uniform float gravity;
 uniform int emission;
+uniform float spread;
 
 uniform bool continuous;
 uniform bool omni;
@@ -61,7 +62,11 @@ void main()
 		//p[iter].pos.xyz = p[iter].pos.xyz + p[iter].dir.xyz*force;
 		
 		vec3 oldP = p[iter].pos.xyz;
-		vec3 vel = normalize( p[iter].initialDir.xyz)*deltaTime;
+		vec3 vel;
+		if(!omni)
+			vel = normalize( sysDir + (p[iter].initialDir.xyz * spread ))*deltaTime;
+		else
+			vel = normalize( p[iter].initialDir.xyz)*deltaTime;
 		
 		p[iter].pos.y += ((-9.81f + percent*10 ) * gravity) * deltaTime;
 		

@@ -121,6 +121,13 @@ struct Decal_GameInfo
 	}
 };
 
+struct HitPosAndDir
+{
+	glm::vec3 pos;
+	glm::vec3 dir;
+	glm::vec3 color;
+};
+
 class Game
 {
 private:
@@ -210,7 +217,7 @@ private:
 	std::vector<BulletTimeOutInfo> allBulletTimeOuts;
 	std::vector<EffectTimeOutInfo> allEffectTimeOuts;
 
-	std::vector<glm::vec3> allBulletHitPlayerPos;
+	std::vector<HitPosAndDir> allBulletHitPlayerPos;
 
 	void checkPvPCollision();
 	void checkPlayerVBulletCollision();
@@ -322,7 +329,7 @@ public:
 	void clearTimedOutEffects() { allEffectTimeOuts.clear(); };
 	void handleEffectTimeOuts(EffectTimeOutInfo hi);
 
-	std::vector<glm::vec3> getAllBulletHitPlayerPos() { return allBulletHitPlayerPos; };
+	std::vector<HitPosAndDir> getAllBulletHitPlayerPos() { return allBulletHitPlayerPos; };
 	void clearAllBulletHitPlayerPos() { allBulletHitPlayerPos.clear(); };
 
 	unsigned int getNrOfDecals();

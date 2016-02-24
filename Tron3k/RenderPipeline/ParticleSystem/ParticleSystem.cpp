@@ -17,7 +17,7 @@ void ParticleSystem::Initialize(glm::vec3 pos, ParticleSystemData ps, GLuint* pr
 		//p.pos = glm::vec4(0, 0, 0, 0);
 		p.pos = glm::vec4(pos, 0);
 		glm::vec3 dir = m_data.dir;
-		if (m_data.omni)
+		//if (m_data.omni)
 		{
 			float x = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / 2.0f));
 			float y = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / 2.0f));
@@ -104,6 +104,9 @@ void ParticleSystem::Update(float dT)
 	glProgramUniform1i(*m_program, m_loc->continuous, m_data.continuous);
 	glProgramUniform1i(*m_program, m_loc->omni, m_data.omni);
 	glProgramUniform3f(*m_program, m_loc->initialPos, m_pos.x, m_pos.y, m_pos.z);
+	glProgramUniform1f(*m_program, m_loc->spread, m_data.spread);
+	glProgramUniform3f(*m_program, m_loc->sysDir, m_data.dir.x, m_data.dir.y, m_data.dir.z);
+
 
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, m_vbo);
 
