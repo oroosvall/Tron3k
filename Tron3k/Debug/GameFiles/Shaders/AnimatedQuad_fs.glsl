@@ -2,67 +2,67 @@
 layout (location = 0) in vec2 uv;
 
 uniform sampler2D tex;
-//uniform int type;
+uniform float timepass;
    
-layout (location = 2) out vec4 DiffuseOut;
+layout (location = 1) out vec4 WorldPosOut;   
+layout (location = 2) out vec4 DiffuseOut;     
+layout (location = 3) out vec4 NormalOut;     
 layout (location = 4) out vec4 GlowMap;
 
 void main () 
 {
-	
-	GlowMap = texture(tex, uv);
-	//DiffuseOut = GlowMap;
-	//DiffuseOut.w = 1f;
-	GlowMap.w = 0.9f;
-	
-	
-	////Water Shader
-	//if (type == 1)
-	//{
-	//	fragment_color = texture(tex, uv2);
-    //
-	//	float distance = gl_FragCoord.z / gl_FragCoord.w;
-	//	float newdistance;
-	//	float near = 7.0f;
-	//	float far = 10.0f;
-    //
-	//	//Make the distance a manageable value (colors range from 0 to 1, so we want this close to that range)
-	//	newdistance = distance / 25;
-    //
-	//	//If the color value is  66% or more bright
-	//	if ((fragment_color.x + fragment_color.y + fragment_color.z) > 2.0f)
-	//	{				
-	//		fragment_color = fragment_color + newdistance;
-    //
-	//		//Only a certain depth range gets fake specular. 0.4 -> 0.6
-	//		if (newdistance < 0.5f && newdistance > 0.3f)
-	//		{
-	//			//Add fake specular
-	//			fragment_color += newdistance * 1.3f;
-	//		}
-	//	}
-    //
-    //
-	//	//Sample the same texture again with opposite animated UV coords,
-	//	//this creates a "double layer" effect
-	//	fragment_color = fragment_color * texture(tex, uv);
-    //
-	//	//Restrict darkness and light. More "newdistance" = more darkness.			
-	//	newdistance = clamp(newdistance, 0.0f, 0.35f);
-	//		
-	//	//Darken based on distance. Further back = darker
-	//	fragment_color -= newdistance * 1.5f;
-	//}
-    //
-	////Sign Shader
-	//else if (type == 1)
-	//{
-	//	fragment_color = texture(tex, uv);
-	//}
-    //
-    //
-	//WorldPosOut = pos;
-	//DiffuseOut = vec4(1.0f, 1.0f, 0.0f, 1.0f);
-	//NormalOut = vec4(0.0f, 1.0f, 0.0f, 0.0f);
-	//GlowMap = vec4(0.0f, 0.0f, 0.0f, 0.0f);
+	if(timepass < 0)
+	{
+		GlowMap = texture(tex, uv);
+		//DiffuseOut = GlowMap;
+		//DiffuseOut.w = 1f;
+		GlowMap.w = 0.9f;
+	}
+	else
+	{
+		//Set UV coords to base UV
+		float tile = 20.0f;	
+		vec2 UV1 = vec2(uv);
+		vec2 UV2 = vec2(uv);
+
+		//Tile UVs 
+		UV1 *= tile;
+		UV2 *= tile;
+
+		//Animate UV1
+		UV1.x += (timepass / 20);
+		UV1.y += (timepass / 10);
+
+		//Animate UV2
+		UV2 -= (timepass / 30);
+
+
+		GlowMap = texture(tex, UV1);
+		GlowMap.w = 1.0f;
+
+		float distance = gl_FragCoord.z / gl_FragCoord.w;
+		float newdistance = distance / 50;
+		float near = 7.0f;
+		float far = 10.0f;
+
+		if ((GlowMap.x + GlowMap.y + GlowMap.z) > 2.0f)
+		{
+			GlowMap = GlowMap + newdistance * 0.2f;
+
+			if (newdistance < 5.0f && newdistance > 0.3f)
+			{
+				GlowMap += newdistance * 0.3f;
+				GlowMap.w = newdistance;
+			}
+		}
+
+		//Sample opposite
+		GlowMap *= texture(tex, UV2);
+
+		//Restrict dark & light
+		newdistance = clamp(newdistance, 0.0f, 0.35f);
+		
+		//Darker based on distance
+		GlowMap -= newdistance * 1.5f;
+	}
 }

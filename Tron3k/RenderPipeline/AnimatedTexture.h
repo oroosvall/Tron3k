@@ -115,10 +115,13 @@ public:
 	GLuint animQuadUVset;
 	GLuint animQuadWorld;
 	GLuint animQuadVP;
+	GLuint animQuadExtas;
 
 private:
 	std::vector<AnimatedObject> objects;
+	AnimatedObject water;
 	bool initialized = false;
+	float timepass = 0.0f;
 };
 
 #endif

@@ -13,7 +13,13 @@ AnimatedTexture::~AnimatedTexture()
 
 void AnimatedTexture::init()
 {
-	
+	if (!initialized)
+	{
+		water.textureID = TextureManager::gTm->createTexture("GameFiles/Textures/animatedSigns/water.png");
+	}
+	water.init_ground(vec3(-225.0f, -4.5f, 225.0f), vec3(225.0f, -4.5f, -225.0f));
+	water.init_time_segments(1, 0.0f, 0.0f);
+
 	int n = 0;
 	if (!initialized)
 	{
@@ -64,12 +70,18 @@ void AnimatedTexture::init()
 
 void AnimatedTexture::update(float dT)
 {
+	timepass += dT;
+
+	if (timepass < 0)
+		timepass = 0;
+
 	int size = objects.size();
 
 	for (int n = 0; n < size; n++)
 	{
 		objects[n].update(dT);
 	}
+	water.update(dT);
 }
 
 void AnimatedTexture::render()
@@ -86,7 +98,19 @@ void AnimatedTexture::render()
 
 		glProgramUniformMatrix4fv(animQuadShader, animQuadWorld, 1, GL_FALSE, (GLfloat*)&objects[n].worldMat[0][0]);
 		glProgramUniform2fv(animQuadShader, animQuadUVset, 1, (GLfloat*)&objects[n].offsets[0]);
+		
 
 		glDrawArrays(GL_POINTS, 0, 1);
 	}
+
+	//water render
+	TextureManager::gTm->bindTextureOnly(water.textureID, TEXTURE_FALLBACK::DIFFUSE_FB);
+	glProgramUniformMatrix4fv(animQuadShader, animQuadWorld, 1, GL_FALSE, (GLfloat*)&water.worldMat[0][0]);
+	glProgramUniform2fv(animQuadShader, animQuadUVset, 1, (GLfloat*)&water.offsets[0]);
+
+
+	glProgramUniform1f(animQuadShader, animQuadExtas, timepass);
+	glDrawArrays(GL_POINTS, 0, 1);
+	// disable
+	glProgramUniform1f(animQuadShader, animQuadExtas, -1.0f);
 }
