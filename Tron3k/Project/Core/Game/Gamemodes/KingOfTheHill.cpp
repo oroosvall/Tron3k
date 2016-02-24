@@ -36,9 +36,9 @@ void KingOfTheHill::init(Console* cptr, Game* gptr)
 
 	teamOneScore = 0;
 	teamTwoScore = 0;
-	winScore = 5;
+	winScore = 9;
 
-	tokensPerTeam = 2;
+	tokensPerTeam = 20;
 
 	tickForCaptureScoring = 15.0f;
 	timerModifierForCaptureScoring = tickForCaptureScoring;
@@ -324,14 +324,14 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
  			timer -= dt;
 			if (timer < FLT_EPSILON)
 			{
-				if (round == 2)
+				if (round%2 == 0)
 				{
 					if (capturePoint == 0)
 						capturePoint = 1;
 					else
 						capturePoint = 0;
 				}
-				else if (round == 3)
+				else
 					capturePoint = rand() % 2;
 
 				teamOneSpawnTokens = teamTwoSpawnTokens = tokensPerTeam;

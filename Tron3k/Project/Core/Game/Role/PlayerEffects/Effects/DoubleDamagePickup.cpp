@@ -31,7 +31,7 @@ int DoubleDamagePickup::update(float dt)
 
 float DoubleDamagePickup::renderRad()
 {
-	return rad;
+	return rad*0.5f;
 }
 
 bool DoubleDamagePickup::onCooldown()
