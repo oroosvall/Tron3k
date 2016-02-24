@@ -38,7 +38,7 @@ void KingOfTheHill::init(Console* cptr, Game* gptr)
 	teamTwoScore = 0;
 	winScore = 5;
 
-	tokensPerTeam = 2;
+	tokensPerTeam = 20;
 
 	tickForCaptureScoring = 15.0f;
 	timerModifierForCaptureScoring = tickForCaptureScoring;
@@ -324,14 +324,14 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
  			timer -= dt;
 			if (timer < FLT_EPSILON)
 			{
-				if (round == 2)
+				if (round%2 == 0)
 				{
 					if (capturePoint == 0)
 						capturePoint = 1;
 					else
 						capturePoint = 0;
 				}
-				else if (round == 3)
+				else
 					capturePoint = rand() % 2;
 
 				teamOneSpawnTokens = teamTwoSpawnTokens = tokensPerTeam;
@@ -560,8 +560,31 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 		{
 			if (GetSoundActivated())
 			{
-				GetSound()->playUserGeneratedSound(SOUNDS::announcerCommence);
 				GetSound()->playUserGeneratedSound(SOUNDS::SoundForOvertime);
+
+				if (gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
+				{
+					if (teamOneSpawnTokens == 0)
+					{
+						GetSound()->playUserGeneratedSound(SOUNDS::announcerFinalAssault);
+					}
+					else
+					{
+						GetSound()->playUserGeneratedSound(SOUNDS::announcerDefendTheObjective);
+					}
+				}
+
+				else if (gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 2)
+				{
+					if (teamTwoSpawnTokens == 0)
+					{
+						GetSound()->playUserGeneratedSound(SOUNDS::announcerFinalAssault);
+					}
+					else
+					{
+						GetSound()->playUserGeneratedSound(SOUNDS::announcerDefendTheObjective);
+					}
+				}
 			}
 			timer = 30.0f;
 		}

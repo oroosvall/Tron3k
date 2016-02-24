@@ -15,6 +15,7 @@ public:
 	void Release();
 
 	glm::vec2 m_size;
+	glm::vec3 m_color;
 
 	GLuint m_texture;
 

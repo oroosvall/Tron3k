@@ -241,7 +241,7 @@ glm::vec4 Physics::checkSpherevSpheretdCollision(Sphere mesh1, Sphere mesh2)
 		//collision
 		vec3 d = normalize(dist);
 
-		//if(inside)
+		//if(inside)sd
 		if (abs(length(dist) - minRad) < abs(length(dist) - radius))
 		{
 			return (vec4(normalize(dist), -abs(minRad - length(dist)))); //works for when we're inside sphere
@@ -526,24 +526,11 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb, bool isBullet)
 		}
 		if (closest.w < FLT_MAX && isBullet)
 		{
-			float d1 = dot(vec3(closest), obb->lines[n].plane1Normal);
-			float d2 = dot(vec3(closest), obb->lines[n].plane2Normal);
-			if (d1 < 0.0f)
-			{
-				if (d1 < d2)
-				{
-					closest.x = obb->lines[n].plane1Normal.x;
-					closest.y = obb->lines[n].plane1Normal.y;
-					closest.z = obb->lines[n].plane1Normal.z;
-				}
-			}
-			else if (d2 < 0.0f)
-			{
-				closest.x = obb->lines[n].plane2Normal.x;
-				closest.y = obb->lines[n].plane2Normal.y;
-				closest.z = obb->lines[n].plane2Normal.z;
-
-			}
+			vec3 direc = normalize(obb->lines[n].plane1Normal + obb->lines[n].plane2Normal);
+			
+				closest.x = direc.x;
+				closest.y = direc.y;
+				closest.z = direc.z;
 		}
 	}
 	//if we found a line intersection it will always be closer
@@ -562,6 +549,12 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb, bool isBullet)
 		if (test_len <= closest.w)
 		{
 			closest.x = test.x; closest.y = test.y; closest.z = test.z;
+			if (isBullet)
+			{
+				closest.x = obb->cornerNorms[n].x;
+				closest.y = obb->cornerNorms[n].y;
+				closest.z = obb->cornerNorms[n].z;
+			}
 			closest.w = test_len;
 		}
 	}

@@ -128,6 +128,9 @@ private:
 	GLuint particleCam;
 	GLuint particleTexture;
 
+	GLuint particleGlow;
+	GLuint particleColor;
+
 	//lightwall
 	GLuint lwVertexDataId;
 	GLuint lwVertexAttribute;
@@ -201,7 +204,7 @@ public:
 
 	virtual bool setSetting(PIPELINE_SETTINGS type, PipelineValues value);
 
-	virtual void createTimedParticleEffect(PARTICLE_EFFECTS peffect, vec3 pos, glm::vec3 dir);
+	virtual void createTimedParticleEffect(PARTICLE_EFFECTS peffect, vec3 pos, glm::vec3 dir, glm::vec3 color);
 
 	virtual void renderWallEffect(void* pos1, void* pos2, float uvStartOffset, float* dgColor);
 

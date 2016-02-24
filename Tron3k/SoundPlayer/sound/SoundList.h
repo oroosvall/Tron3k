@@ -98,6 +98,14 @@ enum SOUNDS
 	soundEffectCleanseNova,
 	soundEffectCleanseNovaStereo,
 	soundEffectGrapplingHook,
+	announcerDoubleDamage,
+	announcerDoubleDamageSpawned,
+	announcerFinalAssault,
+	announcerDefendTheObjective,
+	TrapperPhrase,
+	PunisherPhrase,
+	StalkerPhrase,
+	ManipulatorPhrase,
 
 	nrOfSounds //leave last
 };

@@ -120,7 +120,14 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->soundList[SOUNDS::soundEffectHSCPickup].loadFromFile("GameFiles/Sound/soundEffectHSCPickup.ogg");
 		singleton->soundList[SOUNDS::soundEffectCleanseNova].loadFromFile("GameFiles/Sound/soundEffectCleanseNova.ogg");
 		singleton->soundList[SOUNDS::soundEffectCleanseNovaStereo].loadFromFile("GameFiles/Sound/soundEffectCleanseNovaStereo.ogg");
-		singleton->soundList[SOUNDS::soundEffectGrapplingHook].loadFromFile("GameFiles/Sound/soundEffectGrapplingHook.ogg");
+		singleton->soundList[SOUNDS::announcerDefendTheObjective].loadFromFile("GameFiles/Sound/announcerDefendTheObjective.ogg");
+		singleton->soundList[SOUNDS::announcerDoubleDamage].loadFromFile("GameFiles/Sound/announcerDoubleDamage.ogg");
+		singleton->soundList[SOUNDS::announcerDoubleDamageSpawned].loadFromFile("GameFiles/Sound/announcerDoubleDamageSpawned.ogg");
+		singleton->soundList[SOUNDS::announcerFinalAssault].loadFromFile("GameFiles/Sound/announcerFinalAssault.ogg");
+		singleton->soundList[SOUNDS::ManipulatorPhrase].loadFromFile("GameFiles/Sound/ManipulatorPhrase.ogg");
+		singleton->soundList[SOUNDS::StalkerPhrase].loadFromFile("GameFiles/Sound/StalkerPhrase.ogg");
+		singleton->soundList[SOUNDS::PunisherPhrase].loadFromFile("GameFiles/Sound/PunisherPhrase.ogg");
+		singleton->soundList[SOUNDS::TrapperPhrase].loadFromFile("GameFiles/Sound/TrapperPhrase.ogg");
 		initialized = true;
 	}
 }
@@ -138,6 +145,39 @@ SoundPlayer::SoundPlayer()
 SoundPlayer::~SoundPlayer()
 {
 	
+}
+
+void SoundPlayer::playFields(float x, float y, float z)
+{
+	for (int i = 0; i < 10; i++)
+	{
+		if (fields[i].getStatus() != 2)
+		{
+			fields[i].setBuffer(soundList[SOUNDS::soundEffectFields]);
+			fields[i].setPosition(x, y, z);
+			fields[i].setVolume(50);
+			fields[i].setAttenuation(80);
+			fields[i].setMinDistance(10.0f);
+			fields[i].play();
+			return;
+		}
+	}
+}
+
+void SoundPlayer::playFieldsStereo()
+{
+	for (int i = 0; i < 10; i++)
+	{
+		if (fields[i].getStatus() != 2)
+		{
+			fields[i].setBuffer(soundList[SOUNDS::soundEffectFieldsStereo]);
+			fields[i].setVolume(50);
+			fields[i].setAttenuation(80);
+			fields[i].setMinDistance(10.0f);
+			fields[i].play();
+			return;
+		}
+	}
 }
 
 void SoundPlayer::playMelee(float x, float y, float z)

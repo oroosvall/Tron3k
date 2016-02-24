@@ -295,7 +295,6 @@ void Game::update(float dt)
 		checkBulletVWorldCollision(dt);
 		checkPlayerVEffectCollision();
 		checkPlayerVCapCollision();
-
 	}
 	else if (gameState == Gamestate::CLIENT)
 	{
@@ -303,16 +302,15 @@ void Game::update(float dt)
 		checkPlayerVWorldCollision(dt);
 		checkPlayerVEffectCollision();
 		checkFootsteps(dt);
-
 	}
 	else if (gameState == Gamestate::SERVER)
 	{
+		checkPlayerVBulletCollision();
+		checkPlayerVCapCollision();
+		checkBulletVWorldCollision(dt);
+		checkPlayerVEffectCollision();
 		checkEffectVEffectCollision();
 		checkBulletVEffectCollision(dt);
-		checkBulletVWorldCollision(dt);
-		checkPlayerVBulletCollision();
-		checkPlayerVEffectCollision();
-		checkPlayerVCapCollision();
 	}
 
 	for (int c = 0; c < max_con; c++)
@@ -1468,11 +1466,10 @@ void Game::handleWeaponFire(int conID, int teamId, int bulletId, WEAPON_TYPE wea
 			if (GetSound())
 				if (conID == localPlayerId || conID == spectateID)
 				{
-
-					GetSound()->playExternalSound(SOUNDS::soundEffectFieldsStereo, pos.x, pos.y, pos.z);
+					GetSound()->playFields(pos.x, pos.y, pos.z);
 				}
 				else
-					GetSound()->playExternalSound(SOUNDS::soundEffectFields, pos.x, pos.y, pos.z);
+					GetSound()->playFieldsStereo();
 
 		addBulletToList(conID, teamId, bulletId, BULLET_TYPE::BATTERY_SLOW_SHOT, pos, dir);
 
@@ -1483,11 +1480,10 @@ void Game::handleWeaponFire(int conID, int teamId, int bulletId, WEAPON_TYPE wea
 			if (GetSound())
 				if (conID == localPlayerId || conID == spectateID)
 				{
-					GetSound()->playExternalSound(SOUNDS::soundEffectFieldsStereo, pos.x, pos.y, pos.z);
+					GetSound()->playFields(pos.x, pos.y, pos.z);
 				}
-
 				else
-					GetSound()->playExternalSound(SOUNDS::soundEffectFields, pos.x, pos.y, pos.z);
+					GetSound()->playFieldsStereo();
 
 		addBulletToList(conID, teamId, bulletId, BULLET_TYPE::BATTERY_SPEED_SHOT, pos, dir);
 		break;
@@ -1739,6 +1735,7 @@ void Game::addEffectToList(int conID, int teamId, int effectId, EFFECT_TYPE et, 
 		break;
 	case EFFECT_TYPE::DOUBLEDAMAGEPICKUP:
 		e = new DoubleDamagePickup();
+		
 	}
 	e->init(conID, effectId, pos);
 	e->setTeam(teamId);
@@ -1810,7 +1807,7 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 			console->printMsg(p->getName() + suicideMessages[rand() % suicideMessages.size()], "System", 'S');
 			return 0;
 		}
-		if (hi.bt != BULLET_TYPE::CLUSTERLING && hi.bt != BULLET_TYPE::BATTERY_SLOW_SHOT && hi.bt != BULLET_TYPE::BATTERY_SPEED_SHOT)	//Any bullets that should not detonate on contact
+		if (hi.bt != BULLET_TYPE::CLUSTERLING && hi.bt != BULLET_TYPE::BATTERY_SLOW_SHOT && hi.bt != BULLET_TYPE::BATTERY_SPEED_SHOT || hi.bt != BULLET_TYPE::GRAPPLING_HOOK)	//Any bullets that should not detonate on contact
 		{
 			glm::vec3 pos = playerList[hi.playerHit]->getPos();
 			if (gameState != Gamestate::SERVER)
@@ -1841,10 +1838,18 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 			playerList[hi.bulletPID]->hitMarker = 0.25f;
 			if (theBullet != nullptr)
 			{
-				int k = 0;
 				HitPosAndDir hpad;
 				hpad.pos = theBullet->getPos();
-				hpad.dir = glm::normalize(theBullet->getDir());
+				vec3 dir = glm::normalize(theBullet->getDir());
+				vec3 n = hpad.pos - p->getPos();
+				n.y *= -1;
+				hpad.dir = -reflect(dir, normalize(n));
+				//hpad.dir = normalize(n);
+				if(p->getTeam() == 1)
+					hpad.color = TEAMONECOLOR;
+				else if(p->getTeam() == 2)
+					hpad.color = TEAMTWOCOLOR;
+				else hpad.color = vec3(1.0f, 1.0f, 1.0f);
 				allBulletHitPlayerPos.push_back(hpad);
 			}
 			if (p->getHP() == 0 && p->isAlive())
@@ -1907,7 +1912,7 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 				if (hi.et == EFFECT_TYPE::HEALTHPACK)
 					GetSound()->playExternalSound(SOUNDS::soundEffectHP, pos.x, pos.y, pos.z);
 
-				else if (hi.et != EFFECT_TYPE::BATTERY_SLOW && hi.et != EFFECT_TYPE::BATTERY_SPEED && hi.et != EFFECT_TYPE::HSCPICKUP && hi.et != EFFECT_TYPE::CLEANSENOVA)
+				else if (hi.et != EFFECT_TYPE::BATTERY_SLOW && hi.et != EFFECT_TYPE::BATTERY_SPEED && hi.et != EFFECT_TYPE::HSCPICKUP && hi.et != EFFECT_TYPE::CLEANSENOVA && hi.et != EFFECT_TYPE::DOUBLEDAMAGEPICKUP)
 				{
 					if (!p->isLocal())
 						GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHit, pos.x, pos.y, pos.z);
@@ -2034,7 +2039,10 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 				tester->startCooldown();
 				p->addModifier(MODIFIER_TYPE::DOUBLEDAMAGEMOD);
 
-				//Insert double damage announcer here
+				if (GetSound() && p->isLocal())
+				{
+					GetSound()->playExternalSound(SOUNDS::announcerDoubleDamage, pos.x, pos.y, pos.z);
+				}
 			}
 		}
 		break;
