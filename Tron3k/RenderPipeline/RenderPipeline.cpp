@@ -294,7 +294,8 @@ void RenderPipeline::reloadShaders()
 	animTexture.animQuadWorld = glGetUniformLocation(animTexture.animQuadShader, "world");
 	animTexture.animQuadVP = glGetUniformLocation(animTexture.animQuadShader, "vp");
 	animTexture.animQuadUVset = glGetUniformLocation(animTexture.animQuadShader, "UVset");
-	animTexture.animQuadExtas = glGetUniformLocation(animTexture.animQuadShader, "timepass");
+	animTexture.animQuadTime = glGetUniformLocation(animTexture.animQuadShader, "timepass");
+	animTexture.animQuadType = glGetUniformLocation(animTexture.animQuadShader, "type");
 
 	//pointlight volume shader
 	std::string shaderNamesPointVolume[] = { "GameFiles/Shaders/pointlightVolume_vs.glsl", "GameFiles/Shaders/pointlightVolume_gs.glsl", "GameFiles/Shaders/pointlightVolume_fs.glsl" };

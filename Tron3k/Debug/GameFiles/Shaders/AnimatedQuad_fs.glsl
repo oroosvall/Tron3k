@@ -4,6 +4,7 @@ layout (location = 1) in vec3 worldPos;
 
 uniform sampler2D tex;
 uniform float timepass;
+uniform int type;
    
 layout (location = 1) out vec4 WorldPosOut;   
 layout (location = 2) out vec4 DiffuseOut;     
@@ -12,15 +13,38 @@ layout (location = 4) out vec4 GlowMap;
 
 void main () 
 {
-	if(timepass < 0)
+	WorldPosOut = vec4(0);
+	NormalOut = vec4(0);
+	GlowMap = vec4(0);
+
+	//Sign
+	if(type == 0)
 	{
 		GlowMap = texture(tex, uv);
 		//DiffuseOut = GlowMap;
 		//DiffuseOut.w = 1f;
 		GlowMap.w = 1.0f;
 	}
-	else
+
+	//Specular
+	else if (type == 1)
 	{
+		//DiffuseOut = vec4(0);
+		WorldPosOut = vec4(worldPos, 1.0f);
+		vec2 UV1 = vec2(uv);
+
+		UV1 *= 20.0f;
+		UV1.y += (timepass / 70);
+
+		vec4 t = texture(tex, UV1);
+		NormalOut = vec4(0, 1.0f, 0.3f, t.x);
+		//NormalOut.w = 0.0f;
+	}
+
+	//Water
+	else if (type == 2)
+	{		
+		
 		//Set UV coords to base UV
 		float tile = 20.0f;	
 		vec2 UV1 = vec2(uv);
@@ -60,9 +84,11 @@ void main ()
 		GlowMap *= texture(tex, UV2);
 
 		//Restrict dark & light
-		newdistance = clamp(newdistance, 0.0f, 0.4f);
+		newdistance = clamp(newdistance, 0.1f, 0.4f);
 		
 		//Darker based on distance
 		GlowMap -= newdistance * 1.8f;
+
+		//GlowMap = vec4(0);
 	}
 }
