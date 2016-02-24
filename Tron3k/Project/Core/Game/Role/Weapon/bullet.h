@@ -26,6 +26,7 @@ protected:
 	int bounceCounter = 0;
 
 	bool spawnAdditionals = true;
+	bool collideframe = false;
 
 public:
 	virtual ~Bullet();
@@ -51,5 +52,7 @@ public:
 	void setSpawnAdditionals(bool s) { spawnAdditionals = s; };
 	bool getSpawnAdditionals() { return spawnAdditionals; };
 
+	bool getCollidedThisFrame() { return collideframe; }; //Used to avoid some frame-perfect shenanigans with Battery Fields
+	void collidedThisFrame() { collideframe = true; };
 };
 #endif

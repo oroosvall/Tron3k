@@ -220,7 +220,7 @@ public:
 	CameraInput* getPlayerCam() { return cam; };
 
 	void hitByBullet(Bullet* b, BULLET_TYPE bt, int newHPtotal = -1);
-	void hitByEffect(Effect* e, int newHPtotal = -1);
+	void hitByEffect(Effect* e, EFFECT_TYPE et, int newHPtotal = -1);
 
 	void addModifier(MODIFIER_TYPE mt);
 

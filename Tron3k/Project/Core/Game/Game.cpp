@@ -291,9 +291,9 @@ void Game::update(float dt)
 	{
 		checkEffectVEffectCollision();
 		checkPlayerVWorldCollision(dt);
+		checkBulletVEffectCollision(dt);
 		checkBulletVWorldCollision(dt);
 		checkPlayerVEffectCollision();
-		checkBulletVEffectCollision(dt);
 		checkPlayerVCapCollision();
 
 	}
@@ -308,10 +308,10 @@ void Game::update(float dt)
 	else if (gameState == Gamestate::SERVER)
 	{
 		checkEffectVEffectCollision();
+		checkBulletVEffectCollision(dt);
 		checkBulletVWorldCollision(dt);
 		checkPlayerVBulletCollision();
 		checkPlayerVEffectCollision();
-		checkBulletVEffectCollision(dt);
 		checkPlayerVCapCollision();
 	}
 
@@ -896,17 +896,20 @@ void Game::checkBulletVWorldCollision(float dt)
 		{
 			if (bullets[b][j] != nullptr)
 			{
-				int pid = -1, bid = -1;
-				bullets[b][j]->getId(pid, bid);
-				vec3 bPos = bullets[b][j]->getPos();
-				collides = physics->BulletVWorldCollision(bPos, bullets[b][j]->getVel(), bullets[b][j]->getDir(), dt);
-				if (collides.w > -1 || collides.w < -1)
+				if (!bullets[b][j]->getCollidedThisFrame())
 				{
-					BulletHitWorldInfo hi;
-					hi.bt = BULLET_TYPE(b); hi.hitPos = bPos; hi.hitDir = bullets[b][j]->getDir();
-					bullets[b][j]->getId(hi.bulletPID, hi.bulletBID);
-					hi.collisionNormal = collides;
-					allBulletHitsOnWorld.push_back(hi);
+					int pid = -1, bid = -1;
+					bullets[b][j]->getId(pid, bid);
+					vec3 bPos = bullets[b][j]->getPos();
+					collides = physics->BulletVWorldCollision(bPos, bullets[b][j]->getVel(), bullets[b][j]->getDir(), dt);
+					if (collides.w > -1 || collides.w < -1)
+					{
+						BulletHitWorldInfo hi;
+						hi.bt = BULLET_TYPE(b); hi.hitPos = bPos; hi.hitDir = bullets[b][j]->getDir();
+						bullets[b][j]->getId(hi.bulletPID, hi.bulletBID);
+						hi.collisionNormal = collides;
+						allBulletHitsOnWorld.push_back(hi);
+					}
 				}
 			}
 		}
@@ -985,6 +988,7 @@ void Game::checkBulletVEffectCollision(float dt)
 						collNormalWalls = physics->checkBulletVEffectCollision(bPos, bullets[b][j]->getVel(), bullets[b][j]->getDir(), EFFECT_TYPE::BATTERY_SLOW, eid, dt);
 						if (collNormalWalls != vec4(0, 0, 0, 0))
 						{
+							bullets[b][j]->collidedThisFrame();
 							BulletHitEffectInfo bi;
 							bullets[b][j]->getId(bi.bulletPID, bi.bulletBID);
 							bi.bt = BULLET_TYPE(b);
@@ -1007,6 +1011,7 @@ void Game::checkBulletVEffectCollision(float dt)
 						collNormalWalls = physics->checkBulletVEffectCollision(bPos, bullets[b][j]->getVel(), bullets[b][j]->getDir(), EFFECT_TYPE::BATTERY_SPEED, eid, dt);
 						if (collNormalWalls != vec4(0, 0, 0, 0))
 						{
+							bullets[b][j]->collidedThisFrame();
 							BulletHitEffectInfo bi;
 							bullets[b][j]->getId(bi.bulletPID, bi.bulletBID);
 							bi.bt = BULLET_TYPE(b);
@@ -1914,7 +1919,7 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 			updateEffectBox(theEffect);
 		}
 
-		p->hitByEffect(theEffect, hi.newHPtotal);
+		p->hitByEffect(theEffect, hi.et, hi.newHPtotal);
 
 		switch (hi.et)
 		{

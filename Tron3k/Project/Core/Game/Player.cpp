@@ -1027,7 +1027,7 @@ void Player::hitByBullet(Bullet* b, BULLET_TYPE bt, int newHPtotal)
 	}
 }
 
-void Player::hitByEffect(Effect* e, int newHPtotal)
+void Player::hitByEffect(Effect* e, EFFECT_TYPE et, int newHPtotal)
 {
 	/*
 	Big ol' switch case to identify which effect is hitting us and what we should do about it
@@ -1041,7 +1041,11 @@ void Player::hitByEffect(Effect* e, int newHPtotal)
 			role.takeDamage(dmg);
 		}
 		else
-			role.takeDamage(20); //TEMPORARY SOLUTION, MUST FIND ORIGIN OF PROBLEM
+		{
+			if (et == EFFECT_TYPE::EXPLOSION)
+				role.takeDamage(20); //TEMPORARY SOLUTION, MUST FIND ORIGIN OF PROBLEM
+		}
+			
 	}
 	else //Hello I'm the client. I accept my new HP.
 	{

@@ -538,7 +538,11 @@ void Core::upRoam(float dt)
 		if (effectHitsOnPlayer.size() != 0)
 		{
 			for (int c = 0; c < effectHitsOnPlayer.size(); c++)
+			{
+				if (effectHitsOnPlayer[c].et == EFFECT_TYPE::EXPLOSION)
+					int x = 0;
 				game->handleEffectHitPlayerEvent(effectHitsOnPlayer[c]);
+			}
 			game->clearEffectOnPlayerCollisions();
 		}
 
