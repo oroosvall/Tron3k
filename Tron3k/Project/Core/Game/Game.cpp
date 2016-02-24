@@ -2143,7 +2143,7 @@ void Game::bounceBullet(BulletHitWorldInfo hwi, Bullet* theBullet)
 		theBullet->setDir(dir);
 
 		//use pendepth to set a new pos 
-		theBullet->setPos(theBullet->getPos() + vec3(posadjust));
+	//	theBullet->setPos(theBullet->getPos() + vec3(posadjust));
 		//theBullet->setPos(theBullet->getPos() + (theBullet->getDir() * theBullet->getVel() * lastDT * 1.0f));
 
 		// remove bullet code
@@ -2165,7 +2165,7 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 	Bullet* b = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, arraypos);
 	if (b != nullptr)
 	{
-		b->setPos(hi.hitPos);
+		b->setPos(hi.hitPos + (vec3(normalize(hi.collisionNormal)) * hi.collisionNormal.w));
 		b->setDir(hi.hitDir);
 		vec3 temp;
 		vec3 vel = b->getVel();
