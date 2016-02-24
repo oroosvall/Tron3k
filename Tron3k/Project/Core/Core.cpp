@@ -26,7 +26,7 @@ void Core::init()
 	renderPipe = nullptr;
 
 	recreate = false;
-	fullscreen = false;
+	fullscreen = true;
 	//winX = winY = 1000;
 	winX = 1280; winY = 720;
 	//winX = 1920, winY = 1080;
@@ -2797,7 +2797,8 @@ void Core::createWindow(int x, int y, bool fullscreen)
 			renderPipe->removeTextObject(namePlates[i]);
 		}
 
-		delete uiManager;
+		if(uiManager != nullptr)
+			delete uiManager;
 		renderPipe->release();
 		
 		renderPipe = nullptr;
@@ -2805,6 +2806,8 @@ void Core::createWindow(int x, int y, bool fullscreen)
 		uiManager = new UIManager();
 		initPipeline();
 		uiManager->init(&console, winX, winY);
+		uiManager->LoadNextSet(UISets::Menu, winX, winY); //Load the first set of menus.
+		uiManager->setMenu(MainMenu::StartMenu); //Set start menu as the current menu
 
 
 		PipelineValues pv;
