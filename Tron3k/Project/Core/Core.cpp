@@ -2,6 +2,7 @@
 
 void Core::init()
 {
+	firstTimeInWarmUp = false;
 	firstTimeInEnd = false;
 	lowTicketsFirstTime = false;
 	uitmpcounter = 0;
@@ -742,10 +743,10 @@ void Core::upClient(float dt)
 					uiManager->HUDTime.moveTokenReducer1 = false;
 					uiManager->HUDTime.moveTokenReducer2 = false;
 					uiManager->HUD.firstSecondEachRound = false;
-					uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam1, false);
-					uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam2, false);
-					uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam1, false);
-					uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam2, false);
+					//uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam1, false);
+					//uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam2, false);
+					//uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam1, false);
+					//uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam2, false);
 				}
 
 				//Rights out the of round.
@@ -765,10 +766,10 @@ void Core::upClient(float dt)
 					uiManager->HUDTime.moveTokenReducer1 = false;
 					uiManager->HUDTime.moveTokenReducer2 = false;
 					uiManager->HUD.firstSecondEachRound = false;
-					uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam1, false);
-					uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam2, false);
-					uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam1, false);
-					uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam2, false);
+					//uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam1, false);
+					//uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam2, false);
+					//uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam1, false);
+					//uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam2, false);
 				}
 
 				//Checks to see if the banners "Final Assult" or Hold Your Ground" should be shown.
@@ -813,6 +814,19 @@ void Core::upClient(float dt)
 						uiManager->HUD.bannerCounter = 0;
 						lowTicketsFirstTime = false;
 					}
+
+					uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam1, false);
+					uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam2, false);
+				}
+
+				if (firstTimeInWarmUp && tmp == KOTHSTATE::WARMUP)
+				{
+					uiManager->hideOrShowHideAble(hideAbleObj::Banner, false);
+					uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam1, false);
+					uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam2, false);
+					uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam1, false);
+					uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam2, false);
+					firstTimeInWarmUp = false;
 				}
 			}
 		}
@@ -890,6 +904,7 @@ void Core::upClient(float dt)
 				uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
 				uiManager->HUD.bannerCounter = 0;
 
+				firstTimeInWarmUp = true;
 				firstTimeInEnd = true;
 				lowTicketsFirstTime = true;
 				uiManager->HUDTime.movePointAdder1 = false;
@@ -2345,18 +2360,15 @@ void Core::inGameUIUpdate() //Ingame ui update
 			uiManager->scaleBar(scaleAndText::TicketBar1, (float)uiManager->HUD.teamOneTokens / (float)(uiManager->HUD.maxTokens), true);
 		else
 			console.printMsg("Error: Function inGameUIUpdate in Core, HUD.maxTokens has a value of 0 or below", "System", 'S');
-
-		if (koth->getState() == KOTHSTATE::ROUND)
+		
+		int tmp = uiManager->addNewWM(hideAbleObj::TicketReducerTeam1);
+		if (tmp != -1)
 		{
-			int tmp = uiManager->addNewWM(hideAbleObj::TicketReducerTeam1);
-			if (tmp != -1)
-			{
-				if (uiManager->HUDTime.wmIdListTicket1.size() == 0)
-					uiManager->HUDTime.moveTokenReducer1 = true;
+			if (uiManager->HUDTime.wmIdListTicket1.size() == 0)
+				uiManager->HUDTime.moveTokenReducer1 = true;
 
-				uiManager->HUDTime.wmIdListTicket1.push_back(tmp);
-				uiManager->HUDTime.counterListTicket1.push_back(0);
-			}
+			uiManager->HUDTime.wmIdListTicket1.push_back(tmp);
+			uiManager->HUDTime.counterListTicket1.push_back(0);
 		}
 	}
 
@@ -2371,17 +2383,14 @@ void Core::inGameUIUpdate() //Ingame ui update
 		else
 			console.printMsg("Error: Function inGameUIUpdate in Core, HUD.maxTokens has a value of 0 or below", "System", 'S');
 
-		if (koth->getState() == KOTHSTATE::ROUND)
+		int tmp = uiManager->addNewWM(hideAbleObj::TicketReducerTeam2);
+		if (tmp != -1)
 		{
-			int tmp = uiManager->addNewWM(hideAbleObj::TicketReducerTeam2);
-			if (tmp != -1)
-			{
-				if (uiManager->HUDTime.wmIdListTicket2.size() == 0)
-					uiManager->HUDTime.moveTokenReducer2 = true;
+			if (uiManager->HUDTime.wmIdListTicket2.size() == 0)
+				uiManager->HUDTime.moveTokenReducer2 = true;
 
-				uiManager->HUDTime.wmIdListTicket2.push_back(tmp);
-				uiManager->HUDTime.counterListTicket2.push_back(0);
-			}
+			uiManager->HUDTime.wmIdListTicket2.push_back(tmp);
+			uiManager->HUDTime.counterListTicket2.push_back(0);
 		}
 	}
 

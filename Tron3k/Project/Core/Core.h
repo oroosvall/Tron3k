@@ -71,6 +71,7 @@ private:
 	int lastSubState;
 	bool firstTimeInEnd;
 	bool lowTicketsFirstTime;
+	bool firstTimeInWarmUp;
 
 	//network
 	float tick_timer;
