@@ -26,6 +26,8 @@ struct ParticleSystemData
 	float gravity;
 	int continuous;
 	int omni;
+	int seed;
+	float spread;
 };
 
 typedef struct ParticleShaderLocations
@@ -39,5 +41,7 @@ typedef struct ParticleShaderLocations
 	GLuint continuous;
 	GLuint omni;
 	GLuint initialPos;
+	GLuint spread;
+	GLuint sysDir;
 
 } ParticleShaderLocations;

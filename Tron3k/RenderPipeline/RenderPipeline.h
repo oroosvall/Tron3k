@@ -201,7 +201,7 @@ public:
 
 	virtual bool setSetting(PIPELINE_SETTINGS type, PipelineValues value);
 
-	virtual void createTimedParticleEffect(PARTICLE_EFFECTS peffect, vec3 pos);
+	virtual void createTimedParticleEffect(PARTICLE_EFFECTS peffect, vec3 pos, glm::vec3 dir);
 
 	virtual void renderWallEffect(void* pos1, void* pos2, float uvStartOffset, float* dgColor);
 

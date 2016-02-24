@@ -836,10 +836,10 @@ void Core::upClient(float dt)
 		}
 		game->update(newDt);
 
-		std::vector<glm::vec3> hitpositions = game->getAllBulletHitPlayerPos();
+		std::vector<HitPosAndDir> hitpositions = game->getAllBulletHitPlayerPos();
 		for (size_t i = 0; i < hitpositions.size(); i++)
 		{
-			renderPipe->createTimedParticleEffect(PARTICLE_HIT, hitpositions[i]);
+			renderPipe->createTimedParticleEffect(PARTICLE_HIT, hitpositions[i].pos, hitpositions[i].dir);
 		}
 
 		game->clearAllBulletHitPlayerPos();
@@ -1533,6 +1533,18 @@ void Core::clientHandleCmds(std::string com)
 				cheatsOn = false;
 			else
 				cheatsOn = true;
+		}
+		else if (token == "/slow")
+		{
+			if (cheatsOn)
+			{
+				ss >> token;
+				if (token.size() > 0)
+				{
+					float slow = atof(token.c_str());
+					playbackSpeed = slow;
+				}
+			}
 		}
 		if (token == "/ready")
 		{

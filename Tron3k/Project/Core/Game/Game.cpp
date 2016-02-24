@@ -1840,7 +1840,13 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 			p->hitByBullet(theBullet, hi.bt, hi.newHPtotal);
 			playerList[hi.bulletPID]->hitMarker = 0.25f;
 			if (theBullet != nullptr)
-				allBulletHitPlayerPos.push_back(theBullet->getPos());
+			{
+				int k = 0;
+				HitPosAndDir hpad;
+				hpad.pos = theBullet->getPos();
+				hpad.dir = glm::normalize(theBullet->getDir());
+				allBulletHitPlayerPos.push_back(hpad);
+			}
 			if (p->getHP() == 0 && p->isAlive())
 			{
 				p->IdiedThisFrame();
