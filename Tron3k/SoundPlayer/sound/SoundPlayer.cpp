@@ -120,7 +120,14 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->soundList[SOUNDS::soundEffectHSCPickup].loadFromFile("GameFiles/Sound/soundEffectHSCPickup.ogg");
 		singleton->soundList[SOUNDS::soundEffectCleanseNova].loadFromFile("GameFiles/Sound/soundEffectCleanseNova.ogg");
 		singleton->soundList[SOUNDS::soundEffectCleanseNovaStereo].loadFromFile("GameFiles/Sound/soundEffectCleanseNovaStereo.ogg");
-		singleton->soundList[SOUNDS::soundEffectGrapplingHook].loadFromFile("GameFiles/Sound/soundEffectGrapplingHook.ogg");
+		singleton->soundList[SOUNDS::announcerDefendTheObjective].loadFromFile("GameFiles/Sound/announcerDefendTheObjective.ogg");
+		singleton->soundList[SOUNDS::announcerDoubleDamage].loadFromFile("GameFiles/Sound/announcerDoubleDamage.ogg");
+		singleton->soundList[SOUNDS::announcerDoubleDamageSpawned].loadFromFile("GameFiles/Sound/announcerDoubleDamageSpawned.ogg");
+		singleton->soundList[SOUNDS::announcerFinalAssault].loadFromFile("GameFiles/Sound/announcerFinalAssault.ogg");
+		singleton->soundList[SOUNDS::ManipulatorPhrase].loadFromFile("GameFiles/Sound/ManipulatorPhrase.ogg");
+		singleton->soundList[SOUNDS::StalkerPhrase].loadFromFile("GameFiles/Sound/StalkerPhrase.ogg");
+		singleton->soundList[SOUNDS::PunisherPhrase].loadFromFile("GameFiles/Sound/PunisherPhrase.ogg");
+		singleton->soundList[SOUNDS::TrapperPhrase].loadFromFile("GameFiles/Sound/TrapperPhrase.ogg");
 		initialized = true;
 	}
 }

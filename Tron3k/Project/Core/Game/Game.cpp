@@ -1739,6 +1739,7 @@ void Game::addEffectToList(int conID, int teamId, int effectId, EFFECT_TYPE et, 
 		break;
 	case EFFECT_TYPE::DOUBLEDAMAGEPICKUP:
 		e = new DoubleDamagePickup();
+		
 	}
 	e->init(conID, effectId, pos);
 	e->setTeam(teamId);
@@ -1907,7 +1908,7 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 				if (hi.et == EFFECT_TYPE::HEALTHPACK)
 					GetSound()->playExternalSound(SOUNDS::soundEffectHP, pos.x, pos.y, pos.z);
 
-				else if (hi.et != EFFECT_TYPE::BATTERY_SLOW && hi.et != EFFECT_TYPE::BATTERY_SPEED && hi.et != EFFECT_TYPE::HSCPICKUP && hi.et != EFFECT_TYPE::CLEANSENOVA)
+				else if (hi.et != EFFECT_TYPE::BATTERY_SLOW && hi.et != EFFECT_TYPE::BATTERY_SPEED && hi.et != EFFECT_TYPE::HSCPICKUP && hi.et != EFFECT_TYPE::CLEANSENOVA && hi.et != EFFECT_TYPE::DOUBLEDAMAGEPICKUP)
 				{
 					if (!p->isLocal())
 						GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHit, pos.x, pos.y, pos.z);
@@ -2034,7 +2035,10 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 				tester->startCooldown();
 				p->addModifier(MODIFIER_TYPE::DOUBLEDAMAGEMOD);
 
-				//Insert double damage announcer here
+				if (GetSound())
+				{
+					GetSound()->playExternalSound(SOUNDS::announcerDoubleDamage, pos.x, pos.y, pos.z);
+				}
 			}
 		}
 		break;
