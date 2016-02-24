@@ -128,10 +128,11 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1);
 
+
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
 	glDepthMask(GL_TRUE);
-
+	glBlendEquation(GL_FUNC_ADD);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_CULL_FACE); 
 
@@ -777,12 +778,12 @@ void RenderPipeline::renderExploEffect(float* pos, float rad, float transp, floa
 	glProgramUniformMatrix4fv(exploShader, exploWorld, 1, GL_FALSE, (GLfloat*)&mat[0][0]);
 	glProgramUniform3fv(exploShader, exploDynCol, 1, (GLfloat*)&dgColor[0]);
 
-	contMan.renderBullet(-1);
+	contMan.renderEffect(EFFECT_TYPE::EXPLOSION);
 }
 
 void RenderPipeline::renderThunderDomeEffect(float* pos, float rad, float transp, float* dgColor)
 {
-	glProgramUniform1f(exploShader, exploTimepass, timepass * 0.5f);
+	glProgramUniform1f(exploShader, exploTimepass, timepass * 0.2f);
 
 	//set temp objects worldmat
 	glm::mat4 mat;
@@ -800,8 +801,7 @@ void RenderPipeline::renderThunderDomeEffect(float* pos, float rad, float transp
 	glProgramUniformMatrix4fv(exploShader, exploWorld, 1, GL_FALSE, (GLfloat*)&mat[0][0]);
 	glProgramUniform3fv(exploShader, exploDynCol, 1, (GLfloat*)&dgColor[0]);
 
-	//contMan.renderThunderDome();
-	contMan.renderBullet(-1);
+	contMan.renderEffect(EFFECT_TYPE::THUNDER_DOME);
 }
 
 void RenderPipeline::renderDecals(void* data, int size)
@@ -1310,9 +1310,17 @@ void RenderPipeline::disableDepthTest()
 	glDisable(GL_DEPTH_TEST);
 }
 
-void RenderPipeline::enableBlend()
+void RenderPipeline::enableBlend(bool addetive)
 {
 	glEnable(GL_BLEND);
+
+	if (addetive)
+	{
+		glBlendFunc(GL_ONE, GL_ONE);
+	}
+	else
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 }
 
 void RenderPipeline::disableBlend()
@@ -1696,7 +1704,7 @@ void RenderPipeline::renderLightvolumes()
 	glProgramUniform3fv(gBuffer->spotVolShader, gBuffer->spotVolEye, 1, &gBuffer->eyePos[0]);
 
 	glEnable(GL_BLEND);
-	glBlendEquation(GL_FUNC_ADD);
+	
 	glBlendFunc(GL_ONE, GL_ONE);
 	glDisable(GL_DEPTH_TEST);
 	glCullFace(GL_FRONT);

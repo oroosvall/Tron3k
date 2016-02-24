@@ -2221,7 +2221,7 @@ void Core::renderWorld(float dt)
 		renderPipe->finalizeRender();
 
 		renderPipe->disableDepthTest();
-		renderPipe->enableBlend();
+		renderPipe->enableBlend(false);
 
 		renderPipe->renderCrosshair(CROSSHAIR_TRAPPER_P);
 
@@ -3301,6 +3301,8 @@ void Core::minimapRender()
 
 void Core::effectsRender(int hackedTeam)
 {
+	renderPipe->enableBlend(true);
+	//renderPipe->disableDepthTest();
 	vec3 color;
 	float lightwallOffset = 0;
 	SpotLight light;
@@ -3585,4 +3587,5 @@ void Core::effectsRender(int hackedTeam)
 		break;
 		}
 	}
+	renderPipe->enableBlend(false);
 }
