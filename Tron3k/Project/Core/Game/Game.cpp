@@ -73,7 +73,7 @@ void Game::init(int max_connections, int state, Console* con)
 	spectateID = -1;
 	decalCounter = 0;
 
-	addEffectToList(0, 0, 0, EFFECT_TYPE::HSCPICKUP, vec3(50.87f, 1.6f, 10.7f), 0,  3.0f);
+	addEffectToList(0, 0, 0, EFFECT_TYPE::HSCPICKUP, vec3(50.87f, 1.6f, 10.7f), 0, 3.0f);
 	addEffectToList(0, 0, 1, EFFECT_TYPE::HSCPICKUP, vec3(-81.8f, 1.45f, 45.85f), 0, 3.0f);
 	addEffectToList(0, 0, 2, EFFECT_TYPE::HSCPICKUP, vec3(-34.86f, 1.6f, 67.0f), 0, 3.0f);
 	addEffectToList(0, 0, 3, EFFECT_TYPE::HSCPICKUP, vec3(44.05f, 1.7f, 98.19f), 0, 3.0f);
@@ -226,7 +226,7 @@ void Game::update(float dt)
 		}
 	}
 
-	
+
 
 	for (unsigned int i = 0; i < BULLET_TYPE::NROFBULLETS; i++)
 	{
@@ -554,7 +554,7 @@ void Game::checkFootsteps(float dt)
 				glm::vec3 vel;
 				pos = playerList[i]->getPos();
 				vel = playerList[i]->getVelocity();
-				if (vel.x > 0.5 || vel.x < -0.5  || vel.z > 0.5 || vel.z < -0.5)
+				if (vel.x > 0.5 || vel.x < -0.5 || vel.z > 0.5 || vel.z < -0.5)
 				{
 					playerList[i]->setFootstepsCountdown();
 					playerList[i]->setFootstepsLoop(false);
@@ -569,7 +569,7 @@ void Game::checkFootsteps(float dt)
 							GetSound()->playFootsteps(playerList[i]->getRole()->getRole(), pos.x, pos.y, pos.z);
 						}
 					}
-						
+
 				}
 
 			}
@@ -601,7 +601,7 @@ void Game::checkFootsteps(float dt)
 						GetSound()->playJump(playerList[i]->getRole()->getRole(), pos.x, pos.y, pos.z);
 					}
 				}
-					
+
 
 
 			}
@@ -835,7 +835,7 @@ void Game::checkPlayerVBulletCollision()
 								if (b == BULLET_TYPE::MELEE_ATTACK)
 									modifier = 1.5f;
 								collides = physics->checkPlayerVBulletCollision(playerList[i]->getPos() - (vec3(0, playerList[i]->getRole()->getBoxModifier(), 0)), bullets[b][j]->getPos(), this->playerList[i]->getRole()->GetSize(), modifier);
-								
+
 							}
 						}
 						if (collides != glm::vec3(0, 0, 0))
@@ -1088,7 +1088,7 @@ void Game::checkEffectVEffectCollision()
 			}
 		}
 	}
-	
+
 
 	//Use this line, etype1, eid1 and pid1 are for the thing, the 2s are for the other things, the lightwalls etc
 	//so thing1 is the thing removing effects.
@@ -1463,14 +1463,14 @@ void Game::handleWeaponFire(int conID, int teamId, int bulletId, WEAPON_TYPE wea
 			if (GetSound())
 				if (conID == localPlayerId || conID == spectateID)
 				{
-				
+
 					GetSound()->playExternalSound(SOUNDS::soundEffectFieldsStereo, pos.x, pos.y, pos.z);
 				}
 				else
 					GetSound()->playExternalSound(SOUNDS::soundEffectFields, pos.x, pos.y, pos.z);
 
 		addBulletToList(conID, teamId, bulletId, BULLET_TYPE::BATTERY_SLOW_SHOT, pos, dir);
-		
+
 		break;
 
 	case WEAPON_TYPE::BATTERYWPN_SPEED:
@@ -1669,7 +1669,7 @@ void Game::handleSpecialAbilityUse(int conID, int teamId, int sID, SPECIAL_TYPE 
 	case SPECIAL_TYPE::CLEANSESPECIAL:
 	{
 		addEffectToList(conID, teamId, 0, EFFECT_TYPE::CLEANSENOVA, p->getPos(), 0, 0.0f);
-		if(GetSound())
+		if (GetSound())
 			if (conID == localPlayerId || conID == spectateID)
 			{
 				GetSound()->playExternalSound(SOUNDS::soundEffectCleanseNovaStereo, pos.x, pos.y, pos.z);
@@ -1694,7 +1694,7 @@ void Game::addEffectToList(int conID, int teamId, int effectId, EFFECT_TYPE et, 
 		if (GetSound())
 			if (conID == localPlayerId || conID == spectateID)
 			{
-					GetSound()->playExternalSound(SOUNDS::soundEffectLightWallStereo, pos.x, pos.y, pos.z);
+				GetSound()->playExternalSound(SOUNDS::soundEffectLightWallStereo, pos.x, pos.y, pos.z);
 			}
 
 			else
@@ -1895,13 +1895,13 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 			{
 				if (hi.et == EFFECT_TYPE::HEALTHPACK)
 					GetSound()->playExternalSound(SOUNDS::soundEffectHP, pos.x, pos.y, pos.z);
-				
+
 				else if (hi.et != EFFECT_TYPE::BATTERY_SLOW && hi.et != EFFECT_TYPE::BATTERY_SPEED && hi.et != EFFECT_TYPE::HSCPICKUP && hi.et != EFFECT_TYPE::CLEANSENOVA)
 				{
-					if(!p->isLocal())
+					if (!p->isLocal())
 						GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHit, pos.x, pos.y, pos.z);
 					else
-					GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHitSelf, pos.x, pos.y, pos.z);
+						GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHitSelf, pos.x, pos.y, pos.z);
 				}
 			}
 		}
@@ -2014,7 +2014,7 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 				}
 			}
 		}
-			break;
+		break;
 		case EFFECT_TYPE::DOUBLEDAMAGEPICKUP:
 		{
 			DoubleDamagePickup* tester = (DoubleDamagePickup*)theEffect;
@@ -2143,7 +2143,8 @@ void Game::bounceBullet(BulletHitWorldInfo hwi, Bullet* theBullet)
 		theBullet->setDir(dir);
 
 		//use pendepth to set a new pos 
-	//	theBullet->setPos(theBullet->getPos() + vec3(posadjust));
+		if (theBullet->getType() == BULLET_TYPE::DISC_SHOT)
+			theBullet->setPos(theBullet->getPos() + vec3(posadjust));
 		//theBullet->setPos(theBullet->getPos() + (theBullet->getDir() * theBullet->getVel() * lastDT * 1.0f));
 
 		// remove bullet code
@@ -2165,7 +2166,10 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 	Bullet* b = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, arraypos);
 	if (b != nullptr)
 	{
-		b->setPos(hi.hitPos + (vec3(normalize(hi.collisionNormal)) * hi.collisionNormal.w));
+		if (b->getType() != BULLET_TYPE::DISC_SHOT)
+			b->setPos(hi.hitPos + (vec3(normalize(hi.collisionNormal)) * hi.collisionNormal.w));
+		else
+			b->setPos(hi.hitPos);
 		b->setDir(hi.hitDir);
 		vec3 temp;
 		vec3 vel = b->getVel();
@@ -2246,7 +2250,7 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 			break;
 		case BULLET_TYPE::GRAPPLING_HOOK:
 			temp = normalize(b->getPos() - playerList[hi.bulletPID]->getPos());
-			temp*= 2.5f;
+			temp *= 2.5f;
 			temp.y += temp.y*3.5f + 5.0f;
 			playerList[hi.bulletPID]->setVelocity(temp);
 			playerList[hi.bulletPID]->setGrounded(false);
@@ -2283,7 +2287,7 @@ void Game::handleBulletHitEffectEvent(BulletHitEffectInfo hi)
 						GetSound()->playExternalSound(SOUNDS::soundEffectClusterGrenade, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
 					}
 				}
-					
+
 				else
 				{
 					addEffectToList(hi.effectPID, hi.bulletTeam, hi.effectID, EFFECT_TYPE::EXPLOSION, e->getPos(), 25, 5.0f);
@@ -2292,7 +2296,7 @@ void Game::handleBulletHitEffectEvent(BulletHitEffectInfo hi)
 						GetSound()->playExternalSound(SOUNDS::soundEffectClusterlingExplosion, hi.hitPos.x, hi.hitPos.y, hi.hitPos.z);
 					}
 				}
-					
+
 				removeEffect(hi.et, apos);
 			}
 			if (b != nullptr)
