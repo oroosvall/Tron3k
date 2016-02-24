@@ -205,9 +205,9 @@ public:
 
 	virtual void renderWallEffect(void* pos1, void* pos2, float uvStartOffset, float* dgColor);
 
-	virtual void initRenderExplo();
-	virtual void renderExploEffect(float* pos, float rad, float transp, float* dgColor, bool solid);
-	virtual void renderThunderDomeEffect(float* pos, float rad, float transp, float* dgColor);
+	virtual void initRenderEffect();
+
+	virtual void rendereffect(int type, float* pos, float rad, float transp, float* dgColor);
 
 	virtual void renderDecals(void* data, int size);
 

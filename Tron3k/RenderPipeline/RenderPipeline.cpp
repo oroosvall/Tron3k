@@ -648,8 +648,7 @@ void RenderPipeline::render()
 
 
 	stopTimer(chunkRender);
-	//glDepthMask(GL_TRUE);glEnable(GL_CULL_FACE);glDisable(GL_BLEND);)
-	//renderEffects();
+
 }
 
 void RenderPipeline::finalizeRender()
@@ -748,19 +747,35 @@ void RenderPipeline::renderWallEffect(void* pos1, void* pos2, float uvStartOffse
 
 }
 
-void RenderPipeline::initRenderExplo()
+void RenderPipeline::initRenderEffect()
 {
 	glUseProgram(exploShader);
 	glProgramUniform1i(exploShader, exploTexture, 1);
 	glProgramUniform1f(exploShader, exploTimepass, timepass);
 }
 
-void RenderPipeline::renderExploEffect(float* pos, float rad, float transp, float* dgColor, bool solid)
+void RenderPipeline::rendereffect(int type, float* pos, float rad, float transp, float* dgColor)
 {
-	if(solid == false)
-		glProgramUniform1f(exploShader, exploTimepass, timepass * 15);
-	else
-		glProgramUniform1f(exploShader, exploTimepass, timepass);
+	float speed = 1;
+
+	//set rot speed depending on object
+	switch (type)
+	{
+	case THUNDER_DOME:		speed = 0.2f;	break;
+	case EXPLOSION:			speed = 5.0f;	break;
+	case CLEANSENOVA:			break;
+	case BATTERY_SLOW:			break;
+	case BATTERY_SPEED:			break;
+	case THERMITE_CLOUD:	speed = 1.0f;	break;
+	case VACUUM:				break;
+	case HEALTHPACK:			break;
+	case HSCPICKUP:				break;
+	case DOUBLEDAMAGEPICKUP:	break;
+	default:
+		break;
+	}
+
+	glProgramUniform1f(exploShader, exploTimepass, timepass * speed);
 
 	//set temp objects worldmat
 	glm::mat4 mat;
@@ -778,30 +793,7 @@ void RenderPipeline::renderExploEffect(float* pos, float rad, float transp, floa
 	glProgramUniformMatrix4fv(exploShader, exploWorld, 1, GL_FALSE, (GLfloat*)&mat[0][0]);
 	glProgramUniform3fv(exploShader, exploDynCol, 1, (GLfloat*)&dgColor[0]);
 
-	contMan.renderEffect(EFFECT_TYPE::EXPLOSION);
-}
-
-void RenderPipeline::renderThunderDomeEffect(float* pos, float rad, float transp, float* dgColor)
-{
-	glProgramUniform1f(exploShader, exploTimepass, timepass * 0.2f);
-
-	//set temp objects worldmat
-	glm::mat4 mat;
-
-	mat[0].w = pos[0];
-	mat[1].w = pos[1];
-	mat[2].w = pos[2];
-
-	mat[0].x = rad;
-	mat[1].y = rad;
-	mat[2].z = rad;
-
-	//Glow values for object
-	glProgramUniform1f(exploShader, exploInten, transp);
-	glProgramUniformMatrix4fv(exploShader, exploWorld, 1, GL_FALSE, (GLfloat*)&mat[0][0]);
-	glProgramUniform3fv(exploShader, exploDynCol, 1, (GLfloat*)&dgColor[0]);
-
-	contMan.renderEffect(EFFECT_TYPE::THUNDER_DOME);
+	contMan.renderEffect(type);
 }
 
 void RenderPipeline::renderDecals(void* data, int size)
