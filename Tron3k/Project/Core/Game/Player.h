@@ -102,7 +102,8 @@ private:
 	bool animSwapActive = false;
 	bool lastanimSwapActive = false;
 	
-	
+	float deathTimer = 0;
+
 	void peakAnimsUpdate();
 	bool animLastDead = false;
 

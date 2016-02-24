@@ -435,6 +435,13 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 {
 	diedThisFrame = false;
 	PLAYERMSG msg = NONE;
+
+	if (isDead)
+		deathTimer += dt;
+	else
+		deathTimer = 0;
+
+
 	if (role.getRole() != NROFROLES || spectating)
 	{
 		modifiersGetData(dt); //Dont Remove Please!
@@ -1250,9 +1257,13 @@ void Player::deadViewAngles()
 			case DESTROYER:		cam->setCam(cam->getPos() + vec3(0, -1, 0));			break;
 			case MOBILITY:		cam->setCam(cam->getPos() + vec3(0, -1, 0));			break;
 			case BRUTE:			cam->setCam(cam->getPos() + vec3(0, -0.7f, 0));			break;
-			case MANIPULATOR:	cam->setCam(cam->getPos() + vec3(0, -1, 0));			break;
+			case MANIPULATOR:	if(animPrimary || deathTimer > 0.8f)	cam->setCam(cam->getPos() + vec3(0, -1, 0));break;
 			default:																	break;
 			}
+		}
+		else
+		{
+
 		}
 	}
 }
