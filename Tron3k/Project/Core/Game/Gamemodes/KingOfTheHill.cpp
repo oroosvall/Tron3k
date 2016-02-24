@@ -38,7 +38,7 @@ void KingOfTheHill::init(Console* cptr, Game* gptr)
 	teamTwoScore = 0;
 	winScore = 9;
 
-	tokensPerTeam = 20;
+	tokensPerTeam = 3;
 
 	tickForCaptureScoring = 15.0f;
 	timerModifierForCaptureScoring = tickForCaptureScoring;
