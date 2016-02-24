@@ -88,13 +88,17 @@ struct OBB_LINES
 	glm::vec3 point2;
 	glm::vec3 line;
 	glm::vec3 line_inv;
+	glm::vec3 plane1Normal;
+	glm::vec3 plane2Normal;
 
-	void init(glm::vec3 _point1, glm::vec3 _point2)
+	void init(glm::vec3 _point1, glm::vec3 _point2, glm::vec3 normal1, glm::vec3 normal2)
 	{
 		point1 = _point1;
 		point2 = _point2;
 		line = _point2 - _point1;
 		line_inv = -line;
+		plane1Normal = normal1;
+		plane2Normal = normal2;
 	}
 
 	glm::vec4 sphere_intersects(glm::vec3 pos, float rad)
@@ -230,20 +234,20 @@ struct OBB
 		planes[5].init(corners[7], corners[6], corners[0], corners[1]);
 
 		//init all lines
-		lines[0].init(corners[2], corners[3]);
-		lines[1].init(corners[3], corners[1]);
-		lines[2].init(corners[1], corners[0]);
-		lines[3].init(corners[0], corners[2]);
+		lines[0].init(corners[2], corners[3], planes[0].n, planes[4].n);
+		lines[1].init(corners[3], corners[1], planes[0].n, planes[3].n);
+		lines[2].init(corners[1], corners[0], planes[0].n, planes[5].n);
+		lines[3].init(corners[0], corners[2], planes[0].n, planes[1].n);
 
-		lines[4].init(corners[2], corners[4]);
-		lines[5].init(corners[3], corners[5]);
-		lines[6].init(corners[1], corners[7]);
-		lines[7].init(corners[0], corners[6]);
+		lines[4].init(corners[2], corners[4], planes[1].n, planes[4].n);
+		lines[5].init(corners[3], corners[5], planes[4].n, planes[3].n);
+		lines[6].init(corners[1], corners[7], planes[3].n, planes[5].n);
+		lines[7].init(corners[0], corners[6], planes[5].n, planes[1].n);
 
-		lines[8].init(corners[4], corners[5]);
-		lines[9].init(corners[5], corners[7]);
-		lines[10].init(corners[7], corners[6]);
-		lines[11].init(corners[6], corners[4]);
+		lines[8].init(corners[4], corners[5], planes[2].n, planes[4].n);
+		lines[9].init(corners[5], corners[7], planes[3].n, planes[2].n);
+		lines[10].init(corners[7], corners[6], planes[5].n, planes[2].n);
+		lines[11].init(corners[6], corners[4], planes[1].n, planes[2].n);
 
 	}
 
@@ -258,20 +262,20 @@ struct OBB
 		planes[5].init(corners[7], corners[6], corners[0], corners[1]);
 
 		//init all lines
-		lines[0].init(corners[2], corners[3]);
-		lines[1].init(corners[3], corners[1]);
-		lines[2].init(corners[1], corners[0]);
-		lines[3].init(corners[0], corners[2]);
+		lines[0].init(corners[2], corners[3], planes[0].n, planes[4].n);
+		lines[1].init(corners[3], corners[1], planes[0].n, planes[3].n);
+		lines[2].init(corners[1], corners[0], planes[0].n, planes[5].n);
+		lines[3].init(corners[0], corners[2], planes[0].n, planes[1].n);
 
-		lines[4].init(corners[2], corners[4]);
-		lines[5].init(corners[3], corners[5]);
-		lines[6].init(corners[1], corners[7]);
-		lines[7].init(corners[0], corners[6]);
+		lines[4].init(corners[2], corners[4], planes[1].n, planes[4].n);
+		lines[5].init(corners[3], corners[5], planes[4].n, planes[3].n);
+		lines[6].init(corners[1], corners[7], planes[3].n, planes[5].n);
+		lines[7].init(corners[0], corners[6], planes[5].n, planes[1].n);
 
-		lines[8].init(corners[4], corners[5]);
-		lines[9].init(corners[5], corners[7]);
-		lines[10].init(corners[7], corners[6]);
-		lines[11].init(corners[6], corners[4]);
+		lines[8].init(corners[4], corners[5], planes[2].n, planes[4].n);
+		lines[9].init(corners[5], corners[7], planes[3].n, planes[2].n);
+		lines[10].init(corners[7], corners[6], planes[5].n, planes[2].n);
+		lines[11].init(corners[6], corners[4], planes[1].n, planes[2].n);
 	}
 };
 

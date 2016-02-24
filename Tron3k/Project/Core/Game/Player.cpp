@@ -105,7 +105,7 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool spectatin
 		{
 			this->setFootstepsCountdown();
 			this->setFootstepsLoop(false);
-			GetSound()->PlayStereoFootsteps(this->role.getRole());
+			GetSound()->PlayStereoFootsteps(this->role.getRole(), pos.x, pos.y, pos.z);
 		}
 	}
 

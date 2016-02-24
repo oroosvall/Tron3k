@@ -562,7 +562,7 @@ void Game::checkFootsteps(float dt)
 					{
 						if (i == spectateID)
 						{
-							GetSound()->PlayStereoFootsteps(playerList[i]->getRole()->getRole());
+							GetSound()->PlayStereoFootsteps(playerList[i]->getRole()->getRole(), pos.x, pos.y, pos.z);
 						}
 						else
 						{

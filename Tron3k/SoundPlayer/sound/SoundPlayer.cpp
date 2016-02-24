@@ -715,27 +715,27 @@ void SoundPlayer::PlayStereoJump(int role)
 	}
 }
 
-void SoundPlayer::PlayStereoFootsteps(int role)
+void SoundPlayer::PlayStereoFootsteps(int role, float posX, float posY, float posZ)
 {
 	if (role == 0)
 	{
-		playUserGeneratedSound(SOUNDS::soundFootStepsStereo);
+		playExternalSound(SOUNDS::soundFootStepsStereo, posX, posY, posZ);
 	}
 
 	if (role == 2)
 	{
-		playUserGeneratedSound(SOUNDS::soundEffectShankerStepsStereo);
+		playExternalSound(SOUNDS::soundEffectShankerStepsStereo, posX, posY, posZ);
 	}
 
 	if (role == 3)
 	{
-		playUserGeneratedSound(SOUNDS::soundEffectBruteStepsStereo);
+		playExternalSound(SOUNDS::soundEffectBruteStepsStereo, posX, posY, posZ);
 	}
 
 	if (role == 4)
 	{
-		//cout << nrOfSoundsPlaying << endl;
-		playUserGeneratedSound(SOUNDS::soundStepsManipulatorStereo);
+		cout << nrOfSoundsPlaying << endl;
+		playExternalSound(SOUNDS::soundStepsManipulatorStereo, posX, posY, posZ);
 	}
 
 }
