@@ -164,10 +164,12 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 
 		//WARMUP is the pre-game, before the first round has begun. Once the game starts, we don't go here
 	case WARMUP:
+		teamOneSpawnTokens = teamTwoSpawnTokens = 0;
 		if (gamePtr->nrOfPlayersReady() >= playersReadyNeeded)
 		{
 			timer = 15.0f; //20 seconds in the pre-round
 			capturePoint = rand() % 2;
+			teamOneSpawnTokens = teamTwoSpawnTokens = tokensPerTeam;
 			state = PREROUND;
 			clearTeams();
 			round = 1;
@@ -190,8 +192,6 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 		if (timer < FLT_EPSILON) //Time is up!
 		{
 			timer = 0.0f;
-
-			teamOneSpawnTokens = teamTwoSpawnTokens = tokensPerTeam;
 			state = ROUND;
 			timerModifierForCaptureScoring = 15.0f;
 			gamePtr->resetAllPickups();
@@ -334,6 +334,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 				else if (round == 3)
 					capturePoint = rand() % 2;
 
+				teamOneSpawnTokens = teamTwoSpawnTokens = tokensPerTeam;
 				state = PREROUND;
 				timer = 15.0f;
 
@@ -360,6 +361,15 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			commencePlayed = false;
 			gamePtr->nrOfPlayersReadyReset();
 			gamePtr->clearAllPlayerKD();
+
+			for (int c = 0; c < teamOnePlayers.size(); c++)
+			{
+				gamePtr->allowPlayerRespawn(teamOnePlayers[c], c % 5);
+			}
+			for (int c = 0; c < teamTwoPlayers.size(); c++)
+			{
+				gamePtr->allowPlayerRespawn(teamTwoPlayers[c], c % 5);
+			}
 		}
 		else
 			timer -= dt;
