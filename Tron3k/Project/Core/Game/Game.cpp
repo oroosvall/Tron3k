@@ -1466,11 +1466,10 @@ void Game::handleWeaponFire(int conID, int teamId, int bulletId, WEAPON_TYPE wea
 			if (GetSound())
 				if (conID == localPlayerId || conID == spectateID)
 				{
-
-					GetSound()->playExternalSound(SOUNDS::soundEffectFieldsStereo, pos.x, pos.y, pos.z);
+					GetSound()->playFields(pos.x, pos.y, pos.z);
 				}
 				else
-					GetSound()->playExternalSound(SOUNDS::soundEffectFields, pos.x, pos.y, pos.z);
+					GetSound()->playFieldsStereo();
 
 		addBulletToList(conID, teamId, bulletId, BULLET_TYPE::BATTERY_SLOW_SHOT, pos, dir);
 
@@ -1481,11 +1480,10 @@ void Game::handleWeaponFire(int conID, int teamId, int bulletId, WEAPON_TYPE wea
 			if (GetSound())
 				if (conID == localPlayerId || conID == spectateID)
 				{
-					GetSound()->playExternalSound(SOUNDS::soundEffectFieldsStereo, pos.x, pos.y, pos.z);
+					GetSound()->playFields(pos.x, pos.y, pos.z);
 				}
-
 				else
-					GetSound()->playExternalSound(SOUNDS::soundEffectFields, pos.x, pos.y, pos.z);
+					GetSound()->playFieldsStereo();
 
 		addBulletToList(conID, teamId, bulletId, BULLET_TYPE::BATTERY_SPEED_SHOT, pos, dir);
 		break;
@@ -2041,7 +2039,7 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 				tester->startCooldown();
 				p->addModifier(MODIFIER_TYPE::DOUBLEDAMAGEMOD);
 
-				if (GetSound())
+				if (GetSound() && p->isLocal())
 				{
 					GetSound()->playExternalSound(SOUNDS::announcerDoubleDamage, pos.x, pos.y, pos.z);
 				}

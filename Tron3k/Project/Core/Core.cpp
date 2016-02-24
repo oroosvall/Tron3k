@@ -1622,6 +1622,25 @@ void Core::clientHandleCmds(std::string com)
 			ss >> token;
 			if (token == "1" || token == "3" || token == "4" || token == "5")
 			{
+				if (GetSound())
+				{
+					if (token == "1")
+					{
+						GetSound()->playExternalSound(SOUNDS::TrapperPhrase, 0, 0, 0);
+					}
+
+					else if (token == "3")
+						GetSound()->playExternalSound(SOUNDS::StalkerPhrase, 0, 0, 0);
+
+					else if (token == "4")
+						GetSound()->playExternalSound(SOUNDS::PunisherPhrase, 0, 0, 0);
+
+					else if (token == "5")
+						GetSound()->playExternalSound(SOUNDS::ManipulatorPhrase, 0, 0, 0);
+
+				}
+			
+		
 				int role = stoi(token);
 				top->command_role_change(top->getConId(), role);
 			}

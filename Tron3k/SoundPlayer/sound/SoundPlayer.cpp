@@ -147,6 +147,39 @@ SoundPlayer::~SoundPlayer()
 	
 }
 
+void SoundPlayer::playFields(float x, float y, float z)
+{
+	for (int i = 0; i < 10; i++)
+	{
+		if (fields[i].getStatus() != 2)
+		{
+			fields[i].setBuffer(soundList[SOUNDS::soundEffectFields]);
+			fields[i].setPosition(x, y, z);
+			fields[i].setVolume(50);
+			fields[i].setAttenuation(80);
+			fields[i].setMinDistance(10.0f);
+			fields[i].play();
+			return;
+		}
+	}
+}
+
+void SoundPlayer::playFieldsStereo()
+{
+	for (int i = 0; i < 10; i++)
+	{
+		if (fields[i].getStatus() != 2)
+		{
+			fields[i].setBuffer(soundList[SOUNDS::soundEffectFieldsStereo]);
+			fields[i].setVolume(50);
+			fields[i].setAttenuation(80);
+			fields[i].setMinDistance(10.0f);
+			fields[i].play();
+			return;
+		}
+	}
+}
+
 void SoundPlayer::playMelee(float x, float y, float z)
 {
 	for (int i = 0; i < 10; i++)

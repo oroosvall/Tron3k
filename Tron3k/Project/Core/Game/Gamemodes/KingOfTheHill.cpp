@@ -560,8 +560,31 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 		{
 			if (GetSoundActivated())
 			{
-				GetSound()->playUserGeneratedSound(SOUNDS::announcerCommence);
 				GetSound()->playUserGeneratedSound(SOUNDS::SoundForOvertime);
+
+				if (gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
+				{
+					if (teamOneSpawnTokens == 0)
+					{
+						GetSound()->playUserGeneratedSound(SOUNDS::announcerFinalAssault);
+					}
+					else
+					{
+						GetSound()->playUserGeneratedSound(SOUNDS::announcerDefendTheObjective);
+					}
+				}
+
+				else if (gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 2)
+				{
+					if (teamTwoSpawnTokens == 0)
+					{
+						GetSound()->playUserGeneratedSound(SOUNDS::announcerFinalAssault);
+					}
+					else
+					{
+						GetSound()->playUserGeneratedSound(SOUNDS::announcerDefendTheObjective);
+					}
+				}
 			}
 			timer = 30.0f;
 		}
