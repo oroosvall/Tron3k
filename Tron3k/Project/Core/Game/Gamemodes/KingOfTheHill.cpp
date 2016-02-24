@@ -213,6 +213,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 		{
 			consolePtr->printMsg("OVERTIME BEGINS", "System", 'S');
 			state = OVERTIME;
+			pointsLeftThisRound = 3;
 			timer = 46.0f;
 			timerModifierForCaptureScoring = 30.0f;
 		}
@@ -241,9 +242,9 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			}
 			if (allDead)
 			{
-				if (timer > 31.0f)
+				if (pointsLeftThisRound == 3)
 					teamTwoScore += 3;
-				else if (timer > 16.0f)
+				else if (pointsLeftThisRound == 2)
 					teamTwoScore += 2;
 				else
 					teamTwoScore++;
@@ -270,9 +271,9 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			}
 			if (allDead)
 			{
-				if (timer > 31.0f)
+				if (pointsLeftThisRound == 3)
 					teamOneScore += 3;
-				else if (timer > 16.0f)
+				else if (pointsLeftThisRound == 2)
 					teamOneScore += 2;
 				else
 					teamOneScore++;
@@ -285,6 +286,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 		if (timer - timerModifierForCaptureScoring < 0.0f) //15 seconds have passed and we should now proceed with scoring for capture point control
 		{
 			msg = roundScoring();
+			pointsLeftThisRound--;
 			timerModifierForCaptureScoring -= tickForCaptureScoring;
 		}
 
