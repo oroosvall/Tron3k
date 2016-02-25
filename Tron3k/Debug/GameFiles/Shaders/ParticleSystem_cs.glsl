@@ -75,7 +75,7 @@ void main()
 		p[iter].pos.z += vel.z * force;
 		
 		p[iter].dir.xyz = normalize(oldP - p[iter].pos.xyz);
-		
+		p[iter].initialDir.w = percent;
 		
 		if(continuous)
 		{

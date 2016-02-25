@@ -68,7 +68,7 @@ void main()
 		vec3 up = dir[0].xyz;
 		vec3 right = cross(cam_normal, up);
 		
-		intensity = dir[0].w;
+		intensity = iDir[0].w;
 		
 		vec3 v = pos;
 		
