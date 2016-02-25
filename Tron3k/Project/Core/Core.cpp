@@ -337,6 +337,8 @@ void Core::upMenu(float dt)
 			uiManager->setFirstMenuSet(false);
 			uiManager->setMenu(InGameUI::TeamSelect);
 			subState = 0;
+			renderMenu = false;
+			renderUI = true;
 
 			uiManager->setHoverCheckBool(true);
 			break;
@@ -831,6 +833,17 @@ void Core::upClient(float dt)
 					uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam1, false);
 					uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam2, false);
 					firstTimeInWarmUp = false;
+				}
+				if (tmp == KOTHSTATE::WARMUP)
+				{
+					if (i->justPressed(GLFW_KEY_PERIOD))
+					{
+						showTeamSelect();
+					}
+					if (i->justPressed(GLFW_KEY_COMMA))
+					{
+						showClassSelect();
+					}
 				}
 			}
 		}
@@ -3134,15 +3147,29 @@ void Core::showTeamSelect()
 	if (startTeamSelect)
 	{
 		uiManager->setHoverCheckBool(true);
-		uiManager->LoadNextSet(UISets::InGame, winX, winY);
+		game->getPlayer(game->GetLocalPlayerId())->setLockedControls(true);
+		cursorInvisible = false;
+
+		if (renderMenu)
+		{
+			uiManager->LoadNextSet(UISets::InGame, winX, winY);
+			renderMenu = false;
+		}
+	
 		uiManager->setFirstMenuSet(true);
 		uiManager->setMenu(InGameUI::TeamSelect);
 	}
 	else
 	{
 		uiManager->setHoverCheckBool(false);
-		uiManager->LoadNextSet(UISets::InGame, winX, winY);
 		uiManager->setFirstMenuSet(false);
+
+		if (renderMenu)
+		{
+			uiManager->LoadNextSet(UISets::InGame, winX, winY);
+			renderMenu = false;
+		}
+		
 		uiManager->setMenu(InGameUI::GUI);
 	}
 }
