@@ -439,13 +439,13 @@ void ContentManager::renderBullet(int bid)
 	case BULLET_TYPE::SHOTGUN_PELLET:			puniSecon.draw();		break;
 	case BULLET_TYPE::BATTERY_SLOW_SHOT:
 	case BULLET_TYPE::BATTERY_SPEED_SHOT:		manipSecon.draw();		break;
-	case BULLET_TYPE::LINK_SHOT:				manipMobil.draw();		break;
+	case BULLET_TYPE::LINK_SHOT:				manipPrim.draw();		break;
 	case BULLET_TYPE::CLUSTER_GRENADE:			trapConsumeBig.draw();	break;
-	case BULLET_TYPE::CLUSTERLING:				trapConsimeSmall.draw(); break;
+	case BULLET_TYPE::CLUSTERLING:				trapConsimeSmall.draw();break;
 	case BULLET_TYPE::GRENADE_SHOT:				puniPrim.draw();		break;
 	case BULLET_TYPE::THERMITE_GRENADE:			puniConsume.draw();		break;
 	case BULLET_TYPE::VACUUM_GRENADE:			manipConsume.draw();	break;
-	case BULLET_TYPE::GRAPPLING_HOOK:			trapperConsume.draw();	break;
+	case BULLET_TYPE::GRAPPLING_HOOK:			manipMobil.draw();		break;
 	case BULLET_TYPE::DISC_SHOT:				shankerBullet.draw();	break;
 	case BULLET_TYPE::HACKING_DART:				shankerSpecial.draw();	break;
 	case 100:									healthAmmoMesh.draw();	break;
