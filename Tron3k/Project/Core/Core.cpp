@@ -3938,7 +3938,7 @@ void Core::effectsRender(int hackedTeam)
 				if (!temp->onCooldown())
 				{
 					vec3 pos = eff[i]->getPos();
-					color = vec3(0, 1.0f, 0);
+					color = vec3(0, 0.2f, 1.0f);
 					
 					mat4 world;
 
