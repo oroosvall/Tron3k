@@ -449,6 +449,8 @@ void Core::upRoam(float dt)
 		game->freecam = true;
 		delete p;
 
+
+
 		uiManager->HUD.maxSpecialMeter = 100.0f;
 		uiManager->HUD.specialMeter = 0.0f;
 		game->getPlayer(game->GetLocalPlayerId())->setLockedControls(true);
@@ -849,10 +851,34 @@ void Core::upClient(float dt)
 						uiManager->clearText(scaleAndText::TicketBar2);
 						uiManager->clearText(scaleAndText::Wins1);
 						uiManager->clearText(scaleAndText::Wins2);
-						uiManager->setText("0", scaleAndText::TicketBar1); //tickets
-						uiManager->setText("0", scaleAndText::TicketBar2); //tickets2
-						uiManager->setText("0", scaleAndText::Wins1); //wins1
-						uiManager->setText("0", scaleAndText::Wins2); //wins2
+						//Ticketbar1
+						uiManager->HUD.teamOneTokens = koth->getRespawnTokens(1);
+						std::string nText = hudTextOutPutManager(true, uiManager->HUD.teamOneTokens);
+						uiManager->setText(nText, scaleAndText::TicketBar1); //tickets
+						//
+
+						//Ticketbar2
+						uiManager->HUD.teamTwoTokens = koth->getRespawnTokens(2);
+						nText = hudTextOutPutManager(true, uiManager->HUD.teamTwoTokens);
+						uiManager->setText(nText, scaleAndText::TicketBar2); //tickets
+						//
+
+						//Scores1
+						uiManager->HUD.teamOneScore = koth->getRoundWins(1);
+						nText = hudTextOutPutManager(true, uiManager->HUD.teamOneScore);
+						uiManager->setText(nText, scaleAndText::Wins1); //tickets
+						//
+
+						//Scores2
+						uiManager->HUD.teamTwoScore = koth->getRoundWins(2);
+						nText = hudTextOutPutManager(true, uiManager->HUD.teamTwoScore);
+						uiManager->setText(nText, scaleAndText::Wins2); //tickets
+						//
+
+						//uiManager->setText("0", scaleAndText::TicketBar1); //tickets
+						//uiManager->setText("0", scaleAndText::TicketBar2); //tickets2
+						//uiManager->setText("0", scaleAndText::Wins1); //wins1
+						//uiManager->setText("0", scaleAndText::Wins2); //wins2
 
 						firstTimeInWarmUp = false;
 					}
@@ -926,25 +952,34 @@ void Core::upClient(float dt)
 				uiManager->HUD.ammo = localp->getAmmo();
 				int maxAmmo = localp->getMaxAmmo();
 
-				std::string sAmmo = "0";
-				std::string sMaxAmmo = "0";
-
-				sAmmo += std::to_string(uiManager->HUD.ammo);
-				sMaxAmmo += std::to_string(maxAmmo);
-
-				if (sAmmo.size() > 2)
-					sAmmo = std::to_string(uiManager->HUD.ammo);
-				if (sMaxAmmo.size() > 2)
-					sMaxAmmo = std::to_string(maxAmmo);
-
-				std::string nText = sAmmo + "/" + sMaxAmmo;
+				std::string nText = hudTextOutPutManager(false, uiManager->HUD.ammo, maxAmmo);
 				uiManager->setText(nText, scaleAndText::Ammo);
 				//
+
+				//Ticketbar1
+				uiManager->HUD.teamOneTokens = koth->getRespawnTokens(1);
+				nText = hudTextOutPutManager(true, uiManager->HUD.teamOneTokens);
+				uiManager->setText(nText, scaleAndText::TicketBar1); //tickets
+				//
+
+				//Ticketbar2
+				uiManager->HUD.teamTwoTokens = koth->getRespawnTokens(2);
+				nText = hudTextOutPutManager(true, uiManager->HUD.teamTwoTokens);
+				uiManager->setText(nText, scaleAndText::TicketBar2); //tickets
+				//
+
+				//Scores1
+				uiManager->HUD.teamOneScore = koth->getRoundWins(1);
+				nText = hudTextOutPutManager(true, uiManager->HUD.teamOneScore);
+				uiManager->setText(nText, scaleAndText::Wins1); //tickets
+				//
+
+				//Scores2
+				uiManager->HUD.teamTwoScore = koth->getRoundWins(2);
+				nText = hudTextOutPutManager(true, uiManager->HUD.teamTwoScore);
+				uiManager->setText(nText, scaleAndText::Wins2); //tickets
+				//
 				
-				uiManager->setText(std::to_string(koth->getRespawnTokens(1)), scaleAndText::TicketBar1); //tickets
-				uiManager->setText(std::to_string(koth->getRespawnTokens(2)), scaleAndText::TicketBar2); //tickets2
-				uiManager->setText(std::to_string(koth->getRoundWins(1)), scaleAndText::Wins1); //wins1
-				uiManager->setText(std::to_string(koth->getRoundWins(2)), scaleAndText::Wins2); //wins2
 				if (int(koth->getTimer()) == 0)
 				{
 					uiManager->clearText(scaleAndText::Time);
@@ -1655,10 +1690,10 @@ void Core::roamHandleCmds(std::string com)
 
 				std::string nText = std::to_string(local->getAmmo()) + "/" + std::to_string(local->getMaxAmmo());
 				uiManager->setText(nText, scaleAndText::Ammo); //ammo
-				uiManager->setText(std::to_string(koth->getRespawnTokens(1)), scaleAndText::TicketBar1); //tickets
-				uiManager->setText(std::to_string(koth->getRespawnTokens(2)), scaleAndText::TicketBar2); //tickets2
-				uiManager->setText(std::to_string(koth->getRoundWins(1)), scaleAndText::Wins1); //wins1
-				uiManager->setText(std::to_string(koth->getRoundWins(2)), scaleAndText::Wins2); //wins2
+				uiManager->setText("00", scaleAndText::TicketBar1); //tickets
+				uiManager->setText("00", scaleAndText::TicketBar2); //tickets2
+				uiManager->setText("00", scaleAndText::Wins1); //wins1
+				uiManager->setText("00", scaleAndText::Wins2); //wins2
 				uiManager->setText("00:00", scaleAndText::Time); //time
 
 
@@ -2784,6 +2819,12 @@ void Core::inGameUIUpdate() //Ingame ui update
 
 		int minutes = uiManager->HUD.time * 0.01666;
 		int seconds = uiManager->HUD.time - 60 * minutes;
+		
+		if (seconds == 60)
+		{
+			minutes += 1;
+			seconds = 0;
+		}
 
 		std::string sMinutes = "0";
 		std::string sSeconds = "0";
@@ -3980,6 +4021,39 @@ void Core::effectsRender(int hackedTeam)
 	renderPipe->enableBlend(false);
 }
 
+std::string Core::hudTextOutPutManager(bool onlyOne, int first, int second)
+{
+	std::string sFirst = "0";
+	std::string sSecond = "0";
+	std::string nText = "";
+
+	if (!onlyOne)
+	{
+		sFirst += std::to_string(first);
+		sSecond += std::to_string(second);
+
+		if (sFirst.size() == 3)
+			sFirst = std::to_string(first);
+		else if (sFirst.size() > 3)
+			sFirst = "99";
+		if (sSecond.size() > 3)
+			sSecond = std::to_string(second);
+		else if (sSecond.size() > 3)
+			sSecond = "99";
+
+		 nText = sFirst + "/" + sSecond;
+	}
+	else
+	{
+		sFirst += std::to_string(first);
+		if (sFirst.size() == 3)
+			sFirst = std::to_string(first);
+		else if (sFirst.size() > 3)
+			sFirst = "99";
+		nText = sFirst;
+	}
+	return nText;
+}
 void Core::trailQuadsRender(int hackedTeam)
 {		
 	renderPipe->initRenderTrailQuad();

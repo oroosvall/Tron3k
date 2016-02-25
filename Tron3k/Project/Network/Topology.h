@@ -769,30 +769,83 @@ public:
 				uiPtr->HUD.HP = local->getMaxHP();
 				uiPtr->setText(std::to_string(local->getHP()), scaleAndText::HP); //hp
 
+				std::string sFirst = "0";
+				std::string sSecond = "0";
+
+				//	sFirst += std::to_string(first);
+				//	if (sFirst.size() == 3)
+				//		sFirst = std::to_string(first);
+				//	else if (sFirst.size > 3)
+				//		sFirst = "99";
+				//	nText = sFirst;
 
 				//Ammo
 				uiPtr->HUD.ammo = local->getAmmo();
 				int maxAmmo = local->getMaxAmmo();
 
-				std::string sAmmo = "0";
-				std::string sMaxAmmo = "0";
+				sFirst += std::to_string(uiPtr->HUD.ammo);
+				sSecond += std::to_string(maxAmmo);
 
-				sAmmo += std::to_string(uiPtr->HUD.ammo);
-				sMaxAmmo += std::to_string(maxAmmo);
+				if (sFirst.size() == 3)
+					sFirst = std::to_string(uiPtr->HUD.ammo);
+				else if (sFirst.size() > 3)
+					sFirst = "99";
+				if (sSecond.size() > 3)
+					sSecond = std::to_string(maxAmmo);
+				else if (sSecond.size() > 3)
+					sSecond = "99";
 
-				if (sAmmo.size() > 2)
-					sAmmo = std::to_string(uiPtr->HUD.ammo);
-				if (sMaxAmmo.size() > 2)
-					sMaxAmmo = std::to_string(maxAmmo);
-
-				std::string nText = sAmmo + "/" + sMaxAmmo;
+				std::string nText = sFirst + "/" + sSecond;
 				uiPtr->setText(nText, scaleAndText::Ammo);
 				//
 
-				uiPtr->setText(std::to_string(koth->getRespawnTokens(1)), scaleAndText::TicketBar1); //tickets
-				uiPtr->setText(std::to_string(koth->getRespawnTokens(2)), scaleAndText::TicketBar2); //tickets2
-				uiPtr->setText(std::to_string(koth->getRoundWins(1)), scaleAndText::Wins1); //wins1
-				uiPtr->setText(std::to_string(koth->getRoundWins(2)), scaleAndText::Wins2); //wins2
+				////Ticketbar1
+				//uiPtr->HUD.teamOneTokens = koth->getRespawnTokens(1);
+				//std::string nText = hudTextOutPutManager(true, uiPtr->HUD.teamOneTokens);
+				//uiPtr->setText(nText, scaleAndText::TicketBar1); //tickets
+				////
+				//
+				////Ticketbar2
+				//uiPtr->HUD.teamTwoTokens = koth->getRespawnTokens(2);
+				//std::string nText = hudTextOutPutManager(true, uiPtr->HUD.teamTwoTokens);
+				//uiPtr->setText(nText, scaleAndText::TicketBar2); //tickets
+				////
+				//
+				// //Scores1
+				//uiPtr->HUD.teamOneScore = koth->getRoundWins(1);
+				//std::string nText = hudTextOutPutManager(true, uiPtr->HUD.teamOneScore);
+				//uiPtr->setText(nText, scaleAndText::Wins1); //tickets
+				////
+				//
+				////Scores2
+				//uiPtr->HUD.teamTwoScore = koth->getRoundWins(2);
+				//std::string nText = hudTextOutPutManager(true, uiPtr->HUD.teamTwoScore);
+				//uiPtr->setText(nText, scaleAndText::Wins2); //tickets
+				////
+
+				////Ammo
+				//uiPtr->HUD.ammo = local->getAmmo();
+				//int maxAmmo = local->getMaxAmmo();
+				//
+				//std::string sAmmo = "0";
+				//std::string sMaxAmmo = "0";
+				//
+				//sAmmo += std::to_string(uiPtr->HUD.ammo);
+				//sMaxAmmo += std::to_string(maxAmmo);
+				//
+				//if (sAmmo.size() > 2)
+				//	sAmmo = std::to_string(uiPtr->HUD.ammo);
+				//if (sMaxAmmo.size() > 2)
+				//	sMaxAmmo = std::to_string(maxAmmo);
+				//
+				//std::string nText = sAmmo + "/" + sMaxAmmo;
+				//uiPtr->setText(nText, scaleAndText::Ammo);
+				////
+				//
+				//uiPtr->setText(std::to_string(koth->getRespawnTokens(1)), scaleAndText::TicketBar1); //tickets
+				//uiPtr->setText(std::to_string(koth->getRespawnTokens(2)), scaleAndText::TicketBar2); //tickets2
+				//uiPtr->setText(std::to_string(koth->getRoundWins(1)), scaleAndText::Wins1); //wins1
+				//uiPtr->setText(std::to_string(koth->getRoundWins(2)), scaleAndText::Wins2); //wins2
 				if (int(koth->getTimer()) == 0)
 				{
 					uiPtr->clearText(scaleAndText::Time);

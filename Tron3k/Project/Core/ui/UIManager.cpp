@@ -167,7 +167,7 @@ void UIManager::init(Console* console, int winX, int winY)
 	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/EndofRound.png"); //44
 
 	//New HUD
-	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/NewVersion/static_hud.png"); //45
+	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/NewVersion/bot_background.png"); //45
 	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/NewVersion/hp_bar_orange.png"); //46
 	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/NewVersion/hp_bar_green.png"); //47
 	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/NewVersion/special_bar.png"); //48
@@ -177,15 +177,19 @@ void UIManager::init(Console* console, int winX, int winY)
 	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/NewVersion/consumable_frame_green.png"); //52
 	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/NewVersion/timer_bar.png"); //53
 
-	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/Orange/plain_hud_right_frame.png"); //54 tickets team 1
-	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/Green/plain_hud_top_frame_2_green.png"); //55 timer
-	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/Green/plain_hud_right_frame_green.png"); //56 tickets team 2
+	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/NewVersion/topframes_left.png"); //54 tickets team 1
+	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/NewVersion/topframes_center.png"); //55 timer
+	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/NewVersion/topframes_right.png"); //56 tickets team 2
 
-	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/Orange/plain_hud_top_frame_1.png"); //57 rounds team 1
-	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/Green/plain_hud_top_frame_1_green.png"); //58 rounds team 1
+	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/NewVersion/topframes_left_points.png"); //57 rounds team 1
+	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/NewVersion/topframes_right_points.png"); //58 rounds team 1
 
 	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/TicketReducer2.png"); //59
 	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/TicketReducer3.png"); //60
+
+	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/NewVersion/countdown_background.png");
+
+
 
 	loadInTexture();
 
