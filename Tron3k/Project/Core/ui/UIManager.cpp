@@ -184,6 +184,8 @@ void UIManager::init(Console* console, int winX, int winY)
 	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/Orange/plain_hud_top_frame_1.png"); //57 rounds team 1
 	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/Green/plain_hud_top_frame_1_green.png"); //58 rounds team 1
 
+	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/TicketReducer3.png"); //59
+
 	loadInTexture();
 
 	//Open tthe first groups file

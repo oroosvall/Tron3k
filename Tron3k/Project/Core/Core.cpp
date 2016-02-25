@@ -2631,6 +2631,8 @@ void Core::inGameUIUpdate() //Ingame ui update
 	 //Checks if the teams token number have changed.
 	if (koth->getRespawnTokens(1) != uiManager->HUD.teamOneTokens) //Team 1
 	{
+		int difference = uiManager->HUD.teamOneTokens - koth->getRespawnTokens(1);
+
 		uiManager->HUD.teamOneTokens = koth->getRespawnTokens(1);
 		uiManager->clearText(scaleAndText::TicketBar1);
 		uiManager->setText(std::to_string(uiManager->HUD.teamOneTokens), scaleAndText::TicketBar1);
@@ -2643,15 +2645,21 @@ void Core::inGameUIUpdate() //Ingame ui update
 
 			uiManager->HUDTime.wmIdListTicket1.push_back(tmp);
 			uiManager->HUDTime.counterListTicket1.push_back(0);
+
+			if(difference == 0 || difference == 3)
+				uiManager->changeTextureHideAble(hideAbleObj::TicketReducerTeam1, uiManager->HUDTime.wmIdListTicket1.size() - 1, difference - 1);
 		}
 	}
 
 	if (koth->getRespawnTokens(2) != uiManager->HUD.teamTwoTokens) //Team 2
 	{
+		int difference = uiManager->HUD.teamTwoTokens - koth->getRespawnTokens(2);
+
 		uiManager->HUD.teamTwoTokens = koth->getRespawnTokens(2);
 		uiManager->clearText(scaleAndText::TicketBar2);
 		uiManager->setText(std::to_string(uiManager->HUD.teamTwoTokens), scaleAndText::TicketBar2);
 		
+
 		int tmp = uiManager->addNewWM(hideAbleObj::TicketReducerTeam2);
 		if (tmp != -1)
 		{
@@ -2660,6 +2668,11 @@ void Core::inGameUIUpdate() //Ingame ui update
 
 			uiManager->HUDTime.wmIdListTicket2.push_back(tmp);
 			uiManager->HUDTime.counterListTicket2.push_back(0);
+
+			if (difference == 0)
+				uiManager->changeTextureHideAble(hideAbleObj::TicketReducerTeam2, uiManager->HUDTime.wmIdListTicket2.size() - 1, 0);
+			else if(difference == 3)
+				uiManager->changeTextureHideAble(hideAbleObj::TicketReducerTeam2, uiManager->HUDTime.wmIdListTicket2.size() - 1, 1);
 		}
 	}
 
