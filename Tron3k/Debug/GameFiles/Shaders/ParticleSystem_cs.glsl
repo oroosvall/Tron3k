@@ -103,7 +103,23 @@ void main()
 				}
 			}
 		}
+		else
+		{
+			if(p[iter].dir.w < 0.0f && p[iter].dir.w > -1.0f)
+			{
+				p[iter].dir.w = -0.5f;
+			}
+			else if(p[iter].dir.w < -1.0f)
+			{
+				//atomic
+				int old = atomicExchange(emit, 1);
+				if(old == -1)
+				{
+					p[iter].dir = p[iter].initialDir;
+					p[iter].pos.xyz = initialPos;
+					p[iter].dir.w = lifetime;
+				}
+			}
+		}
 	}
-	
-	
 }

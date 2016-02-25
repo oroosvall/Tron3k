@@ -25,7 +25,12 @@ void ParticleSystem::Initialize(glm::vec3 pos, ParticleSystemData ps, GLuint* pr
 			dir = glm::normalize(glm::vec3(x-1.0f, y - 1.0f, z - 1.0f));
 		}
 		p.iDir = glm::vec4(dir, 0);
-		p.dir = glm::vec4(dir, m_data.lifetime);
+		if(m_data.emission == 0.0f)
+			p.dir = glm::vec4(dir, m_data.lifetime);
+		else
+		{
+			p.dir = glm::vec4(dir, -1.0f);
+		}
 		//m_vertices.push_back(p);
 		m_vertices[i] = p;
 	}
