@@ -2609,7 +2609,20 @@ void Core::inGameUIUpdate() //Ingame ui update
 		if (local->getAmmo() != uiManager->HUD.ammo) //Ammo
 		{
 			uiManager->HUD.ammo = local->getAmmo();
-			std::string nText = std::to_string(uiManager->HUD.ammo) + "/" + std::to_string(local->getMaxAmmo());
+			int maxAmmo = local->getMaxAmmo();
+
+			std::string sAmmo = "0";
+			std::string sMaxAmmo = "0";
+
+			sAmmo += std::to_string(uiManager->HUD.ammo);
+			sMaxAmmo += std::to_string(maxAmmo);
+
+			if (sAmmo.size() > 2)
+				sAmmo = std::to_string(uiManager->HUD.ammo);
+			if (sMaxAmmo.size() > 2)
+				sMaxAmmo = std::to_string(maxAmmo);
+
+			std::string nText = sAmmo + "/" + sMaxAmmo;
 			uiManager->clearText(scaleAndText::Ammo);
 			uiManager->setText(nText, scaleAndText::Ammo);
 		}
