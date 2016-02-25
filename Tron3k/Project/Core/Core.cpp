@@ -3984,12 +3984,16 @@ void Core::trailQuadsRender(int hackedTeam)
 
 	vec3 campos = CameraInput::getCam()->getPos();
 
-	
-
 	vec3 color(1);
 	vec3 pos;
 	vec3 dir;
 	vec3 crossdir;
+	float inten;
+
+	if (hackedTeam == 1)
+		color = TEAMTWOCOLOR;
+	else if (hackedTeam == 2)
+		color = TEAMONECOLOR;
 
 	for (int n = 0; n < BULLET_TYPE::NROFBULLETS; n++)
 	{
@@ -3997,11 +4001,27 @@ void Core::trailQuadsRender(int hackedTeam)
 
 		for (unsigned int i = 0; i < bullets.size(); i++)
 		{
+			if (hackedTeam == -1)
+			{
+				if (bullets[i]->getTeam() == 1)
+					color = TEAMONECOLOR;
+				else
+					color = TEAMTWOCOLOR;
+			}
+
 			pos = bullets[i]->getPos();
 			dir = -bullets[i]->getDir() * glm::length(bullets[i]->getVel()) * 0.05f;
 			crossdir = normalize(cross(normalize(campos - pos), -dir)) * 0.05f;
+			inten = bullets[i]->getCurrTTL();
+			float maxttl = bullets[i]->getMaxTTL();
+			if (inten < maxttl - 0.3f)
+				inten = 1.0f;
+			else
+				inten = (maxttl - inten) / 0.3f;
 
-			renderPipe->renderTrailQUad(BULLET_TYPE::PULSE_SHOT, &pos.x, &dir.x, &crossdir.x, &color[0]);
+			vec3 color2 = color * inten;
+
+			renderPipe->renderTrailQUad(BULLET_TYPE::PULSE_SHOT, &pos.x, &dir.x, &crossdir.x, &color2[0]);
 		}
 	}
 }
