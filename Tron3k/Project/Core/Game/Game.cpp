@@ -2198,8 +2198,11 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 			hpad.color = TEAMTWOCOLOR;
 		else
 			hpad.color = vec3(1, 1, 1);
-
-		hpad.btype = BULLET_TYPE::NROFBULLETS;
+		
+		if (b->getType() != BULLET_TYPE::GRAPPLING_HOOK)
+			hpad.btype = BULLET_TYPE::NROFBULLETS;
+		else
+			hpad.btype = BULLET_TYPE::GRAPPLING_HOOK;
 
 		allBulletHitPlayerPos.push_back(hpad);
 
