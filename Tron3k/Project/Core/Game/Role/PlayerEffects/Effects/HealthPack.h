@@ -8,7 +8,7 @@ class HealthPack : public Effect
 {
 private:
 	float damage;
-	float size = 0.35f;
+	float size = 0.15f;
 public:
 	HealthPack();
 	void init(int pid, int eid, glm::vec3 position);

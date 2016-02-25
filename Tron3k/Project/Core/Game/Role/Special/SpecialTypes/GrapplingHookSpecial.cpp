@@ -9,7 +9,7 @@ GrapplingHookSpecial::~GrapplingHookSpecial(){}
 void GrapplingHookSpecial::init()
 {
 	specialType = SPECIAL_TYPE::GRAPPLINGHOOKSPECIAL;
-	activationCost = 35.0f;
+	activationCost = 30.0f;
 }
 
 int GrapplingHookSpecial::update(float deltaTime)
