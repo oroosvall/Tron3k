@@ -43,6 +43,9 @@ void ContentManager::init()
 	score_header_green = loadTexture("GameFiles/Textures/scoreboard/header_green.png", true, (int*)&xx, (int*)&yy);
 	score_headerscale = vec2(float(xx) / 1920, float(yy) / 1080);
 
+	//trailquad textures
+	trailTex1 = TextureManager::gTm->createTexture("GameFiles/Textures/hex.png");
+
 	skyTexture = 0;
 	lightWallTex = 0;
 
@@ -438,7 +441,7 @@ void ContentManager::renderBullet(int bid)
 	case BULLET_TYPE::PLASMA_SHOT:				trapPrim.draw();		break;
 	case BULLET_TYPE::SHOTGUN_PELLET:			puniSecon.draw();		break;
 	case BULLET_TYPE::BATTERY_SLOW_SHOT:
-	case BULLET_TYPE::BATTERY_SPEED_SHOT:			manipSecon.draw();		break;
+	case BULLET_TYPE::BATTERY_SPEED_SHOT:		manipSecon.draw();		break;
 	case BULLET_TYPE::FUSION_SHOT:				manipPrim.draw();		break;
 	case BULLET_TYPE::CLUSTER_GRENADE:			trapConsumeBig.draw();	break;
 	case BULLET_TYPE::CLUSTERLING:				trapConsimeSmall.draw();break;
@@ -449,7 +452,7 @@ void ContentManager::renderBullet(int bid)
 	case BULLET_TYPE::DISC_SHOT:				shankerBullet.draw();	break;
 	case BULLET_TYPE::HACKING_DART:				shankerSpecial.draw();	break;
 	case 100:									healthAmmoMesh.draw();	break;
-	case 101:									doubleDamageMesh.draw(); break; 
+	case 101:									doubleDamageMesh.draw();break; 
 	default:
 		break;
 	}	

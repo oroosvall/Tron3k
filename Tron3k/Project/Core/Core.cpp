@@ -2510,6 +2510,9 @@ void Core::renderWorld(float dt)
 		// render chunks
 		renderPipe->render();
 
+		// render trailquads
+		trailQuadsRender(hackedTeam);
+
 		// render effects
 		int effectTime = renderPipe->startExecTimer("Effects & decals");
 		effectsRender(hackedTeam);
@@ -3973,4 +3976,32 @@ void Core::effectsRender(int hackedTeam)
 	}
 
 	renderPipe->enableBlend(false);
+}
+
+void Core::trailQuadsRender(int hackedTeam)
+{		
+	renderPipe->initRenderTrailQuad();
+
+	vec3 campos = CameraInput::getCam()->getPos();
+
+	
+
+	vec3 color(1);
+	vec3 pos;
+	vec3 dir;
+	vec3 crossdir;
+
+	for (int n = 0; n < BULLET_TYPE::NROFBULLETS; n++)
+	{
+		std::vector<Bullet*> bullets = game->getBullets(BULLET_TYPE(n));
+
+		for (unsigned int i = 0; i < bullets.size(); i++)
+		{
+			pos = bullets[i]->getPos();
+			dir = -bullets[i]->getDir() * glm::length(bullets[i]->getVel()) * 0.05f;
+			crossdir = normalize(cross(normalize(campos - pos), -dir)) * 0.05f;
+
+			renderPipe->renderTrailQUad(BULLET_TYPE::PULSE_SHOT, &pos.x, &dir.x, &crossdir.x, &color[0]);
+		}
+	}
 }

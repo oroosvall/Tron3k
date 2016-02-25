@@ -325,6 +325,24 @@ void RenderPipeline::reloadShaders()
 	exploDynCol = glGetUniformLocation(exploShader, "dynamicGlowColor");
 	exploInten = glGetUniformLocation(exploShader, "inten");
 
+	//trailquad shader
+	std::string shaderNamesTrailQuad[] = { "GameFiles/Shaders/TrailQuad_vs.glsl", "GameFiles/Shaders/TrailQuad_gs.glsl",  "GameFiles/Shaders/TrailQuad_fs.glsl" };
+	GLenum shaderTypesTrailQuad[] = { GL_VERTEX_SHADER, GL_GEOMETRY_SHADER, GL_FRAGMENT_SHADER };
+	CreateProgram(temp, shaderNamesTrailQuad, shaderTypesTrailQuad, 3);
+	if (temp != 0)
+	{
+		trailQuadShader = temp;
+		temp = 0;
+	}
+
+	//trail uniform locations
+	tarilQuadPos = glGetUniformLocation(trailQuadShader, "pos");
+	tarilQuadDir = glGetUniformLocation(trailQuadShader, "dir");
+	tarilQuadCross = glGetUniformLocation(trailQuadShader, "crossAngle");
+	tarilQuadVP = glGetUniformLocation(trailQuadShader, "vp");
+	tarilQuadTex = glGetUniformLocation(trailQuadShader, "tex");
+	tarilQuadColor = glGetUniformLocation(trailQuadShader, "dgcolor");
+
 	//UI shaderLocations
 	ui_Texture = glGetUniformLocation(uiShader, "textureSample");
 	ui_World = glGetUniformLocation(uiShader, "WorldMatrix");
@@ -513,9 +531,10 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	timepass += dt;
 	delta = dt;
 	//set camera matrixes
+	cam.updateVP();
+
 	cam.setViewMat(regularShader, viewMat);
 	cam.setViewProjMat(regularShader, viewProjMat[0]);
-
 	cam.setViewProjMat(animationShader, viewProjMat[1]);
 	cam.setViewProjMat(*gBuffer->portal_shaderPtr, gBuffer->portal_vp);
 	cam.setViewProjMat(gBuffer->spotVolShader, gBuffer->spotVolVP);
@@ -523,6 +542,7 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	cam.setViewProjMat(portalShaderV2, portal_VP);
 	cam.setViewProjMat(animTexture.animQuadShader, animTexture.animQuadVP);
 	cam.setViewProjMat(exploShader, exploVP);
+	cam.setViewProjMat(trailQuadShader, tarilQuadVP);
 
 	contMan.update(dt);
 	glUseProgram(particleCS);
@@ -1939,4 +1959,21 @@ void RenderPipeline::renderLightvolumes()
 	glCullFace(GL_BACK);
 	glEnable(GL_DEPTH_TEST);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
+void RenderPipeline::initRenderTrailQuad()
+{
+	glUseProgram(trailQuadShader);
+	glActiveTexture(GL_TEXTURE0);
+	TextureManager::gTm->bindTextureOnly(contMan.trailTex1, TEXTURE_FALLBACK::DIFFUSE_FB);
+}
+
+void RenderPipeline::renderTrailQUad(BULLET_TYPE type, float* pos, float* dir, float* crossdir, float* color)
+{
+	glProgramUniform3fv(trailQuadShader, tarilQuadPos, 1, pos);
+	glProgramUniform3fv(trailQuadShader, tarilQuadDir, 1, dir);
+	glProgramUniform3fv(trailQuadShader, tarilQuadCross, 1, crossdir);
+	glProgramUniform3fv(trailQuadShader, tarilQuadColor, 1, color);
+	
+	glDrawArrays(GL_POINTS, 0, 1);
 }
