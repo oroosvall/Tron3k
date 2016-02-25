@@ -787,11 +787,9 @@ void RenderPipeline::rendereffect(int type, float* pos, float rad, float transp,
 	case CLEANSENOVA:			break;
 	case BATTERY_SLOW:			break;
 	case BATTERY_SPEED:			break;
-	case THERMITE_CLOUD:	speed = 1.0f;	break;
+	case THERMITE_CLOUD:		break;
 	case VACUUM:				break;
-	case HEALTHPACK:			break;
-	case HSCPICKUP:				break;
-	case DOUBLEDAMAGEPICKUP:	break;
+	case HEALTHPACK:		speed = 0.5f;	break;
 	default:
 		break;
 	}
@@ -978,10 +976,10 @@ void RenderPipeline::renderBullet(int bid, void* world, float* dgColor, float sg
 	glProgramUniform1f(regularShader, uniformStaticGlowIntensityLocation[0], sgInten);
 	glProgramUniform3fv(regularShader, uniformDynamicGlowColorLocation[0], 1, (GLfloat*)&dgColor[0]);
 
-	if (bid == BULLET_TYPE::PULSE_SHOT)
+	//if (bid == BULLET_TYPE::PULSE_SHOT)
 		glProgramUniform1f(regularShader, uniformGlowTrail[0], 1.0f);
-	else
-		glProgramUniform1f(regularShader, uniformGlowTrail[0], 0.0f);
+	//else
+		//glProgramUniform1f(regularShader, uniformGlowTrail[0], 0.0f);
 
 	glProgramUniform1i(regularShader, uniformTextureLocation[0], 0);
 	glProgramUniform1i(regularShader, uniformNormalLocation[0], 1);

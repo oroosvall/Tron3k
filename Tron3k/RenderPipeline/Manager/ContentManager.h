@@ -50,6 +50,23 @@ private:
 	MiscMesh shankerBullet;
 	MiscMesh shankerSpecial;
 	
+	//new bullet meshes
+	MiscMesh manipConsume;
+	MiscMesh manipMobil;
+	MiscMesh manipPrim;
+	MiscMesh manipSecon;
+
+	MiscMesh puniConsume;
+	MiscMesh puniPrim;
+	MiscMesh puniSecon;
+
+	MiscMesh stalkConsume;
+	MiscMesh stalkPrim;
+
+	MiscMesh trapConsumeBig;
+	MiscMesh trapConsimeSmall;
+	MiscMesh trapPrim;
+
 	//pickups
 	MiscMesh healthAmmoMesh;
 	MiscMesh doubleDamageMesh;
@@ -58,6 +75,7 @@ private:
 	MiscMesh explosionMesh;
 	MiscMesh thunderDomeMesh;
 	MiscMesh manipThunderMesh;
+	MiscMesh deathPickupMesh;
 
 	struct TriangleVertex
 	{

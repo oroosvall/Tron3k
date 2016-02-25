@@ -90,9 +90,27 @@ void ContentManager::init()
 	thunderDomeMesh.load("GameFiles/CharacterFiles/thunderdome_sphere.bin");
 	explosionMesh.load("GameFiles/CharacterFiles/explosion_sphere.bin");
 	manipThunderMesh.load("GameFiles/CharacterFiles/explosion_thunder.bin");
+	deathPickupMesh.load("GameFiles/CharacterFiles/explosion_deathpick.bin");
 
 	healthAmmoMesh.load("GameFiles/CharacterFiles/healthPickup.bin");
 	doubleDamageMesh.load("GameFiles/CharacterFiles/damagePickup.bin");
+
+	//load new meshes
+	manipConsume.load("GameFiles/CharacterFiles/manipulator_consumable.bin");
+	manipMobil.load("GameFiles/CharacterFiles/manipulator_mobility.bin");
+	manipPrim.load("GameFiles/CharacterFiles/manipulator_primary_bullet.bin");
+	manipSecon.load("GameFiles/CharacterFiles/manipulator_secondary_bullet.bin");
+
+	puniConsume.load("GameFiles/CharacterFiles/punisher_consumable.bin");
+	puniPrim.load("GameFiles/CharacterFiles/punisher_primary_bullet.bin");
+	puniSecon.load("GameFiles/CharacterFiles/punisher_secondary_bullet.bin");
+
+	stalkConsume.load("GameFiles/CharacterFiles/stalker_consumable.bin");
+	stalkPrim.load("GameFiles/CharacterFiles/stalker_primary_bullet.bin");
+
+	trapConsumeBig.load("GameFiles/CharacterFiles/trapper_consumable_parent.bin");
+	trapConsimeSmall.load("GameFiles/CharacterFiles/trapper_consumable_child.bin");
+	trapPrim.load("GameFiles/CharacterFiles/trapper_primary_bullet.bin");
 
 	//Skybox
 	skybox.init(0, 0, 0);
@@ -199,6 +217,22 @@ void ContentManager::release()
 	thunderDomeMesh.release();
 	explosionMesh.release();
 	manipThunderMesh.release();
+	deathPickupMesh.release();
+
+	//release new bullets
+	manipConsume.release();
+	manipMobil.release();
+	manipPrim.release();
+	manipSecon.release();
+	puniConsume.release();
+	puniPrim.release();
+	puniSecon.release();
+	stalkConsume.release();
+	stalkPrim.release();
+	trapConsumeBig.release();
+	trapConsimeSmall.release();
+	trapPrim.release();
+
 
 	healthAmmoMesh.release();
 	doubleDamageMesh.release();
@@ -400,21 +434,21 @@ void ContentManager::renderBullet(int bid)
 {
 	switch (bid)
 	{
-	case BULLET_TYPE::PULSE_SHOT:
-	case BULLET_TYPE::PLASMA_SHOT:
-	case BULLET_TYPE::SHOTGUN_PELLET:
+	case BULLET_TYPE::PULSE_SHOT:				trapperBullet.draw();	break;
+	case BULLET_TYPE::PLASMA_SHOT:				trapPrim.draw();		break;
+	case BULLET_TYPE::SHOTGUN_PELLET:			puniSecon.draw();		break;
 	case BULLET_TYPE::BATTERY_SLOW_SHOT:
-	case BULLET_TYPE::BATTERY_SPEED_SHOT:
-	case BULLET_TYPE::LINK_SHOT:				trapperBullet.draw();	break;
-	case BULLET_TYPE::CLUSTER_GRENADE:
-	case BULLET_TYPE::CLUSTERLING:
-	case BULLET_TYPE::GRENADE_SHOT:
-	case BULLET_TYPE::THERMITE_GRENADE:
-	case BULLET_TYPE::VACUUM_GRENADE:
+	case BULLET_TYPE::BATTERY_SPEED_SHOT:		manipSecon.draw();		break;
+	case BULLET_TYPE::LINK_SHOT:				manipMobil.draw();		break;
+	case BULLET_TYPE::CLUSTER_GRENADE:			trapConsumeBig.draw();	break;
+	case BULLET_TYPE::CLUSTERLING:				trapConsimeSmall.draw(); break;
+	case BULLET_TYPE::GRENADE_SHOT:				puniPrim.draw();		break;
+	case BULLET_TYPE::THERMITE_GRENADE:			puniConsume.draw();		break;
+	case BULLET_TYPE::VACUUM_GRENADE:			manipConsume.draw();	break;
 	case BULLET_TYPE::GRAPPLING_HOOK:			trapperConsume.draw();	break;
 	case BULLET_TYPE::DISC_SHOT:				shankerBullet.draw();	break;
 	case BULLET_TYPE::HACKING_DART:				shankerSpecial.draw();	break;
-	case 100:									healthAmmoMesh.draw(); break;
+	case 100:									healthAmmoMesh.draw();	break;
 	case 101:									doubleDamageMesh.draw(); break; 
 	default:
 		break;
@@ -427,9 +461,9 @@ void ContentManager::renderEffect(int eid)
 	{
 	case THUNDER_DOME:			thunderDomeMesh.draw(); break;
 	case EXPLOSION:
-	case THERMITE_CLOUD:		
-	case HEALTHPACK:			explosionMesh.draw(); break;
-	case CLEANSENOVA:
+	case THERMITE_CLOUD:		explosionMesh.draw(); break;
+	case HEALTHPACK:			deathPickupMesh.draw(); break;
+	case CLEANSENOVA:			
 	case VACUUM:
 	case BATTERY_SLOW:
 	case BATTERY_SPEED:			manipThunderMesh.draw(); break;

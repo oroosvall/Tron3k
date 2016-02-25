@@ -3817,7 +3817,7 @@ void Core::effectsRender(int hackedTeam)
 				Vacuum* asd = (Vacuum*)eff[i];
 				vec3 pos = asd->getPos();
 				float inten =  1 - asd->lifepercentageleft();
-				renderPipe->rendereffect(EFFECT_TYPE::EXPLOSION,&pos.x, asd->renderRad(), inten, &color.x);
+				renderPipe->rendereffect(EFFECT_TYPE::VACUUM,&pos.x, asd->renderRad(), inten, &color.x);
 				light.attenuation.w = asd->renderRad();
 				light.Color = color;
 				light.Position = pos;
@@ -3836,7 +3836,7 @@ void Core::effectsRender(int hackedTeam)
 					color = TEAMTWOCOLOR;
 				else
 					color = TEAMONECOLOR;
-				renderPipe->rendereffect(EFFECT_TYPE::EXPLOSION,&pos.x, eff[i]->getInterestingVariable(), 1, &color.x);
+				renderPipe->rendereffect(EFFECT_TYPE::HEALTHPACK,&pos.x, eff[i]->getInterestingVariable(), 1, &color.x);
 
 				light.attenuation.w = eff[i]->getInterestingVariable();
 				light.Color = color;
