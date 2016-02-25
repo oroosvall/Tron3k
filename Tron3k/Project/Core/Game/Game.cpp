@@ -1851,7 +1851,7 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 			}
 			p->hitByBullet(theBullet, hi.bt, hi.newHPtotal);
 			playerList[hi.bulletPID]->hitMarker = 0.25f;
-			if (theBullet != nullptr)
+			if (theBullet != nullptr && gameState != Gamestate::SERVER)
 			{
 				HitPosAndDirParticle hpad;
 				hpad.pos = theBullet->getPos();
@@ -2201,22 +2201,25 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 
 	if (b != nullptr)
 	{
-		HitPosAndDirParticle hpad;
-		hpad.pos = hi.hitPos - vec3(hi.collisionNormal) * (0.35f - hi.collisionNormal.w);
-		hpad.dir = reflect(hi.hitDir, vec3(hi.collisionNormal));
-		if (b->getTeam() == 1)
-			hpad.color = TEAMONECOLOR;
-		else if (b->getTeam() == 2)
-			hpad.color = TEAMTWOCOLOR;
-		else
-			hpad.color = vec3(1, 1, 1);
-		
-		if (b->getType() != BULLET_TYPE::GRAPPLING_HOOK)
-			hpad.btype = BULLET_TYPE::NROFBULLETS;
-		else
-			hpad.btype = BULLET_TYPE::GRAPPLING_HOOK;
+		if (gameState != Gamestate::SERVER)
+		{
+			HitPosAndDirParticle hpad;
+			hpad.pos = hi.hitPos - vec3(hi.collisionNormal) * (0.35f - hi.collisionNormal.w);
+			hpad.dir = reflect(hi.hitDir, vec3(hi.collisionNormal));
+			if (b->getTeam() == 1)
+				hpad.color = TEAMONECOLOR;
+			else if (b->getTeam() == 2)
+				hpad.color = TEAMTWOCOLOR;
+			else
+				hpad.color = vec3(1, 1, 1);
 
-		allBulletHitPlayerPos.push_back(hpad);
+			if (b->getType() != BULLET_TYPE::GRAPPLING_HOOK)
+				hpad.btype = BULLET_TYPE::NROFBULLETS;
+			else
+				hpad.btype = BULLET_TYPE::GRAPPLING_HOOK;
+
+			allBulletHitPlayerPos.push_back(hpad);
+		}
 
 		if (b->getType() != BULLET_TYPE::DISC_SHOT)
 			b->setPos(hi.hitPos + (vec3(normalize(hi.collisionNormal)) * hi.collisionNormal.w));
