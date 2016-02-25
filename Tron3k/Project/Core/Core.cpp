@@ -2,7 +2,7 @@
 
 void Core::init()
 {
-	firstTimeInWarmUp = false;
+	firstTimeInWarmUp = true;
 	firstTimeInEnd = false;
 	lowTicketsFirstTime = false;
 	uitmpcounter = 0;
@@ -820,19 +820,29 @@ void Core::upClient(float dt)
 						uiManager->HUD.bannerCounter = 0;
 						lowTicketsFirstTime = false;
 					}
-
-					uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam1, false);
-					uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam2, false);
 				}
 
 				if (firstTimeInWarmUp && tmp == KOTHSTATE::WARMUP)
 				{
-					uiManager->hideOrShowHideAble(hideAbleObj::Banner, false);
-					uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam1, false);
-					uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam2, false);
-					uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam1, false);
-					uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam2, false);
-					firstTimeInWarmUp = false;
+					if (uiManager->getCurrentMenu() == 0)
+					{
+						uiManager->hideOrShowHideAble(hideAbleObj::Banner, false);
+						uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam1, false);
+						uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam2, false);
+						uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam1, false);
+						uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam2, false);
+
+						uiManager->clearText(scaleAndText::TicketBar1);
+						uiManager->clearText(scaleAndText::TicketBar2);
+						uiManager->clearText(scaleAndText::Wins1);
+						uiManager->clearText(scaleAndText::Wins2);
+						uiManager->setText("0", scaleAndText::TicketBar1); //tickets
+						uiManager->setText("0", scaleAndText::TicketBar2); //tickets2
+						uiManager->setText("0", scaleAndText::Wins1); //wins1
+						uiManager->setText("0", scaleAndText::Wins2); //wins2
+
+						firstTimeInWarmUp = false;
+					}
 				}
 				if (tmp == KOTHSTATE::WARMUP)
 				{
@@ -899,7 +909,7 @@ void Core::upClient(float dt)
 				uiManager->setText(std::to_string(koth->getRoundWins(2)), scaleAndText::Wins2); //wins2
 				if (int(koth->getTimer()) == 0)
 				{
-					uiManager->clearText(6);
+					uiManager->clearText(scaleAndText::Time);
 					uiManager->setText("00:00", scaleAndText::Time); //time
 				}
 				uiManager->HUD.teamOneTokens = koth->getRespawnTokens(1);
@@ -907,9 +917,9 @@ void Core::upClient(float dt)
 
 
 				uiManager->scaleBar(scaleAndText::HP, 1.0f, false);
-				uiManager->scaleBar(scaleAndText::TicketBar1, (float)(koth->getRespawnTokens(1)) / (float)(koth->getMaxTokensPerTeam()), false);
-				uiManager->scaleBar(scaleAndText::TicketBar2, (float)(koth->getRespawnTokens(2)) / (float)(koth->getMaxTokensPerTeam()), false);
-				uiManager->scaleBar(scaleAndText::AbilityMeter, 0.0f, true);
+				uiManager->scaleBar(scaleAndText::AbilityMeter, 0.0f, false);
+				uiManager->scaleBar(scaleAndText::LoseTicketsMeter, 1.0f, false);
+				uiManager->HUD.ticketLostTimer = 14;
 
 				uiManager->setRoleBool(true);
 				uiManager->setHoverCheckBool(false);
@@ -1582,11 +1592,8 @@ void Core::roamHandleCmds(std::string com)
 				uiManager->setText(std::to_string(koth->getRoundWins(1)), scaleAndText::Wins1); //wins1
 				uiManager->setText(std::to_string(koth->getRoundWins(2)), scaleAndText::Wins2); //wins2
 				uiManager->setText("00:00", scaleAndText::Time); //time
-												//uiManager->setText(std::to_string(int(koth->getTimer())), 6); //time
 
 
-				uiManager->scaleBar(scaleAndText::TicketBar1, 0.0f, false);
-				uiManager->scaleBar(scaleAndText::TicketBar2, 0.0f, false);
 				uiManager->scaleBar(scaleAndText::AbilityMeter, 1.0f, true);
 
 				uiManager->setHoverCheckBool(false);
@@ -2588,11 +2595,6 @@ void Core::inGameUIUpdate() //Ingame ui update
 		uiManager->clearText(scaleAndText::TicketBar1);
 		uiManager->setText(std::to_string(uiManager->HUD.teamOneTokens), scaleAndText::TicketBar1);
 		
-		if ((float)(uiManager->HUD.maxTokens) > 0)
-			uiManager->scaleBar(scaleAndText::TicketBar1, (float)uiManager->HUD.teamOneTokens / (float)(uiManager->HUD.maxTokens), true);
-		else
-			console.printMsg("Error: Function inGameUIUpdate in Core, HUD.maxTokens has a value of 0 or below", "System", 'S');
-		
 		int tmp = uiManager->addNewWM(hideAbleObj::TicketReducerTeam1);
 		if (tmp != -1)
 		{
@@ -2610,11 +2612,6 @@ void Core::inGameUIUpdate() //Ingame ui update
 		uiManager->clearText(scaleAndText::TicketBar2);
 		uiManager->setText(std::to_string(uiManager->HUD.teamTwoTokens), scaleAndText::TicketBar2);
 		
-		if ((float)(uiManager->HUD.maxTokens) > 0)
-			uiManager->scaleBar(scaleAndText::TicketBar2, (float)(uiManager->HUD.teamTwoTokens) / (float)(uiManager->HUD.maxTokens), true);
-		else
-			console.printMsg("Error: Function inGameUIUpdate in Core, HUD.maxTokens has a value of 0 or below", "System", 'S');
-
 		int tmp = uiManager->addNewWM(hideAbleObj::TicketReducerTeam2);
 		if (tmp != -1)
 		{
@@ -2626,17 +2623,18 @@ void Core::inGameUIUpdate() //Ingame ui update
 		}
 	}
 
+	//**********************************************************************************//
 	//Checks if the teams score have changed.
 	if (koth->getRoundWins(1) != uiManager->HUD.teamOneScore) //Team 1
 	{
 		if (koth->getRoundWins(1) != -1)
 		{
 			int difference = koth->getRoundWins(1) - uiManager->HUD.teamOneScore;
-
+	
 			uiManager->HUD.teamOneScore = koth->getRoundWins(1);
 			uiManager->clearText(scaleAndText::Wins1);
 			uiManager->setText(std::to_string(uiManager->HUD.teamOneScore), scaleAndText::Wins1);
-
+	
 			if (difference > 0 && difference < 4)
 			{
 				int tmp = uiManager->addNewWM(hideAbleObj::ScoreAdderTeam1);
@@ -2644,10 +2642,10 @@ void Core::inGameUIUpdate() //Ingame ui update
 				{
 					if (uiManager->HUDTime.wmIdListScore1.size() == 0)
 						uiManager->HUDTime.movePointAdder1 = true;
-
+	
 					uiManager->HUDTime.wmIdListScore1.push_back(tmp);
 					uiManager->HUDTime.counterListScore1.push_back(0);
-
+	
 					uiManager->changeTextureHideAble(hideAbleObj::ScoreAdderTeam1, uiManager->HUDTime.wmIdListScore1.size() - 1, difference - 1);
 				}
 			}
@@ -2660,11 +2658,11 @@ void Core::inGameUIUpdate() //Ingame ui update
 		if (koth->getRoundWins(2) != -1)
 		{
 			int difference = koth->getRoundWins(2) - uiManager->HUD.teamTwoScore;
-
+	
 			uiManager->HUD.teamTwoScore = koth->getRoundWins(2);
 			uiManager->clearText(scaleAndText::Wins2);
 			uiManager->setText(std::to_string(uiManager->HUD.teamTwoScore), scaleAndText::Wins2);
-
+	
 			if (difference > 0 && difference < 4)
 			{
 				int tmp = uiManager->addNewWM(hideAbleObj::ScoreAdderTeam2);
@@ -2672,10 +2670,10 @@ void Core::inGameUIUpdate() //Ingame ui update
 				{
 					if (uiManager->HUDTime.wmIdListScore2.size() == 0)
 						uiManager->HUDTime.movePointAdder2 = true;
-
+	
 					uiManager->HUDTime.wmIdListScore2.push_back(tmp);
 					uiManager->HUDTime.counterListScore2.push_back(0);
-
+	
 					uiManager->changeTextureHideAble(hideAbleObj::ScoreAdderTeam2, uiManager->HUDTime.wmIdListScore2.size() - 1, difference - 1);
 				}
 			}
@@ -2839,10 +2837,10 @@ void Core::inGameUIUpdate() //Ingame ui update
 
 	if (uiManager->HUDTime.moveTokenReducer1)
 		for (int i = 0; i < uiManager->HUDTime.wmIdListTicket1.size(); i++)
-			uiManager->setHideableWorldMatrix(hideAbleObj::TicketReducerTeam1, i, glm::vec2(0.001f, 0.0f));
+			uiManager->setHideableWorldMatrix(hideAbleObj::TicketReducerTeam1, i, glm::vec2(0.0f, -0.001f));
 	if (uiManager->HUDTime.moveTokenReducer2)
 		for (int i = 0; i < uiManager->HUDTime.wmIdListTicket2.size(); i++)
-			uiManager->setHideableWorldMatrix(hideAbleObj::TicketReducerTeam2, i, glm::vec2(0.001f, 0.0f));
+			uiManager->setHideableWorldMatrix(hideAbleObj::TicketReducerTeam2, i, glm::vec2(0.0f, -0.001f));
 	if (uiManager->HUDTime.movePointAdder1)
 		for (int i = 0; i < uiManager->HUDTime.wmIdListScore1.size(); i++)
 			uiManager->setHideableWorldMatrix(hideAbleObj::ScoreAdderTeam1, i, glm::vec2(0.0f, -0.001f));
@@ -3042,8 +3040,11 @@ void Core::createWindow(int x, int y, bool fullscreen)
 		uiManager = new UIManager();
 		initPipeline();
 		uiManager->init(&console, winX, winY);
-		uiManager->LoadNextSet(UISets::Menu, winX, winY); //Load the first set of menus.
-		uiManager->setMenu(MainMenu::StartMenu); //Set start menu as the current menu
+		if (renderMenu)
+		{
+			uiManager->LoadNextSet(UISets::Menu, winX, winY); //Load the first set of menus.
+			uiManager->setMenu(MainMenu::StartMenu); //Set start menu as the current menu
+		}
 
 
 		PipelineValues pv;

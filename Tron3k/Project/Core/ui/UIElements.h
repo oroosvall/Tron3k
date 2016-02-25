@@ -24,6 +24,7 @@ public:
 	virtual void resetWorldMatrix(int id) = 0;
 
 	virtual void changeTexUsed(int id, int wmID) = 0;
+	//virtual void changeTexUsed(int textID, int textureID) = 0;
 
 	virtual void fromPosToQuadScreen(glm::vec2 positions, int id) = 0;
 

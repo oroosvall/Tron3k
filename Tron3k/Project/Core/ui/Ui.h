@@ -10,6 +10,7 @@
 #include "InputBox.h"
 #include "VertexBufferUI.h"
 #include "uiVertex.h"
+#include "HideAble.h"
 
 #include "../Console.h"
 
@@ -28,13 +29,13 @@ enum scaleAndText
 	Ammo,  //Dynamic text
 	TicketBar1,  //Dynamic text and ScaleBar
 	TicketBar2,  //Dynamic text and ScaleBar
-	Wins1, //Dynamic text
-	Wins2, //Dynamic text
 	Time, //Dynamic text
 	IP, //Dynamic text and inpit
 	Name, //Dynamic text and input
 	AbilityMeter, //ScaleBar
-	LoseTicketsMeter //ScaleBar
+	LoseTicketsMeter, //ScaleBar
+	Wins1, //Dynamic text
+	Wins2 //Dynamic text
 };
 
 enum hideAbleObj
@@ -43,11 +44,9 @@ enum hideAbleObj
 	ScoreAdderTeam1,
 	ScoreAdderTeam2,
 	TicketReducerTeam1,
-	TicketReducerTeam2
+	TicketReducerTeam2,
 };
 
-//ScoreTeam1,
-//ScoreTeam2,
 
 class UI
 {
@@ -71,7 +70,7 @@ private:
 	int textIdList[11];
 
 	//Hideable stuff
-	std::vector<StaticTextureBoxes*> hideAbleObjects;
+	std::vector<HideAble*> hideAbleObjects;
 	std::vector<int> hideAbleIds;
 
 	//	Functions

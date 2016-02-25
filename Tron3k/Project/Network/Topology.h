@@ -760,8 +760,8 @@ public:
 				uiPtr->clearText(scaleAndText::Ammo);
 				uiPtr->clearText(scaleAndText::TicketBar1);
 				uiPtr->clearText(scaleAndText::TicketBar2);
-				uiPtr->clearText(scaleAndText::Wins1);
-				uiPtr->clearText(scaleAndText::Wins2);
+				//uiPtr->clearText(scaleAndText::Wins1);
+				//uiPtr->clearText(scaleAndText::Wins2);
 
 				uiPtr->HUD.HP = local->getMaxHP();
 				uiPtr->setText(std::to_string(local->getHP()), scaleAndText::HP); //hp
@@ -771,8 +771,8 @@ public:
 				uiPtr->setText(nText, scaleAndText::Ammo); //ammo
 				uiPtr->setText(std::to_string(koth->getRespawnTokens(1)), scaleAndText::TicketBar1); //tickets
 				uiPtr->setText(std::to_string(koth->getRespawnTokens(2)), scaleAndText::TicketBar2); //tickets2
-				uiPtr->setText(std::to_string(koth->getRoundWins(1)), scaleAndText::Wins1); //wins1
-				uiPtr->setText(std::to_string(koth->getRoundWins(2)), scaleAndText::Wins2); //wins2
+				//uiPtr->setText(std::to_string(koth->getRoundWins(1)), scaleAndText::Wins1); //wins1
+				//uiPtr->setText(std::to_string(koth->getRoundWins(2)), scaleAndText::Wins2); //wins2
 				if (int(koth->getTimer()) == 0)
 				{
 					uiPtr->clearText(scaleAndText::Time);
@@ -782,8 +782,6 @@ public:
 				uiPtr->HUD.specialMeter = 0.0f;
 				uiPtr->HUD.maxSpecialMeter = 100.0f;
 
-				uiPtr->scaleBar(scaleAndText::TicketBar1, (float)(koth->getRespawnTokens(1)) / (float)(koth->getMaxTokensPerTeam()), false);
-				uiPtr->scaleBar(scaleAndText::TicketBar2, (float)(koth->getRespawnTokens(2)) / (float)(koth->getMaxTokensPerTeam()), false);
 				uiPtr->scaleBar(scaleAndText::AbilityMeter, 0.0f, true);
 
 				uiPtr->setHoverCheckBool(false);
