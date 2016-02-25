@@ -24,13 +24,13 @@ void main ()
 		NormalOut = vec4(0.0f,0.0f,0.0f, 0.0f);
 		WorldPosOut = vec4(0.0f,0.0f,0.0f, 0.0f);
 		DiffuseOut = vec4(0.0f,0.0f,0.0f, 0.0f);
-		GlowMap = color * vec4(blendcolor, clamp(intenisty, 0.0f, 1.0f));
+		GlowMap = color * vec4(blendcolor, clamp(intenisty*3, 0.0f, 1.0f));
 	}
 	else
 	{
-		NormalOut = vec4(normal, color.w * clamp(intenisty, 0.0f, 1.0f));
-		WorldPosOut = vec4(wPos, color.w * clamp(intenisty, 0.0f, 1.0f));
-		DiffuseOut = color * vec4(blendcolor, clamp(intenisty, 0.0f, 1.0f));
+		NormalOut = vec4(normal, color.w * clamp(intenisty*3, 0.0f, 1.0f));
+		WorldPosOut = vec4(wPos, color.w * clamp(intenisty*3, 0.0f, 1.0f));
+		DiffuseOut = color * vec4(blendcolor, clamp(intenisty*3, 0.0f, 1.0f));
 		GlowMap = vec4(0.0f,0.0f,0.0f, 0.0f);
 	}
 }
