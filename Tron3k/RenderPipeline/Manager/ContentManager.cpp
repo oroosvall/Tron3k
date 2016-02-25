@@ -469,7 +469,9 @@ std::vector<std::vector<float>> ContentManager::getMeshBoxes()
 
 void ContentManager::bindLightwalTexture(GLuint shader, GLuint location)
 {
-	tm.bindTexture(lightWallTex, shader, location, DIFFUSE_FB);
+	glActiveTexture(GL_TEXTURE0);
+	glProgramUniform1i(shader, location, 0);
+	tm.bindTextureOnly(lightWallTex, DIFFUSE_FB);
 }
 
 void ContentManager::bindDecalTexture()

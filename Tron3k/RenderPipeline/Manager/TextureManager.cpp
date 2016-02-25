@@ -158,39 +158,39 @@ bool TextureManager::PNGSize(const char* fileName, unsigned int &x, unsigned int
 }
 
 
-void TextureManager::bindTexture(unsigned int &textureID, GLuint shader, GLuint shaderLocation, TEXTURE_FALLBACK fallback, bool invokeUpdate)
-{
-	if (invokeUpdate)
-		update(0);
-	if (!textureList.empty() && textureID < textureList.size())
-	{
-		TextureInfo* ti = &textureList[textureID];
-	
-		if (ti->state == TEXTURE_UNLOADED)
-		{
-			if (addToStreamQueue(&textureID, ti->texturePath))
-			{
-				ti->state = TEXTURE_STREAMING;
-			}
-			bindDefault(shader, shaderLocation, fallback);
-		}
-		else if (ti->state == TEXTURE_STREAMING)
-		{
-			bindDefault(shader, shaderLocation, fallback);
-		}
-		else if (ti->state == TEXTURE_LOADED)
-		{
-			bind(*ti, shader, shaderLocation);
-			ti->timeNotUsed = 0.0f;
-		}
-	
-	}
-	else
-	{
-		bindDefault(shader, shaderLocation, fallback);
-	}
-
-}
+//void TextureManager::bindTexture(unsigned int &textureID, GLuint shader, GLuint shaderLocation, TEXTURE_FALLBACK fallback, bool invokeUpdate)
+//{
+//	if (invokeUpdate)
+//		update(0);
+//	if (!textureList.empty() && textureID < textureList.size())
+//	{
+//		TextureInfo* ti = &textureList[textureID];
+//	
+//		if (ti->state == TEXTURE_UNLOADED)
+//		{
+//			if (addToStreamQueue(&textureID, ti->texturePath))
+//			{
+//				ti->state = TEXTURE_STREAMING;
+//			}
+//			bindDefault(shader, shaderLocation, fallback);
+//		}
+//		else if (ti->state == TEXTURE_STREAMING)
+//		{
+//			bindDefault(shader, shaderLocation, fallback);
+//		}
+//		else if (ti->state == TEXTURE_LOADED)
+//		{
+//			bind(*ti, shader, shaderLocation);
+//			ti->timeNotUsed = 0.0f;
+//		}
+//	
+//	}
+//	else
+//	{
+//		bindDefault(shader, shaderLocation, fallback);
+//	}
+//
+//}
 
 void TextureManager::bindTextureOnly(unsigned int &textureID, TEXTURE_FALLBACK fallback, bool invokeUpdate)
 {
@@ -230,47 +230,47 @@ void TextureManager::bindTextureOnly(unsigned int &textureID, TEXTURE_FALLBACK f
 	}
 }
 
-void TextureManager::bindDefault(GLuint shader, GLuint textureLocation, TEXTURE_FALLBACK fallback)
-{
-
-	GLuint texture = 0;
-	GLuint* slot = 0;
-
-	if (fallback == DIFFUSE_FB)
-	{
-		texture = defaultDiffuse;
-		slot = &defaultDiffuseSlot;
-	}
-	else if (fallback == NORMAL_FB)
-	{
-		texture = defaultNormal;
-		slot = &defaultNormalSlot;
-	}
-	else if (fallback == NORMAL_FULL_FB)
-	{
-		texture = defaultNormal_full;
-		slot = &defaultNormal_fullSlot;
-	}
-	else if (fallback == GLOW_FB)
-	{
-		texture = defaultGlow;
-		slot = &defaultGlowSlot;
-	}
-
-	//f (textureSlotBinds[*slot - GL_TEXTURE0] != texture)
-	//
-		*slot = GL_TEXTURE0 + textureUnitCounter;
-		textureUnitCounter = ((textureUnitCounter + 1) % (maxTextureUnitSize-1));
-
-	//	textureSlotBinds[*slot - GL_TEXTURE0] = texture;
-	//}
-	
-	glActiveTexture(*slot);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	
-	glProgramUniform1i(shader, textureLocation, *slot - GL_TEXTURE0);
-
-}
+//void TextureManager::bindDefault(GLuint shader, GLuint textureLocation, TEXTURE_FALLBACK fallback)
+//{
+//
+//	GLuint texture = 0;
+//	GLuint* slot = 0;
+//
+//	if (fallback == DIFFUSE_FB)
+//	{
+//		texture = defaultDiffuse;
+//		slot = &defaultDiffuseSlot;
+//	}
+//	else if (fallback == NORMAL_FB)
+//	{
+//		texture = defaultNormal;
+//		slot = &defaultNormalSlot;
+//	}
+//	else if (fallback == NORMAL_FULL_FB)
+//	{
+//		texture = defaultNormal_full;
+//		slot = &defaultNormal_fullSlot;
+//	}
+//	else if (fallback == GLOW_FB)
+//	{
+//		texture = defaultGlow;
+//		slot = &defaultGlowSlot;
+//	}
+//
+//	//f (textureSlotBinds[*slot - GL_TEXTURE0] != texture)
+//	//
+//		*slot = GL_TEXTURE0 + textureUnitCounter;
+//		textureUnitCounter = ((textureUnitCounter + 1) % (maxTextureUnitSize-1));
+//
+//	//	textureSlotBinds[*slot - GL_TEXTURE0] = texture;
+//	//}
+//	
+//	glActiveTexture(*slot);
+//	glBindTexture(GL_TEXTURE_2D, texture);
+//	
+//	glProgramUniform1i(shader, textureLocation, *slot - GL_TEXTURE0);
+//
+//}
 
 void TextureManager::bindDefaultOnly(TEXTURE_FALLBACK fallback)
 {
