@@ -87,8 +87,9 @@ void ContentManager::init()
 	trapperConsume.load("GameFiles/CharacterFiles/consumable_Trapper.bin");
 	shankerBullet.load("GameFiles/CharacterFiles/primary_shanker.bin");
 	shankerSpecial.load("GameFiles/CharacterFiles/special_shanker.bin");
-	bruteThunderDome.load("GameFiles/CharacterFiles/special_Punisher.bin");
+	thunderDomeMesh.load("GameFiles/CharacterFiles/thunderdome_sphere.bin");
 	explosionMesh.load("GameFiles/CharacterFiles/explosion_sphere.bin");
+	manipThunderMesh.load("GameFiles/CharacterFiles/explosion_thunder.bin");
 
 	//Skybox
 	skybox.init(0, 0, 0);
@@ -192,8 +193,9 @@ void ContentManager::release()
 	trapperConsume.release();
 	shankerBullet.release();
 	shankerSpecial.release();
-	bruteThunderDome.release();
+	thunderDomeMesh.release();
 	explosionMesh.release();
+	manipThunderMesh.release();
 
 	tm.release();
 
@@ -414,15 +416,27 @@ void ContentManager::renderBullet(int bid)
 	case BULLET_TYPE::HACKING_DART:
 		shankerSpecial.draw();
 	default:
-		explosionMesh.draw();
 		break;
-	}
-	
+	}	
 }
 
-void ContentManager::renderThunderDome()
+void ContentManager::renderEffect(int eid)
 {
-	bruteThunderDome.draw();
+	switch (eid)
+	{
+	case THUNDER_DOME:			thunderDomeMesh.draw(); break;
+	case EXPLOSION:
+	case THERMITE_CLOUD:		
+	case HEALTHPACK:
+	case HSCPICKUP:
+	case DOUBLEDAMAGEPICKUP:	explosionMesh.draw(); break;
+	case CLEANSENOVA:
+	case VACUUM:
+	case BATTERY_SLOW:
+	case BATTERY_SPEED:			manipThunderMesh.draw(); break;
+	default:
+		break;
+	}
 }
 
 void ContentManager::renderPlayer(AnimManager::animState state, glm::mat4 world, GLuint uniformKeyMatrixLocation, bool first, bool primary, GLuint shader, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation)
@@ -457,7 +471,9 @@ std::vector<std::vector<float>> ContentManager::getMeshBoxes()
 
 void ContentManager::bindLightwalTexture(GLuint shader, GLuint location)
 {
-	tm.bindTexture(lightWallTex, shader, location, DIFFUSE_FB);
+	glActiveTexture(GL_TEXTURE0);
+	glProgramUniform1i(shader, location, 0);
+	tm.bindTextureOnly(lightWallTex, DIFFUSE_FB);
 }
 
 void ContentManager::bindDecalTexture()

@@ -50,8 +50,11 @@ private:
 	MiscMesh trapperConsume;
 	MiscMesh shankerBullet;
 	MiscMesh shankerSpecial;
-	MiscMesh bruteThunderDome;
+	
+	//effect mehshes
 	MiscMesh explosionMesh;
+	MiscMesh thunderDomeMesh;
+	MiscMesh manipThunderMesh;
 
 	struct TriangleVertex
 	{
@@ -111,7 +114,8 @@ public:
 	void renderChunks(GLuint shader, GLuint shaderLocation, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation, GLuint DglowColor, GLuint SglowColor, GLuint collision_portal_shader, GLuint collision_portal_world, GLuint portal, GLuint portal_world);
 
 	void renderBullet(int bid);
-	void renderThunderDome();
+	void renderEffect(int eid);
+
 	void renderMisc(int renderID, GLuint shader, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation);
 
 	void renderCapturePoint(int id, GLuint shader, GLuint shaderLocation, GLuint diffuseLocation, GLuint normalLocation, GLuint glowLocation);

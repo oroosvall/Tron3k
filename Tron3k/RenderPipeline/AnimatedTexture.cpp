@@ -20,6 +20,13 @@ void AnimatedTexture::init()
 	water.init_ground(vec3(-225.0f, -4.5f, 225.0f), vec3(225.0f, -4.5f, -225.0f));
 	water.init_time_segments(1, 0.0f, 0.0f);
 
+	if (!initialized)
+	{
+		water_specular.textureID = TextureManager::gTm->createTexture("GameFiles/Textures/Map/waterfront_normal.png");
+	}
+	water_specular.init_ground(vec3(-225.0f, -4.4f, 225.0f), vec3(225.0f, -4.4f, -225.0f));
+	water_specular.init_time_segments(1, 0.0f, 0.0f);
+
 	int n = 0;
 	if (!initialized)
 	{
@@ -72,8 +79,8 @@ void AnimatedTexture::update(float dT)
 {
 	timepass += dT;
 
-	if (timepass < 0)
-		timepass = 0;
+	//if (timepass < 0)
+	//	timepass = 0;
 
 	int size = objects.size();
 
@@ -82,14 +89,30 @@ void AnimatedTexture::update(float dT)
 		objects[n].update(dT);
 	}
 	water.update(dT);
+	water_specular.update(dT);
 }
 
 void AnimatedTexture::render()
 {
+	
+
 	glUseProgram(animQuadShader);
 	glDisable(GL_CULL_FACE);
 	glActiveTexture(GL_TEXTURE0);
 
+	glDisable(GL_BLEND);
+	//water specular render
+	glProgramUniform1f(animQuadShader, animQuadTime, timepass);
+	glProgramUniform1i(animQuadShader, animQuadType, 1);
+	TextureManager::gTm->bindTextureOnly(water_specular.textureID, TEXTURE_FALLBACK::DIFFUSE_FB);
+	glProgramUniformMatrix4fv(animQuadShader, animQuadWorld, 1, GL_FALSE, (GLfloat*)&water_specular.worldMat[0][0]);
+	glProgramUniform2fv(animQuadShader, animQuadUVset, 1, (GLfloat*)&water_specular.offsets[0]);
+	glDrawArrays(GL_POINTS, 0, 1);
+
+
+	glEnable(GL_BLEND);
+	glProgramUniform1f(animQuadShader, animQuadTime, timepass);
+	glProgramUniform1i(animQuadShader, animQuadType, 0);
 	int size = objects.size();
 
 	for (int n = 0; n < size; n++)
@@ -104,13 +127,11 @@ void AnimatedTexture::render()
 	}
 
 	//water render
+	glProgramUniform1f(animQuadShader, animQuadTime, timepass);
+	glProgramUniform1i(animQuadShader, animQuadType, 2);
 	TextureManager::gTm->bindTextureOnly(water.textureID, TEXTURE_FALLBACK::DIFFUSE_FB);
 	glProgramUniformMatrix4fv(animQuadShader, animQuadWorld, 1, GL_FALSE, (GLfloat*)&water.worldMat[0][0]);
 	glProgramUniform2fv(animQuadShader, animQuadUVset, 1, (GLfloat*)&water.offsets[0]);
 
-
-	glProgramUniform1f(animQuadShader, animQuadExtas, timepass);
 	glDrawArrays(GL_POINTS, 0, 1);
-	// disable
-	glProgramUniform1f(animQuadShader, animQuadExtas, -1.0f);
 }

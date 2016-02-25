@@ -97,9 +97,9 @@ public:
 	virtual void createTimedParticleEffect(PARTICLE_EFFECTS peffect, glm::vec3 pos, glm::vec3 dir, glm::vec3 color) = 0;
 
 	virtual void renderWallEffect(void* pos1, void* pos2, float uvStartOffset, float* dgColor) = 0;
-	virtual void initRenderExplo() = 0;
-	virtual void renderExploEffect(float* pos, float rad, float transp, float* dgColor, bool solid) = 0;
-	virtual void renderThunderDomeEffect(float* pos, float rad, float transp, float* dgColor) = 0;
+	
+	virtual void initRenderEffect() = 0;
+	virtual void rendereffect(int type, float* pos, float rad, float transp, float* dgColor) = 0;
 
 	virtual void renderDecals(void* data, int size) = 0;
 
@@ -143,7 +143,7 @@ public:
 
 	virtual void enableDepthTest() = 0;
 	virtual void disableDepthTest() = 0;
-	virtual void enableBlend() = 0;
+	virtual void enableBlend(bool addetive) = 0;
 	virtual void disableBlend() = 0;
 	virtual void clearBothBuffers() = 0;
 	virtual void clearColor() = 0;

@@ -128,10 +128,11 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1);
 
+
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
 	glDepthMask(GL_TRUE);
-
+	glBlendEquation(GL_FUNC_ADD);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_CULL_FACE); 
 
@@ -294,7 +295,8 @@ void RenderPipeline::reloadShaders()
 	animTexture.animQuadWorld = glGetUniformLocation(animTexture.animQuadShader, "world");
 	animTexture.animQuadVP = glGetUniformLocation(animTexture.animQuadShader, "vp");
 	animTexture.animQuadUVset = glGetUniformLocation(animTexture.animQuadShader, "UVset");
-	animTexture.animQuadExtas = glGetUniformLocation(animTexture.animQuadShader, "timepass");
+	animTexture.animQuadTime = glGetUniformLocation(animTexture.animQuadShader, "timepass");
+	animTexture.animQuadType = glGetUniformLocation(animTexture.animQuadShader, "type");
 
 	//pointlight volume shader
 	std::string shaderNamesPointVolume[] = { "GameFiles/Shaders/pointlightVolume_vs.glsl", "GameFiles/Shaders/pointlightVolume_gs.glsl", "GameFiles/Shaders/pointlightVolume_fs.glsl" };
@@ -651,8 +653,7 @@ void RenderPipeline::render()
 
 
 	stopTimer(chunkRender);
-	//glDepthMask(GL_TRUE);glEnable(GL_CULL_FACE);glDisable(GL_BLEND);)
-	//renderEffects();
+
 }
 
 void RenderPipeline::finalizeRender()
@@ -762,19 +763,35 @@ void RenderPipeline::renderWallEffect(void* pos1, void* pos2, float uvStartOffse
 
 }
 
-void RenderPipeline::initRenderExplo()
+void RenderPipeline::initRenderEffect()
 {
 	glUseProgram(exploShader);
 	glProgramUniform1i(exploShader, exploTexture, 1);
 	glProgramUniform1f(exploShader, exploTimepass, timepass);
 }
 
-void RenderPipeline::renderExploEffect(float* pos, float rad, float transp, float* dgColor, bool solid)
+void RenderPipeline::rendereffect(int type, float* pos, float rad, float transp, float* dgColor)
 {
-	if(solid == false)
-		glProgramUniform1f(exploShader, exploTimepass, timepass * 15);
-	else
-		glProgramUniform1f(exploShader, exploTimepass, timepass);
+	float speed = 1;
+
+	//set rot speed depending on object
+	switch (type)
+	{
+	case THUNDER_DOME:		speed = 0.2f;	break;
+	case EXPLOSION:			speed = 5.0f;	break;
+	case CLEANSENOVA:			break;
+	case BATTERY_SLOW:			break;
+	case BATTERY_SPEED:			break;
+	case THERMITE_CLOUD:	speed = 1.0f;	break;
+	case VACUUM:				break;
+	case HEALTHPACK:			break;
+	case HSCPICKUP:				break;
+	case DOUBLEDAMAGEPICKUP:	break;
+	default:
+		break;
+	}
+
+	glProgramUniform1f(exploShader, exploTimepass, timepass * speed);
 
 	//set temp objects worldmat
 	glm::mat4 mat;
@@ -792,31 +809,7 @@ void RenderPipeline::renderExploEffect(float* pos, float rad, float transp, floa
 	glProgramUniformMatrix4fv(exploShader, exploWorld, 1, GL_FALSE, (GLfloat*)&mat[0][0]);
 	glProgramUniform3fv(exploShader, exploDynCol, 1, (GLfloat*)&dgColor[0]);
 
-	contMan.renderBullet(-1);
-}
-
-void RenderPipeline::renderThunderDomeEffect(float* pos, float rad, float transp, float* dgColor)
-{
-	glProgramUniform1f(exploShader, exploTimepass, timepass * 0.5f);
-
-	//set temp objects worldmat
-	glm::mat4 mat;
-
-	mat[0].w = pos[0];
-	mat[1].w = pos[1];
-	mat[2].w = pos[2];
-
-	mat[0].x = rad;
-	mat[1].y = rad;
-	mat[2].z = rad;
-
-	//Glow values for object
-	glProgramUniform1f(exploShader, exploInten, transp);
-	glProgramUniformMatrix4fv(exploShader, exploWorld, 1, GL_FALSE, (GLfloat*)&mat[0][0]);
-	glProgramUniform3fv(exploShader, exploDynCol, 1, (GLfloat*)&dgColor[0]);
-
-	//contMan.renderThunderDome();
-	contMan.renderBullet(-1);
+	contMan.renderEffect(type);
 }
 
 void RenderPipeline::renderDecals(void* data, int size)
@@ -855,10 +848,13 @@ void RenderPipeline::renderCrosshair(CROSSHAIR_TYPE cross)
 	glProgramUniformMatrix4fv(textShader, textShaderVP, 1, GL_FALSE, (GLfloat*)&glm::mat4());
 	glProgramUniform3f(textShader, textShaderOffset, 0, 0, 0);
 
+	glActiveTexture(GL_TEXTURE0);
+	glProgramUniform1i(textShader, textShaderLocation, 0);
+
 	switch (cross)
 	{
 	case CROSSHAIR_TRAPPER_P:
-		TextureManager::gTm->bindTexture(crosshairTexture, textShader, textShaderLocation, DIFFUSE_FB);
+		TextureManager::gTm->bindTextureOnly(crosshairTexture, DIFFUSE_FB);
 		this->cross->draw();
 		break;
 	case CROSSHAIR_SHANKER_P:
@@ -868,7 +864,8 @@ void RenderPipeline::renderCrosshair(CROSSHAIR_TYPE cross)
 		asd.state = TEXTURE_LOADED;
 		asd.textureID = crosshairHitTexture;
 
-		TextureManager::gTm->bind(asd, textShader, textShaderLocation);
+		//TextureManager::gTm->bindOnly(asd, textShader, textShaderLocation);
+		glBindTexture(GL_TEXTURE_2D, crosshairHitTexture);
 
 		this->crossHit->draw();
 		break;
@@ -1328,9 +1325,17 @@ void RenderPipeline::disableDepthTest()
 	glDisable(GL_DEPTH_TEST);
 }
 
-void RenderPipeline::enableBlend()
+void RenderPipeline::enableBlend(bool addetive)
 {
 	glEnable(GL_BLEND);
+
+	if (addetive)
+	{
+		glBlendFunc(GL_ONE, GL_ONE);
+	}
+	else
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 }
 
 void RenderPipeline::disableBlend()
@@ -1714,7 +1719,7 @@ void RenderPipeline::renderLightvolumes()
 	glProgramUniform3fv(gBuffer->spotVolShader, gBuffer->spotVolEye, 1, &gBuffer->eyePos[0]);
 
 	glEnable(GL_BLEND);
-	glBlendEquation(GL_FUNC_ADD);
+	
 	glBlendFunc(GL_ONE, GL_ONE);
 	glDisable(GL_DEPTH_TEST);
 	glCullFace(GL_FRONT);

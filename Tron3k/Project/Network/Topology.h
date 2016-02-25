@@ -726,6 +726,7 @@ public:
 		}
 
 		p->chooseRole(role - 1);
+
 		if (p_conID == gamePtr->GetLocalPlayerId())
 			gamePtr->setPlayerWantsToRespawn(true);
 		gamePtr->sendPlayerRadSize(p->getRole()->getBoxRadius()); //TEMP BUT W/E

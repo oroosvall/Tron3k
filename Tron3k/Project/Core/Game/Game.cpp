@@ -295,7 +295,6 @@ void Game::update(float dt)
 		checkBulletVWorldCollision(dt);
 		checkPlayerVEffectCollision();
 		checkPlayerVCapCollision();
-
 	}
 	else if (gameState == Gamestate::CLIENT)
 	{
@@ -303,16 +302,15 @@ void Game::update(float dt)
 		checkPlayerVWorldCollision(dt);
 		checkPlayerVEffectCollision();
 		checkFootsteps(dt);
-
 	}
 	else if (gameState == Gamestate::SERVER)
 	{
+		checkPlayerVBulletCollision();
+		checkPlayerVCapCollision();
+		checkBulletVWorldCollision(dt);
+		checkPlayerVEffectCollision();
 		checkEffectVEffectCollision();
 		checkBulletVEffectCollision(dt);
-		checkBulletVWorldCollision(dt);
-		checkPlayerVBulletCollision();
-		checkPlayerVEffectCollision();
-		checkPlayerVCapCollision();
 	}
 
 	for (int c = 0; c < max_con; c++)
@@ -402,6 +400,8 @@ void Game::playerUpdate(int conid, float dt)
 
 void Game::playerApplyForces(int conid, float dt)
 {
+	if (playerList[conid]->getPos().y > 20.0f)
+		playerList[conid]->setVelocity(vec3(playerList[conid]->getVelocity().x, 0.0f, playerList[conid]->getVelocity().z));
 	playerList[conid]->applyGravity(physics->addGravity(dt));
 }
 
@@ -1468,11 +1468,10 @@ void Game::handleWeaponFire(int conID, int teamId, int bulletId, WEAPON_TYPE wea
 			if (GetSound())
 				if (conID == localPlayerId || conID == spectateID)
 				{
-
-					GetSound()->playExternalSound(SOUNDS::soundEffectFieldsStereo, pos.x, pos.y, pos.z);
+					GetSound()->playFields(pos.x, pos.y, pos.z);
 				}
 				else
-					GetSound()->playExternalSound(SOUNDS::soundEffectFields, pos.x, pos.y, pos.z);
+					GetSound()->playFieldsStereo();
 
 		addBulletToList(conID, teamId, bulletId, BULLET_TYPE::BATTERY_SLOW_SHOT, pos, dir);
 
@@ -1483,11 +1482,10 @@ void Game::handleWeaponFire(int conID, int teamId, int bulletId, WEAPON_TYPE wea
 			if (GetSound())
 				if (conID == localPlayerId || conID == spectateID)
 				{
-					GetSound()->playExternalSound(SOUNDS::soundEffectFieldsStereo, pos.x, pos.y, pos.z);
+					GetSound()->playFields(pos.x, pos.y, pos.z);
 				}
-
 				else
-					GetSound()->playExternalSound(SOUNDS::soundEffectFields, pos.x, pos.y, pos.z);
+					GetSound()->playFieldsStereo();
 
 		addBulletToList(conID, teamId, bulletId, BULLET_TYPE::BATTERY_SPEED_SHOT, pos, dir);
 		break;
@@ -1811,7 +1809,7 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 			console->printMsg(p->getName() + suicideMessages[rand() % suicideMessages.size()], "System", 'S');
 			return 0;
 		}
-		if (hi.bt != BULLET_TYPE::CLUSTERLING && hi.bt != BULLET_TYPE::BATTERY_SLOW_SHOT && hi.bt != BULLET_TYPE::BATTERY_SPEED_SHOT)	//Any bullets that should not detonate on contact
+		if (hi.bt != BULLET_TYPE::CLUSTERLING && hi.bt != BULLET_TYPE::BATTERY_SLOW_SHOT && hi.bt != BULLET_TYPE::BATTERY_SPEED_SHOT || hi.bt != BULLET_TYPE::GRAPPLING_HOOK)	//Any bullets that should not detonate on contact
 		{
 			glm::vec3 pos = playerList[hi.playerHit]->getPos();
 			if (gameState != Gamestate::SERVER)
@@ -2043,7 +2041,7 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 				tester->startCooldown();
 				p->addModifier(MODIFIER_TYPE::DOUBLEDAMAGEMOD);
 
-				if (GetSound())
+				if (GetSound() && p->isLocal())
 				{
 					GetSound()->playExternalSound(SOUNDS::announcerDoubleDamage, pos.x, pos.y, pos.z);
 				}

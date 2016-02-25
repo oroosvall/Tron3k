@@ -1622,6 +1622,25 @@ void Core::clientHandleCmds(std::string com)
 			ss >> token;
 			if (token == "1" || token == "3" || token == "4" || token == "5")
 			{
+				if (GetSound())
+				{
+					if (token == "1")
+					{
+						GetSound()->playExternalSound(SOUNDS::TrapperPhrase, 0, 0, 0);
+					}
+
+					else if (token == "3")
+						GetSound()->playExternalSound(SOUNDS::StalkerPhrase, 0, 0, 0);
+
+					else if (token == "4")
+						GetSound()->playExternalSound(SOUNDS::PunisherPhrase, 0, 0, 0);
+
+					else if (token == "5")
+						GetSound()->playExternalSound(SOUNDS::ManipulatorPhrase, 0, 0, 0);
+
+				}
+			
+		
 				int role = stoi(token);
 				top->command_role_change(top->getConId(), role);
 			}
@@ -1772,6 +1791,68 @@ void Core::serverHandleCmds()
 				else
 					game->spectateID = -1;
 			}
+		}
+		//Everything below is KOTH specific :(
+		else if (token == "/setready")
+		{
+			int readyNeeded = 0;
+			if (!(ss >> readyNeeded))
+			{
+				console.printMsg("Invalid input", "System", 'S');
+			}
+			else
+			{
+				KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
+				koth->setReadyNeeded(readyNeeded);
+				console.printMsg("Set readies needed", "System", 'S');
+			}
+		}
+		else if (token == "/settokens")
+		{
+			int tokens = 0;
+			if (!(ss >> tokens))
+			{
+				console.printMsg("Invalid input", "System", 'S');
+			}
+			else
+			{
+				KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
+				koth->setTeamTokens(tokens);
+				console.printMsg("Tokens set", "System", 'S');
+			}
+		}
+		else if (token == "/setwinscore")
+		{
+			int win = 0;
+			if (!(ss >> win))
+			{
+				console.printMsg("Invalid input", "System", 'S');
+			}
+			else
+			{
+				KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
+				koth->setWinScore(win);
+				console.printMsg("Win score set", "System", 'S');
+			}
+		}
+		else if (token == "/setpoints")
+		{
+			int points = 0;
+			if (!(ss >> points))
+			{
+				console.printMsg("Invalid input", "System", 'S');
+			}
+			else
+			{
+				KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
+				koth->setScorePerRound(points);
+				console.printMsg("Points per round set", "System", 'S');
+			}
+		}
+		else if (token == "/restart")
+		{
+			KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
+			koth->restartGame();
 		}
 	}
 }
@@ -2233,7 +2314,7 @@ void Core::renderWorld(float dt)
 		renderPipe->finalizeRender();
 
 		renderPipe->disableDepthTest();
-		renderPipe->enableBlend();
+		renderPipe->enableBlend(false);
 
 		renderPipe->renderCrosshair(CROSSHAIR_TRAPPER_P);
 
@@ -3313,6 +3394,8 @@ void Core::minimapRender()
 
 void Core::effectsRender(int hackedTeam)
 {
+	renderPipe->enableBlend(true);
+	//renderPipe->disableDepthTest();
 	vec3 color;
 	float lightwallOffset = 0;
 	SpotLight light;
@@ -3352,7 +3435,7 @@ void Core::effectsRender(int hackedTeam)
 		lightwallOffset += glm::distance(asd->getPos(), asd->getEndPoint());
 	}
 
-	renderPipe->initRenderExplo();
+	renderPipe->initRenderEffect();
 
 	// Thunderdome
 	eff = game->getEffects(EFFECT_TYPE(EFFECT_TYPE::THUNDER_DOME));
@@ -3370,7 +3453,7 @@ void Core::effectsRender(int hackedTeam)
 
 		ThunderDomeEffect* asd = (ThunderDomeEffect*)eff[i];
 		vec3 pos = asd->getPos();
-		renderPipe->renderThunderDomeEffect(&pos.x, asd->explotionRenderRad(), 1, &color.x);
+		renderPipe->rendereffect(EFFECT_TYPE::THUNDER_DOME, &pos.x, asd->explotionRenderRad(), 0.7f, &color.x);
 	}
 
 	// Explosion shader objects	
@@ -3397,7 +3480,7 @@ void Core::effectsRender(int hackedTeam)
 				vec3 pos = asd->getPos();
 
 				rad = asd->explosionRenderRad(&percentLifeleft);
-				renderPipe->renderExploEffect(&pos.x, rad * 1.3f, percentLifeleft, &color.x, false);
+				renderPipe->rendereffect(EFFECT_TYPE::EXPLOSION, &pos.x, rad * 1.3f, percentLifeleft, &color.x);
 				light.attenuation.w = rad * 2 + 2.0f;
 				light.Position = pos;
 				light.DiffuseIntensity = 1.0f;
@@ -3420,7 +3503,7 @@ void Core::effectsRender(int hackedTeam)
 				color = CLEANSENOVACOLOR;
 				float inten = asd->lifepercentageleft();
 
-				renderPipe->renderExploEffect(&pos.x, asd->renderRad(), inten, &color.x, true);
+				renderPipe->rendereffect(EFFECT_TYPE::CLEANSENOVA, &pos.x, asd->renderRad(), inten, &color.x);
 				light.attenuation.w = asd->renderRad();
 				light.Color = color;
 				light.Position = pos;
@@ -3438,7 +3521,7 @@ void Core::effectsRender(int hackedTeam)
 				BatteryFieldSlow* asd = (BatteryFieldSlow*)eff[i];
 				vec3 pos = asd->getPos();
 				color = SLOWBUBBLECOLOR;
-				renderPipe->renderExploEffect(&pos.x, asd->renderRad(), 1, &color.x, true);
+				renderPipe->rendereffect(EFFECT_TYPE::BATTERY_SLOW,&pos.x, asd->renderRad(), 0.8f, &color.x);
 				light.attenuation.w = asd->renderRad();
 				light.Color = color;
 				light.Position = pos;
@@ -3455,7 +3538,7 @@ void Core::effectsRender(int hackedTeam)
 				BatteryFieldSpeed* asd = (BatteryFieldSpeed*)eff[i];
 				vec3 pos = asd->getPos();
 				color = SPEEDBUBBLECOLOR;
-				renderPipe->renderExploEffect(&pos.x, asd->renderRad(), 1, &color.x, true);
+				renderPipe->rendereffect(EFFECT_TYPE::BATTERY_SPEED,&pos.x, asd->renderRad(), 0.5f, &color.x);
 				light.attenuation.w = asd->renderRad();
 				light.Color = color;
 				light.Position = pos;
@@ -3491,7 +3574,7 @@ void Core::effectsRender(int hackedTeam)
 				else
 					inten = 1.0f;
 
-				renderPipe->renderExploEffect(&pos.x, asd->explosionRenderRad(), inten, &color.x, true);
+				renderPipe->rendereffect(EFFECT_TYPE::THERMITE_CLOUD,&pos.x, asd->explosionRenderRad(), inten, &color.x);
 				light.attenuation.w = asd->explosionRenderRad() * 3;
 				light.DiffuseIntensity = ((sin(timepass * 5) + 1) * 0.5f + 0.3f) * inten;
 				light.Color = color;
@@ -3518,7 +3601,7 @@ void Core::effectsRender(int hackedTeam)
 				Vacuum* asd = (Vacuum*)eff[i];
 				vec3 pos = asd->getPos();
 				float inten =  1 - asd->lifepercentageleft();
-				renderPipe->renderExploEffect(&pos.x, asd->renderRad(), inten, &color.x, false);
+				renderPipe->rendereffect(EFFECT_TYPE::EXPLOSION,&pos.x, asd->renderRad(), inten, &color.x);
 				light.attenuation.w = asd->renderRad();
 				light.Color = color;
 				light.Position = pos;
@@ -3537,7 +3620,7 @@ void Core::effectsRender(int hackedTeam)
 					color = TEAMTWOCOLOR;
 				else
 					color = TEAMONECOLOR;
-				renderPipe->renderExploEffect(&pos.x, eff[i]->getInterestingVariable(), 1, &color.x, true);
+				renderPipe->rendereffect(EFFECT_TYPE::EXPLOSION,&pos.x, eff[i]->getInterestingVariable(), 1, &color.x);
 
 				light.attenuation.w = eff[i]->getInterestingVariable();
 				light.Color = color;
@@ -3559,7 +3642,7 @@ void Core::effectsRender(int hackedTeam)
 				{
 					vec3 pos = eff[i]->getPos();
 					color = vec3(1.0f, 0, 1.0f);
-					renderPipe->renderExploEffect(&pos.x, temp->renderRad(), 1, &color.x, true);
+					renderPipe->rendereffect(EFFECT_TYPE::EXPLOSION,&pos.x, temp->renderRad(), 1, &color.x);
 
 					light.attenuation.w = temp->renderRad();
 					light.Color = color;
@@ -3582,7 +3665,7 @@ void Core::effectsRender(int hackedTeam)
 				{
 					vec3 pos = eff[i]->getPos();
 					color = vec3(1.0f, 0, 0);
-					renderPipe->renderExploEffect(&pos.x, temp->renderRad(), 1, &color.x, true);
+					renderPipe->rendereffect(EFFECT_TYPE::EXPLOSION,&pos.x, temp->renderRad(), 1, &color.x);
 
 					light.attenuation.w = temp->renderRad();
 					light.Color = color;
@@ -3597,4 +3680,5 @@ void Core::effectsRender(int hackedTeam)
 		break;
 		}
 	}
+	renderPipe->enableBlend(false);
 }
