@@ -683,6 +683,11 @@ public:
 				else
 					uiPtr->setMenu(InGameUI::ClassSelect);
 			}
+			else
+			{
+				uiPtr->setMenu(InGameUI::RemoveMenu);
+				uiPtr->setMenu(InGameUI::ClassSelect);
+			}
 		}
 	}
 

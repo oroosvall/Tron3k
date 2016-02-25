@@ -176,19 +176,27 @@ void PlayerMesh::render(GLuint shader, GLuint textureLocation, GLuint normalLoca
 	//	}
 	//}
 
-	if (materials[0].textureMapIndex != -1)
-		TextureManager::gTm->bindTexture(tex[materials[0].textureMapIndex].textureID, shader, textureLocation, DIFFUSE_FB);
-	else
-		TextureManager::gTm->bindDefault(shader, textureLocation, DIFFUSE_FB);
-	if (materials[0].normalMapIndex != -1)
-		TextureManager::gTm->bindTexture(tex[materials[0].normalMapIndex].textureID, shader, normalLocation, NORMAL_FB);
-	else
-		TextureManager::gTm->bindDefault(shader, normalLocation, NORMAL_FB);
+	glActiveTexture(GL_TEXTURE0);
+	glProgramUniform1i(shader, textureLocation, 0);
 
-	if (materials[0].specularMapIndex != -1)
-		TextureManager::gTm->bindTexture(tex[materials[0].specularMapIndex].textureID, shader, glowSpecLocation, GLOW_FB);
+	if (materials[0].textureMapIndex != -1)
+		TextureManager::gTm->bindTextureOnly(tex[materials[0].textureMapIndex].textureID, DIFFUSE_FB);
 	else
-		TextureManager::gTm->bindDefault(shader, glowSpecLocation, GLOW_FB);
+		TextureManager::gTm->bindDefaultOnly(DIFFUSE_FB);
+	
+	glActiveTexture(GL_TEXTURE1);
+	glProgramUniform1i(shader, normalLocation, 1);
+	if (materials[0].normalMapIndex != -1)
+		TextureManager::gTm->bindTextureOnly(tex[materials[0].normalMapIndex].textureID, NORMAL_FB);
+	else
+		TextureManager::gTm->bindDefaultOnly(NORMAL_FB);
+
+	glActiveTexture(GL_TEXTURE2);
+	glProgramUniform1i(shader, glowSpecLocation, 2);
+	if (materials[0].specularMapIndex != -1)
+		TextureManager::gTm->bindTextureOnly(tex[materials[0].specularMapIndex].textureID, GLOW_FB);
+	else
+		TextureManager::gTm->bindDefaultOnly(GLOW_FB);
 
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);

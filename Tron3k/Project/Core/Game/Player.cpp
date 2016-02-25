@@ -764,7 +764,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 				if (GetSoundActivated())
 				{
-					GetSound()->playUserGeneratedSound(SOUNDS::soundEffectYouDied);
+					GetSound()->playUserGeneratedSound(SOUNDS::soundEffectYouDied, CATEGORY::Effects);
 				}
 			}
 
@@ -777,7 +777,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					msg = PLAYERRESPAWN;
 					if (GetSoundActivated())
 					{
-						GetSound()->playUserGeneratedSound(SOUNDS::soundEffectRespawn);
+						GetSound()->playUserGeneratedSound(SOUNDS::soundEffectRespawn, CATEGORY::Effects);
 					}
 				}
 			}
@@ -955,11 +955,11 @@ void Player::reloadCurrentWeapon()
 		if (GetSound())
 		{
 			if (animRole == 0)
-				GetSound()->playUserGeneratedSound(SOUNDS::soundEffectTrapperReload);
+				GetSound()->playUserGeneratedSound(SOUNDS::soundEffectTrapperReload, CATEGORY::Guns);
 			else if (animRole == 2)
-				GetSound()->playUserGeneratedSound(SOUNDS::soundEffectStalkerReload);
+				GetSound()->playUserGeneratedSound(SOUNDS::soundEffectStalkerReload, CATEGORY::Guns);
 			else if (animRole == 3)
-				GetSound()->playUserGeneratedSound(SOUNDS::soundEffectPunisherReload);
+				GetSound()->playUserGeneratedSound(SOUNDS::soundEffectPunisherReload, CATEGORY::Guns);
 
 		}
 

@@ -204,13 +204,15 @@ public:
 
 	virtual bool setSetting(PIPELINE_SETTINGS type, PipelineValues value);
 
-	virtual void createTimedParticleEffect(PARTICLE_EFFECTS peffect, vec3 pos, glm::vec3 dir, glm::vec3 color);
+	virtual void createTimedParticleEffect(BULLET_TYPE peffect, vec3 pos, glm::vec3 dir, glm::vec3 color);
 
 	virtual void renderWallEffect(void* pos1, void* pos2, float uvStartOffset, float* dgColor);
 
 	virtual void initRenderEffect();
 
 	virtual void rendereffect(int type, float* pos, float rad, float transp, float* dgColor);
+
+	virtual void initRenderRegular();
 
 	virtual void renderDecals(void* data, int size);
 

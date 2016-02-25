@@ -118,4 +118,13 @@ enum MUSIC
 	nrOfMusic
 };
 
+enum CATEGORY
+{
+	Footsteps,
+	Announcer,
+	Guns,
+	Ambient,
+	Effects
+};
+
 #endif

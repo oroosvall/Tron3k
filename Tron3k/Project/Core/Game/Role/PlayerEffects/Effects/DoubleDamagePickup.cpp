@@ -19,7 +19,7 @@ int DoubleDamagePickup::update(float dt)
 		{	
 			if (GetSound())
 			{
-				GetSound()->playExternalSound(SOUNDS::announcerDoubleDamageSpawned, pos.x, pos.y, pos.z);
+				GetSound()->playExternalSound(SOUNDS::announcerDoubleDamageSpawned, pos.x, pos.y, pos.z, CATEGORY::Announcer);
 			}
 			resetted = true;
 			playersHitByMe.clear();

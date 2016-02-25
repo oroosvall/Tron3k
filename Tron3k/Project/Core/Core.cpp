@@ -337,6 +337,8 @@ void Core::upMenu(float dt)
 			uiManager->setFirstMenuSet(false);
 			uiManager->setMenu(InGameUI::TeamSelect);
 			subState = 0;
+			renderMenu = false;
+			renderUI = true;
 
 			uiManager->setHoverCheckBool(true);
 			break;
@@ -832,6 +834,17 @@ void Core::upClient(float dt)
 					uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam2, false);
 					firstTimeInWarmUp = false;
 				}
+				if (tmp == KOTHSTATE::WARMUP)
+				{
+					if (i->justPressed(GLFW_KEY_PERIOD))
+					{
+						showTeamSelect();
+					}
+					if (i->justPressed(GLFW_KEY_COMMA))
+					{
+						showClassSelect();
+					}
+				}
 			}
 		}
 		game->update(newDt);
@@ -839,7 +852,7 @@ void Core::upClient(float dt)
 		std::vector<HitPosAndDir> hitpositions = game->getAllBulletHitPlayerPos();
 		for (size_t i = 0; i < hitpositions.size(); i++)
 		{
-			renderPipe->createTimedParticleEffect(PARTICLE_HIT, hitpositions[i].pos, hitpositions[i].dir, hitpositions[i].color);
+			renderPipe->createTimedParticleEffect(hitpositions[i].btype, hitpositions[i].pos, hitpositions[i].dir, hitpositions[i].color);
 		}
 
 		game->clearAllBulletHitPlayerPos();
@@ -1396,6 +1409,126 @@ void Core::roamHandleCmds(std::string com)
 					serverCam->setSensitivity(sens);
 			}
 		}
+
+		else if (token == "/footsteps")
+		{
+			float footsteps = 0.0f;
+			if (!(ss >> footsteps))
+			{
+				console.printMsg("Invalid input.", "System", 'S');
+			}
+			else
+			{
+				if (footsteps < -FLT_EPSILON)
+				{
+					console.printMsg("Positive numbers only, dummy.", "System", 'S');
+				}
+				else
+					GetSound()->SetFootstepsVolume(footsteps);
+			}
+		}
+
+		else if (token == "/announcer")
+		{
+			float announcer = 0.0f;
+			if (!(ss >> announcer))
+			{
+				console.printMsg("Invalid input.", "System", 'S');
+			}
+			else
+			{
+				if (announcer < -FLT_EPSILON)
+				{
+					console.printMsg("Positive numbers only, dummy.", "System", 'S');
+				}
+				else
+					GetSound()->SetAnnouncerVolume(announcer);
+			}
+		}
+
+		else if (token == "/guns")
+		{
+			float guns = 0.0f;
+			if (!(ss >> guns))
+			{
+				console.printMsg("Invalid input.", "System", 'S');
+			}
+			else
+			{
+				if (guns < -FLT_EPSILON)
+				{
+					console.printMsg("Positive numbers only, dummy.", "System", 'S');
+				}
+				else
+					GetSound()->SetGunsVolume(guns);
+			}
+		}
+
+		else if (token == "/ambient")
+		{
+			float ambient = 0.0f;
+			if (!(ss >> ambient))
+			{
+				console.printMsg("Invalid input.", "System", 'S');
+			}
+			else
+			{
+				if (ambient < -FLT_EPSILON)
+				{
+					console.printMsg("Positive numbers only, dummy.", "System", 'S');
+				}
+				else
+				{
+					GetSound()->SetAmbientVolume(ambient);
+				}
+					
+			}
+		}
+
+		else if (token == "/effects")
+		{
+			float effects = 0.0f;
+			if (!(ss >> effects))
+			{
+				console.printMsg("Invalid input.", "System", 'S');
+			}
+			else
+			{
+				if (effects < -FLT_EPSILON)
+				{
+					console.printMsg("Positive numbers only, dummy.", "System", 'S');
+				}
+				else
+					GetSound()->SetEffectVolume(effects);
+			}
+		}
+
+		else if (token == "/master")
+		{
+			float master = 0.0f;
+			if (!(ss >> master))
+			{
+				console.printMsg("Invalid input.", "System", 'S');
+			}
+			else
+			{
+				if (master < -FLT_EPSILON)
+				{
+					console.printMsg("Positive numbers only, dummy.", "System", 'S');
+				}
+				else
+				{
+					if (master !=0)
+					{
+						master = master / 100;
+					}
+					
+					GetSound()->SetMasterVolume(master);
+				}
+					
+			}
+		}
+
 		else if (token == "/fullscreen")
 		{
 			if (fullscreen)
@@ -1407,7 +1540,7 @@ void Core::roamHandleCmds(std::string com)
 
 		else if (token == "/cleanup")
 		{
-			GetSound()->playUserGeneratedSound(SOUNDS::announcerCleanup);
+			GetSound()->playUserGeneratedSound(SOUNDS::announcerCleanup, CATEGORY::Announcer);
 		}
 
 		else if (token == "/role")
@@ -1615,7 +1748,7 @@ void Core::clientHandleCmds(std::string com)
 
 		else if (token == "/cleanup")
 		{
-			GetSound()->playUserGeneratedSound(SOUNDS::announcerCleanup);
+			GetSound()->playUserGeneratedSound(SOUNDS::announcerCleanup, CATEGORY::Announcer);
 		}
 		else if (token == "/role")
 		{
@@ -1626,17 +1759,17 @@ void Core::clientHandleCmds(std::string com)
 				{
 					if (token == "1")
 					{
-						GetSound()->playExternalSound(SOUNDS::TrapperPhrase, 0, 0, 0);
+						GetSound()->playExternalSound(SOUNDS::TrapperPhrase, 0, 0, 0, CATEGORY::Announcer);
 					}
 
 					else if (token == "3")
-						GetSound()->playExternalSound(SOUNDS::StalkerPhrase, 0, 0, 0);
+						GetSound()->playExternalSound(SOUNDS::StalkerPhrase, 0, 0, 0, CATEGORY::Announcer);
 
 					else if (token == "4")
-						GetSound()->playExternalSound(SOUNDS::PunisherPhrase, 0, 0, 0);
+						GetSound()->playExternalSound(SOUNDS::PunisherPhrase, 0, 0, 0, CATEGORY::Announcer);
 
 					else if (token == "5")
-						GetSound()->playExternalSound(SOUNDS::ManipulatorPhrase, 0, 0, 0);
+						GetSound()->playExternalSound(SOUNDS::ManipulatorPhrase, 0, 0, 0, CATEGORY::Announcer);
 
 				}
 			
@@ -1791,6 +1924,68 @@ void Core::serverHandleCmds()
 				else
 					game->spectateID = -1;
 			}
+		}
+		//Everything below is KOTH specific :(
+		else if (token == "/setready")
+		{
+			int readyNeeded = 0;
+			if (!(ss >> readyNeeded))
+			{
+				console.printMsg("Invalid input", "System", 'S');
+			}
+			else
+			{
+				KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
+				koth->setReadyNeeded(readyNeeded);
+				console.printMsg("Set readies needed", "System", 'S');
+			}
+		}
+		else if (token == "/settokens")
+		{
+			int tokens = 0;
+			if (!(ss >> tokens))
+			{
+				console.printMsg("Invalid input", "System", 'S');
+			}
+			else
+			{
+				KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
+				koth->setTeamTokens(tokens);
+				console.printMsg("Tokens set", "System", 'S');
+			}
+		}
+		else if (token == "/setwinscore")
+		{
+			int win = 0;
+			if (!(ss >> win))
+			{
+				console.printMsg("Invalid input", "System", 'S');
+			}
+			else
+			{
+				KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
+				koth->setWinScore(win);
+				console.printMsg("Win score set", "System", 'S');
+			}
+		}
+		else if (token == "/setpoints")
+		{
+			int points = 0;
+			if (!(ss >> points))
+			{
+				console.printMsg("Invalid input", "System", 'S');
+			}
+			else
+			{
+				KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
+				koth->setScorePerRound(points);
+				console.printMsg("Points per round set", "System", 'S');
+			}
+		}
+		else if (token == "/restart")
+		{
+			KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
+			koth->restartGame();
 		}
 	}
 }
@@ -2243,6 +2438,8 @@ void Core::renderWorld(float dt)
 		// render effects
 		int effectTime = renderPipe->startExecTimer("Effects & decals");
 		effectsRender(hackedTeam);
+
+		renderPipe->enableBlend(false);
 
 		// render Decals
 		renderPipe->renderDecals(game->getAllDecalRenderInfo(), game->getNrOfDecals());
@@ -3072,15 +3269,29 @@ void Core::showTeamSelect()
 	if (startTeamSelect)
 	{
 		uiManager->setHoverCheckBool(true);
-		uiManager->LoadNextSet(UISets::InGame, winX, winY);
+		game->getPlayer(game->GetLocalPlayerId())->setLockedControls(true);
+		cursorInvisible = false;
+
+		if (renderMenu)
+		{
+			uiManager->LoadNextSet(UISets::InGame, winX, winY);
+			renderMenu = false;
+		}
+	
 		uiManager->setFirstMenuSet(true);
 		uiManager->setMenu(InGameUI::TeamSelect);
 	}
 	else
 	{
 		uiManager->setHoverCheckBool(false);
-		uiManager->LoadNextSet(UISets::InGame, winX, winY);
 		uiManager->setFirstMenuSet(false);
+
+		if (renderMenu)
+		{
+			uiManager->LoadNextSet(UISets::InGame, winX, winY);
+			renderMenu = false;
+		}
+		
 		uiManager->setMenu(InGameUI::GUI);
 	}
 }
@@ -3375,30 +3586,32 @@ void Core::effectsRender(int hackedTeam)
 
 	renderPipe->initRenderEffect();
 
-	// Thunderdome
-	eff = game->getEffects(EFFECT_TYPE(EFFECT_TYPE::THUNDER_DOME));
-	for (unsigned int i = 0; i < eff.size(); i++)
-	{
-		team = eff[i]->getTeam();
-
-		if (hackedTeam == -1)
-		{
-			if (team == 1)
-				color = TEAMONECOLOR;
-			else if (team == 2)
-				color = TEAMTWOCOLOR;
-		}
-
-		ThunderDomeEffect* asd = (ThunderDomeEffect*)eff[i];
-		vec3 pos = asd->getPos();
-		renderPipe->rendereffect(EFFECT_TYPE::THUNDER_DOME, &pos.x, asd->explotionRenderRad(), 0.7f, &color.x);
-	}
-
 	// Explosion shader objects	
-	for (int c = EXPLOSION; c < NROFEFFECTS; c++)
+	for (int c = THUNDER_DOME; c < HSCPICKUP; c++)
 	{
 		switch (c)
 		{
+		case EFFECT_TYPE::THUNDER_DOME:
+		{
+			eff = game->getEffects(EFFECT_TYPE(c));
+			for (unsigned int i = 0; i < eff.size(); i++)
+			{
+				team = eff[i]->getTeam();
+
+				if (hackedTeam == -1)
+				{
+					if (team == 1)
+						color = TEAMONECOLOR;
+					else if (team == 2)
+						color = TEAMTWOCOLOR;
+				}
+
+				ThunderDomeEffect* asd = (ThunderDomeEffect*)eff[i];
+				vec3 pos = asd->getPos();
+				renderPipe->rendereffect(EFFECT_TYPE::THUNDER_DOME, &pos.x, asd->explotionRenderRad(), 0.7f, &color.x);
+			}
+		}
+		break;
 		case EXPLOSION:
 		{
 			eff = game->getEffects(EFFECT_TYPE(c));
@@ -3442,12 +3655,6 @@ void Core::effectsRender(int hackedTeam)
 				float inten = asd->lifepercentageleft();
 
 				renderPipe->rendereffect(EFFECT_TYPE::CLEANSENOVA, &pos.x, asd->renderRad(), inten, &color.x);
-				light.attenuation.w = asd->renderRad();
-				light.Color = color;
-				light.Position = pos;
-				light.DiffuseIntensity = inten;
-				light.AmbientIntensity = 1.0f;
-				renderPipe->addLight(&light, 0);
 			}
 		}
 		break;
@@ -3464,6 +3671,7 @@ void Core::effectsRender(int hackedTeam)
 				light.Color = color;
 				light.Position = pos;
 				light.AmbientIntensity = 0.1f;
+				light.DiffuseIntensity = 1.0f;
 				renderPipe->addLight(&light, 0);
 			}
 		}
@@ -3481,6 +3689,7 @@ void Core::effectsRender(int hackedTeam)
 				light.Color = color;
 				light.Position = pos;
 				light.AmbientIntensity = 0.1f;
+				light.DiffuseIntensity = 1.0f;
 				renderPipe->addLight(&light, 0);
 			}
 		}
@@ -3570,6 +3779,16 @@ void Core::effectsRender(int hackedTeam)
 			}
 		}
 		break;
+		}
+	}
+
+	//regular shader Double damage & HCS pickup
+	renderPipe->initRenderRegular();
+
+	for (int c = EFFECT_TYPE::HSCPICKUP; c < EFFECT_TYPE::NROFEFFECTS; c++)
+	{
+		switch (c)
+		{
 		case HSCPICKUP:
 		{
 			eff = game->getEffects(EFFECT_TYPE(c));
@@ -3579,13 +3798,32 @@ void Core::effectsRender(int hackedTeam)
 				if (!temp->onCooldown())
 				{
 					vec3 pos = eff[i]->getPos();
-					color = vec3(1.0f, 0, 1.0f);
-					renderPipe->rendereffect(EFFECT_TYPE::EXPLOSION,&pos.x, temp->renderRad(), 1, &color.x);
+					color = vec3(0, 1.0f, 0);
+					
+					mat4 world;
+
+					float rot = timepass;
+
+					world[0].x = 2;
+					world[1].y = 2;
+					world[2].z = 2;
+
+					world = world * mat4(cos(rot), 0.0f, -sin(rot), 0.0f,
+						0.0f, 1.0f, 0.0f, 0.0f,
+						sin(rot), 0.0f, cos(rot), 0.0f,
+						0.0f, 0.0f, 0.0f, 0.0f);
+
+					world[0].w = pos.x;
+					world[1].w = pos.y + sin(timepass) * 0.2f;
+					world[2].w = pos.z;
+
+					float inten = ((sin(timepass * 3) + 1) * 0.2f) +0.3f;
+					renderPipe->renderBullet(100, &world, &color[0], inten);
 
 					light.attenuation.w = temp->renderRad();
 					light.Color = color;
 					light.Position = pos;
-					light.DiffuseIntensity = 0.5f;
+					light.DiffuseIntensity = inten * 0.7f;
 					light.attenuation.w = 5.0f;
 					light.AmbientIntensity = 1.0f;
 					renderPipe->addLight(&light, 0);
@@ -3602,14 +3840,33 @@ void Core::effectsRender(int hackedTeam)
 				if (!temp->onCooldown())
 				{
 					vec3 pos = eff[i]->getPos();
-					color = vec3(1.0f, 0, 0);
-					renderPipe->rendereffect(EFFECT_TYPE::EXPLOSION,&pos.x, temp->renderRad(), 1, &color.x);
+					color = vec3(1, 0.2f, 0);
+
+					mat4 world;
+
+					world[0].x = 4;
+					world[1].y = 4;
+					world[2].z = 4;
+
+					float rot = timepass;
+
+					world = world * mat4(cos(rot), 0.0f, -sin(rot), 0.0f,
+						0.0f, 1.0f, 0.0f, 0.0f,
+						sin(rot), 0.0f, cos(rot), 0.0f,
+						0.0f, 0.0f, 0.0f, 0.0f);
+
+					world[0].w = pos.x;
+					world[1].w = pos.y + sin(timepass) * 0.2f;
+					world[2].w = pos.z;
+
+					float inten = ((sin(timepass * 2) + 1) * 0.3f) +0.3f;
+					renderPipe->renderBullet(101, &world, &color[0], inten * 0.5f);
 
 					light.attenuation.w = temp->renderRad();
 					light.Color = color;
 					light.Position = pos;
-					light.DiffuseIntensity = 0.5f;
-					light.attenuation.w = 5.0f;
+					light.DiffuseIntensity = inten * 0.7f;
+					light.attenuation.w = 8.0f;
 					light.AmbientIntensity = 1.0f;
 					renderPipe->addLight(&light, 0);
 				}
@@ -3618,5 +3875,6 @@ void Core::effectsRender(int hackedTeam)
 		break;
 		}
 	}
+
 	renderPipe->enableBlend(false);
 }
