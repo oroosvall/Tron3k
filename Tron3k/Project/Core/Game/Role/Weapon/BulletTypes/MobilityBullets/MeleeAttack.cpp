@@ -6,7 +6,7 @@ MeleeAttack::MeleeAttack(glm::vec3 position, glm::vec3 direction, int pID, int b
 	initValues(position, direction, pID, bID, tID);
 	vel = glm::vec3(75.0f);
 	damage = 70;
-	ttl = 0.07f;
+	maxttl = ttl = 0.07f;
 	target = player;
 	type = BULLET_TYPE::MELEE_ATTACK;
 }

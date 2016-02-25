@@ -7,6 +7,7 @@ VacuumGrenade::VacuumGrenade(glm::vec3 position, glm::vec3 direction, int pID, i
 	initValues(position, direction, pID, bID, tID);
 	vel = glm::vec3(35.0f);
 	damage = 10;
+	maxttl = ttl;
 }
 
 VacuumGrenade::~VacuumGrenade()

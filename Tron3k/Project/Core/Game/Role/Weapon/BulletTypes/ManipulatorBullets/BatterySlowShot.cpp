@@ -7,6 +7,7 @@ BatterySlowShot::BatterySlowShot(glm::vec3 position, glm::vec3 direction, int pI
 	initValues(position, direction, pID, bID, tID);
 	vel = glm::vec3(50.0f);
 	damage = 0;
+	maxttl = ttl;
 }
 
 BatterySlowShot::~BatterySlowShot()

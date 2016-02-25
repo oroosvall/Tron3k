@@ -5,7 +5,7 @@ ThermiteGrenade::ThermiteGrenade(glm::vec3 position, glm::vec3 direction, int pI
 {
 	type = BULLET_TYPE::THERMITE_GRENADE;
 	initValues(position, direction, pID, bID, tID);
-	ttl = 3;
+	maxttl = ttl = 3;
 	vel = glm::vec3(40.0f);
 	damage = 10;
 }

@@ -7,7 +7,7 @@ ShotgunPellet::ShotgunPellet(glm::vec3 position, glm::vec3 direction, int pID, i
 	initValues(position, direction, pID, bID, tID);
 	vel = glm::vec3(95.0f);
 	damage = 5;
-	ttl = 0.6f;
+	maxttl = ttl = 0.6f;
 }
 
 ShotgunPellet::~ShotgunPellet()

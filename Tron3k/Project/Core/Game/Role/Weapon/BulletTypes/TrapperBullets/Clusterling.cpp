@@ -6,7 +6,7 @@ Clusterling::Clusterling(glm::vec3 position, glm::vec3 direction, int pID, int b
 	type = BULLET_TYPE::CLUSTERLING;
 	initValues(position, direction, pID, bID, tID);
 	float trand = float((rand() % 100)*0.01) - 0.5f;
-	ttl = 0.9f + trand;
+	maxttl = ttl = 0.9f + trand;
 	vel = glm::vec3(15.0f);
 	damage = 10;
 

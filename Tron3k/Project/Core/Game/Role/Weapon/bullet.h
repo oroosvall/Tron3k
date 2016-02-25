@@ -17,6 +17,7 @@ protected:
 	glm::vec3 vel;
 	int damage;
 	float ttl = 4;
+	float maxttl;
 	
 	int teamId;
 	int playerId;
@@ -54,5 +55,8 @@ public:
 
 	bool getCollidedThisFrame() { return collideframe; }; //Used to avoid some frame-perfect shenanigans with Battery Fields
 	void collidedThisFrame() { collideframe = true; };
+
+	float getCurrTTL() { return ttl; };
+	float getMaxTTL() { return maxttl; };
 };
 #endif

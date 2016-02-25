@@ -7,6 +7,7 @@ HackingDart::HackingDart(glm::vec3 position, glm::vec3 direction, int pID, int b
 	vel = glm::vec3(100.0f);
 	damage = 20;
 	type = BULLET_TYPE::HACKING_DART;
+	maxttl = ttl;
 }
 
 HackingDart::~HackingDart()

@@ -7,6 +7,7 @@ FusionShot::FusionShot(glm::vec3 position, glm::vec3 direction, int pID, int bID
 	initValues(position, direction, pID, bID, tID);
 	vel = glm::vec3(80.0f);
 	damage = 50;
+	maxttl = ttl;
 }
 
 FusionShot::~FusionShot()

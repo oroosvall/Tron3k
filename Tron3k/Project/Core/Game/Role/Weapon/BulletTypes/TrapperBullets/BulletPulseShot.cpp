@@ -7,6 +7,7 @@ PulseShot::PulseShot(glm::vec3 position, glm::vec3 direction, int pID, int bID, 
 	vel = glm::vec3(110.0f);
 	damage = 15;
 	type = BULLET_TYPE::PULSE_SHOT;
+	maxttl = ttl;
 }
 
 PulseShot::~PulseShot()
