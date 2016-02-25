@@ -1539,6 +1539,33 @@ void Core::roamHandleCmds(std::string com)
 			}
 		}
 
+		else if (token == "/music")
+		{
+			float music = 0.0f;
+			if (!(ss >> music))
+			{
+				console.printMsg("Invalid input.", "System", 'S');
+			}
+			else
+			{
+				if (music < -FLT_EPSILON)
+				{
+					console.printMsg("Positive numbers only, dummy.", "System", 'S');
+				}
+				else
+				{
+					if (!GetSound()->getFading())
+					{
+						GetSound()->setVolumeMusic(music);
+						game->musicVolumeForMenu = music;
+					}
+					
+					
+				}
+
+			}
+		}
+
 		else if (token == "/fullscreen")
 		{
 			if (fullscreen)
@@ -3260,7 +3287,7 @@ void Core::disconnect()
 	if (GetSound())
 	{
 		GetSound()->playMusic(mainMenu);
-		GetSound()->setVolumeMusic(50);
+		GetSound()->setVolumeMusic(GetSound()->getVolumeMusic());
 		GetSound()->SetFading(false);
 	}
 }
