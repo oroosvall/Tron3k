@@ -89,6 +89,7 @@ void ContentManager::init()
 	shankerSpecial.load("GameFiles/CharacterFiles/special_shanker.bin");
 	thunderDomeMesh.load("GameFiles/CharacterFiles/thunderdome_sphere.bin");
 	explosionMesh.load("GameFiles/CharacterFiles/explosion_sphere.bin");
+	manipThunderMesh.load("GameFiles/CharacterFiles/explosion_thunder.bin");
 
 	//Skybox
 	skybox.init(0, 0, 0);
@@ -194,6 +195,7 @@ void ContentManager::release()
 	shankerSpecial.release();
 	thunderDomeMesh.release();
 	explosionMesh.release();
+	manipThunderMesh.release();
 
 	tm.release();
 
@@ -424,14 +426,14 @@ void ContentManager::renderEffect(int eid)
 	{
 	case THUNDER_DOME:			thunderDomeMesh.draw(); break;
 	case EXPLOSION:
-	case THERMITE_CLOUD:
-	case CLEANSENOVA:
-	case VACUUM:
-	case BATTERY_SLOW:
-	case BATTERY_SPEED:
+	case THERMITE_CLOUD:		
 	case HEALTHPACK:
 	case HSCPICKUP:
 	case DOUBLEDAMAGEPICKUP:	explosionMesh.draw(); break;
+	case CLEANSENOVA:
+	case VACUUM:
+	case BATTERY_SLOW:
+	case BATTERY_SPEED:			manipThunderMesh.draw(); break;
 	default:
 		break;
 	}
@@ -469,7 +471,9 @@ std::vector<std::vector<float>> ContentManager::getMeshBoxes()
 
 void ContentManager::bindLightwalTexture(GLuint shader, GLuint location)
 {
-	tm.bindTexture(lightWallTex, shader, location, DIFFUSE_FB);
+	glActiveTexture(GL_TEXTURE0);
+	glProgramUniform1i(shader, location, 0);
+	tm.bindTextureOnly(lightWallTex, DIFFUSE_FB);
 }
 
 void ContentManager::bindDecalTexture()

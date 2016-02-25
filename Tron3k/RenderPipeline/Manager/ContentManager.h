@@ -54,6 +54,7 @@ private:
 	//effect mehshes
 	MiscMesh explosionMesh;
 	MiscMesh thunderDomeMesh;
+	MiscMesh manipThunderMesh;
 
 	struct TriangleVertex
 	{

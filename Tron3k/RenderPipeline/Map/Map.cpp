@@ -313,11 +313,17 @@ void Map::renderChunk(GLuint shader, GLuint shaderLocation, GLuint diffuseLocati
 
 void Map::renderCapturePoint(GLuint shader,GLuint shaderLocation, GLuint diffuseLocation, GLuint normalLocation, GLuint glowLocation, int capturePointID)
 {
-	tm->bindDefault(shader, diffuseLocation, DIFFUSE_FB);
+	glActiveTexture(GL_TEXTURE0);
+	glProgramUniform1i(shader, diffuseLocation, 0);
+	tm->bindDefaultOnly(DIFFUSE_FB);
 
-	tm->bindDefault(shader, normalLocation, NORMAL_FULL_FB);
+	glActiveTexture(GL_TEXTURE1);
+	glProgramUniform1i(shader, normalLocation, 1);
+	tm->bindDefaultOnly(NORMAL_FULL_FB);
 
-	tm->bindDefault(shader, glowLocation, GLOW_FB);
+	glActiveTexture(GL_TEXTURE2);
+	glProgramUniform1i(shader, glowLocation, 2);
+	tm->bindDefaultOnly(GLOW_FB);
 	
 	if (capturePointID < capCount && capturePoints[capturePointID].meshCount != 0)
 	{

@@ -848,10 +848,13 @@ void RenderPipeline::renderCrosshair(CROSSHAIR_TYPE cross)
 	glProgramUniformMatrix4fv(textShader, textShaderVP, 1, GL_FALSE, (GLfloat*)&glm::mat4());
 	glProgramUniform3f(textShader, textShaderOffset, 0, 0, 0);
 
+	glActiveTexture(GL_TEXTURE0);
+	glProgramUniform1i(textShader, textShaderLocation, 0);
+
 	switch (cross)
 	{
 	case CROSSHAIR_TRAPPER_P:
-		TextureManager::gTm->bindTexture(crosshairTexture, textShader, textShaderLocation, DIFFUSE_FB);
+		TextureManager::gTm->bindTextureOnly(crosshairTexture, DIFFUSE_FB);
 		this->cross->draw();
 		break;
 	case CROSSHAIR_SHANKER_P:
@@ -861,7 +864,8 @@ void RenderPipeline::renderCrosshair(CROSSHAIR_TYPE cross)
 		asd.state = TEXTURE_LOADED;
 		asd.textureID = crosshairHitTexture;
 
-		TextureManager::gTm->bind(asd, textShader, textShaderLocation);
+		//TextureManager::gTm->bindOnly(asd, textShader, textShaderLocation);
+		glBindTexture(GL_TEXTURE_2D, crosshairHitTexture);
 
 		this->crossHit->draw();
 		break;
