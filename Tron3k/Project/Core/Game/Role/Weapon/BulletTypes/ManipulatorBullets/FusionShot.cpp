@@ -1,18 +1,18 @@
-#include "LinkShot.h"
+#include "FusionShot.h"
 
 
-LinkShot::LinkShot(glm::vec3 position, glm::vec3 direction, int pID, int bID, int tID)
+FusionShot::FusionShot(glm::vec3 position, glm::vec3 direction, int pID, int bID, int tID)
 {
-	type = BULLET_TYPE::LINK_SHOT;
+	type = BULLET_TYPE::FUSION_SHOT;
 	initValues(position, direction, pID, bID, tID);
 	vel = glm::vec3(80.0f);
 	damage = 50;
 }
 
-LinkShot::~LinkShot()
+FusionShot::~FusionShot()
 {}
 
-int LinkShot::update(float dt)
+int FusionShot::update(float dt)
 {
 	pos += dir * vel * dt;
 

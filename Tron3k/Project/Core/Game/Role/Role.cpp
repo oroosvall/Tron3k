@@ -76,8 +76,8 @@ void Role::loadWeapons(int role, int wpn)
 	case BATTERYWPN_SLOW:
 		weapons[wpn] = new BatteryFields();
 		break;
-	case LINK_GUN:
-		weapons[wpn] = new LinkGun();
+	case FUSION_CANNON:
+		weapons[wpn] = new FusionCannon();
 		break;
 	case DISC_GUN:
 		weapons[wpn] = new DiscGun();

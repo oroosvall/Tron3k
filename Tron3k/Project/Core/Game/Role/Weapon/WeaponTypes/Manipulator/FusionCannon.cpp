@@ -1,12 +1,12 @@
-#include "LinkGun.h"
+#include "FusionCannon.h"
 
-LinkGun::LinkGun()
+FusionCannon::FusionCannon()
 {}
 
-LinkGun::~LinkGun()
+FusionCannon::~FusionCannon()
 {}
 
-bool LinkGun::shoot()
+bool FusionCannon::shoot()
 {
 	bool ableToShoot = false;
 
@@ -20,9 +20,9 @@ bool LinkGun::shoot()
 	return ableToShoot;
 }
 
-void LinkGun::init()
+void FusionCannon::init()
 {
-	weaponType = WEAPON_TYPE::LINK_GUN;
+	weaponType = WEAPON_TYPE::FUSION_CANNON;
 
 	maxClipSize = 1;
 	currentClipAmmo = maxClipSize;
@@ -36,7 +36,7 @@ void LinkGun::init()
 	rldTimer = 0;
 }
 
-int LinkGun::update(float deltaTime)
+int FusionCannon::update(float deltaTime)
 {
 	countDownFiringSpeed(deltaTime);
 	countDownReloadTimer(deltaTime);

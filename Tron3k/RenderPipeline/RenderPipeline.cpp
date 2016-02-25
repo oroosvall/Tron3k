@@ -1063,7 +1063,7 @@ void RenderPipeline::createTimedParticleEffect(BULLET_TYPE peffect, vec3 pos, gl
 		break;
 	case BATTERY_SLOW_SHOT:
 		break;
-	case LINK_SHOT:
+	case FUSION_SHOT:
 		path += "fusionHit.ps";
 		break;
 	case PLASMA_SHOT:

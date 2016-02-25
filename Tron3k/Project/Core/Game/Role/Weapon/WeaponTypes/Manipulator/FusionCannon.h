@@ -1,17 +1,17 @@
-#ifndef LINKGUN_H
-#define LINKGUN_H
+#ifndef FUSIONCANNON_H
+#define FUSIONCANNON_H
 
 #include <glm/glm.hpp>
 #include "../../Weapon.h"
 
 #include "../../../../GameDataIndex.h"
 
-class LinkGun : public Weapon
+class FusionCannon : public Weapon
 {
 private:
 public:
-	LinkGun();
-	~LinkGun();
+	FusionCannon();
+	~FusionCannon();
 
 	void init();
 	int update(float deltaTime);

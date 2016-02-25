@@ -180,9 +180,6 @@
     <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\Manipulator\BatteryFields.cpp">
       <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes\Manipulator</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\Manipulator\LinkGun.cpp">
-      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes\Manipulator</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\Brute\GrenadeLauncher.cpp">
       <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes\Brute</Filter>
     </ClCompile>
@@ -217,9 +214,6 @@
       <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets</Filter>
     </ClCompile>
     <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\BatterySpeedShot.cpp">
-      <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\LinkShot.cpp">
       <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets</Filter>
     </ClCompile>
     <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\VacuumGrenade.cpp">
@@ -357,6 +351,12 @@
     <ClCompile Include="Core\ui\HideAble.cpp">
       <Filter>Source Files\Core\Ui\uiClasses</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\FusionShot.cpp">
+      <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\Manipulator\FusionCannon.cpp">
+      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes\Manipulator</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Input.h">
@@ -452,9 +452,6 @@
     <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\Mobility\Melee.h">
       <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes\Mobility</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\Manipulator\LinkGun.h">
-      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes\Manipulator</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\Brute\GrenadeLauncher.h">
       <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes\Brute</Filter>
     </ClInclude>
@@ -490,9 +487,6 @@
     </ClInclude>
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\BruteBullets\ShotgunPellet.h">
       <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\BruteBullets</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\LinkShot.h">
-      <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets</Filter>
     </ClInclude>
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\VacuumGrenade.h">
       <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets</Filter>
@@ -652,6 +646,12 @@
     </ClInclude>
     <ClInclude Include="Core\ui\HideAble.h">
       <Filter>Source Files\Core\Ui\uiClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\FusionShot.h">
+      <Filter>Source Files\Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\Manipulator\FusionCannon.h">
+      <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes\Manipulator</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

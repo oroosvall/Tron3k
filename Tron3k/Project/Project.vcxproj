@@ -71,7 +71,7 @@
     <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\BatterySlowShot.cpp" />
     <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\BatterySpeedShot.cpp" />
     <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\GrapplingHook.cpp" />
-    <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\LinkShot.cpp" />
+    <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\FusionShot.cpp" />
     <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\VacuumGrenade.cpp" />
     <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\MobilityBullets\DiscShot.cpp" />
     <ClCompile Include="Core\Game\Role\Weapon\BulletTypes\MobilityBullets\HackingDart.cpp" />
@@ -85,7 +85,7 @@
     <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\Destroyer\EnergyShield.cpp" />
     <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\Destroyer\PlasmaAutorifle.cpp" />
     <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\Manipulator\BatteryFields.cpp" />
-    <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\Manipulator\LinkGun.cpp" />
+    <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\Manipulator\FusionCannon.cpp" />
     <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\Mobility\DiscGun.cpp" />
     <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\Mobility\Melee.cpp" />
     <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\Trapper\EnergyBoost.cpp" />
@@ -164,7 +164,7 @@
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\BatterySlowShot.h" />
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\BatterySpeedShot.h" />
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\GrapplingHook.h" />
-    <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\LinkShot.h" />
+    <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\FusionShot.h" />
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\ManipulatorBullets\VacuumGrenade.h" />
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\MobilityBullets\DiscShot.h" />
     <ClInclude Include="Core\Game\Role\Weapon\BulletTypes\MobilityBullets\HackingDart.h" />
@@ -179,7 +179,7 @@
     <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\Destroyer\EnergyShield.h" />
     <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\Destroyer\PlasmaAutorifle.h" />
     <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\Manipulator\BatteryFields.h" />
-    <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\Manipulator\LinkGun.h" />
+    <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\Manipulator\FusionCannon.h" />
     <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\Mobility\DiscGun.h" />
     <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\Mobility\Melee.h" />
     <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\Trapper\EnergyBoost.h" />

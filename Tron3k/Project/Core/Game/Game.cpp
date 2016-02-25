@@ -979,7 +979,7 @@ void Game::checkBulletVEffectCollision(float dt)
 					}
 				}
 
-				if (BULLET_TYPE(b) == BULLET_TYPE::BATTERY_SLOW_SHOT || BULLET_TYPE(b) == BULLET_TYPE::BATTERY_SPEED_SHOT || BULLET_TYPE(b) == BULLET_TYPE::LINK_SHOT)
+				if (BULLET_TYPE(b) == BULLET_TYPE::BATTERY_SLOW_SHOT || BULLET_TYPE(b) == BULLET_TYPE::BATTERY_SPEED_SHOT || BULLET_TYPE(b) == BULLET_TYPE::FUSION_SHOT)
 				{
 					for (int c = 0; c < effects[EFFECT_TYPE::BATTERY_SLOW].size(); c++)
 					{
@@ -1294,12 +1294,12 @@ void Game::addBulletToList(int conID, int teamId, int bulletId, BULLET_TYPE bt, 
 		pos += upV + rightV + dirMod;
 		b = new BatterySpeedShot(pos, dir, conID, bulletId, teamId);
 		break;
-	case BULLET_TYPE::LINK_SHOT:
+	case BULLET_TYPE::FUSION_SHOT:
 		rightV *= 0.2;
 		upV *= -0.15f;
 		dirMod *= 0.8f;
 		pos += upV + rightV + dirMod;
-		b = new LinkShot(pos, dir, conID, bulletId, teamId);
+		b = new FusionShot(pos, dir, conID, bulletId, teamId);
 		break;
 	case BULLET_TYPE::VACUUM_GRENADE:
 		b = new VacuumGrenade(pos, dir, conID, bulletId, teamId);
@@ -1451,7 +1451,7 @@ void Game::handleWeaponFire(int conID, int teamId, int bulletId, WEAPON_TYPE wea
 	}
 	break;
 
-	case WEAPON_TYPE::LINK_GUN:
+	case WEAPON_TYPE::FUSION_CANNON:
 		if (gameState != Gamestate::SERVER)
 			if (GetSound())
 				if (conID == localPlayerId || conID == spectateID)
@@ -1461,7 +1461,7 @@ void Game::handleWeaponFire(int conID, int teamId, int bulletId, WEAPON_TYPE wea
 
 				else
 					GetSound()->playExternalSound(SOUNDS::soundEffectLinkGun, pos.x, pos.y, pos.z, CATEGORY::Guns);
-		addBulletToList(conID, teamId, bulletId, BULLET_TYPE::LINK_SHOT, pos, dir);
+		addBulletToList(conID, teamId, bulletId, BULLET_TYPE::FUSION_SHOT, pos, dir);
 		break;
 
 	case WEAPON_TYPE::BATTERYWPN_SLOW:
@@ -2312,7 +2312,7 @@ void Game::handleBulletHitEffectEvent(BulletHitEffectInfo hi)
 {
 	int arraypos = -1;
 	Bullet* b = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, arraypos);
-	if (hi.bt == BULLET_TYPE::BATTERY_SLOW_SHOT || hi.bt == BULLET_TYPE::BATTERY_SPEED_SHOT || hi.bt == BULLET_TYPE::LINK_SHOT) //Battery Field exceptions
+	if (hi.bt == BULLET_TYPE::BATTERY_SLOW_SHOT || hi.bt == BULLET_TYPE::BATTERY_SPEED_SHOT || hi.bt == BULLET_TYPE::FUSION_SHOT) //Battery Field exceptions
 	{
 		if (hi.et == EFFECT_TYPE::BATTERY_SLOW || hi.et == EFFECT_TYPE::BATTERY_SPEED)
 		{
@@ -2320,7 +2320,7 @@ void Game::handleBulletHitEffectEvent(BulletHitEffectInfo hi)
 			Effect* e = getSpecificEffect(hi.effectPID, hi.effectID, hi.et, apos);
 			if (e != nullptr)
 			{
-				if (hi.bt == (BULLET_TYPE::LINK_SHOT))
+				if (hi.bt == (BULLET_TYPE::FUSION_SHOT))
 				{
 					addEffectToList(hi.effectPID, hi.bulletTeam, hi.effectID, EFFECT_TYPE::EXPLOSION, e->getPos(), 30, 8.0f);
 					if (GetSound())

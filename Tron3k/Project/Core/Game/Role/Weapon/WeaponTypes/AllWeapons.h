@@ -11,7 +11,7 @@
 #include "Destroyer\PlasmaAutorifle.h"
 
 #include "Manipulator\BatteryFields.h"
-#include "Manipulator\LinkGun.h"
+#include "Manipulator\FusionCannon.h"
 
 #include "Mobility\DiscGun.h"
 #include "Mobility\Melee.h"

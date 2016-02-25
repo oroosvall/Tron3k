@@ -11,7 +11,7 @@
 
 #include "ManipulatorBullets\BatterySlowShot.h"
 #include "ManipulatorBullets\BatterySpeedShot.h"
-#include "ManipulatorBullets\LinkShot.h"
+#include "ManipulatorBullets\FusionShot.h"
 #include "ManipulatorBullets\VacuumGrenade.h"
 #include "ManipulatorBullets\GrapplingHook.h"
 
