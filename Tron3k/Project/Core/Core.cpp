@@ -901,8 +901,25 @@ void Core::upClient(float dt)
 
 				uiManager->setText(std::to_string(localp->getHP()), scaleAndText::HP); //hp
 
-				std::string nText = std::to_string(localp->getAmmo()) + "/" + std::to_string(localp->getMaxAmmo());
-				uiManager->setText(nText, scaleAndText::Ammo); //ammo
+				//Ammo
+				uiManager->HUD.ammo = localp->getAmmo();
+				int maxAmmo = localp->getMaxAmmo();
+
+				std::string sAmmo = "0";
+				std::string sMaxAmmo = "0";
+
+				sAmmo += std::to_string(uiManager->HUD.ammo);
+				sMaxAmmo += std::to_string(maxAmmo);
+
+				if (sAmmo.size() > 2)
+					sAmmo = std::to_string(uiManager->HUD.ammo);
+				if (sMaxAmmo.size() > 2)
+					sMaxAmmo = std::to_string(maxAmmo);
+
+				std::string nText = sAmmo + "/" + sMaxAmmo;
+				uiManager->setText(nText, scaleAndText::Ammo);
+				//
+				
 				uiManager->setText(std::to_string(koth->getRespawnTokens(1)), scaleAndText::TicketBar1); //tickets
 				uiManager->setText(std::to_string(koth->getRespawnTokens(2)), scaleAndText::TicketBar2); //tickets2
 				uiManager->setText(std::to_string(koth->getRoundWins(1)), scaleAndText::Wins1); //wins1
@@ -2669,10 +2686,8 @@ void Core::inGameUIUpdate() //Ingame ui update
 			uiManager->HUDTime.wmIdListTicket2.push_back(tmp);
 			uiManager->HUDTime.counterListTicket2.push_back(0);
 
-			if (difference == 0)
-				uiManager->changeTextureHideAble(hideAbleObj::TicketReducerTeam2, uiManager->HUDTime.wmIdListTicket2.size() - 1, 0);
-			else if(difference == 3)
-				uiManager->changeTextureHideAble(hideAbleObj::TicketReducerTeam2, uiManager->HUDTime.wmIdListTicket2.size() - 1, 1);
+			if (difference > 0 && difference < 4)
+				uiManager->changeTextureHideAble(hideAbleObj::TicketReducerTeam2, uiManager->HUDTime.wmIdListTicket2.size() - 1, difference - 1);
 		}
 	}
 
