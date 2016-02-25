@@ -1044,21 +1044,52 @@ bool RenderPipeline::setSetting(PIPELINE_SETTINGS type, PipelineValues value)
 	return true;
 }
 
-void RenderPipeline::createTimedParticleEffect(PARTICLE_EFFECTS peffect, vec3 pos, glm::vec3 dir, glm::vec3 color)
+void RenderPipeline::createTimedParticleEffect(BULLET_TYPE peffect, vec3 pos, glm::vec3 dir, glm::vec3 color)
 {
-	std::string path = "Gamefiles/ParticleSystems/trapperBulletHit.ps";
+	std::string path = "Gamefiles/ParticleSystems/";
 
-	//switch (peffect)
-	//{
-	//case PARTICLE_HIT:
-	//	break;
-	//case PARTICLE_EXPLODE:
-	//	break;
-	//case PARTICLE_HACKED:
-	//	break;
-	//default:
-	//	break;
-	//}
+	switch (peffect)
+	{
+	case PULSE_SHOT:
+		path += "trapperBulletHit.ps";
+		break;
+	case DISC_SHOT:
+		break;
+	case BATTERY_SPEED_SHOT:
+		break;
+	case BATTERY_SLOW_SHOT:
+		break;
+	case LINK_SHOT:
+		break;
+	case PLASMA_SHOT:
+		break;
+	case GRENADE_SHOT:
+		break;
+	case SHOTGUN_PELLET:
+		break;
+	case THERMITE_GRENADE:
+		break;
+	case CLUSTER_GRENADE:
+		break;
+	case CLUSTERLING:
+		break;
+	case CLEANSE_BOMB:
+		break;
+	case HACKING_DART:
+		break;
+	case VACUUM_GRENADE:
+		break;
+	case MELEE_ATTACK:
+		break;
+	case GRAPPLING_HOOK:
+		break;
+	case KILLYOURSELF:
+		break;
+	case NROFBULLETS:
+		break;
+	default:
+		break;
+	}
 
 	std::ifstream file;
 	file.open(path, std::ios::binary | std::ios::in);

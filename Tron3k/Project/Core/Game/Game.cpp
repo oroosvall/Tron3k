@@ -1852,6 +1852,7 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 				else if(p->getTeam() == 2)
 					hpad.color = TEAMTWOCOLOR;
 				else hpad.color = vec3(1.0f, 1.0f, 1.0f);
+				hpad.btype = hi.bt;
 				allBulletHitPlayerPos.push_back(hpad);
 			}
 			if (p->getHP() == 0 && p->isAlive())

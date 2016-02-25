@@ -49,13 +49,6 @@ enum CROSSHAIR_TYPE
 	CROSSHAIR_NONE,
 };
 
-enum PARTICLE_EFFECTS
-{
-	PARTICLE_HIT,
-	PARTICLE_EXPLODE,
-	PARTICLE_HACKED,
-};
-
 struct PipelineValues
 {
 	enum {INT2, BOOL, FLOAT, FLOAT3} type;
@@ -67,6 +60,8 @@ struct PipelineValues
 		int xy[2];
 	};
 };
+
+enum BULLET_TYPE;
 
 class IRenderPipeline
 {
@@ -94,7 +89,7 @@ public:
 	PipelineValues getSettings(PIPELINE_SETTINGS type);
 	virtual bool setSetting(PIPELINE_SETTINGS type, PipelineValues value) = 0;
 
-	virtual void createTimedParticleEffect(PARTICLE_EFFECTS peffect, glm::vec3 pos, glm::vec3 dir, glm::vec3 color) = 0;
+	virtual void createTimedParticleEffect(BULLET_TYPE peffect, glm::vec3 pos, glm::vec3 dir, glm::vec3 color) = 0;
 
 	virtual void renderWallEffect(void* pos1, void* pos2, float uvStartOffset, float* dgColor) = 0;
 	
