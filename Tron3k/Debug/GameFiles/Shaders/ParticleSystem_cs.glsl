@@ -70,9 +70,9 @@ void main()
 		
 		p[iter].pos.y += ((-9.81f + percent*10 ) * gravity) * deltaTime;
 		
-		p[iter].pos.x -= vel.x * force;
+		p[iter].pos.x += vel.x * force;
 		p[iter].pos.y += vel.y * force;
-		p[iter].pos.z -= vel.z * force;
+		p[iter].pos.z += vel.z * force;
 		
 		p[iter].dir.xyz = normalize(oldP - p[iter].pos.xyz);
 		
