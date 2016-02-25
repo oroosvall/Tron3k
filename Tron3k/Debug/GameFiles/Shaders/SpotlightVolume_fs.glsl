@@ -51,8 +51,9 @@ void main()
 	float Distance = length(LightDirection);
 	
 	float spotlength = lights[spotlightID].attenuation.z;
+	float cosCone = cos(lights[spotlightID].Cutoff);
 	
-	if(Distance * 0.75f < spotlength)
+	if(Distance < spotlength)
 	{
 		Normal0 = texture(Normal, UV);
 		LightDirection = normalize(LightDirection);
@@ -74,30 +75,28 @@ void main()
 			if (SpecularFactor > 0)
 			{
 				float Distance = length(Position0.xyz - lights[spotlightID].Position);
-				float Attenuation = 1.0f / pow(max(0.0f, 1.0f - (Distance/80)), 5);
-				specularAddetive = (vec4(lights[spotlightID].Color, 1.0f) * ( 1 - Normal0.w) * SpecularFactor) / Attenuation;
+				float Attenuation = 1.0f / pow(max(0.0f, 1.0f - (Distance/lights[spotlightID].DiffuseIntensity)), 5); // Not final
+				specularAddetive = (vec4(lights[spotlightID].Color, 1.0f) * ( 1 - Normal0.w) * SpecularFactor);// / Attenuation;
 			}
-		
-			//pointlight attenuations
-			fragment_color *= pow(max(0.0f, 1.0f - (Distance/80)), 10);
 			
-			//spotlight                            
+			//spotlight                      
 			float SpotFactor = dot(LightDirection, lights[spotlightID].Direction);                                      
 			
-			if (SpotFactor > lights[spotlightID].Cutoff)  		
-				fragment_color *= (1.0 - (1.0 - SpotFactor) * 1.0/(1.0 - lights[spotlightID].Cutoff)); 			
+			if (SpotFactor > cosCone)  			
+				fragment_color *= (1.0 - (1.0 - SpotFactor) * 1.0/(1.0 - cosCone)); 			
 			else                                                                                
 				fragment_color = vec4(0);
-		
+
+			// Final
 			Diffuse0 = texture(Diffuse, UV);
 			fragment_color = fragment_color * Diffuse0 + specularAddetive;
 		}
 	}
-	
+
 	// Light volume effect
-	
-	vec3 lightSouceToEye = normalize(eyepos - lights[spotlightID].Position);
-	float dotAngle = dot(lights[spotlightID].Direction, lightSouceToEye);
-	if(dotAngle > 0)
-		fragment_color += vec4(lights[spotlightID].Color, 1) * pow(interpolDist, 5) * pow(dotAngle, 6);
+	vec3 lightToEye = normalize(eyepos - lights[spotlightID].Position);
+	float lightToSurfaceAngle = dot(lightToEye, lights[spotlightID].Direction);
+
+	if(lightToSurfaceAngle > cosCone)
+		fragment_color += vec4(lights[spotlightID].Color, 1) * pow(interpolDist, 5) * pow(lightToSurfaceAngle, 10);
 }

@@ -495,9 +495,8 @@ struct Chunk
 		else
 			nrStaticPointlights++;
 
-		l.Cutoff = light.coneAngle / glm::pi<float>();
+		l.Cutoff = light.coneAngle;
 		l.attenuation = vec4(light.ax, light.ay, light.az, light.aw);
-		//l.Cutoff = -1.0f;
 
 		lights.push_back(l);
 	}

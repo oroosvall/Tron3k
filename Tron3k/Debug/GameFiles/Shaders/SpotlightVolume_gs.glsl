@@ -31,7 +31,7 @@ void main()
 {	
 
 	float spotlength = lights[spotlightID].AmbientIntensity;
-	float halfwidth = lights[spotlightID].attenuation.w * 1.5f;
+	float halfwidth = lights[spotlightID].attenuation.w;
 	
 	vec3 spot_pos = lights[spotlightID].Position;
 	vec3 spot_normal = lights[spotlightID].Direction * spotlength;
