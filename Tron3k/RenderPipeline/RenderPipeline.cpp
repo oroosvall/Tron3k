@@ -763,6 +763,11 @@ void RenderPipeline::renderWallEffect(void* pos1, void* pos2, float uvStartOffse
 
 }
 
+void RenderPipeline::initRenderRegular()
+{
+	glUseProgram(regularShader);
+}
+
 void RenderPipeline::initRenderEffect()
 {
 	glUseProgram(exploShader);

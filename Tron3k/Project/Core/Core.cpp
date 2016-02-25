@@ -2319,6 +2319,8 @@ void Core::renderWorld(float dt)
 		int effectTime = renderPipe->startExecTimer("Effects & decals");
 		effectsRender(hackedTeam);
 
+		renderPipe->enableBlend(false);
+
 		// render Decals
 		renderPipe->renderDecals(game->getAllDecalRenderInfo(), game->getNrOfDecals());
 
@@ -3464,30 +3466,32 @@ void Core::effectsRender(int hackedTeam)
 
 	renderPipe->initRenderEffect();
 
-	// Thunderdome
-	eff = game->getEffects(EFFECT_TYPE(EFFECT_TYPE::THUNDER_DOME));
-	for (unsigned int i = 0; i < eff.size(); i++)
-	{
-		team = eff[i]->getTeam();
-
-		if (hackedTeam == -1)
-		{
-			if (team == 1)
-				color = TEAMONECOLOR;
-			else if (team == 2)
-				color = TEAMTWOCOLOR;
-		}
-
-		ThunderDomeEffect* asd = (ThunderDomeEffect*)eff[i];
-		vec3 pos = asd->getPos();
-		renderPipe->rendereffect(EFFECT_TYPE::THUNDER_DOME, &pos.x, asd->explotionRenderRad(), 0.7f, &color.x);
-	}
-
 	// Explosion shader objects	
-	for (int c = EXPLOSION; c < NROFEFFECTS; c++)
+	for (int c = THUNDER_DOME; c < HSCPICKUP; c++)
 	{
 		switch (c)
 		{
+		case EFFECT_TYPE::THUNDER_DOME:
+		{
+			eff = game->getEffects(EFFECT_TYPE(c));
+			for (unsigned int i = 0; i < eff.size(); i++)
+			{
+				team = eff[i]->getTeam();
+
+				if (hackedTeam == -1)
+				{
+					if (team == 1)
+						color = TEAMONECOLOR;
+					else if (team == 2)
+						color = TEAMTWOCOLOR;
+				}
+
+				ThunderDomeEffect* asd = (ThunderDomeEffect*)eff[i];
+				vec3 pos = asd->getPos();
+				renderPipe->rendereffect(EFFECT_TYPE::THUNDER_DOME, &pos.x, asd->explotionRenderRad(), 0.7f, &color.x);
+			}
+		}
+		break;
 		case EXPLOSION:
 		{
 			eff = game->getEffects(EFFECT_TYPE(c));
@@ -3531,12 +3535,6 @@ void Core::effectsRender(int hackedTeam)
 				float inten = asd->lifepercentageleft();
 
 				renderPipe->rendereffect(EFFECT_TYPE::CLEANSENOVA, &pos.x, asd->renderRad(), inten, &color.x);
-				light.attenuation.w = asd->renderRad();
-				light.Color = color;
-				light.Position = pos;
-				light.DiffuseIntensity = inten;
-				light.AmbientIntensity = 1.0f;
-				renderPipe->addLight(&light, 0);
 			}
 		}
 		break;
@@ -3553,6 +3551,7 @@ void Core::effectsRender(int hackedTeam)
 				light.Color = color;
 				light.Position = pos;
 				light.AmbientIntensity = 0.1f;
+				light.DiffuseIntensity = 1.0f;
 				renderPipe->addLight(&light, 0);
 			}
 		}
@@ -3570,6 +3569,7 @@ void Core::effectsRender(int hackedTeam)
 				light.Color = color;
 				light.Position = pos;
 				light.AmbientIntensity = 0.1f;
+				light.DiffuseIntensity = 1.0f;
 				renderPipe->addLight(&light, 0);
 			}
 		}
@@ -3659,6 +3659,16 @@ void Core::effectsRender(int hackedTeam)
 			}
 		}
 		break;
+		}
+	}
+
+	//regular shader Double damage & HCS pickup
+	renderPipe->initRenderRegular();
+
+	for (int c = EFFECT_TYPE::HSCPICKUP; c < EFFECT_TYPE::NROFEFFECTS; c++)
+	{
+		switch (c)
+		{
 		case HSCPICKUP:
 		{
 			eff = game->getEffects(EFFECT_TYPE(c));
@@ -3668,13 +3678,32 @@ void Core::effectsRender(int hackedTeam)
 				if (!temp->onCooldown())
 				{
 					vec3 pos = eff[i]->getPos();
-					color = vec3(1.0f, 0, 1.0f);
-					renderPipe->rendereffect(EFFECT_TYPE::EXPLOSION,&pos.x, temp->renderRad(), 1, &color.x);
+					color = vec3(0, 1.0f, 0);
+					
+					mat4 world;
+
+					float rot = timepass;
+
+					world[0].x = 2;
+					world[1].y = 2;
+					world[2].z = 2;
+
+					world = world * mat4(cos(rot), 0.0f, -sin(rot), 0.0f,
+						0.0f, 1.0f, 0.0f, 0.0f,
+						sin(rot), 0.0f, cos(rot), 0.0f,
+						0.0f, 0.0f, 0.0f, 0.0f);
+
+					world[0].w = pos.x;
+					world[1].w = pos.y + sin(timepass) * 0.2f;
+					world[2].w = pos.z;
+
+					float inten = ((sin(timepass * 3) + 1) * 0.2f) +0.3f;
+					renderPipe->renderBullet(100, &world, &color[0], inten);
 
 					light.attenuation.w = temp->renderRad();
 					light.Color = color;
 					light.Position = pos;
-					light.DiffuseIntensity = 0.5f;
+					light.DiffuseIntensity = inten * 0.7f;
 					light.attenuation.w = 5.0f;
 					light.AmbientIntensity = 1.0f;
 					renderPipe->addLight(&light, 0);
@@ -3691,14 +3720,33 @@ void Core::effectsRender(int hackedTeam)
 				if (!temp->onCooldown())
 				{
 					vec3 pos = eff[i]->getPos();
-					color = vec3(1.0f, 0, 0);
-					renderPipe->rendereffect(EFFECT_TYPE::EXPLOSION,&pos.x, temp->renderRad(), 1, &color.x);
+					color = vec3(1, 0.2f, 0);
+
+					mat4 world;
+
+					world[0].x = 4;
+					world[1].y = 4;
+					world[2].z = 4;
+
+					float rot = timepass;
+
+					world = world * mat4(cos(rot), 0.0f, -sin(rot), 0.0f,
+						0.0f, 1.0f, 0.0f, 0.0f,
+						sin(rot), 0.0f, cos(rot), 0.0f,
+						0.0f, 0.0f, 0.0f, 0.0f);
+
+					world[0].w = pos.x;
+					world[1].w = pos.y + sin(timepass) * 0.2f;
+					world[2].w = pos.z;
+
+					float inten = ((sin(timepass * 2) + 1) * 0.3f) +0.3f;
+					renderPipe->renderBullet(101, &world, &color[0], inten * 0.5f);
 
 					light.attenuation.w = temp->renderRad();
 					light.Color = color;
 					light.Position = pos;
-					light.DiffuseIntensity = 0.5f;
-					light.attenuation.w = 5.0f;
+					light.DiffuseIntensity = inten * 0.7f;
+					light.attenuation.w = 8.0f;
 					light.AmbientIntensity = 1.0f;
 					renderPipe->addLight(&light, 0);
 				}
@@ -3707,5 +3755,6 @@ void Core::effectsRender(int hackedTeam)
 		break;
 		}
 	}
+
 	renderPipe->enableBlend(false);
 }

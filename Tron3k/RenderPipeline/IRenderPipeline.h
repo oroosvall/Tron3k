@@ -93,6 +93,7 @@ public:
 
 	virtual void renderWallEffect(void* pos1, void* pos2, float uvStartOffset, float* dgColor) = 0;
 	
+	virtual void initRenderRegular() = 0;
 	virtual void initRenderEffect() = 0;
 	virtual void rendereffect(int type, float* pos, float rad, float transp, float* dgColor) = 0;
 

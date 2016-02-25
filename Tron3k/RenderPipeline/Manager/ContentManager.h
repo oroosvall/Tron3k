@@ -45,12 +45,15 @@ private:
 	AnimatedMeshV2 playerCharacters[5];
 
 	// misc files
-
 	MiscMesh trapperBullet;
 	MiscMesh trapperConsume;
 	MiscMesh shankerBullet;
 	MiscMesh shankerSpecial;
 	
+	//pickups
+	MiscMesh healthAmmoMesh;
+	MiscMesh doubleDamageMesh;
+
 	//effect mehshes
 	MiscMesh explosionMesh;
 	MiscMesh thunderDomeMesh;

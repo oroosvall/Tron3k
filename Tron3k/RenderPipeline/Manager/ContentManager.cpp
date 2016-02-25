@@ -91,6 +91,9 @@ void ContentManager::init()
 	explosionMesh.load("GameFiles/CharacterFiles/explosion_sphere.bin");
 	manipThunderMesh.load("GameFiles/CharacterFiles/explosion_thunder.bin");
 
+	healthAmmoMesh.load("GameFiles/CharacterFiles/healthPickup.bin");
+	doubleDamageMesh.load("GameFiles/CharacterFiles/damagePickup.bin");
+
 	//Skybox
 	skybox.init(0, 0, 0);
 	skybox.load("GameFiles/TestFiles/Skybox.v");
@@ -196,6 +199,9 @@ void ContentManager::release()
 	thunderDomeMesh.release();
 	explosionMesh.release();
 	manipThunderMesh.release();
+
+	healthAmmoMesh.release();
+	doubleDamageMesh.release();
 
 	tm.release();
 
@@ -399,22 +405,17 @@ void ContentManager::renderBullet(int bid)
 	case BULLET_TYPE::SHOTGUN_PELLET:
 	case BULLET_TYPE::BATTERY_SLOW_SHOT:
 	case BULLET_TYPE::BATTERY_SPEED_SHOT:
-	case BULLET_TYPE::LINK_SHOT:
-		trapperBullet.draw();
-		break;
+	case BULLET_TYPE::LINK_SHOT:				trapperBullet.draw();	break;
 	case BULLET_TYPE::CLUSTER_GRENADE:
 	case BULLET_TYPE::CLUSTERLING:
 	case BULLET_TYPE::GRENADE_SHOT:
 	case BULLET_TYPE::THERMITE_GRENADE:
 	case BULLET_TYPE::VACUUM_GRENADE:
-	case BULLET_TYPE::GRAPPLING_HOOK:
-		trapperConsume.draw();
-		break;
-	case BULLET_TYPE::DISC_SHOT:
-		shankerBullet.draw();
-		break;
-	case BULLET_TYPE::HACKING_DART:
-		shankerSpecial.draw();
+	case BULLET_TYPE::GRAPPLING_HOOK:			trapperConsume.draw();	break;
+	case BULLET_TYPE::DISC_SHOT:				shankerBullet.draw();	break;
+	case BULLET_TYPE::HACKING_DART:				shankerSpecial.draw();	break;
+	case 100:									healthAmmoMesh.draw(); break;
+	case 101:									doubleDamageMesh.draw(); break; 
 	default:
 		break;
 	}	
@@ -427,9 +428,7 @@ void ContentManager::renderEffect(int eid)
 	case THUNDER_DOME:			thunderDomeMesh.draw(); break;
 	case EXPLOSION:
 	case THERMITE_CLOUD:		
-	case HEALTHPACK:
-	case HSCPICKUP:
-	case DOUBLEDAMAGEPICKUP:	explosionMesh.draw(); break;
+	case HEALTHPACK:			explosionMesh.draw(); break;
 	case CLEANSENOVA:
 	case VACUUM:
 	case BATTERY_SLOW:

@@ -212,6 +212,8 @@ public:
 
 	virtual void rendereffect(int type, float* pos, float rad, float transp, float* dgColor);
 
+	virtual void initRenderRegular();
+
 	virtual void renderDecals(void* data, int size);
 
 	virtual void renderCrosshair(CROSSHAIR_TYPE cross);
