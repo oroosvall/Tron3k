@@ -94,6 +94,14 @@ private:
 	GLuint animatedTexShader;
 	GLuint uniformAnimatedTex;
 
+	GLuint trailQuadShader;
+	GLuint tarilQuadPos;
+	GLuint tarilQuadDir;
+	GLuint tarilQuadCross;
+	GLuint tarilQuadVP;
+	GLuint tarilQuadTex;
+	GLuint tarilQuadColor;
+
 	BlitQuad uiQuad;
 
 	GLuint worldMat[2];
@@ -214,6 +222,8 @@ public:
 	virtual void rendereffect(int type, float* pos, float rad, float transp, float* dgColor);
 
 	virtual void initRenderRegular();
+	virtual void initRenderTrailQuad();
+	virtual void renderTrailQUad(BULLET_TYPE type, float* pos, float* dir, float* crossdir, float* color);
 
 	virtual void renderDecals(void* data, int size);
 

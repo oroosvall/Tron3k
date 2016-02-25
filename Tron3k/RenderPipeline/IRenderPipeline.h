@@ -99,6 +99,8 @@ public:
 	virtual void initRenderEffect() = 0;
 	virtual void rendereffect(int type, float* pos, float rad, float transp, float* dgColor) = 0;
 
+	virtual void initRenderTrailQuad() = 0;
+	virtual void renderTrailQUad(BULLET_TYPE type, float* pos, float* dir, float* crossdir, float* color) = 0;
 	virtual void renderDecals(void* data, int size) = 0;
 
 	virtual void renderCrosshair(CROSSHAIR_TYPE cross) = 0;

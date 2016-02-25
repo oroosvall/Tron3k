@@ -124,6 +124,9 @@ public:
 	vec2 score_teamscale;
 	vec2 score_headerscale;
 
+	//trailquad textures
+	unsigned int trailTex1;
+
 	~ContentManager();
 	void init();
 

@@ -22,6 +22,11 @@ void Camera::changeFoV(float newFov)
 
 }
 
+void Camera::updateVP()
+{
+	vp = projMat * viewMat;
+}
+
 void Camera::setProjMat(GLuint shader, GLuint shaderLocation)
 {
 	glProgramUniformMatrix4fv(shader, shaderLocation, 1, GL_FALSE, &projMat[0][0]);
@@ -34,7 +39,6 @@ void Camera::setViewMat(GLuint shader, GLuint shaderLocation)
 
 void Camera::setViewProjMat(GLuint shader, GLuint shaderLocation)
 {
-	glm::mat4 VP = projMat * viewMat;
-	glProgramUniformMatrix4fv(shader, shaderLocation, 1, GL_FALSE, &VP[0][0]);
+	glProgramUniformMatrix4fv(shader, shaderLocation, 1, GL_FALSE, &vp[0][0]);
 }
 
