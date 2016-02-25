@@ -294,19 +294,19 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 		if (teamOneScore >= winScore && teamTwoScore != winScore)
 		{
 			msg = GAMEMODE_MSG::MATCH_WIN_TEAM1;
-			timer = 6.0f;
+			timer = 10.0f;
 			state = ENDMATCH;
 		}
 		else if (teamTwoScore >= winScore && teamOneScore != winScore)
 		{
 			msg = GAMEMODE_MSG::MATCH_WIN_TEAM2;
-			timer = 6.0f;
+			timer = 10.0f;
 			state = ENDMATCH;
 		}
 		else if (teamTwoScore >= winScore && teamOneScore >= winScore)
 		{
 			msg = GAMEMODE_MSG::MATCH_DRAW;
-			timer = 6.0f;
+			timer = 10.0f;
 			state = ENDMATCH;
 		}
 		else //Match has not ended, let's start another round!
@@ -344,22 +344,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 	case ENDMATCH:
 		if (timer < FLT_EPSILON)
 		{
-			state = WARMUP;
-			teamOneScore = 0;
-			teamTwoScore = 0;
-			fiveTokensPlayed = false;
-			commencePlayed = false;
-			gamePtr->nrOfPlayersReadyReset();
-			gamePtr->clearAllPlayerKD();
-
-			for (int c = 0; c < teamOnePlayers.size(); c++)
-			{
-				gamePtr->allowPlayerRespawn(teamOnePlayers[c], c % 5);
-			}
-			for (int c = 0; c < teamTwoPlayers.size(); c++)
-			{
-				gamePtr->allowPlayerRespawn(teamTwoPlayers[c], c % 5);
-			}
+			restartGame();
 		}
 		else
 			timer -= dt;
@@ -690,5 +675,26 @@ void KingOfTheHill::clearTeams()
 	for (int i = 0; i < teamTwoPlayers.size(); i++)
 	{
 		teamTwoPlayers.pop_back();
+	}
+}
+
+void KingOfTheHill::restartGame()
+{
+	state = WARMUP;
+	timer = 0.0f;
+	teamOneScore = 0;
+	teamTwoScore = 0;
+	fiveTokensPlayed = false;
+	commencePlayed = false;
+	gamePtr->nrOfPlayersReadyReset();
+	gamePtr->clearAllPlayerKD();
+
+	for (int c = 0; c < teamOnePlayers.size(); c++)
+	{
+		gamePtr->allowPlayerRespawn(teamOnePlayers[c], c % 5);
+	}
+	for (int c = 0; c < teamTwoPlayers.size(); c++)
+	{
+		gamePtr->allowPlayerRespawn(teamTwoPlayers[c], c % 5);
 	}
 }

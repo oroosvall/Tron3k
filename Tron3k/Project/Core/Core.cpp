@@ -1849,6 +1849,11 @@ void Core::serverHandleCmds()
 				console.printMsg("Points per round set", "System", 'S');
 			}
 		}
+		else if (token == "/restart")
+		{
+			KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
+			koth->restartGame();
+		}
 	}
 }
 

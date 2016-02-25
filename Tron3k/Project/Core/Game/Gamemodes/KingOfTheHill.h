@@ -91,6 +91,8 @@ public:
 
 	void clearPlayersOnCapPoint(); //Clear the values at the start of each frame
 	void clearTeams();
+
+	void restartGame();
 };
 
 #endif
