@@ -107,7 +107,7 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->soundList[SOUNDS::soundEffectTrapperJumpStereo].loadFromFile("GameFiles/Sound/soundEffectTrapperJumpStereo.ogg");
 		singleton->soundList[SOUNDS::soundEffectTrapperLandStereo].loadFromFile("GameFiles/Sound/soundEffectTrapperLandStereo.ogg");
 		singleton->soundList[SOUNDS::soundEffectTrapperMultiJumpStereo].loadFromFile("GameFiles/Sound/soundEffectTrapperMultiJumpStereo.ogg");
-		singleton->soundList[SOUNDS::soundFootStepsStereo].loadFromFile("GameFiles/Sound/soundFootStepsStereo.ogg");
+		singleton->soundList[SOUNDS::soundFootStepsStereo].loadFromFile("GameFiles/Sound/soundFootStepsStereo2.ogg");
 		singleton->soundList[SOUNDS::soundEffectBruteDashStereo].loadFromFile("GameFiles/Sound/soundEffectBruteDashStereo.ogg");
 		singleton->soundList[SOUNDS::soundEffectLinkGunStereo].loadFromFile("GameFiles/Sound/soundEffectLinkGunStereo.ogg");
 		singleton->soundList[SOUNDS::soundStepsManipulatorStereo].loadFromFile("GameFiles/Sound/soundStepsManipulatorStereo.ogg");
