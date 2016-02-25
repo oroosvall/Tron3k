@@ -3331,6 +3331,9 @@ void Core::disconnect()
 		GetSound()->setVolumeMusic(GetSound()->getVolumeMusic());
 		GetSound()->SetFading(false);
 	}
+
+	renderMenu = true;
+	renderUI = false;
 }
 
 void Core::showTeamSelect()
