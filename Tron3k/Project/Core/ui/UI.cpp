@@ -182,6 +182,8 @@ bool UI::loadUI(std::string fileName, int winX, int winY)
 						textIdList[7] = counter;
 					else if (textId == "loseTicketsMeter")
 						textIdList[8] = counter;
+					else if(textId == "consumable")
+						twoColoredHUDObjects.push_back(counter);
 
 					UiObjects.push_back(new StaticTextureBoxes(xy, textureArray, tmpCounter, uiRender, textureRes[0]));
 					textureIdList[counter] = textureArray[0];
@@ -209,9 +211,15 @@ bool UI::loadUI(std::string fileName, int winX, int winY)
 				result = true;
 
 				if (textId == "hpBar")
+				{
 					textIdList[0] = counter;
+					twoColoredHUDObjects.push_back(counter);
+				}
 				else if (textId == "ammo")
+				{
 					textIdList[1] = counter;
+					twoColoredHUDObjects.push_back(counter);
+				}
 				else if (textId == "ticketBar1")
 					textIdList[2] = counter;
 				else if (textId == "ticketBar2")
@@ -313,10 +321,17 @@ void UI::changeTex(int objId, int whichTex)
 		UiObjects[objId]->changeTexUsed(whichTex, 0);
 }
 
+void UI::scaleAndTextChangeTexture(int objId, int whichTex)
+{
+	if (objId > -1 && objId < 11)
+		if (textIdList[objId] > -1 && textIdList[objId] < UiObjects.size())
+			UiObjects[textIdList[objId]]->changeTexUsed(whichTex, 0);
+}
+
 void UI::changeColorTeam(int whichTex)
 {
-	for (int i = 0; i < UiObjects.size(); i++)
-		UiObjects[i]->changeTexUsed(whichTex, 0);
+	for (int i = 0; i < twoColoredHUDObjects.size(); i++)
+		UiObjects[twoColoredHUDObjects[i]]->changeTexUsed(whichTex, 0);
 }
 
 //Empty
@@ -344,31 +359,36 @@ void UI::setWindowResolution(int winX, int winY)
 
 void UI::setText(std::string text, int id)
 {
-	if(textIdList[id] > -1)
-		UiObjects[textIdList[id]]->setText(text);
+	if (id > -1 && id < 11)
+		if(textIdList[id] > -1)
+			UiObjects[textIdList[id]]->setText(text);
 }
 std::string UI::getText(int id)
 {
-	if (textIdList[id] > -1)
-		return UiObjects[textIdList[id]]->getText();
+	if (id > -1 && id < 11)
+		if (textIdList[id] > -1)
+			return UiObjects[textIdList[id]]->getText();
 	return "";
 }
 void UI::removeLastInput(int id)
 {
-	if (textIdList[id] > -1)
-		UiObjects[textIdList[id]]->removeLastInput();
+	if (id > -1 && id < 11)
+		if (textIdList[id] > -1)
+			UiObjects[textIdList[id]]->removeLastInput();
 }
 
 void UI::clearText(int id)
 {
-	if (textIdList[id] > -1)
-		UiObjects[textIdList[id]]->cleanText();
+	if (id > -1 && id < 11)
+		if (textIdList[id] > -1)
+			UiObjects[textIdList[id]]->cleanText();
 }
 
 void UI::scaleBar(int id,  float procentOfMax, bool fromRight)
 {
-	if (textIdList[id] > -1)
-		UiObjects[textIdList[id]]->scaleBar(0, procentOfMax, fromRight);
+	if (id > -1 && id < 11)
+		if (textIdList[id] > -1)
+			UiObjects[textIdList[id]]->scaleBar(0, procentOfMax, fromRight);
 }
 
 

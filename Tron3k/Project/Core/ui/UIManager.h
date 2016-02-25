@@ -108,6 +108,7 @@ public:
 	void hoverCheck(glm::vec2 pos);
 
 	void changeTex(int objId, int whichTex);
+	void scaleAndTextChangeTexture(int objId, int whichTex);
 	void changeColorTeam();
 
 	void setWindowResolution(int winX, int winY);

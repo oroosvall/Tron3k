@@ -35,7 +35,7 @@ enum scaleAndText
 	AbilityMeter, //ScaleBar
 	LoseTicketsMeter, //ScaleBar
 	Wins1, //Dynamic text
-	Wins2 //Dynamic text
+	Wins2, //Dynamic text
 };
 
 enum hideAbleObj
@@ -60,6 +60,7 @@ private:
 	std::vector<UIElements*> UiObjects;
 	std::vector<int> textObjIds;
 	int* textureIdList;
+	std::vector<int> twoColoredHUDObjects;
 
 	//Counters
 	int nrOfObjects;
@@ -96,6 +97,7 @@ public:
 	void clean();
 
 	void changeTex(int objId, int whichTex);
+	void scaleAndTextChangeTexture(int objId, int whichTex);
 
 	int mouseCollission(glm::vec2 pos);
 	void mouseHover(glm::vec2 pos);

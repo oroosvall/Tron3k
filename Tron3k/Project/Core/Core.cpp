@@ -753,6 +753,11 @@ void Core::upClient(float dt)
 					//uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam2, false);
 					//uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam1, false);
 					//uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam2, false);
+
+					uiManager->scaleAndTextChangeTexture(scaleAndText::Wins1, 0);
+					uiManager->scaleAndTextChangeTexture(scaleAndText::Wins2, 0);
+					uiManager->scaleAndTextChangeTexture(scaleAndText::TicketBar1, 0);
+					uiManager->scaleAndTextChangeTexture(scaleAndText::TicketBar2, 0);
 				}
 
 				//Rights out the of round.
@@ -776,6 +781,9 @@ void Core::upClient(float dt)
 					//uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam2, false);
 					//uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam1, false);
 					//uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam2, false);
+
+					uiManager->scaleAndTextChangeTexture(scaleAndText::Wins1, 0);
+					uiManager->scaleAndTextChangeTexture(scaleAndText::Wins2, 0);
 				}
 
 				//Checks to see if the banners "Final Assult" or Hold Your Ground" should be shown.
@@ -820,6 +828,11 @@ void Core::upClient(float dt)
 						uiManager->HUD.bannerCounter = 0;
 						lowTicketsFirstTime = false;
 					}
+
+					uiManager->scaleAndTextChangeTexture(scaleAndText::Wins1, 1);
+					uiManager->scaleAndTextChangeTexture(scaleAndText::Wins2, 1);
+					uiManager->scaleAndTextChangeTexture(scaleAndText::TicketBar1, 0);
+					uiManager->scaleAndTextChangeTexture(scaleAndText::TicketBar2, 0);
 				}
 
 				if (firstTimeInWarmUp && tmp == KOTHSTATE::WARMUP)
@@ -969,6 +982,9 @@ void Core::upClient(float dt)
 				uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam2, true);
 				uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam1, true);
 				uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam2, true);
+
+				uiManager->scaleAndTextChangeTexture(scaleAndText::TicketBar1, 1);
+				uiManager->scaleAndTextChangeTexture(scaleAndText::TicketBar2, 1);
 			}
 			kothState = tmp;
 		}

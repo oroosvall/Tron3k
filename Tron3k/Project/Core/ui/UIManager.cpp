@@ -446,6 +446,17 @@ void UIManager::changeTex(int objId, int whichTex)
 		console->printMsg("Error: Function changeTex in UIManager, nrOfOpenedMenus has a value of 0 or lower", "System", 'S');
 }
 
+void UIManager::scaleAndTextChangeTexture(int objId, int whichTex)
+{
+	if (nrOfOpenedMenus > 0)
+		if (currentMenu > -1)
+			menus[currentMenu].scaleAndTextChangeTexture(objId, whichTex);
+		else
+			console->printMsg("Error: Function changeTex in UIManager, currentMenu has a value lower then 0", "System", 'S');
+	else
+		console->printMsg("Error: Function changeTex in UIManager, nrOfOpenedMenus has a value of 0 or lower", "System", 'S');
+}
+
 void UIManager::changeColorTeam()
 {
 	if (currentGroup == 1)
