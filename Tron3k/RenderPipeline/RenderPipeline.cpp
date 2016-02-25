@@ -1057,32 +1057,39 @@ void RenderPipeline::createTimedParticleEffect(BULLET_TYPE peffect, vec3 pos, gl
 		path += "trapperBulletHit.ps";
 		break;
 	case DISC_SHOT:
+		path += "discshotHit.ps";
 		break;
 	case BATTERY_SPEED_SHOT:
 		break;
 	case BATTERY_SLOW_SHOT:
 		break;
 	case LINK_SHOT:
+		path += "fusionHit.ps";
 		break;
 	case PLASMA_SHOT:
 		break;
 	case GRENADE_SHOT:
+		path += "grenadeShotHit.ps";
 		break;
 	case SHOTGUN_PELLET:
+		path += "shotgunPelletHit.ps";
 		break;
 	case THERMITE_GRENADE:
 		break;
 	case CLUSTER_GRENADE:
+		path += "grenadeShotHit.ps";
 		break;
 	case CLUSTERLING:
 		break;
 	case CLEANSE_BOMB:
 		break;
 	case HACKING_DART:
+		path += "hackingdartHit.ps";
 		break;
 	case VACUUM_GRENADE:
 		break;
 	case MELEE_ATTACK:
+		path += "meleeHit.ps";
 		break;
 	case GRAPPLING_HOOK:
 		break;

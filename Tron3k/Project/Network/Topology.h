@@ -227,15 +227,18 @@ public:
 		BulletHitPlayerInfo hi;
 		Uint8 playerHit, PID, BID, bt, hpTotal;
 		Uint8 size;
+		glm::vec3 hitdir;
 		*rec >> size;
 		for (int c = 0; c < size; c++)
 		{
 			*rec >> playerHit >> PID >> BID >> bt >> hpTotal;
+			*rec >> hitdir.x >> hitdir.y >> hitdir.z;
 			hi.playerHit = playerHit;
 			hi.bt = BULLET_TYPE(bt);
 			hi.bulletBID = BID;
 			hi.bulletPID = PID;
 			hi.newHPtotal = hpTotal;
+			hi.hitDir = hitdir;
 			gamePtr->handleBulletHitPlayerEvent(hi);
 		}
 	}

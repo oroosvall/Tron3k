@@ -857,6 +857,7 @@ void Game::checkPlayerVBulletCollision()
 							hit.playerHit = i;
 							bullets[b][j]->getId(hit.bulletPID, hit.bulletBID);
 							hit.newHPtotal = -1;
+							hit.hitDir = bullets[b][j]->getDir();
 							allBulletHitsOnPlayers.push_back(hit);
 						}
 					}
@@ -1845,7 +1846,7 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 				//vec3 dir = -glm::normalize(theBullet->getDir());
 				vec3 n = hpad.pos - p->getPos();
 				//hpad.dir = reflect(dir, normalize(n));
-				hpad.dir = normalize(n);
+				hpad.dir = hi.hitDir;
 				if(p->getTeam() == 1)
 					hpad.color = TEAMONECOLOR;
 				else if(p->getTeam() == 2)
@@ -2186,22 +2187,22 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 	int arraypos = -1;
 	Bullet* b = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, arraypos);
 
-	HitPosAndDir hpad;
-	hpad.pos = hi.hitPos - vec3(hi.collisionNormal) * (0.35f - hi.collisionNormal.w);
-	hpad.dir = reflect(hi.hitDir, vec3(hi.collisionNormal));
-	if (b->getTeam() == 1)
-		hpad.color = TEAMONECOLOR;
-	else if (b->getTeam() == 2)
-		hpad.color = TEAMTWOCOLOR;
-	else
-		hpad.color = vec3(1, 1, 1);
-
-	hpad.btype = BULLET_TYPE::NROFBULLETS;
-
-	allBulletHitPlayerPos.push_back(hpad);
-
 	if (b != nullptr)
 	{
+		HitPosAndDir hpad;
+		hpad.pos = hi.hitPos - vec3(hi.collisionNormal) * (0.35f - hi.collisionNormal.w);
+		hpad.dir = reflect(hi.hitDir, vec3(hi.collisionNormal));
+		if (b->getTeam() == 1)
+			hpad.color = TEAMONECOLOR;
+		else if (b->getTeam() == 2)
+			hpad.color = TEAMTWOCOLOR;
+		else
+			hpad.color = vec3(1, 1, 1);
+
+		hpad.btype = BULLET_TYPE::NROFBULLETS;
+
+		allBulletHitPlayerPos.push_back(hpad);
+
 		if (b->getType() != BULLET_TYPE::DISC_SHOT)
 			b->setPos(hi.hitPos + (vec3(normalize(hi.collisionNormal)) * hi.collisionNormal.w));
 		else
