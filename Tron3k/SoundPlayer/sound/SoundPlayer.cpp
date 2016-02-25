@@ -155,7 +155,7 @@ void SoundPlayer::playFields(float x, float y, float z)
 		{
 			fields[i].setBuffer(soundList[SOUNDS::soundEffectFields]);
 			fields[i].setPosition(x, y, z);
-			fields[i].setVolume(50);
+			fields[i].setVolume(gunVolume * masterVolume);
 			fields[i].setAttenuation(80);
 			fields[i].setMinDistance(10.0f);
 			fields[i].play();
@@ -171,7 +171,7 @@ void SoundPlayer::playFieldsStereo()
 		if (fields[i].getStatus() != 2)
 		{
 			fields[i].setBuffer(soundList[SOUNDS::soundEffectFieldsStereo]);
-			fields[i].setVolume(50);
+			fields[i].setVolume(gunVolume * masterVolume);
 			fields[i].setAttenuation(80);
 			fields[i].setMinDistance(10.0f);
 			fields[i].play();
@@ -188,7 +188,7 @@ void SoundPlayer::playMelee(float x, float y, float z)
 		{
 			melee[i].setBuffer(soundList[SOUNDS::soundEffectMelee]);
 			melee[i].setPosition(x, y, z);
-			melee[i].setVolume(50);
+			melee[i].setVolume(gunVolume * masterVolume);
 			melee[i].setAttenuation(80);
 			melee[i].setMinDistance(10.0f);
 			melee[i].play();
@@ -204,7 +204,7 @@ void SoundPlayer::playMeleeStereo()
 		if (melee[i].getStatus() != 2)
 		{
 			melee[i].setBuffer(soundList[SOUNDS::soundEffectMeleeStereo]);
-			melee[i].setVolume(50);
+			melee[i].setVolume(gunVolume * masterVolume);
 			melee[i].setAttenuation(80);
 			melee[i].setMinDistance(10.0f);
 			melee[i].play();
@@ -224,16 +224,48 @@ void SoundPlayer::stopMusic()
 	//musicPlayer.stop();
 }
 
+void SoundPlayer::SetFootstepsVolume(int volume)
+{
+	this->footstepsVolume = volume;
+}
+
+void SoundPlayer::SetAnnouncerVolume(int volume)
+{
+	this->announcerVolume = volume;
+}
+
+void SoundPlayer::SetGunsVolume(int volume)
+{
+	this->gunVolume = volume;
+}
+
+void SoundPlayer::SetAmbientVolume(int volume)
+{
+	this->ambientVolume = volume;
+	this->playMapSounds();
+}
+
+void SoundPlayer::SetEffectVolume(int volume)
+{
+	this->effectVolume = volume;
+}
+
+void SoundPlayer::SetMasterVolume(float volume)
+{
+	this->masterVolume = volume;
+	this->playMapSounds();
+}
+
 int SoundPlayer::playJump(int role, float x, float y, float z)
 {
 	if (role == 0)
 	{
-			GetSound()->playExternalSound(SOUNDS::soundEffectTrapperJump, x, y, z);
+			GetSound()->playExternalSound(SOUNDS::soundEffectTrapperJump, x, y, z, CATEGORY::Effects);
 	}
 
 	else if (role == 2)
 	{
-		GetSound()->playExternalSound(SOUNDS::soundEffectHunterJump, x, y, z);
+		GetSound()->playExternalSound(SOUNDS::soundEffectHunterJump, x, y, z, CATEGORY::Effects);
 	}
 
 	else if (role == 3)
@@ -251,17 +283,17 @@ int SoundPlayer::playLand(int role, float x, float y, float z)
 {
 	if (role == 0)
 	{
-		GetSound()->playExternalSound(SOUNDS::soundEffectTrapperLandStereo, x, y, z);
+		GetSound()->playExternalSound(SOUNDS::soundEffectTrapperLandStereo, x, y, z, CATEGORY::Effects);
 	}
 
 	else if (role == 2)
 	{
-		GetSound()->playExternalSound(SOUNDS::soundEffectTrapperLandStereo, x, y, z);
+		GetSound()->playExternalSound(SOUNDS::soundEffectTrapperLandStereo, x, y, z, CATEGORY::Effects);
 	}
 
 	else if (role == 3)
 	{
-		GetSound()->playExternalSound(SOUNDS::soundEffectBruteLand, x, y, z);
+		GetSound()->playExternalSound(SOUNDS::soundEffectBruteLand, x, y, z, CATEGORY::Effects);
 	}
 	else
 	{
@@ -287,7 +319,7 @@ int SoundPlayer::playMapSounds()
 			}
 			theCantinaSong.setPosition(45, 1.55, 95);
 			theCantinaSong.setAttenuation(90);
-			theCantinaSong.setVolume(50);
+			theCantinaSong.setVolume(50 * ambientVolume / 100 * masterVolume);
 			theCantinaSong.play();
 			theCantinaSong.setLoop(true);
 			theCantinaSong.setMinDistance(9.5);
@@ -299,27 +331,27 @@ int SoundPlayer::playMapSounds()
 			mapSounds[0].setMinDistance(5.0f);*/
 			mapSounds[1].setBuffer(soundList[SOUNDS::BreakingOutBass]);
 			mapSounds[1].setPosition(44, 1.55, 100);
-			mapSounds[1].setVolume(50);
+			mapSounds[1].setVolume(50 * ambientVolume/100 * masterVolume);
 			mapSounds[1].setAttenuation(80);
 			mapSounds[1].setMinDistance(25.0f);
 			mapSounds[2].setBuffer(soundList[SOUNDS::soundEffectOcean]);
 			mapSounds[2].setPosition(73, 1.55, 4);
-			mapSounds[2].setVolume(20);
+			mapSounds[2].setVolume(20 * ambientVolume / 100 * masterVolume);
 			mapSounds[2].setAttenuation(20);
 			mapSounds[2].setMinDistance(50.0f);
 			mapSounds[3].setBuffer(soundList[SOUNDS::soundEffectFlies]);
 			mapSounds[3].setPosition(51, 1.55, 108);
-			mapSounds[3].setVolume(30);
+			mapSounds[3].setVolume(30 * ambientVolume / 100 * masterVolume);
 			mapSounds[3].setAttenuation(3);
 			mapSounds[3].setMinDistance(9.0f);
 			mapSounds[4].setBuffer(soundList[SOUNDS::soundEffectFlies]);
 			mapSounds[4].setPosition(-74, 1.55, 30);
-			mapSounds[4].setVolume(30);
+			mapSounds[4].setVolume(30 * ambientVolume / 100 * masterVolume);
 			mapSounds[4].setAttenuation(3);
 			mapSounds[4].setMinDistance(9.0f);
 			mapSounds[5].setBuffer(soundList[SOUNDS::soundEffectFrogs]);
 			mapSounds[5].setPosition(-48, 1.55, 72);
-			mapSounds[5].setVolume(10);
+			mapSounds[5].setVolume(10 * ambientVolume / 100 * masterVolume);
 			mapSounds[5].setAttenuation(10);
 			mapSounds[5].setMinDistance(4.0f);
 			/*mapSounds[6].setBuffer(soundList[SOUNDS::soundEffectCrows]);
@@ -329,72 +361,72 @@ int SoundPlayer::playMapSounds()
 			mapSounds[6].setMinDistance(40.0f);*/
 			mapSounds[7].setBuffer(soundList[SOUNDS::soundEffectFlies]);
 			mapSounds[7].setPosition(-32, 1.55, 47);
-			mapSounds[7].setVolume(30);
+			mapSounds[7].setVolume(30 * ambientVolume / 100 * masterVolume);
 			mapSounds[7].setAttenuation(3);
 			mapSounds[7].setMinDistance(9.0f);
 			mapSounds[8].setBuffer(soundList[SOUNDS::soundEffectNeonSign]);
 			mapSounds[8].setPosition(24, 1.45, 59.8);
-			mapSounds[8].setVolume(20);
+			mapSounds[8].setVolume(20 * ambientVolume / 100 * masterVolume);
 			mapSounds[8].setAttenuation(5);
 			mapSounds[8].setMinDistance(2.0f);
 			mapSounds[9].setBuffer(soundList[SOUNDS::soundEffectNeonSign]);
 			mapSounds[9].setPosition(27.8, 1.45, 59.8);
-			mapSounds[9].setVolume(20);
+			mapSounds[9].setVolume(20 * ambientVolume / 100 * masterVolume);
 			mapSounds[9].setAttenuation(5);
 			mapSounds[9].setMinDistance(2.0f);
 			mapSounds[10].setBuffer(soundList[SOUNDS::soundEffectNeonSign]);
 			mapSounds[10].setPosition(-18.2, 1.45, 38.94);
-			mapSounds[10].setVolume(20);
+			mapSounds[10].setVolume(20 * ambientVolume / 100 * masterVolume);
 			mapSounds[10].setAttenuation(5);
 			mapSounds[10].setMinDistance(2.0f);
 			mapSounds[11].setBuffer(soundList[SOUNDS::soundEffectNeonSign]);
 			mapSounds[11].setPosition(-50.29, 1.45, 60);
-			mapSounds[11].setVolume(20);
+			mapSounds[11].setVolume(20 * ambientVolume / 100 * masterVolume);
 			mapSounds[11].setAttenuation(5);
 			mapSounds[11].setMinDistance(2.0f);
 			mapSounds[13].setBuffer(soundList[SOUNDS::soundEffectNeonSign]);
 			mapSounds[13].setPosition(-10.3, 5.6, 63.2);
-			mapSounds[13].setVolume(20);
+			mapSounds[13].setVolume(20 * ambientVolume / 100 * masterVolume);
 			mapSounds[13].setAttenuation(5);
 			mapSounds[13].setMinDistance(2.0f);
 			mapSounds[14].setBuffer(soundList[SOUNDS::soundEffectNeonSign]);
 			mapSounds[14].setPosition(9.7, 1.45, 84.6);
-			mapSounds[14].setVolume(20);
+			mapSounds[14].setVolume(20 * ambientVolume / 100 * masterVolume);
 			mapSounds[14].setAttenuation(5);
 			mapSounds[14].setMinDistance(2.0f);
 			mapSounds[15].setBuffer(soundList[SOUNDS::soundEffectNeonSign]);
 			mapSounds[15].setPosition(9.7, 1.45, 80.4);
-			mapSounds[15].setVolume(20);
+			mapSounds[15].setVolume(20 * ambientVolume / 100 * masterVolume);
 			mapSounds[15].setAttenuation(5);
 			mapSounds[15].setMinDistance(2.0f);
 			mapSounds[16].setBuffer(soundList[SOUNDS::soundEffectNeonSign]);
 			mapSounds[16].setPosition(16, 2, 60);
-			mapSounds[16].setVolume(20);
+			mapSounds[16].setVolume(20 * ambientVolume / 100 * masterVolume);
 			mapSounds[16].setAttenuation(5);
 			mapSounds[16].setMinDistance(2.0f);
 			mapSounds[17].setBuffer(soundList[SOUNDS::soundEffectNeonSign]);
 			mapSounds[17].setPosition(22.27, 1.45, 67.8);
-			mapSounds[17].setVolume(20);
+			mapSounds[17].setVolume(20 * ambientVolume / 100 * masterVolume);
 			mapSounds[17].setAttenuation(5);
 			mapSounds[17].setMinDistance(2.0f);
 			mapSounds[18].setBuffer(soundList[SOUNDS::soundEffectNeonSign]);
 			mapSounds[18].setPosition(25.3, 1.45, 68);
-			mapSounds[18].setVolume(20);
+			mapSounds[18].setVolume(20 * ambientVolume / 100 * masterVolume);
 			mapSounds[18].setAttenuation(5);
 			mapSounds[18].setMinDistance(2.0f);
 			mapSounds[19].setBuffer(soundList[SOUNDS::soundEffectNeonSign]);
 			mapSounds[19].setPosition(31.45, 1.45, 67.6);
-			mapSounds[19].setVolume(20);
+			mapSounds[19].setVolume(20 * ambientVolume / 100 * masterVolume);
 			mapSounds[19].setAttenuation(5);
 			mapSounds[19].setMinDistance(2.0f);
 			mapSounds[20].setBuffer(soundList[SOUNDS::soundEffectNeonSign]);
 			mapSounds[20].setPosition(34, 2, 67.9);
-			mapSounds[20].setVolume(20);
+			mapSounds[20].setVolume(20 * ambientVolume / 100 * masterVolume);
 			mapSounds[20].setAttenuation(5);
 			mapSounds[20].setMinDistance(2.0f);
 			mapSounds[21].setBuffer(soundList[SOUNDS::soundEffectNeonSign]);
 			mapSounds[21].setPosition(33, 1.8, 60);
-			mapSounds[21].setVolume(20);
+			mapSounds[21].setVolume(20 * ambientVolume / 100 * masterVolume);
 			mapSounds[21].setAttenuation(5);
 			mapSounds[21].setMinDistance(2.0f);
 			
@@ -453,13 +485,31 @@ void SoundPlayer::setVolumeSound(float volume)
 	this->soundVolume = volume;
 }
 
-int SoundPlayer::playUserGeneratedSound(int sound)
+int SoundPlayer::playUserGeneratedSound(int sound, int category)
 {
 	if (soundEnabler && initialized == 1)
 	{
 		sounds[nrOfSoundsPlaying].setBuffer(soundList[sound]);
 		sounds[nrOfSoundsPlaying].setRelativeToListener(true);
 		sounds[nrOfSoundsPlaying].setPosition(0, 0, 0);
+		switch (category)
+		{
+		case CATEGORY::Footsteps:
+			sounds[nrOfSoundsPlaying].setVolume(footstepsVolume * masterVolume);
+			break;
+		case CATEGORY::Announcer:
+			sounds[nrOfSoundsPlaying].setVolume(announcerVolume * masterVolume);
+			break;
+		case CATEGORY::Guns:
+			sounds[nrOfSoundsPlaying].setVolume(gunVolume * masterVolume);
+			break;
+		case CATEGORY::Ambient:
+			sounds[nrOfSoundsPlaying].setVolume(ambientVolume * masterVolume);
+			break;
+		case CATEGORY::Effects:
+			sounds[nrOfSoundsPlaying].setVolume(effectVolume * masterVolume);
+			break;
+		}
 		sounds[nrOfSoundsPlaying].play();
 		nrOfSoundsPlaying++;
 		nrOfSoundsPlaying %= MAXSOUNDS;
@@ -607,7 +657,7 @@ int SoundPlayer::playDestroyerStart(float x, float y, float z)
 	return 0;
 }
 
-int SoundPlayer::playExternalSound(int sound, float x, float y, float z)
+int SoundPlayer::playExternalSound(int sound, float x, float y, float z, int category)
 {
 	if (soundEnabler && initialized == 1)
 	{
@@ -632,7 +682,24 @@ int SoundPlayer::playExternalSound(int sound, float x, float y, float z)
 		//sounds[nrOfSoundsPlaying].isRelativeToListener();
 		sounds[nrOfSoundsPlaying].setMinDistance(10.0f);		//Set the sound's distance it travels before it starts to attenuate. Could be passed in through a parameter.
 		sounds[nrOfSoundsPlaying].setBuffer(soundList[sound]);
-		sounds[nrOfSoundsPlaying].setVolume(soundVolume);
+		switch (category)
+		{
+		case CATEGORY::Footsteps:
+			sounds[nrOfSoundsPlaying].setVolume(footstepsVolume * masterVolume);
+			break;
+		case CATEGORY::Announcer:
+			sounds[nrOfSoundsPlaying].setVolume(announcerVolume * masterVolume);
+			break;
+		case CATEGORY::Guns:
+			sounds[nrOfSoundsPlaying].setVolume(gunVolume * masterVolume);
+			break;
+		case CATEGORY::Ambient:
+			sounds[nrOfSoundsPlaying].setVolume(ambientVolume * masterVolume);
+			break;
+		case CATEGORY::Effects:
+			sounds[nrOfSoundsPlaying].setVolume(effectVolume * masterVolume);
+			break;
+		}
 		sounds[nrOfSoundsPlaying].play();
 		nrOfSoundsPlaying++;
 		nrOfSoundsPlaying %= MAXSOUNDS;
@@ -666,7 +733,7 @@ int SoundPlayer::playMusic(int music)
 		{
 			return -1;
 		}
-
+		musicPlayer.setVolume(100);
 		musicPlayer.play();
 		musicPlayer.setLoop(true);
 	}
@@ -715,7 +782,7 @@ void SoundPlayer::playFootsteps(int role, float posX, float posY, float posZ)
 		
 		if (role == 0)
 		{
-			playExternalSound(SOUNDS::soundFootSteps, posX, posY, posZ);
+			playExternalSound(SOUNDS::soundFootSteps, posX, posY, posZ, CATEGORY::Footsteps);
 		}
 
 		if (role == 1)
@@ -725,18 +792,18 @@ void SoundPlayer::playFootsteps(int role, float posX, float posY, float posZ)
 
 		if (role == 2)
 		{
-			playExternalSound(SOUNDS::soundEffectShankerSteps, posX, posY, posZ);
+			playExternalSound(SOUNDS::soundEffectShankerSteps, posX, posY, posZ, CATEGORY::Footsteps);
 		}
 
 		if (role == 3)
 		{
-			playExternalSound(SOUNDS::soundEffectBruteSteps, posX, posY, posZ);
+			playExternalSound(SOUNDS::soundEffectBruteSteps, posX, posY, posZ, CATEGORY::Footsteps);
 			//playUserGeneratedSound(SOUNDS::soundEffectBruteSteps);
 		}
 
 		if (role == 4)
 		{
-			playExternalSound(SOUNDS::soundStepsManipulator, posX, posY, posZ);
+			playExternalSound(SOUNDS::soundStepsManipulator, posX, posY, posZ, CATEGORY::Footsteps);
 		}
 	
 	
@@ -746,12 +813,12 @@ void SoundPlayer::PlayStereoJump(int role)
 {
 	if (role == 0)
 	{
-		playUserGeneratedSound(SOUNDS::soundEffectTrapperJumpStereo);
+		playUserGeneratedSound(SOUNDS::soundEffectTrapperJumpStereo, CATEGORY::Announcer);
 	}
 
 	if (role == 2)
 	{
-		playUserGeneratedSound(SOUNDS::soundEffectHunterJumpStereo);
+		playUserGeneratedSound(SOUNDS::soundEffectHunterJumpStereo, CATEGORY::Announcer);
 	}
 }
 
@@ -759,23 +826,23 @@ void SoundPlayer::PlayStereoFootsteps(int role, float posX, float posY, float po
 {
 	if (role == 0)
 	{
-		playExternalSound(SOUNDS::soundFootStepsStereo, posX, posY, posZ);
+		playExternalSound(SOUNDS::soundFootStepsStereo, posX, posY, posZ, CATEGORY::Footsteps);
 	}
 
 	if (role == 2)
 	{
-		playExternalSound(SOUNDS::soundEffectShankerStepsStereo, posX, posY, posZ);
+		playExternalSound(SOUNDS::soundEffectShankerStepsStereo, posX, posY, posZ, CATEGORY::Footsteps);
 	}
 
 	if (role == 3)
 	{
-		playExternalSound(SOUNDS::soundEffectBruteStepsStereo, posX, posY, posZ);
+		playExternalSound(SOUNDS::soundEffectBruteStepsStereo, posX, posY, posZ, CATEGORY::Footsteps);
 	}
 
 	if (role == 4)
 	{
 		cout << nrOfSoundsPlaying << endl;
-		playExternalSound(SOUNDS::soundStepsManipulatorStereo, posX, posY, posZ);
+		playExternalSound(SOUNDS::soundStepsManipulatorStereo, posX, posY, posZ, CATEGORY::Footsteps);
 	}
 
 }

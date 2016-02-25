@@ -1409,6 +1409,126 @@ void Core::roamHandleCmds(std::string com)
 					serverCam->setSensitivity(sens);
 			}
 		}
+
+		else if (token == "/footsteps")
+		{
+			float footsteps = 0.0f;
+			if (!(ss >> footsteps))
+			{
+				console.printMsg("Invalid input.", "System", 'S');
+			}
+			else
+			{
+				if (footsteps < -FLT_EPSILON)
+				{
+					console.printMsg("Positive numbers only, dummy.", "System", 'S');
+				}
+				else
+					GetSound()->SetFootstepsVolume(footsteps);
+			}
+		}
+
+		else if (token == "/announcer")
+		{
+			float announcer = 0.0f;
+			if (!(ss >> announcer))
+			{
+				console.printMsg("Invalid input.", "System", 'S');
+			}
+			else
+			{
+				if (announcer < -FLT_EPSILON)
+				{
+					console.printMsg("Positive numbers only, dummy.", "System", 'S');
+				}
+				else
+					GetSound()->SetAnnouncerVolume(announcer);
+			}
+		}
+
+		else if (token == "/guns")
+		{
+			float guns = 0.0f;
+			if (!(ss >> guns))
+			{
+				console.printMsg("Invalid input.", "System", 'S');
+			}
+			else
+			{
+				if (guns < -FLT_EPSILON)
+				{
+					console.printMsg("Positive numbers only, dummy.", "System", 'S');
+				}
+				else
+					GetSound()->SetGunsVolume(guns);
+			}
+		}
+
+		else if (token == "/ambient")
+		{
+			float ambient = 0.0f;
+			if (!(ss >> ambient))
+			{
+				console.printMsg("Invalid input.", "System", 'S');
+			}
+			else
+			{
+				if (ambient < -FLT_EPSILON)
+				{
+					console.printMsg("Positive numbers only, dummy.", "System", 'S');
+				}
+				else
+				{
+					GetSound()->SetAmbientVolume(ambient);
+				}
+					
+			}
+		}
+
+		else if (token == "/effects")
+		{
+			float effects = 0.0f;
+			if (!(ss >> effects))
+			{
+				console.printMsg("Invalid input.", "System", 'S');
+			}
+			else
+			{
+				if (effects < -FLT_EPSILON)
+				{
+					console.printMsg("Positive numbers only, dummy.", "System", 'S');
+				}
+				else
+					GetSound()->SetEffectVolume(effects);
+			}
+		}
+
+		else if (token == "/master")
+		{
+			float master = 0.0f;
+			if (!(ss >> master))
+			{
+				console.printMsg("Invalid input.", "System", 'S');
+			}
+			else
+			{
+				if (master < -FLT_EPSILON)
+				{
+					console.printMsg("Positive numbers only, dummy.", "System", 'S');
+				}
+				else
+				{
+					if (master !=0)
+					{
+						master = master / 100;
+					}
+					
+					GetSound()->SetMasterVolume(master);
+				}
+					
+			}
+		}
+
 		else if (token == "/fullscreen")
 		{
 			if (fullscreen)
@@ -1420,7 +1540,7 @@ void Core::roamHandleCmds(std::string com)
 
 		else if (token == "/cleanup")
 		{
-			GetSound()->playUserGeneratedSound(SOUNDS::announcerCleanup);
+			GetSound()->playUserGeneratedSound(SOUNDS::announcerCleanup, CATEGORY::Announcer);
 		}
 
 		else if (token == "/role")
@@ -1628,7 +1748,7 @@ void Core::clientHandleCmds(std::string com)
 
 		else if (token == "/cleanup")
 		{
-			GetSound()->playUserGeneratedSound(SOUNDS::announcerCleanup);
+			GetSound()->playUserGeneratedSound(SOUNDS::announcerCleanup, CATEGORY::Announcer);
 		}
 		else if (token == "/role")
 		{
@@ -1639,17 +1759,17 @@ void Core::clientHandleCmds(std::string com)
 				{
 					if (token == "1")
 					{
-						GetSound()->playExternalSound(SOUNDS::TrapperPhrase, 0, 0, 0);
+						GetSound()->playExternalSound(SOUNDS::TrapperPhrase, 0, 0, 0, CATEGORY::Announcer);
 					}
 
 					else if (token == "3")
-						GetSound()->playExternalSound(SOUNDS::StalkerPhrase, 0, 0, 0);
+						GetSound()->playExternalSound(SOUNDS::StalkerPhrase, 0, 0, 0, CATEGORY::Announcer);
 
 					else if (token == "4")
-						GetSound()->playExternalSound(SOUNDS::PunisherPhrase, 0, 0, 0);
+						GetSound()->playExternalSound(SOUNDS::PunisherPhrase, 0, 0, 0, CATEGORY::Announcer);
 
 					else if (token == "5")
-						GetSound()->playExternalSound(SOUNDS::ManipulatorPhrase, 0, 0, 0);
+						GetSound()->playExternalSound(SOUNDS::ManipulatorPhrase, 0, 0, 0, CATEGORY::Announcer);
 
 				}
 			

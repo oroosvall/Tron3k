@@ -44,12 +44,19 @@ private:
 	sf::SoundBuffer soundList[SOUNDS::nrOfSounds];
 	string musicList[MUSIC::nrOfMusic];
 	bool fading = false;
-	
+	int volume = 50;
 
 	sf::Music musicPlayer;	//Streams big sound files
 	sf::Music theCantinaSong;
 
 	sf::SoundBuffer soundBuffer;
+
+	int footstepsVolume = 50;
+	int announcerVolume = 50;
+	int gunVolume = 50;
+	int ambientVolume = 50;
+	int effectVolume = 50;
+	float masterVolume = 1.0f;
 
 public:
 	SoundPlayer();
@@ -83,8 +90,8 @@ public:
 
 	virtual int playJump(int, float, float, float);
 	virtual int playLand(int, float, float, float);
-	virtual int playExternalSound(int sound, float posX, float posY, float posZ);
-	virtual int playUserGeneratedSound(int sound);
+	virtual int playExternalSound(int sound, float posX, float posY, float posZ, int category);
+	virtual int playUserGeneratedSound(int sound, int category);
 	virtual int playDestroyer(float x, float y, float z);
 	virtual int playDestroyerStop(float x, float y, float z);
 	virtual int playDestroyerStart(float x, float y, float z);
@@ -93,6 +100,13 @@ public:
 	virtual void playMeleeStereo();
 	virtual void playFields(float, float, float);
 	virtual void playFieldsStereo();
+
+	virtual void SetFootstepsVolume(int);
+	virtual void SetAnnouncerVolume(int);
+	virtual void SetGunsVolume(int);
+	virtual void SetAmbientVolume(int);
+	virtual void SetEffectVolume(int);
+	virtual void SetMasterVolume(float);
 
 	virtual void stopBrute()
 	{

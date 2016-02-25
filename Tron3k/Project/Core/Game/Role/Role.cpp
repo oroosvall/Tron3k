@@ -232,11 +232,11 @@ void Role::swapWeaponLocal(int swapTo)
 	{
 		if (currentWpn == 1)
 		{
-			GetSound()->playUserGeneratedSound(SOUNDS::soundEffectStalkerChange);
+			GetSound()->playUserGeneratedSound(SOUNDS::soundEffectStalkerChange, CATEGORY::Guns);
 		}
 		else
 		{
-			GetSound()->playUserGeneratedSound(SOUNDS::soundEffectStalkerChangeBack);
+			GetSound()->playUserGeneratedSound(SOUNDS::soundEffectStalkerChangeBack, CATEGORY::Guns);
 		}
 		
 	}

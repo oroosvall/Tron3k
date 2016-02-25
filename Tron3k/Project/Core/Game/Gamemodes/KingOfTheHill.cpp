@@ -136,7 +136,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			{
 				if (GetSoundActivated())
 				{
-					GetSound()->playUserGeneratedSound(SOUNDS::soundEffectCaptureScored);
+					GetSound()->playUserGeneratedSound(SOUNDS::soundEffectCaptureScored, CATEGORY::Announcer);
 				}
 				timerModifierForCaptureScoring += tickForCaptureScoring;
 			}
@@ -152,13 +152,13 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 
 			if (timer < 15.0f && !fifteenPlayed && GetSoundActivated())
 			{
-				GetSound()->playUserGeneratedSound(SOUNDS::announcer15Seconds);
+				GetSound()->playUserGeneratedSound(SOUNDS::announcer15Seconds, CATEGORY::Announcer);
 				fifteenPlayed = true;
 			}
 
 			if (timer < 5.0f && !fivePlayed && GetSoundActivated())
 			{
-				GetSound()->playUserGeneratedSound(SOUNDS::announcer5Seconds);
+				GetSound()->playUserGeneratedSound(SOUNDS::announcer5Seconds, CATEGORY::Announcer);
 				fivePlayed = true;
 			}
 		}
@@ -430,12 +430,12 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 {
 	if (respawn1 == 5 && teamOneSpawnTokens !=5 && GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
 	{
-		GetSound()->playUserGeneratedSound(SOUNDS::announcer5Tokens);
+		GetSound()->playUserGeneratedSound(SOUNDS::announcer5Tokens, CATEGORY::Announcer);
 	}
 
 	if (respawn2 == 5 && teamTwoSpawnTokens != 5 && GetSoundActivated() && this->gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 2)
 	{
-		GetSound()->playUserGeneratedSound(SOUNDS::announcer5Tokens);
+		GetSound()->playUserGeneratedSound(SOUNDS::announcer5Tokens, CATEGORY::Announcer);
 	}
 
 	this->timer = timer;
@@ -518,34 +518,34 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 			timerModifierForCaptureScoring = 15.0f;
 			if (round == 1 && GetSoundActivated())
 			{
-				GetSound()->playUserGeneratedSound(SOUNDS::announcerRound1);
+				GetSound()->playUserGeneratedSound(SOUNDS::announcerRound1, CATEGORY::Announcer);
 			}
 
 			else if (round == 2 && GetSoundActivated())
 			{
-				GetSound()->playUserGeneratedSound(SOUNDS::announcerRound2);
+				GetSound()->playUserGeneratedSound(SOUNDS::announcerRound2, CATEGORY::Announcer);
 			}
 
 			else if (round == 3 && GetSoundActivated())
 			{
-				GetSound()->playUserGeneratedSound(SOUNDS::announcerRound3);
+				GetSound()->playUserGeneratedSound(SOUNDS::announcerRound3, CATEGORY::Announcer);
 			}
 		}
 		else if (state == OVERTIME)
 		{
 			if (GetSoundActivated())
 			{
-				GetSound()->playUserGeneratedSound(SOUNDS::SoundForOvertime);
+				GetSound()->playUserGeneratedSound(SOUNDS::SoundForOvertime, CATEGORY::Effects);
 
 				if (gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
 				{
 					if (teamOneSpawnTokens == 0)
 					{
-						GetSound()->playUserGeneratedSound(SOUNDS::announcerFinalAssault);
+						GetSound()->playUserGeneratedSound(SOUNDS::announcerFinalAssault, CATEGORY::Announcer);
 					}
 					else
 					{
-						GetSound()->playUserGeneratedSound(SOUNDS::announcerDefendTheObjective);
+						GetSound()->playUserGeneratedSound(SOUNDS::announcerDefendTheObjective, CATEGORY::Announcer);
 					}
 				}
 
@@ -553,11 +553,11 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 				{
 					if (teamTwoSpawnTokens == 0)
 					{
-						GetSound()->playUserGeneratedSound(SOUNDS::announcerFinalAssault);
+						GetSound()->playUserGeneratedSound(SOUNDS::announcerFinalAssault, CATEGORY::Announcer);
 					}
 					else
 					{
-						GetSound()->playUserGeneratedSound(SOUNDS::announcerDefendTheObjective);
+						GetSound()->playUserGeneratedSound(SOUNDS::announcerDefendTheObjective, CATEGORY::Announcer);
 					}
 				}
 			}
@@ -579,11 +579,11 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 				consolePtr->printMsg("ALPHA WINS THE MATCH", "System", 'S');
 				if (GetSoundActivated() && gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
 				{
-					GetSound()->playUserGeneratedSound(SOUNDS::announcerYouWin);
+					GetSound()->playUserGeneratedSound(SOUNDS::announcerYouWin, CATEGORY::Announcer);
 				}
 				else if (GetSoundActivated() && gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 2)
 				{
-					GetSound()->playUserGeneratedSound(SOUNDS::announcerYouLose);
+					GetSound()->playUserGeneratedSound(SOUNDS::announcerYouLose, CATEGORY::Announcer);
 				}
 			}
 			else if (serverMsg == GAMEMODE_MSG::MATCH_WIN_TEAM2)
@@ -591,11 +591,11 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 				consolePtr->printMsg("BETA WINS THE MATCH", "System", 'S');
 				if (GetSoundActivated() && gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 1)
 				{
-					GetSound()->playUserGeneratedSound(SOUNDS::announcerYouLose);
+					GetSound()->playUserGeneratedSound(SOUNDS::announcerYouLose, CATEGORY::Announcer);
 				}
 				else if (GetSoundActivated() && gamePtr->getPlayer(gamePtr->GetLocalPlayerId())->getTeam() == 2)
 				{
-					GetSound()->playUserGeneratedSound(SOUNDS::announcerYouWin);
+					GetSound()->playUserGeneratedSound(SOUNDS::announcerYouWin, CATEGORY::Announcer);
 				}
 			}
 			else if (serverMsg == GAMEMODE_MSG::MATCH_DRAW)
