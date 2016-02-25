@@ -1150,12 +1150,15 @@ void RenderPipeline::createTimedParticleEffect(EFFECT_TYPE eeffect, glm::vec3 po
 	case THUNDER_DOME:
 		break;
 	case EXPLOSION:
+		path += "explosionFire.ps";
 		break;
 	case CLEANSENOVA:
 		break;
 	case BATTERY_SLOW:
+		path += "batteryFieldParticles.ps";
 		break;
 	case BATTERY_SPEED:
+		path += "batteryFieldParticles.ps";
 		break;
 	case THERMITE_CLOUD:
 		break;
@@ -1206,6 +1209,44 @@ void RenderPipeline::createTimedParticleEffect(EFFECT_TYPE eeffect, glm::vec3 po
 		dynamicParticleSystems.push_back(pSys);
 	}
 	file.close();
+
+	if (eeffect == EFFECT_TYPE::EXPLOSION)
+	{
+		path += "explosionSmoke.ps";
+		std::ifstream file;
+		file.open(path, std::ios::binary | std::ios::in);
+
+		if (file.is_open())
+		{
+
+			ExportHeader exHeader;
+			file.read((char*)&exHeader, sizeof(exHeader));
+
+			//Read texture name
+			char* f = (char*)malloc(exHeader.texturesize + 1);
+			file.read(f, sizeof(char) * exHeader.texturesize);
+			f[exHeader.texturesize] = 0;
+
+			GLuint texID = TextureManager::gTm->createTexture("Gamefiles/Textures/particles/" + std::string(f));
+			unsigned int x = 0, y = 0;
+			std::string str = "Gamefiles/Textures/particles/" + std::string(f);
+			TextureManager::gTm->PNGSize(str.c_str(), x, y);
+			free(f);
+
+			ParticleSystemData pdata;
+			//Read Particle System
+			file.read((char*)&pdata, sizeof(ParticleSystemData));
+
+			pdata.continuous = false; // force single time
+
+			ParticleSystem pSys;
+			pSys.Initialize(pos, pdata, &compute, &locations);
+			pSys.m_texture = texID;
+			pSys.m_color = color;
+			dynamicParticleSystems.push_back(pSys);
+		}
+		file.close();
+	}
 }
 
 SETTING_INPUT RenderPipeline::getType(PIPELINE_SETTINGS type) const
