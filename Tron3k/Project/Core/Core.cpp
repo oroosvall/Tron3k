@@ -859,13 +859,21 @@ void Core::upClient(float dt)
 		}
 		game->update(newDt);
 
-		std::vector<HitPosAndDir> hitpositions = game->getAllBulletHitPlayerPos();
+		std::vector<HitPosAndDirParticle> hitpositions = game->getAllBulletHitPlayerPos();
 		for (size_t i = 0; i < hitpositions.size(); i++)
 		{
 			renderPipe->createTimedParticleEffect(hitpositions[i].btype, hitpositions[i].pos, hitpositions[i].dir, hitpositions[i].color);
 		}
 
 		game->clearAllBulletHitPlayerPos();
+
+		std::vector<EffectParticle> effectpositions = game->getAllEffectParticleSpawn();
+		for (size_t i = 0; i < effectpositions.size(); i++)
+		{
+			renderPipe->createTimedParticleEffect(effectpositions[i].etype, effectpositions[i].pos, effectpositions[i].color);
+		}
+
+		game->clearAllEffectParticleSpawn();
 
 		if (kothState != tmp)
 		{

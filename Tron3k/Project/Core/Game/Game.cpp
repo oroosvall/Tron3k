@@ -1744,6 +1744,17 @@ void Game::addEffectToList(int conID, int teamId, int effectId, EFFECT_TYPE et, 
 	e->setTeam(teamId);
 	effects[et].push_back(e);
 	addEffectToPhysics(e);
+
+	EffectParticle ep;
+
+	ep.pos = pos;
+	ep.etype = et;
+	if (teamId == 1)
+		ep.color = TEAMONECOLOR;
+	if (teamId == 2)
+		ep.color = TEAMTWOCOLOR;
+
+	allEffectParticleSpawn.push_back(ep);
 }
 
 void Game::addEffectToPhysics(Effect* effect)
@@ -1841,7 +1852,7 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 			playerList[hi.bulletPID]->hitMarker = 0.25f;
 			if (theBullet != nullptr)
 			{
-				HitPosAndDir hpad;
+				HitPosAndDirParticle hpad;
 				hpad.pos = theBullet->getPos();
 				//vec3 dir = -glm::normalize(theBullet->getDir());
 				vec3 n = hpad.pos - p->getPos();
@@ -2189,7 +2200,7 @@ void Game::handleBulletHitWorldEvent(BulletHitWorldInfo hi)
 
 	if (b != nullptr)
 	{
-		HitPosAndDir hpad;
+		HitPosAndDirParticle hpad;
 		hpad.pos = hi.hitPos - vec3(hi.collisionNormal) * (0.35f - hi.collisionNormal.w);
 		hpad.dir = reflect(hi.hitDir, vec3(hi.collisionNormal));
 		if (b->getTeam() == 1)

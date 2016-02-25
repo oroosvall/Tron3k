@@ -62,6 +62,7 @@ struct PipelineValues
 };
 
 enum BULLET_TYPE;
+enum EFFECT_TYPE;
 
 class IRenderPipeline
 {
@@ -90,6 +91,7 @@ public:
 	virtual bool setSetting(PIPELINE_SETTINGS type, PipelineValues value) = 0;
 
 	virtual void createTimedParticleEffect(BULLET_TYPE peffect, glm::vec3 pos, glm::vec3 dir, glm::vec3 color) = 0;
+	virtual void createTimedParticleEffect(EFFECT_TYPE eeffect, glm::vec3 pos, glm::vec3 color) = 0;
 
 	virtual void renderWallEffect(void* pos1, void* pos2, float uvStartOffset, float* dgColor) = 0;
 	
