@@ -3947,12 +3947,14 @@ void Core::effectsRender(int hackedTeam)
 					world[1].y = 4;
 					world[2].z = 4;
 
-					float rot = timepass;
+					float rot = timepass * 3.0f;
 
 					world = world * mat4(cos(rot), 0.0f, -sin(rot), 0.0f,
 						0.0f, 1.0f, 0.0f, 0.0f,
 						sin(rot), 0.0f, cos(rot), 0.0f,
 						0.0f, 0.0f, 0.0f, 0.0f);
+
+					world = glm::rotate(world, rot * 1.3f , vec3(1, 0, 0));
 
 					world[0].w = pos.x;
 					world[1].w = pos.y + sin(timepass) * 0.2f;
