@@ -3,6 +3,7 @@
 
 LinkShot::LinkShot(glm::vec3 position, glm::vec3 direction, int pID, int bID, int tID)
 {
+	type = BULLET_TYPE::LINK_SHOT;
 	initValues(position, direction, pID, bID, tID);
 	vel = glm::vec3(80.0f);
 	damage = 50;

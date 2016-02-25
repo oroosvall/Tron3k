@@ -3,6 +3,7 @@
 
 GrapplingHook::GrapplingHook(glm::vec3 position, glm::vec3 direction, int pID, int bID, int tID)
 {
+	type = BULLET_TYPE::GRAPPLING_HOOK;
 	initValues(position, direction, pID, bID, tID);
 	vel = glm::vec3(90.0f);
 	ttl = 0.5f;

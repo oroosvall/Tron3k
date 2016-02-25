@@ -7,6 +7,7 @@ ClusterGrenade::ClusterGrenade(glm::vec3 position, glm::vec3 direction, int pID,
 	ttl = 1.5;
 	vel = glm::vec3(30.0f);
 	damage = 0;
+	type = BULLET_TYPE::CLUSTER_GRENADE;
 }
 
 ClusterGrenade::~ClusterGrenade()

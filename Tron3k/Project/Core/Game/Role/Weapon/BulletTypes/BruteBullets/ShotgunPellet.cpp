@@ -3,6 +3,7 @@
 
 ShotgunPellet::ShotgunPellet(glm::vec3 position, glm::vec3 direction, int pID, int bID, int tID)
 {
+	type = BULLET_TYPE::SHOTGUN_PELLET;
 	initValues(position, direction, pID, bID, tID);
 	vel = glm::vec3(95.0f);
 	damage = 5;

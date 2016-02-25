@@ -1312,7 +1312,7 @@ void Game::addBulletToList(int conID, int teamId, int bulletId, BULLET_TYPE bt, 
 		b = new DiscShot(pos, dir, conID, bulletId, teamId);
 		break;
 	case BULLET_TYPE::HACKING_DART:
-		b = new HackingDart(pos, dir, conID, bulletId, teamId, BULLET_TYPE::HACKING_DART);
+		b = new HackingDart(pos, dir, conID, bulletId, teamId);
 		break;
 	case BULLET_TYPE::MELEE_ATTACK:
 		b = new MeleeAttack(vec3(999.0f, 999.0f, 999.0f), dir, conID, bulletId, teamId, p);

@@ -3,6 +3,7 @@
 
 BatterySlowShot::BatterySlowShot(glm::vec3 position, glm::vec3 direction, int pID, int bID, int tID)
 {
+	type = BULLET_TYPE::BATTERY_SLOW_SHOT;
 	initValues(position, direction, pID, bID, tID);
 	vel = glm::vec3(50.0f);
 	damage = 0;

@@ -7,6 +7,7 @@ DiscShot::DiscShot(glm::vec3 position, glm::vec3 direction, int pID, int bID, in
 	vel = glm::vec3(55.0f);
 	damage = 24;
 	ttl = 2.5f;
+	type = BULLET_TYPE::DISC_SHOT;
 }
 
 DiscShot::~DiscShot()
