@@ -1092,6 +1092,7 @@ void RenderPipeline::createTimedParticleEffect(BULLET_TYPE peffect, vec3 pos, gl
 		path += "meleeHit.ps";
 		break;
 	case GRAPPLING_HOOK:
+		path += "gravityAttractorHit.ps";
 		break;
 	case KILLYOURSELF:
 		break;
