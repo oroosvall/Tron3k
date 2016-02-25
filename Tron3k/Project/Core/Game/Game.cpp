@@ -1753,7 +1753,8 @@ void Game::addEffectToList(int conID, int teamId, int effectId, EFFECT_TYPE et, 
 		ep.color = TEAMONECOLOR;
 	if (teamId == 2)
 		ep.color = TEAMTWOCOLOR;
-
+	else
+		ep.color = vec3(1.0f, 1.0f, 1.0f);
 	allEffectParticleSpawn.push_back(ep);
 }
 
