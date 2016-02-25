@@ -35,7 +35,7 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->soundList[SOUNDS::soundEffectDiscGun].loadFromFile("GameFiles/Sound/soundEffectDiscGun.ogg");
 		singleton->soundList[SOUNDS::soundEffectLinkGun].loadFromFile("GameFiles/Sound/soundEffectLinkGun.ogg");
 		singleton->soundList[SOUNDS::soundEffectMelee].loadFromFile("GameFiles/Sound/soundEffectMelee.ogg");
-		singleton->soundList[SOUNDS::soundFootSteps].loadFromFile("GameFiles/Sound/soundFootSteps.ogg");
+		singleton->soundList[SOUNDS::soundFootSteps].loadFromFile("GameFiles/Sound/soundFootSteps2.ogg");
 		singleton->soundList[SOUNDS::soundStepsManipulator].loadFromFile("GameFiles/Sound/SoundStepsManipulator.ogg");
 		singleton->soundList[SOUNDS::soundEffectTrapperReload].loadFromFile("GameFiles/Sound/soundEffectTrapperReload2.ogg");
 		singleton->soundList[SOUNDS::soundEffectShield].loadFromFile("GameFiles/Sound/soundShield.ogg");
@@ -128,6 +128,7 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->soundList[SOUNDS::StalkerPhrase].loadFromFile("GameFiles/Sound/StalkerPhrase.ogg");
 		singleton->soundList[SOUNDS::PunisherPhrase].loadFromFile("GameFiles/Sound/PunisherPhrase.ogg");
 		singleton->soundList[SOUNDS::TrapperPhrase].loadFromFile("GameFiles/Sound/TrapperPhrase.ogg");
+		singleton->soundList[SOUNDS::hackedSound].loadFromFile("GameFiles/Sound/hackedSound.ogg");
 		initialized = true;
 	}
 }
