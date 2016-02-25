@@ -400,6 +400,8 @@ void Game::playerUpdate(int conid, float dt)
 
 void Game::playerApplyForces(int conid, float dt)
 {
+	if (playerList[conid]->getPos().y > 20.0f)
+		playerList[conid]->setVelocity(vec3(playerList[conid]->getVelocity().x, 0.0f, playerList[conid]->getVelocity().z));
 	playerList[conid]->applyGravity(physics->addGravity(dt));
 }
 
