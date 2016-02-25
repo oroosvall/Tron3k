@@ -434,7 +434,7 @@ void ContentManager::renderBullet(int bid)
 {
 	switch (bid)
 	{
-	case BULLET_TYPE::PULSE_SHOT:				trapperBullet.draw();	break;
+	case BULLET_TYPE::PULSE_SHOT:				//trapperBullet.draw();	break;
 	case BULLET_TYPE::PLASMA_SHOT:				trapPrim.draw();		break;
 	case BULLET_TYPE::SHOTGUN_PELLET:			puniSecon.draw();		break;
 	case BULLET_TYPE::BATTERY_SLOW_SHOT:
