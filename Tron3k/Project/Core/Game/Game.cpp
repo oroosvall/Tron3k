@@ -1745,17 +1745,20 @@ void Game::addEffectToList(int conID, int teamId, int effectId, EFFECT_TYPE et, 
 	effects[et].push_back(e);
 	addEffectToPhysics(e);
 
-	EffectParticle ep;
+	if (gameState != SERVER)
+	{
+		EffectParticle ep;
 
-	ep.pos = pos;
-	ep.etype = et;
-	if (teamId == 1)
-		ep.color = TEAMONECOLOR;
-	if (teamId == 2)
-		ep.color = TEAMTWOCOLOR;
-	else
-		ep.color = vec3(1.0f, 1.0f, 1.0f);
-	allEffectParticleSpawn.push_back(ep);
+		ep.pos = pos;
+		ep.etype = et;
+		if (teamId == 1)
+			ep.color = TEAMONECOLOR;
+		if (teamId == 2)
+			ep.color = TEAMTWOCOLOR;
+		else
+			ep.color = vec3(1.0f, 1.0f, 1.0f);
+		allEffectParticleSpawn.push_back(ep);
+	}
 }
 
 void Game::addEffectToPhysics(Effect* effect)
