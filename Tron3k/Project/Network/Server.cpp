@@ -80,6 +80,7 @@ void Server::event_bullet_hit_player(std::vector<BulletHitPlayerInfo> allhits)
 	for (unsigned int c = 0; c < allhits.size(); c++)
 	{
 		*out << Uint8(allhits[c].playerHit) << Uint8(allhits[c].bulletPID) << Uint8(allhits[c].bulletBID) << Uint8(allhits[c].bt) << Uint8(allhits[c].newHPtotal);
+		*out << allhits[c].hitDir.x << allhits[c].hitDir.y << allhits[c].hitDir.z;
 	}
 	
 	branch(out, -1);

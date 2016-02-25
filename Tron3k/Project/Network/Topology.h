@@ -227,15 +227,18 @@ public:
 		BulletHitPlayerInfo hi;
 		Uint8 playerHit, PID, BID, bt, hpTotal;
 		Uint8 size;
+		glm::vec3 hitdir;
 		*rec >> size;
 		for (int c = 0; c < size; c++)
 		{
 			*rec >> playerHit >> PID >> BID >> bt >> hpTotal;
+			*rec >> hitdir.x >> hitdir.y >> hitdir.z;
 			hi.playerHit = playerHit;
 			hi.bt = BULLET_TYPE(bt);
 			hi.bulletBID = BID;
 			hi.bulletPID = PID;
 			hi.newHPtotal = hpTotal;
+			hi.hitDir = hitdir;
 			gamePtr->handleBulletHitPlayerEvent(hi);
 		}
 	}
@@ -683,6 +686,11 @@ public:
 				else
 					uiPtr->setMenu(InGameUI::ClassSelect);
 			}
+			else
+			{
+				uiPtr->setMenu(InGameUI::RemoveMenu);
+				uiPtr->setMenu(InGameUI::ClassSelect);
+			}
 		}
 	}
 
@@ -761,9 +769,26 @@ public:
 				uiPtr->HUD.HP = local->getMaxHP();
 				uiPtr->setText(std::to_string(local->getHP()), scaleAndText::HP); //hp
 
-				uiPtr->HUD.ammo = local->getMaxAmmo();
-				std::string nText = std::to_string(local->getAmmo()) + "/" + std::to_string(local->getMaxAmmo());
-				uiPtr->setText(nText, scaleAndText::Ammo); //ammo
+
+				//Ammo
+				uiPtr->HUD.ammo = local->getAmmo();
+				int maxAmmo = local->getMaxAmmo();
+
+				std::string sAmmo = "0";
+				std::string sMaxAmmo = "0";
+
+				sAmmo += std::to_string(uiPtr->HUD.ammo);
+				sMaxAmmo += std::to_string(maxAmmo);
+
+				if (sAmmo.size() > 2)
+					sAmmo = std::to_string(uiPtr->HUD.ammo);
+				if (sMaxAmmo.size() > 2)
+					sMaxAmmo = std::to_string(maxAmmo);
+
+				std::string nText = sAmmo + "/" + sMaxAmmo;
+				uiPtr->setText(nText, scaleAndText::Ammo);
+				//
+
 				uiPtr->setText(std::to_string(koth->getRespawnTokens(1)), scaleAndText::TicketBar1); //tickets
 				uiPtr->setText(std::to_string(koth->getRespawnTokens(2)), scaleAndText::TicketBar2); //tickets2
 				uiPtr->setText(std::to_string(koth->getRoundWins(1)), scaleAndText::Wins1); //wins1
@@ -777,8 +802,6 @@ public:
 				uiPtr->HUD.specialMeter = 0.0f;
 				uiPtr->HUD.maxSpecialMeter = 100.0f;
 
-				uiPtr->scaleBar(scaleAndText::TicketBar1, (float)(koth->getRespawnTokens(1)) / (float)(koth->getMaxTokensPerTeam()), false);
-				uiPtr->scaleBar(scaleAndText::TicketBar2, (float)(koth->getRespawnTokens(2)) / (float)(koth->getMaxTokensPerTeam()), false);
 				uiPtr->scaleBar(scaleAndText::AbilityMeter, 0.0f, true);
 
 				uiPtr->setHoverCheckBool(false);

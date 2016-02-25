@@ -154,6 +154,18 @@ bool UI::loadUI(std::string fileName, int winX, int winY)
 				getline(myfile, inputString); //uniqueKey
 				uniqueKey = std::stoi(inputString);
 			}
+			else if (classId == 5)
+			{
+				getline(myfile, inputString);
+				tmpCounter = std::stoi(inputString);
+
+				textureArray = new int[tmpCounter];
+				for (int i = 0; i < tmpCounter; i++)
+				{
+					getline(myfile, inputString);
+					textureArray[i] = std::stoi(inputString);
+				}
+			}
 
 			if (classId == 0) //Button
 			{
@@ -167,9 +179,9 @@ bool UI::loadUI(std::string fileName, int winX, int winY)
 				if (menuId != 10) //??
 				{
 					if (textId == "abilityMeter")
-						textIdList[9] = counter;
+						textIdList[7] = counter;
 					else if (textId == "loseTicketsMeter")
-						textIdList[10] = counter;
+						textIdList[8] = counter;
 
 					UiObjects.push_back(new StaticTextureBoxes(xy, textureArray, tmpCounter, uiRender, textureRes[0]));
 					textureIdList[counter] = textureArray[0];
@@ -177,15 +189,6 @@ bool UI::loadUI(std::string fileName, int winX, int winY)
 					counter++;
 					delete[] textureArray;
 					textureArray = nullptr;
-				}
-				else
-				{
-					hideAbleObjects.push_back(new StaticTextureBoxes(xy, textureArray, tmpCounter, uiRender, textureRes[0]));
-					delete[] textureArray;
-					textureArray = nullptr;
-					result = true;
-					if((hideAbleObjects.size() - 1) != hideAbleObj::Banner)
-						hideAbleObjects[hideAbleObjects.size() - 1]->deleteOldestWM();
 				}
 			}
 			else if (classId == 3) //Slider
@@ -213,17 +216,27 @@ bool UI::loadUI(std::string fileName, int winX, int winY)
 					textIdList[2] = counter;
 				else if (textId == "ticketBar2")
 					textIdList[3] = counter;
-				else if (textId == "wins1")
-					textIdList[4] = counter;
-				else if (textId == "wins2")
-					textIdList[5] = counter;
 				else if (textId == "time")
-					textIdList[6] = counter;
+					textIdList[4] = counter;
 				else if (textId == "ip")
-					textIdList[7] = counter;
+					textIdList[5] = counter;
 				else if (textId == "name")
-					textIdList[8] = counter;
+					textIdList[6] = counter;
+				else if(textId == "wins1")
+					textIdList[9] = counter;
+				else if (textId == "wins2")
+					textIdList[10] = counter;
+
 				counter++;
+			}
+			else if (classId == 5)
+			{
+				hideAbleObjects.push_back(new HideAble(xy, textureArray, tmpCounter, uiRender, textureRes[0], offsetTextSize));
+				delete[] textureArray;
+				textureArray = nullptr;
+				result = true;
+				if ((hideAbleObjects.size() - 1) != hideAbleObj::Banner)
+					hideAbleObjects[hideAbleObjects.size() - 1]->deleteOldestWM();
 			}
 		}
 	}
@@ -231,7 +244,7 @@ bool UI::loadUI(std::string fileName, int winX, int winY)
 		console->printMsg("Error: File could not be opened", "System", 'S');
 	
 	myfile.close();
-	
+
 	return result;
 }
 

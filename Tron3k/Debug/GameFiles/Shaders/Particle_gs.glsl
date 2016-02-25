@@ -8,6 +8,10 @@ layout (location = 1) in vec4 iDir[1];
 //layout(location = 0) out vec4 dirOut;
 //layout(location = 1) out vec4 iDirOut;
 layout(location = 0) out vec2 uv_frag;
+layout(location = 1) out float intensity;
+
+layout(location = 2) out vec3 wPos;
+layout(location = 3) out vec3 normal;
 
 uniform mat4 VP;
 uniform vec3 cam;
@@ -64,16 +68,21 @@ void main()
 		vec3 up = dir[0].xyz;
 		vec3 right = cross(cam_normal, up);
 		
+		intensity = iDir[0].w;
+		
 		vec3 v = pos;
 		
 		up *= (size.y / 2);
 		right *= (size.x / 2);
+		
+		normal = cam_normal;
 		
 		v = pos;
 		v -= right;
 		v -= up;
 		uv_frag = vec2(0.0f, 0.0f);
 		gl_Position = VP * vec4(v, 1.0f);
+		wPos = v;
 		EmitVertex();
 		
 		v = pos;
@@ -81,6 +90,7 @@ void main()
 		v -= up;
 		uv_frag = vec2(1.0f, 0.0f);
 		gl_Position = VP * vec4(v, 1.0f);
+		wPos = v;
 		EmitVertex();
 
 		v = pos;
@@ -88,6 +98,7 @@ void main()
 		v += up;
 		uv_frag = vec2(0.0f, 1.0f);
 		gl_Position = VP * vec4(v, 1.0f);
+		wPos = v;
 		EmitVertex();		
 
 		v = pos;
@@ -95,6 +106,7 @@ void main()
 		v += up;
 		uv_frag = vec2(1.0f, 1.0f);
 		gl_Position = VP * vec4(v, 1.0f);
+		wPos = v;
 		EmitVertex();
 		
 		EndPrimitive();

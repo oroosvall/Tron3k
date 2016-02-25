@@ -33,3 +33,17 @@ texture size           //Size of the text
 UniqueKey	  //A value that says what will happen when its clicked on. If the button doesn't have any event then just leave it at -1
 
 Slider: //Here is what the slider needs
+
+//Class id 5
+x y		  //x and y for the center of the box.
+class id	  //Says which class the button needs to be.
+noText			//Says if the object is going to render text. 1 for yes and the rest for no
+if(noText == 1)
+	dynamic text x offset  //The amount the text needs to be moved in order to be alined with the texture in x
+	dynamic text y offset  //The amount the text needs to be moved in order to be alined with the texture in y
+	texture size           //Size of the text
+number of textures //Only needed if the class id is 1
+texture		   //As many textures as the row above says
+.
+.
+.

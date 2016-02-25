@@ -672,7 +672,7 @@ void RenderPipeline::finalizeRender()
 	glEnable(GL_DEPTH_TEST);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	glProgramUniform1i(particleShader, particleGlow, 0);
+	glProgramUniform1i(particleShader, particleGlow, 1);
 
 	glDepthMask(GL_FALSE);
 
@@ -763,6 +763,11 @@ void RenderPipeline::renderWallEffect(void* pos1, void* pos2, float uvStartOffse
 
 }
 
+void RenderPipeline::initRenderRegular()
+{
+	glUseProgram(regularShader);
+}
+
 void RenderPipeline::initRenderEffect()
 {
 	glUseProgram(exploShader);
@@ -782,11 +787,9 @@ void RenderPipeline::rendereffect(int type, float* pos, float rad, float transp,
 	case CLEANSENOVA:			break;
 	case BATTERY_SLOW:			break;
 	case BATTERY_SPEED:			break;
-	case THERMITE_CLOUD:	speed = 1.0f;	break;
+	case THERMITE_CLOUD:		break;
 	case VACUUM:				break;
-	case HEALTHPACK:			break;
-	case HSCPICKUP:				break;
-	case DOUBLEDAMAGEPICKUP:	break;
+	case HEALTHPACK:		speed = 0.5f;	break;
 	default:
 		break;
 	}
@@ -848,10 +851,13 @@ void RenderPipeline::renderCrosshair(CROSSHAIR_TYPE cross)
 	glProgramUniformMatrix4fv(textShader, textShaderVP, 1, GL_FALSE, (GLfloat*)&glm::mat4());
 	glProgramUniform3f(textShader, textShaderOffset, 0, 0, 0);
 
+	glActiveTexture(GL_TEXTURE0);
+	glProgramUniform1i(textShader, textShaderLocation, 0);
+
 	switch (cross)
 	{
 	case CROSSHAIR_TRAPPER_P:
-		TextureManager::gTm->bindTexture(crosshairTexture, textShader, textShaderLocation, DIFFUSE_FB);
+		TextureManager::gTm->bindTextureOnly(crosshairTexture, DIFFUSE_FB);
 		this->cross->draw();
 		break;
 	case CROSSHAIR_SHANKER_P:
@@ -861,7 +867,8 @@ void RenderPipeline::renderCrosshair(CROSSHAIR_TYPE cross)
 		asd.state = TEXTURE_LOADED;
 		asd.textureID = crosshairHitTexture;
 
-		TextureManager::gTm->bind(asd, textShader, textShaderLocation);
+		//TextureManager::gTm->bindOnly(asd, textShader, textShaderLocation);
+		glBindTexture(GL_TEXTURE_2D, crosshairHitTexture);
 
 		this->crossHit->draw();
 		break;
@@ -969,10 +976,10 @@ void RenderPipeline::renderBullet(int bid, void* world, float* dgColor, float sg
 	glProgramUniform1f(regularShader, uniformStaticGlowIntensityLocation[0], sgInten);
 	glProgramUniform3fv(regularShader, uniformDynamicGlowColorLocation[0], 1, (GLfloat*)&dgColor[0]);
 
-	if (bid == BULLET_TYPE::PULSE_SHOT)
+	//if (bid == BULLET_TYPE::PULSE_SHOT)
 		glProgramUniform1f(regularShader, uniformGlowTrail[0], 1.0f);
-	else
-		glProgramUniform1f(regularShader, uniformGlowTrail[0], 0.0f);
+	//else
+		//glProgramUniform1f(regularShader, uniformGlowTrail[0], 0.0f);
 
 	glProgramUniform1i(regularShader, uniformTextureLocation[0], 0);
 	glProgramUniform1i(regularShader, uniformNormalLocation[0], 1);
@@ -1040,21 +1047,59 @@ bool RenderPipeline::setSetting(PIPELINE_SETTINGS type, PipelineValues value)
 	return true;
 }
 
-void RenderPipeline::createTimedParticleEffect(PARTICLE_EFFECTS peffect, vec3 pos, glm::vec3 dir, glm::vec3 color)
+void RenderPipeline::createTimedParticleEffect(BULLET_TYPE peffect, vec3 pos, glm::vec3 dir, glm::vec3 color)
 {
-	std::string path = "Gamefiles/ParticleSystems/trapperBulletHit.ps";
+	std::string path = "Gamefiles/ParticleSystems/";
 
-	//switch (peffect)
-	//{
-	//case PARTICLE_HIT:
-	//	break;
-	//case PARTICLE_EXPLODE:
-	//	break;
-	//case PARTICLE_HACKED:
-	//	break;
-	//default:
-	//	break;
-	//}
+	switch (peffect)
+	{
+	case PULSE_SHOT:
+		path += "trapperBulletHit.ps";
+		break;
+	case DISC_SHOT:
+		path += "discshotHit.ps";
+		break;
+	case BATTERY_SPEED_SHOT:
+		break;
+	case BATTERY_SLOW_SHOT:
+		break;
+	case LINK_SHOT:
+		path += "fusionHit.ps";
+		break;
+	case PLASMA_SHOT:
+		break;
+	case GRENADE_SHOT:
+		path += "grenadeShotHit.ps";
+		break;
+	case SHOTGUN_PELLET:
+		path += "shotgunPelletHit.ps";
+		break;
+	case THERMITE_GRENADE:
+		break;
+	case CLUSTER_GRENADE:
+		path += "grenadeShotHit.ps";
+		break;
+	case CLUSTERLING:
+		break;
+	case CLEANSE_BOMB:
+		break;
+	case HACKING_DART:
+		path += "hackingdartHit.ps";
+		break;
+	case VACUUM_GRENADE:
+		break;
+	case MELEE_ATTACK:
+		path += "meleeHit.ps";
+		break;
+	case GRAPPLING_HOOK:
+		break;
+	case KILLYOURSELF:
+		break;
+	case NROFBULLETS:
+		break;
+	default:
+		break;
+	}
 
 	std::ifstream file;
 	file.open(path, std::ios::binary | std::ios::in);

@@ -31,6 +31,7 @@ struct BulletHitPlayerInfo
 	int playerHit;
 	int bulletPID;
 	int bulletBID;
+	glm::vec3 hitDir;
 	BULLET_TYPE bt;
 	int newHPtotal;
 };
@@ -126,6 +127,7 @@ struct HitPosAndDir
 	glm::vec3 pos;
 	glm::vec3 dir;
 	glm::vec3 color;
+	BULLET_TYPE btype;
 };
 
 class Game

@@ -92,6 +92,7 @@
     <ClCompile Include="Core\Game\Role\Weapon\WeaponTypes\Trapper\PulseRifle.cpp" />
     <ClCompile Include="Core\Input.cpp" />
     <ClCompile Include="Core\ui\Button.cpp" />
+    <ClCompile Include="Core\ui\HideAble.cpp" />
     <ClCompile Include="Core\ui\InputBox.cpp" />
     <ClCompile Include="Core\ui\Slider.cpp" />
     <ClCompile Include="Core\ui\StaticTextureBoxes.cpp" />
@@ -186,6 +187,7 @@
     <ClInclude Include="Core\Input.h" />
     <ClInclude Include="Core\sharedStructs.h" />
     <ClInclude Include="Core\ui\Button.h" />
+    <ClInclude Include="Core\ui\HideAble.h" />
     <ClInclude Include="Core\ui\InputBox.h" />
     <ClInclude Include="Core\ui\Slider.h" />
     <ClInclude Include="Core\ui\StaticTextureBoxes.h" />
