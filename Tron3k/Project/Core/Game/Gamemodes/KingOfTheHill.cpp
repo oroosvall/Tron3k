@@ -39,6 +39,8 @@ void KingOfTheHill::init(Console* cptr, Game* gptr)
 	winScore = 5;
 
 	tokensPerTeam = 20;
+	pointsPerRound = 3;
+	overtimer = 46.0f;
 
 	tickForCaptureScoring = 15.0f;
 	timerModifierForCaptureScoring = tickForCaptureScoring;
@@ -213,9 +215,9 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 		{
 			consolePtr->printMsg("OVERTIME BEGINS", "System", 'S');
 			state = OVERTIME;
-			pointsLeftThisRound = 3;
-			timer = 46.0f;
-			timerModifierForCaptureScoring = 30.0f;
+			pointsLeftThisRound = pointsPerRound;
+			timer = overtimer;
+			timerModifierForCaptureScoring = overtimer - 16.0f;
 		}
 		break;
 
@@ -242,13 +244,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			}
 			if (allDead)
 			{
-				if (pointsLeftThisRound == 3)
-					teamTwoScore += 3;
-				else if (pointsLeftThisRound == 2)
-					teamTwoScore += 2;
-				else
-					teamTwoScore++;
-
+				teamTwoScore += pointsLeftThisRound;
 				if (teamTwoScore >= winScore)
 					msg = MATCH_WIN_TEAM2;
 			}
@@ -271,13 +267,7 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 			}
 			if (allDead)
 			{
-				if (pointsLeftThisRound == 3)
-					teamOneScore += 3;
-				else if (pointsLeftThisRound == 2)
-					teamOneScore += 2;
-				else
-					teamOneScore++;
-
+				teamOneScore += pointsLeftThisRound;
 				if (teamOneScore >= winScore)
 					msg = MATCH_WIN_TEAM1;
 			}

@@ -1792,6 +1792,63 @@ void Core::serverHandleCmds()
 					game->spectateID = -1;
 			}
 		}
+		//Everything below is KOTH specific :(
+		else if (token == "/setready")
+		{
+			int readyNeeded = 0;
+			if (!(ss >> readyNeeded))
+			{
+				console.printMsg("Invalid input", "System", 'S');
+			}
+			else
+			{
+				KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
+				koth->setReadyNeeded(readyNeeded);
+				console.printMsg("Set readies needed", "System", 'S');
+			}
+		}
+		else if (token == "/settokens")
+		{
+			int tokens = 0;
+			if (!(ss >> tokens))
+			{
+				console.printMsg("Invalid input", "System", 'S');
+			}
+			else
+			{
+				KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
+				koth->setTeamTokens(tokens);
+				console.printMsg("Tokens set", "System", 'S');
+			}
+		}
+		else if (token == "/setwinscore")
+		{
+			int win = 0;
+			if (!(ss >> win))
+			{
+				console.printMsg("Invalid input", "System", 'S');
+			}
+			else
+			{
+				KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
+				koth->setWinScore(win);
+				console.printMsg("Win score set", "System", 'S');
+			}
+		}
+		else if (token == "/setpoints")
+		{
+			int points = 0;
+			if (!(ss >> points))
+			{
+				console.printMsg("Invalid input", "System", 'S');
+			}
+			else
+			{
+				KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
+				koth->setScorePerRound(points);
+				console.printMsg("Points per round set", "System", 'S');
+			}
+		}
 	}
 }
 

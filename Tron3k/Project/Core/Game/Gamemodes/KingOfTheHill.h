@@ -38,9 +38,11 @@ private:
 	int teamTwoScore;
 	int winScore;
 
+	int pointsPerRound;
 	int tokensPerTeam;
 	int teamOneSpawnTokens;
 	int teamTwoSpawnTokens;
+	float overtimer;
 
 	bool freeze = false;
 	bool slowdownTime = false;
@@ -61,6 +63,11 @@ public:
 	~KingOfTheHill();
 	void init(Console* cptr, Game* gptr);
 	GAMEMODE_MSG update(float dt);
+
+	void setReadyNeeded(int r) { playersReadyNeeded = r; };
+	void setTeamTokens(int s) { tokensPerTeam = s; };
+	void setWinScore(int w) { winScore = w; };
+	void setScorePerRound(int p) { pointsPerRound = p; overtimer = float(p + 1)*15.0f + 1.0f; };
 
 	int getMaxTokensPerTeam();
 	int getRespawnTokens(int team);
