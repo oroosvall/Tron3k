@@ -1321,6 +1321,10 @@ void Game::addBulletToList(int conID, int teamId, int bulletId, BULLET_TYPE bt, 
 		b = new MeleeAttack(vec3(999.0f, 999.0f, 999.0f), dir, conID, bulletId, teamId, p);
 		break;
 	case BULLET_TYPE::GRAPPLING_HOOK:
+		rightV *= 0.2;
+		upV *= -0.15f;
+		dirMod *= 0.8f;
+		pos += upV + rightV + dirMod;
 		b = new GrapplingHook(pos, dir, conID, bulletId, teamId);
 	}
 
