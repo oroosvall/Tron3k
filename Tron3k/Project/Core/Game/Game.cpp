@@ -2032,18 +2032,15 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 		case EFFECT_TYPE::HSCPICKUP:
 		{
 			HSCPickup* tester = (HSCPickup*)theEffect;
-			if (!tester->onCooldown())
-			{
-				if (gameState == SERVER)
-					p->setHP(p->getMaxHP());
-				p->getRole()->setSpecialMeter(100);
-				p->getRole()->getConsumable()->reset();
-				tester->startCooldown();
+			if (gameState == SERVER)
+				p->setHP(p->getMaxHP());
+			p->getRole()->setSpecialMeter(100);
+			p->getRole()->getConsumable()->reset();
+			tester->startCooldown();
 
-				if (gameState != SERVER && GetSound() && hi.playerHit == localPlayerId)
-				{
-					GetSound()->playExternalSound(SOUNDS::soundEffectHSCPickup, pos.x, pos.y, pos.z, CATEGORY::Effects);
-				}
+			if (gameState != SERVER && GetSound() && hi.playerHit == localPlayerId)
+			{
+				GetSound()->playExternalSound(SOUNDS::soundEffectHSCPickup, pos.x, pos.y, pos.z, CATEGORY::Effects);
 			}
 		}
 		break;
@@ -2393,6 +2390,8 @@ void Game::handleBulletTimeOuts(BulletTimeOutInfo hi)
 	if (b != nullptr)
 	{
 		b->setPos(hi.pos);
+		if (hi.bt == BULLET_TYPE::BATTERY_SLOW_SHOT || hi.bt == BULLET_TYPE::BATTERY_SPEED_SHOT)
+			b->setSpawnAdditionals(false);
 		removeBullet(hi.bt, posInArray);
 	}
 }
