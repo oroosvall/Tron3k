@@ -1754,9 +1754,9 @@ void Game::addEffectToList(int conID, int teamId, int effectId, EFFECT_TYPE et, 
 
 		ep.pos = pos;
 		ep.etype = et;
-		if (teamId == 1)
+		if (teamId == 1 || (et == EFFECT_TYPE::HEALTHPACK && teamId == 2))
 			ep.color = TEAMONECOLOR;
-		if (teamId == 2)
+		if (teamId == 2 || (et == EFFECT_TYPE::HEALTHPACK && teamId == 1))
 			ep.color = TEAMTWOCOLOR;
 		else
 		{

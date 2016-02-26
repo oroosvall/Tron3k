@@ -1189,6 +1189,7 @@ void RenderPipeline::createTimedParticleEffect(EFFECT_TYPE eeffect, glm::vec3 po
 	case VACUUM:
 		break;
 	case HEALTHPACK:
+		path += "healthPack.ps";
 		break;
 	case HSCPICKUP:
 		break;
