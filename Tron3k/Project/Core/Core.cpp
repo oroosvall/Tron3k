@@ -4041,8 +4041,8 @@ void Core::effectsRender(int hackedTeam)
 	}
 
 	renderPipe->enableBlend(false);
-	renderPipe->disableDepthTest();
-	renderPipe->enableDepthMask();
+	//renderPipe->disableDepthTest();
+	//renderPipe->enableDepthMask();
 }
 
 std::string Core::hudTextOutPutManager(bool onlyOne, int first, int second)
@@ -4078,6 +4078,7 @@ std::string Core::hudTextOutPutManager(bool onlyOne, int first, int second)
 	}
 	return nText;
 }
+
 void Core::trailQuadsRender(int hackedTeam)
 {		
 	renderPipe->initRenderTrailQuad();
