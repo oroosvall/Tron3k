@@ -260,7 +260,7 @@ void UIManager::init(Console* console, int winX, int winY)
 		console->printMsg("Error: UIManager.init could not open the second groups file.", "System", 'S');
 	myfile.close();
 
-	currentGroup = 1;
+	currentGroup = -1;
 	this->winX = winX;
 	this->winY = winY;
 
