@@ -154,16 +154,16 @@ void UIManager::init(Console* console, int winX, int winY)
 	texturePaths.push_back("GameFiles/Textures/UITextures/ClassSelect/class_selection_punisher_hover.png"); //33
 
 	//Temp
-	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/Victory.png"); //34
-	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/Defeat.png"); //35
-	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/ParkingArea.png"); //36
-	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/Market.png"); //37
-	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/HoldCapturePoint.png"); //38
-	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/FinalAssult.png"); //39
-	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/TicketReducer.png"); //40
-	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/ScoreAdder1.png"); //41
-	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/ScoreAdder2.png"); //42
-	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/ScoreAdder3.png"); //43
+	texturePaths.push_back("GameFiles/Textures/UITextures/Banners/banner_victory.png"); //34
+	texturePaths.push_back("GameFiles/Textures/UITextures/Banners/banner_defeat.png"); //35
+	texturePaths.push_back("GameFiles/Textures/UITextures/Banners/banner_objective_docks.png"); //36
+	texturePaths.push_back("GameFiles/Textures/UITextures/Banners/banner_objective_fishmarket.png"); //37
+	texturePaths.push_back("GameFiles/Textures/UITextures/Banners/banner_defend_the_objective.png"); //38
+	texturePaths.push_back("GameFiles/Textures/UITextures/Banners/banner_final_assult.png"); //39
+	texturePaths.push_back("GameFiles/Textures/UITextures/Banners/tickloss_1_green.png"); //40
+	texturePaths.push_back("GameFiles/Textures/UITextures/Banners/pointgain_1_green.png"); //41
+	texturePaths.push_back("GameFiles/Textures/UITextures/Banners/pointgain_2_green.png"); //42
+	texturePaths.push_back("GameFiles/Textures/UITextures/Banners/pointgain_3_green.png"); //43
 	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/EndofRound.png"); //44
 
 	//New HUD
@@ -185,9 +185,17 @@ void UIManager::init(Console* console, int winX, int winY)
 	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/NewVersion/topframes_right_points.png"); //58 rounds team 1
 
 	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/TicketReducer2.png"); //59
-	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/TicketReducer3.png"); //60
+	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/tickloss_3_green.png"); //60
 
-	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/NewVersion/countdown_background.png");
+	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/NewVersion/countdown_background.png"); //61
+
+	texturePaths.push_back("GameFiles/Textures/UITextures/Banners/pointgain_1_orange.png"); //62
+	texturePaths.push_back("GameFiles/Textures/UITextures/Banners/pointgain_2_orange.png"); //63
+	texturePaths.push_back("GameFiles/Textures/UITextures/Banners/pointgain_3_orange.png"); //64
+
+	texturePaths.push_back("GameFiles/Textures/UITextures/Banners/tickloss_1_orange.png"); //65
+	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/TicketReducer2.png"); //66
+	texturePaths.push_back("GameFiles/Textures/UITextures/Banners/tickloss_3_orange.png"); //67
 
 
 

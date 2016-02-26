@@ -760,6 +760,9 @@ void Core::upClient(float dt)
 					uiManager->scaleAndTextChangeTexture(scaleAndText::Wins2, 0);
 					uiManager->scaleAndTextChangeTexture(scaleAndText::TicketBar1, 0);
 					uiManager->scaleAndTextChangeTexture(scaleAndText::TicketBar2, 0);
+
+					uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam1, false);
+					uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam2, false);
 				}
 
 				//Rights out the of round.
@@ -786,6 +789,9 @@ void Core::upClient(float dt)
 
 					uiManager->scaleAndTextChangeTexture(scaleAndText::Wins1, 0);
 					uiManager->scaleAndTextChangeTexture(scaleAndText::Wins2, 0);
+
+					uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam1, false);
+					uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam2, false);
 				}
 
 				//Checks to see if the banners "Final Assult" or Hold Your Ground" should be shown.
@@ -893,6 +899,9 @@ void Core::upClient(float dt)
 					{
 						showClassSelect();
 					}
+
+					uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam1, false);
+					uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam2, false);
 				}
 			}
 		}
@@ -925,6 +934,9 @@ void Core::upClient(float dt)
 				//dont show class select when in spectate
 				if (localp->getTeam() != 0)
 					showClassSelect();
+
+				uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam1, false);
+				uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam2, false);
 			}
 			else if (tmp == KOTHSTATE::ROUND)
 			{
@@ -2696,10 +2708,14 @@ void Core::inGameUIUpdate() //Ingame ui update
 			sAmmo += std::to_string(uiManager->HUD.ammo);
 			sMaxAmmo += std::to_string(maxAmmo);
 
-			if (sAmmo.size() > 2)
+			if (sAmmo.size() == 3)
 				sAmmo = std::to_string(uiManager->HUD.ammo);
-			if (sMaxAmmo.size() > 2)
+			else if (sAmmo.size() > 3)
+				sAmmo = "99";
+			if (sMaxAmmo.size() == 3)
 				sMaxAmmo = std::to_string(maxAmmo);
+			else if (sMaxAmmo.size() > 3)
+				sMaxAmmo = "99";
 
 			std::string nText = sAmmo + "/" + sMaxAmmo;
 			uiManager->clearText(scaleAndText::Ammo);
@@ -2714,7 +2730,8 @@ void Core::inGameUIUpdate() //Ingame ui update
 
 		uiManager->HUD.teamOneTokens = koth->getRespawnTokens(1);
 		uiManager->clearText(scaleAndText::TicketBar1);
-		uiManager->setText(std::to_string(uiManager->HUD.teamOneTokens), scaleAndText::TicketBar1);
+		std::string nText = hudTextOutPutManager(true, uiManager->HUD.teamOneTokens);
+		uiManager->setText(nText, scaleAndText::TicketBar1);
 		
 		int tmp = uiManager->addNewWM(hideAbleObj::TicketReducerTeam1);
 		if (tmp != -1)
@@ -2736,8 +2753,8 @@ void Core::inGameUIUpdate() //Ingame ui update
 
 		uiManager->HUD.teamTwoTokens = koth->getRespawnTokens(2);
 		uiManager->clearText(scaleAndText::TicketBar2);
-		uiManager->setText(std::to_string(uiManager->HUD.teamTwoTokens), scaleAndText::TicketBar2);
-		
+		std::string nText = hudTextOutPutManager(true, uiManager->HUD.teamTwoTokens);
+		uiManager->setText(nText, scaleAndText::TicketBar2);
 
 		int tmp = uiManager->addNewWM(hideAbleObj::TicketReducerTeam2);
 		if (tmp != -1)
@@ -2763,8 +2780,9 @@ void Core::inGameUIUpdate() //Ingame ui update
 	
 			uiManager->HUD.teamOneScore = koth->getRoundWins(1);
 			uiManager->clearText(scaleAndText::Wins1);
-			uiManager->setText(std::to_string(uiManager->HUD.teamOneScore), scaleAndText::Wins1);
-	
+			std::string nText = hudTextOutPutManager(true, uiManager->HUD.teamOneScore);
+			uiManager->setText(nText, scaleAndText::Wins1);
+
 			if (difference > 0 && difference < 4)
 			{
 				int tmp = uiManager->addNewWM(hideAbleObj::ScoreAdderTeam1);
@@ -2791,8 +2809,9 @@ void Core::inGameUIUpdate() //Ingame ui update
 	
 			uiManager->HUD.teamTwoScore = koth->getRoundWins(2);
 			uiManager->clearText(scaleAndText::Wins2);
-			uiManager->setText(std::to_string(uiManager->HUD.teamTwoScore), scaleAndText::Wins2);
-	
+			std::string nText = hudTextOutPutManager(true, uiManager->HUD.teamTwoScore);
+			uiManager->setText(nText, scaleAndText::Wins2);
+
 			if (difference > 0 && difference < 4)
 			{
 				int tmp = uiManager->addNewWM(hideAbleObj::ScoreAdderTeam2);
@@ -4041,7 +4060,7 @@ std::string Core::hudTextOutPutManager(bool onlyOne, int first, int second)
 			sFirst = std::to_string(first);
 		else if (sFirst.size() > 3)
 			sFirst = "99";
-		if (sSecond.size() > 3)
+		if (sSecond.size() == 3)
 			sSecond = std::to_string(second);
 		else if (sSecond.size() > 3)
 			sSecond = "99";

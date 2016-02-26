@@ -790,7 +790,7 @@ public:
 					sFirst = std::to_string(uiPtr->HUD.ammo);
 				else if (sFirst.size() > 3)
 					sFirst = "99";
-				if (sSecond.size() > 3)
+				if (sSecond.size() == 3)
 					sSecond = std::to_string(maxAmmo);
 				else if (sSecond.size() > 3)
 					sSecond = "99";
