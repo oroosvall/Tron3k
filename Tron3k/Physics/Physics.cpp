@@ -503,34 +503,37 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb, bool isBullet)
 	{
 		t = obb->lines[n].sphere_intersects(pos, rad);
 
-		if (obb->lines[n].line.y < -FLT_EPSILON || obb->lines[n].line.y > FLT_EPSILON)
+		if (!isBullet)
 		{
-			if (t.w > 0)
+			if (obb->lines[n].line.y < -FLT_EPSILON || obb->lines[n].line.y > FLT_EPSILON)
 			{
-				if (t.w < closest.w) // a new closest dist was found
+				if (t.w > 0)
 				{
-					closest = t;
+					if (t.w < closest.w) // a new closest dist was found
+					{
+						closest = t;
+					}
 				}
 			}
+			else //This is for flat lines. Else we occasionally got stuck on slopes. Without this we would also sometimes fall through lines
+			{
+				if (t.w > 0)
+					if (t.w < closest.w) // a new closest dist was found
+					{
+						closest.x = t.x;
+						closest.y = abs(t.y);
+						closest.z = t.z;
+						closest.w = t.w;
+					}
+			}
 		}
-		else //This is for flat lines. Else we occasionally got stuck on slopes. Without this we would also sometimes fall through lines
-		{
-			if (t.w > 0)
-				if (t.w < closest.w) // a new closest dist was found
-				{
-					closest.x = t.x;
-					closest.y = abs(t.y);
-					closest.z = t.z;
-					closest.w = t.w;
-				}
-		}
-		if (closest.w < FLT_MAX && isBullet)
+		if (t.w < FLT_MAX && isBullet)
 		{
 			vec3 direc = normalize(obb->lines[n].plane1Normal + obb->lines[n].plane2Normal);
-			
-				closest.x = direc.x;
-				closest.y = direc.y;
-				closest.z = direc.z;
+
+			closest.x = direc.x;
+			closest.y = direc.y;
+			closest.z = direc.z;
 		}
 	}
 	//if we found a line intersection it will always be closer
@@ -548,12 +551,18 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb, bool isBullet)
 
 		if (test_len <= closest.w)
 		{
-			closest.x = test.x; closest.y = test.y; closest.z = test.z;
+
 			if (isBullet)
 			{
 				closest.x = obb->cornerNorms[n].x;
 				closest.y = obb->cornerNorms[n].y;
 				closest.z = obb->cornerNorms[n].z;
+			}
+			else
+			{
+				closest.x = test.x;
+				closest.y = test.y;
+				closest.z = test.z;
 			}
 			closest.w = test_len;
 		}
@@ -699,7 +708,7 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos, vec3 playerDir,
 
 			for (int n = 0; n < size; n++)
 			{
-				
+
 				t = getSpherevOBBNorms(playerPos, rad, roomBoxes[0].getSpecificBox(j)->getOBB(n));
 				//t = checkOBBvCylinderCollision(playerBox.getCylinder(), *roomBoxes[0].getSpecificBox(j)->getOBB(n));
 				t.w = rad - t.w; //penetration depth instead of collision distance 
@@ -769,7 +778,7 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos, vec3 playerDir,
 						else
 						{
 							t = getSpherevOBBNorms(origPos, rad, roomBoxes[i].getSpecificBox(j)->getOBB(n));
-						//	t = checkOBBvCylinderCollision(playerBox.getCylinder(), *roomBoxes[i].getSpecificBox(j)->getOBB(n));
+							//	t = checkOBBvCylinderCollision(playerBox.getCylinder(), *roomBoxes[i].getSpecificBox(j)->getOBB(n));
 							t.w = rad - t.w; //penetration depth instead of collision distance 
 							if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
 							{
@@ -951,7 +960,7 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 								{
 									t = vec4(dir, t.w + 0.2f);
 									bPos -= dir* rad;
-									posAdjs.push_back(bPos); 
+									posAdjs.push_back(bPos);
 									cNorms.push_back(t);
 								}
 

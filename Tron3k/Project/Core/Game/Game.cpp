@@ -2172,7 +2172,7 @@ void Game::bounceBullet(BulletHitWorldInfo hwi, Bullet* theBullet)
 
 		float d = dot(dir, combinedNormal2);
 
-		if (d < 0.3f)
+		if (d < 0.3f && d >= 0.0f)
 			dir = normalize((dir * (1 - d)) + (combinedNormal2 * d));
 		/*
 		//float dotp = dot(dirn, obb->planes[n].n);
