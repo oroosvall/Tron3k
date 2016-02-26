@@ -1679,6 +1679,17 @@ void Game::handleSpecialAbilityUse(int conID, int teamId, int sID, SPECIAL_TYPE 
 	case SPECIAL_TYPE::GRAPPLINGHOOKSPECIAL:
 	{
 		addBulletToList(conID, teamId, 0, BULLET_TYPE::GRAPPLING_HOOK, pos, dir);
+
+		if (GetSound())
+		{
+			if (conID == localPlayerId || conID == spectateID)
+			{
+				GetSound()->playExternalSound(SOUNDS::soundEffectGrapplingShotStereo, pos.x, pos.y, pos.z, CATEGORY::Effects);
+			}
+
+			else
+				GetSound()->playExternalSound(SOUNDS::soundEffectGrapplingShot, pos.x, pos.y, pos.z, CATEGORY::Effects);
+		}
 	}
 	break;
 	case SPECIAL_TYPE::CLEANSESPECIAL:

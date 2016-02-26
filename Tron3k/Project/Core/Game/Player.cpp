@@ -101,7 +101,7 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool spectatin
 	if ((vel.x != 0 || vel.z != 0) && this->grounded)
 	{
 
-		if (this->getFootsteps() && this->getGrounded() && GetSoundActivated() && this->role.getRole() != 1)
+		if (this->getFootsteps() && this->getGrounded() && GetSoundActivated() && this->role.getRole() != 1 && !i->getKeyInfo(GLFW_KEY_SPACE))
 		{
 			this->setFootstepsCountdown();
 			this->setFootstepsLoop(false);
