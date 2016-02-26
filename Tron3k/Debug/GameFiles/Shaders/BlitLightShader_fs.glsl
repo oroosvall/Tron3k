@@ -152,7 +152,7 @@ void main()
 
 	//middle sample
 	sum += texture(GlowMap, UV) * 0.146768;
-	sum = texture(GlowMap2, UV);
+	//sum = texture(GlowMap2, UV);
 	
 	fragment_color += sum + specularAddetive;
 }

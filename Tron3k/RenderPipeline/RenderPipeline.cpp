@@ -731,7 +731,7 @@ void RenderPipeline::finalizeRender()
 
 	glDisable(GL_BLEND);
 
-	gBuffer->preRender(glowSampleShader, 0);
+	//gBuffer->preRender(glowSampleShader, 0);
 
 	//GBuffer Render
 	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
