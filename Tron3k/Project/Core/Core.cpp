@@ -1869,7 +1869,14 @@ void Core::clientHandleCmds(std::string com)
 				}
 			}
 		}
-
+		else if (token == "/fullscreen")
+		{
+			if (fullscreen)
+				fullscreen = false;
+			else
+				fullscreen = true;
+			recreate = true;
+		}
 		else if (token == "/cleanup")
 		{
 			GetSound()->playUserGeneratedSound(SOUNDS::announcerCleanup, CATEGORY::Announcer);
