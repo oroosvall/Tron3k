@@ -267,6 +267,8 @@ public:
 
 	virtual void enableDepthTest();
 	virtual void disableDepthTest();
+	virtual void enableDepthMask();
+	virtual void disableDepthMask();
 	virtual void enableBlend(bool addetive);
 	virtual void disableBlend();
 	virtual void clearBothBuffers();

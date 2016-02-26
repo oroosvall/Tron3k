@@ -3924,6 +3924,9 @@ void Core::effectsRender(int hackedTeam)
 
 	//regular shader Double damage & HCS pickup
 	renderPipe->initRenderRegular();
+	//renderPipe->disableBlend();
+	//renderPipe->enableDepthTest();
+	//renderPipe->disableDepthMask();
 
 	for (int c = EFFECT_TYPE::HSCPICKUP; c < EFFECT_TYPE::NROFEFFECTS; c++)
 	{
@@ -4019,6 +4022,8 @@ void Core::effectsRender(int hackedTeam)
 	}
 
 	renderPipe->enableBlend(false);
+	renderPipe->disableDepthTest();
+	renderPipe->enableDepthMask();
 }
 
 std::string Core::hudTextOutPutManager(bool onlyOne, int first, int second)
