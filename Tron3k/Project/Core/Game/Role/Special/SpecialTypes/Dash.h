@@ -15,5 +15,6 @@ public:
 	int update(float deltaTime);
 
 	bool allowedToActivate(Player* p);
+	bool isActive() { if (timer > FLT_EPSILON) return true; return false; };
 };
 #endif

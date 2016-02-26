@@ -13,7 +13,7 @@ void TrueGrit::init(Player* myTarget)
 	oldHealth = target->getHP();
 
 	vel = target->getDir();
-	vel *= glm::vec3(2.0f, 0.0f, 2.0f);
+	vel *= glm::vec3(1.6f, 0.0f, 1.6f);
 	vel.y = 5.0f; //Jump height at initial dash
 	target->setVelocity(vel);
 	target->setGrounded(false);
@@ -68,4 +68,16 @@ int TrueGrit::setData(float dt)
 		timer -= dt;
 
 	return 0;
+}
+
+void TrueGrit::refresh()
+{
+	lifeTime = 0.2; 
+	dashDone = false; 
+	
+	vel = target->getDir();
+	vel *= glm::vec3(1.6f, 0.0f, 1.6f);
+	vel.y = 5.0f; //Jump height at initial dash
+	target->setVelocity(vel);
+	target->setGrounded(false);
 }

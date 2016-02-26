@@ -1661,7 +1661,13 @@ void Game::handleSpecialAbilityUse(int conID, int teamId, int sID, SPECIAL_TYPE 
 	break;
 	case SPECIAL_TYPE::DASH:
 	{
-		p->addModifier(MODIFIER_TYPE::TRUEGRITMODIFIER);
+		TrueGrit* temp = (TrueGrit*)p->searchModifierGet(MODIFIER_TYPE::TRUEGRITMODIFIER);
+		if (temp)
+		{
+			temp->refresh();
+		}
+		else
+			p->addModifier(MODIFIER_TYPE::TRUEGRITMODIFIER);
 		if (GetSound())
 		{
 			if (conID == localPlayerId || conID == spectateID)
