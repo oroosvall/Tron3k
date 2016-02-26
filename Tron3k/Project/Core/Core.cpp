@@ -493,8 +493,9 @@ void Core::upRoam(float dt)
 			game->handleWeaponSwitch(0, wt, swaploc);
 
 			Player* p = game->getPlayer(0);
-			uiManager->HUD.ammo = p->getMaxAmmo();
-			std::string nText = std::to_string(p->getAmmo()) + "/" + std::to_string(p->getMaxAmmo());
+			uiManager->HUD.ammo = p->getAmmo();
+
+			std::string nText = hudTextOutPutManager(false, uiManager->HUD.ammo, p->getMaxAmmo());//std::to_string(p->getAmmo()) + "/" + std::to_string(p->getMaxAmmo());
 			uiManager->clearText(scaleAndText::Ammo);
 			uiManager->setText(nText, scaleAndText::Ammo);
 		}
@@ -768,7 +769,7 @@ void Core::upClient(float dt)
 				//Rights out the of round.
 				if (firstTimeInEnd && tmp == KOTHSTATE::ENDROUND)
 				{
-					if (localp->getTeam() != 0)
+   					if (localp->getTeam() != 0)
 					{
 						uiManager->changeTextureHideAble(hideAbleObj::Banner, 0, BannerTextureIDs::EndOfRound);
 						uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
@@ -1081,8 +1082,9 @@ void Core::upClient(float dt)
 				WEAPON_TYPE ws = game->getWpnSwitch(swaploc);
 				top->frame_weapon_switch(top->getConId(), ws, swaploc);
 				
-				uiManager->HUD.ammo = local->getMaxAmmo();
-				std::string nText = std::to_string(local->getAmmo()) + "/" + std::to_string(local->getMaxAmmo());
+				uiManager->HUD.ammo = local->getAmmo();
+
+				std::string nText = hudTextOutPutManager(false, uiManager->HUD.ammo, local->getMaxAmmo());//= std::to_string(local->getAmmo()) + "/" + std::to_string(local->getMaxAmmo());
 				uiManager->clearText(scaleAndText::Ammo);
 				uiManager->setText(nText, scaleAndText::Ammo); //ammo
 			}
