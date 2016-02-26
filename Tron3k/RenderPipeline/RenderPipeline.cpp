@@ -786,6 +786,10 @@ void RenderPipeline::renderWallEffect(void* pos1, void* pos2, float uvStartOffse
 void RenderPipeline::initRenderRegular()
 {
 	glUseProgram(regularShader);
+	enableBlend(false);
+	enableDepthMask();
+	enableDepthTest();
+	disableBlend();
 }
 
 void RenderPipeline::initRenderEffect()
@@ -1484,6 +1488,16 @@ void RenderPipeline::ui_textureRelease(vector<unsigned int> texids)
 {
 	for (unsigned int n = 0; n < texids.size(); n++)
 		glDeleteTextures(1, &texids[n]);
+}
+
+void RenderPipeline::enableDepthMask()
+{
+	glDepthMask(GL_TRUE);
+}
+
+void RenderPipeline::disableDepthMask()
+{
+	glDepthMask(GL_FALSE);
 }
 
 
