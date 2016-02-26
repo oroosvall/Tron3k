@@ -197,6 +197,8 @@ void UIManager::init(Console* console, int winX, int winY)
 	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/TicketReducer2.png"); //66
 	texturePaths.push_back("GameFiles/Textures/UITextures/Banners/tickloss_3_orange.png"); //67
 
+	texturePaths.push_back("GameFiles/Textures/UITextures/ClassSelect/class_selection_manipulator.png"); //68
+	texturePaths.push_back("GameFiles/Textures/UITextures/ClassSelect/class_selection_manipulator_hover.png"); //69
 
 
 	loadInTexture();
