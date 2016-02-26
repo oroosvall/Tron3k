@@ -111,7 +111,7 @@ public:
 	virtual bool removeEffect(int eid, int pid, unsigned int eType); //SKRIV EN FUNKTIONSFAN
 	
 	virtual glm::vec3 checkPlayerVPlayerCollision(glm::vec3 playerPos1, glm::vec3 playerPos2);
-	virtual glm::vec3 checkPlayerVBulletCollision(glm::vec3 playerPos, glm::vec3 bulletPos, vec3 size, float bModifier = 1);
+	virtual glm::vec3 checkPlayerVBulletCollision(glm::vec3 playerPos, glm::vec3 bulletPos, vec3 size, vec3 bulletDir, vec3 bulletVel, float dt, float bModifier = 1);
 	virtual std::vector<glm::vec4> PlayerVWorldCollision(glm::vec3 playerPos, vec3 playerDir, vec3 playerVel, float dt);
 	virtual glm::vec4 BulletVWorldCollision(glm::vec3 &bulletPos, vec3 bulletVel, vec3 bulletDir, float dt);
 	virtual glm::vec4 checkPlayerVEffectCollision(glm::vec3 playerPos, unsigned int eType, int eid);

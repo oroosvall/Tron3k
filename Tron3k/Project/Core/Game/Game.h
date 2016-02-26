@@ -230,7 +230,7 @@ private:
 	std::vector<EffectParticle> allEffectParticleSpawn;
 
 	void checkPvPCollision();
-	void checkPlayerVBulletCollision();
+	void checkPlayerVBulletCollision(float dt);
 	void checkPlayerVWorldCollision(float dt);
 	void checkBulletVWorldCollision(float dt);
 	void checkBulletVEffectCollision(float dt);
