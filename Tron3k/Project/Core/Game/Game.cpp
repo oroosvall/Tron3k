@@ -1759,7 +1759,12 @@ void Game::addEffectToList(int conID, int teamId, int effectId, EFFECT_TYPE et, 
 		if (teamId == 2)
 			ep.color = TEAMTWOCOLOR;
 		else
-			ep.color = vec3(1.0f, 1.0f, 1.0f);
+		{
+			if(et == BATTERY_SLOW)
+				ep.color = SLOWBUBBLECOLOR;
+			if(et == BATTERY_SPEED)
+				ep.color = SPEEDBUBBLECOLOR;
+		}
 		allEffectParticleSpawn.push_back(ep);
 	}
 }

@@ -66,20 +66,21 @@ void ParticleSystem::Initialize(glm::vec3 pos, ParticleSystemData ps, GLuint* pr
 
 	m_counter = 0;
 	m_alive = false;
+	m_glow = m_data.glow;
 }
 
 
 void ParticleSystem::Update(float dT)
 {
-	int emit = 123;
+	int emit = 0;
 	if (m_currentEmission < 0.0f)
 	{
-		m_currentEmission = m_data.emission;
-		emit = -1;
-
+		m_currentEmission += m_data.emission;
+		emit = 1;
 		if (!m_data.continuous)
 		{
-			m_counter++;
+			if (m_data.emission)
+				m_counter ++;
 		}
 	}
 	else
@@ -89,9 +90,9 @@ void ParticleSystem::Update(float dT)
 
 	if (m_data.emission == 0.0f)
 	{
-		emit = 0;
 		if (m_counter != m_data.maxparticles)
 		{
+			emit = m_data.maxparticles;
 			m_counter = m_data.maxparticles;
 			m_currentEmission = m_data.lifetime;
 		}

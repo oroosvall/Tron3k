@@ -28,6 +28,7 @@ struct ParticleSystemData
 	int omni;
 	int seed;
 	float spread;
+	int glow;
 };
 
 typedef struct ParticleShaderLocations

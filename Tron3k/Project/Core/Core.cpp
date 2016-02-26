@@ -3824,7 +3824,7 @@ void Core::effectsRender(int hackedTeam)
 			{
 				BatteryFieldSlow* asd = (BatteryFieldSlow*)eff[i];
 				vec3 pos = asd->getPos();
-				color = SLOWBUBBLECOLOR;
+				color = game->SLOWBUBBLECOLOR;
 				renderPipe->rendereffect(EFFECT_TYPE::BATTERY_SLOW,&pos.x, asd->renderRad(), 0.8f, &color.x);
 				light.attenuation.w = asd->renderRad();
 				light.Color = color;
@@ -3842,7 +3842,7 @@ void Core::effectsRender(int hackedTeam)
 			{
 				BatteryFieldSpeed* asd = (BatteryFieldSpeed*)eff[i];
 				vec3 pos = asd->getPos();
-				color = SPEEDBUBBLECOLOR;
+				color = game->SPEEDBUBBLECOLOR;
 				renderPipe->rendereffect(EFFECT_TYPE::BATTERY_SPEED,&pos.x, asd->renderRad(), 0.5f, &color.x);
 				light.attenuation.w = asd->renderRad();
 				light.Color = color;

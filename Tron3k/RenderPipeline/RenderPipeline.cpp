@@ -692,11 +692,9 @@ void RenderPipeline::finalizeRender()
 	glEnable(GL_DEPTH_TEST);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	glProgramUniform1i(particleShader, particleGlow, 1);
-
 	glDepthMask(GL_FALSE);
 
-	contMan.renderParticles(particleShader, particleTexture, particleSize);
+	contMan.renderParticles(particleShader, particleTexture, particleSize, particleGlow);
 
 	for (size_t i = 0; i < dynamicParticleSystems.size(); i++)
 	{
@@ -707,6 +705,7 @@ void RenderPipeline::finalizeRender()
 
 		glActiveTexture(GL_TEXTURE0);
 		glProgramUniform1i(particleShader, particleTexture, 0);
+		glProgramUniform1i(particleShader, particleGlow, dynamicParticleSystems[i].m_glow);
 
 		TextureManager::gTm->bindTextureOnly(dynamicParticleSystems[i].m_texture, DIFFUSE_FB);
 		dynamicParticleSystems[i].Draw();
@@ -1175,6 +1174,7 @@ void RenderPipeline::createTimedParticleEffect(EFFECT_TYPE eeffect, glm::vec3 po
 		break;
 	case EXPLOSION:
 		path += "explosionFire.ps";
+		color = vec3(1.0, 1.0, 1.0);
 		break;
 	case CLEANSENOVA:
 		break;

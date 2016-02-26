@@ -101,7 +101,7 @@ public:
 	void release();
 
 	void update(float dt);
-	void renderParticles(GLuint shader, GLuint textureLoc, GLuint particleSize);
+	void renderParticles(GLuint shader, GLuint textureLoc, GLuint particleSize, GLuint glowLoc);
 
 	void renderChunk(GLuint shader, GLuint shaderLocation, GLuint diffuseLocation, GLuint normalLocation, GLuint glowLocation, int chunkID);
 
