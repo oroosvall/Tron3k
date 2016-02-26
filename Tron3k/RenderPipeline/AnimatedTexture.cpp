@@ -77,7 +77,7 @@ void AnimatedTexture::init()
 	if (!initialized)
 	{
 		objects.push_back(AnimatedObject());
-		objects[n].textureID = TextureManager::gTm->createTexture("GameFiles/Textures/animatedSigns/discoFloor.png");
+		objects[n].textureID = TextureManager::gTm->createTexture("GameFiles/Textures/animatedSigns/alphaSign.png");
 	}
 	objects[n].worldMat[0] = vec4(-5.12f, 8.22f, 113.79f, 1.0f);
 	objects[n].worldMat[1] = vec4(-5.12f + 0.5f, 8.22f - 1, 113.79f, 1.0f);
