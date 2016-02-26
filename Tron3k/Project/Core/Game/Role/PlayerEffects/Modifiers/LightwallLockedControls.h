@@ -9,6 +9,7 @@ private:
 	float lightWallSpeed;
 	glm::vec3 vel;
 	glm::vec3 normvel;
+	float stopCooldown;
 public:
 	~LightWallLockedControls();
 	void init(Player* myTarget);

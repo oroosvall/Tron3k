@@ -81,25 +81,14 @@ void main()
 		{
 			if(p[iter].dir.w < 0.0f)
 			{
-				//0 means all emit at the same pos
-				if(emit == 0)
+				//emit holt number of particles to emit this frame
+				//atomic
+				int old = atomicAdd(emit, -1);
+				if(old > 0)
 				{
 					p[iter].dir = p[iter].initialDir;
 					p[iter].pos.xyz = initialPos;
 					p[iter].dir.w = lifetime;
-				}
-				
-				//-1 means only one emits at a time
-				else if (emit == -1)
-				{
-					//atomic
-					int old = atomicExchange(emit, 1);
-					if(old == -1)
-					{
-						p[iter].dir = p[iter].initialDir;
-						p[iter].pos.xyz = initialPos;
-						p[iter].dir.w = lifetime;
-					}
 				}
 			}
 		}
@@ -112,8 +101,8 @@ void main()
 			else if(p[iter].dir.w < -1.0f)
 			{
 				//atomic
-				int old = atomicExchange(emit, 1);
-				if(old == -1)
+				int old = atomicAdd(emit, -1);
+				if(old > 0)
 				{
 					p[iter].dir = p[iter].initialDir;
 					p[iter].pos.xyz = initialPos;

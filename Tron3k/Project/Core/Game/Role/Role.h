@@ -100,6 +100,7 @@ public:
 	float getBoxRadius() { return boundingBoxRadius; };
 
 	bool getIfBusy();
+	void forceBusy() { swapWeaponTimer = 0.1f; };
 
 	int getRole();
 

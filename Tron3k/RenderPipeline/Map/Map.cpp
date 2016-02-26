@@ -196,7 +196,7 @@ void Map::update(float dt)
 	}
 }
 
-void Map::renderParticles(GLuint shader, GLuint textureLoc, GLuint particleSize)
+void Map::renderParticles(GLuint shader, GLuint textureLoc, GLuint particleSize, GLuint glowLoc)
 {
 	for (size_t i = 0; i < chunks.size(); i++)
 	{
@@ -210,6 +210,7 @@ void Map::renderParticles(GLuint shader, GLuint textureLoc, GLuint particleSize)
 			glProgramUniform1i(shader, textureLoc, 0);
 
 			tm->bindTextureOnly(tex, DIFFUSE_FB);
+			glProgramUniform1i(shader, glowLoc, chunks[i].particleSystem[p].m_glow);
 
 			chunks[i].particleSystem[p].Draw();
 		}

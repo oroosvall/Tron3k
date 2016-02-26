@@ -255,9 +255,9 @@ ContentManager::~ContentManager()
 	
 }
 
-void ContentManager::renderParticles(GLuint shader, GLuint textureLoc, GLuint particleSize)
+void ContentManager::renderParticles(GLuint shader, GLuint textureLoc, GLuint particleSize, GLuint glowLoc)
 {
-	testMap.renderParticles(shader, textureLoc, particleSize);
+	testMap.renderParticles(shader, textureLoc, particleSize, glowLoc);
 }
 
 void ContentManager::renderChunks(GLuint shader, GLuint shaderLocation, GLuint textureLocation, GLuint normalLocation, GLuint glowSpecLocation, GLuint DglowColor, GLuint SglowColor, GLuint collision_portal_shader, GLuint collision_portal_world, GLuint portal_shader, GLuint portal_world)
