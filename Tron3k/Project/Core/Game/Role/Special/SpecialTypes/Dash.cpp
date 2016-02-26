@@ -4,7 +4,7 @@
 void Dash::init()
 {
 	timer = -1;
-	activationCost = 25;
+	activationCost = 30;
 	specialType = SPECIAL_TYPE::DASH;
 }
 
@@ -21,7 +21,7 @@ bool Dash::allowedToActivate(Player* p)
 	if (this->timer <= 0.0f && specialMeter >= 25)
 	{
 		p->getRole()->setSpecialMeter(specialMeter);
-		timer = 5.0;
+		timer = 2.0;
 		return true;
 	}
 	return false;

@@ -48,7 +48,7 @@ int TrueGrit::setData(float dt)
 		else
 		{
 			dashDone = true;
-			lifeTime = 2.8f;
+			lifeTime = 1.5f;
 		}
 	}
 	else
