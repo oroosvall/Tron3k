@@ -141,6 +141,11 @@ private:
 	GLuint particleScaleDir;
 
 
+	// glowSample shader
+
+	GLuint glowSampleShader;
+	GLuint glowSampleTextureLoc;
+
 	//lightwall
 	GLuint lwVertexDataId;
 	GLuint lwVertexAttribute;

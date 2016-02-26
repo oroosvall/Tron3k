@@ -9,7 +9,7 @@ void Camera::init(int xres, int yres)
 	//projMat = glm::perspective(0.0174533f * 45.0f, float(xres) / float(yres), 0.1f, 1000.0f);
 	float fov = 90.0f;
 	float fovFactor = 60.0f / 180.0f;
-	projMat = glm::perspectiveFov(3.14f * fovFactor, float(xres), float(yres), 0.1f, 1000.0f);
+	projMat = glm::perspectiveFov(3.14f * fovFactor, float(xres), float(yres), 0.05f, 1000.0f);
 }
 
 glm::mat4* Camera::getViewMat()

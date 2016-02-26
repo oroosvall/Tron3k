@@ -7,6 +7,7 @@ uniform sampler2D Position;
 uniform sampler2D Diffuse;
 uniform sampler2D Normal;
 uniform sampler2D GlowMap;	
+uniform sampler2D GlowMap2;
 uniform sampler2D Depth;
 
 vec4 Position0;
@@ -151,6 +152,7 @@ void main()
 
 	//middle sample
 	sum += texture(GlowMap, UV) * 0.146768;
+	sum = texture(GlowMap2, UV);
 	
 	fragment_color += sum + specularAddetive;
 }

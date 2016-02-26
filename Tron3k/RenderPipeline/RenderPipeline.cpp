@@ -142,7 +142,7 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	cam.setViewProjMat(animationShader, viewProjMat[1]);
 	cam.setViewMat(regularShader, viewMat);
 
-	gBuffer->init(WindowWidth, WindowHeight, 5, true);
+	gBuffer->init(WindowWidth, WindowHeight, 6, true);
 
 	//at this point map is loaded and g.buffer initialized
 	//send the static lights and dont clear them every frame
@@ -244,14 +244,14 @@ void RenderPipeline::reloadShaders()
 	}
 
 	//Glow Shader
-	std::string shaderNamesGlow[] = { "GameFiles/Shaders/GlowFade_vs.glsl", "GameFiles/Shaders/GlowFade_fs.glsl" };
-	GLenum shaderTypesGlow[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
-	CreateProgram(temp, shaderNamesGlow, shaderTypesGlow, 2);
-	if (temp != 0)
-	{
-		glowShaderTweeks = temp;
-		temp = 0;
-	}
+	//std::string shaderNamesGlow[] = { "GameFiles/Shaders/GlowFade_vs.glsl", "GameFiles/Shaders/GlowFade_fs.glsl" };
+	//GLenum shaderTypesGlow[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
+	//CreateProgram(temp, shaderNamesGlow, shaderTypesGlow, 2);
+	//if (temp != 0)
+	//{
+	//	glowShaderTweeks = temp;
+	//	temp = 0;
+	//}
 
 	//UI shader
 	std::string shaderNamesUI[] = { "GameFiles/Shaders/uiShader_vs.glsl", "GameFiles/Shaders/uiShader_fs.glsl" };
@@ -391,10 +391,10 @@ void RenderPipeline::reloadShaders()
 
 	uniformKeyMatrixLocation = glGetUniformBlockIndex(animationShader, "boneMatrices");
 
-	uniformGlowTimeDelta = glGetUniformLocation(glowShaderTweeks, "deltaTime");
-	uniformGlowFalloff = glGetUniformLocation(glowShaderTweeks, "falloff");
-	uniformGlowTexture = glGetUniformLocation(glowShaderTweeks, "glowAdd");
-	uniformGlowSelf = glGetUniformLocation(glowShaderTweeks, "self");
+	//uniformGlowTimeDelta = glGetUniformLocation(glowShaderTweeks, "deltaTime");
+	//uniformGlowFalloff = glGetUniformLocation(glowShaderTweeks, "falloff");
+	//uniformGlowTexture = glGetUniformLocation(glowShaderTweeks, "glowAdd");
+	//uniformGlowSelf = glGetUniformLocation(glowShaderTweeks, "self");
 
 	//build shader
 	std::string shaderNamesLW[] = { "GameFiles/Shaders/lw_shader_vs.glsl", "GameFiles/Shaders/lw_shader_gs.glsl", "GameFiles/Shaders/lw_shader_fs.glsl" };
@@ -478,6 +478,16 @@ void RenderPipeline::reloadShaders()
 	};
 
 	locations = pLoc;
+
+	std::string glowSampleShaders[] = { "GameFiles/Shaders/glowsample_vs.glsl", "GameFiles/Shaders/glowsample_fs.glsl" };
+	GLenum glowSampleShaderTypes[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
+
+	CreateProgram(temp, glowSampleShaders, glowSampleShaderTypes, 2);
+	if (temp != 0)
+	{
+		glowSampleShader = temp;
+		temp = 0;
+	}
 
 	std::cout << "Done loading shaders\n";
 
@@ -720,6 +730,8 @@ void RenderPipeline::finalizeRender()
 	glDepthMask(GL_TRUE);
 
 	glDisable(GL_BLEND);
+
+	gBuffer->preRender(glowSampleShader, 0);
 
 	//GBuffer Render
 	glBindFramebuffer(GL_FRAMEBUFFER, NULL);

@@ -110,7 +110,8 @@ void Gbuffer::init(int x, int y, int nrTex, bool depth)
 	uniformBitsList[1] = glGetUniformLocation(*shaderPtr, "Position");
 	uniformBitsList[2] = glGetUniformLocation(*shaderPtr, "Diffuse");
 	uniformBitsList[3] = glGetUniformLocation(*shaderPtr, "Normal");
-	uniformBitsList[4] = glGetUniformLocation(*shaderPtr, "GlowMap");;
+	uniformBitsList[4] = glGetUniformLocation(*shaderPtr, "GlowMap");
+	uniformBitsList[5] = glGetUniformLocation(*shaderPtr, "GlowMap2");
 	uniformUse = glGetUniformLocation(*shaderPtr, "Use");
 	
 
@@ -228,6 +229,18 @@ void Gbuffer::bind(GLuint target)
 	glBindFramebuffer(target, targetId);
 }
 
+void Gbuffer::preRender(GLuint shader, GLuint location)
+{
+	glUseProgram(shader);
+	glActiveTexture(GL_TEXTURE0);
+	glProgramUniform1i(shader, location, 0);
+	glBindTexture(GL_TEXTURE_2D, rTexture[4].getTargetId());
+
+	blitQuads[5].BindVertData();
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+}
+
 void Gbuffer::render(/*glm::vec3 playerPos, glm::vec3 playerDir*/)
 {
 	// bind shader
@@ -275,6 +288,8 @@ void Gbuffer::clearBuffers()
 	glClearBufferfv(GL_COLOR, 1, &clear);
 	glClearBufferfv(GL_COLOR, 2, &clear);
 	glClearBufferfv(GL_COLOR, 3, &clear);
+	glClearBufferfv(GL_COLOR, 4, &clear);
+	glClearBufferfv(GL_COLOR, 5, &clear);
 }
 
 void Gbuffer::generate(int x, int y)
@@ -294,7 +309,7 @@ void Gbuffer::generate(int x, int y)
 				rTexture[i].init(x, y, 0, false, false, false);	// diffuse
 			else if (i == 3)
 				rTexture[i].init(x, y, 0, false, false, true);	// normal
-			else if (i == 4)
+			else
 				rTexture[i].init(x, y, 0, false, false, false);	// glow
 
 		}
