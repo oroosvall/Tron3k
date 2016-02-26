@@ -38,7 +38,7 @@ void KingOfTheHill::init(Console* cptr, Game* gptr)
 	teamTwoScore = 0;
 	winScore = 5;
 
-	tokensPerTeam = 2;
+	tokensPerTeam = 5;
 	pointsPerRound = 3;
 	overtimer = 46.0f;
 
