@@ -138,6 +138,8 @@ private:
 
 	GLuint particleGlow;
 	GLuint particleColor;
+	GLuint particleScaleDir;
+
 
 	//lightwall
 	GLuint lwVertexDataId;

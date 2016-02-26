@@ -67,6 +67,7 @@ void ParticleSystem::Initialize(glm::vec3 pos, ParticleSystemData ps, GLuint* pr
 	m_counter = 0;
 	m_alive = false;
 	m_glow = m_data.glow;
+	m_scaleDir = m_data.scaleDir;
 }
 
 

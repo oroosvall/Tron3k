@@ -16,6 +16,7 @@ layout(location = 3) out vec3 normal;
 uniform mat4 VP;
 uniform vec3 cam;
 uniform vec2 size;
+uniform int scaleDir;
 
 void main() 
 {	
@@ -37,8 +38,26 @@ void main()
 
 		right *= (size.x / 2);
 
-		up *= iDir[0].w;
-		right *= iDir[0].w;
+
+		if (scaleDir == 1)
+		{
+			//scale up with time
+			up *= 1.0f - iDir[0].w;
+			right *= 1.0f - iDir[0].w;		
+		}
+
+		else if (scaleDir == 0)
+		{
+			//dont scale with time
+		}
+		else if (scaleDir == -1)
+		{
+			//scale down with time
+			up *= iDir[0].w;
+			right *= iDir[0].w;
+		}
+
+
 		
 		normal = cam_normal;
 		

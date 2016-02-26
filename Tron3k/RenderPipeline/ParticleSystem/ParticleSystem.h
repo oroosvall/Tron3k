@@ -22,6 +22,7 @@ public:
 
 	bool m_alive;
 	int m_counter;
+	int m_scaleDir;
 
 private:
 	ParticleSystemData m_data;

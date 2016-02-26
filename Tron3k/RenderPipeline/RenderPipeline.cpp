@@ -447,6 +447,8 @@ void RenderPipeline::reloadShaders()
 	particleTexture = glGetUniformLocation(particleShader, "tex");
 	particleGlow = glGetUniformLocation(particleShader, "glow");
 	particleColor = glGetUniformLocation(particleShader, "blendcolor");
+	particleScaleDir = glGetUniformLocation(particleShader, "scaleDir");
+
 
 	particleShaders[0] = "GameFiles/Shaders/ParticleSystem_cs.glsl";
 	particleshaderTypes[0] = GL_COMPUTE_SHADER;
@@ -693,6 +695,7 @@ void RenderPipeline::finalizeRender()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glProgramUniform1i(particleShader, particleGlow, 1);
+	glProgramUniform1i(particleShader, particleScaleDir, 1);
 
 	glDepthMask(GL_FALSE);
 
@@ -708,6 +711,7 @@ void RenderPipeline::finalizeRender()
 		glActiveTexture(GL_TEXTURE0);
 		glProgramUniform1i(particleShader, particleTexture, 0);
 		glProgramUniform1i(particleShader, particleGlow, dynamicParticleSystems[i].m_glow);
+		glProgramUniform1i(particleShader, particleScaleDir, dynamicParticleSystems[i].m_scaleDir);
 
 		TextureManager::gTm->bindTextureOnly(dynamicParticleSystems[i].m_texture, DIFFUSE_FB);
 		dynamicParticleSystems[i].Draw();
@@ -1175,7 +1179,7 @@ void RenderPipeline::createTimedParticleEffect(EFFECT_TYPE eeffect, glm::vec3 po
 	case THUNDER_DOME:
 		break;
 	case EXPLOSION:
-		path += "explosionSparks.ps";
+		path += "explosionShockwave.ps";
 		break;
 	case CLEANSENOVA:
 		break;
