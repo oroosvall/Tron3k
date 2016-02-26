@@ -106,6 +106,9 @@ enum SOUNDS
 	PunisherPhrase,
 	StalkerPhrase,
 	ManipulatorPhrase,
+	soundEffectGrapplingShot,
+	soundEffectGrapplingShotStereo,
+
 
 	nrOfSounds //leave last
 };

@@ -124,6 +124,7 @@ Input* Input::getInput()
 
 void Input::release()
 {
+	
 	if (singleton)
 		delete singleton;
 }

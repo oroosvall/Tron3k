@@ -129,6 +129,9 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->soundList[SOUNDS::PunisherPhrase].loadFromFile("GameFiles/Sound/PunisherPhrase.ogg");
 		singleton->soundList[SOUNDS::TrapperPhrase].loadFromFile("GameFiles/Sound/TrapperPhrase.ogg");
 		singleton->soundList[SOUNDS::hackedSound].loadFromFile("GameFiles/Sound/hackedSound.ogg");
+		singleton->soundList[SOUNDS::soundEffectGrapplingHook].loadFromFile("GameFiles/Sound/soundEffectGrapplingHook.ogg");
+		singleton->soundList[SOUNDS::soundEffectGrapplingShot].loadFromFile("GameFiles/Sound/soundEffectGrapplingShot.ogg");
+		singleton->soundList[SOUNDS::soundEffectGrapplingShotStereo].loadFromFile("GameFiles/Sound/soundEffectGrapplingShotStereo.ogg");
 		initialized = true;
 	}
 }
