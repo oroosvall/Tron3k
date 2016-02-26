@@ -1758,15 +1758,25 @@ void Game::addEffectToList(int conID, int teamId, int effectId, EFFECT_TYPE et, 
 
 		ep.pos = pos;
 		ep.etype = et;
-		if (teamId == 1 || (et == EFFECT_TYPE::HEALTHPACK && teamId == 2))
-			ep.color = TEAMONECOLOR;
-		if (teamId == 2 || (et == EFFECT_TYPE::HEALTHPACK && teamId == 1))
-			ep.color = TEAMTWOCOLOR;
+		if (teamId == 1)
+		{
+			if (et != EFFECT_TYPE::HEALTHPACK)
+				ep.color = TEAMONECOLOR;
+			else
+				ep.color = TEAMTWOCOLOR;
+		}	
+		else if (teamId == 2)
+		{
+			if (et != EFFECT_TYPE::HEALTHPACK)
+				ep.color = TEAMTWOCOLOR;
+			else
+				ep.color = TEAMONECOLOR;
+		}
 		else
 		{
-			if(et == BATTERY_SLOW)
+			if(et == EFFECT_TYPE::BATTERY_SLOW)
 				ep.color = SLOWBUBBLECOLOR;
-			if(et == BATTERY_SPEED)
+			if(et == EFFECT_TYPE::BATTERY_SPEED)
 				ep.color = SPEEDBUBBLECOLOR;
 		}
 		allEffectParticleSpawn.push_back(ep);
