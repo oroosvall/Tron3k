@@ -143,6 +143,8 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	cam.setViewMat(regularShader, viewMat);
 
 	gBuffer->init(WindowWidth, WindowHeight, 6, true);
+	takeDamage_timer = -1;
+	updateTakeDamageEffect(0);
 
 	//at this point map is loaded and g.buffer initialized
 	//send the static lights and dont clear them every frame
@@ -488,6 +490,8 @@ void RenderPipeline::reloadShaders()
 		glowSampleShader = temp;
 		temp = 0;
 	}
+	uBlitLightPixelX_2 = glGetUniformLocation(glowSampleShader, "pixeluvX");
+	uBlitLightPixelY_2 = glGetUniformLocation(glowSampleShader, "pixeluvY");
 
 	std::cout << "Done loading shaders\n";
 
@@ -1624,10 +1628,19 @@ void RenderPipeline::updateTakeDamageEffect(float dt)
 		if (takeDamage_timer > 0)
 		{
 			float precent = (takeDamage_timer / takeDamage_timerStartValue);
-			gBuffer->setGlowSamplingDist(precent * takeDamage_startDispalce + 1);
+			float dist = precent * takeDamage_startDispalce + 1;
+
+			gBuffer->setGlowSamplingDist(dist);
+
+			glProgramUniform1f(glowSampleShader, uBlitLightPixelX_2, dist / float(gBuffer->xres));
+			glProgramUniform1f(glowSampleShader, uBlitLightPixelY_2, dist / float(gBuffer->yres));
 		}
 		else //timeout
+		{
 			gBuffer->setGlowSamplingDist(1.0f);
+			glProgramUniform1f(glowSampleShader, uBlitLightPixelX_2, 1.0f / float(gBuffer->xres));
+			glProgramUniform1f(glowSampleShader, uBlitLightPixelY_2, 1.0f / float(gBuffer->yres));
+		}
 	}
 }
 
