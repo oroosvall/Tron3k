@@ -322,16 +322,19 @@ void UIManager::setMenu(int menuId)
 	}
 	else if (menuId == InGameUI::RemoveMenu)
 	{
-		if(openedMenus[nrOfOpenedMenus] != InGameUI::GUI)
+		if (nrOfOpenedMenus > -1 && openedMenus == nullptr)
 		{
-			if (currentMenu == InGameUI::ClassSelect)
-				menus[currentMenu].resetAllObjsTexture();
+			if (openedMenus[nrOfOpenedMenus] != InGameUI::GUI)
+			{
+				if (currentMenu == InGameUI::ClassSelect)
+					menus[currentMenu].resetAllObjsTexture();
 
-			nrOfOpenedMenus--;
-			openedMenus[nrOfOpenedMenus] = -1;
+				nrOfOpenedMenus--;
+				openedMenus[nrOfOpenedMenus] = -1;
+			}
+			else
+				console->printMsg("Error: Function setMenu in UIManager, Someone is trying to use RemoveMenu when nrOfOpenedMenus has a value of 1 or lower .", "System", 'S');
 		}
-		else
-			console->printMsg("Error: Function setMenu in UIManager, Someone is trying to use RemoveMenu when nrOfOpenedMenus has a value of 1 or lower .", "System", 'S');
 	}
 	else if (menuId == MainMenu::Back)
 	{

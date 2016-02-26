@@ -93,6 +93,9 @@ public:
 		}
 	}
 
+	//GUI
+	void setNewUIPtr(UIManager* uiPtr) { this->uiPtr = uiPtr; };
+
 	void IN(Connection* connection, Uint8 conID)
 	{
 		while (true)
