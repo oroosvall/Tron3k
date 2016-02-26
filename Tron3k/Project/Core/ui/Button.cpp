@@ -25,6 +25,8 @@ Button::Button()
 	winY = 0;
 	startWMX = 0;
 	startWMY = 0;
+
+	dontChangeTexture = false;
 }
 
 Button::Button(glm::vec2 center, int textureId1, int textureId2, int uniqueKey, int hoverKey, IRenderPipeline* uiRender, glm::vec2 textRes1, glm::vec2 textRes2)
@@ -59,6 +61,8 @@ Button::Button(glm::vec2 center, int textureId1, int textureId2, int uniqueKey, 
 
 	startWMX = worldMatrix[0].w;
 	startWMY = worldMatrix[1].w;
+
+	dontChangeTexture = false;
 }
 
 Button::~Button() {}
@@ -102,6 +106,13 @@ void Button::changeTexUsed(int id, int wmID)
 	pos[1] = glm::vec2(worldMatrix[0].w + worldMatrix[0].x, worldMatrix[1].w + worldMatrix[1].y);
 
 	textureIdInUse = textureIdList[id];
+
+	dontChangeTexture = false;
+}
+
+void Button::setDontChangeTexture(bool set)
+{
+	dontChangeTexture = set;
 }
 
 void Button::fromPosToQuadScreen(glm::vec2 positions, int id)
@@ -132,7 +143,7 @@ void Button::hoverCheck(glm::vec2 mpos)
 {
 	int returnValue = -1;
 
-	if (hoverCheckKey == 1)
+	if (hoverCheckKey == 1 && !dontChangeTexture)
 	{
 		if (mpos.x > pos[0].x && mpos.x < pos[1].x)
 		{

@@ -24,6 +24,8 @@ private:
 	glm::mat4 worldMatrix;
 	//Hover key
 	int hoverCheckKey;
+	
+	bool dontChangeTexture;
 
 	glm::vec3 pivot;
 
@@ -44,6 +46,7 @@ public:
 	virtual void resetWorldMatrix(int id);
 
 	virtual void changeTexUsed(int id, int wmID);
+	void setDontChangeTexture(bool set);
 
 	virtual void fromPosToQuadScreen(glm::vec2 positions, int id);
 

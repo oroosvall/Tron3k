@@ -312,6 +312,9 @@ void UIManager::setMenu(int menuId)
 		}
 		if (nrOfOpenedMenus < maxMenus)
 		{
+			if (currentMenu == InGameUI::ClassSelect)
+				menus[currentMenu].resetAllObjsTexture();
+
 			openedMenus[nrOfOpenedMenus] = menuId;
 			currentMenu = menuId;
 			nrOfOpenedMenus++;
@@ -321,6 +324,9 @@ void UIManager::setMenu(int menuId)
 	{
 		if(openedMenus[nrOfOpenedMenus] != InGameUI::GUI)
 		{
+			if (currentMenu == InGameUI::ClassSelect)
+				menus[currentMenu].resetAllObjsTexture();
+
 			nrOfOpenedMenus--;
 			openedMenus[nrOfOpenedMenus] = -1;
 		}

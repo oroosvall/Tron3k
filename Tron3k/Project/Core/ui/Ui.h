@@ -105,6 +105,7 @@ public:
 	void changeColorTeam(int whichTex);
 
 	void setTextureId(std::vector<GLuint> uiTextureIds);
+	void resetAllObjsTexture();
 
 	void setWindowResolution(int winX, int winY);
 

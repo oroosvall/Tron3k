@@ -298,12 +298,22 @@ int UI::mouseCollission(glm::vec2 pos)
 {
 	int hit = -1;
 	int result = -1;
+	int index = -1;
 	
 	for (int i = 0; i < nrOfObjects && hit == -1; i++)
 	{
 		hit = UiObjects[i]->checkCollision(pos);
+		index = i;
 	}
-	
+
+	if (index > -1)
+		if (hit == 30 || hit == 32 || hit == 33 || hit == 34)
+		{
+			for (int i = 0; i < UiObjects.size(); i++)
+				UiObjects[i]->changeTexUsed(0, 0);
+			UiObjects[index]->changeTexUsed(1, 0);
+			UiObjects[index]->setDontChangeTexture(true);
+		}
 	return hit;
 }
 
@@ -331,6 +341,12 @@ void UI::changeColorTeam(int whichTex)
 {
 	for (int i = 0; i < twoColoredHUDObjects.size(); i++)
 		UiObjects[twoColoredHUDObjects[i]]->changeTexUsed(whichTex, 0);
+}
+
+void UI::resetAllObjsTexture()
+{
+	for (int i = 0; i < UiObjects.size(); i++)
+		UiObjects[i]->changeTexUsed(0, 0);
 }
 
 //Empty
