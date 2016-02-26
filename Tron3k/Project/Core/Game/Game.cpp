@@ -818,47 +818,50 @@ void Game::checkPlayerVBulletCollision()
 		{
 			for (unsigned int b = 0; b < BULLET_TYPE::NROFBULLETS; b++)
 			{
-				for (unsigned int j = 0; j < bullets[b].size(); j++)
+				if (b != BULLET_TYPE::CLUSTERLING || b != BULLET_TYPE::BATTERY_SLOW_SHOT || b != BULLET_TYPE::BATTERY_SPEED_SHOT || b != BULLET_TYPE::BATTERY_SLOW_SHOT)
 				{
-					collides = glm::vec3(0, 0, 0);
-					if (bullets[b][j] != nullptr)
+					for (unsigned int j = 0; j < bullets[b].size(); j++)
 					{
-						int pid = -1, bid = -1;
-						bullets[b][j]->getId(pid, bid);
-						if ((bullets[b][j]->getTeam() != playerList[i]->getTeam() && playerList[i]->getTeam() != 0) || (playerList[pid]->searchModifier(MODIFIER_TYPE::HACKINGDARTMODIFIER) && pid != i)) //Don't shoot same team, don't shoot spectators
+						collides = glm::vec3(0, 0, 0);
+						if (bullets[b][j] != nullptr)
 						{
-							if (playerList[i]->isAlive()) //Don't shoot dead people
+							int pid = -1, bid = -1;
+							bullets[b][j]->getId(pid, bid);
+							if ((bullets[b][j]->getTeam() != playerList[i]->getTeam() && playerList[i]->getTeam() != 0) || (playerList[pid]->searchModifier(MODIFIER_TYPE::HACKINGDARTMODIFIER) && pid != i)) //Don't shoot same team, don't shoot spectators
 							{
-								float modifier = 1.0f;
-								if (b == BULLET_TYPE::GRENADE_SHOT || b == BULLET_TYPE::CLUSTERLING)
-									modifier = 2.5f;
-								if (b == BULLET_TYPE::MELEE_ATTACK)
-									modifier = 1.5f;
-								collides = physics->checkPlayerVBulletCollision(playerList[i]->getPos() - (vec3(0, playerList[i]->getRole()->getBoxModifier(), 0)), bullets[b][j]->getPos(), this->playerList[i]->getRole()->GetSize(), modifier);
+								if (playerList[i]->isAlive()) //Don't shoot dead people
+								{
+									float modifier = 1.0f;
+									if (b == BULLET_TYPE::GRENADE_SHOT || b == BULLET_TYPE::CLUSTERLING)
+										modifier = 2.5f;
+									if (b == BULLET_TYPE::MELEE_ATTACK)
+										modifier = 1.5f;
+									collides = physics->checkPlayerVBulletCollision(playerList[i]->getPos() - (vec3(0, playerList[i]->getRole()->getBoxModifier(), 0)), bullets[b][j]->getPos(), this->playerList[i]->getRole()->GetSize(), modifier);
 
+								}
 							}
-						}
-						if (collides != glm::vec3(0, 0, 0))
-						{
-							//Code for player on bullet collision goes here
-							/*
+							if (collides != glm::vec3(0, 0, 0))
+							{
+								//Code for player on bullet collision goes here
+								/*
 
-							Spara undan player som blev träffad (dvs i), bulletId (pID och bID) och BULLET_TYPE. Även dir.
-							Lägg förslagsvis i en vector<struct> som kan skickas till Core. Core matar in alla träffade spelare i ett NET_EVENT (conID, bID, pID, bt).
-							NET_EVENT eftersom allt detta sker endast på servern
-							Tas emot av klienterna, Core->Game. Game hanterar sina bullethits när paketet tas emot.
+								Spara undan player som blev träffad (dvs i), bulletId (pID och bID) och BULLET_TYPE. Även dir.
+								Lägg förslagsvis i en vector<struct> som kan skickas till Core. Core matar in alla träffade spelare i ett NET_EVENT (conID, bID, pID, bt).
+								NET_EVENT eftersom allt detta sker endast på servern
+								Tas emot av klienterna, Core->Game. Game hanterar sina bullethits när paketet tas emot.
 
-							Servern gör givetvis samma beräkning för bullethits (speed/position-data pga knockbacks antingen görs inte eller görs och sedan discardas pga client->server update)
-							direkt när kollisionen sker, dvs.
+								Servern gör givetvis samma beräkning för bullethits (speed/position-data pga knockbacks antingen görs inte eller görs och sedan discardas pga client->server update)
+								direkt när kollisionen sker, dvs.
 
-							*/
-							BulletHitPlayerInfo hit;
-							hit.bt = BULLET_TYPE(b);
-							hit.playerHit = i;
-							bullets[b][j]->getId(hit.bulletPID, hit.bulletBID);
-							hit.newHPtotal = -1;
-							hit.hitDir = bullets[b][j]->getDir();
-							allBulletHitsOnPlayers.push_back(hit);
+								*/
+								BulletHitPlayerInfo hit;
+								hit.bt = BULLET_TYPE(b);
+								hit.playerHit = i;
+								bullets[b][j]->getId(hit.bulletPID, hit.bulletBID);
+								hit.newHPtotal = -1;
+								hit.hitDir = bullets[b][j]->getDir();
+								allBulletHitsOnPlayers.push_back(hit);
+							}
 						}
 					}
 				}
@@ -1825,90 +1828,86 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 			console->printMsg(p->getName() + suicideMessages[rand() % suicideMessages.size()], "System", 'S');
 			return 0;
 		}
-		if (hi.bt != BULLET_TYPE::CLUSTERLING && hi.bt != BULLET_TYPE::BATTERY_SLOW_SHOT && hi.bt != BULLET_TYPE::BATTERY_SPEED_SHOT || hi.bt != BULLET_TYPE::GRAPPLING_HOOK)	//Any bullets that should not detonate on contact
+
+		glm::vec3 pos = playerList[hi.playerHit]->getPos();
+		if (gameState != Gamestate::SERVER)
 		{
-			glm::vec3 pos = playerList[hi.playerHit]->getPos();
-			if (gameState != Gamestate::SERVER)
+			if (GetSoundActivated())
 			{
-				if (GetSoundActivated())
+				if (hi.bt == BULLET_TYPE::HACKING_DART && p->isLocal())
 				{
-					if (hi.bt == BULLET_TYPE::HACKING_DART && p->isLocal())
-					{
-						GetSound()->playUserGeneratedSound(SOUNDS::hackedSound, CATEGORY::Effects);
-					}
-					else if (!p->isLocal())
-						GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHit, pos.x, pos.y, pos.z, CATEGORY::Effects);
-					else
-						GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHitSelf, pos.x, pos.y, pos.z, CATEGORY::Effects);
+					GetSound()->playUserGeneratedSound(SOUNDS::hackedSound, CATEGORY::Effects);
 				}
-			}
-			int bulletPosInArray = -1;
-
-			Bullet* theBullet = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, bulletPosInArray);
-			if (playerList[hi.bulletPID] != nullptr && gameState == SERVER)
-			{
-				if (playerList[hi.bulletPID]->searchModifier(MODIFIER_TYPE::DOUBLEDAMAGEMOD))
-				{
-					p->setHP(p->getHP() - theBullet->getDamage());
-				}
-			}
-			p->hitByBullet(theBullet, hi.bt, hi.newHPtotal);
-			playerList[hi.bulletPID]->hitMarker = 0.25f;
-			if (theBullet != nullptr && gameState != Gamestate::SERVER)
-			{
-				HitPosAndDirParticle hpad;
-				hpad.pos = theBullet->getPos();
-				//vec3 dir = -glm::normalize(theBullet->getDir());
-				vec3 n = hpad.pos - p->getPos();
-				//hpad.dir = reflect(dir, normalize(n));
-				hpad.dir = hi.hitDir;
-				if(p->getTeam() == 1)
-					hpad.color = TEAMONECOLOR;
-				else if(p->getTeam() == 2)
-					hpad.color = TEAMTWOCOLOR;
-				else hpad.color = vec3(1.0f, 1.0f, 1.0f);
-				hpad.btype = hi.bt;
-				allBulletHitPlayerPos.push_back(hpad);
-			}
-			if (p->getHP() == 0 && p->isAlive())
-			{
-				p->IdiedThisFrame();
-				string fragMessage = fragMessages[rand() % fragMessages.size()];
-				if (playerList[hi.bulletPID] != nullptr)
-					console->printMsg(p->getName() + fragMessage + playerList[hi.bulletPID]->getName() + "!", "System", 'S');
+				else if (!p->isLocal())
+					GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHit, pos.x, pos.y, pos.z, CATEGORY::Effects);
 				else
-					console->printMsg(p->getName() + fragMessage + " a quitter!", "System", 'S');
-				playerList[hi.bulletPID]->addKill();
-				playerList[hi.bulletPID]->IncreaseFrags();
-				playerList[hi.bulletPID]->ZeroDeaths();
-				p->ZeroFrags();
-				p->addDeath();
-				p->IncreaseDeaths();
-				if (playerList[hi.bulletPID]->GetConsecutiveFrags() == 3 && !playerList[hi.bulletPID]->killingSpreeDone)
-				{
-					console->printMsg(playerList[hi.bulletPID]->getName() + " is on a killing spree!", "System", 'S');
-					if (GetSoundActivated() && hi.bulletPID == localPlayerId)
-					{
-						GetSound()->playUserGeneratedSound(SOUNDS::announcerKillingSpree, CATEGORY::Announcer);
-					}
-					playerList[hi.bulletPID]->killingSpreeDone = true;
-				}
-
-				else if (playerList[hi.bulletPID]->GetConsecutiveFrags() == 5 && !playerList[hi.bulletPID]->impressiveDone)
-				{
-					console->printMsg("Impressive, " + playerList[hi.bulletPID]->getName(), "System", 'S');
-					if (GetSoundActivated() && hi.bulletPID == localPlayerId)
-					{
-						GetSound()->playUserGeneratedSound(SOUNDS::announcerImpressive, CATEGORY::Announcer);
-					}
-					playerList[hi.bulletPID]->impressiveDone = true;
-				}
-				addEffectToList(-1, p->getTeam(), hi.playerHit, EFFECT_TYPE::HEALTHPACK, p->getPos(), 0, 0.5f);
+					GetSound()->playExternalSound(SOUNDS::soundEffectBulletPlayerHitSelf, pos.x, pos.y, pos.z, CATEGORY::Effects);
 			}
-			removeBullet(hi.bt, bulletPosInArray);
 		}
-		else
-			return p->getHP();
+		int bulletPosInArray = -1;
+
+		Bullet* theBullet = getSpecificBullet(hi.bulletPID, hi.bulletBID, hi.bt, bulletPosInArray);
+		if (playerList[hi.bulletPID] != nullptr && gameState == SERVER)
+		{
+			if (playerList[hi.bulletPID]->searchModifier(MODIFIER_TYPE::DOUBLEDAMAGEMOD))
+			{
+				p->setHP(p->getHP() - theBullet->getDamage());
+			}
+		}
+		p->hitByBullet(theBullet, hi.bt, hi.newHPtotal);
+		playerList[hi.bulletPID]->hitMarker = 0.25f;
+		if (theBullet != nullptr && gameState != Gamestate::SERVER)
+		{
+			HitPosAndDirParticle hpad;
+			hpad.pos = theBullet->getPos();
+			//vec3 dir = -glm::normalize(theBullet->getDir());
+			vec3 n = hpad.pos - p->getPos();
+			//hpad.dir = reflect(dir, normalize(n));
+			hpad.dir = hi.hitDir;
+			if(p->getTeam() == 1)
+				hpad.color = TEAMONECOLOR;
+			else if(p->getTeam() == 2)
+				hpad.color = TEAMTWOCOLOR;
+			else hpad.color = vec3(1.0f, 1.0f, 1.0f);
+			hpad.btype = hi.bt;
+			allBulletHitPlayerPos.push_back(hpad);
+		}
+		if (p->getHP() == 0 && p->isAlive())
+		{
+			p->IdiedThisFrame();
+			string fragMessage = fragMessages[rand() % fragMessages.size()];
+			if (playerList[hi.bulletPID] != nullptr)
+				console->printMsg(p->getName() + fragMessage + playerList[hi.bulletPID]->getName() + "!", "System", 'S');
+			else
+				console->printMsg(p->getName() + fragMessage + " a quitter!", "System", 'S');
+			playerList[hi.bulletPID]->addKill();
+			playerList[hi.bulletPID]->IncreaseFrags();
+			playerList[hi.bulletPID]->ZeroDeaths();
+			p->ZeroFrags();
+			p->addDeath();
+			p->IncreaseDeaths();
+			if (playerList[hi.bulletPID]->GetConsecutiveFrags() == 3 && !playerList[hi.bulletPID]->killingSpreeDone)
+			{
+				console->printMsg(playerList[hi.bulletPID]->getName() + " is on a killing spree!", "System", 'S');
+				if (GetSoundActivated() && hi.bulletPID == localPlayerId)
+				{
+					GetSound()->playUserGeneratedSound(SOUNDS::announcerKillingSpree, CATEGORY::Announcer);
+				}
+				playerList[hi.bulletPID]->killingSpreeDone = true;
+			}
+
+			else if (playerList[hi.bulletPID]->GetConsecutiveFrags() == 5 && !playerList[hi.bulletPID]->impressiveDone)
+			{
+				console->printMsg("Impressive, " + playerList[hi.bulletPID]->getName(), "System", 'S');
+				if (GetSoundActivated() && hi.bulletPID == localPlayerId)
+				{
+					GetSound()->playUserGeneratedSound(SOUNDS::announcerImpressive, CATEGORY::Announcer);
+				}
+				playerList[hi.bulletPID]->impressiveDone = true;
+			}
+			addEffectToList(-1, p->getTeam(), hi.playerHit, EFFECT_TYPE::HEALTHPACK, p->getPos(), 0, 0.5f);
+		}
+		removeBullet(hi.bt, bulletPosInArray);
 		int newHP = p->getHP();
 		return newHP;
 	}
