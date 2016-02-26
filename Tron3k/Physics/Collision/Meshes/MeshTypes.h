@@ -211,6 +211,8 @@ struct PLANE
 
 struct OBB
 {
+	AABBSingle aabb; //aabb that encapsulates the obb.
+
 	glm::vec3 corners[8];
 	glm::vec3 cornerNorms[8];
 	PLANE planes[6];
@@ -219,11 +221,30 @@ struct OBB
 
 	void init(OBBloaded* in)
 	{
+		float maxX, maxY, maxZ, minX, minY, minZ;
+		maxX = maxY = maxZ = -FLT_MAX;
+		minX = minY = minZ = FLT_MAX;
 		for (int n = 0; n < 8; n++)
 		{
 			//convert obbloaded's corners from glm::vec4 to obb's glm::vec3 corners
 			corners[n].x = in->corners[n].x; corners[n].y = in->corners[n].y; corners[n].z = in->corners[n].z;
+
+			if (corners[n].x > maxX)
+				maxX = corners[n].x;
+			if (corners[n].x < minX)
+				minX = corners[n].x;
+			if (corners[n].y > maxY)
+				maxY = corners[n].y;
+			if (corners[n].y < minY)
+				minY = corners[n].y;
+			if (corners[n].z > maxZ)
+				maxZ = corners[n].z;
+			if (corners[n].z < minZ)
+				minZ = corners[n].z;
+
 		}
+		aabb.max.x = maxX; aabb.max.y = maxY; aabb.max.z = maxZ;
+		aabb.min.x = minX; aabb.min.y = minY; aabb.min.z = minZ;
 
 		//init planes
 		planes[0].init(corners[2], corners[3], corners[1], corners[0]);
