@@ -662,7 +662,7 @@ vec3 Physics::checkPlayerVPlayerCollision(vec3 playerPos1, vec3 playerPos2)
 	return vec3(0, 0, 0);
 }
 
-vec3 Physics::checkPlayerVBulletCollision(vec3 playerPos, vec3 bulletPos, vec3 size, float bModifier)
+vec3 Physics::checkPlayerVBulletCollision(vec3 playerPos, vec3 bulletPos, vec3 size, vec3 bulletDir, vec3 bulletVel, float dt, float bModifier)
 {
 	playerBox.setPos(playerPos);
 	playerBox.setPlayerSize(size);
@@ -670,10 +670,13 @@ vec3 Physics::checkPlayerVBulletCollision(vec3 playerPos, vec3 bulletPos, vec3 s
 
 	bulletBox.setPos(bulletPos);
 	bulletBox.setSize(bModifier);
+	AABBSingle box = bulletBox.getAABB();
+	vec3 origPos = bulletPos - (bulletVel * bulletDir * dt);
+	box.min = origPos - bulletBox.getWorldSize();
 
 	vec3 collide = vec3(0, 0, 0);// checkAABBCollision(playerBox, bulletBox);
 
-	if (checkAABBvAABBCollision(playerBox.getAABB(), bulletBox.getAABB()))
+	if (checkAABBvAABBCollision(playerBox.getAABB(), box))
 		return normalize(bulletPos - playerPos);
 
 	return collide;

@@ -305,7 +305,7 @@ void Game::update(float dt)
 	}
 	else if (gameState == Gamestate::SERVER)
 	{
-		checkPlayerVBulletCollision();
+		checkPlayerVBulletCollision(dt);
 		checkPlayerVCapCollision();
 		checkBulletVWorldCollision(dt);
 		checkPlayerVEffectCollision();
@@ -807,7 +807,7 @@ void Game::checkPlayerVCapCollision()
 	}
 }
 
-void Game::checkPlayerVBulletCollision()
+void Game::checkPlayerVBulletCollision(float dt)
 {
 	glm::vec3 collides = glm::vec3(0, 0, 0);
 
@@ -836,7 +836,7 @@ void Game::checkPlayerVBulletCollision()
 										modifier = 2.5f;
 									if (b == BULLET_TYPE::MELEE_ATTACK)
 										modifier = 1.5f;
-									collides = physics->checkPlayerVBulletCollision(playerList[i]->getPos() - (vec3(0, playerList[i]->getRole()->getBoxModifier(), 0)), bullets[b][j]->getPos(), this->playerList[i]->getRole()->GetSize(), modifier);
+									collides = physics->checkPlayerVBulletCollision(playerList[i]->getPos() - (vec3(0, playerList[i]->getRole()->getBoxModifier(), 0)), bullets[b][j]->getPos(), this->playerList[i]->getRole()->GetSize(), bullets[b][j]->getDir(), bullets[b][j]->getVel(), dt, modifier);
 
 								}
 							}
