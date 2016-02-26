@@ -31,6 +31,6 @@ void main ()
 		NormalOut = vec4(normal, color.w * clamp(intenisty*3, 0.0f, 1.0f));
 		WorldPosOut = vec4(wPos, color.w * clamp(intenisty*3, 0.0f, 1.0f));
 		DiffuseOut = color * vec4(blendcolor, clamp(intenisty*3, 0.0f, 1.0f));
-		GlowMap = vec4(color.rgb, length(color)*intenisty * color.w);
+		GlowMap = vec4(0,0,0,0);
 	}
 }
