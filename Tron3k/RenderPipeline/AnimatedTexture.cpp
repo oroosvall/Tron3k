@@ -72,6 +72,25 @@ void AnimatedTexture::init()
 	objects[n].init_ground(vec3(39.5f, 0.2f , 96), vec3(46.5f, 0.2f, 102));
 	objects[n].init_time_segments(5, 0.6f, 0.0f);
 
+
+	n++;
+	if (!initialized)
+	{
+		objects.push_back(AnimatedObject());
+		objects[n].textureID = TextureManager::gTm->createTexture("GameFiles/Textures/animatedSigns/discoFloor.png");
+	}
+	objects[n].worldMat[0] = vec4(-5.12f, 8.22f, 113.79f, 1.0f);
+	objects[n].worldMat[1] = vec4(-5.12f + 0.5f, 8.22f - 1, 113.79f, 1.0f);
+	
+	objects[n].worldMat[2] = vec4(-9.90f, 5.67f, 113.68f, 1.0f);
+	objects[n].worldMat[3] = vec4(-9.90f + 0.5f, 5.67f - 1, 113.68f, 1.0f);
+
+
+
+
+	objects[n].init_time_segments(5, 0.1f, 0.f);
+
+	n++;
 	initialized = true;
 }
 
