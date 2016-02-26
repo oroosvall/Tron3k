@@ -818,7 +818,7 @@ void Game::checkPlayerVBulletCollision()
 		{
 			for (unsigned int b = 0; b < BULLET_TYPE::NROFBULLETS; b++)
 			{
-				if (b != BULLET_TYPE::CLUSTERLING || b != BULLET_TYPE::BATTERY_SLOW_SHOT || b != BULLET_TYPE::BATTERY_SPEED_SHOT || b != BULLET_TYPE::BATTERY_SLOW_SHOT)
+				if (b != BULLET_TYPE::CLUSTERLING && b != BULLET_TYPE::BATTERY_SLOW_SHOT && b != BULLET_TYPE::BATTERY_SPEED_SHOT && b != BULLET_TYPE::BATTERY_SLOW_SHOT)
 				{
 					for (unsigned int j = 0; j < bullets[b].size(); j++)
 					{
