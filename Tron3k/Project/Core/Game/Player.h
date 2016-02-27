@@ -120,12 +120,14 @@ private:
 	bool removeSpecificModifier(MODIFIER_TYPE mt);
 
 	void rotatePlayer(vec3 olddir, vec3 newdir);
-	void reloadCurrentWeapon();
+	void reloadCurrentWeapon(bool force = false);
 
 	int kills;
 	int deaths;
 	int consecutiveFrags = 0;
 	int consecutiveDeaths = 0;
+
+	int specReoloadSound = 0;
 
 	int areWeScrolling;
 public:
