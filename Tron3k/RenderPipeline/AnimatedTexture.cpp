@@ -31,19 +31,68 @@ void AnimatedTexture::init()
 	if (!initialized)
 	{
 		objects.push_back(AnimatedObject());
+		objects[n].textureID = TextureManager::gTm->createTexture("GameFiles/Textures/animatedSigns/spaceNow.dds");
+	}
+	objects[n].init_standing_right(vec3(94.8f, 22.3f, 53.6f + 3), vec3(94.8f, 14.3f, 74.3f + 3));
+	objects[n].init_time_segments(20, 0.075f, 0);
+
+	n++;
+	if (!initialized)
+	{
+		objects.push_back(AnimatedObject());
 		objects[n].textureID = TextureManager::gTm->createTexture("GameFiles/Textures/animatedSigns/youmuSwing.png");
 	}
-	objects[n].init_standing_right(vec3(94.8f, 22.3f, 53.6f), vec3(94.8f, 14.3f, 64.3f));
+	objects[n].init_standing_right(vec3(45, 2, 103.7f), vec3(41.8f, 0.6f, 103.7f));
 	objects[n].init_time_segments(5, 0.15f, 0);
 	
 	n++;
 	if (!initialized)
 	{
 		objects.push_back(AnimatedObject());
-		objects[n].textureID = TextureManager::gTm->createTexture("GameFiles/Textures/animatedSigns/matrxtext.png");
+		objects[n].textureID = TextureManager::gTm->createTexture("GameFiles/Textures/animatedSigns/glowStrip.png");
 	}
-	objects[n].init_standing_down(vec3(94.8f, 22.3f + 20, 53.6f), vec3(94.8f, 14.3f + 10, 59.3f));
-	objects[n].init_time_segments(4, 0, 2.0f);
+	objects[n].init_standing_down(vec3(94.99f, 50, 49.4f), vec3(94.99f, 3, 49.7f));
+	objects[n].init_time_segments(1, 0, 3.0f);
+
+	n++;
+	if (!initialized)
+	{
+		objects.push_back(AnimatedObject());
+		objects[n].textureID = objects[n-1].textureID;
+	}
+	objects[n].init_standing_down(vec3(94.99f, 50, 83.5f), vec3(94.99f, 3, 83.8f));
+	objects[n].init_time_segments(1, 0, 3.0f);
+	objects[n].timer = 2.0f;
+
+	n++;
+	if (!initialized)
+	{
+		objects.push_back(AnimatedObject());
+		objects[n].textureID = objects[n - 1].textureID;
+	}
+	objects[n].init_standing_down(vec3(49.3f, 55, 80.91f), vec3(49.0f, 0.0f, 80.91f));
+	objects[n].init_time_segments(1, 0, 3.0f);
+	objects[n].timer = 3.5f;
+
+	n++;
+	if (!initialized)
+	{
+		objects.push_back(AnimatedObject());
+		objects[n].textureID = objects[n - 1].textureID;
+	}
+	objects[n].init_standing_down(vec3(41.0f, 55, 80.91f), vec3(41.3f, 0.0f, 80.91f));
+	objects[n].init_time_segments(1, 0, 3.0f);
+	objects[n].timer = 4.5f;
+
+	//n++;
+	//if (!initialized)
+	//{
+	//	objects.push_back(AnimatedObject());
+	//	objects[n].textureID = objects[n - 1].textureID;
+	//}
+	//objects[n].init_standing_down(vec3(94.99f, 50, 83.5f), vec3(94.99f, 3, 83.8f));
+	//objects[n].init_time_segments(1, 0, 3.0f);
+	//objects[n].timer = 2.0f;
 
 	n++;
 	if (!initialized)
@@ -60,7 +109,7 @@ void AnimatedTexture::init()
 		objects.push_back(AnimatedObject());
 		objects[n].textureID = TextureManager::gTm->createTexture("GameFiles/Textures/animatedSigns/seasons.png");
 	}
-	objects[n].init_standing_right(vec3(94.8f, 22.3f + 20, 60.6f), vec3(94.8f, 14.3f + 10, 64.3f));
+	objects[n].init_standing_right(vec3(-69.3f, 12, 57.5f), vec3(-69.3f, 5, 55.5f));
 	objects[n].init_time_segments(4, 2.0f, 0.5f);
 
 	n++;
