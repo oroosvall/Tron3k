@@ -3218,7 +3218,9 @@ void Core::createWindow(int x, int y, bool fullscreen)
 			uiManager->LoadNextSet(UISets::InGame, winX, winY);
 			uiManager->setMenu(InGameUI::GUI);
 		}
-		top->setNewUIPtr(uiManager);
+
+		if(top != nullptr)
+			top->setNewUIPtr(uiManager);
 
 
 		PipelineValues pv;
