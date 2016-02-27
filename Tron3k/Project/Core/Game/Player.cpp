@@ -887,7 +887,7 @@ void Player::movementUpdates(float dt, bool freecam, bool spectatingThisPlayer, 
 		{
 			movePlayerCollided(dt, olddir);
 
-			if (!freecam || spectating)
+			if (!freecam || spectatingThisPlayer)
 				cam->setCam(pos);
 
 			float lastHeight = pos.y;

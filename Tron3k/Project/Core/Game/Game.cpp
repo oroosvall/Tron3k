@@ -2724,8 +2724,8 @@ void Game::fixLocalPlayerCamera(float dt)
 	if (spectateID > -1)
 	{
 		spectating = true;
+		playerList[spectateID]->fixCamera(dt, freecam, spectating);
 	}
-
-	if (!playerList[localPlayerId]->getLockedControls())
+	else if (!playerList[localPlayerId]->getLockedControls())
 		playerList[localPlayerId]->fixCamera(dt, freecam, spectating);
 }

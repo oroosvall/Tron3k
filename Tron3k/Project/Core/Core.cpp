@@ -1952,8 +1952,8 @@ void Core::clientHandleCmds(std::string com)
 			else
 			{
 				Player* local = game->getPlayer(game->GetLocalPlayerId());
-				if (local->getTeam() == 0)
-				{
+				//if (local->getTeam() == 0)
+				//{
 					if (id > -1 && id < MAX_CONNECT)
 					{
 						//set view dir pos back to the player's view
@@ -1973,7 +1973,7 @@ void Core::clientHandleCmds(std::string com)
 					}
 					else
 						game->spectateID = -1;
-				}
+				//}
 			}
 		}
 		else if (token == "/rs")
