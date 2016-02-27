@@ -3683,7 +3683,12 @@ void Core::scoreboardRender()
 
 void Core::minimapRender()
 {
-	Player* p = game->getPlayer(game->GetLocalPlayerId());
+	Player* p;
+	if(game->spectateID == -1)
+		p = game->getPlayer(game->GetLocalPlayerId());
+	else
+		p = game->getPlayer(game->spectateID);
+
 	Player* p2;
 	int memb = 0;
 	if (p)
