@@ -43,9 +43,6 @@ float ambientLightAmbientIntensity = 0.2f;
 
 out vec4 fragment_color;                                                                                       
 
-const float kernel[51] = float[51](0.001776, 0.002268, 0.002869,
-0.003592, 0.004453, 0.005465, 0.00664, 0.007988, 0.009515, 0.01122, 0.0131, 0.015142, 0.017328, 0.019634, 0.022024, 0.024461, 0.026896, 0.02928, 0.031559, 0.033676, 0.035579, 0.037215, 0.038539, 0.039514, 0.040111, 0.040312, 0.040111, 0.039514, 0.038539, 0.037215, 0.035579, 0.033676, 0.031559, 0.02928, 0.026896, 0.024461, 0.022024, 0.019634, 0.017328, 0.015142, 0.0131, 0.01122, 0.009515, 0.007988, 0.00664, 0.005465, 0.004453, 0.003592, 0.002869, 0.002268, 0.001776);
-
 void main()
 {
 	fragment_color = vec4(0);
@@ -154,18 +151,8 @@ void main()
 	sum += texture(GlowMap, UV + vec2( 0, pixeluvY * 3)) * 0.002291;
 
 	//middle sample
-	//sum += texture(GlowMap, UV) * 0.146768;
+	sum += texture(GlowMap, UV) * 0.146768;
 	//sum = texture(GlowMap2, UV);
-	
-	sum = vec4(0.0f);
-	
-	int i;
-    for(i = -25; i < 25; i++)
-    {
-        sum += texture(GlowMap2, UV + vec2(0,pixeluvY*i)) * kernel[i+25];
-    }
-    
-    sum += texture(GlowMap, UV);
 	
 	fragment_color += sum + specularAddetive;
 }
