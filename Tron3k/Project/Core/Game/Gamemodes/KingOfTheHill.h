@@ -93,6 +93,8 @@ public:
 	void clearTeams();
 
 	void restartGame();
+	
+	std::vector<int>* getTeamVector(int team);
 };
 
 #endif

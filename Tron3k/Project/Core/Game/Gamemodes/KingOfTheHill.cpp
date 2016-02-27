@@ -698,3 +698,12 @@ void KingOfTheHill::restartGame()
 		gamePtr->allowPlayerRespawn(teamTwoPlayers[c], c % 5);
 	}
 }
+
+std::vector<int>* KingOfTheHill::getTeamVector(int team)
+{
+	if (team == 1)
+		return &teamOnePlayers;
+	if (team == 2)
+		return &teamTwoPlayers;
+	return nullptr;
+}

@@ -901,9 +901,10 @@ void Core::upClient(float dt)
 						firstTimeInWarmUp = false;
 					}
 				}
+
 				if (tmp == KOTHSTATE::WARMUP)
 				{
-					if (!game->getPlayer(game->GetLocalPlayerId())->getLockedControls())
+					if (!localp->getLockedControls())
 					{
 						if (i->justPressed(GLFW_KEY_PERIOD))
 						{
@@ -918,8 +919,49 @@ void Core::upClient(float dt)
 					uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam1, false);
 					uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam2, false);
 				}
+
+				if (tmp == KOTHSTATE::OVERTIME)
+				{
+					if (!localp->isAlive() && koth->getRespawnTokens(localp->getTeam()) == 0)
+					{
+						if (i->justPressed(localp->controls.fire))
+						{
+							std::vector<int>* pteam = koth->getTeamVector(localp->getTeam());
+							if (pteam != nullptr)
+							{
+								bool stopthis = false;
+								for (int c = 0; c < pteam->size() && !stopthis; c++)
+								{
+									if (game->spectateID == -1)
+									{
+										if (pteam->at(c) == game->GetLocalPlayerId())
+										{
+											game->spectateID = pteam->at(c);
+										}
+									}
+
+									if (pteam->at(c) == game->spectateID)
+									{
+										if (c < pteam->size() - 1)
+										{
+											game->spectateID = pteam->at(c + 1);
+										}
+										else
+											game->spectateID = pteam->at(c);
+
+										if (game->spectateID == game->GetLocalPlayerId())
+											game->spectateID = -1;
+										stopthis = true;
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 		}
+
+
 		game->update(newDt);
 
 		std::vector<HitPosAndDirParticle> hitpositions = game->getAllBulletHitPlayerPos();

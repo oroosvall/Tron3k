@@ -2563,6 +2563,7 @@ void Game::allowPlayerRespawn(int p_conID, int respawnPosition)
 			localPlayerWantsRespawn = false;
 			localPlayerRespawnWaiting = false;
 			freecam = false;
+			spectateID = -1;
 		}
 	}
 }
