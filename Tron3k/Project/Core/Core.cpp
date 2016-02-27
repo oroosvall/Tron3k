@@ -947,7 +947,7 @@ void Core::upClient(float dt)
 											game->spectateID = pteam->at(c + 1);
 										}
 										else
-											game->spectateID = pteam->at(c);
+											game->spectateID = pteam->at(0);
 
 										if (game->spectateID == game->GetLocalPlayerId())
 											game->spectateID = -1;
