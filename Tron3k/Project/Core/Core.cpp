@@ -2332,16 +2332,16 @@ void Core::renderWorld(float dt)
 		force3rd = true;
 		}
 		*/
-
+		Player* tmp_player = 0;
 		int pid = game->GetLocalPlayerId();
 		if (game->spectateID == -1)
 		{
-			Player* tmp_player = game->getPlayer(pid);
+			tmp_player = game->getPlayer(pid);
 			tmp_player->deadViewAngles();
 		}
 		else
 		{
-			Player* tmp_player = game->getPlayer(game->spectateID);
+			tmp_player = game->getPlayer(game->spectateID);
 			tmp_player->deadViewAngles();
 		}
 
@@ -2698,6 +2698,15 @@ void Core::renderWorld(float dt)
 		if (i->getKeyInfo(GLFW_KEY_TAB))
 			//if (game->getPlayer(game->GetLocalPlayerId())->getLockedControls() == false)
 				scoreboardRender();
+
+		//spectate this playername render
+		if (game->spectateID != -1)
+		{
+			renderPipe->setTextObjectText(leaderBoardTextID, "Spectating: " + tmp_player->getName());
+			renderPipe->setTextPos(leaderBoardTextID, vec2(500 - 42, 650));
+			renderPipe->renderTextObject(leaderBoardTextID);
+		}
+
 
 		renderPipe->disableBlend();
 
