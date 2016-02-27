@@ -77,7 +77,7 @@ void Player::setExplodingInfo(std::vector<glm::vec4> expDirs)
 	}
 }
 
-void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool spectating)
+void Player::movePlayer(float dt, glm::vec3 oldDir)
 {
 	if (!this->getFootsteps())
 	{
@@ -125,7 +125,7 @@ void Player::movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool spectatin
 	}
 }
 
-void Player::movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool specingThis)
+void Player::movePlayerCollided(float dt, glm::vec3 oldDir)
 {
 	effectCollisionHandling();
 	//Collision handling here, after movement
@@ -436,6 +436,11 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 	diedThisFrame = false;
 	PLAYERMSG msg = NONE;
 
+	if (i->justPressed(GLFW_KEY_K))
+	{
+		setHP(0);
+	}
+
 	if (isDead)
 		deathTimer += dt;
 	else
@@ -478,23 +483,6 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 			if (!lockControls)
 			{
-				//move camera to where we are looking.
-				//if freecam is true the cam can move on its own
-				if (spectating == false)
-				{
-					//if (i->justPressed(GLFW_KEY_C)) // flymode
-					//	noclip = !noclip;
-
-					if (noclip)
-					{
-						cam->update(dt, true);
-						setPos(cam->getPos());
-						vel *= 0;
-					}
-					else
-						cam->update(dt, freecam);
-				}
-
 				//If freecam or spectating dont take player move input
 				if (freecam == false && isDead == false)
 				{
@@ -785,7 +773,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			movementAnimationChecks(dt);
 
 			modifiersSetData(dt);	//Dont Remove Again Please!
-			movePlayer(dt, olddir, freecam, spectating); //This moves the player regardless of what we might end up colliding with
+			movePlayer(dt, olddir); //This moves the player regardless of what we might end up colliding with
 
 
 			clearCollisionNormals(); //Doesn't actually clear the array, just manually sets size to 0. This is to speed things up a little.
@@ -888,12 +876,10 @@ void Player::movementUpdates(float dt, bool freecam, bool spectatingThisPlayer, 
 		//ignore if we are spectating
 		if (currentTeam != 0)
 		{
-			movePlayerCollided(dt, olddir, freecam, spectatingThisPlayer);
-			if (!freecam || spectating == true)
-			{
-				cam->setCam(pos, dir);
-				rotatePlayer(oldDir, dir);
-			}
+			movePlayerCollided(dt, olddir);
+
+			if (!freecam || spectating)
+				cam->setCam(pos);
 
 			float lastHeight = pos.y;
 
@@ -1553,4 +1539,21 @@ bool Player::allahuAkhbar()
 		return true;
 	}
 	return false;
+}
+
+void Player::fixCamera(float dt, bool freecam, bool spectating)
+{
+	if (!freecam && !spectating)
+	{
+		if (!isDead)
+		{
+			cam->update(dt, freecam);
+			cam->setCam(pos);
+			rotatePlayer(oldDir, dir);
+		}
+	}
+	else
+	{
+		cam->update(dt, freecam);
+	}
 }

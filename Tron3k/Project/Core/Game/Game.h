@@ -367,6 +367,8 @@ public:
 
 	void clearAllPlayerKD();
 	void resetAllPickups();
+
+	void fixLocalPlayerCamera(float dt);
 };
 
 #endif

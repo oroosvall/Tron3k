@@ -328,7 +328,6 @@ void Game::update(float dt)
 					if (c == spectateID)
 						spectatingThis = true;
 				}
-
 			}
 			playerList[c]->movementUpdates(dt, freecam, spectatingThis, spectating);
 
@@ -2716,4 +2715,18 @@ void Game::resetAllPickups()
 		temp2 = (DoubleDamagePickup*)effects[EFFECT_TYPE::DOUBLEDAMAGEPICKUP][i];
 		temp2->startCooldown();
 	}
+}
+
+void Game::fixLocalPlayerCamera(float dt)
+{
+	bool spectatingThis = false;
+	bool spectating = false;
+
+	if (spectateID > -1)
+	{
+		spectating = true;
+	}
+
+	if (!playerList[localPlayerId]->getLockedControls())
+		playerList[localPlayerId]->fixCamera(dt, freecam, spectating);
 }

@@ -571,6 +571,8 @@ void Core::upRoam(float dt)
 			game->clearTimedOutEffects();
 		}
 
+		game->fixLocalPlayerCamera(dt);
+
 		renderWorld(dt);
 		break;
 	}
@@ -1119,6 +1121,8 @@ void Core::upClient(float dt)
 			top->network_OUT(dt);
 			tick_timer = 0;
 		}
+
+		game->fixLocalPlayerCamera(dt);
 
 		renderWorld(dt);
 		break;
@@ -1933,30 +1937,33 @@ void Core::clientHandleCmds(std::string com)
 		}
 		else if (token == "/spec")
 		{
-			ss >> token;
-			if (token == "/spec")
+			int id;
+			if (!(ss >> id))
 				console.printMsg("Invalid Number", "System", 'S');
 			else
 			{
-				int id = stoi(token); // yes this is dangerous, dont write anything but numbers
-				if (id > -1 && id < MAX_CONNECT)
+				Player* local = game->getPlayer(game->GetLocalPlayerId());
+				if (local->getTeam() == 0)
 				{
-					//set view dir pos back to the player's view
-					Player* p = game->getPlayer(id);
-					if (p != nullptr)
+					if (id > -1 && id < MAX_CONNECT)
 					{
-						CameraInput::getCam()->setCam(p->getPos(), p->getDir());
-						game->spectateID = id;
-						game->freecam = true;
-						//set team color
-						uiManager->setTeamColor(p->getTeam());
-						uiManager->changeColorTeam();
+						//set view dir pos back to the player's view
+						Player* p = game->getPlayer(id);
+						if (p != nullptr)
+						{
+							CameraInput::getCam()->setCam(p->getPos(), p->getDir());
+							game->spectateID = id;
+							game->freecam = true;
+							//set team color
+							uiManager->setTeamColor(p->getTeam());
+							uiManager->changeColorTeam();
+						}
+						else
+							console.printMsg("That Player Doesn't exist", "System", 'S');
 					}
 					else
-						console.printMsg("That Player Doesn't exist", "System", 'S');
+						game->spectateID = -1;
 				}
-				else
-					game->spectateID = -1;
 			}
 		}
 		else if (token == "/rs")
@@ -2006,8 +2013,6 @@ void Core::serverHandleCmds()
 			console.printMsg("Console commands", "", ' ');
 			console.printMsg("/players", "", ' ');
 			console.printMsg("/disconnect", "", ' ');
-			console.printMsg("/render", "", ' ');
-			console.printMsg("/spec #", "", ' ');
 		}
 		else if (token == "/players")
 		{
@@ -2024,38 +2029,7 @@ void Core::serverHandleCmds()
 		}
 		else if (token == "/disconnect")
 			disconnect();
-		else if (token == "/render")
-		{
-			if (serverRender)
-				serverRender = false; //createWindow(200, 200, false);
-			else
-				serverRender = true; //createWindow(winX, winY, fullscreen);
-		}
-		else if (token == "/spec")
-		{
-			ss >> token;
-			if (token == "/spec")
-				console.printMsg("Invalid Number", "System", 'S');
-			else
-			{
-				int id = stoi(token); // yes this is dangerous, dont write anything but numbers
-				if (id > -1 && id < MAX_CONNECT)
-				{
-					//set view dir pos back to the player's view
-					Player* p = game->getPlayer(id);
-					if (p != nullptr)
-					{
-						CameraInput::getCam()->setCam(p->getPos(), p->getDir());
-						game->spectateID = id;
-						game->freecam = true;
-					}
-					else
-						console.printMsg("That Player Doesn't exist", "System", 'S');
-				}
-				else
-					game->spectateID = -1;
-			}
-		}
+		
 		//Everything below is KOTH specific :(
 		else if (token == "/setready")
 		{
@@ -3218,7 +3192,6 @@ void Core::createWindow(int x, int y, bool fullscreen)
 			uiManager->LoadNextSet(UISets::InGame, winX, winY);
 			uiManager->setMenu(InGameUI::GUI);
 		}
-		top->setNewUIPtr(uiManager);
 
 
 		PipelineValues pv;

@@ -66,8 +66,8 @@ private:
 	float maxspeed = 5.0f;
 
 	glm::vec3 collisionVel; //How we ought to be moving based on our collisions
-	void movePlayer(float dt, glm::vec3 oldDir, bool freecam, bool specingThis);
-	void movePlayerCollided(float dt, glm::vec3 oldDir, bool freecam, bool specingThis);
+	void movePlayer(float dt, glm::vec3 oldDir);
+	void movePlayerCollided(float dt, glm::vec3 oldDir);
 	void effectCollisionHandling();
 	bool grounded = false;
 	bool collided = false;
@@ -266,6 +266,8 @@ public:
 
 	PlayerControlSettings controls;
 	float hitMarker;
+
+	void fixCamera(float dt, bool freecam, bool spectating);
 };
 
 #endif

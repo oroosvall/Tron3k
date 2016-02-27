@@ -679,7 +679,7 @@ public:
 		{
 			uiPtr->setTeamColor(team);
 			uiPtr->changeColorTeam();
-			if (gamePtr->getPlayer(p_conID)->getRole()->getRole() == ROLES::NROFROLES)
+			if (gamePtr->getPlayer(p_conID)->getRole()->getRole() == ROLES::NROFROLES && team != 0)
 			{
 				if (!uiPtr->getRoleBool())
 				{
@@ -688,6 +688,10 @@ public:
 				}
 				else
 					uiPtr->setMenu(InGameUI::ClassSelect);
+			}
+			else if (team == 0)
+			{
+				uiPtr->setMenu(InGameUI::RemoveMenu);
 			}
 			else
 			{

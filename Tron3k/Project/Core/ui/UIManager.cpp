@@ -287,7 +287,8 @@ void UIManager::loadInTexture()
 
 void UIManager::menuRender()
 {
-	menus[currentMenu].renderMenu();
+	if(currentMenu > -1)
+		menus[currentMenu].renderMenu();
 }
 
 void UIManager::inGameRender()
@@ -322,15 +323,19 @@ void UIManager::setMenu(int menuId)
 	}
 	else if (menuId == InGameUI::RemoveMenu)
 	{
-		if (nrOfOpenedMenus > -1 && openedMenus == nullptr)
+		if (nrOfOpenedMenus > -1 && openedMenus != nullptr)
 		{
-			if (openedMenus[nrOfOpenedMenus] != InGameUI::GUI)
+			if (openedMenus[nrOfOpenedMenus - 1] != InGameUI::GUI)
 			{
 				if (currentMenu == InGameUI::ClassSelect)
 					menus[currentMenu].resetAllObjsTexture();
 
 				nrOfOpenedMenus--;
 				openedMenus[nrOfOpenedMenus] = -1;
+				if (nrOfOpenedMenus > 0)
+					currentMenu = openedMenus[nrOfOpenedMenus - 1];
+				else
+					currentMenu = -1;
 			}
 			else
 				console->printMsg("Error: Function setMenu in UIManager, Someone is trying to use RemoveMenu when nrOfOpenedMenus has a value of 1 or lower .", "System", 'S');
@@ -451,10 +456,6 @@ void UIManager::hoverCheck(glm::vec2 pos)
 	if (nrOfOpenedMenus > 0)
 		if (currentMenu > -1)
 			menus[currentMenu].mouseHover(pos);
-		else
-			console->printMsg("Error: Function hoverCheck in UIManager, currentMenu has a value lower then 0", "System", 'S');
-	else
-		console->printMsg("Error: Function hoverCheck in UIManager, nrOfOpenedMenus has a value of 0 or lower", "System", 'S');
 }
 
 
@@ -580,17 +581,14 @@ int UIManager::getCurrentMenu()
 	if (nrOfOpenedMenus > 0)
 		if (currentMenu > -1)
 			returnValue = currentMenu;
-		else
-			console->printMsg("Error: Function getCurrentMenu in UIManager, currentMenu has a value lower then 0", "System", 'S');
-	else
-		console->printMsg("Error: Function getCurrentMenu in UIManager, nrOfOpenedMenus has a value of 0 or lower", "System", 'S');
 	return returnValue;
 }
 
 bool UIManager::isThereAMenuUp()
 {
 	bool returnValue = true;
-	if (currentMenu == InGameUI::GUI && nrOfOpenedMenus == 1)
+	//if (currentMenu == InGameUI::GUI && nrOfOpenedMenus == 1)
+	if(currentMenu < 1)
 		returnValue = false;
 
 	return returnValue;
