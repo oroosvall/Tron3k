@@ -16,8 +16,8 @@ private:
 	int textureIndexList[2];
 	int uniqueKey;
 	int nrOfButtons;
-	int objId[2];
 	float lastScale;
+
 	glm::vec3 pivot;
 
 	int winX;
@@ -28,36 +28,32 @@ private:
 	void createAdditionalPoint();
 public:
 	Slider();
-	Slider(glm::vec2 center, int textureId1, int textureId2, int uniqueKey, int objId1, int objId2, IRenderPipeline* uiRender, glm::vec2 textRes, glm::vec2 textRes2);
+	Slider(glm::vec2 center, int textureId1, int textureId2, int uniqueKey, IRenderPipeline* uiRender, glm::vec2 textRes, glm::vec2 textRes2);
 	virtual ~Slider();
 
 	virtual void renderQuad(int id);
-	virtual void renderText(int id);
-
+	
 	virtual void setWorldMatrix(int id, float x, float y);
 	virtual void resetWorldMatrix(int id);
 
-	virtual void changeTexUsed(int id, int wmID);
-
-	virtual void fromPosToQuadScreen(glm::vec2 positions, int id);
-
-	virtual int checkCollision(glm::vec2 pos);
-
-	virtual void hoverCheck(glm::vec2 pos);
+	virtual int checkCollision(glm::vec2 pos, float newSoundProcent = 0.0f);
 
 	virtual void setTexture(std::vector<GLuint> uiTextureIds);
 
-	virtual void scaleBar(int id, float procentOfMax, bool fromRight);
-
 	virtual void setWindowResolution(int winX, int winY);
 
-	virtual void setText(std::string text);
+	virtual float calculateSoundProcent(float mposX);
 
+	// Not used
+	virtual void renderText(int id); //Not used
+	virtual void changeTexUsed(int id, int wmID); //Not used
+	virtual void fromPosToQuadScreen(glm::vec2 positions, int id); //Not used
+	virtual void hoverCheck(glm::vec2 pos); //Not used
+	virtual void scaleBar(int id, float procentOfMax, bool fromRight); //Not used
+	virtual void setText(std::string text); // not used
 	virtual std::string getText();
 	virtual void removeLastInput();
 	virtual void cleanText();
 };
 
 #endif
-
-//Sätt button direkt dit spelaren klickade.

@@ -185,7 +185,7 @@ void UIManager::init(Console* console, int winX, int winY)
 	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/NewVersion/topframes_right_points.png"); //58 rounds team 1
 
 	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/TicketReducer2.png"); //59
-	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/tickloss_3_green.png"); //60
+	texturePaths.push_back("GameFiles/Textures/UITextures/Banners/tickloss_3_green.png"); //60
 
 	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/NewVersion/countdown_background.png"); //61
 
@@ -440,11 +440,11 @@ void UIManager::setFirstMenuSet(bool set)
 }
 
 
-int UIManager::collisionCheck(glm::vec2 pos)
+int UIManager::collisionCheck(glm::vec2 pos, float newSoundProcent)
 {
 	if (nrOfOpenedMenus > 0)
 		if (currentMenu > -1)
-			return menus[currentMenu].mouseCollission(pos);
+			return menus[currentMenu].mouseCollission(pos, newSoundProcent);
 		else
 			console->printMsg("Error: Function collisionCheck in UIManager, currentMenu has a value lower then 0", "System", 'S');
 	else

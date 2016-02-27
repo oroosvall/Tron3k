@@ -29,7 +29,7 @@ public:
 
 	virtual void fromPosToQuadScreen(glm::vec2 positions, int id) = 0;
 
-	virtual int checkCollision(glm::vec2 pos) = 0;
+	virtual int checkCollision(glm::vec2 pos, float newSoundProcent = 0.0f) = 0;
 
 	virtual void hoverCheck(glm::vec2 pos) = 0;
 
@@ -43,6 +43,8 @@ public:
 	virtual std::string getText() = 0;
 	virtual void removeLastInput() = 0;
 	virtual void cleanText() = 0;
+
+	virtual float calculateSoundProcent(float mposX) { return 0; };
 
 	//virtual uiVertex* returnPosAUv(int id) = 0;
 };

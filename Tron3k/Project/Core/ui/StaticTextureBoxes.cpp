@@ -151,7 +151,7 @@ void StaticTextureBoxes::fromPosToQuadScreen(glm::vec2 positions, int id)
 	}
 }
 
-int StaticTextureBoxes::checkCollision(glm::vec2 mpos)
+int StaticTextureBoxes::checkCollision(glm::vec2 mpos, float newSoundProcent)
 {
 	//int returnValue = -1;
 	//if (mpos.x > pos[0].x && mpos.x < pos[1].x)

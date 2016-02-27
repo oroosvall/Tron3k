@@ -294,7 +294,7 @@ glm::vec2 UI::fileCoordToScreenSpace(glm::vec2 pos)
 }
 
 
-int UI::mouseCollission(glm::vec2 pos) 
+int UI::mouseCollission(glm::vec2 pos, float newSoundProcent)
 {
 	int hit = -1;
 	int result = -1;
@@ -302,7 +302,7 @@ int UI::mouseCollission(glm::vec2 pos)
 	
 	for (int i = 0; i < nrOfObjects && hit == -1; i++)
 	{
-		hit = UiObjects[i]->checkCollision(pos);
+		hit = UiObjects[i]->checkCollision(pos, newSoundProcent);
 		index = i;
 	}
 
@@ -314,6 +314,7 @@ int UI::mouseCollission(glm::vec2 pos)
 			UiObjects[index]->changeTexUsed(1, 0);
 			UiObjects[index]->setDontChangeTexture(true);
 		}
+
 	return hit;
 }
 

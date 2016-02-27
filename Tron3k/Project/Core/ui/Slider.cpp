@@ -24,15 +24,15 @@ Slider::Slider()
 					   0, 0, 0, 1 };
 	uniqueKey = -1;
 	nrOfButtons = 2;
-	objId[0] = -1;
-	objId[1] = -1;
 
 	winX = 0;
 	winY = 0;
 	startWMX = 0;
 	startWMY = 0;
+
+	pivot = glm::vec3(0.0f);
 }
-Slider::Slider(glm::vec2 center, int textureId1, int textureId2, int uniqueKey, int objId1, int objId2, IRenderPipeline* uiRender, glm::vec2 textRes, glm::vec2 textRes2)
+Slider::Slider(glm::vec2 center, int textureId1, int textureId2, int uniqueKey, IRenderPipeline* uiRender, glm::vec2 textRes, glm::vec2 textRes2)
 {
 	this->uiRender = uiRender;
 	this->center[0] = center;
@@ -42,9 +42,6 @@ Slider::Slider(glm::vec2 center, int textureId1, int textureId2, int uniqueKey, 
 	textureIndexList[0] = textureId1;
 	textureIndexList[1] = textureId2;
 	this->uniqueKey = uniqueKey;
-
-	objId[0] = objId1;
-	objId[1] = objId2;
 
 	winX = 0;
 	winY = 0;
@@ -66,20 +63,32 @@ Slider::Slider(glm::vec2 center, int textureId1, int textureId2, int uniqueKey, 
 	startWMX = worldMatrix[0][0].w;
 	startWMY = worldMatrix[0][1].w;
 
+	pivot = glm::vec3(0.0f);
+
 	createAdditionalPoint();
 }
-Slider::~Slider() {}
+Slider::~Slider() { uiRender = nullptr; }
 
 
 void Slider::createAdditionalPoint()
 {
+	center[1] = center[0];
+	
+	float xScale = textureRes[1].x / 1980;
+	float yScale = textureRes[1].y / 1080;
 
+	// setpos
+	worldMatrix[1][0].w = center[1].x;
+	worldMatrix[1][1].w = center[1].y;
+	worldMatrix[1][2].w = 0.0f;
+	// set scale
+	worldMatrix[1][0].x = xScale;
+	worldMatrix[1][1].y = yScale;
+
+	pos[2] = glm::vec2(worldMatrix[1][0].w - worldMatrix[1][0].x, worldMatrix[1][1].w - worldMatrix[1][1].y);
+	pos[3] = glm::vec2(worldMatrix[1][0].w + worldMatrix[1][0].x, worldMatrix[1][1].w + worldMatrix[1][1].y);
 }
 
-void Slider::renderText(int id)
-{
-
-}
 
 void Slider::renderQuad(int id)
 {
@@ -99,6 +108,64 @@ void Slider::resetWorldMatrix(int id)
 	worldMatrix[id][1].w = startWMY;
 }
 
+int Slider::checkCollision(glm::vec2 mpos, float newSoundProcent)
+{
+	int returnValue = -1;
+	if (mpos.x > pos[0].x && mpos.x < pos[1].x)
+	{
+		if (mpos.y > pos[0].y && mpos.y < pos[1].y)
+		{
+			returnValue = uniqueKey;
+			setWorldMatrix(1, mpos.x, mpos.y);
+			newSoundProcent = calculateSoundProcent(mpos.x);
+		}
+	}
+
+	return returnValue;
+}
+
+void Slider::setTexture(std::vector<GLuint> uiTextureIds)
+{
+	for (int i = 0; i < 2; i++)
+	{
+		textureIndexList[i] = uiTextureIds[textureIndexList[i]];
+	}
+}
+
+void Slider::setWindowResolution(int winX, int winY)
+{
+	this->winX = winX;
+	this->winY = winY;
+}
+
+float Slider::calculateSoundProcent(float mposX)
+{
+	float procent = 1.0f;
+
+	float left = pos[0].x;
+	float right = pos[1].x;
+
+	if(left < 0)
+		left *= -1.0f;
+	if(right < 0)
+		right *= -1.0f;
+	if (mposX < 0)
+		mposX *= -1;
+
+	float lenght = right + left;
+
+	float pointClicked = mposX - left;
+
+	if(lenght > 0)
+		procent = pointClicked / lenght;
+
+	return procent;
+}
+
+void Slider::renderText(int id)
+{
+
+}
 //Empty
 void Slider::changeTexUsed(int id, int wmID)
 {
@@ -115,53 +182,13 @@ void Slider::fromPosToQuadScreen(glm::vec2 positions, int id)
 
 }
 
-int Slider::checkCollision(glm::vec2 mpos)
-{
-	int returnValue = -1;
-	if (mpos.x > pos[0].x && mpos.x < pos[1].x)
-	{
-		if (mpos.y > pos[0].y && mpos.y < pos[1].y)
-		{
-			returnValue = uniqueKey;
-		}
-	}
-
-	return returnValue;
-
-	return returnValue;
-}
-
 void Slider::hoverCheck(glm::vec2 pos)
 {
 
 }
 
-void Slider::setTexture(std::vector<GLuint> uiTextureIds)
-{
-	for (int i = 0; i < 2; i++)
-	{
-		textureIndexList[i] = uiTextureIds[textureIndexList[i]];
-	}
-}
-
 void Slider::scaleBar(int id, float procentOfMax, bool fromRight) //
 {
-	pivot = glm::vec3(1.0f, 0.0f, 0.0f);
-
-	float scale = (textureRes[0].x * procentOfMax) / 1920.0f;
-	worldMatrix[0][0].x = scale;
-
-	float fullLength = textureRes[0].x / 1920.0f;
-	pivot.x = fullLength - scale;
-
-	if (!fromRight)
-		pivot.x = -pivot.x;
-}
-
-void Slider::setWindowResolution(int winX, int winY)
-{
-	this->winX = winX;
-	this->winY = winY;
 }
 
 void Slider::setText(std::string text)

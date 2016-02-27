@@ -59,7 +59,7 @@ public:
 
 	virtual void fromPosToQuadScreen(glm::vec2 positions, int id);
 
-	virtual int checkCollision(glm::vec2 pos);
+	virtual int checkCollision(glm::vec2 pos, float newSoundProcent = 0.0f);
 
 	virtual void hoverCheck(glm::vec2 pos);
 

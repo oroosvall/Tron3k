@@ -104,7 +104,7 @@ public:
 
 	void setFirstMenuSet(bool set);
 
-	int collisionCheck(glm::vec2 pos);
+	int collisionCheck(glm::vec2 pos, float newSoundProcent = 0.0f);
 	void hoverCheck(glm::vec2 pos);
 
 	void changeTex(int objId, int whichTex);
