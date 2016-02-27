@@ -2481,10 +2481,17 @@ void Core::renderWorld(float dt)
 					//If first person render
 					if (!force3rd && p->isLocal() && !game->freecam || game->spectateID == i)
 					{
-						if (p->isLocal())   //use current anim
-							renderPipe->renderAnimation(i, p->getRole()->getRole(), &p->getFPSmat(), p->getAnimState_f_c(), &dgColor.x, hpval, true, p->getAnimPrimary(), cam->roomID);
-						else //use peak anim
-							renderPipe->renderAnimation(i, p->getRole()->getRole(), &p->getFPSmat(), p->getAnimState_f_p(), &dgColor.x, hpval, true, p->getAnimPrimary(), cam->roomID);
+						if (p->isLocal() && game->spectateID != -1)
+						{
+							//dont render local fps view
+						}
+						else
+						{
+							if (p->isLocal())   //use current anim
+								renderPipe->renderAnimation(i, p->getRole()->getRole(), &p->getFPSmat(), p->getAnimState_f_c(), &dgColor.x, hpval, true, p->getAnimPrimary(), cam->roomID);
+							else //use peak anim
+								renderPipe->renderAnimation(i, p->getRole()->getRole(), &p->getFPSmat(), p->getAnimState_f_p(), &dgColor.x, hpval, true, p->getAnimPrimary(), cam->roomID);
+						}
 					}
 					else
 					{
