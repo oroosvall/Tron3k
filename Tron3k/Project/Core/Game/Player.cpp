@@ -826,13 +826,13 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					//init swap 1st to second
 					if (anim_first_framePeak == AnimationState::first_primary_switch)
 					{
-						animSwapTime_OUT = 0.53f;
+						animSwapTime_OUT = 0.53f * 0.5f;
 						animSwapActive = true;
 					}
 					//init swap 2nd to first
 					else if (anim_first_framePeak == AnimationState::first_secondary_switch)
 					{
-						animSwapTime_OUT = 0.34f;
+						animSwapTime_OUT = 0.34f * 0.5f;
 						animSwapActive = true;
 					}
 				}
