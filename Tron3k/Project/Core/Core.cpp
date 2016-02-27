@@ -2334,8 +2334,16 @@ void Core::renderWorld(float dt)
 		*/
 
 		int pid = game->GetLocalPlayerId();
-		Player* tmp_player = game->getPlayer(pid);
-		tmp_player->deadViewAngles();
+		if (game->spectateID == -1)
+		{
+			Player* tmp_player = game->getPlayer(pid);
+			tmp_player->deadViewAngles();
+		}
+		else
+		{
+			Player* tmp_player = game->getPlayer(game->spectateID);
+			tmp_player->deadViewAngles();
+		}
 
 		glm::vec3 tmpEyePos = CameraInput::getCam()->getPos();
 
