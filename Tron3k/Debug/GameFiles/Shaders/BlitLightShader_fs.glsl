@@ -43,6 +43,9 @@ float ambientLightAmbientIntensity = 0.2f;
 
 out vec4 fragment_color;                                                                                       
 
+const float kernel[51] = float[51](0.001776, 0.002268, 0.002869,
+0.003592, 0.004453, 0.005465, 0.00664, 0.007988, 0.009515, 0.01122, 0.0131, 0.015142, 0.017328, 0.019634, 0.022024, 0.024461, 0.026896, 0.02928, 0.031559, 0.033676, 0.035579, 0.037215, 0.038539, 0.039514, 0.040111, 0.040312, 0.040111, 0.039514, 0.038539, 0.037215, 0.035579, 0.033676, 0.031559, 0.02928, 0.026896, 0.024461, 0.022024, 0.019634, 0.017328, 0.015142, 0.0131, 0.01122, 0.009515, 0.007988, 0.00664, 0.005465, 0.004453, 0.003592, 0.002869, 0.002268, 0.001776);
+
 void main()
 {
 	fragment_color = vec4(0);
@@ -86,73 +89,81 @@ void main()
 	vec4 sum = vec4(0);
 	
 	//top left quadrant
-	sum += texture(GlowMap, UV + vec2( -pixeluvX * 1 , -pixeluvY * 1 )) * 0.058488;
-	sum += texture(GlowMap, UV + vec2( -pixeluvX * 1 , -pixeluvY * 2 )) * 0.014662;
-	sum += texture(GlowMap, UV + vec2( -pixeluvX * 1 , -pixeluvY * 3 )) * 0.001446;
-	sum += texture(GlowMap, UV + vec2( -pixeluvX * 2 , -pixeluvY * 1 )) * 0.014662;
-	sum += texture(GlowMap, UV + vec2( -pixeluvX * 2 , -pixeluvY * 2 )) * 0.003676;
-	sum += texture(GlowMap, UV + vec2( -pixeluvX * 2 , -pixeluvY * 3 )) * 0.000363;
-	sum += texture(GlowMap, UV + vec2( -pixeluvX * 3 , -pixeluvY * 1 )) * 0.001446;
-	sum += texture(GlowMap, UV + vec2( -pixeluvX * 3 , -pixeluvY * 2 )) * 0.000363;
-	sum += texture(GlowMap, UV + vec2( -pixeluvX * 3 , -pixeluvY * 3 )) * 0.000036;
-
-	//top right quadrant   
-	sum += texture(GlowMap, UV + vec2( pixeluvX * 1 , -pixeluvY * 1 )) * 0.058488;
-	sum += texture(GlowMap, UV + vec2( pixeluvX * 1 , -pixeluvY * 2 )) * 0.014662;
-	sum += texture(GlowMap, UV + vec2( pixeluvX * 1 , -pixeluvY * 3 )) * 0.001446;
-	sum += texture(GlowMap, UV + vec2( pixeluvX * 2 , -pixeluvY * 1 )) * 0.014662;
-	sum += texture(GlowMap, UV + vec2( pixeluvX * 2 , -pixeluvY * 2 )) * 0.003676;
-	sum += texture(GlowMap, UV + vec2( pixeluvX * 2 , -pixeluvY * 3 )) * 0.000363;
-	sum += texture(GlowMap, UV + vec2( pixeluvX * 3 , -pixeluvY * 1 )) * 0.001446;
-	sum += texture(GlowMap, UV + vec2( pixeluvX * 3 , -pixeluvY * 2 )) * 0.000363;
-	sum += texture(GlowMap, UV + vec2( pixeluvX * 3 , -pixeluvY * 3 )) * 0.000036;
-
-	//bot left quadrant  
-	sum += texture(GlowMap, UV + vec2( -pixeluvX * 1 , pixeluvY * 1 )) * 0.058488;
-	sum += texture(GlowMap, UV + vec2( -pixeluvX * 1 , pixeluvY * 2 )) * 0.014662;
-	sum += texture(GlowMap, UV + vec2( -pixeluvX * 1 , pixeluvY * 3 )) * 0.001446;
-	sum += texture(GlowMap, UV + vec2( -pixeluvX * 2 , pixeluvY * 1 )) * 0.014662;
-	sum += texture(GlowMap, UV + vec2( -pixeluvX * 2 , pixeluvY * 2 )) * 0.003676;
-	sum += texture(GlowMap, UV + vec2( -pixeluvX * 2 , pixeluvY * 3 )) * 0.000363;
-	sum += texture(GlowMap, UV + vec2( -pixeluvX * 3 , pixeluvY * 1 )) * 0.001446;
-	sum += texture(GlowMap, UV + vec2( -pixeluvX * 3 , pixeluvY * 2 )) * 0.000363;
-	sum += texture(GlowMap, UV + vec2( -pixeluvX * 3 , pixeluvY * 3 )) * 0.000036;
-
-	//bot left quadrant  
-	sum += texture(GlowMap, UV + vec2( pixeluvX * 1 , pixeluvY * 1 )) * 0.058488;
-	sum += texture(GlowMap, UV + vec2( pixeluvX * 1 , pixeluvY * 2 )) * 0.014662;
-	sum += texture(GlowMap, UV + vec2( pixeluvX * 1 , pixeluvY * 3 )) * 0.001446;
-	sum += texture(GlowMap, UV + vec2( pixeluvX * 2 , pixeluvY * 1 )) * 0.014662;
-	sum += texture(GlowMap, UV + vec2( pixeluvX * 2 , pixeluvY * 2 )) * 0.003676;
-	sum += texture(GlowMap, UV + vec2( pixeluvX * 2 , pixeluvY * 3 )) * 0.000363;
-	sum += texture(GlowMap, UV + vec2( pixeluvX * 3 , pixeluvY * 1 )) * 0.001446;
-	sum += texture(GlowMap, UV + vec2( pixeluvX * 3 , pixeluvY * 2 )) * 0.000363;
-	sum += texture(GlowMap, UV + vec2( pixeluvX * 3 , pixeluvY * 3 )) * 0.000036;
-
-	//Cross samples
-	//up
-	sum += texture(GlowMap, UV + vec2( 0, -pixeluvY * 1)) * 0.092651;
-	sum += texture(GlowMap, UV + vec2( 0, -pixeluvY * 2)) * 0.023226;
-	sum += texture(GlowMap, UV + vec2( 0, -pixeluvY * 3)) * 0.002291;
-
-	//left
-	sum += texture(GlowMap, UV + vec2( -pixeluvX * 1, 0)) * 0.092651;
-	sum += texture(GlowMap, UV + vec2( -pixeluvX * 2, 0)) * 0.023226;
-	sum += texture(GlowMap, UV + vec2( -pixeluvX * 3, 0)) * 0.002291;
-
-	//right
-	sum += texture(GlowMap, UV + vec2( pixeluvX * 1, 0)) * 0.092651;
-	sum += texture(GlowMap, UV + vec2( pixeluvX * 2, 0)) * 0.023226;
-	sum += texture(GlowMap, UV + vec2( pixeluvX * 3, 0)) * 0.002291;
-
-	//down
-	sum += texture(GlowMap, UV + vec2( 0, pixeluvY * 1)) * 0.092651;
-	sum += texture(GlowMap, UV + vec2( 0, pixeluvY * 2)) * 0.023226;
-	sum += texture(GlowMap, UV + vec2( 0, pixeluvY * 3)) * 0.002291;
-
-	//middle sample
-	sum += texture(GlowMap, UV) * 0.146768;
+	//sum += texture(GlowMap, UV + vec2( -pixeluvX * 1 , -pixeluvY * 1 )) * 0.058488;
+	//sum += texture(GlowMap, UV + vec2( -pixeluvX * 1 , -pixeluvY * 2 )) * 0.014662;
+	//sum += texture(GlowMap, UV + vec2( -pixeluvX * 1 , -pixeluvY * 3 )) * 0.001446;
+	//sum += texture(GlowMap, UV + vec2( -pixeluvX * 2 , -pixeluvY * 1 )) * 0.014662;
+	//sum += texture(GlowMap, UV + vec2( -pixeluvX * 2 , -pixeluvY * 2 )) * 0.003676;
+	//sum += texture(GlowMap, UV + vec2( -pixeluvX * 2 , -pixeluvY * 3 )) * 0.000363;
+	//sum += texture(GlowMap, UV + vec2( -pixeluvX * 3 , -pixeluvY * 1 )) * 0.001446;
+	//sum += texture(GlowMap, UV + vec2( -pixeluvX * 3 , -pixeluvY * 2 )) * 0.000363;
+	//sum += texture(GlowMap, UV + vec2( -pixeluvX * 3 , -pixeluvY * 3 )) * 0.000036;
+    //
+	////top right quadrant   
+	//sum += texture(GlowMap, UV + vec2( pixeluvX * 1 , -pixeluvY * 1 )) * 0.058488;
+	//sum += texture(GlowMap, UV + vec2( pixeluvX * 1 , -pixeluvY * 2 )) * 0.014662;
+	//sum += texture(GlowMap, UV + vec2( pixeluvX * 1 , -pixeluvY * 3 )) * 0.001446;
+	//sum += texture(GlowMap, UV + vec2( pixeluvX * 2 , -pixeluvY * 1 )) * 0.014662;
+	//sum += texture(GlowMap, UV + vec2( pixeluvX * 2 , -pixeluvY * 2 )) * 0.003676;
+	//sum += texture(GlowMap, UV + vec2( pixeluvX * 2 , -pixeluvY * 3 )) * 0.000363;
+	//sum += texture(GlowMap, UV + vec2( pixeluvX * 3 , -pixeluvY * 1 )) * 0.001446;
+	//sum += texture(GlowMap, UV + vec2( pixeluvX * 3 , -pixeluvY * 2 )) * 0.000363;
+	//sum += texture(GlowMap, UV + vec2( pixeluvX * 3 , -pixeluvY * 3 )) * 0.000036;
+    //
+	////bot left quadrant  
+	//sum += texture(GlowMap, UV + vec2( -pixeluvX * 1 , pixeluvY * 1 )) * 0.058488;
+	//sum += texture(GlowMap, UV + vec2( -pixeluvX * 1 , pixeluvY * 2 )) * 0.014662;
+	//sum += texture(GlowMap, UV + vec2( -pixeluvX * 1 , pixeluvY * 3 )) * 0.001446;
+	//sum += texture(GlowMap, UV + vec2( -pixeluvX * 2 , pixeluvY * 1 )) * 0.014662;
+	//sum += texture(GlowMap, UV + vec2( -pixeluvX * 2 , pixeluvY * 2 )) * 0.003676;
+	//sum += texture(GlowMap, UV + vec2( -pixeluvX * 2 , pixeluvY * 3 )) * 0.000363;
+	//sum += texture(GlowMap, UV + vec2( -pixeluvX * 3 , pixeluvY * 1 )) * 0.001446;
+	//sum += texture(GlowMap, UV + vec2( -pixeluvX * 3 , pixeluvY * 2 )) * 0.000363;
+	//sum += texture(GlowMap, UV + vec2( -pixeluvX * 3 , pixeluvY * 3 )) * 0.000036;
+    //
+	////bot left quadrant  
+	//sum += texture(GlowMap, UV + vec2( pixeluvX * 1 , pixeluvY * 1 )) * 0.058488;
+	//sum += texture(GlowMap, UV + vec2( pixeluvX * 1 , pixeluvY * 2 )) * 0.014662;
+	//sum += texture(GlowMap, UV + vec2( pixeluvX * 1 , pixeluvY * 3 )) * 0.001446;
+	//sum += texture(GlowMap, UV + vec2( pixeluvX * 2 , pixeluvY * 1 )) * 0.014662;
+	//sum += texture(GlowMap, UV + vec2( pixeluvX * 2 , pixeluvY * 2 )) * 0.003676;
+	//sum += texture(GlowMap, UV + vec2( pixeluvX * 2 , pixeluvY * 3 )) * 0.000363;
+	//sum += texture(GlowMap, UV + vec2( pixeluvX * 3 , pixeluvY * 1 )) * 0.001446;
+	//sum += texture(GlowMap, UV + vec2( pixeluvX * 3 , pixeluvY * 2 )) * 0.000363;
+	//sum += texture(GlowMap, UV + vec2( pixeluvX * 3 , pixeluvY * 3 )) * 0.000036;
+    //
+	////Cross samples
+	////up
+	//sum += texture(GlowMap, UV + vec2( 0, -pixeluvY * 1)) * 0.092651;
+	//sum += texture(GlowMap, UV + vec2( 0, -pixeluvY * 2)) * 0.023226;
+	//sum += texture(GlowMap, UV + vec2( 0, -pixeluvY * 3)) * 0.002291;
+    //
+	////left
+	//sum += texture(GlowMap, UV + vec2( -pixeluvX * 1, 0)) * 0.092651;
+	//sum += texture(GlowMap, UV + vec2( -pixeluvX * 2, 0)) * 0.023226;
+	//sum += texture(GlowMap, UV + vec2( -pixeluvX * 3, 0)) * 0.002291;
+    //
+	////right
+	//sum += texture(GlowMap, UV + vec2( pixeluvX * 1, 0)) * 0.092651;
+	//sum += texture(GlowMap, UV + vec2( pixeluvX * 2, 0)) * 0.023226;
+	//sum += texture(GlowMap, UV + vec2( pixeluvX * 3, 0)) * 0.002291;
+    //
+	////down
+	//sum += texture(GlowMap, UV + vec2( 0, pixeluvY * 1)) * 0.092651;
+	//sum += texture(GlowMap, UV + vec2( 0, pixeluvY * 2)) * 0.023226;
+	//sum += texture(GlowMap, UV + vec2( 0, pixeluvY * 3)) * 0.002291;
+    //
+	////middle sample
+	//sum += texture(GlowMap, UV) * 0.146768;
 	//sum = texture(GlowMap2, UV);
 	
+    int i;
+    for(i = -25; i < 25; i++)
+    {
+        sum += texture(GlowMap2, UV + vec2(0,pixeluvY*i)) * kernel[i+25];
+    }
+    
+    sum += texture(GlowMap, UV);
+    
 	fragment_color += sum + specularAddetive;
 }
