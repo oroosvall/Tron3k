@@ -44,7 +44,6 @@ void main()
 	fragment_color = vec4(0);
 	
 	vec2 UV = gl_FragCoord.xy / gScreenSize;
-	//fragment_color = vec4(lights[spotlightID].Color, 1) * 0.1 + texture(Diffuse, UV);
 	
 	Position0 = texture(Position, UV).xyz;
 	vec3 LightDirection = Position0.xyz - lights[spotlightID].Position;
@@ -64,26 +63,28 @@ void main()
 		{	
 			//directional light
 			fragment_color = vec4(lights[spotlightID].Color, 1.0f) * lights[spotlightID].DiffuseIntensity * DiffuseFactor;
-			
-			//specular
-			vec4 specularAddetive = vec4(0);
-		
-			vec3 VertexToEye = normalize(eyepos - Position0);                             
-			vec3 LightReflect = normalize(reflect(LightDirection, Normal0.xyz));                     
-			float SpecularFactor = dot(VertexToEye, LightReflect);                              
-			SpecularFactor = pow(SpecularFactor, gSpecularPower);                               
-			if (SpecularFactor > 0)
-			{
-				float Distance = length(Position0.xyz - lights[spotlightID].Position);
-				float Attenuation = 1.0f / pow(max(0.0f, 1.0f - (Distance/lights[spotlightID].DiffuseIntensity)), 5); // Not final
-				specularAddetive = (vec4(lights[spotlightID].Color, 1.0f) * ( 1 - Normal0.w) * SpecularFactor);// / Attenuation;
-			}
-			
-			//spotlight                      
+
+			//spotlight              
+			vec4 specularAddetive = vec4(0);        
 			float SpotFactor = dot(LightDirection, lights[spotlightID].Direction);                                      
 			
-			if (SpotFactor > cosCone)  			
-				fragment_color *= (1.0 - (1.0 - SpotFactor) * 1.0/(1.0 - cosCone)); 			
+			if (SpotFactor > cosCone)
+			{                           
+				//specular
+				vec3 VertexToEye = normalize(eyepos - Position0);                             
+				vec3 LightReflect = normalize(reflect(LightDirection, Normal0.xyz));                     
+				float SpecularFactor = dot(VertexToEye, LightReflect);                              
+				SpecularFactor = pow(SpecularFactor, gSpecularPower); 
+
+				if (SpecularFactor > 0)
+					{
+						float Distance = length(Position0.xyz - lights[spotlightID].Position);
+						float Attenuation = 1.0f / pow(max(0.0f, 1.0f - (Distance/lights[spotlightID].attenuation.z)), 1);
+						specularAddetive = (vec4(lights[spotlightID].Color, 1.0f) * ( 1 - Normal0.w) * SpecularFactor) / Attenuation;
+					}
+						
+				fragment_color *= (1.0 - (1.0 - SpotFactor) * 1.0/(1.0 - cosCone)); 	
+			}		
 			else                                                                                
 				fragment_color = vec4(0);
 
@@ -99,4 +100,6 @@ void main()
 
 	if(lightToSurfaceAngle > cosCone)
 		fragment_color += vec4(lights[spotlightID].Color, 1) * pow(interpolDist, 5) * pow(lightToSurfaceAngle, 10);
+
+	//fragment_color += vec4(0.1, 0.0, 0.0, 0.0);
 }
