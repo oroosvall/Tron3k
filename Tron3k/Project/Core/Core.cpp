@@ -903,13 +903,16 @@ void Core::upClient(float dt)
 				}
 				if (tmp == KOTHSTATE::WARMUP)
 				{
-					if (i->justPressed(GLFW_KEY_PERIOD))
+					if (!game->getPlayer(game->GetLocalPlayerId())->getLockedControls())
 					{
-						showTeamSelect();
-					}
-					if (i->justPressed(GLFW_KEY_COMMA))
-					{
-						showClassSelect();
+						if (i->justPressed(GLFW_KEY_PERIOD))
+						{
+							showTeamSelect();
+						}
+						if (i->justPressed(GLFW_KEY_COMMA))
+						{
+							showClassSelect();
+						}
 					}
 
 					uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam1, false);
