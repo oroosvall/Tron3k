@@ -260,13 +260,13 @@ void Core::update(float dt)
 	default:						break;
 	}
 
-	if (renderPipe)
-	{
-		if (i->justPressed(GLFW_KEY_8))
-		{
-			renderPipe->reloadShaders();
-		}
-	}
+	//if (renderPipe)
+	//{
+	//	if (i->justPressed(GLFW_KEY_8))
+	//	{
+	//		renderPipe->reloadShaders();
+	//	}
+	//}
 
 	i->clearOnPress();
 	console.discardCommandAndLastMsg();
@@ -2626,7 +2626,7 @@ void Core::renderWorld(float dt)
 
 		// render score screen
 		if (i->getKeyInfo(GLFW_KEY_TAB))
-			if (game->getPlayer(game->GetLocalPlayerId())->getLockedControls() == false)
+			//if (game->getPlayer(game->GetLocalPlayerId())->getLockedControls() == false)
 				scoreboardRender();
 
 		renderPipe->disableBlend();
@@ -3193,6 +3193,8 @@ void Core::createWindow(int x, int y, bool fullscreen)
 			uiManager->setMenu(InGameUI::GUI);
 		}
 
+		if(top != nullptr)
+			top->setNewUIPtr(uiManager);
 
 		PipelineValues pv;
 		pv.type = pv.INT2;
@@ -3656,7 +3658,12 @@ void Core::scoreboardRender()
 
 void Core::minimapRender()
 {
-	Player* p = game->getPlayer(game->GetLocalPlayerId());
+	Player* p;
+	if(game->spectateID == -1)
+		p = game->getPlayer(game->GetLocalPlayerId());
+	else
+		p = game->getPlayer(game->spectateID);
+
 	Player* p2;
 	int memb = 0;
 	if (p)

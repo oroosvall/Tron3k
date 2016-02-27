@@ -731,7 +731,7 @@ void RenderPipeline::finalizeRender()
 
 	glDisable(GL_BLEND);
 
-	gBuffer->preRender(glowSampleShader, 0);
+	//gBuffer->preRender(glowSampleShader, 0);
 
 	//GBuffer Render
 	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
@@ -1090,7 +1090,7 @@ bool RenderPipeline::setSetting(PIPELINE_SETTINGS type, PipelineValues value)
 
 void RenderPipeline::createTimedParticleEffect(BULLET_TYPE peffect, vec3 pos, glm::vec3 dir, glm::vec3 color)
 {
-	std::string path = "Gamefiles/ParticleSystems/";
+	std::string path = "GameFiles/ParticleSystems/";
 
 	switch (peffect)
 	{
@@ -1182,7 +1182,7 @@ void RenderPipeline::createTimedParticleEffect(BULLET_TYPE peffect, vec3 pos, gl
 
 void RenderPipeline::createTimedParticleEffect(EFFECT_TYPE eeffect, glm::vec3 pos, glm::vec3 color)
 {
-	std::string path = "Gamefiles/ParticleSystems/";
+	std::string path = "GameFiles/ParticleSystems/";
 
 	switch (eeffect)
 	{
@@ -1202,6 +1202,7 @@ void RenderPipeline::createTimedParticleEffect(EFFECT_TYPE eeffect, glm::vec3 po
 		path += "batteryFieldParticles.ps";
 		break;
 	case THERMITE_CLOUD:
+		path += "thermiteEffect.ps";
 		break;
 	case VACUUM:
 		break;

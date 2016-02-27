@@ -38,8 +38,8 @@ float gMatSpecularIntensity = 0.4f;
 vec3 ambientLightPosition = vec3(131.0f, 45.0f, 0.0f);
 vec3 ambientLightDirection = vec3(-0.16f, -0.36f, 0.61f);
 vec3 ambientLightColor = vec3(0.7f, 0.7f , 1.0f);
-float ambientLightDiffuseIntensity = 0.1f;
-float ambientLightAmbientIntensity = 0.1f;
+float ambientLightDiffuseIntensity = 0.2f;
+float ambientLightAmbientIntensity = 0.2f;
 
 out vec4 fragment_color;                                                                                       
 
@@ -152,7 +152,7 @@ void main()
 
 	//middle sample
 	sum += texture(GlowMap, UV) * 0.146768;
-	sum = texture(GlowMap2, UV);
+	//sum = texture(GlowMap2, UV);
 	
 	fragment_color += sum + specularAddetive;
 }

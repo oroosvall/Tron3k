@@ -807,6 +807,15 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				if (role.getWeaponNRequiped() == 0) // if primary
 					animPrimary = true;
 
+				if (anim_first_framePeak == AnimationState::first_primary_reload ||
+					anim_first_framePeak == AnimationState::first_secondary_reload)
+					specReoloadSound++;
+				else
+					specReoloadSound = 0;
+
+				if (specReoloadSound == 1)
+					reloadCurrentWeapon(true);
+
 				//special case when spectating a brute and he swaps weapons
 
 				if (animRole == ROLES::BRUTE && animSwapActive == false)
@@ -814,13 +823,13 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 					//init swap 1st to second
 					if (anim_first_framePeak == AnimationState::first_primary_switch)
 					{
-						animSwapTime_OUT = 0.53f;
+						animSwapTime_OUT = 0.53f * 0.5f;
 						animSwapActive = true;
 					}
 					//init swap 2nd to first
 					else if (anim_first_framePeak == AnimationState::first_secondary_switch)
 					{
-						animSwapTime_OUT = 0.34f;
+						animSwapTime_OUT = 0.34f * 0.5f;
 						animSwapActive = true;
 					}
 				}
@@ -934,9 +943,9 @@ void Player::rotatePlayer(vec3 olddir, vec3 newdir)
 	dir = newdir;
 }
 
-void Player::reloadCurrentWeapon()
+void Player::reloadCurrentWeapon(bool force)
 {
-	if (!role.getCurrentWeapon()->getIfFullAmmo())
+	if (!role.getCurrentWeapon()->getIfFullAmmo() || force)
 	{
 		if (GetSound())
 		{

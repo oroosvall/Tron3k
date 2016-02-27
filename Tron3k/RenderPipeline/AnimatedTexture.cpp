@@ -82,13 +82,13 @@ void AnimatedTexture::init()
 	objects[n].worldMat[0] = vec4(-5.12f, 8.22f, 113.79f, 1.0f);
 	objects[n].worldMat[1] = vec4(-5.12f + 0.5f, 8.22f - 1, 113.79f, 1.0f);
 	
-	objects[n].worldMat[2] = vec4(-9.90f, 5.67f, 113.68f, 1.0f);
-	objects[n].worldMat[3] = vec4(-9.90f + 0.5f, 5.67f - 1, 113.68f, 1.0f);
+	objects[n].worldMat[2] = vec4(-8.90f, 5.67f, 113.68f, 1.0f);
+	objects[n].worldMat[3] = vec4(-8.90f + 0.5f, 5.67f - 1, 113.68f, 1.0f);
 
 
 
 
-	objects[n].init_time_segments(5, 0.1f, 0.f);
+	objects[n].init_time_segments(5, 0.4f, 0.f);
 
 	n++;
 	initialized = true;
