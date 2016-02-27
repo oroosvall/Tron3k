@@ -190,6 +190,8 @@ private:
 
 	vector<ParticleSystem> dynamicParticleSystems;
 
+	GLuint fragmentInvocationQuery;
+
 public:
 
 	RenderPipeline() {};
