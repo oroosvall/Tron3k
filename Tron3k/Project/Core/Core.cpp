@@ -704,10 +704,19 @@ void Core::upClient(float dt)
 				}
 
 				//Checks it was the end of the match
+
+				Player* camPlayer = nullptr;
+				if (game->spectateID > -1)
+				{
+					camPlayer = game->getPlayer(game->spectateID);
+				}
+				else
+					camPlayer = game->getPlayer(game->GetLocalPlayerId());
+
 				if (firstTimeInEnd && tmp == KOTHSTATE::ENDMATCH)
 				{
 					GAMEMODE_MSG tMode = k->getLastMsg();
-					int tTeam = localp->getTeam();
+					int tTeam = camPlayer->getTeam();
 
 					if (tMode == GAMEMODE_MSG::MATCH_WIN_TEAM1)
 					{
@@ -771,7 +780,7 @@ void Core::upClient(float dt)
 				//Rights out the of round.
 				if (firstTimeInEnd && tmp == KOTHSTATE::ENDROUND)
 				{
-   					if (localp->getTeam() != 0)
+   					if (camPlayer->getTeam() != 0)
 					{
 						uiManager->changeTextureHideAble(hideAbleObj::Banner, 0, BannerTextureIDs::EndOfRound);
 						uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
@@ -800,7 +809,7 @@ void Core::upClient(float dt)
 				//Checks to see if the banners "Final Assult" or Hold Your Ground" should be shown.
 				if (lowTicketsFirstTime && tmp == KOTHSTATE::OVERTIME)
 				{
-					int tTeam = localp->getTeam();
+					int tTeam = camPlayer->getTeam();
 
 					if (uiManager->HUD.teamOneTokens <= 0 && uiManager->HUD.teamTwoTokens <= 0)
 					{
@@ -1955,6 +1964,7 @@ void Core::clientHandleCmds(std::string com)
 							game->spectateID = id;
 							game->freecam = true;
 							//set team color
+							uiManager->setMenu(InGameUI::GUI);
 							uiManager->setTeamColor(p->getTeam());
 							uiManager->changeColorTeam();
 						}

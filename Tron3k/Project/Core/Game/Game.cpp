@@ -1336,7 +1336,6 @@ void Game::addBulletToList(int conID, int teamId, int bulletId, BULLET_TYPE bt, 
 
 void Game::handleWeaponFire(int conID, int teamId, int bulletId, WEAPON_TYPE weapontype, glm::vec3 pos, glm::vec3 dir)
 {
-
 	switch (weapontype)
 	{
 	case WEAPON_TYPE::PULSE_RIFLE:

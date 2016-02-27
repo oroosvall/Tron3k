@@ -1561,7 +1561,7 @@ void Player::fixCamera(float dt, bool freecam, bool spectating)
 			rotatePlayer(oldDir, dir);
 		}
 	}
-	else
+	else if (!spectating)
 	{
 		cam->update(dt, freecam);
 	}
