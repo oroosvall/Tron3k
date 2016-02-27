@@ -2652,7 +2652,7 @@ void Core::renderWorld(float dt)
 
 		// render score screen
 		if (i->getKeyInfo(GLFW_KEY_TAB))
-			if (game->getPlayer(game->GetLocalPlayerId())->getLockedControls() == false)
+			//if (game->getPlayer(game->GetLocalPlayerId())->getLockedControls() == false)
 				scoreboardRender();
 
 		renderPipe->disableBlend();
