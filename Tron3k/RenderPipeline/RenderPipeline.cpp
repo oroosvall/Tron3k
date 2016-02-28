@@ -1629,6 +1629,42 @@ void RenderPipeline::startTakeDamageEffect(int maxDisplace, float time)
 	takeDamage_timerStartValue = takeDamage_timer;
 }
 
+void RenderPipeline::renderTakeDamageDistort()
+{
+	if (takeDamage_timer > 0)
+	{
+		//init render
+		glUseProgram(uiShader);
+		//uniformlocation set texture 0  it defaults to 0 so not needed
+		uiQuad.BindVertData();
+
+		mat4 minimapRenderMat = mat4();
+
+		TextureInfo asd;
+		asd.lastTextureSlot = GL_TEXTURE0;
+		asd.state = TEXTURE_LOADED;
+		float percentage = takeDamage_timer / takeDamage_timerStartValue;
+
+		if(percentage > 0.85f)
+			asd.textureID = contMan.takeDamage1;
+		else if(percentage > 0.70f)
+			asd.textureID = contMan.takeDamage2;
+		else if (percentage > 0.55f)
+			asd.textureID = contMan.takeDamage3;
+
+		if (percentage > 0.551f)
+		{
+			TextureManager::gTm->bind(asd, uiShader, ui_Texture);
+
+			vec3 piv(0);
+			glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, &minimapRenderMat[0][0]);
+			glProgramUniform3fv(uiShader, uniformPivotLocation, 1, &piv[0]);
+			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		}
+	}
+
+}
+
 void RenderPipeline::updateTakeDamageEffect(float dt)
 {
 	if (takeDamage_timer > 0)

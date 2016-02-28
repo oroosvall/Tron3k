@@ -146,7 +146,7 @@ public:
 	virtual void enableDepthMask() = 0;
 	virtual void disableDepthMask() = 0;
 	virtual void enableBlend(bool addetive) = 0;
-	virtual void disableBlend() = 0;
+	virtual void disableBlend() = 0; 
 	virtual void clearBothBuffers() = 0;
 	virtual void clearColor() = 0;
 
@@ -154,6 +154,7 @@ public:
 	virtual void stopExecTimer(int id) = 0;
 	virtual bool* getRenderedChunks(int& get_size) = 0;
 
+	virtual void renderTakeDamageDistort() = 0;
 	virtual void startTakeDamageEffect(int maxDisplace, float time) = 0;
 	virtual void renderMinimap(float* yourPos, float* yourdir, float* teammates, int nrOfTeammates, int activeCap) = 0;
 	virtual void renderScoreBoard(int team1size, int team2size) = 0;

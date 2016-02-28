@@ -2689,6 +2689,8 @@ void Core::renderWorld(float dt)
 		if (renderUI) //Temp
 			inGameUIUpdate();
 
+		renderPipe->renderTakeDamageDistort();
+
 		//render minimap
 		if (i->getKeyInfo(GLFW_KEY_F))
 			if (game->getPlayer(game->GetLocalPlayerId())->getLockedControls() == false)

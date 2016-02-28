@@ -116,6 +116,11 @@ public:
 	vec2 mapBotcord;
 	vec2 mapTopcord;
 
+	//take damage texture overlay
+	GLuint takeDamage1;
+	GLuint takeDamage2;
+	GLuint takeDamage3;
+
 	//scoreboard
 	GLuint score_team_green;
 	GLuint score_team_orange;

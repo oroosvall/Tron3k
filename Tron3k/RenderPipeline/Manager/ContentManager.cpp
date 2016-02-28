@@ -35,6 +35,11 @@ void ContentManager::init()
 	activeCapTexture = loadTexture("GameFiles/Textures/minimap/activecap.png", true, (int*)&xx, (int*)&yy);
 	activeCapScale = vec2(float(xx) / 1920.0f, float(yy) / 1080.0f);
 
+	//take damage effet overlay
+	takeDamage1 = loadTexture("GameFiles/Textures/takedamage1.dds");
+	takeDamage2 = loadTexture("GameFiles/Textures/takedamage2.dds");
+	takeDamage3 = loadTexture("GameFiles/Textures/takedamage3.dds");
+
 	//scoreboard
 	score_team_orange = loadTexture("GameFiles/Textures/scoreboard/team_orange.png");
 	score_team_green = loadTexture("GameFiles/Textures/scoreboard/team_green.png", true, (int*)&xx, (int*)&yy);

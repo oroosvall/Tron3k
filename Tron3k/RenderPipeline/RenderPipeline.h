@@ -287,6 +287,7 @@ public:
 	virtual void stopExecTimer(int id);
 	virtual bool* getRenderedChunks(int& get_size);
 
+	virtual void renderTakeDamageDistort();
 	virtual void startTakeDamageEffect(int maxDisplace, float time);
 	virtual void updateTakeDamageEffect(float dt);
 	virtual void renderMinimap(float* yourPos, float* yourdir, float* teammates, int nrOfTeammates, int activeCap);
