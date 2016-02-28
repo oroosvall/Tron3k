@@ -2332,6 +2332,7 @@ void Core::renderWorld(float dt)
 		force3rd = true;
 		}
 		*/
+
 		Player* tmp_player = 0;
 		int pid = game->GetLocalPlayerId();
 		if (game->spectateID == -1)
@@ -2713,10 +2714,44 @@ void Core::renderWorld(float dt)
 		renderPipe->disableBlend();
 
 		//viewing 3rd person anims in roam
-		if (i->getKeyInfo(GLFW_KEY_P))
-			cam->setCam(camPos, camDir);
-		if (i->getKeyInfo(GLFW_KEY_L))
-			cam->setCam(camPos, camDir);
+		//if (i->getKeyInfo(GLFW_KEY_P))
+		//	cam->setCam(camPos, camDir);
+		//if (i->getKeyInfo(GLFW_KEY_L))
+		//	cam->setCam(camPos, camDir);
+
+		if (game->getPlayer(game->GetLocalPlayerId())->getLockedControls() == false)
+		{
+			if (game->freecam)
+			{
+				if (i->justPressed(GLFW_KEY_1))
+					game->spectateID = -1;
+				if (i->justPressed(GLFW_KEY_2))
+				{
+					//search for closest player to cam and set that ConID to spectateID
+					int closest = -1;
+					float lenth = 999999.0f;
+					//camPos
+					Player* p;
+					int localID = game->GetLocalPlayerId();
+					for (int n = 0; n < 20; n++)
+						if (n != localID)
+						{
+							p = game->getPlayer(n);
+							if (p)
+							{
+								float len2 = length(p->getPos() - camPos);
+								if (len2 < lenth)
+								{
+									lenth = len2;
+									closest = n;
+								}
+							}
+						}
+					clientHandleCmds( string("/spec " + to_string(closest)));
+				}
+			}
+
+		}
 	}
 }
 
