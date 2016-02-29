@@ -74,6 +74,9 @@ int fps = 0;
 
 bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 {
+	memusageT = 0;
+	memusageTex = 0;
+	memusageMesh = 0;
 	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	if (initialized)
 	{
