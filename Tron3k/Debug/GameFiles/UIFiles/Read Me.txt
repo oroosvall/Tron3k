@@ -21,6 +21,13 @@ texture		   //As many textures as the row above says
 .
 .
 
+Slider: //Here is what the slider needs
+x y
+class id
+texture1
+texture2
+UniqueKey
+
 InputBox: //Here is what the inputBox needs
 x y		       //x and y for the center of the box.
 class id	       //Says which class the button needs to be.
@@ -31,8 +38,6 @@ dynamic text x offset  //The amount the text needs to be moved in order to be al
 dynamic text y offset  //The amount the text needs to be moved in order to be alined with the texture in y
 texture size           //Size of the text
 UniqueKey	  //A value that says what will happen when its clicked on. If the button doesn't have any event then just leave it at -1
-
-Slider: //Here is what the slider needs
 
 //Class id 5
 x y		  //x and y for the center of the box.

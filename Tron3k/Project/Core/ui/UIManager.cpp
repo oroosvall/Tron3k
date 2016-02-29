@@ -200,6 +200,16 @@ void UIManager::init(Console* console, int winX, int winY)
 	texturePaths.push_back("GameFiles/Textures/UITextures/ClassSelect/class_selection_manipulator.png"); //68
 	texturePaths.push_back("GameFiles/Textures/UITextures/ClassSelect/class_selection_manipulator_hover.png"); //69
 
+	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/Options.png"); //70
+	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/HowToPlay.png"); //71
+	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/LocalIP.png"); //72
+	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/GlobalIP.png"); //73
+	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/Background.png"); //74
+	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/SliderPart1.png"); //75
+	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/SliderPart2.png"); //76
+	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/FullscreenOff.png"); //77
+	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/FullscreenOn.png"); //78
+
 
 	loadInTexture();
 

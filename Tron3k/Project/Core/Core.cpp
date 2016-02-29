@@ -325,9 +325,10 @@ void Core::upMenu(float dt)
 
 	if (i->justPressed(GLFW_MOUSE_BUTTON_LEFT))
 	{
+		float newVolume = 1.0;
 		menuIpKeyListener = false;
 		menuNameKeyListener = false;
-		int eventIndex = uiManager->collisionCheck(glm::vec2((float)tX, (float)tY));
+		int eventIndex = uiManager->collisionCheck(glm::vec2((float)tX, (float)tY), newVolume);
 		switch (eventIndex)
 		{
 		case 0: //Roam
@@ -342,11 +343,13 @@ void Core::upMenu(float dt)
 
 			uiManager->setHoverCheckBool(true);
 			break;
-		case 1: //Multiplayer -> multiplayer window
+		case 1: //MainMenu -> Multiplayer
 			uiManager->setFirstMenuSet(true);
 			uiManager->setMenu(MainMenu::Multiplayer);
 			break;
-		case 2: //Settings
+		case 2: //MainMenu -> Settings
+			uiManager->setFirstMenuSet(true);
+			uiManager->setMenu(MainMenu::Settings);
 			break;
 		case 3: //Exit
 			glfwSetWindowShouldClose(win, 1);
@@ -406,11 +409,74 @@ void Core::upMenu(float dt)
 			ipNrOfKeys = 0;
 			uiManager->setMenu(MainMenu::Back); //Last menu
 			break;
+		case 8: //Settings -> Options
+			uiManager->setFirstMenuSet(true);
+			uiManager->setMenu(MainMenu::Options);
+			break;
+		case 9: //Settings -> How to play
+			uiManager->setFirstMenuSet(true);
+			uiManager->setMenu(MainMenu::HowToPlay);
+			break;
 		case 10: //Ip input
 			menuIpKeyListener = true;
 			break;
 		case 11: //Port
 			menuNameKeyListener = true;
+			break;
+		case 12: //Master sound
+		{
+			SoundPlayer* sound = GetSound();
+			sound->SetMasterVolume(newVolume);
+			sound = nullptr;
+			break;
+		}
+		case 13: //Footsteps sound
+		{
+			SoundPlayer* sound = GetSound();
+			sound->SetFootstepsVolume((int)newVolume);
+			sound = nullptr;
+			break;
+		}
+		case 14: //Weapon sound
+		{
+			SoundPlayer* sound = GetSound();
+			sound->SetGunsVolume((int)newVolume);
+			sound = nullptr;
+			break;
+		}
+		case 15: //Effects sound
+		{
+		SoundPlayer* sound = GetSound();
+		sound->SetEffectVolume((int)newVolume);
+		sound = nullptr;
+		break;
+		}
+		case 16: //Ambient sound
+		{
+			SoundPlayer* sound = GetSound();
+			sound->SetAmbientVolume((int)newVolume);
+			sound = nullptr;
+			break;
+		}
+		case 17: //Announcer sound
+		{
+			SoundPlayer* sound = GetSound();
+			sound->SetAnnouncerVolume((int)newVolume);
+			sound = nullptr;
+			break;
+		}
+		case 18: //Music
+		{
+			SoundPlayer* sound = GetSound();
+			sound->setVolumeMusic(newVolume);
+			sound = nullptr;
+			break;
+		}
+		case 19: //Sensitivity
+			clientHandleCmds("/sens" + std::to_string(newVolume));
+			break;
+		case 20: //Fullscreen
+			clientHandleCmds("/fullscreen");
 			break;
 		default:
 			break;
@@ -3135,7 +3201,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 			int eventIndex = uiManager->collisionCheck(glm::vec2((float)tX, (float)tY));
 			switch (eventIndex)
 			{
-			case 20: //Team 1
+			case 21: //Team 1
 				if (current == ROAM)
 				{
 					uiManager->setTeamColor(TeamColors::TeamOne);
@@ -3144,7 +3210,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 				else
 					clientHandleCmds("/team 2");
 				break;
-			case 21: //Team 2
+			case 22: //Team 2
 				if (current == ROAM)
 				{
 					uiManager->setTeamColor(TeamColors::TeamTwo);

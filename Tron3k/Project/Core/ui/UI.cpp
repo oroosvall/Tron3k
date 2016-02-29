@@ -132,6 +132,16 @@ bool UI::loadUI(std::string fileName, int winX, int winY)
 					textureArray[i] = std::stoi(inputString);
 				}
 			}
+			else if (classId == 3)
+			{
+				getline(myfile, inputString); //tex1
+				textureId1 = std::stoi(inputString);
+				getline(myfile, inputString); //tex2
+				textureId2 = std::stoi(inputString);
+
+				getline(myfile, inputString); //uniqueKey
+				uniqueKey = std::stoi(inputString);
+			}
 			else if (classId == 4)
 			{
 				getline(myfile, inputString); //texture1
@@ -194,13 +204,12 @@ bool UI::loadUI(std::string fileName, int winX, int winY)
 			}
 			else if (classId == 3) //Slider
 			{
-				//UiObjects.push_back(Slider(xy, textureId1, textureId2, counter, counter+1, uiRender, textureRes[0][textureId1], textureRes[0][textureId2]));
-				//textureIdList[counter] = textureId1;
-
-				//counter++;
-				//textureIdList[counter] = textureId2;
-				//result = true;
-				//counter++;
+				UiObjects.push_back(new Slider(xy, textureId1, textureId2, uniqueKey, uiRender, textureRes[0][textureId1], textureRes[0][textureId2]));
+				textureIdList[counter] = textureId1;
+				counter++;
+				textureIdList[counter] = textureId2;
+				counter++;
+				result = true;
 			}
 			else if(classId == 4) //InputBox
 			{

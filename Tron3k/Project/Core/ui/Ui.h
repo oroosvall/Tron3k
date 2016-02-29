@@ -8,6 +8,7 @@
 #include "Button.h"
 #include "StaticTextureBoxes.h"
 #include "InputBox.h"
+#include "Slider.h"
 #include "VertexBufferUI.h"
 #include "uiVertex.h"
 #include "HideAble.h"
