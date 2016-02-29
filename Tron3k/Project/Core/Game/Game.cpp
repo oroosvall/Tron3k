@@ -299,8 +299,8 @@ void Game::update(float dt)
 	else if (gameState == Gamestate::CLIENT)
 	{
 		checkPvPCollision();
-		checkPlayerVWorldCollision(dt);
 		checkPlayerVEffectCollision();
+		checkPlayerVWorldCollision(dt);
 		checkFootsteps(dt);
 	}
 	else if (gameState == Gamestate::SERVER)
@@ -2680,7 +2680,7 @@ void Game::decalAdd(BulletHitWorldInfo info, float rad)
 	decals_renderInfo[decalCounter].inten = 1.0f;
 	decals_renderInfo[decalCounter].normal = vec3(info.collisionNormal);
 	//for correct; pos = pos - collision.normal * (Bulletrad - pendepth)
-	decals_renderInfo[decalCounter].pos = info.hitPos - vec3(info.collisionNormal) * (rad - info.collisionNormal.w);
+	decals_renderInfo[decalCounter].pos = info.hitPos + vec3(info.hitDir) * (info.collisionNormal.w);
 
 	if (p->getTeam() == 1)
 		decals_renderInfo[decalCounter].color = TEAMONECOLOR;
