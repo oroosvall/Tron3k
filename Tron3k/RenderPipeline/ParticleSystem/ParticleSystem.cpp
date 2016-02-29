@@ -1,4 +1,5 @@
 #include "ParticleSystem.h"
+#include <Windows.h>
 
 void ParticleSystem::Initialize(glm::vec3 pos, ParticleSystemData ps, GLuint* program, ParticleShaderLocations* pLoc)
 {
@@ -44,6 +45,21 @@ void ParticleSystem::Initialize(glm::vec3 pos, ParticleSystemData ps, GLuint* pr
 		glGenBuffers(1, &m_vbo);
 		glGenVertexArrays(1, &m_vao);
 		glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+		int asd;
+		glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &asd);
+		if(asd != m_vbo)	// while current bound array buffer is not equal to m_vbo do this loop, "Should never happen"
+		{
+			// something failed so delete the buffer and vao, created remains false so no update will occur
+			// set m_alive to true to delete object, best confuse ever!
+			glDeleteBuffers(1, &m_vbo);
+			glDeleteVertexArrays(1, &m_vao);
+
+			m_vbo = 0;
+			m_vao = 0;
+
+			m_alive = true;
+			return;
+		}
 		glBufferData(GL_ARRAY_BUFFER, sizeof(m_vertices[0]) * m_data.maxparticles, &m_vertices[0], GL_STATIC_DRAW);
 
 		glBindVertexArray(m_vao);
