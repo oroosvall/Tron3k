@@ -41,6 +41,8 @@ struct PlayerControlSettings
 	int item = GLFW_KEY_Q;
 	int mobility = GLFW_KEY_LEFT_SHIFT;
 	int special = GLFW_KEY_E;
+	int minimap = GLFW_KEY_F;
+	int scorescreen = GLFW_KEY_TAB;
 };
 
 class Player : public GameObject

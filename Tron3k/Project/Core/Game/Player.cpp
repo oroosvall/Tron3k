@@ -101,7 +101,7 @@ void Player::movePlayer(float dt, glm::vec3 oldDir)
 	if ((vel.x != 0 || vel.z != 0) && this->grounded)
 	{
 
-		if (this->getFootsteps() && this->getGrounded() && GetSoundActivated() && this->role.getRole() != 1 && !i->getKeyInfo(GLFW_KEY_SPACE))
+		if (this->getFootsteps() && this->getGrounded() && GetSoundActivated() && this->role.getRole() != 1 && !i->getKeyInfo(controls.jump))
 		{
 			this->setFootstepsCountdown();
 			this->setFootstepsLoop(false);
@@ -436,11 +436,6 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 	diedThisFrame = false;
 	PLAYERMSG msg = NONE;
 
-	if (i->justPressed(GLFW_KEY_K))
-	{
-		setHP(0);
-	}
-
 	if (isDead)
 		deathTimer += dt;
 	else
@@ -720,29 +715,8 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 							msg = SPECIALUSE;
 						}
 					}
-
-					/*				if (i->justPressed(GLFW_KEY_Z))					//Temp?
-									{
-										if (GetSoundActivated() == 0 && GetInitialized() == 0)
-										{
-											InitSound(CreateSound(), 1);
-											GetSound()->playMusic(mainMenu);
-										}
-										else if (GetInitialized())
-										{
-											GetSound()->enableSounds();
-										}
-									}
-									if (i->justPressed(GLFW_KEY_M))
-										role.setSpecialMeter(100.0f);
-					*/
 				} // end of player input
 			} // end of lock control check
-
-
-
-			//if (i->justPressed(GLFW_KEY_O))
-			//	role.setHealth(0);
 
 			if (role.getHealth() <= 0 && !isDead && role.getRole() != ROLES::NROFROLES)
 			{

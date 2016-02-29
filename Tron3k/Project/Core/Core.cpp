@@ -2278,6 +2278,14 @@ void Core::loadControls()
 				p->controls.mobility = i->getGLFWkeyFromString(in2);
 			else if (in == "Super:")
 				p->controls.special = i->getGLFWkeyFromString(in2);
+			else if (in == "Minimap:")
+				p->controls.minimap = i->getGLFWkeyFromString(in2);
+			else if (in == "Scorescreen:")
+				p->controls.scorescreen = i->getGLFWkeyFromString(in2);
+			else if (in == "Allchat:")
+				console.setChatKey(i->getGLFWkeyFromString(in2), true);
+			else if (in == "Teamchat:")
+				console.setChatKey(i->getGLFWkeyFromString(in2), false);
 		}
 		file.close();
 	}
@@ -2692,15 +2700,19 @@ void Core::renderWorld(float dt)
 
 		renderPipe->renderTakeDamageDistort();
 
-		//render minimap
-		if (i->getKeyInfo(GLFW_KEY_F))
-			if (game->getPlayer(game->GetLocalPlayerId())->getLockedControls() == false)
-				minimapRender();
+		if (current != SERVER)
+		{
+			Player* localp = game->getPlayer(game->GetLocalPlayerId());
+			//render minimap
+			if (i->getKeyInfo(localp->controls.minimap))
+				if (game->getPlayer(game->GetLocalPlayerId())->getLockedControls() == false)
+					minimapRender();
 
-		// render score screen
-		if (i->getKeyInfo(GLFW_KEY_TAB))
-			//if (game->getPlayer(game->GetLocalPlayerId())->getLockedControls() == false)
+			// render score screen
+			if (i->getKeyInfo(localp->controls.scorescreen))
+				//if (game->getPlayer(game->GetLocalPlayerId())->getLockedControls() == false)
 				scoreboardRender();
+		}
 
 		//spectate this playername render
 		if (game->spectateID != -1)

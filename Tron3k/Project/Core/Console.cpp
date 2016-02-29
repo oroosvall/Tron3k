@@ -101,12 +101,12 @@ bool Console::update(string clientName)
 	}
 	else
 	{
-		if (i->justPressed(GLFW_KEY_T))
+		if (i->justPressed(teamchat))
 		{
 			inChatMode = true;
 			scope = 'T';
 		}
-		if (i->justPressed(GLFW_KEY_Y))
+		if (i->justPressed(allchat))
 		{
 			inChatMode = true;
 			scope = 'A';
