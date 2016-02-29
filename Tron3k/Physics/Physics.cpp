@@ -572,7 +572,8 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb, bool isBullet)
 	if (closest.w + FLT_EPSILON > rad - FLT_EPSILON)
 		closest.w = FLT_MAX;
 
-	return closest;
+	if(closest.w < FLT_MAX)
+		return closest;
 
 	bool outside = false;
 	vec3 smallest = vec3(999999, 999999, 999999);
@@ -582,10 +583,10 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb, bool isBullet)
 	{
 		//Are we inside the obb?
 		//ood
-		vec3 p = (obb->planes[n].p[0]);// +obb->planes[n].p[2]) * 0.5f;
-		vec3 dir = p - pos;
+		vec3 p = (obb->planes[n].p[0] + obb->planes[n].p[2]) * 0.5f;
+		vec3 dir = pos - p;
 
-		if (dot(dir, obb->planes[n].n) > 0.00f)
+		if (dot(dir, obb->planes[n].n) >= 0.00f)
 		{
 			//behind plane
 			//do stuff
@@ -605,7 +606,7 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb, bool isBullet)
 		l = length(p - pos);
 	}
 
-	if (!outside)
+	if (!outside)// && l < rad)
 		closest = vec4(normalize(smallest), l);
 	else
 		return vec4(FLT_MAX);
