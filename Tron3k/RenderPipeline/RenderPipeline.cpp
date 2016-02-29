@@ -177,6 +177,12 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 	glGenQueries(1, &fragmentInvocationQuery);
 
+	int counterBits = 0;
+
+	glGetQueryiv(GL_FRAGMENT_SHADER_INVOCATIONS_ARB, GL_QUERY_COUNTER_BITS, &counterBits);
+
+	fragmentStatQueryAvaible = counterBits ? 1 : 0;
+
 	initialized = true;
 	return true;
 }
@@ -542,7 +548,8 @@ void RenderPipeline::release()
 
 void RenderPipeline::update(float x, float y, float z, float dt)
 {
-	glEndQuery(GL_FRAGMENT_SHADER_INVOCATIONS_ARB);
+	if(fragmentStatQueryAvaible)
+		glEndQuery(GL_FRAGMENT_SHADER_INVOCATIONS_ARB);
 	timepass += dt;
 	delta = dt;
 	//set camera matrixes
@@ -610,7 +617,8 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 		ss << "Dt:" << dt << "\n";
 
 		unsigned int fragCount = 0;
-		glGetQueryObjectuiv(fragmentInvocationQuery, GL_QUERY_RESULT, &fragCount);
+		if (fragmentStatQueryAvaible)
+			glGetQueryObjectuiv(fragmentInvocationQuery, GL_QUERY_RESULT, &fragCount);
 
 		ss << "Fragment invocations: " << fragCount << "\n";
 
@@ -647,7 +655,8 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 	counter += dt;
 	textTimer -= dt;
 
-	glBeginQuery(GL_FRAGMENT_SHADER_INVOCATIONS_ARB, fragmentInvocationQuery);
+	if (fragmentStatQueryAvaible)
+		glBeginQuery(GL_FRAGMENT_SHADER_INVOCATIONS_ARB, fragmentInvocationQuery);
 
 }
 

@@ -191,6 +191,7 @@ private:
 	vector<ParticleSystem> dynamicParticleSystems;
 
 	GLuint fragmentInvocationQuery;
+	bool fragmentStatQueryAvaible;
 
 public:
 
