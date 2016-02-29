@@ -1031,6 +1031,26 @@ void Core::upClient(float dt)
 
 		game->update(newDt);
 
+		std::vector<MovableParticle*>* movable = game->getAllMovableParticle();
+		for (size_t i = 0; i < movable->size(); i++)
+		{
+			if (!(*movable)[i]->created)
+			{
+				(*movable)[i]->id = renderPipe->createMappedParticleEffect( *(*movable)[i]->pPos, glm::vec3(0,0,0), (*movable)[i]->color);
+				(*movable)[i]->created = true;
+			}
+			else
+			{
+				if (!(*movable)[i]->dead)
+					renderPipe->moveMappedParticleEffect((*movable)[i]->id, *(*movable)[i]->pPos);
+			}
+			if ((*movable)[i]->dead)
+			{
+				renderPipe->removeMappedParticleEffect((*movable)[i]->id);
+				(*movable)[i]->allowRemove = true;
+			}
+		}
+
 		std::vector<HitPosAndDirParticle> hitpositions = game->getAllBulletHitPlayerPos();
 		for (size_t i = 0; i < hitpositions.size(); i++)
 		{

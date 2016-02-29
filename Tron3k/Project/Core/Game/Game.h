@@ -229,6 +229,8 @@ private:
 	std::vector<HitPosAndDirParticle> allBulletHitPlayerPos;
 	std::vector<EffectParticle> allEffectParticleSpawn;
 
+	std::vector<MovableParticle*> allMovableParticles;
+
 	void checkPvPCollision();
 	void checkPlayerVBulletCollision(float dt);
 	void checkPlayerVWorldCollision(float dt);
@@ -346,6 +348,8 @@ public:
 
 	std::vector<EffectParticle> getAllEffectParticleSpawn() { return allEffectParticleSpawn; };
 	void clearAllEffectParticleSpawn() { allEffectParticleSpawn.clear(); };
+
+	std::vector<MovableParticle*>* getAllMovableParticle() { return &allMovableParticles; };
 
 	unsigned int getNrOfDecals();
 	Decal_GameInfo* getAllDecalGameInfo();

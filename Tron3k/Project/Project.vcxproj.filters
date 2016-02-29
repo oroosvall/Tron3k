@@ -653,5 +653,8 @@
     <ClInclude Include="Core\Game\Role\Weapon\WeaponTypes\Manipulator\FusionCannon.h">
       <Filter>Source Files\Core\Game\Role\Weapon\WeaponTypes\Manipulator</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Game\ParticleStruct.h">
+      <Filter>Source Files\Core\Game</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

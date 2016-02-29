@@ -14,6 +14,8 @@ public:
 
 	void Release();
 
+	void setSpawnPos(glm::vec3 pos);
+
 	glm::vec2 m_size;
 	glm::vec3 m_color;
 

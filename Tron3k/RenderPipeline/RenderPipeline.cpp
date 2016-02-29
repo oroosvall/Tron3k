@@ -578,6 +578,16 @@ void RenderPipeline::update(float x, float y, float z, float dt)
 		}
 	}
 
+	for (size_t p = 0; p < mappedparticleSystems.size(); p++)
+	{
+		mappedparticleSystems[p].pSys.Update(dt);
+		if (mappedparticleSystems[p].pSys.m_alive)
+		{
+			mappedparticleSystems[p].pSys.Release();
+			mappedparticleSystems.erase(mappedparticleSystems.begin() + p);
+		}
+	}
+
 	animTexture.update(dt);
 
 	updateTakeDamageEffect(dt);
@@ -746,6 +756,22 @@ void RenderPipeline::finalizeRender()
 
 		TextureManager::gTm->bindTextureOnly(dynamicParticleSystems[i].m_texture, DIFFUSE_FB);
 		dynamicParticleSystems[i].Draw();
+	}
+
+	for (size_t i = 0; i < mappedparticleSystems.size(); i++)
+	{
+		vec2 size = mappedparticleSystems[i].pSys.m_size;
+		vec3 color = mappedparticleSystems[i].pSys.m_color;
+		glProgramUniform2f(particleShader, particleSize, size.x, size.y);
+		glProgramUniform3f(particleShader, particleColor, color.x, color.y, color.z);
+
+		glActiveTexture(GL_TEXTURE0);
+		glProgramUniform1i(particleShader, particleTexture, 0);
+		glProgramUniform1i(particleShader, particleGlow, mappedparticleSystems[i].pSys.m_glow);
+		glProgramUniform1i(particleShader, particleScaleDir, mappedparticleSystems[i].pSys.m_scaleDir);
+
+		TextureManager::gTm->bindTextureOnly(mappedparticleSystems[i].pSys.m_texture, DIFFUSE_FB);
+		mappedparticleSystems[i].pSys.Draw();
 	}
 
 	glDepthMask(GL_TRUE);
@@ -1107,6 +1133,83 @@ bool RenderPipeline::setSetting(PIPELINE_SETTINGS type, PipelineValues value)
 		}
 	}
 	return true;
+}
+
+int RenderPipeline::createMappedParticleEffect(glm::vec3 pos, glm::vec3 dir, glm::vec3 color)
+{
+	int id = mappedParticleIDCounter;
+	mappedParticleIDCounter++;
+
+	std::string path = "GameFiles/ParticleSystems/trapperBulletHit.ps";
+
+	std::ifstream file;
+	file.open(path, std::ios::binary | std::ios::in);
+
+	if (file.is_open())
+	{
+
+		ExportHeader exHeader;
+		file.read((char*)&exHeader, sizeof(exHeader));
+
+		//Read texture name
+		char* f = (char*)malloc(exHeader.texturesize + 1);
+		file.read(f, sizeof(char) * exHeader.texturesize);
+		f[exHeader.texturesize] = 0;
+
+		GLuint texID = TextureManager::gTm->createTexture("Gamefiles/Textures/particles/" + std::string(f));
+		unsigned int x = 0, y = 0;
+		std::string str = "Gamefiles/Textures/particles/" + std::string(f);
+		TextureManager::gTm->PNGSize(str.c_str(), x, y);
+		free(f);
+
+		ParticleSystemData pdata;
+		//Read Particle System
+		file.read((char*)&pdata, sizeof(ParticleSystemData));
+
+		pdata.continuous = true; // force single time
+		pdata.emission = 0.01f;
+		pdata.dir = dir;
+
+		ParticleSystem pSys;
+		pSys.Initialize(pos, pdata, &compute, &locations);
+		pSys.m_texture = texID;
+		pSys.m_color = color;
+
+		MappedParticleSystem mps;
+
+		mps.id = id;
+		mps.pSys = pSys;
+
+		mappedparticleSystems.push_back(mps);
+	}
+	file.close();
+
+	return id;
+}
+
+bool RenderPipeline::moveMappedParticleEffect(int id, glm::vec3 newPos)
+{
+	for (size_t i = 0; i < mappedparticleSystems.size(); i++)
+	{
+		if (mappedparticleSystems[i].id == id)
+		{
+			mappedparticleSystems[i].pSys.setSpawnPos(newPos);
+			return true;
+		}
+	}
+	return false;
+}
+
+void RenderPipeline::removeMappedParticleEffect(int id)
+{
+	for (size_t i = 0; i < mappedparticleSystems.size(); i++)
+	{
+		if (mappedparticleSystems[i].id == id)
+		{
+			mappedparticleSystems[i].pSys.Release();
+			mappedparticleSystems.erase(mappedparticleSystems.begin() + i);
+		}
+	}
 }
 
 void RenderPipeline::createTimedParticleEffect(BULLET_TYPE peffect, vec3 pos, glm::vec3 dir, glm::vec3 color)

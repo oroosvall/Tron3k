@@ -31,6 +31,12 @@ enum SETTING_INPUT
 	NONE_IN = -1,
 };
 
+struct MappedParticleSystem
+{
+	int id;
+	ParticleSystem pSys;
+};
+
 class RenderPipeline : public IRenderPipeline
 {
 private:
@@ -189,6 +195,8 @@ private:
 	GLuint ptex;
 
 	vector<ParticleSystem> dynamicParticleSystems;
+	vector<MappedParticleSystem> mappedparticleSystems;
+	int mappedParticleIDCounter = 0;
 
 	GLuint fragmentInvocationQuery;
 	bool fragmentStatQueryAvaible;
@@ -221,6 +229,10 @@ public:
 	virtual std::string getStatus() { return ""; };
 
 	virtual bool setSetting(PIPELINE_SETTINGS type, PipelineValues value);
+
+	virtual int createMappedParticleEffect(glm::vec3 pos, glm::vec3 dir, glm::vec3 color);
+	virtual bool moveMappedParticleEffect(int id, glm::vec3 newPos);
+	virtual void removeMappedParticleEffect(int id);
 
 	virtual void createTimedParticleEffect(BULLET_TYPE peffect, vec3 pos, glm::vec3 dir, glm::vec3 color);
 	virtual void createTimedParticleEffect(EFFECT_TYPE eeffect, glm::vec3 pos, glm::vec3 color);

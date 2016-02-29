@@ -137,3 +137,8 @@ void ParticleSystem::Release()
 	glDeleteBuffers(1, &m_vbo);
 	glDeleteVertexArrays(1, &m_vao);
 }
+
+void ParticleSystem::setSpawnPos(glm::vec3 pos)
+{
+	m_pos = pos;
+}

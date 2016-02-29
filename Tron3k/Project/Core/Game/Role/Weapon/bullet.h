@@ -5,7 +5,7 @@
 #include "../../GameObject.h"
 
 #include "../../GameDataIndex.h"
-
+#include "../../ParticleStruct.h"
 
 class Bullet : public GameObject
 {
@@ -35,6 +35,9 @@ public:
 
 	void getId(int &player, int &bullet) { player = playerId; bullet = bulletId; };
 
+	MovableParticle* part;
+
+	glm::vec3* getPosPtr() { return &pos; }
 	glm::vec3 getPos() { return pos; };
 	glm::vec3 getDir() { return dir; };
 

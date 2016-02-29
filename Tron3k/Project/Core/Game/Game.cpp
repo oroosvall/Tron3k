@@ -187,6 +187,16 @@ vector<int>* Game::getTeamConIds(int team)
 void Game::update(float dt)
 {
 	//some things need to be done before movement, some after
+
+	for (size_t i = 0; i < allMovableParticles.size(); i++)
+	{
+		if (allMovableParticles[i]->allowRemove)
+		{
+			delete allMovableParticles[i];
+			allMovableParticles.erase(allMovableParticles.begin() + i);
+		}
+	}
+
 	if (GetSoundActivated() && musicVolumeForMenu > 0 && GetSound()->getFading())
 	{
 		musicVolumeForMenu--;
@@ -1330,8 +1340,25 @@ void Game::addBulletToList(int conID, int teamId, int bulletId, BULLET_TYPE bt, 
 		pos += upV + rightV + dirMod;
 		b = new GrapplingHook(pos, dir, conID, bulletId, teamId);
 	}
-
+	b->part = 0;
 	bullets[bt].push_back(b);
+
+	MovableParticle* mp = new MovableParticle();
+	mp->id = 0;
+	mp->created = false;
+	mp->dead = false;
+	mp->allowRemove = false;
+	mp->pPos = b->getPosPtr();
+	if (teamId == 1)
+		mp->color = TEAMONECOLOR;
+	if (teamId == 2)
+		mp->color = TEAMTWOCOLOR;
+
+	if (gameState != SERVER)
+	{
+		b->part = mp;
+		allMovableParticles.push_back(mp);
+	}
 }
 
 void Game::handleWeaponFire(int conID, int teamId, int bulletId, WEAPON_TYPE weapontype, glm::vec3 pos, glm::vec3 dir)

@@ -1,7 +1,10 @@
 #include"Bullet.h"
 
 Bullet::~Bullet()
-{}
+{
+	if (part)
+		part->dead = true;
+}
 
 void Bullet::updateWorldMat()
 {

@@ -114,6 +114,7 @@
     <ClInclude Include="Core\Game\Gamemode.h" />
     <ClInclude Include="Core\Game\Gamemodes\KingOfTheHill.h" />
     <ClInclude Include="Core\Game\GameObject.h" />
+    <ClInclude Include="Core\Game\ParticleStruct.h" />
     <ClInclude Include="Core\Game\Player.h" />
     <ClInclude Include="Core\Game\Role\Consumable\Consumable.h" />
     <ClInclude Include="Core\Game\Role\PlayerEffects\Effect.h" />
