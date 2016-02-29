@@ -2112,15 +2112,12 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 		case EFFECT_TYPE::DOUBLEDAMAGEPICKUP:
 		{
 			DoubleDamagePickup* tester = (DoubleDamagePickup*)theEffect;
-			if (!tester->onCooldown())
-			{
-				tester->startCooldown();
-				p->addModifier(MODIFIER_TYPE::DOUBLEDAMAGEMOD);
+			tester->startCooldown();
+			p->addModifier(MODIFIER_TYPE::DOUBLEDAMAGEMOD);
 
-				if (GetSound() && p->isLocal())
-				{
-					GetSound()->playExternalSound(SOUNDS::announcerDoubleDamage, pos.x, pos.y, pos.z, CATEGORY::Announcer);
-				}
+			if (GetSound() && p->isLocal())
+			{
+				GetSound()->playExternalSound(SOUNDS::announcerDoubleDamage, pos.x, pos.y, pos.z, CATEGORY::Announcer);
 			}
 		}
 		break;
