@@ -7,7 +7,8 @@ class MultiJump :
 {
 
 private:
-	float coolDown;
+	Player* myPlayer = nullptr;
+	bool used = false;
 public:
 	MultiJump();
 	~MultiJump();
@@ -16,7 +17,5 @@ public:
 	int update(float deltaTime);
 
 	bool allowedToActivate(Player* p);
-
-	void coolDowntick(float);
 };
 

@@ -12,10 +12,12 @@ MultiJump::~MultiJump()
 
 bool MultiJump::allowedToActivate(Player* p)
 {
-	if (this->coolDown < 0.01 && !p->getGrounded())
+	if (myPlayer == nullptr)
+		myPlayer = p;
+	if (!myPlayer->getGrounded() && !used)
 	{
-		p->movmentSpecialAnimUse();
-		coolDown = 2.0f;
+		used = true;
+		myPlayer->movmentSpecialAnimUse();
 		return true;
 	}
 	return false;
@@ -23,22 +25,17 @@ bool MultiJump::allowedToActivate(Player* p)
 
 void MultiJump::init()
 {
-	this->coolDown = 0;
-	this->activationCost = 15;
+	activationCost = 15;
 	specialType = SPECIAL_TYPE::MULTIJUMP;
 	isOnJumpKey = true;
 }
 
 int MultiJump::update(float deltaTime)
 {
-	coolDowntick(deltaTime);
-	return 0;
-}
-
-void MultiJump::coolDowntick(float deltaTime)
-{
-	if (coolDown > FLT_EPSILON)
+	if (myPlayer != nullptr)
 	{
-		coolDown -= deltaTime;
+		if (myPlayer->getGrounded())
+			used = false;
 	}
+	return 0;
 }

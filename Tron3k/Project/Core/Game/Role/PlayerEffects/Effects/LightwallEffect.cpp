@@ -31,7 +31,7 @@ int LightwallEffect::update(float dt)
 			expandDong = false;
 			collidable = true;
 			lifeTime = 10.0f;
-			if (length(endPoint - pos) < 1.5f)
+			if (length(endPoint - pos) < 4.0f)
 				return 1;
 		}
 		if (expandDong)
