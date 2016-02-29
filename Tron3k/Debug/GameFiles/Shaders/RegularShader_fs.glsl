@@ -1,9 +1,7 @@
 #version 420
 layout (location = 0) in vec3 Position;                                                                  
 layout (location = 1) in vec2 UV;                                                                  
-layout (location = 2) in vec3 Normal;    
-layout (location = 3) in vec3 Tangent;
-
+layout (location = 2) in mat3 TBN;
 
 uniform sampler2D textureSample;
 uniform sampler2D normalSample;
@@ -26,13 +24,9 @@ layout(early_fragment_tests) in;
 
 vec4 CalcBumpedNormal()
  {
-  vec3 tan = normalize(Tangent);
-  tan = normalize(tan - dot(tan, Normal) * Normal);
-  vec3 bitangent = cross(tan, Normal);
   normalMap = texture(normalSample, vec2(UV.s, 1-UV.t));
   alpha = normalMap.w;
   vec4 newnormal = (2.0 * normalMap) - vec4(1.0, 1.0, 1.0, 0.0);
-  mat3 TBN = mat3(tan, bitangent, Normal);
   newnormal.xyz = TBN * newnormal.xyz;
   newnormal.xyz = normalize(newnormal.xyz);
   return newnormal;
