@@ -1343,19 +1343,20 @@ void Game::addBulletToList(int conID, int teamId, int bulletId, BULLET_TYPE bt, 
 	b->part = 0;
 	bullets[bt].push_back(b);
 
-	MovableParticle* mp = new MovableParticle();
-	mp->id = 0;
-	mp->created = false;
-	mp->dead = false;
-	mp->allowRemove = false;
-	mp->pPos = b->getPosPtr();
-	if (teamId == 1)
-		mp->color = TEAMONECOLOR;
-	if (teamId == 2)
-		mp->color = TEAMTWOCOLOR;
 
 	if (gameState != SERVER)
 	{
+		MovableParticle* mp = new MovableParticle();
+		mp->id = 0;
+		mp->created = false;
+		mp->dead = false;
+		mp->allowRemove = false;
+		mp->pPos = b->getPosPtr();
+		if (teamId == 1)
+			mp->color = TEAMONECOLOR;
+		if (teamId == 2)
+			mp->color = TEAMTWOCOLOR;
+
 		b->part = mp;
 		allMovableParticles.push_back(mp);
 	}
