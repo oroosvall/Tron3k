@@ -477,6 +477,7 @@ void Core::upMenu(float dt)
 			break;
 		case 20: //Fullscreen
 			clientHandleCmds("/fullscreen");
+			//uiManager->changeTex(10, );
 			break;
 		default:
 			break;
