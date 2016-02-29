@@ -2446,14 +2446,14 @@ void Core::renderWorld(float dt)
 					{
 						if (p->isLocal())
 						{
-							if (lastHP_blurreffect > p->getHP())
+							if (lastHP_blurreffect > p->getHP() && p->getHP() != p->getMaxHP())
 								renderPipe->startTakeDamageEffect(6, 0.6f);
 							lastHP_blurreffect = p->getHP();
 						}
 					}
 					else if (game->spectateID == i)
 					{
-						if (lastHP_blurreffect > p->getHP())
+						if (lastHP_blurreffect > p->getHP() && p->getHP() != p->getMaxHP())
 							renderPipe->startTakeDamageEffect(6, 0.6f);
 						lastHP_blurreffect = p->getHP();
 					}
