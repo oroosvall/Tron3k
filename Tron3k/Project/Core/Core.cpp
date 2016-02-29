@@ -227,16 +227,16 @@ void Core::update(float dt)
 				playbackSpeed *= 2.0f;
 				if (playbackSpeed > 16.0f)
 					playbackSpeed = 16.0f;
-				CameraInput* cam = CameraInput::getCam();
-				cam->setPlaybackSpeed(playbackSpeed);
+				//CameraInput* cam = CameraInput::getCam();
+				//cam->setPlaybackSpeed(playbackSpeed);
 			}
 			if (i->justPressed(GLFW_KEY_6))
 			{
 				playbackSpeed *= 0.5f;
 				if (playbackSpeed < 0.03125f)
 					playbackSpeed = 0.03125f;
-				CameraInput* cam = CameraInput::getCam();
-				cam->setPlaybackSpeed(playbackSpeed);
+				//CameraInput* cam = CameraInput::getCam();
+				//cam->setPlaybackSpeed(playbackSpeed);
 			}
 			if (i->justPressed(GLFW_KEY_0))
 			{
