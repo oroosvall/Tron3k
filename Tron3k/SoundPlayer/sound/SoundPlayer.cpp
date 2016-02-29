@@ -254,6 +254,8 @@ void SoundPlayer::SetEffectVolume(int volume)
 	this->effectVolume = volume;
 }
 
+
+
 void SoundPlayer::SetMasterVolume(float volume)
 {
 	this->masterVolume = volume;
@@ -753,6 +755,7 @@ void SoundPlayer::rotate(float deltaTime)
 
 SoundPlayer* CreateSound()
 {
+	sf::err().rdbuf(NULL);
 	return new SoundPlayer();
 }
 
