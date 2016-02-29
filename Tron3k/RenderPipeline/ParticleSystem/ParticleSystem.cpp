@@ -2,6 +2,8 @@
 
 void ParticleSystem::Initialize(glm::vec3 pos, ParticleSystemData ps, GLuint* program, ParticleShaderLocations* pLoc)
 {
+	m_vao = 0;
+	m_vbo = 0;
 	m_program = program;
 	m_data = ps;
 
@@ -153,6 +155,9 @@ void ParticleSystem::Release()
 	{
 		glDeleteBuffers(1, &m_vbo);
 		glDeleteVertexArrays(1, &m_vao);
+
+		m_vao = 0;
+		m_vbo = 0;
 	}
 }
 

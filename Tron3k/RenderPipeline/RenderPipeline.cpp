@@ -115,6 +115,7 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	ptex = TextureManager::gTm->createTexture("GameFiles/Textures/Particles/arrow.png");
 
 #ifdef _DEBUG
+	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 	if (glDebugMessageCallback) {
 		printf("Register OpenGL debug callback\n");
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
