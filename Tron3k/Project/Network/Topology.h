@@ -287,6 +287,7 @@ public:
 			hi.bt = BULLET_TYPE(bt);
 			hi.bulletBID = BID;
 			hi.bulletPID = PID;
+			hi.bulletTeam = bTeam;
 			hi.et = EFFECT_TYPE(et);
 			hi.effectPID = EPID;
 			hi.effectID = EID;
