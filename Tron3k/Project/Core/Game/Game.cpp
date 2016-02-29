@@ -1520,10 +1520,10 @@ void Game::handleWeaponFire(int conID, int teamId, int bulletId, WEAPON_TYPE wea
 			if (GetSound())
 				if (conID == localPlayerId || conID == spectateID)
 				{
-					GetSound()->playFields(pos.x, pos.y, pos.z);
+					GetSound()->playFieldsStereo();
 				}
 				else
-					GetSound()->playFieldsStereo();
+					GetSound()->playFields(pos.x, pos.y, pos.z);
 
 		addBulletToList(conID, teamId, bulletId, BULLET_TYPE::BATTERY_SPEED_SHOT, pos, dir);
 		break;
