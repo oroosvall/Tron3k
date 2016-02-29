@@ -26,6 +26,8 @@ public:
 	int m_counter;
 	int m_scaleDir;
 
+	bool created;
+
 private:
 	ParticleSystemData m_data;
 	//std::vector<Particle> m_vertices;
