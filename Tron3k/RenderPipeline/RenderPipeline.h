@@ -197,6 +197,11 @@ private:
 
 	vector<ParticleSystem> dynamicParticleSystems;
 	vector<MappedParticleSystem> mappedparticleSystems;
+	
+	vector<ParticleSystemData> particleSystemData;
+	vector<std::string> particleTextureString;
+	std::map<std::string, int> particleNameToIndexMap;
+
 	int mappedParticleIDCounter = 0;
 
 	GLuint fragmentInvocationQuery;
@@ -207,6 +212,8 @@ public:
 	RenderPipeline() {};
 
 	void renderEffects();
+
+	void addParticleName(std::string particlePath);
 
 	virtual bool init(unsigned int WindowWidth, unsigned int WindowHeight);
 	virtual void release();

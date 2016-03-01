@@ -187,6 +187,36 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 	fragmentStatQueryAvaible = counterBits ? 1 : 0;
 
+	std::string particlePath = "GameFiles/ParticleSystems/";
+
+	addParticleName(particlePath + "batteryFieldParticles.ps");
+	addParticleName(particlePath + "batteryShotTrail.ps");
+	addParticleName(particlePath + "bruteGrenadeExplosion.ps");
+	addParticleName(particlePath + "bulletHit_1.ps");
+	addParticleName(particlePath + "bulletHit_2.ps");
+	addParticleName(particlePath + "clusterlingExplosion.ps");
+	addParticleName(particlePath + "discshotHit.ps");
+	addParticleName(particlePath + "electronicsLightning.ps");
+	addParticleName(particlePath + "explosion_1.ps");
+	addParticleName(particlePath + "explosion_2.ps");
+	addParticleName(particlePath + "explosionShockwave.ps");
+	addParticleName(particlePath + "explosionShrapnel.ps");
+	addParticleName(particlePath + "explosionSparks.ps");
+	addParticleName(particlePath + "fusionHit.ps");
+	addParticleName(particlePath + "fusionTrail.ps");
+	addParticleName(particlePath + "gravityAttractorHit.ps");
+	addParticleName(particlePath + "grenadeShotHit.ps");
+	addParticleName(particlePath + "hackingdartBleed.ps");
+	addParticleName(particlePath + "hackingdartHit.ps");
+	addParticleName(particlePath + "healthPack.ps");
+	addParticleName(particlePath + "meleeHit.ps");
+	addParticleName(particlePath + "shotgunPelletHit.ps");
+	addParticleName(particlePath + "steam.ps");
+	addParticleName(particlePath + "thermiteEffect.ps");
+	addParticleName(particlePath + "trapperBulletHit.ps");
+	addParticleName(particlePath + "trapperBulletTrail.ps");
+	addParticleName(particlePath + "vacuumTrail.ps");
+
 	initialized = true;
 	return true;
 }
@@ -1041,6 +1071,44 @@ void RenderPipeline::renderEffects()
 	//glDrawArrays(GL_POINTS, 0, 2);
 }
 
+void RenderPipeline::addParticleName(std::string particlePath)
+{
+	std::ifstream file;
+	file.open(particlePath, std::ios::binary | std::ios::in);
+
+	int i = particleSystemData.size();
+
+	if (file.is_open())
+	{
+
+		ExportHeader exHeader;
+		file.read((char*)&exHeader, sizeof(exHeader));
+
+		//Read texture name
+		char* f = (char*)malloc(exHeader.texturesize + 1);
+		file.read(f, sizeof(char) * exHeader.texturesize);
+		f[exHeader.texturesize] = 0;
+
+		//GLuint texID = TextureManager::gTm->createTexture("Gamefiles/Textures/particles/" + std::string(f));
+		unsigned int x = 0, y = 0;
+		std::string str = "Gamefiles/Textures/particles/" + std::string(f);
+
+		TextureManager::gTm->PNGSize(str.c_str(), x, y);
+		free(f);
+
+		ParticleSystemData pdata;
+		//Read Particle System
+		file.read((char*)&pdata, sizeof(ParticleSystemData));
+
+		particleSystemData.push_back(pdata);
+		particleTextureString.push_back(str);
+
+		particleNameToIndexMap[particlePath] = i;
+
+	}
+
+}
+
 void* RenderPipeline::getView()
 {
 	return (void*)cam.getViewMat();
@@ -1173,36 +1241,63 @@ int RenderPipeline::createMappedParticleEffect(BULLET_TYPE peffect, glm::vec3 po
 		path = "0"; //Använd detta för att inte läsa från fil när inget system ska skapas. Valfri metod.
 	}
 
-	std::ifstream file;
-	file.open(path, std::ios::binary | std::ios::in);
+	//std::ifstream file;
+	//file.open(path, std::ios::binary | std::ios::in);
+	//
+	//if (file.is_open())
+	//{
+	//
+	//	ExportHeader exHeader;
+	//	file.read((char*)&exHeader, sizeof(exHeader));
+	//
+	//	//Read texture name
+	//	char* f = (char*)malloc(exHeader.texturesize + 1);
+	//	file.read(f, sizeof(char) * exHeader.texturesize);
+	//	f[exHeader.texturesize] = 0;
+	//
+	//	GLuint texID = TextureManager::gTm->createTexture("Gamefiles/Textures/particles/" + std::string(f));
+	//	unsigned int x = 0, y = 0;
+	//	std::string str = "Gamefiles/Textures/particles/" + std::string(f);
+	//	TextureManager::gTm->PNGSize(str.c_str(), x, y);
+	//	free(f);
+	//
+	//	ParticleSystemData pdata;
+	//	//Read Particle System
+	//	file.read((char*)&pdata, sizeof(ParticleSystemData));
+	//
+	//	pdata.continuous = true; // force single time
+	//	pdata.emission = 0.01f;
+	//	pdata.dir = dir;
+	//
+	//	ParticleSystem pSys;
+	//	pSys.Initialize(pos, pdata, &compute, &locations);
+	//	pSys.m_texture = texID;
+	//	pSys.m_color = color;
+	//
+	//	MappedParticleSystem mps;
+	//
+	//	mps.id = id;
+	//	mps.pSys = pSys;
+	//
+	//	mappedparticleSystems.push_back(mps);
+	//}
+	//file.close();
 
-	if (file.is_open())
+	if (path != "0")
 	{
+		int loadID = particleNameToIndexMap[path];
 
-		ExportHeader exHeader;
-		file.read((char*)&exHeader, sizeof(exHeader));
-
-		//Read texture name
-		char* f = (char*)malloc(exHeader.texturesize + 1);
-		file.read(f, sizeof(char) * exHeader.texturesize);
-		f[exHeader.texturesize] = 0;
-
-		GLuint texID = TextureManager::gTm->createTexture("Gamefiles/Textures/particles/" + std::string(f));
-		unsigned int x = 0, y = 0;
-		std::string str = "Gamefiles/Textures/particles/" + std::string(f);
-		TextureManager::gTm->PNGSize(str.c_str(), x, y);
-		free(f);
-
-		ParticleSystemData pdata;
-		//Read Particle System
-		file.read((char*)&pdata, sizeof(ParticleSystemData));
+		ParticleSystemData pdata = particleSystemData[loadID];
 
 		pdata.continuous = true; // force single time
-		pdata.emission = 0.01f;
+		//pdata.emission = 0.01f;
 		pdata.dir = dir;
 
 		ParticleSystem pSys;
 		pSys.Initialize(pos, pdata, &compute, &locations);
+
+		GLuint texID = TextureManager::gTm->createTexture(particleTextureString[loadID]);
+
 		pSys.m_texture = texID;
 		pSys.m_color = color;
 
@@ -1213,8 +1308,6 @@ int RenderPipeline::createMappedParticleEffect(BULLET_TYPE peffect, glm::vec3 po
 
 		mappedparticleSystems.push_back(mps);
 	}
-	file.close();
-
 	return id;
 }
 
@@ -1255,15 +1348,15 @@ void RenderPipeline::createTimedParticleEffect(BULLET_TYPE peffect, vec3 pos, gl
 	case DISC_SHOT:
 		path += "discshotHit.ps";
 		break;
-	case BATTERY_SPEED_SHOT:
-		break;
-	case BATTERY_SLOW_SHOT:
-		break;
+	//case BATTERY_SPEED_SHOT:
+	//	break;
+	//case BATTERY_SLOW_SHOT:
+	//	break;
 	case FUSION_SHOT:
 		path += "fusionHit.ps";
 		break;
-	case PLASMA_SHOT:
-		break;
+	//case PLASMA_SHOT:
+	//	break;
 	case GRENADE_SHOT:
 		path += "grenadeShotHit.ps";
 		break;
@@ -1275,63 +1368,84 @@ void RenderPipeline::createTimedParticleEffect(BULLET_TYPE peffect, vec3 pos, gl
 	case CLUSTER_GRENADE:
 		path += "grenadeShotHit.ps";
 		break;
-	case CLUSTERLING:
-		break;
-	case CLEANSE_BOMB:
-		break;
+	//case CLUSTERLING:
+	//	break;
+	//case CLEANSE_BOMB:
+	//	break;
 	case HACKING_DART:
 		path += "hackingdartHit.ps";
 		break;
-	case VACUUM_GRENADE:
-		break;
+	//case VACUUM_GRENADE:
+	//	break;
 	case MELEE_ATTACK:
 		path += "meleeHit.ps";
 		break;
 	case GRAPPLING_HOOK:
 		path += "gravityAttractorHit.ps";
 		break;
-	case KILLYOURSELF:
-		break;
-	case NROFBULLETS:
-		break;
+	//case KILLYOURSELF:
+	//	break;
+	//case NROFBULLETS:
+	//	break;
 	default:
+		path = "0";
 		break;
 	}
 
 	std::ifstream file;
 	file.open(path, std::ios::binary | std::ios::in);
 
-	if (file.is_open())
+	//if (file.is_open())
+	//{
+	//
+	//	ExportHeader exHeader;
+	//	file.read((char*)&exHeader, sizeof(exHeader));
+	//
+	//	//Read texture name
+	//	char* f = (char*)malloc(exHeader.texturesize + 1);
+	//	file.read(f, sizeof(char) * exHeader.texturesize);
+	//	f[exHeader.texturesize] = 0;
+	//
+	//	GLuint texID = TextureManager::gTm->createTexture("Gamefiles/Textures/particles/" + std::string(f));
+	//	unsigned int x = 0, y = 0;
+	//	std::string str = "Gamefiles/Textures/particles/" + std::string(f);
+	//	TextureManager::gTm->PNGSize(str.c_str(), x, y);
+	//	free(f);
+	//
+	//	ParticleSystemData pdata;
+	//	//Read Particle System
+	//	file.read((char*)&pdata, sizeof(ParticleSystemData));
+	//
+	//	pdata.continuous = false; // force single time
+	//	pdata.dir = dir;
+	//
+	//	ParticleSystem pSys;
+	//	pSys.Initialize(pos, pdata, &compute, &locations);
+	//	pSys.m_texture = texID;
+	//	pSys.m_color = color;
+	//	dynamicParticleSystems.push_back(pSys);
+	//}
+	//file.close();
+
+	if (path != "0")
 	{
+		int loadID = particleNameToIndexMap[path];
 
-		ExportHeader exHeader;
-		file.read((char*)&exHeader, sizeof(exHeader));
-
-		//Read texture name
-		char* f = (char*)malloc(exHeader.texturesize + 1);
-		file.read(f, sizeof(char) * exHeader.texturesize);
-		f[exHeader.texturesize] = 0;
-
-		GLuint texID = TextureManager::gTm->createTexture("Gamefiles/Textures/particles/" + std::string(f));
-		unsigned int x = 0, y = 0;
-		std::string str = "Gamefiles/Textures/particles/" + std::string(f);
-		TextureManager::gTm->PNGSize(str.c_str(), x, y);
-		free(f);
-
-		ParticleSystemData pdata;
-		//Read Particle System
-		file.read((char*)&pdata, sizeof(ParticleSystemData));
+		ParticleSystemData pdata = particleSystemData[loadID];
 
 		pdata.continuous = false; // force single time
 		pdata.dir = dir;
 
 		ParticleSystem pSys;
 		pSys.Initialize(pos, pdata, &compute, &locations);
+
+		GLuint texID = TextureManager::gTm->createTexture(particleTextureString[loadID]);
+
 		pSys.m_texture = texID;
 		pSys.m_color = color;
+		
 		dynamicParticleSystems.push_back(pSys);
 	}
-	file.close();
 
 }
 
@@ -1341,15 +1455,15 @@ void RenderPipeline::createTimedParticleEffect(EFFECT_TYPE eeffect, glm::vec3 po
 
 	switch (eeffect)
 	{
-	case LIGHT_WALL:
-		break;
-	case THUNDER_DOME:
-		break;
+	//case LIGHT_WALL:
+	//	break;
+	//case THUNDER_DOME:
+	//	break;
 	case EXPLOSION:
 		path += "explosionShockwave.ps";
 		break;
-	case CLEANSENOVA:
-		break;
+	//case CLEANSENOVA:
+	//	break;
 	case BATTERY_SLOW:
 		path += "batteryFieldParticles.ps";
 		break;
@@ -1359,54 +1473,75 @@ void RenderPipeline::createTimedParticleEffect(EFFECT_TYPE eeffect, glm::vec3 po
 	case THERMITE_CLOUD:
 		path += "thermiteEffect.ps";
 		break;
-	case VACUUM:
-		break;
+	//case VACUUM:
+	//	break;
 	case HEALTHPACK:
 		path += "healthPack.ps";
 		break;
-	case HSCPICKUP:
-		break;
-	case DOUBLEDAMAGEPICKUP:
-		break;
-	case NROFEFFECTS:
-		break;
+	//case HSCPICKUP:
+	//	break;
+	//case DOUBLEDAMAGEPICKUP:
+	//	break;
+	//case NROFEFFECTS:
+	//	break;
 	default:
+		path = "0";
 		break;
 	}
 
 	std::ifstream file;
 	file.open(path, std::ios::binary | std::ios::in);
 
-	if (file.is_open())
+	//if (file.is_open())
+	//{
+	//
+	//	ExportHeader exHeader;
+	//	file.read((char*)&exHeader, sizeof(exHeader));
+	//
+	//	//Read texture name
+	//	char* f = (char*)malloc(exHeader.texturesize + 1);
+	//	file.read(f, sizeof(char) * exHeader.texturesize);
+	//	f[exHeader.texturesize] = 0;
+	//
+	//	GLuint texID = TextureManager::gTm->createTexture("Gamefiles/Textures/particles/" + std::string(f));
+	//	unsigned int x = 0, y = 0;
+	//	std::string str = "Gamefiles/Textures/particles/" + std::string(f);
+	//	TextureManager::gTm->PNGSize(str.c_str(), x, y);
+	//	free(f);
+	//
+	//	ParticleSystemData pdata;
+	//	//Read Particle System
+	//	file.read((char*)&pdata, sizeof(ParticleSystemData));
+	//
+	//	pdata.continuous = false; // force single time
+	//
+	//	ParticleSystem pSys;
+	//	pSys.Initialize(pos, pdata, &compute, &locations);
+	//	pSys.m_texture = texID;
+	//	pSys.m_color = color;
+	//	dynamicParticleSystems.push_back(pSys);
+	//}
+	//file.close();
+
+	if (path != "0")
 	{
+		int loadID = particleNameToIndexMap[path];
 
-		ExportHeader exHeader;
-		file.read((char*)&exHeader, sizeof(exHeader));
-
-		//Read texture name
-		char* f = (char*)malloc(exHeader.texturesize + 1);
-		file.read(f, sizeof(char) * exHeader.texturesize);
-		f[exHeader.texturesize] = 0;
-
-		GLuint texID = TextureManager::gTm->createTexture("Gamefiles/Textures/particles/" + std::string(f));
-		unsigned int x = 0, y = 0;
-		std::string str = "Gamefiles/Textures/particles/" + std::string(f);
-		TextureManager::gTm->PNGSize(str.c_str(), x, y);
-		free(f);
-
-		ParticleSystemData pdata;
-		//Read Particle System
-		file.read((char*)&pdata, sizeof(ParticleSystemData));
+		ParticleSystemData pdata = particleSystemData[loadID];
 
 		pdata.continuous = false; // force single time
 
 		ParticleSystem pSys;
 		pSys.Initialize(pos, pdata, &compute, &locations);
+
+		GLuint texID = TextureManager::gTm->createTexture(particleTextureString[loadID]);
+
 		pSys.m_texture = texID;
 		pSys.m_color = color;
+
 		dynamicParticleSystems.push_back(pSys);
 	}
-	file.close();
+
 }
 
 SETTING_INPUT RenderPipeline::getType(PIPELINE_SETTINGS type) const
