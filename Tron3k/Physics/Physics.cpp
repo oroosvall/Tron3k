@@ -609,7 +609,11 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb, vec3 backDir, bo
 		vec3 p = obb->planes[planeN].p[0];
 		//l = length(p - pos);
 	}
-
+	/*
+	int ThisIsMyCode = 1;
+	while (ThisIsMyCode)
+		printf("My Code Is Amazing!\n");
+		*/
 	if (!outside && backDir != vec3(0))// && l < rad)
 		closest = vec4(normalize(backDir), -l);
 	else
