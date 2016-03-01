@@ -585,7 +585,7 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb, vec3 backDir, bo
 	{
 		//Are we inside the obb?
 		//ood
-		vec3 p = (obb->planes[n].p[0]);// +obb->planes[n].p[2]) * 0.5f;
+		vec3 p = (obb->planes[n].p[0] + obb->planes[n].p[2]) * 0.5f;
 		vec3 dir = p - pos;
 		//d = dot(dir, obb->planes[n].n);
 		if (dot(normalize(dir), obb->planes[n].n) > 0.0f) //pointing the same way as normal, point is "behind" the plane
@@ -611,7 +611,7 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb, vec3 backDir, bo
 	}
 
 	if (!outside && backDir != vec3(0))// && l < rad)
-		closest = vec4(backDir, l);
+		closest = vec4(backDir, -l);
 	else
 		return vec4(FLT_MAX);
 
