@@ -14,6 +14,10 @@ void ParticleSystem::Initialize(glm::vec3 pos, ParticleSystemData ps, GLuint* pr
 
 	m_vertices = new Particle[m_data.maxparticles];
 
+	std::random_device rd;
+	std::mt19937 mt(m_data.seed);
+	std::uniform_real_distribution<float> dist(-1.0f, 1.0f);
+
 	for (int i = 0; i < m_data.maxparticles; i++)
 	{
 		Particle p;
@@ -22,10 +26,10 @@ void ParticleSystem::Initialize(glm::vec3 pos, ParticleSystemData ps, GLuint* pr
 		glm::vec3 dir = m_data.dir;
 		//if (m_data.omni)
 		{
-			float x = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / 2.0f));
-			float y = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / 2.0f));
-			float z = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / 2.0f));
-			dir = glm::normalize(glm::vec3(x-1.0f, y - 1.0f, z - 1.0f));
+			float x = dist(mt);
+			float y = dist(mt);
+			float z = dist(mt);
+			dir = glm::vec3(x, y, z);
 		}
 		p.iDir = glm::vec4(dir, 0);
 		if(m_data.emission == 0.0f)

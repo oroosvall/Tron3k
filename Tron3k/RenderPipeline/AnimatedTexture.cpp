@@ -137,7 +137,7 @@ void AnimatedTexture::init()
 
 
 
-	objects[n].init_time_segments(5, 0.4f, 0.f);
+	objects[n].init_time_segments(5, 0.1f, 0.f);
 
 	n++;
 	initialized = true;

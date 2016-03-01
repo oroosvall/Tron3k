@@ -26,7 +26,7 @@ void main ()
 		GlowMap.w = 1.0f;
 	}
 
-	//Specular
+	//Specular (Water normal)
 	else if (type == 1)
 	{
 		//DiffuseOut = vec4(0);
@@ -34,7 +34,7 @@ void main ()
 		vec2 UV1 = vec2(uv);
 
 		UV1 *= 20.0f;
-		UV1.y += (timepass / 70);
+		UV1.y += (timepass / 40);
 
 		vec4 t = texture(tex, UV1);
 		NormalOut = vec4(0, 1.0f, 0.3f, t.x);

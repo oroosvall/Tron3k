@@ -2,6 +2,7 @@
 #define PARTICLESYSTEM_H
 
 #include <glm/glm.hpp>
+#include <random>
 #include "../Utils/GPUMemoryLeakChecker.h"
 #include "ParticleStructs.h"
 
