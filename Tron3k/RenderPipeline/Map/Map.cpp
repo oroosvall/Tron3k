@@ -146,7 +146,7 @@ void Map::release()
 
 		for (size_t p = 0; p < chunks[i].particleSystem.size(); p++)
 		{
-			chunks[i].particleSystem[i].Release();
+			chunks[i].particleSystem[p].Release();
 		}
 
 	}
