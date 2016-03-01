@@ -161,17 +161,17 @@ void Player::movePlayerCollided(float dt, glm::vec3 oldDir)
 			}
 
 			
-			if (abs(pendepth.x) > 0)//abs(posadjust.x))
+			if (abs(pendepth.x) > abs(posadjust.x))
 			{
 				posadjust.x += pendepth.x;
 				xDivs++;
 			}
-			if (abs(pendepth.y) > 0)//abs(posadjust.y))
+			if (abs(pendepth.y) > abs(posadjust.y))
 			{
 				posadjust.y += pendepth.y;
 				yDivs++;
 			}
-			if (abs(pendepth.z) > 0)//abs(posadjust.z))
+			if (abs(pendepth.z) > abs(posadjust.z))
 			{
 				posadjust.z += pendepth.z;
 				zDivs++;
