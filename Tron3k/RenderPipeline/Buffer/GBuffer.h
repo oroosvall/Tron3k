@@ -76,6 +76,10 @@ public:
 	int nrOfSpotLights = 0;
 	int nrOfPointLights = 0;
 
+	GLuint glowSampleFbo;
+	
+	RenderTarget glowSampleTexture;
+
 private:
 
 	bool initialized;

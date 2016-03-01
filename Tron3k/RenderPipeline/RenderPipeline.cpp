@@ -146,7 +146,7 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	cam.setViewProjMat(animationShader, viewProjMat[1]);
 	cam.setViewMat(regularShader, viewMat);
 
-	gBuffer->init(WindowWidth, WindowHeight, 6, true);
+	gBuffer->init(WindowWidth, WindowHeight, 5, true);
 
 	//at this point map is loaded and g.buffer initialized
 	//send the static lights and dont clear them every frame
