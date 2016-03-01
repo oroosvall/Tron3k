@@ -1155,7 +1155,15 @@ int RenderPipeline::createMappedParticleEffect(BULLET_TYPE peffect, glm::vec3 po
 	int id = mappedParticleIDCounter;
 	mappedParticleIDCounter++;
 
-	std::string path = "GameFiles/ParticleSystems/trapperBulletHit.ps";
+	std::string path = "GameFiles/ParticleSystems/";
+
+	switch (peffect)
+	{
+	case BULLET_TYPE::VACUUM_GRENADE:
+		path += "vacuumTrail.ps";
+	default:
+		path = "0"; //Använd detta för att inte läsa från fil när inget system ska skapas. Valfri metod.
+	}
 
 	std::ifstream file;
 	file.open(path, std::ios::binary | std::ios::in);
