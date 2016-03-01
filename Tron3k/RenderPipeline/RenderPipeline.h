@@ -151,6 +151,7 @@ private:
 
 	GLuint glowSampleShader;
 	GLuint glowSampleTextureLoc;
+	GLuint glowSamplePixelUVX;
 
 	//lightwall
 	GLuint lwVertexDataId;

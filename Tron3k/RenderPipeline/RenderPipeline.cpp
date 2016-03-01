@@ -501,6 +501,9 @@ void RenderPipeline::reloadShaders()
 		temp = 0;
 	}
 
+	glowSampleTextureLoc = glGetUniformLocation(glowSampleShader, "glowTexture");
+	glowSamplePixelUVX = glGetUniformLocation(glowSampleShader, "pixeluvX");
+
 	std::cout << "Done loading shaders\n";
 
 }
@@ -779,15 +782,18 @@ void RenderPipeline::finalizeRender()
 	}
 
 	glDepthMask(GL_TRUE);
+	glDisable(GL_DEPTH_TEST);
 
-	glDisable(GL_BLEND);
+	glProgramUniform1f(glowSampleShader, glowSamplePixelUVX, 1.0f / gBuffer->xres);
 
-	//gBuffer->preRender(glowSampleShader, 0);
+	gBuffer->preRender(glowSampleShader, glowSampleTextureLoc);
 
 	//GBuffer Render
 	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
+	glDisable(GL_BLEND);
+	glEnable(GL_DEPTH_TEST);
 	gBuffer->render();
 
 	renderLightvolumes();
