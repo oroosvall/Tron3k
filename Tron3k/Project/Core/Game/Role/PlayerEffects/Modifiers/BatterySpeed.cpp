@@ -32,7 +32,7 @@ int BatterySpeedMod::setData(float dt)
 	}
 	else
 	{
-		if (glm::length(airSpeed) < FLT_EPSILON)
+		if (glm::length(airSpeed) < FLT_EPSILON && glm::length(airSpeed) > maxSpeed)
 		{
 			airSpeed = vel*(speedFactor);
 		}
