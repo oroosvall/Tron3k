@@ -979,45 +979,47 @@ void RenderPipeline::renderDecals(void* data, int size)
 
 void RenderPipeline::renderCrosshair(CROSSHAIR_TYPE cross)
 {
-	glUseProgram(textShader);
-	glProgramUniformMatrix4fv(textShader, textShaderModel, 1, GL_FALSE, (GLfloat*)&glm::mat4());
-	glProgramUniformMatrix4fv(textShader, textShaderVP, 1, GL_FALSE, (GLfloat*)&glm::mat4());
-	glProgramUniform3f(textShader, textShaderOffset, 0, 0, 0);
-
-	glActiveTexture(GL_TEXTURE0);
-	glProgramUniform1i(textShader, textShaderLocation, 0);
-
-	switch (cross)
+	if (contMan.f_render_gui)
 	{
-	case CROSSHAIR_TRAPPER_P:
-		TextureManager::gTm->bindTextureOnly(crosshairTexture, DIFFUSE_FB);
-		this->cross->draw();
-		break;
-	case CROSSHAIR_SHANKER_P:
-	{
-		TextureInfo asd;
-		asd.lastTextureSlot = GL_TEXTURE0;
-		asd.state = TEXTURE_LOADED;
-		asd.textureID = crosshairHitTexture;
+		glUseProgram(textShader);
+		glProgramUniformMatrix4fv(textShader, textShaderModel, 1, GL_FALSE, (GLfloat*)&glm::mat4());
+		glProgramUniformMatrix4fv(textShader, textShaderVP, 1, GL_FALSE, (GLfloat*)&glm::mat4());
+		glProgramUniform3f(textShader, textShaderOffset, 0, 0, 0);
 
-		//TextureManager::gTm->bindOnly(asd, textShader, textShaderLocation);
-		glBindTexture(GL_TEXTURE_2D, crosshairHitTexture);
+		glActiveTexture(GL_TEXTURE0);
+		glProgramUniform1i(textShader, textShaderLocation, 0);
 
-		this->crossHit->draw();
-		break;
+		switch (cross)
+		{
+		case CROSSHAIR_TRAPPER_P:
+			TextureManager::gTm->bindTextureOnly(crosshairTexture, DIFFUSE_FB);
+			this->cross->draw();
+			break;
+		case CROSSHAIR_SHANKER_P:
+		{
+			TextureInfo asd;
+			asd.lastTextureSlot = GL_TEXTURE0;
+			asd.state = TEXTURE_LOADED;
+			asd.textureID = crosshairHitTexture;
+
+			//TextureManager::gTm->bindOnly(asd, textShader, textShaderLocation);
+			glBindTexture(GL_TEXTURE_2D, crosshairHitTexture);
+
+			this->crossHit->draw();
+			break;
+		}
+		//case CROSSHAIR_SHANKER_S:
+		//	break;
+		//case CROSSHAIR_BRUTE_P:
+		//	break;
+		//case CROSSHAIR_BRUTE_S:
+		//	break;
+		//case CROSSHAIR_NONE:
+		//	break;
+		default:
+			break;
+		}
 	}
-	//case CROSSHAIR_SHANKER_S:
-	//	break;
-	//case CROSSHAIR_BRUTE_P:
-	//	break;
-	//case CROSSHAIR_BRUTE_S:
-	//	break;
-	//case CROSSHAIR_NONE:
-	//	break;
-	default:
-		break;
-	}
-	
 }
 
 void RenderPipeline::renderEffects()
@@ -1853,42 +1855,46 @@ void RenderPipeline::removeTextObject(int id)
 
 void RenderPipeline::renderTextObject(int id)
 {
-	glUseProgram(textShader);
-	glProgramUniformMatrix4fv(textShader, textShaderModel, 1, GL_FALSE, (GLfloat*)&glm::mat4());
-	glProgramUniformMatrix4fv(textShader, textShaderVP, 1, GL_FALSE, (GLfloat*)&glm::mat4());
-	glProgramUniform3f(textShader, textShaderOffset, 0, 0, 0);
-	
-	TextureInfo asd;
-	asd.lastTextureSlot = GL_TEXTURE0;
-	asd.state = TEXTURE_LOADED;
-	asd.textureID = fontTexture;
+	if (contMan.f_render_gui)
+	{
+		glUseProgram(textShader);
+		glProgramUniformMatrix4fv(textShader, textShaderModel, 1, GL_FALSE, (GLfloat*)&glm::mat4());
+		glProgramUniformMatrix4fv(textShader, textShaderVP, 1, GL_FALSE, (GLfloat*)&glm::mat4());
+		glProgramUniform3f(textShader, textShaderOffset, 0, 0, 0);
 
-	TextureManager::gTm->bind(asd, textShader, textShaderLocation);//TextureManager::gTm->bindTexture(fontTexture, textShader, textShaderLocation, DIFFUSE_FB);
+		TextureInfo asd;
+		asd.lastTextureSlot = GL_TEXTURE0;
+		asd.state = TEXTURE_LOADED;
+		asd.textureID = fontTexture;
 
-	textObjects[id]->draw();
+		TextureManager::gTm->bind(asd, textShader, textShaderLocation);//TextureManager::gTm->bindTexture(fontTexture, textShader, textShaderLocation, DIFFUSE_FB);
 
+		textObjects[id]->draw();
+	}
 }
 
 void RenderPipeline::renderTextObjectWorldPos(int id, glm::mat4 world)
 {
-	glUseProgram(textShader);
-	glProgramUniformMatrix4fv(textShader, textShaderModel, 1, GL_FALSE, (GLfloat*)&world);
-	cam.setViewProjMat(textShader, textShaderVP);
-	//glProgramUniform3fv(textShader, textShaderOffset, 1, (GLfloat*)&textObjects[id]->getOffset()[0]);
+	if (contMan.f_render_gui)
+	{
+		glUseProgram(textShader);
+		glProgramUniformMatrix4fv(textShader, textShaderModel, 1, GL_FALSE, (GLfloat*)&world);
+		cam.setViewProjMat(textShader, textShaderVP);
+		//glProgramUniform3fv(textShader, textShaderOffset, 1, (GLfloat*)&textObjects[id]->getOffset()[0]);
 
-	vec3 pos = textObjects[id]->getOffset();
+		vec3 pos = textObjects[id]->getOffset();
 
-	glProgramUniform3f(textShader, textShaderOffset, -pos.x ,0,0);
+		glProgramUniform3f(textShader, textShaderOffset, -pos.x, 0, 0);
 
-	TextureInfo asd;
-	asd.lastTextureSlot = GL_TEXTURE0;
-	asd.state = TEXTURE_LOADED;
-	asd.textureID = fontTexture;
+		TextureInfo asd;
+		asd.lastTextureSlot = GL_TEXTURE0;
+		asd.state = TEXTURE_LOADED;
+		asd.textureID = fontTexture;
 
-	TextureManager::gTm->bind(asd, textShader, textShaderLocation);//TextureManager::gTm->bindTexture(fontTexture, textShader, textShaderLocation, DIFFUSE_FB);
+		TextureManager::gTm->bind(asd, textShader, textShaderLocation);//TextureManager::gTm->bindTexture(fontTexture, textShader, textShaderLocation, DIFFUSE_FB);
 
-	textObjects[id]->draw();
-
+		textObjects[id]->draw();
+	}
 }
 
 void RenderPipeline::setCapRoomColor(int capPoint, vec3 color, float intensity)
