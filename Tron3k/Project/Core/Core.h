@@ -161,6 +161,11 @@ private:
 
 	//for take damage blur effect on player or spectated player
 	int lastHP_blurreffect = 0;
+
+	//Options data
+	float* optionsSavedData;
+	int optionsDataSize;
+
 public:
 	
 	vec3 TEAMONECOLOR = vec3(1.0f, 0.5f, 0.0f);

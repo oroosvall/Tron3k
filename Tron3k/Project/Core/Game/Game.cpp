@@ -1477,7 +1477,7 @@ void Game::handleWeaponFire(int conID, int teamId, int bulletId, WEAPON_TYPE wea
 		{
 			xoff = glm::sin(k);
 			yoff = glm::cos(k);
-			r = ((rand() % 100) / 2000.0f) + 0.01f;
+			r = ((rand() % 100) / 1500.0f) + 0.01f;
 			rightV *= xoff*r;
 			upV *= yoff*r;
 			ndir = dir + upV + rightV;
@@ -1520,10 +1520,10 @@ void Game::handleWeaponFire(int conID, int teamId, int bulletId, WEAPON_TYPE wea
 			if (GetSound())
 				if (conID == localPlayerId || conID == spectateID)
 				{
-					GetSound()->playFields(pos.x, pos.y, pos.z);
+					GetSound()->playFieldsStereo();
 				}
 				else
-					GetSound()->playFieldsStereo();
+					GetSound()->playFields(pos.x, pos.y, pos.z);
 
 		addBulletToList(conID, teamId, bulletId, BULLET_TYPE::BATTERY_SPEED_SHOT, pos, dir);
 		break;
@@ -2112,15 +2112,12 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 		case EFFECT_TYPE::DOUBLEDAMAGEPICKUP:
 		{
 			DoubleDamagePickup* tester = (DoubleDamagePickup*)theEffect;
-			if (!tester->onCooldown())
-			{
-				tester->startCooldown();
-				p->addModifier(MODIFIER_TYPE::DOUBLEDAMAGEMOD);
+			tester->startCooldown();
+			p->addModifier(MODIFIER_TYPE::DOUBLEDAMAGEMOD);
 
-				if (GetSound() && p->isLocal())
-				{
-					GetSound()->playExternalSound(SOUNDS::announcerDoubleDamage, pos.x, pos.y, pos.z, CATEGORY::Announcer);
-				}
+			if (GetSound() && p->isLocal())
+			{
+				GetSound()->playExternalSound(SOUNDS::announcerDoubleDamage, pos.x, pos.y, pos.z, CATEGORY::Announcer);
 			}
 		}
 		break;
@@ -2550,7 +2547,7 @@ void Game::removeBullet(BULLET_TYPE bt, int posInArray)
 				if (GetSoundActivated())
 					GetSound()->playExternalSound(SOUNDS::soundEffectClusterGrenade, parent->getPos().x, parent->getPos().y, parent->getPos().z, CATEGORY::Guns);
 
-				addEffectToList(PID, parent->getTeam(), BID, EFFECT_TYPE::EXPLOSION, parent->getPos(), 15, 3.5f);
+				addEffectToList(PID, parent->getTeam(), BID, EFFECT_TYPE::EXPLOSION, parent->getPos(), 20, 4.0f);
 				break;
 			}
 			case BULLET_TYPE::BATTERY_SLOW_SHOT:

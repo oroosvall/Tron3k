@@ -74,6 +74,9 @@ int fps = 0;
 
 bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 {
+	memusageT = 0;
+	memusageTex = 0;
+	memusageMesh = 0;
 	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	if (initialized)
 	{
@@ -1181,7 +1184,7 @@ int RenderPipeline::createMappedParticleEffect(glm::vec3 pos, glm::vec3 dir, glm
 		mps.id = id;
 		mps.pSys = pSys;
 
-		//mappedparticleSystems.push_back(mps);
+		mappedparticleSystems.push_back(mps);
 	}
 	file.close();
 
@@ -1299,7 +1302,7 @@ void RenderPipeline::createTimedParticleEffect(BULLET_TYPE peffect, vec3 pos, gl
 		pSys.Initialize(pos, pdata, &compute, &locations);
 		pSys.m_texture = texID;
 		pSys.m_color = color;
-		//dynamicParticleSystems.push_back(pSys);
+		dynamicParticleSystems.push_back(pSys);
 	}
 	file.close();
 
@@ -1374,7 +1377,7 @@ void RenderPipeline::createTimedParticleEffect(EFFECT_TYPE eeffect, glm::vec3 po
 		pSys.Initialize(pos, pdata, &compute, &locations);
 		pSys.m_texture = texID;
 		pSys.m_color = color;
-		//dynamicParticleSystems.push_back(pSys);
+		dynamicParticleSystems.push_back(pSys);
 	}
 	file.close();
 }
