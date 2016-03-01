@@ -197,7 +197,7 @@ void Map::update(float dt)
 	}
 }
 
-void Map::renderParticles(GLuint shader, GLuint textureLoc, GLuint particleSize, GLuint glowLoc)
+void Map::renderParticles(GLuint shader, GLuint textureLoc, GLuint particleSize, GLuint glowLoc, GLuint scaleDir)
 {
 	for (size_t i = 0; i < chunks.size(); i++)
 	{
@@ -209,6 +209,7 @@ void Map::renderParticles(GLuint shader, GLuint textureLoc, GLuint particleSize,
 
 			glActiveTexture(GL_TEXTURE0);
 			glProgramUniform1i(shader, textureLoc, 0);
+			glProgramUniform1i(shader, scaleDir, chunks[i].particleSystem[p].m_scaleDir);
 
 			tm->bindTextureOnly(tex, DIFFUSE_FB);
 			glProgramUniform1i(shader, glowLoc, chunks[i].particleSystem[p].m_glow);
