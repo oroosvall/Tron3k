@@ -782,7 +782,7 @@ void RenderPipeline::finalizeRender()
 
 	glDepthMask(GL_FALSE);
 
-	contMan.renderParticles(particleShader, particleTexture, particleSize, particleGlow);
+	contMan.renderParticles(particleShader, particleTexture, particleSize, particleGlow, particleScaleDir);
 
 	for (size_t i = 0; i < dynamicParticleSystems.size(); i++)
 	{
