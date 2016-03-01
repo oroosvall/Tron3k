@@ -574,7 +574,7 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb, vec3 backDir, bo
 
 	if(closest.w < FLT_MAX)
 		return closest;
-	return vec4(FLT_MAX);
+	//return vec4(FLT_MAX);
 
 	bool outside = false;
 	vec3 smallest = vec3(999999, 999999, 999999);
