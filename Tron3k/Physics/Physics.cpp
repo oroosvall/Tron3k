@@ -744,6 +744,37 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos, vec3 playerDir,
 								t.y = -1;
 							cNorms.push_back(t);
 						}
+						else
+						{
+							OBB* theOBB = roomBoxes[0].getSpecificBox(j)->getOBB(n);
+							bool collidedWithPlane = false;
+							vec3 pPos = playerPos;
+							for (int p = 0; p < 6; p++)
+							{
+								vec3 lvP = checkLinevPlaneCollision(origPos, playerPos, theOBB->planes[p].p[0], theOBB->planes[p].p[1], theOBB->planes[p].p[2], theOBB->planes[p].n);
+
+								if (length(lvP) > 0.00001f)
+									if (dot(lvP - theOBB->planes[p].p[0], theOBB->planes[p].n) < 0.01f)
+									{
+										if (dot(normalize(lvP - origPos), theOBB->planes[p].n) < 0.0f)
+											if (length(pPos - origPos) > (length((lvP/* - (bulletDir * rad)*/)-origPos)))
+												pPos = lvP;// -theOBB->planes[p].n * rad;// - bulletDir * rad;
+										collidedWithPlane = true;
+									}
+							}
+							t = getSpherevOBBNorms(pPos, rad, roomBoxes[0].getSpecificBox(j)->getOBB(n), -normalize(playerVel));
+							//t = checkOBBvCylinderCollision(playerBox.getCylinder(), *roomBoxes[0].getSpecificBox(j)->getOBB(n));
+							t.w = rad - t.w; //penetration depth instead of collision distance 
+							if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
+							{
+								t = vec4(normalize(vec3(t)), t.w);
+								if (t.y > 0.98f)
+									t.y = 1;
+								else if (t.y < -0.98f)
+									t.y = -1;
+								cNorms.push_back(t);
+							}
+						}
 					}
 				}
 			}
@@ -800,6 +831,37 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos, vec3 playerDir,
 									else if (t.y < -0.98f)
 										t.y = -1;
 									cNorms.push_back(t);
+								}
+								else
+								{
+									OBB* theOBB = roomBoxes[i].getSpecificBox(j)->getOBB(n);
+									bool collidedWithPlane = false;
+									vec3 pPos = playerPos;
+									for (int p = 0; p < 6; p++)
+									{
+										vec3 lvP = checkLinevPlaneCollision(origPos, playerPos, theOBB->planes[p].p[0], theOBB->planes[p].p[1], theOBB->planes[p].p[2], theOBB->planes[p].n);
+
+										if (length(lvP) > 0.00001f)
+											if (dot(lvP - theOBB->planes[p].p[0], theOBB->planes[p].n) < 0.01f)
+											{
+												if (dot(normalize(lvP - origPos), theOBB->planes[p].n) < 0.0f)
+													if (length(pPos - origPos) > (length((lvP/* - (bulletDir * rad)*/)-origPos)))
+														pPos = lvP;// -theOBB->planes[p].n * rad;// - bulletDir * rad;
+												collidedWithPlane = true;
+											}
+									}
+									t = getSpherevOBBNorms(pPos, rad, roomBoxes[i].getSpecificBox(j)->getOBB(n), -normalize(playerVel));
+									//t = checkOBBvCylinderCollision(playerBox.getCylinder(), *roomBoxes[0].getSpecificBox(j)->getOBB(n));
+									t.w = rad - t.w; //penetration depth instead of collision distance 
+									if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
+									{
+										t = vec4(normalize(vec3(t)), t.w);
+										if (t.y > 0.98f)
+											t.y = 1;
+										else if (t.y < -0.98f)
+											t.y = -1;
+										cNorms.push_back(t);
+									}
 								}
 							}
 						}
