@@ -14,6 +14,7 @@ layout (location = 4) out vec4 GlowMap;
 void main () 
 {
 	WorldPosOut = vec4(0);
+	DiffuseOut = vec4(0);
 	NormalOut = vec4(0);
 	GlowMap = vec4(0);
 
@@ -29,7 +30,7 @@ void main ()
 	//Specular (Water normal)
 	else if (type == 1)
 	{
-		//DiffuseOut = vec4(0);
+		DiffuseOut = vec4(0.1f, 0.1f, 0.1f, 1.0f);
 		WorldPosOut = vec4(worldPos, 1.0f);
 		vec2 UV1 = vec2(uv);
 
