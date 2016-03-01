@@ -574,6 +574,44 @@ void Core::upRoam(float dt)
 		GetSound()->setLocalPlayerPos(game->getPlayer(0)->getPos());
 		}*/
 
+
+		std::vector<MovableParticle*>* movable = game->getAllMovableParticle();
+		for (size_t i = 0; i < movable->size(); i++)
+		{
+			if (!(*movable)[i]->created)
+			{
+				(*movable)[i]->id = renderPipe->createMappedParticleEffect(BULLET_TYPE(0), *(*movable)[i]->pPos, glm::vec3(0, 0, 0), (*movable)[i]->color);
+				(*movable)[i]->created = true;
+			}
+			else
+			{
+				if (!(*movable)[i]->dead)
+					renderPipe->moveMappedParticleEffect((*movable)[i]->id, *(*movable)[i]->pPos);
+			}
+			if ((*movable)[i]->dead)
+			{
+				renderPipe->removeMappedParticleEffect((*movable)[i]->id);
+				(*movable)[i]->allowRemove = true;
+			}
+		}
+
+		std::vector<HitPosAndDirParticle> hitpositions = game->getAllBulletHitPlayerPos();
+		for (size_t i = 0; i < hitpositions.size(); i++)
+		{
+			renderPipe->createTimedParticleEffect(hitpositions[i].btype, hitpositions[i].pos, hitpositions[i].dir, hitpositions[i].color);
+		}
+
+		game->clearAllBulletHitPlayerPos();
+
+		std::vector<EffectParticle> effectpositions = game->getAllEffectParticleSpawn();
+		for (size_t i = 0; i < effectpositions.size(); i++)
+		{
+			renderPipe->createTimedParticleEffect(effectpositions[i].etype, effectpositions[i].pos, effectpositions[i].color);
+		}
+
+		game->clearAllEffectParticleSpawn();
+
+
 		if (game->playerWantsToRespawn() && game->getPlayer(0)->getTeam() != 0)
 		{
 			game->allowPlayerRespawn(0, 0);
