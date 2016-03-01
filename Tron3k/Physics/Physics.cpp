@@ -691,13 +691,14 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos, vec3 playerDir,
 {
 	playerBox.setPos(playerPos);
 	playerBox.setWorldSize();
-	vec3 origPos = playerPos - (normalize(playerVel) * playerVel * dt);
+	vec3 origPos = playerPos - (playerVel * dt);
 	AABBSingle box = playerBox.getAABB();
 	float rad = playerBox.getSphere().radius;
 	float abbrad = rad + 0.01f;
 
 	box.min = origPos - playerBox.getWorldSize();
-
+	box.max += abbrad;
+	box.min -= abbrad;
 
 	std::vector<vec4> cNorms;
 	vec4 t;
@@ -728,7 +729,7 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos, vec3 playerDir,
 							t.y = 1;
 						else if (t.y < -0.98f)
 							t.y = -1;
-						t = vec4(normalize(vec3(t)), t.w);
+						//t = vec4(normalize(vec3(t)), t.w);
 						cNorms.push_back(t);
 					}
 					else
@@ -743,7 +744,7 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos, vec3 playerDir,
 								t.y = 1;
 							else if (t.y < -0.98f)
 								t.y = -1;
-							t = vec4(normalize(vec3(t)), t.w);
+							//t = vec4(normalize(vec3(t)), t.w);
 							cNorms.push_back(t);
 						}
 						/*else
@@ -818,7 +819,7 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos, vec3 playerDir,
 									t.y = 1;
 								else if (t.y < -0.98f)
 									t.y = -1;
-								t = vec4(normalize(vec3(t)), t.w);
+							//	t = vec4(normalize(vec3(t)), t.w);
 								cNorms.push_back(t);
 							}
 							else
@@ -833,7 +834,7 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos, vec3 playerDir,
 										t.y = 1;
 									else if (t.y < -0.98f)
 										t.y = -1;
-									t = vec4(normalize(vec3(t)), t.w);
+								//	t = vec4(normalize(vec3(t)), t.w);
 									cNorms.push_back(t);
 								}
 								/*else
