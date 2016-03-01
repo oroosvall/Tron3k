@@ -476,8 +476,8 @@ std::vector<vec3> Physics::getCollisionNormal(AABB* aabb1, AABB* aabb2)
 
 vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb, vec3 backDir, bool isBullet)
 {
-	vec4 t;
-	vec4 closest;
+	vec4 t = vec4(0);
+	vec4 closest = vec4(0);
 	closest.w = FLT_MAX;
 
 	//test vs all planes
@@ -624,8 +624,8 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb, vec3 backDir, bo
 
 vec4 Physics::getSpherevOBBlwNorms(vec3 pos, float rad, OBB* obb)
 {
-	vec4 t;
-	vec4 closest;
+	vec4 t = vec4(0);
+	vec4 closest = vec4(0);
 	closest.w = FLT_MAX;
 
 	//test vs all planes
@@ -705,7 +705,7 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos, vec3 playerDir,
 	box.min -= abbrad;
 
 	std::vector<vec4> cNorms;
-	vec4 t;
+	vec4 t = vec4(0);
 	vec3 collisionNormal = vec3(0, 0, 0);
 
 	/*while (1) {
@@ -723,6 +723,8 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos, vec3 playerDir,
 			{
 				if (checkAABBvAABBCollision(box, roomBoxes[0].getSpecificBox(j)->getOBB(n)->aabb))
 				{
+					t = vec4(0);
+
 					t = getSpherevOBBNorms(playerPos, rad, roomBoxes[0].getSpecificBox(j)->getOBB(n), -normalize(playerVel));
 					//t = checkOBBvCylinderCollision(playerBox.getCylinder(), *roomBoxes[0].getSpecificBox(j)->getOBB(n));
 					t.w = rad - t.w; //penetration depth instead of collision distance 
@@ -1106,7 +1108,7 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 
 vec4 Physics::checkPlayerVEffectCollision(glm::vec3 playerPos, unsigned int eType, int eid)
 {
-	glm::vec4 collided;
+	glm::vec4 collided = vec4(0);
 
 	playerBox.setPos(playerPos);
 	playerBox.setWorldSize();
@@ -1180,7 +1182,7 @@ bool Physics::checkPlayerVCaptureCollision(vec3 playerPos, int capID)
 
 vec4 Physics::checkBulletVEffectCollision(glm::vec3 &bulletPos, vec3 bulletVel, vec3 bulletDir, unsigned int eType, int eid, float dt)
 {
-	glm::vec4 collided;
+	glm::vec4 collided = vec4(0);
 
 	AABBSingle box = bulletBox.getAABB();
 
