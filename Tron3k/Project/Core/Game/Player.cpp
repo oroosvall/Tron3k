@@ -495,18 +495,12 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 						*/
 						if (i->getKeyInfo(controls.forward))
 						{
-							//if (length(glm::vec2(airVelocity.x, airVelocity.z)) < role.getMovementSpeed()*0.1f)
-							//{
 							vel += normalize(glm::vec3(dir.x, 0, dir.z))*dt*0.3f;
-							//}
 						}
 
 						if (i->getKeyInfo(controls.back))
 						{
-							//if (length(glm::vec2(airVelocity.x, airVelocity.z)) < role.getMovementSpeed()*0.1f)
-							//{
 							vel -= normalize(glm::vec3(dir.x, 0, dir.z))*dt*0.3f;
-							//}
 						}
 
 						if (!(i->getKeyInfo(controls.left) && i->getKeyInfo(controls.right)))
@@ -524,6 +518,19 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 									vel += normalize(right)*dt*0.4f;
 							}
 						}
+
+						float maxxz = 2.0f;
+						glm::vec2 xzspeed = glm::vec2(vel.x, vel.z); //For calculating maximum allowed speed
+						if (length(xzspeed) > maxxz)
+						{
+							xzspeed = normalize(xzspeed)*maxxz;
+							vel.x = xzspeed.x;
+							vel.z = xzspeed.y;
+						}
+
+						float maxy = 15.0f; //Y speed is separate
+						if (vel.y > maxy)
+							vel.y = maxy;
 					}
 					else if (grounded)
 					{

@@ -84,16 +84,6 @@ void AnimatedTexture::init()
 	objects[n].init_time_segments(1, 0, 3.0f);
 	objects[n].timer = 4.5f;
 
-	//n++;
-	//if (!initialized)
-	//{
-	//	objects.push_back(AnimatedObject());
-	//	objects[n].textureID = objects[n - 1].textureID;
-	//}
-	//objects[n].init_standing_down(vec3(94.99f, 50, 83.5f), vec3(94.99f, 3, 83.8f));
-	//objects[n].init_time_segments(1, 0, 3.0f);
-	//objects[n].timer = 2.0f;
-
 	n++;
 	if (!initialized)
 	{
@@ -102,6 +92,24 @@ void AnimatedTexture::init()
 	}
 	objects[n].init_standing_right(vec3(40.0f, 4.0f, 94.6f), vec3(46.0f, 1.0f, 94.6f));
 	objects[n].init_time_segments(9, 0.4f, 0);
+
+	n++;
+	if (!initialized)
+	{
+		objects.push_back(AnimatedObject());
+		objects[n].textureID = TextureManager::gTm->createTexture("GameFiles/Textures/animatedSigns/whitenoise.dds");
+	}
+	objects[n].init_standing_right(vec3(-47, 7.5f, 84), vec3(-42, 4.5f, 84));
+	objects[n].init_time_segments(7, 0.05f, 0);
+
+	n++;
+	if (!initialized)
+	{
+		objects.push_back(AnimatedObject());
+		objects[n].textureID = TextureManager::gTm->createTexture("GameFiles/Textures/animatedSigns/emergency.dds");
+	}
+	objects[n].init_standing_right(vec3(1.5f, 2.3f, 55.2f), vec3(1.5f, 0.8f, 52.4f));
+	objects[n].init_time_segments(2, 0.8f, 0);
 
 	n++;
 	if (!initialized)

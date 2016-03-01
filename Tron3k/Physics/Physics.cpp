@@ -611,7 +611,7 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb, vec3 backDir, bo
 	}
 
 	if (!outside && backDir != vec3(0))// && l < rad)
-		closest = vec4(backDir, -l);
+		closest = vec4(normalize(backDir), -l);
 	else
 		return vec4(FLT_MAX);
 
@@ -728,6 +728,7 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos, vec3 playerDir,
 							t.y = 1;
 						else if (t.y < -0.98f)
 							t.y = -1;
+						t = vec4(normalize(vec3(t)), t.w);
 						cNorms.push_back(t);
 					}
 					else
@@ -742,9 +743,10 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos, vec3 playerDir,
 								t.y = 1;
 							else if (t.y < -0.98f)
 								t.y = -1;
+							t = vec4(normalize(vec3(t)), t.w);
 							cNorms.push_back(t);
 						}
-						else
+						/*else
 						{
 							OBB* theOBB = roomBoxes[0].getSpecificBox(j)->getOBB(n);
 							bool collidedWithPlane = false;
@@ -757,8 +759,8 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos, vec3 playerDir,
 									if (dot(lvP - theOBB->planes[p].p[0], theOBB->planes[p].n) < 0.01f)
 									{
 										if (dot(normalize(lvP - origPos), theOBB->planes[p].n) < 0.0f)
-											if (length(pPos - origPos) > (length((lvP/* - (bulletDir * rad)*/)-origPos)))
-												pPos = lvP;// -theOBB->planes[p].n * rad;// - bulletDir * rad;
+											if (length(pPos - origPos) > (length((lvP/* - (bulletDir * rad))-origPos)))
+							/*					pPos = lvP;// -theOBB->planes[p].n * rad;// - bulletDir * rad;
 										collidedWithPlane = true;
 									}
 							}
@@ -774,7 +776,7 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos, vec3 playerDir,
 									t.y = -1;
 								cNorms.push_back(t);
 							}
-						}
+						}*/
 					}
 				}
 			}
@@ -816,6 +818,7 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos, vec3 playerDir,
 									t.y = 1;
 								else if (t.y < -0.98f)
 									t.y = -1;
+								t = vec4(normalize(vec3(t)), t.w);
 								cNorms.push_back(t);
 							}
 							else
@@ -830,9 +833,10 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos, vec3 playerDir,
 										t.y = 1;
 									else if (t.y < -0.98f)
 										t.y = -1;
+									t = vec4(normalize(vec3(t)), t.w);
 									cNorms.push_back(t);
 								}
-								else
+								/*else
 								{
 									OBB* theOBB = roomBoxes[i].getSpecificBox(j)->getOBB(n);
 									bool collidedWithPlane = false;
@@ -845,8 +849,8 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos, vec3 playerDir,
 											if (dot(lvP - theOBB->planes[p].p[0], theOBB->planes[p].n) < 0.01f)
 											{
 												if (dot(normalize(lvP - origPos), theOBB->planes[p].n) < 0.0f)
-													if (length(pPos - origPos) > (length((lvP/* - (bulletDir * rad)*/)-origPos)))
-														pPos = lvP;// -theOBB->planes[p].n * rad;// - bulletDir * rad;
+													if (length(pPos - origPos) > (length((lvP/* - (bulletDir * rad))-origPos)))
+									/*					pPos = lvP;// -theOBB->planes[p].n * rad;// - bulletDir * rad;
 												collidedWithPlane = true;
 											}
 									}
@@ -862,7 +866,7 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos, vec3 playerDir,
 											t.y = -1;
 										cNorms.push_back(t);
 									}
-								}
+								}*/
 							}
 						}
 					}
