@@ -597,6 +597,8 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb, vec3 backDir, bo
 				smallest = dir;
 				planeN = n;
 			}
+			if (l < length(dir))
+				l = length(dir);
 		}
 		else//if it's infront of any plane, we're not inside it
 			outside = true;
@@ -605,7 +607,7 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb, vec3 backDir, bo
 	{
 		smallest = obb->planes[planeN].n;
 		vec3 p = obb->planes[planeN].p[0];
-		l = length(p - pos);
+		//l = length(p - pos);
 	}
 
 	if (!outside && backDir != vec3(0))// && l < rad)
