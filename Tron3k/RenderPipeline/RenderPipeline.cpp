@@ -523,6 +523,11 @@ void RenderPipeline::release()
 		dynamicParticleSystems[i].Release();
 	}
 
+	for (size_t i = 0; i < mappedparticleSystems.size(); i++)
+	{
+		mappedparticleSystems[i].pSys.Release();
+	}
+
 	glDeleteBuffers(1, &lwVertexDataId);
 	glDeleteVertexArrays(1, &lwVertexAttribute);
 
@@ -1145,7 +1150,7 @@ bool RenderPipeline::setSetting(PIPELINE_SETTINGS type, PipelineValues value)
 	return true;
 }
 
-int RenderPipeline::createMappedParticleEffect(glm::vec3 pos, glm::vec3 dir, glm::vec3 color)
+int RenderPipeline::createMappedParticleEffect(BULLET_TYPE peffect, glm::vec3 pos, glm::vec3 dir, glm::vec3 color)
 {
 	int id = mappedParticleIDCounter;
 	mappedParticleIDCounter++;

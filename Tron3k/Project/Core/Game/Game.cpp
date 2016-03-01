@@ -36,6 +36,11 @@ void Game::release()
 		}
 	}
 
+	for (size_t i = 0; i < allMovableParticles.size(); i++)
+	{
+		delete allMovableParticles[i];
+	}
+
 	physics->release();
 
 	delete templateRole;

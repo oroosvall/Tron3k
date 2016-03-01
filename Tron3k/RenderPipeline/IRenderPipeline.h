@@ -90,7 +90,7 @@ public:
 	PipelineValues getSettings(PIPELINE_SETTINGS type);
 	virtual bool setSetting(PIPELINE_SETTINGS type, PipelineValues value) = 0;
 
-	virtual int createMappedParticleEffect(glm::vec3 pos, glm::vec3 dir, glm::vec3 color) = 0;
+	virtual int createMappedParticleEffect(BULLET_TYPE peffect, glm::vec3 pos, glm::vec3 dir, glm::vec3 color) = 0;
 	virtual bool moveMappedParticleEffect(int id, glm::vec3 newPos) = 0;
 	virtual void removeMappedParticleEffect(int id) = 0;
 
