@@ -1162,6 +1162,13 @@ int RenderPipeline::createMappedParticleEffect(BULLET_TYPE peffect, glm::vec3 po
 	case BULLET_TYPE::VACUUM_GRENADE:
 		path += "vacuumTrail.ps";
 		break;
+	case BULLET_TYPE::BATTERY_SLOW_SHOT:
+	case BULLET_TYPE::BATTERY_SPEED_SHOT:
+		path += "batteryShotTrail.ps";
+		break;
+	case BULLET_TYPE::FUSION_SHOT:
+		path += "fusionTrail.ps";
+		break;
 	default:
 		path = "0"; //Använd detta för att inte läsa från fil när inget system ska skapas. Valfri metod.
 	}
