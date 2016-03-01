@@ -12,6 +12,8 @@ uniform sampler2D Diffuse;
 uniform sampler2D Normal;
 uniform sampler2D GlowMap;
 
+uniform float universalInten;
+
 struct SpotLight
 {
 	vec3 Color;
@@ -79,7 +81,7 @@ void main()
 			fragment_color *= pow(max(0.0f, 1.0f - (Distance/size)), lights[pointlightID].AmbientIntensity);
 		
 			Diffuse0 = texture(Diffuse, UV);
-			fragment_color = fragment_color * Diffuse0 + specularAddetive;
+			fragment_color = (fragment_color * Diffuse0 + specularAddetive) * universalInten;
 			
 			//fragment_color = vec4(1,1,1,1);
 		}

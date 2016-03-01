@@ -2480,6 +2480,8 @@ void Core::renderWorld(float dt)
 		vec3 camDir = cam->getDir();
 		bool force3rd = false;
 
+		renderPipe->setuniversalInten((sin(timepass) + 1));
+
 		/*		if (i->getKeyInfo(GLFW_KEY_P))
 		{
 		cam->setCam(vec3(-6, 1.5f, 33), vec3(0, 0, -1));

@@ -51,7 +51,7 @@ void AnimatedTexture::init()
 		objects.push_back(AnimatedObject());
 		objects[n].textureID = TextureManager::gTm->createTexture("GameFiles/Textures/animatedSigns/glowStrip.png");
 	}
-	objects[n].init_standing_down(vec3(94.99f, 50, 49.4f), vec3(94.99f, 3, 49.7f));
+	objects[n].init_standing_down(vec3(94.99f, 46, 49.4f), vec3(94.99f, 3, 49.7f));
 	objects[n].init_time_segments(1, 0, 3.0f);
 
 	n++;
@@ -60,7 +60,7 @@ void AnimatedTexture::init()
 		objects.push_back(AnimatedObject());
 		objects[n].textureID = objects[n-1].textureID;
 	}
-	objects[n].init_standing_down(vec3(94.99f, 50, 83.5f), vec3(94.99f, 3, 83.8f));
+	objects[n].init_standing_down(vec3(94.99f, 46, 83.5f), vec3(94.99f, 3, 83.8f));
 	objects[n].init_time_segments(1, 0, 3.0f);
 	objects[n].timer = 2.0f;
 
@@ -70,7 +70,7 @@ void AnimatedTexture::init()
 		objects.push_back(AnimatedObject());
 		objects[n].textureID = objects[n - 1].textureID;
 	}
-	objects[n].init_standing_down(vec3(49.3f, 55, 80.91f), vec3(49.0f, 0.0f, 80.91f));
+	objects[n].init_standing_down(vec3(49.3f, 55, 80.91f), vec3(49.0f, 2.7f, 80.91f));
 	objects[n].init_time_segments(1, 0, 3.0f);
 	objects[n].timer = 3.5f;
 
@@ -80,7 +80,7 @@ void AnimatedTexture::init()
 		objects.push_back(AnimatedObject());
 		objects[n].textureID = objects[n - 1].textureID;
 	}
-	objects[n].init_standing_down(vec3(41.0f, 55, 80.91f), vec3(41.3f, 0.0f, 80.91f));
+	objects[n].init_standing_down(vec3(41.0f, 55, 80.91f), vec3(41.3f, 2.7f, 80.91f));
 	objects[n].init_time_segments(1, 0, 3.0f);
 	objects[n].timer = 4.5f;
 

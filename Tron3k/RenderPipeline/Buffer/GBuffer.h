@@ -63,6 +63,10 @@ public:
 	GLuint pointVolBufferPos;
 
 	GLuint* shaderPtr;
+	GLuint blightlightUniversalInten;
+	GLuint spotVolUniversalInten;
+	GLuint pointVolUniversalInten;
+
 	GLuint* portal_shaderPtr;
 
 	glm::vec3 eyePos;

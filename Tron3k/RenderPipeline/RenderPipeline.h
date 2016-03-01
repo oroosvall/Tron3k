@@ -308,6 +308,7 @@ public:
 	virtual void stopExecTimer(int id);
 	virtual bool* getRenderedChunks(int& get_size);
 
+	virtual void setuniversalInten(float val);
 	virtual void renderTakeDamageDistort();
 	virtual void startTakeDamageEffect(int maxDisplace, float time);
 	virtual void updateTakeDamageEffect(float dt);

@@ -120,6 +120,15 @@ void Gbuffer::init(int x, int y, int nrTex, bool depth)
 	uBlitLightPixelX  = glGetUniformLocation(*shaderPtr, "pixeluvX");
 	uBlitLightPixelY = glGetUniformLocation(*shaderPtr, "pixeluvY");
 
+	blightlightUniversalInten = glGetUniformLocation(*shaderPtr, "universalInten");
+	spotVolUniversalInten = glGetUniformLocation(spotVolShader, "universalInten");
+	pointVolUniversalInten = glGetUniformLocation(pointVolShader, "universalInten");
+
+	glProgramUniform1f(*shaderPtr, blightlightUniversalInten, 1.0f);
+	glProgramUniform1f(spotVolShader, spotVolUniversalInten, 1.0f);
+	glProgramUniform1f(pointVolShader, pointVolUniversalInten, 1.0f);
+
+
 	setGlowSamplingDist(1.0f);
 
 	if (depth)

@@ -2304,3 +2304,10 @@ void RenderPipeline::renderTrailQUad(BULLET_TYPE type, float* pos, float* dir, f
 	
 	glDrawArrays(GL_POINTS, 0, 1);
 }
+
+void RenderPipeline::setuniversalInten(float inten)
+{
+	glProgramUniform1f(*gBuffer->shaderPtr, gBuffer->blightlightUniversalInten, inten);
+	glProgramUniform1f(gBuffer->spotVolShader, gBuffer->spotVolUniversalInten, inten);
+	glProgramUniform1f(gBuffer->pointVolShader, gBuffer->pointVolUniversalInten, inten);
+}
