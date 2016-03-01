@@ -10,6 +10,9 @@ UI::UI()
 
 	//id
 	menuId = -1;
+
+	optionsMenu = false;
+	optionsSaved = nullptr;
 }
 UI::~UI() 
 {
@@ -54,6 +57,9 @@ void UI::init(std::string fileName, Console* console, IRenderPipeline* uiRender,
 bool UI::loadUI(std::string fileName, int winX, int winY)
 {
 	bool result = false;
+
+	if (fileName == "GameFiles/UIFiles/Options.txt")
+		optionsMenu = true;
 	
 	std::ifstream myfile;
 	myfile.open(fileName);
@@ -207,8 +213,6 @@ bool UI::loadUI(std::string fileName, int winX, int winY)
 				UiObjects.push_back(new Slider(xy, textureId1, textureId2, uniqueKey, uiRender, textureRes[0][textureId1], textureRes[0][textureId2]));
 				textureIdList[counter] = textureId1;
 				counter++;
-				textureIdList[counter] = textureId2;
-				counter++;
 				result = true;
 			}
 			else if(classId == 4) //InputBox
@@ -286,6 +290,7 @@ void UI::clean()
 
 	textureIdList = nullptr;
 	console = nullptr;
+	optionsSaved = nullptr;
 
 	nrOfObjects = 0;
 	nrOfObjectsToRender = 0;
@@ -323,6 +328,10 @@ int UI::mouseCollission(glm::vec2 pos, float newSoundProcent)
 			UiObjects[index]->changeTexUsed(1, 0);
 			UiObjects[index]->setDontChangeTexture(true);
 		}
+
+	if(optionsMenu && (index > 0 && index < 10))
+		if(optionsSaved != nullptr)
+			optionsSaved[index] = newSoundProcent;
 
 	return hit;
 }
@@ -414,6 +423,15 @@ void UI::scaleBar(int id,  float procentOfMax, bool fromRight)
 	if (id > -1 && id < 11)
 		if (textIdList[id] > -1)
 			UiObjects[textIdList[id]]->scaleBar(0, procentOfMax, fromRight);
+}
+
+void UI::setOptionsSaved(float list[])
+{
+	optionsSaved = list;
+}
+float* UI::getOptionsSaved()
+{
+	return optionsSaved;
 }
 
 

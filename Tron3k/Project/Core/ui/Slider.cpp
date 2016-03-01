@@ -98,8 +98,9 @@ void Slider::renderQuad(int id)
 
 void Slider::setWorldMatrix(int id, float x, float y)
 {
-	worldMatrix[id][0].w = x;
-	worldMatrix[id][1].w = y;
+	if(x >= pos[0].x && x <= pos[1].x)
+		worldMatrix[id][0].w = x;
+	//worldMatrix[id][1].w = y;
 }
 
 void Slider::resetWorldMatrix(int id)

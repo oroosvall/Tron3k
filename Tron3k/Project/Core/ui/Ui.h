@@ -83,6 +83,8 @@ private:
 	//Convert
 	glm::vec2 fileCoordToScreenSpace(glm::vec2 pos);
 
+	float* optionsSaved;
+	bool optionsMenu;
 	
 public:
 	UI();
@@ -116,6 +118,9 @@ public:
 	void clearText(int id);
 
 	void scaleBar(int id, float procentOfMax, bool fromRight);
+
+	void setOptionsSaved(float* list);
+	float* getOptionsSaved();
 
 	//Hideable stuff
 	void renderHideable();
