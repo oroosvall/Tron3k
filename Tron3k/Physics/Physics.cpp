@@ -1106,7 +1106,7 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 
 vec4 Physics::checkPlayerVEffectCollision(glm::vec3 playerPos, unsigned int eType, int eid)
 {
-	glm::vec4 collided;
+	glm::vec4 collided = vec4(0, 0, 0, 0);
 
 	playerBox.setPos(playerPos);
 	playerBox.setWorldSize();
