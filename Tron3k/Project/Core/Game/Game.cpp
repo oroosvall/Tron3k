@@ -1352,6 +1352,7 @@ void Game::addBulletToList(int conID, int teamId, int bulletId, BULLET_TYPE bt, 
 	if (gameState != SERVER)
 	{
 		MovableParticle* mp = new MovableParticle();
+		mp->bt = BULLET_TYPE(b->getType());
 		mp->id = 0;
 		mp->created = false;
 		mp->dead = false;

@@ -580,7 +580,7 @@ void Core::upRoam(float dt)
 		{
 			if (!(*movable)[i]->created)
 			{
-				(*movable)[i]->id = renderPipe->createMappedParticleEffect(BULLET_TYPE(0), *(*movable)[i]->pPos, glm::vec3(0, 0, 0), (*movable)[i]->color);
+				(*movable)[i]->id = renderPipe->createMappedParticleEffect(movable->at(i)->bt, *(*movable)[i]->pPos, glm::vec3(0, 0, 0), (*movable)[i]->color);
 				(*movable)[i]->created = true;
 			}
 			else
@@ -1100,7 +1100,7 @@ void Core::upClient(float dt)
 		{
 			if (!(*movable)[i]->created)
 			{
-				(*movable)[i]->id = renderPipe->createMappedParticleEffect(BULLET_TYPE(0), *(*movable)[i]->pPos, glm::vec3(0,0,0), (*movable)[i]->color);
+				(*movable)[i]->id = renderPipe->createMappedParticleEffect(movable->at(i)->bt, *(*movable)[i]->pPos, glm::vec3(0,0,0), (*movable)[i]->color);
 				(*movable)[i]->created = true;
 			}
 			else
