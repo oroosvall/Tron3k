@@ -151,6 +151,7 @@ private:
 
 	GLuint glowSampleShader;
 	GLuint glowSampleTextureLoc;
+	GLuint glowSamplePixelUVX;
 
 	//lightwall
 	GLuint lwVertexDataId;
@@ -196,6 +197,11 @@ private:
 
 	vector<ParticleSystem> dynamicParticleSystems;
 	vector<MappedParticleSystem> mappedparticleSystems;
+	
+	vector<ParticleSystemData> particleSystemData;
+	vector<std::string> particleTextureString;
+	std::map<std::string, int> particleNameToIndexMap;
+
 	int mappedParticleIDCounter = 0;
 
 	GLuint fragmentInvocationQuery;
@@ -206,6 +212,8 @@ public:
 	RenderPipeline() {};
 
 	void renderEffects();
+
+	void addParticleName(std::string particlePath);
 
 	virtual bool init(unsigned int WindowWidth, unsigned int WindowHeight);
 	virtual void release();
@@ -230,7 +238,7 @@ public:
 
 	virtual bool setSetting(PIPELINE_SETTINGS type, PipelineValues value);
 
-	virtual int createMappedParticleEffect(glm::vec3 pos, glm::vec3 dir, glm::vec3 color);
+	virtual int createMappedParticleEffect(BULLET_TYPE peffect, glm::vec3 pos, glm::vec3 dir, glm::vec3 color);
 	virtual bool moveMappedParticleEffect(int id, glm::vec3 newPos);
 	virtual void removeMappedParticleEffect(int id);
 

@@ -36,6 +36,11 @@ void Game::release()
 		}
 	}
 
+	for (size_t i = 0; i < allMovableParticles.size(); i++)
+	{
+		delete allMovableParticles[i];
+	}
+
 	physics->release();
 
 	delete templateRole;
@@ -708,7 +713,7 @@ void Game::checkPlayerVEffectCollision()
 			{
 				collNormalWalls = physics->checkPlayerVEffectCollision(local->getPos(), EFFECT_TYPE::LIGHT_WALL, eid);
 				if (collNormalWalls != vec4(0, 0, 0, 0))
-					playerList[localPlayerId]->addEffectCollisionNormal(collNormalWalls);
+					playerList[localPlayerId]->addCollisionNormal(collNormalWalls);
 			}
 
 		}
@@ -719,7 +724,7 @@ void Game::checkPlayerVEffectCollision()
 			effects[EFFECT_TYPE::THUNDER_DOME][c]->getId(pid, eid);
 			collNormalDomes = physics->checkPlayerVEffectCollision(local->getPos(), EFFECT_TYPE::THUNDER_DOME, eid);
 			if (collNormalDomes != vec4(0, 0, 0, 0))
-				playerList[localPlayerId]->addEffectCollisionNormal(collNormalDomes);
+				playerList[localPlayerId]->addCollisionNormal(collNormalDomes);
 			//this is to be changed, we need to calculate a proper normal for the dome
 
 			//vec3 n = vec3(collNormalDomes[0]);
@@ -1347,6 +1352,7 @@ void Game::addBulletToList(int conID, int teamId, int bulletId, BULLET_TYPE bt, 
 	if (gameState != SERVER)
 	{
 		MovableParticle* mp = new MovableParticle();
+		mp->bt = BULLET_TYPE(b->getType());
 		mp->id = 0;
 		mp->created = false;
 		mp->dead = false;
@@ -2112,15 +2118,12 @@ int Game::handleEffectHitPlayerEvent(EffectHitPlayerInfo hi)
 		case EFFECT_TYPE::DOUBLEDAMAGEPICKUP:
 		{
 			DoubleDamagePickup* tester = (DoubleDamagePickup*)theEffect;
-			if (!tester->onCooldown())
-			{
-				tester->startCooldown();
-				p->addModifier(MODIFIER_TYPE::DOUBLEDAMAGEMOD);
+			tester->startCooldown();
+			p->addModifier(MODIFIER_TYPE::DOUBLEDAMAGEMOD);
 
-				if (GetSound() && p->isLocal())
-				{
-					GetSound()->playExternalSound(SOUNDS::announcerDoubleDamage, pos.x, pos.y, pos.z, CATEGORY::Announcer);
-				}
+			if (GetSound() && p->isLocal())
+			{
+				GetSound()->playExternalSound(SOUNDS::announcerDoubleDamage, pos.x, pos.y, pos.z, CATEGORY::Announcer);
 			}
 		}
 		break;

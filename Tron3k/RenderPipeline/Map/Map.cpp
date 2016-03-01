@@ -83,9 +83,10 @@ void Map::init(TextureManager* _tm)
 			file.read(f, sizeof(char) * exHeader.texturesize);
 			f[exHeader.texturesize] = 0;
 
-			GLuint texID = tm->createTexture(std::string(f));
+			GLuint texID = tm->createTexture("GameFiles/Textures/particles/" + std::string(f));
 			unsigned int x = 0, y = 0;
-			tm->PNGSize(f, x, y);
+			std::string str = "GameFiles/Textures/particles/" + std::string(f);
+			tm->PNGSize(str.c_str(), x, y);
 			free(f);
 
 			ParticleSystemData pdata;
@@ -96,7 +97,7 @@ void Map::init(TextureManager* _tm)
 
 			ParticleSystem pSys;
 			pSys.Initialize(particleStuff[i].pos, pdata, &compute, &locations);
-			pSys.m_size = vec2(x, y);
+			//pSys.m_size = vec2(x, y);
 			pSys.m_texture = texID;
 			chunks[roomID].particleSystem.push_back(pSys);
 		}
@@ -191,7 +192,7 @@ void Map::update(float dt)
 	{
 		for (size_t p = 0; p < chunks[i].particleSystem.size(); p++)
 		{
-			chunks[i].particleSystem[i].Update(dt);
+			chunks[i].particleSystem[p].Update(dt);
 		}
 	}
 }

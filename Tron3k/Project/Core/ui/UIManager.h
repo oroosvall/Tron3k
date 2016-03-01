@@ -84,6 +84,9 @@ private:
 	//	Functions
 	void loadInTexture();
 
+	//Options saved.
+	float* optionsSaved;
+
 public:
 	UIManager();
 	~UIManager();
@@ -132,6 +135,9 @@ public:
 	int getCurrentMenu();
 
 	bool isThereAMenuUp();
+
+	void setOptionsSaved(float* list);
+	float* getOptionsSaved();
 
 	//hideAble exclusive
 	void renderHideAble();

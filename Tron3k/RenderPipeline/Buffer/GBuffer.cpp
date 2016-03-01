@@ -58,12 +58,31 @@ void Gbuffer::init(int x, int y, int nrTex, bool depth)
 
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
+	glGenFramebuffers(1, &glowSampleFbo);
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, glowSampleFbo);
+
+	glowSampleTexture.init(x, y, 0, false, false, false);
+
+	glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, glowSampleTexture.getTargetId(), 0);
+
+	GLenum glowDrawBuffer[] = { GL_NONE, GL_COLOR_ATTACHMENT0 };
+
+	glDrawBuffers(2, glowDrawBuffer);
+
+	Status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+
+	if (Status != GL_FRAMEBUFFER_COMPLETE) {
+		throw;
+	}
+	
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+
 	if (!shaderPtr)
 	{
 		throw;
 	}
 
-	uniformBitsList = new GLuint[nrTextures];
+	uniformBitsList = new GLuint[nrTextures+1];
 
 	//ambient blitquad
 	uniformEyePos = glGetUniformLocation(*shaderPtr, "eyepos");
@@ -236,6 +255,8 @@ void Gbuffer::preRender(GLuint shader, GLuint location)
 	glProgramUniform1i(shader, location, 0);
 	glBindTexture(GL_TEXTURE_2D, rTexture[4].getTargetId());
 
+	glBindFramebuffer(GL_FRAMEBUFFER, glowSampleFbo);
+
 	blitQuads[5].BindVertData();
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
@@ -252,7 +273,7 @@ void Gbuffer::render(/*glm::vec3 playerPos, glm::vec3 playerDir*/)
 		glActiveTexture(GL_TEXTURE0 + i);
 		//if (i == 4)
 		//{
-		//	glBindTexture(GL_TEXTURE_2D, glowTexture.getTargetId());
+		//	glBindTexture(GL_TEXTURE_2D, glowSampleTexture.getTargetId());
 		//}
 		//else
 		//{
@@ -260,6 +281,9 @@ void Gbuffer::render(/*glm::vec3 playerPos, glm::vec3 playerDir*/)
 		//}
 		glProgramUniform1i(*shaderPtr, uniformBitsList[i], i);
 	}
+	glActiveTexture(GL_TEXTURE0 + 6);
+	glBindTexture(GL_TEXTURE_2D, glowSampleTexture.getTargetId());
+	glProgramUniform1i(*shaderPtr, uniformBitsList[5], 6);
 
 	glProgramUniform3fv(*shaderPtr, uniformEyePos, 1, &eyePos[0]);
 	//glProgramUniform1i(*shaderPtr, uniformNrOfLight, nrOfLights);

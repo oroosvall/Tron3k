@@ -58,6 +58,8 @@ UIManager::~UIManager()
 		delete textureRes;
 	if (openedMenus != nullptr)
 		delete[] openedMenus;
+
+	optionsSaved = nullptr;
 }
 
 //Start menu
@@ -329,6 +331,9 @@ void UIManager::setMenu(int menuId)
 			openedMenus[nrOfOpenedMenus] = menuId;
 			currentMenu = menuId;
 			nrOfOpenedMenus++;
+
+			if (currentMenu == MainMenu::Options)
+				menus[currentMenu].setOptionsSaved(optionsSaved);
 		}
 	}
 	else if (menuId == InGameUI::RemoveMenu)
@@ -339,6 +344,8 @@ void UIManager::setMenu(int menuId)
 			{
 				if (currentMenu == InGameUI::ClassSelect)
 					menus[currentMenu].resetAllObjsTexture();
+				else if (currentMenu == MainMenu::Options)
+						optionsSaved = menus[currentMenu].getOptionsSaved();
 
 				nrOfOpenedMenus--;
 				openedMenus[nrOfOpenedMenus] = -1;
@@ -602,6 +609,21 @@ bool UIManager::isThereAMenuUp()
 		returnValue = false;
 
 	return returnValue;
+}
+
+void UIManager::setOptionsSaved(float* list)
+{
+	optionsSaved = list;
+	if(nrOfOpenedMenus >= MainMenu::Options)
+		menus[MainMenu::Options].setOptionsSaved(optionsSaved);
+}
+float* UIManager::getOptionsSaved()
+{
+	if (currentMenu == MainMenu::Options)
+		if (MainMenu::Options >= nrOfMenus)
+			optionsSaved = menus[MainMenu::Options].getOptionsSaved();
+
+	return optionsSaved;
 }
 
 //hideAble exclusive

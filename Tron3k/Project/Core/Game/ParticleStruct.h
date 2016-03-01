@@ -5,6 +5,8 @@
 
 struct MovableParticle
 {
+	BULLET_TYPE bt = NROFBULLETS; //One of these values will change
+	EFFECT_TYPE et = NROFEFFECTS; //The other will not. Use the right value
 	bool created = false;
 	bool dead = false;
 	bool allowRemove = false;

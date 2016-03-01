@@ -127,7 +127,7 @@ void Player::movePlayer(float dt, glm::vec3 oldDir)
 
 void Player::movePlayerCollided(float dt, glm::vec3 oldDir)
 {
-	effectCollisionHandling();
+	//effectCollisionHandling();
 	//Collision handling here, after movement
 	bool ceiling = false;
 	vec3 posadjust = vec3(0);

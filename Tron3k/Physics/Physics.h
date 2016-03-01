@@ -90,7 +90,7 @@ private:
 	std::vector<glm::vec3> getCollisionNormal(AABB* aabb1, AABB* aabb2);
 
 	glm::vec4 getSpherevOBBlwNorms(glm::vec3 pos, float rad, OBB* obb);
-	glm::vec4 getSpherevOBBNorms(glm::vec3 pos, float rad, OBB* obb, bool isBullet = false);
+	glm::vec4 getSpherevOBBNorms(glm::vec3 pos, float rad, OBB* obb, vec3 backDir = vec3(0), bool isBullet = false);
 	//--------------//--------------//
 
 	vec4 bulletNormal[4];
