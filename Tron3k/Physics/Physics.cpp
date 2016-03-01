@@ -691,7 +691,7 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos, vec3 playerDir,
 {
 	playerBox.setPos(playerPos);
 	playerBox.setWorldSize();
-	vec3 origPos = playerPos - (playerDir * playerVel * dt);
+	vec3 origPos = playerPos - (normalize(playerVel) * playerVel * dt);
 	AABBSingle box = playerBox.getAABB();
 	float rad = playerBox.getSphere().radius;
 	float abbrad = rad + 0.01f;
@@ -718,7 +718,7 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos, vec3 playerDir,
 			{
 				if (checkAABBvAABBCollision(box, roomBoxes[0].getSpecificBox(j)->getOBB(n)->aabb))
 				{
-					t = getSpherevOBBNorms(playerPos, rad, roomBoxes[0].getSpecificBox(j)->getOBB(n), -playerDir);
+					t = getSpherevOBBNorms(playerPos, rad, roomBoxes[0].getSpecificBox(j)->getOBB(n), -normalize(playerVel));
 					//t = checkOBBvCylinderCollision(playerBox.getCylinder(), *roomBoxes[0].getSpecificBox(j)->getOBB(n));
 					t.w = rad - t.w; //penetration depth instead of collision distance 
 					if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
@@ -732,7 +732,7 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos, vec3 playerDir,
 					}
 					else
 					{
-						t = getSpherevOBBNorms(origPos, rad, roomBoxes[0].getSpecificBox(j)->getOBB(n), -playerDir);
+						t = getSpherevOBBNorms(origPos, rad, roomBoxes[0].getSpecificBox(j)->getOBB(n), -normalize(playerVel));
 						//t = checkOBBvCylinderCollision(playerBox.getCylinder(), *roomBoxes[0].getSpecificBox(j)->getOBB(n));
 						t.w = rad - t.w; //penetration depth instead of collision distance 
 						if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
@@ -775,7 +775,7 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos, vec3 playerDir,
 					{
 						if (checkAABBvAABBCollision(box, roomBoxes[i].getSpecificBox(j)->getOBB(n)->aabb))
 						{
-							t = getSpherevOBBNorms(playerPos, rad, roomBoxes[i].getSpecificBox(j)->getOBB(n), -playerDir);
+							t = getSpherevOBBNorms(playerPos, rad, roomBoxes[i].getSpecificBox(j)->getOBB(n), -normalize(playerVel));
 							//t = checkOBBvCylinderCollision(playerBox.getCylinder(), *roomBoxes[i].getSpecificBox(j)->getOBB(n));
 							t.w = rad - t.w; //penetration depth instead of collision distance 
 							if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
@@ -789,7 +789,7 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos, vec3 playerDir,
 							}
 							else
 							{
-								t = getSpherevOBBNorms(origPos, rad, roomBoxes[i].getSpecificBox(j)->getOBB(n), -playerDir);
+								t = getSpherevOBBNorms(origPos, rad, roomBoxes[i].getSpecificBox(j)->getOBB(n), -normalize(playerVel));
 								//	t = checkOBBvCylinderCollision(playerBox.getCylinder(), *roomBoxes[i].getSpecificBox(j)->getOBB(n));
 								t.w = rad - t.w; //penetration depth instead of collision distance 
 								if (t.w + FLT_EPSILON >= 0 - FLT_EPSILON && t.w - FLT_EPSILON <= rad + FLT_EPSILON)
