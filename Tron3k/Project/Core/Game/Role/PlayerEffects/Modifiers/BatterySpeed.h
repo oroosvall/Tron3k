@@ -7,7 +7,6 @@ class BatterySpeedMod : public Modifier
 {
 private:
 	float speedFactor = 1.6f;
-	float maxSpeed = 12.0f;
 	glm::vec3 oldDir;
 	glm::vec3 vel;
 	glm::vec3 airSpeed;
