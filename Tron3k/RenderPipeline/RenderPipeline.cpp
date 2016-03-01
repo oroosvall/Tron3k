@@ -146,7 +146,7 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	cam.setViewProjMat(animationShader, viewProjMat[1]);
 	cam.setViewMat(regularShader, viewMat);
 
-	gBuffer->init(WindowWidth, WindowHeight, 6, true);
+	gBuffer->init(WindowWidth, WindowHeight, 5, true);
 
 	//at this point map is loaded and g.buffer initialized
 	//send the static lights and dont clear them every frame
@@ -1161,6 +1161,13 @@ int RenderPipeline::createMappedParticleEffect(BULLET_TYPE peffect, glm::vec3 po
 	{
 	case BULLET_TYPE::VACUUM_GRENADE:
 		path += "vacuumTrail.ps";
+		break;
+	case BULLET_TYPE::BATTERY_SLOW_SHOT:
+	case BULLET_TYPE::BATTERY_SPEED_SHOT:
+		path += "batteryShotTrail.ps";
+		break;
+	case BULLET_TYPE::FUSION_SHOT:
+		path += "fusionTrail.ps";
 		break;
 	default:
 		path = "0"; //Använd detta för att inte läsa från fil när inget system ska skapas. Valfri metod.

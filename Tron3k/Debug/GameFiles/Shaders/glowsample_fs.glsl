@@ -6,7 +6,7 @@ uniform sampler2D glowTexture;
 
 uniform float pixeluvX;
   
-layout (location = 5) out vec4 GlowMap;
+layout (location = 1) out vec4 GlowMap;
 
 const float kernel[41] = float[41](0.003848, 0.004894, 0.006148,
 0.007629, 0.009351, 0.011321, 0.013537, 0.01599, 0.018655,
