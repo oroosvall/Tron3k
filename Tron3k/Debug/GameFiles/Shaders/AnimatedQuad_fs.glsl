@@ -73,7 +73,7 @@ void main ()
 
 		if ((GlowMap.x + GlowMap.y + GlowMap.z) > 2.0f)
 		{
-			GlowMap.xyz = GlowMap.xyz + newdistance * 0.5f;
+			GlowMap.xyz = GlowMap.xyz + newdistance * 0.9f;
 
 			if (newdistance > 0.2f && newdistance < 0.4f)
 			{
