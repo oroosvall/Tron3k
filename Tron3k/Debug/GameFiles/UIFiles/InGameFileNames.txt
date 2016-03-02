@@ -1,5 +1,6 @@
-4
+5
 GameFiles/UIFiles/GUI.txt
 GameFiles/UIFiles/TeamSelect.txt
 GameFiles/UIFiles/ClassSelect.txt
+GameFiles/UIFiles/Esc.txt
 GameFiles/UIFiles/HideAble.txt

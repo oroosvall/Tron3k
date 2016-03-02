@@ -24,6 +24,7 @@ enum InGameUI
 	GUI,
 	TeamSelect,
 	ClassSelect,
+	ESC,
 	RemoveMenu = -2
 };
 
@@ -110,7 +111,7 @@ public:
 
 	void setFirstMenuSet(bool set);
 
-	int collisionCheck(glm::vec2 pos, float newSoundProcent = 0.0f);
+	int collisionCheck(glm::vec2 pos, float &newSoundProcent);
 	void hoverCheck(glm::vec2 pos);
 
 	void changeTex(int objId, int whichTex);
