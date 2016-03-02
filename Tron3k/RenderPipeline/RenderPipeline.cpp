@@ -1221,6 +1221,9 @@ int RenderPipeline::createMappedParticleEffect(BULLET_TYPE peffect, glm::vec3 po
 	case BULLET_TYPE::PULSE_SHOT:
 		path += "lightningTrail.ps";
 		break;
+	case BULLET_TYPE::CLUSTER_GRENADE:
+		path += "clusterGrenadeTrail.ps";
+		break;
 	case BULLET_TYPE::SHOTGUN_PELLET:
 		path += "shotgunTrail.ps";
 		break;
@@ -1237,7 +1240,6 @@ int RenderPipeline::createMappedParticleEffect(BULLET_TYPE peffect, glm::vec3 po
 	default:
 		path = "0"; //Använd detta för att inte läsa från fil när inget system ska skapas. Valfri metod.
 	}
-	
 	if (path != "0")
 	{
 		int loadID = particleNameToIndexMap[path];
