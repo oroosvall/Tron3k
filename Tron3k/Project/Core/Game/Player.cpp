@@ -529,7 +529,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 							vel.z = xzspeed.y;
 						}
 
-						float maxy = 15.0f; //Y speed is separate
+						float maxy = 12.0f; //Y speed is separate
 						if (vel.y > maxy)
 							vel.y = maxy;
 					}
