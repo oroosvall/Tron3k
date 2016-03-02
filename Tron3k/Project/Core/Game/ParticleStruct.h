@@ -14,6 +14,7 @@ struct MovableParticle
 
 	glm::vec3 color;
 	glm::vec3* pPos;
+	glm::vec3 dir;
 };
 
 #endif

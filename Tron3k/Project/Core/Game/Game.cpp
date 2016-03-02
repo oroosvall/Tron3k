@@ -1358,6 +1358,7 @@ void Game::addBulletToList(int conID, int teamId, int bulletId, BULLET_TYPE bt, 
 		mp->dead = false;
 		mp->allowRemove = false;
 		mp->pPos = b->getPosPtr();
+		mp->dir = -b->getDir();
 		if (teamId == 1)
 			mp->color = TEAMONECOLOR;
 		if (teamId == 2)
