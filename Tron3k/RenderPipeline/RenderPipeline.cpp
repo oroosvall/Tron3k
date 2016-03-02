@@ -9,6 +9,7 @@
 #include <vld.h>
 #endif
 #include <sstream>
+#include <codecvt>
 
 #include "Utils\TimeQuery.h"
 
@@ -189,33 +190,12 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 	std::string particlePath = "GameFiles/ParticleSystems/";
 
-	addParticleName(particlePath + "batteryFieldParticles.ps");
-	addParticleName(particlePath + "batteryShotTrail.ps");
-	addParticleName(particlePath + "bruteGrenadeExplosion.ps");
-	addParticleName(particlePath + "bulletHit_1.ps");
-	addParticleName(particlePath + "bulletHit_2.ps");
-	addParticleName(particlePath + "clusterlingExplosion.ps");
-	addParticleName(particlePath + "discshotHit.ps");
-	addParticleName(particlePath + "electronicsLightning.ps");
-	addParticleName(particlePath + "explosion_1.ps");
-	addParticleName(particlePath + "explosion_2.ps");
-	addParticleName(particlePath + "explosionShockwave.ps");
-	addParticleName(particlePath + "explosionShrapnel.ps");
-	addParticleName(particlePath + "explosionSparks.ps");
-	addParticleName(particlePath + "fusionHit.ps");
-	addParticleName(particlePath + "fusionTrail.ps");
-	addParticleName(particlePath + "gravityAttractorHit.ps");
-	addParticleName(particlePath + "grenadeShotHit.ps");
-	addParticleName(particlePath + "hackingdartBleed.ps");
-	addParticleName(particlePath + "hackingdartHit.ps");
-	addParticleName(particlePath + "healthPack.ps");
-	addParticleName(particlePath + "meleeHit.ps");
-	addParticleName(particlePath + "shotgunPelletHit.ps");
-	addParticleName(particlePath + "steam.ps");
-	addParticleName(particlePath + "thermiteEffect.ps");
-	addParticleName(particlePath + "trapperBulletHit.ps");
-	addParticleName(particlePath + "trapperBulletTrail.ps");
-	addParticleName(particlePath + "vacuumTrail.ps");
+	vector<std::string> particleFiles = ListFiles(particlePath, "*.ps");
+
+	for (int i = 0; i < particleFiles.size(); i++)
+	{
+		addParticleName(particlePath + particleFiles[i]);
+	}
 
 	initialized = true;
 	return true;
@@ -2310,4 +2290,26 @@ void RenderPipeline::setuniversalInten(float inten)
 	glProgramUniform1f(*gBuffer->shaderPtr, gBuffer->blightlightUniversalInten, inten);
 	glProgramUniform1f(gBuffer->spotVolShader, gBuffer->spotVolUniversalInten, inten);
 	glProgramUniform1f(gBuffer->pointVolShader, gBuffer->pointVolUniversalInten, inten);
+}
+
+std::vector<std::string> RenderPipeline::ListFiles(std::string Directory, std::string Extension)
+{
+	Directory.append(Extension);
+
+	WIN32_FIND_DATA FindFileData;
+	std::wstring FileName(Directory.begin(), Directory.end());
+	HANDLE hFind = FindFirstFile(FileName.c_str(), &FindFileData);
+	typedef std::codecvt_utf8<wchar_t> convert;
+	std::wstring_convert<convert, wchar_t> converter;
+
+	std::vector<std::string> listFileNames;
+	listFileNames.push_back(converter.to_bytes(FindFileData.cFileName));
+
+
+	while (FindNextFile(hFind, &FindFileData))
+	{
+		listFileNames.push_back(converter.to_bytes(FindFileData.cFileName));
+	}
+
+	return listFileNames;
 }
