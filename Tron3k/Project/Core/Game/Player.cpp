@@ -519,7 +519,8 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 							}
 						}
 
-						float maxxz = 2.0f;
+						
+						float maxxz = 1.6f;
 						glm::vec2 xzspeed = glm::vec2(vel.x, vel.z); //For calculating maximum allowed speed
 						if (length(xzspeed) > maxxz)
 						{

@@ -1137,7 +1137,7 @@ vec4 Physics::checkPlayerVEffectCollision(glm::vec3 playerPos, unsigned int eTyp
 					}
 					else if (eType > 11)//False box, no collision
 					{
-
+						collided = vec4(0);
 					}
 					else //evrything else is a sphere, if not, not my goddamn problem
 					{
