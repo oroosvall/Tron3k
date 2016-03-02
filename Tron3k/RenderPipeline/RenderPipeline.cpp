@@ -1218,6 +1218,9 @@ int RenderPipeline::createMappedParticleEffect(BULLET_TYPE peffect, glm::vec3 po
 
 	switch (peffect)
 	{
+	case BULLET_TYPE::PULSE_SHOT:
+		path += "lightningTrail.ps";
+		break;
 	case BULLET_TYPE::SHOTGUN_PELLET:
 		path += "shotgunTrail.ps";
 		break;
