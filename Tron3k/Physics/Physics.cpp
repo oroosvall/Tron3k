@@ -792,11 +792,12 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos, vec3 playerDir,
 
 	AABBSingle* roomBox;
 	//each chunk
+	bool passed = false;
 	for (unsigned int i = 1; i < roomBoxes.size(); i++)
 	{
 		//culling player intersection tests vs room aabbs
 		roomBox = roomBoxes[i - 1].getAABB();
-		bool passed = false;
+		passed = false;
 		if (box.max.x > roomBox->min.x && box.min.x < roomBox->max.x)//x
 			if (box.max.y > roomBox->min.y && box.min.y < roomBox->max.y)//y
 				if (box.max.z > roomBox->min.z && box.min.z < roomBox->max.z)//y
@@ -901,6 +902,7 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 	box.max = bulletPos + bulletBox.getWorldSize();
 	box.min = origPos - bulletBox.getWorldSize(); //This should make sure that we never pass through walls???
 
+	bool collidedWithPlane = false;
 	for (unsigned int j = 0; j < roomBoxes[0].getRoomBoxes()->size(); j++)
 	{
 		//each chunk
@@ -914,7 +916,7 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 
 				if (checkAABBvAABBCollision(box, roomBoxes[0].getSpecificBox(j)->getOBB(n)->aabb))
 				{
-					bool collidedWithPlane = false;
+					collidedWithPlane = false;
 					for (int p = 0; p < 6; p++)
 					{
 						vec3 lvP = checkLinevPlaneCollision(sPos, ePos, theOBB->planes[p].p[0], theOBB->planes[p].p[1], theOBB->planes[p].p[2], theOBB->planes[p].n);
@@ -985,13 +987,15 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 	bPos = bulletPos;
 	ePos = bulletPos + bulletDir * rad;
 	sPos = origPos - bulletDir * rad;
+
+	bool passed = false;
 	for (unsigned int i = 1; i < roomBoxes.size(); i++)
 	{
 		//culling player intersection tests vs room aabbs
 		if (i > 0)
 		{
 			roomBox = roomBoxes[i - 1].getAABB();
-			bool passed = false;
+			passed = false;
 			if (box.max.x > roomBox->min.x && box.min.x < roomBox->max.x)//x
 				if (box.max.y > roomBox->min.y && box.min.y < roomBox->max.y)//y
 					if (box.max.z > roomBox->min.z && box.min.z < roomBox->max.z)//y
@@ -1012,7 +1016,7 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 							OBB* theOBB = roomBoxes[i].getSpecificBox(j)->getOBB(n);
 							if (checkAABBvAABBCollision(box, roomBoxes[i].getSpecificBox(j)->getOBB(n)->aabb))
 							{
-								bool collidedWithPlane = false;
+								collidedWithPlane = false;
 								for (int p = 0; p < 6; p++)
 								{
 									vec3 lvP = checkLinevPlaneCollision(sPos, ePos, theOBB->planes[p].p[0], theOBB->planes[p].p[1], theOBB->planes[p].p[2], theOBB->planes[p].n);
