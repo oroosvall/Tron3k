@@ -14,7 +14,9 @@ uniform sampler2D diffuse;
 uniform float pixeluvX;
 uniform float pixeluvY;
 
-layout (location = 2)out vec4 outColor;
+//layout (location = 1)out vec4 outColor;
+
+out vec4 fragment_color;   
 
 float rgbToLuma(vec3 color)
 {
@@ -64,6 +66,6 @@ vec4 fxaaPass(sampler2D tex)
 
 void main()
 {
-    //outColor = fxaaPass(diffuse);
-	outColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	fragment_color = fxaaPass(diffuse);
+	//fragment_color = texture(diffuse, vec2(UV.x, UV.y));
 }
