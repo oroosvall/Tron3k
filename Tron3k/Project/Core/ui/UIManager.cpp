@@ -206,11 +206,11 @@ void UIManager::init(Console* console, int winX, int winY)
 	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/HowToPlay.png"); //71
 	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/LocalIP.png"); //72
 	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/GlobalIP.png"); //73
-	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/Background.png"); //74
-	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/SliderPart1.png"); //75
-	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/SliderPart2.png"); //76
-	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/FullscreenOff.png"); //77
-	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/FullscreenOn.png"); //78
+	texturePaths.push_back("GameFiles/Textures/UITextures/Settings/settings_background.png"); //74
+	texturePaths.push_back("GameFiles/Textures/UITextures/Settings/settings_slider.png"); //75
+	texturePaths.push_back("GameFiles/Textures/UITextures/Settings/settings_marker.png"); //76
+	texturePaths.push_back("GameFiles/Textures/UITextures/Settings/settings_checkbox_unchecked.png"); //77
+	texturePaths.push_back("GameFiles/Textures/UITextures/Settings/settings_checkbox_checked.png"); //78
 
 	texturePaths.push_back("GameFiles/Textures/UITextures/EscWindow/pause_menu_background.png"); //79
 	texturePaths.push_back("GameFiles/Textures/UITextures/EscWindow/pause_menu_quit_0.png"); //80
@@ -219,6 +219,11 @@ void UIManager::init(Console* console, int winX, int winY)
 	texturePaths.push_back("GameFiles/Textures/UITextures/EscWindow/pause_menu_resumegame_1.png"); //83
 	texturePaths.push_back("GameFiles/Textures/UITextures/EscWindow/pause_menu_settings_0.png"); //84
 	texturePaths.push_back("GameFiles/Textures/UITextures/EscWindow/pause_menu_settings_1.png"); //85
+
+	texturePaths.push_back("GameFiles/Textures/UITextures/Settings/settings_back.png"); //86
+	texturePaths.push_back("GameFiles/Textures/UITextures/Settings/settings_back_hover.png"); //87
+	texturePaths.push_back("GameFiles/Textures/UITextures/Settings/settings_confirmed.png"); //88
+	texturePaths.push_back("GameFiles/Textures/UITextures/Settings/settings_confirmed_hover.png"); //89
 
 
 	loadInTexture();
