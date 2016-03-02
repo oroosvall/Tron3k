@@ -2,6 +2,9 @@
 
 void Core::init()
 {
+	escActive = false;
+	inGameSettings = false;
+	justSetFullScreen = false;
 	firstTimeInWarmUp = true;
 	firstTimeInEnd = false;
 	lowTicketsFirstTime = false;
@@ -55,7 +58,7 @@ void Core::init()
 	optionsDataSize = 11;
 	optionsSavedData = new float[optionsDataSize];
 	for (int i = 0; i < optionsDataSize; i++)
-		optionsSavedData[i] = 1;
+		optionsSavedData[i] = 0.5;
 	uiManager->setOptionsSaved(optionsSavedData);
 
 	renderUI = false;
@@ -125,8 +128,6 @@ Core::~Core()
 
 void Core::update(float dt)
 {
-	timepass += dt;
-
 	if (shitBool && justAFrameCounterActivated)
 	{
 		justAFrameCounter++;
@@ -263,6 +264,8 @@ void Core::update(float dt)
 
 	dt *= playbackSpeed;
 
+	timepass += dt;
+
 	switch (current)
 	{
 	case START:		upStart(dt);	break;
@@ -323,8 +326,7 @@ void Core::upStart(float dt)
 
 void Core::upMenu(float dt)
 {
-	renderUI = true;
-
+	//renderUI = true;
 	double tX = (0.0);
 	double tY = (0.0);
 	//Get mouse position
@@ -335,6 +337,12 @@ void Core::upMenu(float dt)
 	cursorInvisible = false;
 	uiManager->menuRender();
 
+	if (justSetFullScreen)
+	{
+		uiManager->setMenu(MainMenu::Options);
+		justSetFullScreen = false;
+	}
+
 	if (i->justPressed(GLFW_MOUSE_BUTTON_LEFT))
 	{
 		float newVolume = 1.0;
@@ -344,7 +352,9 @@ void Core::upMenu(float dt)
 		switch (eventIndex)
 		{
 		case 0: //Roam
+			last = current;
 			current = ROAM;
+			optionsSavedData = uiManager->getOptionsSaved();
 			uiManager->LoadNextSet(UISets::InGame, winX, winY);
 			uiManager->setRoleBool(false);
 			uiManager->setFirstMenuSet(false);
@@ -410,6 +420,8 @@ void Core::upMenu(float dt)
 
 			nameNrOfKeys = 0;
 			ipNrOfKeys = 0;
+
+			last = current;
 			current = Gamestate::CLIENT; //Start the game as a client
 			client_record = false;
 			client_playback = false;
@@ -420,6 +432,29 @@ void Core::upMenu(float dt)
 			nameNrOfKeys = 0;
 			ipNrOfKeys = 0;
 			uiManager->setMenu(MainMenu::Back); //Last menu
+
+			if (inGameSettings)
+			{
+				if (uiManager->getCurrentMenu() == -1)
+				{
+					Gamestate tmp = current;
+					current = last;
+					last = tmp;
+
+					optionsSavedData = uiManager->getOptionsSaved();
+					uiManager->LoadNextSet(UISets::InGame, winX, winY);
+					uiManager->setFirstMenuSet(false);
+					uiManager->setMenu(InGameUI::GUI);
+					uiManager->setMenu(InGameUI::ESC);
+					renderMenu = false;
+					renderUI = true;
+					inGameSettings = false;
+
+					//Set HUD stats
+					setHUDText();
+				}
+			}
+
 			break;
 		case 8: //Settings -> Options
 			uiManager->setFirstMenuSet(true);
@@ -499,11 +534,8 @@ void Core::upMenu(float dt)
 			clientHandleCmds("/sens" + std::to_string(newVolume));
 			break;
 		case 20: //Fullscreen
+			justSetFullScreen = true;
 			clientHandleCmds("/fullscreen");
-			if(fullscreen)
-				uiManager->changeTex(10, 1);
-			else
-				uiManager->changeTex(10, 0);
 			break;
 		default:
 			break;
@@ -1601,6 +1633,14 @@ void Core::startHandleCmds(std::string com)
 			client_playback = true;
 			subState = 0;
 		}
+		else if (token == "/fullscreen")
+		{
+			if (fullscreen)
+				fullscreen = false;
+			else
+				fullscreen = true;
+			recreate = true;
+		}
 	}
 }
 
@@ -2480,6 +2520,11 @@ void Core::renderWorld(float dt)
 		vec3 camDir = cam->getDir();
 		bool force3rd = false;
 
+		//float intennn = (sin(timepass / 5));
+		//if (intennn < 0)
+		//	intennn = 0;
+		//renderPipe->setuniversalInten(intennn);
+
 		/*		if (i->getKeyInfo(GLFW_KEY_P))
 		{
 		cam->setCam(vec3(-6, 1.5f, 33), vec3(0, 0, -1));
@@ -2851,69 +2896,72 @@ void Core::renderWorld(float dt)
 
 		renderPipe->renderTakeDamageDistort();
 
-		if (current != SERVER)
+		if (game != nullptr)
 		{
-			Player* localp = game->getPlayer(game->GetLocalPlayerId());
-			//render minimap
-			if (i->getKeyInfo(localp->controls.minimap))
-				if (game->getPlayer(game->GetLocalPlayerId())->getLockedControls() == false)
-					minimapRender();
-
-			// render score screen
-			if (i->getKeyInfo(localp->controls.scorescreen))
-				//if (game->getPlayer(game->GetLocalPlayerId())->getLockedControls() == false)
-				scoreboardRender();
-		}
-
-		//spectate this playername render
-		if (game->spectateID != -1)
-		{
-			renderPipe->setTextObjectText(leaderBoardTextID, "Spectating: " + tmp_player->getName());
-			renderPipe->setTextPos(leaderBoardTextID, vec2(500 - 42, 650));
-			renderPipe->renderTextObject(leaderBoardTextID);
-		}
-
-
-		renderPipe->disableBlend();
-
-		//viewing 3rd person anims in roam
-		//if (i->getKeyInfo(GLFW_KEY_P))
-		//	cam->setCam(camPos, camDir);
-		//if (i->getKeyInfo(GLFW_KEY_L))
-		//	cam->setCam(camPos, camDir);
-
-		if (game->getPlayer(game->GetLocalPlayerId())->getLockedControls() == false)
-		{
-			if (game->freecam)
+			if (current != SERVER)
 			{
-				if (i->justPressed(GLFW_KEY_1))
-					game->spectateID = -1;
-				if (i->justPressed(GLFW_KEY_2))
-				{
-					//search for closest player to cam and set that ConID to spectateID
-					int closest = -1;
-					float lenth = 999999.0f;
-					//camPos
-					Player* p;
-					int localID = game->GetLocalPlayerId();
-					for (int n = 0; n < 20; n++)
-						if (n != localID)
-						{
-							p = game->getPlayer(n);
-							if (p)
-							{
-								float len2 = length(p->getPos() - camPos);
-								if (len2 < lenth)
-								{
-									lenth = len2;
-									closest = n;
-								}
-							}
-						}
-					clientHandleCmds( string("/spec " + to_string(closest)));
-				}
+				Player* localp = game->getPlayer(game->GetLocalPlayerId());
+				//render minimap
+				if (i->getKeyInfo(localp->controls.minimap))
+					if (game->getPlayer(game->GetLocalPlayerId())->getLockedControls() == false)
+						minimapRender();
+
+				// render score screen
+				if (i->getKeyInfo(localp->controls.scorescreen))
+					//if (game->getPlayer(game->GetLocalPlayerId())->getLockedControls() == false)
+					scoreboardRender();
 			}
 
+			//spectate this playername render
+			if (game->spectateID != -1)
+			{
+				renderPipe->setTextObjectText(leaderBoardTextID, "Spectating: " + tmp_player->getName());
+				renderPipe->setTextPos(leaderBoardTextID, vec2(500 - 42, 650));
+				renderPipe->renderTextObject(leaderBoardTextID);
+			}
+
+
+			renderPipe->disableBlend();
+
+			//viewing 3rd person anims in roam
+			//if (i->getKeyInfo(GLFW_KEY_P))
+			//	cam->setCam(camPos, camDir);
+			//if (i->getKeyInfo(GLFW_KEY_L))
+			//	cam->setCam(camPos, camDir);
+
+			if (game->getPlayer(game->GetLocalPlayerId())->getLockedControls() == false)
+			{
+				if (game->freecam)
+				{
+					if (i->justPressed(GLFW_KEY_1))
+						game->spectateID = -1;
+					if (i->justPressed(GLFW_KEY_2))
+					{
+						//search for closest player to cam and set that ConID to spectateID
+						int closest = -1;
+						float lenth = 999999.0f;
+						//camPos
+						Player* p;
+						int localID = game->GetLocalPlayerId();
+						for (int n = 0; n < 20; n++)
+							if (n != localID)
+							{
+								p = game->getPlayer(n);
+								if (p)
+								{
+									float len2 = length(p->getPos() - camPos);
+									if (len2 < lenth)
+									{
+										lenth = len2;
+										closest = n;
+									}
+								}
+							}
+						clientHandleCmds(string("/spec " + to_string(closest)));
+					}
+				}
+
+			}
 		}
 	}
 }
@@ -3268,12 +3316,35 @@ void Core::inGameUIUpdate() //Ingame ui update
 		for (int i = 0; i < uiManager->HUDTime.wmIdListScore2.size(); i++)
 			uiManager->setHideableWorldMatrix(hideAbleObj::ScoreAdderTeam2, i, glm::vec2(0.0f, -0.001f));
 
+	if (i->justPressed(GLFW_KEY_ESCAPE))
+	{
+		if (!escActive)
+		{
+			escActive = true;
+			uiManager->setMenu(InGameUI::ESC);
+
+			uiManager->setHoverCheckBool(true);
+			game->getPlayer(game->GetLocalPlayerId())->setLockedControls(true);
+			cursorInvisible = false;
+		}
+		else
+		{
+			escActive = false;
+			uiManager->setMenu(InGameUI::RemoveMenu);
+
+			uiManager->setHoverCheckBool(false);
+			game->getPlayer(game->GetLocalPlayerId())->setLockedControls(false);
+			cursorInvisible = true;
+		}
+	}
+
 
 	uiManager->renderHideAble();
 	uiManager->inGameRender();
 
 	double x = (0.0);
 	double y = (0.0);
+	float nothing = 1.0f;
 	//Get mouse position
 	i->getCursor(x, y);
 	double tX = (x / (double)winX) * 2 - 1.0;
@@ -3283,7 +3354,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 	{
 		if (i->justPressed(GLFW_MOUSE_BUTTON_LEFT))
 		{
-			int eventIndex = uiManager->collisionCheck(glm::vec2((float)tX, (float)tY));
+			int eventIndex = uiManager->collisionCheck(glm::vec2((float)tX, (float)tY), nothing);
 			switch (eventIndex)
 			{
 			case 21: //Team 1
@@ -3335,9 +3406,28 @@ void Core::inGameUIUpdate() //Ingame ui update
 					clientHandleCmds("/role 5");
 				break;
 			case 40: //Continue
-				
+				escActive = false;
+				uiManager->setMenu(InGameUI::RemoveMenu);
+
+				uiManager->setHoverCheckBool(true);
+				game->getPlayer(game->GetLocalPlayerId())->setLockedControls(true);
+				cursorInvisible = false;
 				break;
 			case 41: //Settings
+				last = current;
+				current = Gamestate::START;
+				subState = 0;
+
+				uiManager->setHoverCheckBool(true);
+				uiManager->setRoleBool(false);
+				uiManager->setFirstMenuSet(false);
+
+				uiManager->LoadNextSet(UISets::Menu, winX, winY);
+				uiManager->setMenu(MainMenu::Settings);
+				uiManager->setOptionsSaved(optionsSavedData);
+				inGameSettings = true;
+				renderMenu = true;
+				renderUI = false;
 				break;
 			case 42: //Quit
 				if (current == ROAM)
@@ -3467,7 +3557,18 @@ void Core::createWindow(int x, int y, bool fullscreen)
 		if (renderMenu)
 		{
 			uiManager->LoadNextSet(UISets::Menu, winX, winY); //Load the first set of menus.
-			uiManager->setMenu(MainMenu::StartMenu); //Set start menu as the current menu
+			uiManager->setFirstMenuSet(false);
+			if(!inGameSettings)
+				uiManager->setMenu(MainMenu::StartMenu); //Set start menu as the current menu
+			if(justSetFullScreen)
+				uiManager->setMenu(MainMenu::Settings);
+
+			if(fullscreen)
+				uiManager->changeTex(10, 1);
+			else
+				uiManager->changeTex(10, 0);
+
+			uiManager->setOptionsSaved(optionsSavedData);
 		}
 		else
 		{
@@ -3476,7 +3577,6 @@ void Core::createWindow(int x, int y, bool fullscreen)
 			uiManager->setMenu(InGameUI::GUI);
 			uiManager->HUD.maxSpecialMeter = 100.0f;
 		}
-		uiManager->setOptionsSaved(optionsSavedData);
 
 		if(top != nullptr)
 			top->setNewUIPtr(uiManager);
@@ -3682,7 +3782,7 @@ void Core::disconnect()
 	current = Gamestate::START;
 	subState = 0;
 
-	uiManager->setRoleBool(false);
+	escActive = false;
 
 	uiManager->setHoverCheckBool(true);
 	uiManager->setRoleBool(false);
@@ -3691,6 +3791,7 @@ void Core::disconnect()
 	glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	uiManager->LoadNextSet(UISets::Menu, winX, winY);
 	uiManager->setMenu(MainMenu::StartMenu);
+	uiManager->setOptionsSaved(optionsSavedData);
 	if (GetSound())
 	{
 		GetSound()->playMusic(mainMenu);
@@ -3712,6 +3813,7 @@ void Core::showTeamSelect()
 
 		if (renderMenu)
 		{
+			optionsSavedData = uiManager->getOptionsSaved();
 			uiManager->LoadNextSet(UISets::InGame, winX, winY);
 			renderMenu = false;
 		}
@@ -3726,6 +3828,7 @@ void Core::showTeamSelect()
 
 		if (renderMenu)
 		{
+			optionsSavedData = uiManager->getOptionsSaved();
 			uiManager->LoadNextSet(UISets::InGame, winX, winY);
 			renderMenu = false;
 		}
@@ -3741,6 +3844,100 @@ void Core::showClassSelect()
 	cursorInvisible = false;
 	uiManager->setFirstMenuSet(true);
 	uiManager->setMenu(InGameUI::ClassSelect);
+}
+
+void Core::setHUDText()
+{
+	Player* local = game->getPlayer(game->GetLocalPlayerId());
+	KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
+
+	uiManager->HUD.HP = local->getMaxHP();
+	uiManager->setText(std::to_string(local->getHP()), scaleAndText::HP); //hp
+
+	std::string sFirst = "0";
+	std::string sSecond = "0";
+
+	//Ammo
+	uiManager->HUD.ammo = local->getAmmo();
+	int maxAmmo = local->getMaxAmmo();
+
+	sFirst += std::to_string(uiManager->HUD.ammo);
+	sSecond += std::to_string(maxAmmo);
+
+	if (sFirst.size() == 3)
+		sFirst = std::to_string(uiManager->HUD.ammo);
+	else if (sFirst.size() > 3)
+		sFirst = "99";
+	if (sSecond.size() == 3)
+		sSecond = std::to_string(maxAmmo);
+	else if (sSecond.size() > 3)
+		sSecond = "99";
+
+	std::string nText = sFirst + "/" + sSecond;
+	uiManager->setText(nText, scaleAndText::Ammo);
+	//
+
+	//Ticketbar1
+	uiManager->HUD.teamOneTokens = koth->getRespawnTokens(1);
+
+	sFirst = "0";
+	sFirst += std::to_string(uiManager->HUD.teamOneTokens);
+
+	if (sFirst.size() == 3)
+		sFirst = std::to_string(uiManager->HUD.teamOneTokens);
+	else if (sFirst.size() > 3)
+		sFirst = "99";
+
+	uiManager->setText(sFirst, scaleAndText::TicketBar1); //tickets
+	//
+
+	//Ticketbar2
+	uiManager->HUD.teamTwoTokens = koth->getRespawnTokens(2);
+
+	sFirst = "0";
+	sFirst += std::to_string(uiManager->HUD.teamTwoTokens);
+
+	if (sFirst.size() == 3)
+		sFirst = std::to_string(uiManager->HUD.teamTwoTokens);
+	else if (sFirst.size() > 3)
+		sFirst = "99";
+
+	uiManager->setText(sFirst, scaleAndText::TicketBar2); //tickets
+	//
+
+													  //Scores1
+	uiManager->HUD.teamOneScore = koth->getRoundWins(1);
+
+	sFirst = "0";
+	sFirst += std::to_string(uiManager->HUD.teamOneScore);
+
+	if (sFirst.size() == 3)
+		sFirst = std::to_string(uiManager->HUD.teamOneScore);
+	else if (sFirst.size() > 3)
+		sFirst = "99";
+
+	uiManager->setText(sFirst, scaleAndText::Wins1); //tickets
+	//
+
+	//Scores2
+	uiManager->HUD.teamTwoScore = koth->getRoundWins(2);
+
+	sFirst = "0";
+	sFirst += std::to_string(uiManager->HUD.teamTwoScore);
+
+	if (sFirst.size() == 3)
+		sFirst = std::to_string(uiManager->HUD.teamTwoScore);
+	else if (sFirst.size() > 3)
+		sFirst = "99";
+
+	uiManager->setText(sFirst, scaleAndText::Wins2); //tickets
+	//
+
+	if (int(koth->getTimer()) == 0)
+	{
+		uiManager->clearText(scaleAndText::Time);
+		uiManager->setText("00:00", scaleAndText::Time); //time
+	}
 }
 
 void Core::menuIpKeyInputUpdate()

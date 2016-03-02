@@ -77,6 +77,25 @@ void Gbuffer::init(int x, int y, int nrTex, bool depth)
 	
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
+	glGenFramebuffers(1, &postProcess);
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, postProcess);
+
+	postProcessTexture.init(x, y, 0, false, false, false);
+
+	glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, postProcessTexture.getTargetId(), 0);
+
+	//GLenum glowDrawBuffer[] = { GL_NONE, GL_COLOR_ATTACHMENT0 };
+
+	glDrawBuffers(2, glowDrawBuffer);
+
+	Status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+
+	if (Status != GL_FRAMEBUFFER_COMPLETE) {
+		throw;
+	}
+
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+
 	if (!shaderPtr)
 	{
 		throw;
@@ -119,6 +138,15 @@ void Gbuffer::init(int x, int y, int nrTex, bool depth)
 
 	uBlitLightPixelX  = glGetUniformLocation(*shaderPtr, "pixeluvX");
 	uBlitLightPixelY = glGetUniformLocation(*shaderPtr, "pixeluvY");
+
+	blightlightUniversalInten = glGetUniformLocation(*shaderPtr, "universalInten");
+	spotVolUniversalInten = glGetUniformLocation(spotVolShader, "universalInten");
+	pointVolUniversalInten = glGetUniformLocation(pointVolShader, "universalInten");
+
+	glProgramUniform1f(*shaderPtr, blightlightUniversalInten, 1.0f);
+	glProgramUniform1f(spotVolShader, spotVolUniversalInten, 1.0f);
+	glProgramUniform1f(pointVolShader, pointVolUniversalInten, 1.0f);
+
 
 	setGlowSamplingDist(1.0f);
 
@@ -262,8 +290,19 @@ void Gbuffer::preRender(GLuint shader, GLuint location)
 
 }
 
-void Gbuffer::render(/*glm::vec3 playerPos, glm::vec3 playerDir*/)
+void Gbuffer::render(GLuint shader, GLuint location, GLuint uvX, GLuint uvY)
 {
+
+
+	//glBindFramebuffer(GL_FRAMEBUFFER, NULL);
+	//glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, postProcess);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	glDisable(GL_BLEND);
+	glEnable(GL_DEPTH_TEST);
+
 	// bind shader
 	glUseProgram(*shaderPtr);
 
@@ -303,6 +342,19 @@ void Gbuffer::render(/*glm::vec3 playerPos, glm::vec3 playerDir*/)
 	//	glProgramUniform1i(*shaderPtr, uniformUse, n);
 	//	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	//}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
+	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+
+	glUseProgram(shader);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, postProcessTexture.getTargetId());
+	glProgramUniform1i(shader, location, 0);
+	glProgramUniform1f(shader, uvX, 1.0f / xres);
+	glProgramUniform1f(shader, uvY, 1.0f / yres);
+
+
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
 
 void Gbuffer::clearBuffers()

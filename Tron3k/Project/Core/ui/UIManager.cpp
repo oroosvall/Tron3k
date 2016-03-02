@@ -212,6 +212,14 @@ void UIManager::init(Console* console, int winX, int winY)
 	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/FullscreenOff.png"); //77
 	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/FullscreenOn.png"); //78
 
+	texturePaths.push_back("GameFiles/Textures/UITextures/EscWindow/pause_menu_background.png"); //79
+	texturePaths.push_back("GameFiles/Textures/UITextures/EscWindow/pause_menu_quit_0.png"); //80
+	texturePaths.push_back("GameFiles/Textures/UITextures/EscWindow/pause_menu_quit_1.png"); //81
+	texturePaths.push_back("GameFiles/Textures/UITextures/EscWindow/pause_menu_resumegame_0.png"); //82
+	texturePaths.push_back("GameFiles/Textures/UITextures/EscWindow/pause_menu_resumegame_1.png"); //83
+	texturePaths.push_back("GameFiles/Textures/UITextures/EscWindow/pause_menu_settings_0.png"); //84
+	texturePaths.push_back("GameFiles/Textures/UITextures/EscWindow/pause_menu_settings_1.png"); //85
+
 
 	loadInTexture();
 
@@ -344,8 +352,6 @@ void UIManager::setMenu(int menuId)
 			{
 				if (currentMenu == InGameUI::ClassSelect)
 					menus[currentMenu].resetAllObjsTexture();
-				else if (currentMenu == MainMenu::Options)
-						optionsSaved = menus[currentMenu].getOptionsSaved();
 
 				nrOfOpenedMenus--;
 				openedMenus[nrOfOpenedMenus] = -1;
@@ -360,18 +366,16 @@ void UIManager::setMenu(int menuId)
 	}
 	else if (menuId == MainMenu::Back)
 	{
-		if (nrOfOpenedMenus > 1)
+		if (currentMenu == MainMenu::Connect)
 		{
-			if (currentMenu == MainMenu::Connect)
-			{
-				menus[currentMenu].clearText(scaleAndText::IP);
-				menus[currentMenu].clearText(scaleAndText::Name);
-			}
-			nrOfOpenedMenus--;
-			currentMenu = openedMenus[nrOfOpenedMenus - 1];
+			menus[currentMenu].clearText(scaleAndText::IP);
+			menus[currentMenu].clearText(scaleAndText::Name);
 		}
+		nrOfOpenedMenus--;
+		if (nrOfOpenedMenus > 0)
+			currentMenu = openedMenus[nrOfOpenedMenus - 1];
 		else
-			console->printMsg("Error: Function setMenu in UIManager, Someone is trying to use Back when nrOfOpenedMenus has a value of 1 or lower .", "System", 'S');
+			currentMenu = -1;
 	}
 	else
 		console->printMsg("Error: Function setMenu in UIManager, menuId is invalid", "System", 'S');
@@ -457,7 +461,7 @@ void UIManager::setFirstMenuSet(bool set)
 }
 
 
-int UIManager::collisionCheck(glm::vec2 pos, float newSoundProcent)
+int UIManager::collisionCheck(glm::vec2 pos, float &newSoundProcent)
 {
 	if (nrOfOpenedMenus > 0)
 		if (currentMenu > -1)
@@ -594,11 +598,11 @@ int UIManager::getNrOfOpenedMenus()
 }
 int UIManager::getCurrentMenu()
 {
-	int returnValue = -1;
-	if (nrOfOpenedMenus > 0)
-		if (currentMenu > -1)
-			returnValue = currentMenu;
-	return returnValue;
+	//int returnValue = -1;
+	//if (nrOfOpenedMenus > 0)
+	//	if (currentMenu > -1)
+	//		returnValue = currentMenu;
+	return currentMenu;
 }
 
 bool UIManager::isThereAMenuUp()

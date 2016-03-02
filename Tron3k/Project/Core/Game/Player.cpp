@@ -519,18 +519,18 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 							}
 						}
 
-						float maxxz = 2.0f;
+						
 						glm::vec2 xzspeed = glm::vec2(vel.x, vel.z); //For calculating maximum allowed speed
-						if (length(xzspeed) > maxxz)
+						if (length(xzspeed) > maxVelocityXZ)
 						{
-							xzspeed = normalize(xzspeed)*maxxz;
+							xzspeed = normalize(xzspeed)*maxVelocityXZ;
 							vel.x = xzspeed.x;
 							vel.z = xzspeed.y;
 						}
 
-						float maxy = 15.0f; //Y speed is separate
-						if (vel.y > maxy)
-							vel.y = maxy;
+						//Y speed is separate
+						if (vel.y > maxVelocityY)
+							vel.y = maxVelocityY;
 					}
 					else if (grounded)
 					{

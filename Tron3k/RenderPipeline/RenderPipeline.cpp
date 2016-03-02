@@ -9,6 +9,7 @@
 #include <vld.h>
 #endif
 #include <sstream>
+#include <codecvt>
 
 #include "Utils\TimeQuery.h"
 
@@ -189,33 +190,12 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 	std::string particlePath = "GameFiles/ParticleSystems/";
 
-	addParticleName(particlePath + "batteryFieldParticles.ps");
-	addParticleName(particlePath + "batteryShotTrail.ps");
-	addParticleName(particlePath + "bruteGrenadeExplosion.ps");
-	addParticleName(particlePath + "bulletHit_1.ps");
-	addParticleName(particlePath + "bulletHit_2.ps");
-	addParticleName(particlePath + "clusterlingExplosion.ps");
-	addParticleName(particlePath + "discshotHit.ps");
-	addParticleName(particlePath + "electronicsLightning.ps");
-	addParticleName(particlePath + "explosion_1.ps");
-	addParticleName(particlePath + "explosion_2.ps");
-	addParticleName(particlePath + "explosionShockwave.ps");
-	addParticleName(particlePath + "explosionShrapnel.ps");
-	addParticleName(particlePath + "explosionSparks.ps");
-	addParticleName(particlePath + "fusionHit.ps");
-	addParticleName(particlePath + "fusionTrail.ps");
-	addParticleName(particlePath + "gravityAttractorHit.ps");
-	addParticleName(particlePath + "grenadeShotHit.ps");
-	addParticleName(particlePath + "hackingdartBleed.ps");
-	addParticleName(particlePath + "hackingdartHit.ps");
-	addParticleName(particlePath + "healthPack.ps");
-	addParticleName(particlePath + "meleeHit.ps");
-	addParticleName(particlePath + "shotgunPelletHit.ps");
-	addParticleName(particlePath + "steam.ps");
-	addParticleName(particlePath + "thermiteEffect.ps");
-	addParticleName(particlePath + "trapperBulletHit.ps");
-	addParticleName(particlePath + "trapperBulletTrail.ps");
-	addParticleName(particlePath + "vacuumTrail.ps");
+	vector<std::string> particleFiles = ListFiles(particlePath, "*.ps");
+
+	for (int i = 0; i < particleFiles.size(); i++)
+	{
+		addParticleName(particlePath + particleFiles[i]);
+	}
 
 	initialized = true;
 	return true;
@@ -534,6 +514,20 @@ void RenderPipeline::reloadShaders()
 	glowSampleTextureLoc = glGetUniformLocation(glowSampleShader, "glowTexture");
 	glowSamplePixelUVX = glGetUniformLocation(glowSampleShader, "pixeluvX");
 
+
+	std::string postProcess[] = { "GameFiles/Shaders/glowsample_vs.glsl", "GameFiles/Shaders/fxaa_fs.glsl" };
+
+	CreateProgram(temp, postProcess, glowSampleShaderTypes, 2);
+	if (temp != 0)
+	{
+		postProcessShader = temp;
+		temp = 0;
+	}
+
+	postProcessTextureLoc = glGetUniformLocation(postProcessShader, "diffuse");
+	postProcessPixelUVX = glGetUniformLocation(postProcessShader, "pixeluvX");
+	postProcessPixelUVY = glGetUniformLocation(postProcessShader, "pixeluvY");
+
 	std::cout << "Done loading shaders\n";
 
 }
@@ -824,12 +818,7 @@ void RenderPipeline::finalizeRender()
 	gBuffer->preRender(glowSampleShader, glowSampleTextureLoc);
 
 	//GBuffer Render
-	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
-	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-
-	glDisable(GL_BLEND);
-	glEnable(GL_DEPTH_TEST);
-	gBuffer->render();
+	gBuffer->render(postProcessShader, postProcessTextureLoc, postProcessPixelUVX, postProcessPixelUVY);
 
 	renderLightvolumes();
 	
@@ -979,45 +968,47 @@ void RenderPipeline::renderDecals(void* data, int size)
 
 void RenderPipeline::renderCrosshair(CROSSHAIR_TYPE cross)
 {
-	glUseProgram(textShader);
-	glProgramUniformMatrix4fv(textShader, textShaderModel, 1, GL_FALSE, (GLfloat*)&glm::mat4());
-	glProgramUniformMatrix4fv(textShader, textShaderVP, 1, GL_FALSE, (GLfloat*)&glm::mat4());
-	glProgramUniform3f(textShader, textShaderOffset, 0, 0, 0);
-
-	glActiveTexture(GL_TEXTURE0);
-	glProgramUniform1i(textShader, textShaderLocation, 0);
-
-	switch (cross)
+	if (contMan.f_render_gui)
 	{
-	case CROSSHAIR_TRAPPER_P:
-		TextureManager::gTm->bindTextureOnly(crosshairTexture, DIFFUSE_FB);
-		this->cross->draw();
-		break;
-	case CROSSHAIR_SHANKER_P:
-	{
-		TextureInfo asd;
-		asd.lastTextureSlot = GL_TEXTURE0;
-		asd.state = TEXTURE_LOADED;
-		asd.textureID = crosshairHitTexture;
+		glUseProgram(textShader);
+		glProgramUniformMatrix4fv(textShader, textShaderModel, 1, GL_FALSE, (GLfloat*)&glm::mat4());
+		glProgramUniformMatrix4fv(textShader, textShaderVP, 1, GL_FALSE, (GLfloat*)&glm::mat4());
+		glProgramUniform3f(textShader, textShaderOffset, 0, 0, 0);
 
-		//TextureManager::gTm->bindOnly(asd, textShader, textShaderLocation);
-		glBindTexture(GL_TEXTURE_2D, crosshairHitTexture);
+		glActiveTexture(GL_TEXTURE0);
+		glProgramUniform1i(textShader, textShaderLocation, 0);
 
-		this->crossHit->draw();
-		break;
+		switch (cross)
+		{
+		case CROSSHAIR_TRAPPER_P:
+			TextureManager::gTm->bindTextureOnly(crosshairTexture, DIFFUSE_FB);
+			this->cross->draw();
+			break;
+		case CROSSHAIR_SHANKER_P:
+		{
+			TextureInfo asd;
+			asd.lastTextureSlot = GL_TEXTURE0;
+			asd.state = TEXTURE_LOADED;
+			asd.textureID = crosshairHitTexture;
+
+			//TextureManager::gTm->bindOnly(asd, textShader, textShaderLocation);
+			glBindTexture(GL_TEXTURE_2D, crosshairHitTexture);
+
+			this->crossHit->draw();
+			break;
+		}
+		//case CROSSHAIR_SHANKER_S:
+		//	break;
+		//case CROSSHAIR_BRUTE_P:
+		//	break;
+		//case CROSSHAIR_BRUTE_S:
+		//	break;
+		//case CROSSHAIR_NONE:
+		//	break;
+		default:
+			break;
+		}
 	}
-	//case CROSSHAIR_SHANKER_S:
-	//	break;
-	//case CROSSHAIR_BRUTE_P:
-	//	break;
-	//case CROSSHAIR_BRUTE_S:
-	//	break;
-	//case CROSSHAIR_NONE:
-	//	break;
-	default:
-		break;
-	}
-	
 }
 
 void RenderPipeline::renderEffects()
@@ -1853,42 +1844,46 @@ void RenderPipeline::removeTextObject(int id)
 
 void RenderPipeline::renderTextObject(int id)
 {
-	glUseProgram(textShader);
-	glProgramUniformMatrix4fv(textShader, textShaderModel, 1, GL_FALSE, (GLfloat*)&glm::mat4());
-	glProgramUniformMatrix4fv(textShader, textShaderVP, 1, GL_FALSE, (GLfloat*)&glm::mat4());
-	glProgramUniform3f(textShader, textShaderOffset, 0, 0, 0);
-	
-	TextureInfo asd;
-	asd.lastTextureSlot = GL_TEXTURE0;
-	asd.state = TEXTURE_LOADED;
-	asd.textureID = fontTexture;
+	if (contMan.f_render_gui)
+	{
+		glUseProgram(textShader);
+		glProgramUniformMatrix4fv(textShader, textShaderModel, 1, GL_FALSE, (GLfloat*)&glm::mat4());
+		glProgramUniformMatrix4fv(textShader, textShaderVP, 1, GL_FALSE, (GLfloat*)&glm::mat4());
+		glProgramUniform3f(textShader, textShaderOffset, 0, 0, 0);
 
-	TextureManager::gTm->bind(asd, textShader, textShaderLocation);//TextureManager::gTm->bindTexture(fontTexture, textShader, textShaderLocation, DIFFUSE_FB);
+		TextureInfo asd;
+		asd.lastTextureSlot = GL_TEXTURE0;
+		asd.state = TEXTURE_LOADED;
+		asd.textureID = fontTexture;
 
-	textObjects[id]->draw();
+		TextureManager::gTm->bind(asd, textShader, textShaderLocation);//TextureManager::gTm->bindTexture(fontTexture, textShader, textShaderLocation, DIFFUSE_FB);
 
+		textObjects[id]->draw();
+	}
 }
 
 void RenderPipeline::renderTextObjectWorldPos(int id, glm::mat4 world)
 {
-	glUseProgram(textShader);
-	glProgramUniformMatrix4fv(textShader, textShaderModel, 1, GL_FALSE, (GLfloat*)&world);
-	cam.setViewProjMat(textShader, textShaderVP);
-	//glProgramUniform3fv(textShader, textShaderOffset, 1, (GLfloat*)&textObjects[id]->getOffset()[0]);
+	if (contMan.f_render_gui)
+	{
+		glUseProgram(textShader);
+		glProgramUniformMatrix4fv(textShader, textShaderModel, 1, GL_FALSE, (GLfloat*)&world);
+		cam.setViewProjMat(textShader, textShaderVP);
+		//glProgramUniform3fv(textShader, textShaderOffset, 1, (GLfloat*)&textObjects[id]->getOffset()[0]);
 
-	vec3 pos = textObjects[id]->getOffset();
+		vec3 pos = textObjects[id]->getOffset();
 
-	glProgramUniform3f(textShader, textShaderOffset, -pos.x ,0,0);
+		glProgramUniform3f(textShader, textShaderOffset, -pos.x, 0, 0);
 
-	TextureInfo asd;
-	asd.lastTextureSlot = GL_TEXTURE0;
-	asd.state = TEXTURE_LOADED;
-	asd.textureID = fontTexture;
+		TextureInfo asd;
+		asd.lastTextureSlot = GL_TEXTURE0;
+		asd.state = TEXTURE_LOADED;
+		asd.textureID = fontTexture;
 
-	TextureManager::gTm->bind(asd, textShader, textShaderLocation);//TextureManager::gTm->bindTexture(fontTexture, textShader, textShaderLocation, DIFFUSE_FB);
+		TextureManager::gTm->bind(asd, textShader, textShaderLocation);//TextureManager::gTm->bindTexture(fontTexture, textShader, textShaderLocation, DIFFUSE_FB);
 
-	textObjects[id]->draw();
-
+		textObjects[id]->draw();
+	}
 }
 
 void RenderPipeline::setCapRoomColor(int capPoint, vec3 color, float intensity)
@@ -2297,4 +2292,33 @@ void RenderPipeline::renderTrailQUad(BULLET_TYPE type, float* pos, float* dir, f
 	glProgramUniform3fv(trailQuadShader, tarilQuadColor, 1, color);
 	
 	glDrawArrays(GL_POINTS, 0, 1);
+}
+
+void RenderPipeline::setuniversalInten(float inten)
+{
+	glProgramUniform1f(*gBuffer->shaderPtr, gBuffer->blightlightUniversalInten, inten);
+	glProgramUniform1f(gBuffer->spotVolShader, gBuffer->spotVolUniversalInten, inten);
+	glProgramUniform1f(gBuffer->pointVolShader, gBuffer->pointVolUniversalInten, inten);
+}
+
+std::vector<std::string> RenderPipeline::ListFiles(std::string Directory, std::string Extension)
+{
+	Directory.append(Extension);
+
+	WIN32_FIND_DATA FindFileData;
+	std::wstring FileName(Directory.begin(), Directory.end());
+	HANDLE hFind = FindFirstFile(FileName.c_str(), &FindFileData);
+	typedef std::codecvt_utf8<wchar_t> convert;
+	std::wstring_convert<convert, wchar_t> converter;
+
+	std::vector<std::string> listFileNames;
+	listFileNames.push_back(converter.to_bytes(FindFileData.cFileName));
+
+
+	while (FindNextFile(hFind, &FindFileData))
+	{
+		listFileNames.push_back(converter.to_bytes(FindFileData.cFileName));
+	}
+
+	return listFileNames;
 }

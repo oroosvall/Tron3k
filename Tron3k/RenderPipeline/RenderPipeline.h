@@ -153,6 +153,11 @@ private:
 	GLuint glowSampleTextureLoc;
 	GLuint glowSamplePixelUVX;
 
+	GLuint postProcessShader;
+	GLuint postProcessTextureLoc;
+	GLuint postProcessPixelUVX;
+	GLuint postProcessPixelUVY;
+
 	//lightwall
 	GLuint lwVertexDataId;
 	GLuint lwVertexAttribute;
@@ -308,6 +313,7 @@ public:
 	virtual void stopExecTimer(int id);
 	virtual bool* getRenderedChunks(int& get_size);
 
+	virtual void setuniversalInten(float val);
 	virtual void renderTakeDamageDistort();
 	virtual void startTakeDamageEffect(int maxDisplace, float time);
 	virtual void updateTakeDamageEffect(float dt);
@@ -316,6 +322,8 @@ public:
 	virtual void pushStaticLights();
 	virtual void clearDynamicLights();
 	virtual void renderLightvolumes();
+
+	vector<std::string> ListFiles(std::string Directory, std::string Extension);
 };
 
 

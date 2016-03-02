@@ -36,7 +36,7 @@ public:
 	virtual void setWorldMatrix(int id, float x, float y);
 	virtual void resetWorldMatrix(int id);
 
-	virtual int checkCollision(glm::vec2 pos, float newSoundProcent = 0.0f);
+	virtual int checkCollision(glm::vec2 pos, float &newSoundProcent, float &xPos);
 
 	virtual void setTexture(std::vector<GLuint> uiTextureIds);
 

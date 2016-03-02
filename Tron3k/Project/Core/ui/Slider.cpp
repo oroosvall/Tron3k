@@ -109,7 +109,7 @@ void Slider::resetWorldMatrix(int id)
 	worldMatrix[id][1].w = startWMY;
 }
 
-int Slider::checkCollision(glm::vec2 mpos, float newSoundProcent)
+int Slider::checkCollision(glm::vec2 mpos, float &newSoundProcent, float &xPos)
 {
 	int returnValue = -1;
 	if (mpos.x > pos[0].x && mpos.x < pos[1].x)
@@ -119,6 +119,7 @@ int Slider::checkCollision(glm::vec2 mpos, float newSoundProcent)
 			returnValue = uniqueKey;
 			setWorldMatrix(1, mpos.x, mpos.y);
 			newSoundProcent = calculateSoundProcent(mpos.x);
+			xPos = mpos.x;
 		}
 	}
 

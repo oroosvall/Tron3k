@@ -102,7 +102,7 @@ public:
 	void changeTex(int objId, int whichTex);
 	void scaleAndTextChangeTexture(int objId, int whichTex);
 
-	int mouseCollission(glm::vec2 pos, float newSoundProcent = 0.0f);
+	int mouseCollission(glm::vec2 pos, float &newSoundProcent);
 	void mouseHover(glm::vec2 pos);
 
 	void changeColorTeam(int whichTex);

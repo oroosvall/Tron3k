@@ -22,7 +22,7 @@ public:
 	void bind(GLuint index);
 
 	void preRender(GLuint shader, GLuint location);
-	void render(/*glm::vec3 playerPos, glm::vec3 playerDir*/);
+	void render(GLuint shader, GLuint location, GLuint uvX, GLuint uvY);
 
 	void clearLights();
 	void clearBuffers();
@@ -63,6 +63,10 @@ public:
 	GLuint pointVolBufferPos;
 
 	GLuint* shaderPtr;
+	GLuint blightlightUniversalInten;
+	GLuint spotVolUniversalInten;
+	GLuint pointVolUniversalInten;
+
 	GLuint* portal_shaderPtr;
 
 	glm::vec3 eyePos;
@@ -77,8 +81,10 @@ public:
 	int nrOfPointLights = 0;
 
 	GLuint glowSampleFbo;
-	
 	RenderTarget glowSampleTexture;
+
+	GLuint postProcess;
+	RenderTarget postProcessTexture;
 
 private:
 
