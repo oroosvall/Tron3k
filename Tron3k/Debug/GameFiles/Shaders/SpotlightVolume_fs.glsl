@@ -92,7 +92,7 @@ void main()
 
 			// Final
 			Diffuse0 = texture(Diffuse, UV);
-			fragment_color = (fragment_color * Diffuse0 + specularAddetive) * universalInten;
+			fragment_color = (fragment_color * Diffuse0 + specularAddetive); // * universalInten;
 		}
 	}
 
@@ -101,7 +101,7 @@ void main()
 	float lightToSurfaceAngle = dot(lightToEye, lights[spotlightID].Direction);
 
 	if(lightToSurfaceAngle > cosCone)
-		fragment_color += vec4(lights[spotlightID].Color, 1) * pow(interpolDist, 5) * pow(lightToSurfaceAngle, 10) * universalInten;
+		fragment_color += vec4(lights[spotlightID].Color, 1) * pow(interpolDist, 5) * pow(lightToSurfaceAngle, 10); // * universalInten;
 
 	//fragment_color += vec4(0.1, 0.0, 0.0, 0.0);
 }
