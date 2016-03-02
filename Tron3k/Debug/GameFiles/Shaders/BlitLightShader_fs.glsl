@@ -174,7 +174,7 @@ void main()
 	}
 	
 	sum += texture(GlowMap, UV) * 0.65f;
-	sum *= universalInten;
+	//sum *= universalInten;
 	
 	fragment_color += sum + specularAddetive;
 }
