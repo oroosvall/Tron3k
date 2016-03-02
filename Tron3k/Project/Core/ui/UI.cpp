@@ -308,19 +308,21 @@ glm::vec2 UI::fileCoordToScreenSpace(glm::vec2 pos)
 }
 
 
-int UI::mouseCollission(glm::vec2 pos, float newSoundProcent)
+int UI::mouseCollission(glm::vec2 pos, float &newSoundProcent)
 {
 	int hit = -1;
 	int result = -1;
 	int index = -1;
+	float tX = 0.0f;
 	
 	for (int i = 0; i < nrOfObjects && hit == -1; i++)
 	{
-		hit = UiObjects[i]->checkCollision(pos, newSoundProcent);
+		hit = UiObjects[i]->checkCollision(pos, newSoundProcent, tX);
 		index = i;
 	}
 
-	if (index > -1)
+	if (hit != -1)
+	{
 		if (hit == 30 || hit == 32 || hit == 33 || hit == 34)
 		{
 			for (int i = 0; i < UiObjects.size(); i++)
@@ -328,10 +330,10 @@ int UI::mouseCollission(glm::vec2 pos, float newSoundProcent)
 			UiObjects[index]->changeTexUsed(1, 0);
 			UiObjects[index]->setDontChangeTexture(true);
 		}
-
-	if(optionsMenu && (index > 0 && index < 10))
-		if(optionsSaved != nullptr)
-			optionsSaved[index] = newSoundProcent;
+		else if (optionsMenu && (index > 0 && index < 10))
+			if (optionsSaved != nullptr)
+				optionsSaved[index] = tX;
+	}
 
 	return hit;
 }
@@ -425,9 +427,12 @@ void UI::scaleBar(int id,  float procentOfMax, bool fromRight)
 			UiObjects[textIdList[id]]->scaleBar(0, procentOfMax, fromRight);
 }
 
-void UI::setOptionsSaved(float list[])
+void UI::setOptionsSaved(float* list)
 {
 	optionsSaved = list;
+	for (int i = 1; i < UiObjects.size() - 1; i++)
+		if(optionsSaved[i] >= -1.0f && optionsSaved[i] <= 1.0f)
+			UiObjects[i]->setWorldMatrix(1, optionsSaved[i], 0.0f);
 }
 float* UI::getOptionsSaved()
 {

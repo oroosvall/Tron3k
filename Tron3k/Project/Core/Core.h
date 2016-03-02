@@ -134,8 +134,13 @@ private:
 	void sendPlayerBox();
 	void sendWorldBoxes();
 
+	//Show Menus
 	void showTeamSelect();
 	void showClassSelect();
+
+	//Set menu text
+	void setHUDText();
+
 	//Menu activations
 	bool startTeamSelect; //temp
 	bool renderMenu;
@@ -143,6 +148,8 @@ private:
 	bool menuNameKeyListener;
 	int nameNrOfKeys;
 	int ipNrOfKeys;
+	bool escActive;
+	bool inGameSettings;
 
 	bool shitBool = false;
 	bool justAFrameCounterActivated = false;
@@ -165,6 +172,8 @@ private:
 	//Options data
 	float* optionsSavedData;
 	int optionsDataSize;
+
+	bool justSetFullScreen;
 
 public:
 	

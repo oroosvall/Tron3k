@@ -121,7 +121,7 @@ void InputBox::fromPosToQuadScreen(glm::vec2 positions, int id)
 	pos[1] = glm::vec2(worldMatrix[0].w + worldMatrix[0].x, worldMatrix[1].w + worldMatrix[1].y);
 }
 
-int InputBox::checkCollision(glm::vec2 mpos, float newSoundProcent)
+int InputBox::checkCollision(glm::vec2 mpos, float &newSoundProcent, float &xPos)
 {
 	int returnValue = -1;
 	if (mpos.x > pos[0].x && mpos.x < pos[1].x)
