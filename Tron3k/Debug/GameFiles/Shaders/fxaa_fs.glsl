@@ -14,7 +14,7 @@ uniform sampler2D diffuse;
 uniform float pixeluvX;
 uniform float pixeluvY;
 
-out vec4 fragment_color;
+layout (location = 2)out vec4 outColor;
 
 float rgbToLuma(vec3 color)
 {
@@ -23,11 +23,11 @@ float rgbToLuma(vec3 color)
 
 vec4 fxaaPass(sampler2D tex)
 {
-    vec3 rgbN = texture(tex, vec2(UV.x, UV.y) + vec2(0,-pixeluvY)).rgb;
-    vec3 rgbW = texture(tex, vec2(UV.x, UV.y) + vec2(-pixeluvX,0)).rgb;
+    vec3 rgbN = texture(tex, vec2(UV.x, UV.y) + vec2(0.0f,-pixeluvY)).rgb;
+    vec3 rgbW = texture(tex, vec2(UV.x, UV.y) + vec2(-pixeluvX,0.0f)).rgb;
     vec3 rgbM = texture(tex, vec2(UV.x, UV.y)).rgb;
-    vec3 rgbE = texture(tex, vec2(UV.x, UV.y) + vec2(pixeluvX,0)).rgb;
-    vec3 rgbS = texture(tex, vec2(UV.x, UV.y) + vec2(0,pixeluvY)).rgb;
+    vec3 rgbE = texture(tex, vec2(UV.x, UV.y) + vec2(pixeluvX,0.0f)).rgb;
+    vec3 rgbS = texture(tex, vec2(UV.x, UV.y) + vec2(0.0f,pixeluvY)).rgb;
     
     float lumaN  = rgbToLuma(rgbN);
     float lumaW  = rgbToLuma(rgbW);
@@ -44,9 +44,9 @@ vec4 fxaaPass(sampler2D tex)
     }
     
     
-    float lumaL = (lumaN + lumaW + lumaE + lumaS) * 0.25;
+    float lumaL = (lumaN + lumaW + lumaE + lumaS) * 0.25f;
     float rangeL = abs(lumaL - lumaM);
-    float blendL = max(0.0, (rangeL / range) - FXAA_SUBPIX_TRIM) * FXAA_SUBPIX_TRIM_SCALE; 
+    float blendL = max(0.0f, (rangeL / range) - FXAA_SUBPIX_TRIM) * FXAA_SUBPIX_TRIM_SCALE; 
     blendL = min(FXAA_SUBPIX_CAP, blendL);
     
     vec3 rgbL = rgbN + rgbW + rgbM + rgbE + rgbS;
@@ -56,7 +56,7 @@ vec4 fxaaPass(sampler2D tex)
     vec3 rgbSW = texture(tex, UV + vec2(-pixeluvX, pixeluvY)).xyz;
     vec3 rgbSE = texture(tex, UV + vec2( pixeluvX, pixeluvY)).xyz;
     rgbL += (rgbNW + rgbNE + rgbSW + rgbSE);
-    rgbL *= vec3(1.0/9.0);
+    rgbL *= vec3(1.0f/9.0f);
     
     return vec4(rgbL, 1.0f);
     
@@ -64,5 +64,6 @@ vec4 fxaaPass(sampler2D tex)
 
 void main()
 {
-    fragment_color = fxaaPass(diffuse);
+    //outColor = fxaaPass(diffuse);
+	outColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
 }

@@ -38,6 +38,8 @@ void Core::init()
 
 	createWindow(winX, winY, fullscreen);
 
+	glfwSwapBuffers(win);
+
 	serverRender = false;
 
 	timepass = 0.0f;

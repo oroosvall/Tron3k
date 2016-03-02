@@ -297,11 +297,12 @@ void Gbuffer::render(GLuint shader, GLuint location, GLuint uvX, GLuint uvY)
 	//glBindFramebuffer(GL_FRAMEBUFFER, NULL);
 	//glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-	glBindFramebuffer(GL_FRAMEBUFFER, postProcess);
+	//glBindFramebuffer(GL_FRAMEBUFFER, postProcess);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glDisable(GL_BLEND);
-	glEnable(GL_DEPTH_TEST);
+
 
 	// bind shader
 	glUseProgram(*shaderPtr);
@@ -342,19 +343,21 @@ void Gbuffer::render(GLuint shader, GLuint location, GLuint uvX, GLuint uvY)
 	//	glProgramUniform1i(*shaderPtr, uniformUse, n);
 	//	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	//}
+	//glEnable(GL_DEPTH_TEST);
+	//
+	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	//glClearColor(1, 0, 0, 1);
+	//glClear(GL_COLOR_BUFFER_BIT);
+	//
+	//glUseProgram(shader);
+	//glActiveTexture(GL_TEXTURE0);
+	//glBindTexture(GL_TEXTURE_2D, postProcessTexture.getTargetId());
+	//glProgramUniform1i(shader, location, 0);
+	//glProgramUniform1f(shader, uvX, 1.0f / xres);
+	//glProgramUniform1f(shader, uvY, 1.0f / yres);
+	//
+	//glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
-	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
-	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-
-	glUseProgram(shader);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, postProcessTexture.getTargetId());
-	glProgramUniform1i(shader, location, 0);
-	glProgramUniform1f(shader, uvX, 1.0f / xres);
-	glProgramUniform1f(shader, uvY, 1.0f / yres);
-
-
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
 
 void Gbuffer::clearBuffers()
