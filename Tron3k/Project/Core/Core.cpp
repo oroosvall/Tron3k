@@ -125,8 +125,6 @@ Core::~Core()
 
 void Core::update(float dt)
 {
-	timepass += dt;
-
 	if (shitBool && justAFrameCounterActivated)
 	{
 		justAFrameCounter++;
@@ -262,6 +260,8 @@ void Core::update(float dt)
 	}
 
 	dt *= playbackSpeed;
+
+	timepass += dt;
 
 	switch (current)
 	{
@@ -2480,7 +2480,10 @@ void Core::renderWorld(float dt)
 		vec3 camDir = cam->getDir();
 		bool force3rd = false;
 
-		renderPipe->setuniversalInten((sin(timepass) + 1));
+		float intennn = (sin(timepass / 5));
+		if (intennn < 0)
+			intennn = 0;
+		renderPipe->setuniversalInten(intennn);
 
 		/*		if (i->getKeyInfo(GLFW_KEY_P))
 		{
