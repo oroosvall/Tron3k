@@ -480,10 +480,12 @@ void UIManager::hoverCheck(glm::vec2 pos)
 }
 
 
-void UIManager::changeTex(int objId, int whichTex)
+void UIManager::changeTex(int objId, int whichTex, int menu)
 {
 	if (nrOfOpenedMenus > 0)
-		if (currentMenu > -1)
+		if (menu > -1)
+			menus[menu].changeTex(objId, whichTex);
+		else if(currentMenu)
 			menus[currentMenu].changeTex(objId, whichTex);
 		else
 			console->printMsg("Error: Function changeTex in UIManager, currentMenu has a value lower then 0", "System", 'S');
@@ -491,10 +493,12 @@ void UIManager::changeTex(int objId, int whichTex)
 		console->printMsg("Error: Function changeTex in UIManager, nrOfOpenedMenus has a value of 0 or lower", "System", 'S');
 }
 
-void UIManager::scaleAndTextChangeTexture(int objId, int whichTex)
+void UIManager::scaleAndTextChangeTexture(int objId, int whichTex, int menu)
 {
 	if (nrOfOpenedMenus > 0)
-		if (currentMenu > -1)
+		if (menu > -1)
+			menus[menu].scaleAndTextChangeTexture(objId, whichTex);
+		else if(currentMenu > -1)
 			menus[currentMenu].scaleAndTextChangeTexture(objId, whichTex);
 		else
 			console->printMsg("Error: Function changeTex in UIManager, currentMenu has a value lower then 0", "System", 'S');
@@ -522,10 +526,12 @@ void UIManager::setWindowResolution(int winX, int winY)
 		console->printMsg("Error: Function setWindowResolution in UIManager, nrOfOpenedMenus has a value of 0 or lower", "System", 'S');
 }
 
-void UIManager::setText(std::string text, int id)
+void UIManager::setText(std::string text, int id, int menu)
 {
 	if (nrOfOpenedMenus > 0)
-		if(currentMenu > -1)
+		if(menu > -1)
+			menus[menu].setText(text, id);
+		else if(currentMenu > -1)
 			menus[currentMenu].setText(text, id);
 		else
 			console->printMsg("Error: Function setText in UIManager, currentMenu has a value lower then 0", "System", 'S');
@@ -533,26 +539,32 @@ void UIManager::setText(std::string text, int id)
 		console->printMsg("Error: Function setText in UIManager, nrOfOpenedMenus has a value of 0 or lower", "System", 'S');
 }
 
-std::string UIManager::getText(int id)
+std::string UIManager::getText(int id, int menu)
 {
-	if (currentMenu > -1)
+	if (menu > -1)
+		return menus[menu].getText(id);
+	else if (currentMenu > -1)
 		return menus[currentMenu].getText(id);
 	return "";
 }
-void UIManager::removeLastInput(int id)
+void UIManager::removeLastInput(int id, int menu)
 {
 	if (nrOfOpenedMenus > 0)
-		if (currentMenu > -1)
-			menus[currentMenu].removeLastInput(id);
+		if (menu > -1)
+			menus[menu].removeLastInput(id);
+		else if(currentMenu > -1)
+			menus[currentMenu].clearText(id);
 		else
 			console->printMsg("Error: Function removeLastInput in UIManager, currentMenu has a value lower then 0", "System", 'S');
 	else
 		console->printMsg("Error: Function removeLastInput in UIManager, nrOfOpenedMenus has a value of 0 or lower", "System", 'S');
 }
-void UIManager::clearText(int id)
+void UIManager::clearText(int id, int menu)
 {
 	if (nrOfOpenedMenus > 0)
-		if (currentMenu > -1)
+		if (menu > -1)
+			menus[menu].clearText(id);
+		else if(currentMenu > -1)
 			menus[currentMenu].clearText(id);
 		else
 			console->printMsg("Error: Function clearText in UIManager, currentMenu has a value lower then 0", "System", 'S');
@@ -560,10 +572,12 @@ void UIManager::clearText(int id)
 		console->printMsg("Error: Function clearText in UIManager, nrOfOpenedMenus has a value of 0 or lower", "System", 'S');
 }
 
-void UIManager::scaleBar(int id, float procentOfMax, bool fromRight)
+void UIManager::scaleBar(int id, float procentOfMax, bool fromRight, int menu)
 {
 	if(nrOfOpenedMenus  > 0)
-		if(currentMenu > -1)
+		if(menu > -1)
+			menus[menu].scaleBar(id, procentOfMax, fromRight);
+		else if(currentMenu > -1)
 			menus[currentMenu].scaleBar(id, procentOfMax, fromRight);
 		else
 			console->printMsg("Error: Function scaleBar in UIManager, currentMenu has a value lower then 0", "System", 'S');

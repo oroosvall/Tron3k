@@ -114,17 +114,17 @@ public:
 	int collisionCheck(glm::vec2 pos, float &newSoundProcent);
 	void hoverCheck(glm::vec2 pos);
 
-	void changeTex(int objId, int whichTex);
-	void scaleAndTextChangeTexture(int objId, int whichTex);
+	void changeTex(int objId, int whichTex, int menu = -1);
+	void scaleAndTextChangeTexture(int objId, int whichTex, int menu = -1);
 	void changeColorTeam();
 
 	void setWindowResolution(int winX, int winY);
 
-	void setText(std::string text, int id);
-	std::string getText(int id);
-	void removeLastInput(int id);
-	void clearText(int id);
-	void scaleBar(int id, float procentOfMax, bool fromRight);
+	void setText(std::string text, int id, int menu = -1);
+	std::string getText(int id, int menu = -1);
+	void removeLastInput(int id, int menu = -1);
+	void clearText(int id, int menu = -1);
+	void scaleBar(int id, float procentOfMax, bool fromRight, int menu = -1);
 
 	void setTeamColor(int team);
 	int getTeamColor();

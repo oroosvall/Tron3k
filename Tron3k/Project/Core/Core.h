@@ -139,7 +139,7 @@ private:
 	void showClassSelect();
 
 	//Set menu text
-	void setHUDText();
+	void setHUDText(int menuID);
 
 	//Menu activations
 	bool startTeamSelect; //temp
@@ -154,6 +154,9 @@ private:
 	bool shitBool = false;
 	bool justAFrameCounterActivated = false;
 	int justAFrameCounter = 0;
+
+	//time
+	int oldTime;
 
 	//Menu input
 	void menuIpKeyInputUpdate();

@@ -767,15 +767,15 @@ public:
 				Player* local = gamePtr->getPlayer(gamePtr->GetLocalPlayerId());
 				KingOfTheHill* koth = (KingOfTheHill*)gamePtr->getGameMode();
 
-				uiPtr->clearText(scaleAndText::HP);
-				uiPtr->clearText(scaleAndText::Ammo);
-				uiPtr->clearText(scaleAndText::TicketBar1);
-				uiPtr->clearText(scaleAndText::TicketBar2);
-				uiPtr->clearText(scaleAndText::Wins1);
-				uiPtr->clearText(scaleAndText::Wins2);
+				uiPtr->clearText(scaleAndText::HP, InGameUI::GUI);
+				uiPtr->clearText(scaleAndText::Ammo, InGameUI::GUI);
+				uiPtr->clearText(scaleAndText::TicketBar1, InGameUI::GUI);
+				uiPtr->clearText(scaleAndText::TicketBar2, InGameUI::GUI);
+				uiPtr->clearText(scaleAndText::Wins1, InGameUI::GUI);
+				uiPtr->clearText(scaleAndText::Wins2, InGameUI::GUI);
 
 				uiPtr->HUD.HP = local->getMaxHP();
-				uiPtr->setText(std::to_string(local->getHP()), scaleAndText::HP); //hp
+				uiPtr->setText(std::to_string(local->getHP()), scaleAndText::HP, InGameUI::GUI); //hp
 
 				std::string sFirst = "0";
 				std::string sSecond = "0";
@@ -804,7 +804,7 @@ public:
 					sSecond = "99";
 
 				std::string nText = sFirst + "/" + sSecond;
-				uiPtr->setText(nText, scaleAndText::Ammo);
+				uiPtr->setText(nText, scaleAndText::Ammo, InGameUI::GUI);
 				//
 
 				//Ticketbar1
@@ -818,7 +818,7 @@ public:
 				else if (sFirst.size() > 3)
 					sFirst = "99";
 
-				uiPtr->setText(sFirst, scaleAndText::TicketBar1); //tickets
+				uiPtr->setText(sFirst, scaleAndText::TicketBar1, InGameUI::GUI); //tickets
 				//
 				
 				//Ticketbar2
@@ -832,7 +832,7 @@ public:
 				else if (sFirst.size() > 3)
 					sFirst = "99";
 
-				uiPtr->setText(sFirst, scaleAndText::TicketBar2); //tickets
+				uiPtr->setText(sFirst, scaleAndText::TicketBar2, InGameUI::GUI); //tickets
 				//
 				
 				 //Scores1
@@ -846,7 +846,7 @@ public:
 				else if (sFirst.size() > 3)
 					sFirst = "99";
 
-				uiPtr->setText(sFirst, scaleAndText::Wins1); //tickets
+				uiPtr->setText(sFirst, scaleAndText::Wins1, InGameUI::GUI); //tickets
 				//
 				
 				//Scores2
@@ -860,19 +860,19 @@ public:
 				else if (sFirst.size() > 3)
 					sFirst = "99";
 
-				uiPtr->setText(sFirst, scaleAndText::Wins2); //tickets
+				uiPtr->setText(sFirst, scaleAndText::Wins2, InGameUI::GUI); //tickets
 				//
 				
 				if (int(koth->getTimer()) == 0)
 				{
-					uiPtr->clearText(scaleAndText::Time);
-					uiPtr->setText("00:00", scaleAndText::Time); //time
+					uiPtr->clearText(scaleAndText::Time, InGameUI::GUI);
+					uiPtr->setText("00:00", scaleAndText::Time, InGameUI::GUI); //time
 				}
 
 				uiPtr->HUD.specialMeter = 0.0f;
 				uiPtr->HUD.maxSpecialMeter = 100.0f;
 
-				uiPtr->scaleBar(scaleAndText::AbilityMeter, 0.0f, true);
+				uiPtr->scaleBar(scaleAndText::AbilityMeter, 0.0f, true, InGameUI::GUI);
 
 				uiPtr->setHoverCheckBool(false);
 			}

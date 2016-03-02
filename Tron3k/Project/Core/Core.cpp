@@ -343,6 +343,10 @@ void Core::upMenu(float dt)
 	{
 		uiManager->setMenu(MainMenu::Options);
 		justSetFullScreen = false;
+		if (fullscreen)
+			uiManager->changeTex(9, 1);
+		else
+			uiManager->changeTex(9, 0);
 	}
 
 	if (i->justPressed(GLFW_MOUSE_BUTTON_LEFT))
@@ -442,6 +446,7 @@ void Core::upMenu(float dt)
 					Gamestate tmp = current;
 					current = last;
 					last = tmp;
+					subState = 2;
 
 					optionsSavedData = uiManager->getOptionsSaved();
 					uiManager->LoadNextSet(UISets::InGame, winX, winY);
@@ -453,7 +458,7 @@ void Core::upMenu(float dt)
 					inGameSettings = false;
 
 					//Set HUD stats
-					setHUDText();
+					setHUDText(InGameUI::GUI);
 				}
 			}
 
@@ -462,9 +467,9 @@ void Core::upMenu(float dt)
 			uiManager->setFirstMenuSet(true);
 			uiManager->setMenu(MainMenu::Options);
 			if (fullscreen)
-				uiManager->changeTex(10, 1);
+				uiManager->changeTex(9, 1);
 			else
-				uiManager->changeTex(10, 0);
+				uiManager->changeTex(9, 0);
 			break;
 		case 9: //Settings -> How to play
 			uiManager->setFirstMenuSet(true);
@@ -661,8 +666,8 @@ void Core::upRoam(float dt)
 			uiManager->HUD.ammo = p->getAmmo();
 
 			std::string nText = hudTextOutPutManager(false, uiManager->HUD.ammo, p->getMaxAmmo());//std::to_string(p->getAmmo()) + "/" + std::to_string(p->getMaxAmmo());
-			uiManager->clearText(scaleAndText::Ammo);
-			uiManager->setText(nText, scaleAndText::Ammo);
+			uiManager->clearText(scaleAndText::Ammo, InGameUI::GUI);
+			uiManager->setText(nText, scaleAndText::Ammo, InGameUI::GUI);
 		}
 
 		if (game->fireEventReady())
@@ -807,6 +812,8 @@ void Core::upClient(float dt)
 			me->setName(_name);
 			game->getPlayer(game->GetLocalPlayerId())->setLockedControls(true);
 			showTeamSelect();
+			renderMenu = false;
+			renderUI = true;
 
 			subState++;
 			uiManager->HUD.specialMeter = 0.0f;
@@ -933,10 +940,10 @@ void Core::upClient(float dt)
 					//uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam1, false);
 					//uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam2, false);
 
-					uiManager->scaleAndTextChangeTexture(scaleAndText::Wins1, 0);
-					uiManager->scaleAndTextChangeTexture(scaleAndText::Wins2, 0);
-					uiManager->scaleAndTextChangeTexture(scaleAndText::TicketBar1, 0);
-					uiManager->scaleAndTextChangeTexture(scaleAndText::TicketBar2, 0);
+					uiManager->scaleAndTextChangeTexture(scaleAndText::Wins1, 0, InGameUI::GUI);
+					uiManager->scaleAndTextChangeTexture(scaleAndText::Wins2, 0, InGameUI::GUI);
+					uiManager->scaleAndTextChangeTexture(scaleAndText::TicketBar1, 0, InGameUI::GUI);
+					uiManager->scaleAndTextChangeTexture(scaleAndText::TicketBar2, 0, InGameUI::GUI);
 
 					uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam1, false);
 					uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam2, false);
@@ -964,8 +971,8 @@ void Core::upClient(float dt)
 					//uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam1, false);
 					//uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam2, false);
 
-					uiManager->scaleAndTextChangeTexture(scaleAndText::Wins1, 0);
-					uiManager->scaleAndTextChangeTexture(scaleAndText::Wins2, 0);
+					uiManager->scaleAndTextChangeTexture(scaleAndText::Wins1, 0, InGameUI::GUI);
+					uiManager->scaleAndTextChangeTexture(scaleAndText::Wins2, 0, InGameUI::GUI);
 
 					uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam1, false);
 					uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam2, false);
@@ -1943,26 +1950,26 @@ void Core::roamHandleCmds(std::string com)
 				Player* local = game->getPlayer(game->GetLocalPlayerId());
 				KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
 
-				uiManager->clearText(scaleAndText::HP);
-				uiManager->clearText(scaleAndText::Ammo);
-				uiManager->clearText(scaleAndText::TicketBar1);
-				uiManager->clearText(scaleAndText::TicketBar2);
-				uiManager->clearText(scaleAndText::Wins1);
-				uiManager->clearText(scaleAndText::Wins2);
-				uiManager->clearText(scaleAndText::Time);
+				uiManager->clearText(scaleAndText::HP, InGameUI::GUI);
+				uiManager->clearText(scaleAndText::Ammo, InGameUI::GUI);
+				uiManager->clearText(scaleAndText::TicketBar1, InGameUI::GUI);
+				uiManager->clearText(scaleAndText::TicketBar2, InGameUI::GUI);
+				uiManager->clearText(scaleAndText::Wins1, InGameUI::GUI);
+				uiManager->clearText(scaleAndText::Wins2, InGameUI::GUI);
+				uiManager->clearText(scaleAndText::Time, InGameUI::GUI);
 
-				uiManager->setText(std::to_string(local->getHP()), scaleAndText::HP); //hp
+				uiManager->setText(std::to_string(local->getHP()), scaleAndText::HP, InGameUI::GUI); //hp
 
 				std::string nText = std::to_string(local->getAmmo()) + "/" + std::to_string(local->getMaxAmmo());
-				uiManager->setText(nText, scaleAndText::Ammo); //ammo
-				uiManager->setText("00", scaleAndText::TicketBar1); //tickets
-				uiManager->setText("00", scaleAndText::TicketBar2); //tickets2
-				uiManager->setText("00", scaleAndText::Wins1); //wins1
-				uiManager->setText("00", scaleAndText::Wins2); //wins2
-				uiManager->setText("00:00", scaleAndText::Time); //time
+				uiManager->setText(nText, scaleAndText::Ammo, InGameUI::GUI); //ammo
+				uiManager->setText("00", scaleAndText::TicketBar1, InGameUI::GUI); //tickets
+				uiManager->setText("00", scaleAndText::TicketBar2, InGameUI::GUI); //tickets2
+				uiManager->setText("00", scaleAndText::Wins1, InGameUI::GUI); //wins1
+				uiManager->setText("00", scaleAndText::Wins2, InGameUI::GUI); //wins2
+				uiManager->setText("00:00", scaleAndText::Time, InGameUI::GUI); //time
 
 
-				uiManager->scaleBar(scaleAndText::AbilityMeter, 1.0f, true);
+				uiManager->scaleBar(scaleAndText::AbilityMeter, 1.0f, true, InGameUI::GUI);
 
 				uiManager->setHoverCheckBool(false);
 			}
@@ -2992,11 +2999,11 @@ void Core::inGameUIUpdate() //Ingame ui update
 		if (local->getHP() != uiManager->HUD.HP) //Health
 		{
 			uiManager->HUD.HP = local->getHP();
-			uiManager->clearText(scaleAndText::HP);
-			uiManager->setText(std::to_string(uiManager->HUD.HP), scaleAndText::HP);
+			uiManager->clearText(scaleAndText::HP, InGameUI::GUI);
+			uiManager->setText(std::to_string(uiManager->HUD.HP), scaleAndText::HP, InGameUI::GUI);
 			if ((float)local->getMaxHP() > 0)
 			{
-				uiManager->scaleBar(scaleAndText::HP, (float)(uiManager->HUD.HP) / (float)(local->getMaxHP()), true);
+				uiManager->scaleBar(scaleAndText::HP, (float)(uiManager->HUD.HP) / (float)(local->getMaxHP()), true, InGameUI::GUI);
 			}
 			else
 				console.printMsg("Error: Function inGameUIUpdate in Core, local player maxHp has a value of 0 or below", "System", 'S');
@@ -3007,7 +3014,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 			uiManager->HUD.specialMeter = local->getSpecialMeter();
 			if(uiManager->HUD.maxSpecialMeter > 0)
 				procent = local->getSpecialMeter() / uiManager->HUD.maxSpecialMeter;
-			uiManager->scaleBar(scaleAndText::AbilityMeter, procent, true);
+			uiManager->scaleBar(scaleAndText::AbilityMeter, procent, true, InGameUI::GUI);
 		}
 		if (local->getAmmo() != uiManager->HUD.ammo) //Ammo
 		{
@@ -3030,8 +3037,8 @@ void Core::inGameUIUpdate() //Ingame ui update
 				sMaxAmmo = "99";
 
 			std::string nText = sAmmo + "/" + sMaxAmmo;
-			uiManager->clearText(scaleAndText::Ammo);
-			uiManager->setText(nText, scaleAndText::Ammo);
+			uiManager->clearText(scaleAndText::Ammo, InGameUI::GUI);
+			uiManager->setText(nText, scaleAndText::Ammo, InGameUI::GUI);
 		}
 	} //player stats on HUD end
 
@@ -3041,9 +3048,9 @@ void Core::inGameUIUpdate() //Ingame ui update
 		int difference = uiManager->HUD.teamOneTokens - koth->getRespawnTokens(1);
 
 		uiManager->HUD.teamOneTokens = koth->getRespawnTokens(1);
-		uiManager->clearText(scaleAndText::TicketBar1);
+		uiManager->clearText(scaleAndText::TicketBar1, InGameUI::GUI);
 		std::string nText = hudTextOutPutManager(true, uiManager->HUD.teamOneTokens);
-		uiManager->setText(nText, scaleAndText::TicketBar1);
+		uiManager->setText(nText, scaleAndText::TicketBar1, InGameUI::GUI);
 		
 		int tmp = uiManager->addNewWM(hideAbleObj::TicketReducerTeam1);
 		if (tmp != -1)
@@ -3064,9 +3071,9 @@ void Core::inGameUIUpdate() //Ingame ui update
 		int difference = uiManager->HUD.teamTwoTokens - koth->getRespawnTokens(2);
 
 		uiManager->HUD.teamTwoTokens = koth->getRespawnTokens(2);
-		uiManager->clearText(scaleAndText::TicketBar2);
+		uiManager->clearText(scaleAndText::TicketBar2, InGameUI::GUI);
 		std::string nText = hudTextOutPutManager(true, uiManager->HUD.teamTwoTokens);
-		uiManager->setText(nText, scaleAndText::TicketBar2);
+		uiManager->setText(nText, scaleAndText::TicketBar2, InGameUI::GUI);
 
 		int tmp = uiManager->addNewWM(hideAbleObj::TicketReducerTeam2);
 		if (tmp != -1)
@@ -3091,9 +3098,9 @@ void Core::inGameUIUpdate() //Ingame ui update
 			int difference = koth->getRoundWins(1) - uiManager->HUD.teamOneScore;
 	
 			uiManager->HUD.teamOneScore = koth->getRoundWins(1);
-			uiManager->clearText(scaleAndText::Wins1);
+			uiManager->clearText(scaleAndText::Wins1, InGameUI::GUI);
 			std::string nText = hudTextOutPutManager(true, uiManager->HUD.teamOneScore);
-			uiManager->setText(nText, scaleAndText::Wins1);
+			uiManager->setText(nText, scaleAndText::Wins1, InGameUI::GUI);
 
 			if (difference > 0 && difference < 4)
 			{
@@ -3120,9 +3127,9 @@ void Core::inGameUIUpdate() //Ingame ui update
 			int difference = koth->getRoundWins(2) - uiManager->HUD.teamTwoScore;
 	
 			uiManager->HUD.teamTwoScore = koth->getRoundWins(2);
-			uiManager->clearText(scaleAndText::Wins2);
+			uiManager->clearText(scaleAndText::Wins2, InGameUI::GUI);
 			std::string nText = hudTextOutPutManager(true, uiManager->HUD.teamTwoScore);
-			uiManager->setText(nText, scaleAndText::Wins2);
+			uiManager->setText(nText, scaleAndText::Wins2, InGameUI::GUI);
 
 			if (difference > 0 && difference < 4)
 			{
@@ -3168,8 +3175,8 @@ void Core::inGameUIUpdate() //Ingame ui update
 		if (sSeconds.size() > 2)
 			sSeconds = std::to_string(seconds);
 
-		uiManager->clearText(scaleAndText::Time);
-		uiManager->setText(sMinutes + ":" + sSeconds, scaleAndText::Time);
+		uiManager->clearText(scaleAndText::Time, InGameUI::GUI);
+		uiManager->setText(sMinutes + ":" + sSeconds, scaleAndText::Time, InGameUI::GUI);
 
 		if (koth->getState() == ROUND) //Tickets meter should only work during the rounds which is why this check is here.
 		{
@@ -3177,14 +3184,14 @@ void Core::inGameUIUpdate() //Ingame ui update
 			{
 				if (uiManager->HUD.ticketLostTimer == 0)
 				{
-					uiManager->scaleBar(scaleAndText::LoseTicketsMeter, 0.0f, true);
+					uiManager->scaleBar(scaleAndText::LoseTicketsMeter, 0.0f, true, InGameUI::GUI);
 					uiManager->HUD.ticketLostTimer = uiManager->HUD.loseTicketPer;
 				}
 				else
 				{
 					if (uiManager->HUD.loseTicketPer > 0)
 					{
-						uiManager->scaleBar(scaleAndText::LoseTicketsMeter, (float)(uiManager->HUD.ticketLostTimer) / (float)(uiManager->HUD.loseTicketPer), true);
+						uiManager->scaleBar(scaleAndText::LoseTicketsMeter, (float)(uiManager->HUD.ticketLostTimer) / (float)(uiManager->HUD.loseTicketPer), true, InGameUI::GUI);
 						uiManager->HUD.ticketLostTimer -= 1;
 					}
 					else
@@ -3196,7 +3203,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 				if (uiManager->HUD.loseTicketPer > 1)
 				{
 					uiManager->HUD.ticketLostTimer -= 1;
-					uiManager->scaleBar(scaleAndText::LoseTicketsMeter, (float)(uiManager->HUD.ticketLostTimer) / (float)(uiManager->HUD.loseTicketPer), true);
+					uiManager->scaleBar(scaleAndText::LoseTicketsMeter, (float)(uiManager->HUD.ticketLostTimer) / (float)(uiManager->HUD.loseTicketPer), true, InGameUI::GUI);
 					uiManager->HUD.ticketLostTimer -= 1;
 				}
 				else
@@ -3208,7 +3215,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 		{
 			uiManager->HUD.firstSecondEachRound = true;
 			uiManager->HUD.ticketLostTimer = 14;
-			uiManager->scaleBar(scaleAndText::LoseTicketsMeter, 1.0f, true);
+			uiManager->scaleBar(scaleAndText::LoseTicketsMeter, 1.0f, true, InGameUI::GUI);
 		}
 
 		//Counters
@@ -3418,7 +3425,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 			case 41: //Settings
 				last = current;
 				current = Gamestate::START;
-				subState = 0;
+				subState = 1;
 
 				uiManager->setHoverCheckBool(true);
 				uiManager->setRoleBool(false);
@@ -3430,6 +3437,8 @@ void Core::inGameUIUpdate() //Ingame ui update
 				inGameSettings = true;
 				renderMenu = true;
 				renderUI = false;
+
+				oldTime = int(koth->getTimer());
 				break;
 			case 42: //Quit
 				if (current == ROAM)
@@ -3516,6 +3525,8 @@ void Core::handleCulling()
 
 void Core::createWindow(int x, int y, bool fullscreen)
 {
+	bool hoverTemp = false;
+
 	if (win != 0)
 	{
 		removeWindow();
@@ -3546,6 +3557,7 @@ void Core::createWindow(int x, int y, bool fullscreen)
 
 		if (uiManager != nullptr)
 		{
+			hoverTemp = uiManager->getHoverCheckBool();
 			optionsSavedData = uiManager->getOptionsSaved();
 			delete uiManager;
 		}
@@ -3565,10 +3577,7 @@ void Core::createWindow(int x, int y, bool fullscreen)
 			if(justSetFullScreen)
 				uiManager->setMenu(MainMenu::Settings);
 
-			if(fullscreen)
-				uiManager->changeTex(10, 1);
-			else
-				uiManager->changeTex(10, 0);
+			uiManager->setHoverCheckBool(hoverTemp);
 
 			uiManager->setOptionsSaved(optionsSavedData);
 		}
@@ -3848,13 +3857,13 @@ void Core::showClassSelect()
 	uiManager->setMenu(InGameUI::ClassSelect);
 }
 
-void Core::setHUDText()
+void Core::setHUDText(int menuID)
 {
 	Player* local = game->getPlayer(game->GetLocalPlayerId());
 	KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
 
 	uiManager->HUD.HP = local->getMaxHP();
-	uiManager->setText(std::to_string(local->getHP()), scaleAndText::HP); //hp
+	uiManager->setText(std::to_string(local->getHP()), scaleAndText::HP, menuID); //hp
 
 	std::string sFirst = "0";
 	std::string sSecond = "0";
@@ -3876,7 +3885,7 @@ void Core::setHUDText()
 		sSecond = "99";
 
 	std::string nText = sFirst + "/" + sSecond;
-	uiManager->setText(nText, scaleAndText::Ammo);
+	uiManager->setText(nText, scaleAndText::Ammo, menuID);
 	//
 
 	//Ticketbar1
@@ -3890,7 +3899,7 @@ void Core::setHUDText()
 	else if (sFirst.size() > 3)
 		sFirst = "99";
 
-	uiManager->setText(sFirst, scaleAndText::TicketBar1); //tickets
+	uiManager->setText(sFirst, scaleAndText::TicketBar1, menuID); //tickets
 	//
 
 	//Ticketbar2
@@ -3904,7 +3913,7 @@ void Core::setHUDText()
 	else if (sFirst.size() > 3)
 		sFirst = "99";
 
-	uiManager->setText(sFirst, scaleAndText::TicketBar2); //tickets
+	uiManager->setText(sFirst, scaleAndText::TicketBar2, menuID); //tickets
 	//
 
 													  //Scores1
@@ -3918,7 +3927,7 @@ void Core::setHUDText()
 	else if (sFirst.size() > 3)
 		sFirst = "99";
 
-	uiManager->setText(sFirst, scaleAndText::Wins1); //tickets
+	uiManager->setText(sFirst, scaleAndText::Wins1, menuID); //tickets
 	//
 
 	//Scores2
@@ -3932,14 +3941,25 @@ void Core::setHUDText()
 	else if (sFirst.size() > 3)
 		sFirst = "99";
 
-	uiManager->setText(sFirst, scaleAndText::Wins2); //tickets
+	uiManager->setText(sFirst, scaleAndText::Wins2, menuID); //tickets
 	//
 
 	if (int(koth->getTimer()) == 0)
 	{
-		uiManager->clearText(scaleAndText::Time);
-		uiManager->setText("00:00", scaleAndText::Time); //time
+		uiManager->clearText(scaleAndText::Time, menuID);
+		uiManager->setText("00:00", scaleAndText::Time, menuID); //time
 	}
+
+	uiManager->HUD.specialMeter = 0.0f;
+	uiManager->HUD.maxSpecialMeter = 100.0f;
+	uiManager->HUD.loseTicketPer = 14;
+
+	//int temp = int(koth->getTimer());
+	//int timeTemp = temp - oldTime;
+	//timeTemp = timeTemp % uiManager->HUD.loseTicketPer;
+	//uiManager->HUD.ticketLostTimer = timeTemp;
+
+	uiManager->scaleBar(scaleAndText::LoseTicketsMeter, (float)(uiManager->HUD.ticketLostTimer) / (float)(uiManager->HUD.loseTicketPer), true, InGameUI::GUI);
 }
 
 void Core::menuIpKeyInputUpdate()
@@ -3955,14 +3975,14 @@ void Core::menuIpKeyInputUpdate()
 				std::string fromChar = "";
 				fromChar += ch;
 
-				uiManager->setText(fromChar, scaleAndText::IP); //Set ip object
+				uiManager->setText(fromChar, scaleAndText::IP, MainMenu::Connect); //Set ip object
 				ipNrOfKeys++;
 			}
 		}
 	}
 	if (i->justPressed(GLFW_KEY_BACKSPACE))
 	{
-		uiManager->removeLastInput(scaleAndText::IP); //remove from ip object
+		uiManager->removeLastInput(scaleAndText::IP, MainMenu::Connect); //remove from ip object
 		ipNrOfKeys--;
 	}
 }
@@ -3982,7 +4002,7 @@ void Core::menuNameKeyInputUpdate()
 				std::string fromChar = "";
 				fromChar += ch;
 
-				uiManager->setText(fromChar, scaleAndText::Name); //Set ip object
+				uiManager->setText(fromChar, scaleAndText::Name, MainMenu::Connect); //Set ip object
 
 				nameNrOfKeys++;
 			}
@@ -3990,7 +4010,7 @@ void Core::menuNameKeyInputUpdate()
 	}
 	if (i->justPressed(GLFW_KEY_BACKSPACE))
 	{
-		uiManager->removeLastInput(scaleAndText::Name); //remove from ip object
+		uiManager->removeLastInput(scaleAndText::Name, MainMenu::Connect); //remove from ip object
 		nameNrOfKeys--;
 	}
 }
