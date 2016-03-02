@@ -514,6 +514,20 @@ void RenderPipeline::reloadShaders()
 	glowSampleTextureLoc = glGetUniformLocation(glowSampleShader, "glowTexture");
 	glowSamplePixelUVX = glGetUniformLocation(glowSampleShader, "pixeluvX");
 
+
+	std::string postProcess[] = { "GameFiles/Shaders/glowsample_vs.glsl", "GameFiles/Shaders/fxaa_fs.glsl" };
+
+	CreateProgram(temp, postProcess, glowSampleShaderTypes, 2);
+	if (temp != 0)
+	{
+		postProcessShader = temp;
+		temp = 0;
+	}
+
+	postProcessTextureLoc = glGetUniformLocation(postProcessShader, "diffuse");
+	postProcessPixelUVX = glGetUniformLocation(postProcessShader, "pixeluvX");
+	postProcessPixelUVY = glGetUniformLocation(postProcessShader, "pixeluvY");
+
 	std::cout << "Done loading shaders\n";
 
 }
@@ -804,12 +818,7 @@ void RenderPipeline::finalizeRender()
 	gBuffer->preRender(glowSampleShader, glowSampleTextureLoc);
 
 	//GBuffer Render
-	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
-	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-
-	glDisable(GL_BLEND);
-	glEnable(GL_DEPTH_TEST);
-	gBuffer->render();
+	gBuffer->render(postProcessShader, postProcessTextureLoc, postProcessPixelUVX, postProcessPixelUVY);
 
 	renderLightvolumes();
 	

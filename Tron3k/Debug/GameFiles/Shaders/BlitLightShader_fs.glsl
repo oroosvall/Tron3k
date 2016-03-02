@@ -1,13 +1,4 @@
 #version 410
-
-#define FXAA_EDGE_THRESHOLD_MIN 1.0f/8.0f
-#define FXAA_EDGE_THRESHOLD 1.0f/16.0f
-#define FXAA_SUBPIX 1
-#define FXAA_SUBPIX_TRIM_SCALE 1
-#define FXAA_SUBPIX_TRIM 1.0f/4.0f
-#define FXAA_SUBPIX_CAP 3.0f/4.0f
-
-
 layout (location = 0) in vec2 UV;
 
 uniform int Use;
@@ -65,58 +56,12 @@ const float kernel[41] = float[41](0.003848, 0.004894, 0.006148,
 //const float kernel[101] = float[101](0.000664, 0.000761, 0.000871, 0.000993, 0.00113, 0.001282, 0.00145, 0.001635, 0.00184, 0.002064, 0.002309, 0.002575, 0.002865, 0.003179, 0.003517, 0.00388, 0.004269, 0.004684, 0.005125, 0.005593, 0.006085, 0.006604, 0.007146, 0.007711, 0.008299, 0.008906, 0.009531, 0.010172, 0.010826, 0.01149, 0.012161, 0.012836, 0.013511, 0.014182, 0.014845, 0.015496, 0.016131, 0.016746, 0.017336, 0.017896, 0.018425, 0.018916, 0.019366, 0.019773, 0.020132, 0.020441, 0.020697, 0.020899, 0.021044, 0.021132, 0.021161, 0.021132, 0.021044, 0.020899, 0.020697, 0.020441, 0.020132, 0.019773, 0.019366, 0.018916, 0.018425, 0.017896, 0.017336, 0.016746, 0.016131, 0.015496, 0.014845, 0.014182, 0.013511, 0.012836, 0.012161, 0.01149, 0.010826, 0.010172, 0.009531, 0.008906, 0.008299, 0.007711, 0.007146, 0.006604, 0.006085, 0.005593, 0.005125, 0.004684, 0.004269, 0.00388, 0.003517, 0.003179, 0.002865, 0.002575, 0.002309, 0.002064, 0.00184, 0.001635, 0.00145, 0.001282, 0.00113, 0.000993, 0.000871, 0.000761, 0.000664
 //);
 
-float rgbToLuma(vec3 color)
-{
-    return color.r*0.2126f + color.g*0.7152 + color.b*0.0722;
-}
-
-vec4 fxaaPass(sampler2D tex)
-{
-    vec3 rgbN = texture(tex, vec2(UV.x, UV.y) + vec2(0,pixeluvY)).rgb;
-    vec3 rgbW = texture(tex, vec2(UV.x, UV.y) + vec2(-pixeluvX,0)).rgb;
-    vec3 rgbM = texture(tex, vec2(UV.x, UV.y)).rgb;
-    vec3 rgbE = texture(tex, vec2(UV.x, UV.y) + vec2(pixeluvX,0)).rgb;
-    vec3 rgbS = texture(tex, vec2(UV.x, UV.y) + vec2(0,-pixeluvY)).rgb;
-    
-    float lumaN  = rgbToLuma(rgbN);
-    float lumaW  = rgbToLuma(rgbW);
-    float lumaM  = rgbToLuma(rgbM);
-    float lumaE  = rgbToLuma(rgbE);
-    float lumaS  = rgbToLuma(rgbS);
-    
-    float rangeMin = min(lumaM, min(min(lumaN, lumaW), min(lumaS, lumaE)));
-    float rangeMax = max(lumaM, max(max(lumaN, lumaW), max(lumaS, lumaE)));
-    float range = rangeMax - rangeMin;
-    if(range < max(FXAA_EDGE_THRESHOLD_MIN, rangeMax * FXAA_EDGE_THRESHOLD))
-    {
-        return vec4(rgbM, 1.0f);
-    }
-    
-    
-    float lumaL = (lumaN + lumaW + lumaE + lumaS) * 0.25;
-    float rangeL = abs(lumaL - lumaM);
-    float blendL = max(0.0, (rangeL / range) - FXAA_SUBPIX_TRIM) * FXAA_SUBPIX_TRIM_SCALE; 
-    blendL = min(FXAA_SUBPIX_CAP, blendL);
-    
-    vec3 rgbL = rgbN + rgbW + rgbM + rgbE + rgbS;
-    // ...
-    vec3 rgbNW = texture(tex, UV + vec2(-pixeluvX, -pixeluvY)).xyz;
-    vec3 rgbNE = texture(tex, UV + vec2( pixeluvX, -pixeluvY)).xyz;
-    vec3 rgbSW = texture(tex, UV + vec2(-pixeluvX, pixeluvY)).xyz;
-    vec3 rgbSE = texture(tex, UV + vec2( pixeluvX, pixeluvY)).xyz;
-    rgbL += (rgbNW + rgbNE + rgbSW + rgbSE);
-    rgbL *= vec3(1.0/9.0);
-    
-    return vec4(rgbL, 1.0f);
-    
-}
-
 void main()
 {
 	fragment_color = vec4(0);
 	
 	Position0 = texture(Position, vec2(UV.x, UV.y));
-	//Diffuse0 = texture(Diffuse, vec2(UV.x, UV.y));
+	Diffuse0 = texture(Diffuse, vec2(UV.x, UV.y));
     //Diffuse0 = fxaaPass();
 	//glowValue = texture(GlowMap, vec2(UV.x, UV.y));
 	
@@ -125,7 +70,7 @@ void main()
 	float len = length(Position0.xyz - eyepos);
 	if(len < 500)
 	{
-		Diffuse0 = fxaaPass(Diffuse);
+		//Diffuse0 = fxaaPass(Diffuse);
         
 		Normal0 = texture(Normal, vec2(UV.x, UV.y));
 		
@@ -151,7 +96,7 @@ void main()
 	}
 	else //dont color the skybox!
 	{
-		fragment_color = texture(Diffuse, vec2(UV.x, UV.y));
+		fragment_color = Diffuse0;
 	}
 	vec4 sum = vec4(0);
 	
@@ -230,8 +175,8 @@ void main()
 		sum += texture(GlowMap2, UV  + vec2(0.0f, pixeluvY * i))* kernel[i + 20];
 	}
 	
-	//sum += texture(GlowMap, UV) * 0.65f;
-    sum += fxaaPass(GlowMap) * 0.65f;
+	sum += texture(GlowMap, UV) * 0.65f;
+    //sum += fxaaPass(GlowMap) * 0.65f;
 	//sum *= universalInten;
 	
 	fragment_color += sum + specularAddetive;

@@ -153,6 +153,11 @@ private:
 	GLuint glowSampleTextureLoc;
 	GLuint glowSamplePixelUVX;
 
+	GLuint postProcessShader;
+	GLuint postProcessTextureLoc;
+	GLuint postProcessPixelUVX;
+	GLuint postProcessPixelUVY;
+
 	//lightwall
 	GLuint lwVertexDataId;
 	GLuint lwVertexAttribute;
