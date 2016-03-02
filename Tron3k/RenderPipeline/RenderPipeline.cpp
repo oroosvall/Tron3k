@@ -1218,6 +1218,9 @@ int RenderPipeline::createMappedParticleEffect(BULLET_TYPE peffect, glm::vec3 po
 
 	switch (peffect)
 	{
+	case BULLET_TYPE::SHOTGUN_PELLET:
+		path += "shotgunTrail.ps";
+		break;
 	case BULLET_TYPE::VACUUM_GRENADE:
 		path += "vacuumTrail.ps";
 		break;
@@ -1240,7 +1243,7 @@ int RenderPipeline::createMappedParticleEffect(BULLET_TYPE peffect, glm::vec3 po
 
 		pdata.continuous = true;
 		//pdata.emission = 0.01f;
-		pdata.dir = dir;
+		pdata.dir = -dir;
 
 		ParticleSystem pSys;
 		pSys.Initialize(pos, pdata, &compute, &locations);
@@ -1370,7 +1373,9 @@ void RenderPipeline::createTimedParticleEffect(BULLET_TYPE peffect, vec3 pos, gl
 void RenderPipeline::createTimedParticleEffect(EFFECT_TYPE eeffect, glm::vec3 pos, glm::vec3 color)
 {
 	std::string path = "GameFiles/ParticleSystems/";
-
+	std::string path2 = "GameFiles/ParticleSystems/";
+	bool doubleEffect = false;
+	
 	switch (eeffect)
 	{
 	//case LIGHT_WALL:
@@ -1379,6 +1384,8 @@ void RenderPipeline::createTimedParticleEffect(EFFECT_TYPE eeffect, glm::vec3 po
 	//	break;
 	case EXPLOSION:
 		path += "explosionShockwave.ps";
+		path2 += "explosionSparks.ps";
+		doubleEffect = true;
 		break;
 	//case CLEANSENOVA:
 	//	break;
@@ -1404,6 +1411,7 @@ void RenderPipeline::createTimedParticleEffect(EFFECT_TYPE eeffect, glm::vec3 po
 	//	break;
 	default:
 		path = "0";
+		path2 = "0";
 		break;
 	}
 
@@ -1429,6 +1437,33 @@ void RenderPipeline::createTimedParticleEffect(EFFECT_TYPE eeffect, glm::vec3 po
 
 		dynamicParticleSystems.push_back(pSys);
 	}
+
+	if (doubleEffect)
+	{
+		std::ifstream file;
+		file.open(path2, std::ios::binary | std::ios::in);
+
+		if (path2 != "0")
+		{
+			int loadID = particleNameToIndexMap[path2];
+
+			ParticleSystemData pdata = particleSystemData[loadID];
+
+			pdata.continuous = false; // force single time
+
+			ParticleSystem pSys;
+			pSys.Initialize(pos, pdata, &compute, &locations);
+
+			GLuint texID = TextureManager::gTm->createTexture(particleTextureString[loadID]);
+
+			pSys.m_texture = texID;
+			pSys.m_color = color;
+
+			dynamicParticleSystems.push_back(pSys);
+		}
+	}
+
+
 
 }
 
