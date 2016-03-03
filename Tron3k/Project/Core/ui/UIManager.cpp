@@ -89,9 +89,9 @@ void UIManager::init(Console* console, int winX, int winY)
 
 	//Class select
 	texturePaths.push_back("GameFiles/Textures/UITextures/ClassSelect/class_selection_background.png"); //11
-	texturePaths.push_back("GameFiles/Textures/UITextures/ClassSelect/class_selection_trapper.png"); //12
-	texturePaths.push_back("GameFiles/Textures/UITextures/ClassSelect/class_selection_stalker.png"); //13
-	texturePaths.push_back("GameFiles/Textures/UITextures/ClassSelect/class_selection_punisher.png"); //14
+	texturePaths.push_back("GameFiles/Textures/UITextures/ClassSelect/trapper.png"); //12
+	texturePaths.push_back("GameFiles/Textures/UITextures/ClassSelect/stalker.png"); //13
+	texturePaths.push_back("GameFiles/Textures/UITextures/ClassSelect/punisher.png"); //14
 
 	//Ip input
 	texturePaths.push_back("GameFiles/Textures/UITextures/Connect/ip_field.png"); //15
@@ -151,9 +151,9 @@ void UIManager::init(Console* console, int winX, int winY)
 	texturePaths.push_back("GameFiles/Textures/UITextures/TeamSelect/team_selection_alpha_hover.png"); //29
 	texturePaths.push_back("GameFiles/Textures/UITextures/TeamSelect/team_selection_beta_hover.png"); //30
 
-	texturePaths.push_back("GameFiles/Textures/UITextures/ClassSelect/class_selection_trapper_hover.png"); //31
-	texturePaths.push_back("GameFiles/Textures/UITextures/ClassSelect/class_selection_stalker_hover.png"); //32
-	texturePaths.push_back("GameFiles/Textures/UITextures/ClassSelect/class_selection_punisher_hover.png"); //33
+	texturePaths.push_back("GameFiles/Textures/UITextures/ClassSelect/trapper_selected.png"); //31
+	texturePaths.push_back("GameFiles/Textures/UITextures/ClassSelect/stalker_selected.png"); //32
+	texturePaths.push_back("GameFiles/Textures/UITextures/ClassSelect/punisher_selected.png"); //33
 
 	//Temp
 	texturePaths.push_back("GameFiles/Textures/UITextures/Banners/banner_victory.png"); //34
@@ -199,8 +199,8 @@ void UIManager::init(Console* console, int winX, int winY)
 	texturePaths.push_back("GameFiles/Textures/UITextures/Banners/tickloss_2_orange.png"); //66
 	texturePaths.push_back("GameFiles/Textures/UITextures/Banners/tickloss_3_orange.png"); //67
 
-	texturePaths.push_back("GameFiles/Textures/UITextures/ClassSelect/class_selection_manipulator.png"); //68
-	texturePaths.push_back("GameFiles/Textures/UITextures/ClassSelect/class_selection_manipulator_hover.png"); //69
+	texturePaths.push_back("GameFiles/Textures/UITextures/ClassSelect/manipulator.png"); //68
+	texturePaths.push_back("GameFiles/Textures/UITextures/ClassSelect/manipulator_selected.png"); //69
 
 	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/Options.png"); //70
 	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/HowToPlay.png"); //71
