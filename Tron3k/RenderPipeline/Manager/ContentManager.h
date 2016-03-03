@@ -116,6 +116,11 @@ public:
 	vec2 mapBotcord;
 	vec2 mapTopcord;
 
+	//help texutre overlays
+	GLuint help1;
+	GLuint help2;
+	GLuint help3;
+
 	//take damage texture overlay
 	GLuint takeDamage1;
 	GLuint takeDamage2;

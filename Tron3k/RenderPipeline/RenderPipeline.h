@@ -323,7 +323,7 @@ public:
 	virtual void pushStaticLights();
 	virtual void clearDynamicLights();
 	virtual void renderLightvolumes();
-
+	virtual void renderHelp(int id);
 	vector<std::string> ListFiles(std::string Directory, std::string Extension);
 };
 

@@ -48,6 +48,10 @@ void ContentManager::init()
 	score_header_green = loadTexture("GameFiles/Textures/scoreboard/header_green.png", true, (int*)&xx, (int*)&yy);
 	score_headerscale = vec2(float(xx) / 1920, float(yy) / 1080);
 
+	GLuint help1 = loadTexture("GameFiles/Textures/helpimages/help1.dds");
+	GLuint help2 = loadTexture("GameFiles/Textures/helpimages/help2.dds");
+	GLuint help3 = loadTexture("GameFiles/Textures/helpimages/help3.dds");
+
 	//trailquad textures
 	trailTex1 = TextureManager::gTm->createTexture("GameFiles/Textures/hex.png");
 

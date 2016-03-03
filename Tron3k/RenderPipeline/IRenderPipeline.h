@@ -165,6 +165,7 @@ public:
 	virtual void setuniversalInten(float val) = 0;
 	virtual void renderMinimap(float* yourPos, float* yourdir, float* teammates, int nrOfTeammates, int activeCap) = 0;
 	virtual void renderScoreBoard(int team1size, int team2size) = 0;
+	virtual void renderHelp(int id) = 0;
 
 };
 

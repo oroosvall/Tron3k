@@ -2924,6 +2924,13 @@ void Core::renderWorld(float dt)
 				if (i->getKeyInfo(localp->controls.scorescreen))
 					//if (game->getPlayer(game->GetLocalPlayerId())->getLockedControls() == false)
 					scoreboardRender();
+
+				if (i->getKeyInfo(GLFW_KEY_F1))
+					renderPipe->renderHelp(1);
+				if (i->getKeyInfo(GLFW_KEY_F2))
+					renderPipe->renderHelp(2);
+				if (i->getKeyInfo(GLFW_KEY_F3))
+					renderPipe->renderHelp(3);
 			}
 
 			//spectate this playername render

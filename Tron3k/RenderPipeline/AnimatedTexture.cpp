@@ -115,6 +115,15 @@ void AnimatedTexture::init()
 	if (!initialized)
 	{
 		objects.push_back(AnimatedObject());
+		objects[n].textureID = TextureManager::gTm->createTexture("GameFiles/Textures/animatedSigns/sunset.dds");
+	}
+	objects[n].init_standing_right(vec3(15.50f, 2.314f, 45.34f), vec3(15.50f, 1.314f, 47.34f));
+	objects[n].init_time_segments(8, 0.1f, 0);
+
+	n++;
+	if (!initialized)
+	{
+		objects.push_back(AnimatedObject());
 		objects[n].textureID = TextureManager::gTm->createTexture("GameFiles/Textures/animatedSigns/seasons.png");
 	}
 	objects[n].init_standing_right(vec3(-69.3f, 12, 57.5f), vec3(-69.3f, 5, 55.5f));
