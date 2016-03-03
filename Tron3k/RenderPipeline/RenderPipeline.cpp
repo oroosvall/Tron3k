@@ -1261,7 +1261,14 @@ int RenderPipeline::createMappedParticleEffect(BULLET_TYPE peffect, glm::vec3 po
 		GLuint texID = TextureManager::gTm->createTexture(particleTextureString[loadID]);
 
 		pSys.m_texture = texID;
-		pSys.m_color = color;
+		if (pdata.glow)
+		{
+			pSys.m_color = color;
+		}
+		else
+		{
+			pSys.m_color = vec3(1, 1, 1);
+		}
 
 		MappedParticleSystem mps;
 
@@ -1373,7 +1380,14 @@ void RenderPipeline::createTimedParticleEffect(BULLET_TYPE peffect, vec3 pos, gl
 		GLuint texID = TextureManager::gTm->createTexture(particleTextureString[loadID]);
 
 		pSys.m_texture = texID;
-		pSys.m_color = color;
+		if (pdata.glow)
+		{
+			pSys.m_color = color;
+		}
+		else
+		{
+			pSys.m_color = vec3(1, 1, 1);
+		}
 		
 		dynamicParticleSystems.push_back(pSys);
 	}
