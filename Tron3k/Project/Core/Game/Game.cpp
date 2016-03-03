@@ -1372,7 +1372,7 @@ void Game::addBulletToList(int conID, int teamId, int bulletId, BULLET_TYPE bt, 
 		if (mp->bt == BULLET_TYPE::FUSION_SHOT)
 		{
 			mp = new MovableParticle();
-			mp->bt = BULLET_TYPE::SHOTGUN_PELLET;
+			mp->bt = BULLET_TYPE::FUSION_SHOT2;
 			mp->id = 0;
 			mp->created = false;
 			mp->dead = false;
