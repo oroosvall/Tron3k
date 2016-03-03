@@ -527,6 +527,7 @@ void RenderPipeline::reloadShaders()
 	postProcessTextureLoc = glGetUniformLocation(postProcessShader, "diffuse");
 	postProcessPixelUVX = glGetUniformLocation(postProcessShader, "pixeluvX");
 	postProcessPixelUVY = glGetUniformLocation(postProcessShader, "pixeluvY");
+	fxaaToggleLoc = glGetUniformLocation(postProcessShader, "fxaatoggle");
 
 	std::cout << "Done loading shaders\n";
 
@@ -822,7 +823,7 @@ void RenderPipeline::finalizeRender()
 
 	renderLightvolumes();
 
-	gBuffer->postProcessPass(postProcessShader, postProcessTextureLoc, postProcessPixelUVX, postProcessPixelUVY);
+	gBuffer->postProcessPass(postProcessShader, postProcessTextureLoc, postProcessPixelUVX, postProcessPixelUVY, fxaaToggleLoc);
 
 	glUseProgram(textShader);
 	glProgramUniformMatrix4fv(textShader, textShaderModel, 1, GL_FALSE, (GLfloat*)&glm::mat4());
@@ -1594,6 +1595,7 @@ void RenderPipeline::setRenderFlag(RENDER_FLAGS flag)
 		case RENDER_ROOM:		contMan.f_render_roombox = !contMan.f_render_roombox;		break;
 		case RENDER_DEBUG_TEXT:	renderDebugText = !renderDebugText; debugText->setText(""); break;
 		case RENDER_GUI:		contMan.f_render_gui = !contMan.f_render_gui;				break;
+		case RENDER_FXAA:		gBuffer->fxaa = !gBuffer->fxaa;								break;
 	}
 }
 

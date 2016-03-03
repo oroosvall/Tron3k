@@ -14,6 +14,8 @@ uniform sampler2D diffuse;
 uniform float pixeluvX;
 uniform float pixeluvY;
 
+uniform int fxaatoggle;
+
 //layout (location = 1)out vec4 outColor;
 
 out vec4 fragment_color;   
@@ -66,7 +68,9 @@ vec4 fxaaPass(sampler2D tex)
 
 void main()
 {
-	fragment_color = fxaaPass(diffuse);
-	//fragment_color = texture(diffuse, vec2(UV.x, UV.y));
+	if(fxaatoggle == 1)
+		fragment_color = fxaaPass(diffuse);
+	else
+		fragment_color = texture(diffuse, vec2(UV.x, UV.y));
 	//fragment_color = vec4(1.0f);
 }

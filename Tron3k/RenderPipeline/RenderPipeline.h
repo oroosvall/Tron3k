@@ -157,6 +157,7 @@ private:
 	GLuint postProcessTextureLoc;
 	GLuint postProcessPixelUVX;
 	GLuint postProcessPixelUVY;
+	GLuint fxaaToggleLoc;
 
 	//lightwall
 	GLuint lwVertexDataId;

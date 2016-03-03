@@ -24,7 +24,7 @@ public:
 	void preRender(GLuint shader, GLuint location);
 	void render();
 
-	void postProcessPass(GLuint shader, GLuint location, GLuint uvX, GLuint uvY);
+	void postProcessPass(GLuint shader, GLuint location, GLuint uvX, GLuint uvY, GLuint fxaalocation);
 
 	void clearLights();
 	void clearBuffers();
@@ -87,6 +87,8 @@ public:
 
 	GLuint postProcess;
 	RenderTarget postProcessTexture;
+
+	bool fxaa = false;
 
 private:
 

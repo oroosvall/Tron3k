@@ -2088,6 +2088,7 @@ void Core::roamHandleCmds(std::string com)
 				console.printMsg("/rs  room		RENDER_ROOM ", "", ' ');
 				console.printMsg("/rs  debug	RENDER_DEBUG_TEXT ", "", ' ');
 				console.printMsg("/rs  gui		RENDER_GUI ", "", ' ');
+				console.printMsg("/rs  fxaa		FXAA_TOGGLE ", "", ' ');
 			}
 			else if (token == "portal")
 				renderPipe->setRenderFlag(PORTAL_CULLING);
@@ -2105,6 +2106,8 @@ void Core::roamHandleCmds(std::string com)
 				renderPipe->setRenderFlag(RENDER_DEBUG_TEXT);
 			else if (token == "gui")
 				renderPipe->setRenderFlag(RENDER_GUI);
+			else if (token == "fxaa")
+				renderPipe->setRenderFlag(RENDER_FXAA);
 		}
 		else if (token == "/disconnect")
 		{
@@ -2323,6 +2326,7 @@ void Core::clientHandleCmds(std::string com)
 				console.printMsg("/rs  room		RENDER_ROOM ", "", ' ');
 				console.printMsg("/rs  debug	RENDER_DEBUG_TEXT ", "", ' ');
 				console.printMsg("/rs  gui		RENDER_GUI ", "", ' ');
+				console.printMsg("/rs  fxaa		FXAA_TOGGLE ", "", ' ');
 			}
 			else if (token == "portal")
 				renderPipe->setRenderFlag(PORTAL_CULLING);
@@ -2340,6 +2344,8 @@ void Core::clientHandleCmds(std::string com)
 				renderPipe->setRenderFlag(RENDER_DEBUG_TEXT);
 			else if (token == "gui")
 				renderPipe->setRenderFlag(RENDER_GUI);
+			else if (token == "fxaa")
+				renderPipe->setRenderFlag(RENDER_FXAA);
 		}
 	}
 }

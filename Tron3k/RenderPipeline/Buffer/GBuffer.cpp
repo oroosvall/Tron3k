@@ -346,7 +346,7 @@ void Gbuffer::render()
 
 }
 
-void Gbuffer::postProcessPass(GLuint shader, GLuint location, GLuint uvX, GLuint uvY)
+void Gbuffer::postProcessPass(GLuint shader, GLuint location, GLuint uvX, GLuint uvY, GLuint fxaalocation)
 {
 
 	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
@@ -356,9 +356,9 @@ void Gbuffer::postProcessPass(GLuint shader, GLuint location, GLuint uvX, GLuint
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, postProcessTexture.getTargetId());
 	glProgramUniform1i(shader, location, 0);
+	glProgramUniform1i(shader, fxaalocation, fxaa);
 	glProgramUniform1f(shader, uvX, 1.0f / xres);
 	glProgramUniform1f(shader, uvY, 1.0f / yres);
-
 
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
