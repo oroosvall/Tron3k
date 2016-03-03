@@ -580,6 +580,7 @@ void Input::callbackKeyboard(GLFWwindow* wnd, int key, int scancode, int action,
 			pF1 = true;
 			keyPressedThisFrame = true;
 		}
+		break;
 	case GLFW_KEY_F2:
 		F2 = (bool)action;
 		if (action == GLFW_PRESS)
@@ -587,6 +588,7 @@ void Input::callbackKeyboard(GLFWwindow* wnd, int key, int scancode, int action,
 			pF2 = true;
 			keyPressedThisFrame = true;
 		}
+		break;
 	case GLFW_KEY_F3:
 		F3 = (bool)action;
 		if (action == GLFW_PRESS)
@@ -594,6 +596,7 @@ void Input::callbackKeyboard(GLFWwindow* wnd, int key, int scancode, int action,
 			pF3 = true;
 			keyPressedThisFrame = true;
 		}
+		break;
 	case GLFW_KEY_F4:
 		F4 = (bool)action;
 		if (action == GLFW_PRESS)
@@ -601,6 +604,7 @@ void Input::callbackKeyboard(GLFWwindow* wnd, int key, int scancode, int action,
 			pF4 = true;
 			keyPressedThisFrame = true;
 		}
+		break;
 	case GLFW_KEY_F5:
 		F5 = (bool)action;
 		if (action == GLFW_PRESS)
@@ -608,6 +612,7 @@ void Input::callbackKeyboard(GLFWwindow* wnd, int key, int scancode, int action,
 			pF5 = true;
 			keyPressedThisFrame = true;
 		}
+		break;
 	case GLFW_KEY_F6:
 		F6 = (bool)action;
 		if (action == GLFW_PRESS)
@@ -615,6 +620,7 @@ void Input::callbackKeyboard(GLFWwindow* wnd, int key, int scancode, int action,
 			pF6 = true;
 			keyPressedThisFrame = true;
 		}
+		break;
 	case GLFW_KEY_F7:
 		F7 = (bool)action;
 		if (action == GLFW_PRESS)
@@ -622,6 +628,7 @@ void Input::callbackKeyboard(GLFWwindow* wnd, int key, int scancode, int action,
 			pF7 = true;
 			keyPressedThisFrame = true;
 		}
+		break;
 	case GLFW_KEY_F8:
 		F8 = (bool)action;
 		if (action == GLFW_PRESS)
@@ -629,6 +636,7 @@ void Input::callbackKeyboard(GLFWwindow* wnd, int key, int scancode, int action,
 			pF8 = true;
 			keyPressedThisFrame = true;
 		}
+		break;
 	case GLFW_KEY_F9:
 		F9 = (bool)action;
 		if (action == GLFW_PRESS)
@@ -636,6 +644,7 @@ void Input::callbackKeyboard(GLFWwindow* wnd, int key, int scancode, int action,
 			pF9 = true;
 			keyPressedThisFrame = true;
 		}
+		break;
 	case GLFW_KEY_F10:
 		F10 = (bool)action;
 		if (action == GLFW_PRESS)
@@ -643,6 +652,7 @@ void Input::callbackKeyboard(GLFWwindow* wnd, int key, int scancode, int action,
 			pF10 = true;
 			keyPressedThisFrame = true;
 		}
+		break;
 	case GLFW_KEY_F11:
 		F11 = (bool)action;
 		if (action == GLFW_PRESS)
@@ -650,6 +660,7 @@ void Input::callbackKeyboard(GLFWwindow* wnd, int key, int scancode, int action,
 			pF11 = true;
 			keyPressedThisFrame = true;
 		}
+		break;
 	case GLFW_KEY_F12:
 		F12 = (bool)action;
 		if (action == GLFW_PRESS)
