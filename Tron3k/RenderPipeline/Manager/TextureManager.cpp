@@ -296,23 +296,23 @@ void TextureManager::bindDefaultOnly(TEXTURE_FALLBACK fallback)
 	glBindTexture(GL_TEXTURE_2D, texture);
 }
 
-void TextureManager::bind(TextureInfo &ti, GLuint shader, GLuint textureLocation)
-{
-	GLuint texture = ti.textureID;
-	GLuint slot = 0;// ti.lastTextureSlot;
-
-	//if (textureSlotBinds[slot - GL_TEXTURE0] != texture)
-	//{
-		slot = GL_TEXTURE0 + textureUnitCounter;
-		textureUnitCounter = ((textureUnitCounter + 1) % (maxTextureUnitSize-1));
-
-	//	textureSlotBinds[slot - GL_TEXTURE0] = texture;
-	//	ti.lastTextureSlot = slot;
-	//}
-
-	glActiveTexture(slot);
-	glBindTexture(GL_TEXTURE_2D, texture);
-
-	glProgramUniform1i(shader, textureLocation, slot - GL_TEXTURE0);
-
-}
+//void TextureManager::bind(TextureInfo &ti, GLuint shader, GLuint textureLocation)
+//{
+//	GLuint texture = ti.textureID;
+//	GLuint slot = 0;// ti.lastTextureSlot;
+//
+//	//if (textureSlotBinds[slot - GL_TEXTURE0] != texture)
+//	//{
+//		slot = GL_TEXTURE0 + textureUnitCounter;
+//		textureUnitCounter = ((textureUnitCounter + 1) % (maxTextureUnitSize-1));
+//
+//	//	textureSlotBinds[slot - GL_TEXTURE0] = texture;
+//	//	ti.lastTextureSlot = slot;
+//	//}
+//
+//	glActiveTexture(slot);
+//	glBindTexture(GL_TEXTURE_2D, texture);
+//
+//	glProgramUniform1i(shader, textureLocation, slot - GL_TEXTURE0);
+//
+//}

@@ -74,7 +74,7 @@ public:
 	//void bindDefault(GLuint shader, GLuint shaderLocation, TEXTURE_FALLBACK fallback);
 	void bindDefaultOnly(TEXTURE_FALLBACK fallback);
 
-	void bind(TextureInfo &ti, GLuint shader, GLuint shaderLocation);
+	//void bind(TextureInfo &ti, GLuint shader, GLuint shaderLocation);
 
 	static TextureManager* gTm;
 };
