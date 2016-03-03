@@ -277,6 +277,7 @@ public:
 	virtual void removeTextObject(int id);
 	virtual void renderTextObject(int id);
 	virtual void renderTextObjectWorldPos(int id, glm::mat4 world);
+	virtual void renderChatText();
 
 	virtual void setCapRoomColor(int capPoint, vec3 color, float intensity);
 

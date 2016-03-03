@@ -843,10 +843,6 @@ void RenderPipeline::finalizeRender()
 	glEnable(GL_BLEND);
 
 	debugText->draw();
-	if (textTimer > 0.0f)
-	{
-		chatText->draw();
-	}
 	
 	//uglyCrosshairSolution->draw();
 
@@ -1861,6 +1857,24 @@ void RenderPipeline::renderTextObjectWorldPos(int id, glm::mat4 world)
 		glProgramUniform1i(textShader, textShaderLocation, 0);
 
 		textObjects[id]->draw();
+	}
+}
+
+void RenderPipeline::renderChatText()
+{
+	if (textTimer > 0.0f)
+	{
+		glUseProgram(textShader);
+		glProgramUniformMatrix4fv(textShader, textShaderModel, 1, GL_FALSE, (GLfloat*)&glm::mat4());
+		glProgramUniformMatrix4fv(textShader, textShaderVP, 1, GL_FALSE, (GLfloat*)&glm::mat4());
+		glProgramUniform3f(textShader, textShaderOffset, 0, 0, 0);
+
+		glEnable(GL_BLEND);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, fontTexture);
+		glProgramUniform1i(textShader, textShaderLocation, 0);
+		chatText->draw();
+		glDisable(GL_BLEND);
 	}
 }
 
