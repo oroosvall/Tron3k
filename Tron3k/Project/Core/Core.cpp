@@ -2,6 +2,7 @@
 
 void Core::init()
 {
+	calcTimer = false;
 	escActive = false;
 	inGameSettings = false;
 	justSetFullScreenMainMenu = false;
@@ -503,6 +504,7 @@ void Core::upMenu(float dt)
 					renderMenu = false;
 					renderUI = true;
 					inGameSettings = false;
+					calcTimer = true;
 
 					//Set HUD stats
 					setHUDText(InGameUI::GUI);
@@ -544,6 +546,8 @@ void Core::upMenu(float dt)
 					renderMenu = false;
 					renderUI = true;
 					inGameSettings = false;
+
+					calcTimer = true;
 
 					//Set HUD stats
 					setHUDText(InGameUI::GUI);
@@ -3164,7 +3168,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 			uiManager->HUDTime.wmIdListTicket1.push_back(tmp);
 			uiManager->HUDTime.counterListTicket1.push_back(0);
 
-			if(difference == 0 || difference == 3)
+			if (difference > 0 && difference < 4)
 				uiManager->changeTextureHideAble(hideAbleObj::TicketReducerTeam1, uiManager->HUDTime.wmIdListTicket1.size() - 1, difference - 1);
 		}
 	}
@@ -3215,8 +3219,9 @@ void Core::inGameUIUpdate() //Ingame ui update
 	
 					uiManager->HUDTime.wmIdListScore1.push_back(tmp);
 					uiManager->HUDTime.counterListScore1.push_back(0);
-	
-					uiManager->changeTextureHideAble(hideAbleObj::ScoreAdderTeam1, uiManager->HUDTime.wmIdListScore1.size() - 1, difference - 1);
+					
+					if (difference > 0 && difference < 4)
+						uiManager->changeTextureHideAble(hideAbleObj::ScoreAdderTeam1, uiManager->HUDTime.wmIdListScore1.size() - 1, difference - 1);
 				}
 			}
 		}
@@ -3245,7 +3250,8 @@ void Core::inGameUIUpdate() //Ingame ui update
 					uiManager->HUDTime.wmIdListScore2.push_back(tmp);
 					uiManager->HUDTime.counterListScore2.push_back(0);
 	
-					uiManager->changeTextureHideAble(hideAbleObj::ScoreAdderTeam2, uiManager->HUDTime.wmIdListScore2.size() - 1, difference - 1);
+					if (difference > 0 && difference < 4)
+						uiManager->changeTextureHideAble(hideAbleObj::ScoreAdderTeam2, uiManager->HUDTime.wmIdListScore2.size() - 1, difference - 1);
 				}
 			}
 		}
@@ -3283,7 +3289,18 @@ void Core::inGameUIUpdate() //Ingame ui update
 
 		if (koth->getState() == ROUND) //Tickets meter should only work during the rounds which is why this check is here.
 		{
-			if (!uiManager->HUD.firstSecondEachRound) //If it isn't the first second of the round
+			if (calcTimer)
+			{
+				int tDiff = int(koth->getTimer()) - oldTime;
+				tDiff = tDiff % 15;
+				uiManager->HUD.ticketLostTimer = tDiff;
+
+				uiManager->scaleBar(scaleAndText::LoseTicketsMeter, (float)(uiManager->HUD.ticketLostTimer) / (float)(uiManager->HUD.loseTicketPer), true, InGameUI::GUI);
+				uiManager->HUD.ticketLostTimer -= 1;
+
+				calcTimer = false;
+			}
+			else if (!uiManager->HUD.firstSecondEachRound) //If it isn't the first second of the round
 			{
 				if (uiManager->HUD.ticketLostTimer == 0)
 				{
