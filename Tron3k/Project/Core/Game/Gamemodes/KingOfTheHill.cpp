@@ -450,8 +450,11 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 	{
 		if (state == WARMUP)
 		{
-			GetSound()->SetFading(false);
-			GetSound()->SetMenuVolume(GetSound()->getVolumeMusic());
+			if (GetSound())
+			{
+				GetSound()->SetFading(false);
+				GetSound()->SetMenuVolume(GetSound()->getVolumeMusic());
+			}
 			gamePtr->clearAllPlayerKD();
 			consolePtr->printMsg("Warmup. Type /ready to start.", "System", 'S');
 			teamOneScore = 0;
