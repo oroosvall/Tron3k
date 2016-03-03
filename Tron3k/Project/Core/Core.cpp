@@ -2647,10 +2647,12 @@ void Core::renderWorld(float dt)
 
 		Player* tmp_player = 0;
 		int pid = game->GetLocalPlayerId();
+
 		if (game->spectateID == -1)
 		{
 			tmp_player = game->getPlayer(pid);
-			tmp_player->deadViewAngles();
+			if(game->freecam == false)
+				tmp_player->deadViewAngles();
 		}
 		else
 		{
@@ -3047,6 +3049,18 @@ void Core::renderWorld(float dt)
 				renderPipe->setTextPos(leaderBoardTextID, vec2(500 - 42, 650));
 				renderPipe->renderTextObject(leaderBoardTextID);
 			}
+			else
+				if (game->GetGameState() == Gamestate::CLIENT)
+					if (tmp_player->isAlive() == false)
+					{
+						KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
+						if (koth->getState() == KOTHSTATE::OVERTIME)
+						{
+							renderPipe->setTextObjectText(leaderBoardTextID, "Press 'FIRE' to spectate");
+							renderPipe->setTextPos(leaderBoardTextID, vec2(500 - 42, 650));
+							renderPipe->renderTextObject(leaderBoardTextID);
+						}
+					}
 
 
 			renderPipe->disableBlend();
