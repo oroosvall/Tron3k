@@ -291,7 +291,7 @@ void Core::update(float dt)
 	if (current != SERVER)
 	{
 		int swapTime = renderPipe->startExecTimer("Swap");
-		if (renderPipe)
+		if(current == CLIENT || current == ROAM)
 			renderPipe->renderChatText();
 		glfwSwapBuffers(win);
 		renderPipe->stopExecTimer(swapTime);
