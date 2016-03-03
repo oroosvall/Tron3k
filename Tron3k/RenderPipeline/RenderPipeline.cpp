@@ -818,10 +818,12 @@ void RenderPipeline::finalizeRender()
 	gBuffer->preRender(glowSampleShader, glowSampleTextureLoc);
 
 	//GBuffer Render
-	gBuffer->render(postProcessShader, postProcessTextureLoc, postProcessPixelUVX, postProcessPixelUVY);
+	gBuffer->render();
 
 	renderLightvolumes();
-	
+
+	gBuffer->postProcessPass(postProcessShader, postProcessTextureLoc, postProcessPixelUVX, postProcessPixelUVY);
+
 	glUseProgram(textShader);
 	glProgramUniformMatrix4fv(textShader, textShaderModel, 1, GL_FALSE, (GLfloat*)&glm::mat4());
 	glProgramUniformMatrix4fv(textShader, textShaderVP, 1, GL_FALSE, (GLfloat*)&glm::mat4());

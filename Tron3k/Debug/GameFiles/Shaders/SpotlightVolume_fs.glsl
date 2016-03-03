@@ -2,7 +2,7 @@
 
 layout (location = 0) in float interpolDist;
 
-out vec4 fragment_color;
+layout(location = 1)out vec4 fragment_color;
 
 
 uniform int spotlightID;

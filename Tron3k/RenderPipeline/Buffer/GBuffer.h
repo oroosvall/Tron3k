@@ -22,7 +22,9 @@ public:
 	void bind(GLuint index);
 
 	void preRender(GLuint shader, GLuint location);
-	void render(GLuint shader, GLuint location, GLuint uvX, GLuint uvY);
+	void render();
+
+	void postProcessPass(GLuint shader, GLuint location, GLuint uvX, GLuint uvY);
 
 	void clearLights();
 	void clearBuffers();
