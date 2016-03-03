@@ -1468,7 +1468,14 @@ void RenderPipeline::createTimedParticleEffect(EFFECT_TYPE eeffect, glm::vec3 po
 		GLuint texID = TextureManager::gTm->createTexture(particleTextureString[loadID]);
 
 		pSys.m_texture = texID;
-		pSys.m_color = color;
+		if (pdata.glow)
+		{
+			pSys.m_color = color;
+		}
+		else
+		{
+			pSys.m_color = vec3(1, 1, 1);
+		}
 
 		dynamicParticleSystems.push_back(pSys);
 	}
@@ -1492,7 +1499,14 @@ void RenderPipeline::createTimedParticleEffect(EFFECT_TYPE eeffect, glm::vec3 po
 			GLuint texID = TextureManager::gTm->createTexture(particleTextureString[loadID]);
 
 			pSys.m_texture = texID;
-			pSys.m_color = color;
+			if (pdata.glow)
+			{
+				pSys.m_color = color;
+			}
+			else
+			{
+				pSys.m_color = vec3(1, 1, 1);
+			}
 
 			dynamicParticleSystems.push_back(pSys);
 		}
