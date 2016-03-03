@@ -542,7 +542,11 @@ void Core::upMenu(float dt)
 			break;
 		case 20: //Fullscreen
 			justSetFullScreen = true;
-			clientHandleCmds("/fullscreen");
+			if (fullscreen)
+				fullscreen = false;
+			else
+				fullscreen = true;
+			recreate = true;
 			break;
 		default:
 			break;
@@ -1919,15 +1923,6 @@ void Core::roamHandleCmds(std::string com)
 			}
 		}
 
-		else if (token == "/fullscreen")
-		{
-			if (fullscreen)
-				fullscreen = false;
-			else
-				fullscreen = true;
-			recreate = true;
-		}
-
 		else if (token == "/cleanup")
 		{
 			GetSound()->playUserGeneratedSound(SOUNDS::announcerCleanup, CATEGORY::Announcer);
@@ -2131,14 +2126,6 @@ void Core::clientHandleCmds(std::string com)
 					console.printMsg(print, "", ' ');
 				}
 			}
-		}
-		else if (token == "/fullscreen")
-		{
-			if (fullscreen)
-				fullscreen = false;
-			else
-				fullscreen = true;
-			recreate = true;
 		}
 		else if (token == "/cleanup")
 		{
