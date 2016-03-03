@@ -4646,4 +4646,21 @@ void Core::flamebarrelflicker()
 	light.AmbientIntensity = 1.0f;
 	light.attenuation.w = 3.5f + sin(timepass * 3.5f) * 0.15 + sin(timepass * 8) * 0.1f;
 	renderPipe->addLight(&light, 32);
+
+	light.Position = { 90.14f, 1.51f, 80.1f };
+	renderPipe->addLight(&light, 8);
+
+	light.Position = { -90.0f, 1.24f, 11.306f };
+	renderPipe->addLight(&light, 17);
+
+	light.Position = { -85.3f, 1.29f, 49.12f };
+	renderPipe->addLight(&light, 28);
+
+	light.Position = { -29.15f, 1.16f, 104.6f };
+	renderPipe->addLight(&light, 14);
+
+	light.Position = { 27.54f, 1.36f, 108.91f };
+	renderPipe->addLight(&light, 6);
+
+
 }
