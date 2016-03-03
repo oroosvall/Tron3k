@@ -1112,8 +1112,7 @@ void Core::upClient(float dt)
 									{
 										if (pteam->at(c) == game->GetLocalPlayerId())
 										{
-											if (game->getPlayer(pteam->at(c)) != nullptr)
-												game->spectateID = pteam->at(c); //This won't last because of the next part
+											game->spectateID = game->GetLocalPlayerId(); //This won't last because of the next part
 										}
 									}
 
