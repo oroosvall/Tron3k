@@ -479,7 +479,7 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			{
 				//dance key
 				if (i->getKeyInfo(GLFW_KEY_G))
-					anim_third_current = AnimationState::dance;
+					animOverideIfPriority(anim_third_current, AnimationState::dance);
 
 				//If freecam or spectating dont take player move input
 				if (freecam == false && isDead == false)

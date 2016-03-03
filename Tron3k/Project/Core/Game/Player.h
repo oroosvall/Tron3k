@@ -123,7 +123,7 @@ private:
 	void modifiersSetData(float dt); //Sets player's data as necessary after player's update occurs
 	bool removeSpecificModifier(MODIFIER_TYPE mt);
 
-	void rotatePlayer(vec3 olddir, vec3 newdir);
+	
 	void reloadCurrentWeapon(bool force = false);
 
 	int kills;
@@ -162,6 +162,7 @@ public:
 
 	PLAYERMSG update(float dt, bool freecam, bool spectatingThisPlayer, bool spectating);
 	void movementUpdates(float dt, bool freecam, bool spectatingThisPlayer, bool spectating);
+	void rotatePlayer(vec3 olddir, vec3 newdir);
 
 	void setName(std::string newName);
 	void setGoalPos(glm::vec3 newPos);

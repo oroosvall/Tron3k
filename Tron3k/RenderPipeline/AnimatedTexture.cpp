@@ -44,6 +44,18 @@ void AnimatedTexture::init()
 	}
 	objects[n].init_standing_right(vec3(44.76f, 2.58f, 103.73f), vec3(42.76f, 1.58f, 103.73));
 	objects[n].init_time_segments(15, 0.08f, 0);
+
+	n++;
+	if (!initialized)
+	{
+		objects.push_back(AnimatedObject());
+		objects[n].textureID = TextureManager::gTm->createTexture("GameFiles/Textures/animatedSigns/sunset.dds");
+	}
+	objects[n].worldMat[0] = { 20.10f, 2.404f, 39.752f, 1.0f };
+	objects[n].worldMat[1] = { 20.10f, 1.423f, 39.947f, 1.0f };
+	objects[n].worldMat[2] = { 20.10f, 2.014f, 37.790f, 1.0f };
+	objects[n].worldMat[3] = { 20.10f, 1.033f, 37.985f, 1.0f };
+	objects[n].init_time_segments(8, 0.1f, 0);
 	
 	n++;
 	if (!initialized)
@@ -115,10 +127,10 @@ void AnimatedTexture::init()
 	if (!initialized)
 	{
 		objects.push_back(AnimatedObject());
-		objects[n].textureID = TextureManager::gTm->createTexture("GameFiles/Textures/animatedSigns/sunset.dds");
+		objects[n].textureID = TextureManager::gTm->createTexture("GameFiles/Textures/animatedSigns/timelapse.dds");
 	}
 	objects[n].init_standing_right(vec3(15.50f, 2.314f, 45.34f), vec3(15.50f, 1.314f, 47.34f));
-	objects[n].init_time_segments(8, 0.1f, 0);
+	objects[n].init_time_segments(10, 4.0f, 0.5f);
 
 	n++;
 	if (!initialized)

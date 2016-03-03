@@ -300,13 +300,13 @@ void Core::update(float dt)
 	default:						break;
 	}
 
-	//if (renderPipe)
-	//{
-	//	if (i->justPressed(GLFW_KEY_8))
-	//	{
-	//		renderPipe->reloadShaders();
-	//	}
-	//}
+	if (renderPipe)
+	{
+		if (i->justPressed(GLFW_KEY_8))
+		{
+			renderPipe->reloadShaders();
+		}
+	}
 
 	i->clearOnPress();
 	console.discardCommandAndLastMsg();
@@ -2657,7 +2657,19 @@ void Core::renderWorld(float dt)
 			tmp_player->deadViewAngles();
 		}
 
-		glm::vec3 tmpEyePos = CameraInput::getCam()->getPos();
+		if (game->spectateID == -1)
+		{
+			if (i->getKeyInfo(GLFW_KEY_G))
+			{
+				force3rd = true;
+				camPos = camPos - (camDir * 5.0f);
+				cam->setCam(camPos);
+				tmp_player->resetRotation();
+				tmp_player->rotatePlayer(vec3(0,0,1), camDir);
+			}
+		}
+
+		glm::vec3 tmpEyePos = camPos;
 
 		renderPipe->update(tmpEyePos.x, tmpEyePos.y, tmpEyePos.z, dt); // sets the view/proj matrix
 		renderPipe->renderIni();
@@ -2819,12 +2831,7 @@ void Core::renderWorld(float dt)
 						{
 							glm::mat4* playermat = p->getWorldMat();
 							if (force3rd)
-							{
-								*playermat = glm::mat4();
-								playermat[0][0].w = p->getPos().x;
-								playermat[0][1].w = p->getPos().y - 0.45;
-								playermat[0][2].w = p->getPos().z;
-							}
+								playermat[0][1].w = p->getPos().y -1.45f;
 
 							if (p->isLocal()) //use current anim
 								renderPipe->renderAnimation(i, p->getRole()->getRole(), playermat, p->getAnimState_t_c(), &dgColor.x, hpval, false, false, p->roomID);
@@ -3040,8 +3047,8 @@ void Core::renderWorld(float dt)
 			renderPipe->disableBlend();
 
 			//viewing 3rd person anims in roam
-			//if (i->getKeyInfo(GLFW_KEY_P))
-			//	cam->setCam(camPos, camDir);
+			if (i->getKeyInfo(GLFW_KEY_G))
+				cam->setCam(camPos);
 			//if (i->getKeyInfo(GLFW_KEY_L))
 			//	cam->setCam(camPos, camDir);
 
