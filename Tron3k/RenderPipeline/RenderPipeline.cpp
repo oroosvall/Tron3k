@@ -818,10 +818,12 @@ void RenderPipeline::finalizeRender()
 	gBuffer->preRender(glowSampleShader, glowSampleTextureLoc);
 
 	//GBuffer Render
-	gBuffer->render(postProcessShader, postProcessTextureLoc, postProcessPixelUVX, postProcessPixelUVY);
+	gBuffer->render();
 
 	renderLightvolumes();
-	
+
+	gBuffer->postProcessPass(postProcessShader, postProcessTextureLoc, postProcessPixelUVX, postProcessPixelUVY);
+
 	glUseProgram(textShader);
 	glProgramUniformMatrix4fv(textShader, textShaderModel, 1, GL_FALSE, (GLfloat*)&glm::mat4());
 	glProgramUniformMatrix4fv(textShader, textShaderVP, 1, GL_FALSE, (GLfloat*)&glm::mat4());
@@ -1218,6 +1220,15 @@ int RenderPipeline::createMappedParticleEffect(BULLET_TYPE peffect, glm::vec3 po
 
 	switch (peffect)
 	{
+	case BULLET_TYPE::PULSE_SHOT:
+		path += "lightningTrail.ps";
+		break;
+	case BULLET_TYPE::CLUSTER_GRENADE:
+		path += "clusterGrenadeTrail.ps";
+		break;
+	case BULLET_TYPE::GRENADE_SHOT:
+		path += "grenadeTrail.ps";
+		break;
 	case BULLET_TYPE::SHOTGUN_PELLET:
 		path += "shotgunTrail.ps";
 		break;
@@ -1234,7 +1245,6 @@ int RenderPipeline::createMappedParticleEffect(BULLET_TYPE peffect, glm::vec3 po
 	default:
 		path = "0"; //Använd detta för att inte läsa från fil när inget system ska skapas. Valfri metod.
 	}
-	
 	if (path != "0")
 	{
 		int loadID = particleNameToIndexMap[path];
