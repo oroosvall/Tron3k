@@ -453,6 +453,7 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 			if (GetSound())
 			{
 				GetSound()->SetFading(false);
+				GetSound()->NoBackground();
 			}
 			gamePtr->clearAllPlayerKD();
 			consolePtr->printMsg("Warmup. Type /ready to start.", "System", 'S');
