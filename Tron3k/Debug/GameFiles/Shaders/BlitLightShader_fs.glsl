@@ -43,7 +43,7 @@ vec3 ambientLightColor = vec3(0.7f, 0.7f , 1.0f);
 float ambientLightDiffuseIntensity = 0.1f;
 float ambientLightAmbientIntensity = 0.1f;
 
-out vec4 fragment_color;                                                                                       
+layout (location = 1)out vec4 fragment_color;                                                                                       
 
 const float kernel[41] = float[41](0.003848, 0.004894, 0.006148,
 0.007629, 0.009351, 0.011321, 0.013537, 0.01599, 0.018655,
