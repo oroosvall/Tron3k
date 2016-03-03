@@ -74,6 +74,8 @@ enum AnimationState
 	first_primary_death,			// ?	| ? | ? | ? | ? |
 	first_secondary_death,			// ?	| ? | ? | ? | ? |
 
+	dance,
+
 	none
 };
 
@@ -149,6 +151,8 @@ int static getAnimRank(AnimationState test)
 	case third_secondary_death:			return 2;
 	case first_primary_death:			return 2;
 	case first_secondary_death:			return 2;
+
+	case dance:							return 0;
 
 	default:
 	case none: return -1;

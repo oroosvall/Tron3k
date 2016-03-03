@@ -117,6 +117,7 @@ enum MUSIC
 {
 	mainMenu,
 	cantinaSong,
+	background,
 
 	nrOfMusic
 };

@@ -829,12 +829,16 @@ void RenderPipeline::finalizeRender()
 	glProgramUniformMatrix4fv(textShader, textShaderVP, 1, GL_FALSE, (GLfloat*)&glm::mat4());
 	glProgramUniform3f(textShader, textShaderOffset,  0, 0, 0);
 	
-	TextureInfo asd;
-	asd.lastTextureSlot = GL_TEXTURE0;
-	asd.state = TEXTURE_LOADED;
-	asd.textureID = fontTexture;
+	//TextureInfo asd;
+	//asd.lastTextureSlot = GL_TEXTURE0;
+	//asd.state = TEXTURE_LOADED;
+	//asd.textureID = fontTexture;
 
-	TextureManager::gTm->bind(asd, textShader, textShaderLocation);//bindTexture(fontTexture, textShader, textShaderLocation, DIFFUSE_FB);
+	//TextureManager::gTm->bind(asd, textShader, textShaderLocation);//bindTexture(fontTexture, textShader, textShaderLocation, DIFFUSE_FB);
+	
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, fontTexture);
+	glProgramUniform1i(textShader, textShaderLocation, 0);
 	
 	glEnable(GL_BLEND);
 
@@ -1690,12 +1694,17 @@ void RenderPipeline::ui_renderQuad(float* mat, float* pivot, GLuint textureID, f
 	{
 		glm::mat4* world = (glm::mat4*)mat;
 
-		TextureInfo temp;
-		temp.state = TEXTURE_LOADED;
-		temp.lastTextureSlot = GL_TEXTURE0;
-		temp.textureID = textureID;
-		TextureManager::gTm->bind(temp, uiShader, ui_Texture);
+		//TextureInfo temp;
+		//temp.state = TEXTURE_LOADED;
+		//temp.lastTextureSlot = GL_TEXTURE0;
+		//temp.textureID = textureID;
+		//TextureManager::gTm->bind(temp, uiShader, ui_Texture);
 		//glBindTexture(GL_TEXTURE_2D, textureID);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, textureID);
+		glProgramUniform1i(uiShader, ui_Texture, 0);
+
 		glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, mat);
 		glProgramUniform3fv(uiShader, uniformPivotLocation, 1, pivot);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
@@ -1807,12 +1816,15 @@ void RenderPipeline::renderTextObject(int id)
 		glProgramUniformMatrix4fv(textShader, textShaderVP, 1, GL_FALSE, (GLfloat*)&glm::mat4());
 		glProgramUniform3f(textShader, textShaderOffset, 0, 0, 0);
 
-		TextureInfo asd;
-		asd.lastTextureSlot = GL_TEXTURE0;
-		asd.state = TEXTURE_LOADED;
-		asd.textureID = fontTexture;
-
-		TextureManager::gTm->bind(asd, textShader, textShaderLocation);//TextureManager::gTm->bindTexture(fontTexture, textShader, textShaderLocation, DIFFUSE_FB);
+		//TextureInfo asd;
+		//asd.lastTextureSlot = GL_TEXTURE0;
+		//asd.state = TEXTURE_LOADED;
+		//asd.textureID = fontTexture;
+		//
+		//TextureManager::gTm->bind(asd, textShader, textShaderLocation);//TextureManager::gTm->bindTexture(fontTexture, textShader, textShaderLocation, DIFFUSE_FB);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, fontTexture);
+		glProgramUniform1i(textShader, textShaderLocation, 0);
 
 		textObjects[id]->draw();
 	}
@@ -1831,12 +1843,16 @@ void RenderPipeline::renderTextObjectWorldPos(int id, glm::mat4 world)
 
 		glProgramUniform3f(textShader, textShaderOffset, -pos.x, 0, 0);
 
-		TextureInfo asd;
-		asd.lastTextureSlot = GL_TEXTURE0;
-		asd.state = TEXTURE_LOADED;
-		asd.textureID = fontTexture;
+		//TextureInfo asd;
+		//asd.lastTextureSlot = GL_TEXTURE0;
+		//asd.state = TEXTURE_LOADED;
+		//asd.textureID = fontTexture;
+		//
+		//TextureManager::gTm->bind(asd, textShader, textShaderLocation);//TextureManager::gTm->bindTexture(fontTexture, textShader, textShaderLocation, DIFFUSE_FB);
 
-		TextureManager::gTm->bind(asd, textShader, textShaderLocation);//TextureManager::gTm->bindTexture(fontTexture, textShader, textShaderLocation, DIFFUSE_FB);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, fontTexture);
+		glProgramUniform1i(textShader, textShaderLocation, 0);
 
 		textObjects[id]->draw();
 	}
@@ -1869,21 +1885,27 @@ void RenderPipeline::renderTakeDamageDistort()
 
 		mat4 minimapRenderMat = mat4();
 
-		TextureInfo asd;
-		asd.lastTextureSlot = GL_TEXTURE0;
-		asd.state = TEXTURE_LOADED;
+		//TextureInfo asd;
+		//asd.lastTextureSlot = GL_TEXTURE0;
+		//asd.state = TEXTURE_LOADED;
 		float percentage = takeDamage_timer / takeDamage_timerStartValue;
 
+		GLuint texID = 0;
+
 		if(percentage > 0.85f)
-			asd.textureID = contMan.takeDamage1;
+			texID = contMan.takeDamage1;
 		else if(percentage > 0.70f)
-			asd.textureID = contMan.takeDamage2;
+			texID = contMan.takeDamage2;
 		else if (percentage > 0.55f)
-			asd.textureID = contMan.takeDamage3;
+			texID = contMan.takeDamage3;
 
 		if (percentage > 0.551f)
 		{
-			TextureManager::gTm->bind(asd, uiShader, ui_Texture);
+			//TextureManager::gTm->bind(asd, uiShader, ui_Texture);
+
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, texID);
+			glProgramUniform1i(uiShader, ui_Texture, 0);
 
 			vec3 piv(0);
 			glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, &minimapRenderMat[0][0]);
@@ -1917,11 +1939,15 @@ void RenderPipeline::renderMinimap(float* yourPos, float* yourdir, float* teamma
 	uiQuad.BindVertData();
 	glActiveTexture(GL_TEXTURE0);
 	
-	TextureInfo asd;
-	asd.lastTextureSlot = GL_TEXTURE0;
-	asd.state = TEXTURE_LOADED;
-	asd.textureID = contMan.miniMapTexture;
-	TextureManager::gTm->bind(asd, uiShader, ui_Texture);
+	//TextureInfo asd;
+	//asd.lastTextureSlot = GL_TEXTURE0;
+	//asd.state = TEXTURE_LOADED;
+	//asd.textureID = contMan.miniMapTexture;
+	//TextureManager::gTm->bind(asd, uiShader, ui_Texture);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, contMan.miniMapTexture);
+	glProgramUniform1i(uiShader, ui_Texture, 0);
 
 	minimapRenderMat = mat4();
 	//pos
@@ -1938,8 +1964,11 @@ void RenderPipeline::renderMinimap(float* yourPos, float* yourdir, float* teamma
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
 	//render active cappoint marker
-	asd.textureID = contMan.activeCapTexture;
-	TextureManager::gTm->bind(asd, uiShader, ui_Texture);
+	//asd.textureID = contMan.activeCapTexture;
+	//TextureManager::gTm->bind(asd, uiShader, ui_Texture);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, contMan.activeCapTexture);
+	glProgramUniform1i(uiShader, ui_Texture, 0);
 
 	if (activeCap == 0)
 	{
@@ -1960,8 +1989,12 @@ void RenderPipeline::renderMinimap(float* yourPos, float* yourdir, float* teamma
 
 
 	//render player markers
-	asd.textureID = contMan.youarehereTexture;
-	TextureManager::gTm->bind(asd, uiShader, ui_Texture);
+	//asd.textureID = contMan.youarehereTexture;
+	//TextureManager::gTm->bind(asd, uiShader, ui_Texture);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, contMan.youarehereTexture);
+	glProgramUniform1i(uiShader, ui_Texture, 0);
 
 	minimapRenderMat = mat4();
 
@@ -1991,10 +2024,14 @@ void RenderPipeline::renderMinimap(float* yourPos, float* yourdir, float* teamma
 
 
 	//set teammates texture
-	asd.lastTextureSlot = GL_TEXTURE0;
-	asd.state = TEXTURE_LOADED;
-	asd.textureID = contMan.teamishereTexture;
-	TextureManager::gTm->bind(asd, uiShader, ui_Texture);
+	//asd.lastTextureSlot = GL_TEXTURE0;
+	//asd.state = TEXTURE_LOADED;
+	//asd.textureID = contMan.teamishereTexture;
+	//TextureManager::gTm->bind(asd, uiShader, ui_Texture);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, contMan.teamishereTexture);
+	glProgramUniform1i(uiShader, ui_Texture, 0);
 
 	vec3* teamMateData = (vec3*)teammates;
 
@@ -2039,14 +2076,18 @@ void RenderPipeline::renderScoreBoard(int team1size, int team2size)
 	//uniformlocation set texture 0  it defaults to 0 so not needed
 	uiQuad.BindVertData();
 	glActiveTexture(GL_TEXTURE0);
-
+	glBindTexture(GL_TEXTURE_2D, contMan.score_header_orange);
+	glProgramUniform1i(uiShader, ui_Texture, 0);
 
 	// render headder ORANGE
-	TextureInfo asd;
-	asd.lastTextureSlot = GL_TEXTURE0;
-	asd.state = TEXTURE_LOADED;
-	asd.textureID = contMan.score_header_orange;
-	TextureManager::gTm->bind(asd, uiShader, ui_Texture);
+	//TextureInfo asd;
+	//asd.lastTextureSlot = GL_TEXTURE0;
+	//asd.state = TEXTURE_LOADED;
+	//asd.textureID = contMan.score_header_orange;
+	//TextureManager::gTm->bind(asd, uiShader, ui_Texture);
+
+	
+
 	minimapRenderMat = mat4();
 	vec3 piv(0);
 	glProgramUniform3fv(uiShader, uniformPivotLocation, 1, &piv[0]);
@@ -2062,10 +2103,15 @@ void RenderPipeline::renderScoreBoard(int team1size, int team2size)
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
 	// render headder GREEN
-	asd.lastTextureSlot = GL_TEXTURE0;
-	asd.state = TEXTURE_LOADED;
-	asd.textureID = contMan.score_header_green;
-	TextureManager::gTm->bind(asd, uiShader, ui_Texture);
+	//asd.lastTextureSlot = GL_TEXTURE0;
+	//asd.state = TEXTURE_LOADED;
+	//asd.textureID = contMan.score_header_green;
+	//TextureManager::gTm->bind(asd, uiShader, ui_Texture);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, contMan.score_header_green);
+	glProgramUniform1i(uiShader, ui_Texture, 0);
+
 	//pos
 	minimapRenderMat[0].w = 0.65f;
 	minimapRenderMat[1].w = 0.43f;
@@ -2075,11 +2121,15 @@ void RenderPipeline::renderScoreBoard(int team1size, int team2size)
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
 	//render Orange playerinfo boxes
-	asd.lastTextureSlot = GL_TEXTURE0;
-	asd.state = TEXTURE_LOADED;
-	asd.textureID = contMan.score_team_orange;
-	TextureManager::gTm->bind(asd, uiShader, ui_Texture);
+	//asd.lastTextureSlot = GL_TEXTURE0;
+	//asd.state = TEXTURE_LOADED;
+	//asd.textureID = contMan.score_team_orange;
+	//TextureManager::gTm->bind(asd, uiShader, ui_Texture);
 	
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, contMan.score_team_orange);
+	glProgramUniform1i(uiShader, ui_Texture, 0);
+
 	minimapRenderMat[0].x = contMan.score_teamscale.x;
 	minimapRenderMat[1].y = contMan.score_teamscale.y;
 	
@@ -2094,11 +2144,15 @@ void RenderPipeline::renderScoreBoard(int team1size, int team2size)
 	}
 	
 	//render Green playerinfo boxes
-	asd.lastTextureSlot = GL_TEXTURE0;
-	asd.state = TEXTURE_LOADED;
-	asd.textureID = contMan.score_team_green;
-	TextureManager::gTm->bind(asd, uiShader, ui_Texture);
+	//asd.lastTextureSlot = GL_TEXTURE0;
+	//asd.state = TEXTURE_LOADED;
+	//asd.textureID = contMan.score_team_green;
+	//TextureManager::gTm->bind(asd, uiShader, ui_Texture);
 	
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, contMan.score_team_green);
+	glProgramUniform1i(uiShader, ui_Texture, 0);
+
 	for (int n = 0; n < team2size; n++)
 	{
 		//pos

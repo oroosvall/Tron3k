@@ -33,17 +33,17 @@ void AnimatedTexture::init()
 		objects.push_back(AnimatedObject());
 		objects[n].textureID = TextureManager::gTm->createTexture("GameFiles/Textures/animatedSigns/spaceNow.dds");
 	}
-	objects[n].init_standing_right(vec3(94.8f, 22.3f, 53.6f + 3), vec3(94.8f, 14.3f, 74.3f + 3));
+	objects[n].init_standing_right(vec3(94.63f, 18.96f, 60.3f), vec3(94.63f, 12.73f, 72));
 	objects[n].init_time_segments(20, 0.075f, 0);
 
 	n++;
 	if (!initialized)
 	{
 		objects.push_back(AnimatedObject());
-		objects[n].textureID = TextureManager::gTm->createTexture("GameFiles/Textures/animatedSigns/youmuSwing.png");
+		objects[n].textureID = TextureManager::gTm->createTexture("GameFiles/Textures/animatedSigns/noisecube.dds");
 	}
-	objects[n].init_standing_right(vec3(45, 2, 103.7f), vec3(41.8f, 0.6f, 103.7f));
-	objects[n].init_time_segments(5, 0.15f, 0);
+	objects[n].init_standing_right(vec3(44.76f, 2.58f, 103.73f), vec3(42.76f, 1.58f, 103.73));
+	objects[n].init_time_segments(15, 0.08f, 0);
 	
 	n++;
 	if (!initialized)
@@ -90,7 +90,7 @@ void AnimatedTexture::init()
 		objects.push_back(AnimatedObject());
 		objects[n].textureID = TextureManager::gTm->createTexture("GameFiles/Textures/animatedSigns/discoWallAnimated.png");
 	}
-	objects[n].init_standing_right(vec3(40.0f, 4.0f, 94.6f), vec3(46.0f, 1.0f, 94.6f));
+	objects[n].init_standing_right(vec3(40.94f, 3.57f, 94.6f), vec3(45.09f, 1.501f, 94.6f));
 	objects[n].init_time_segments(9, 0.4f, 0);
 
 	n++;
@@ -99,7 +99,7 @@ void AnimatedTexture::init()
 		objects.push_back(AnimatedObject());
 		objects[n].textureID = TextureManager::gTm->createTexture("GameFiles/Textures/animatedSigns/whitenoise.dds");
 	}
-	objects[n].init_standing_right(vec3(-47, 7.5f, 84), vec3(-42, 4.5f, 84));
+	objects[n].init_standing_right(vec3(-42.145f, 5.603f, 84.20f), vec3(-46.866, 7.964f, 84.20f));
 	objects[n].init_time_segments(7, 0.05f, 0);
 
 	n++;
@@ -108,7 +108,7 @@ void AnimatedTexture::init()
 		objects.push_back(AnimatedObject());
 		objects[n].textureID = TextureManager::gTm->createTexture("GameFiles/Textures/animatedSigns/emergency.dds");
 	}
-	objects[n].init_standing_right(vec3(1.5f, 2.3f, 55.2f), vec3(1.5f, 0.8f, 52.4f));
+	objects[n].init_standing_right(vec3(1.12f, 2.220f, 54.331f), vec3(1.12f, 1.220f, 52.331f));
 	objects[n].init_time_segments(2, 0.8f, 0);
 
 	n++;

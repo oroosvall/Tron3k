@@ -450,6 +450,8 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 	{
 		if (state == WARMUP)
 		{
+			GetSound()->SetFading(false);
+			GetSound()->SetMenuVolume(GetSound()->getVolumeMusic());
 			gamePtr->clearAllPlayerKD();
 			consolePtr->printMsg("Warmup. Type /ready to start.", "System", 'S');
 			teamOneScore = 0;
@@ -470,6 +472,11 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 		}
 		else if (state == PREROUND)
 		{
+			if (GetSound())
+			{
+				GetSound()->PlayBackground();
+			}
+
 			if (round == 1)
 				gamePtr->clearAllPlayerKD();
 
@@ -506,6 +513,12 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 		}
 		else if (state == ROUND)
 		{
+			if (GetSound())
+			{
+				GetSound()->NoBackground();
+			}
+			
+
 			gamePtr->resetAllPickups();
 			if (GetSound())
 			{
@@ -533,6 +546,12 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 		}
 		else if (state == OVERTIME)
 		{
+			if (GetSound())
+			{
+				GetSound()->PlayBackground();
+			}
+			
+
 			if (GetSoundActivated())
 			{
 				GetSound()->playUserGeneratedSound(SOUNDS::SoundForOvertime, CATEGORY::Effects);
@@ -565,6 +584,10 @@ void KingOfTheHill::setGamemodeData(int respawn1, int respawn2, int onCap1, int 
 		}
 		else if (state == ENDROUND)
 		{
+			if (GetSound())
+			{
+				GetSound()->NoBackground();
+			}
 			fivePlayed = false;
 			fifteenPlayed = false;
 			round++;
