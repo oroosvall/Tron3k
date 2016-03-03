@@ -469,7 +469,6 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 				if (animPrimary == false)
 					anim_third_current = AnimationState::third_secondary_idle;
 
-
 			//instant stop
 			if (grounded && isLocalPlayer)
 			{
@@ -478,6 +477,10 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 
 			if (!lockControls)
 			{
+				//dance key
+				if (i->getKeyInfo(GLFW_KEY_G))
+					anim_third_current = AnimationState::dance;
+
 				//If freecam or spectating dont take player move input
 				if (freecam == false && isDead == false)
 				{
