@@ -5,7 +5,7 @@ FusionShot::FusionShot(glm::vec3 position, glm::vec3 direction, int pID, int bID
 {
 	type = BULLET_TYPE::FUSION_SHOT;
 	initValues(position, direction, pID, bID, tID);
-	vel = glm::vec3(80.0f);
+	vel = glm::vec3(90.0f);
 	damage = 50;
 	maxttl = ttl;
 }
