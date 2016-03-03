@@ -68,4 +68,5 @@ void main()
 {
 	fragment_color = fxaaPass(diffuse);
 	//fragment_color = texture(diffuse, vec2(UV.x, UV.y));
+	//fragment_color = vec4(1.0f);
 }
