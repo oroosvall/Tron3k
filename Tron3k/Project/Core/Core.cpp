@@ -2662,18 +2662,19 @@ void Core::renderWorld(float dt)
 
 		if (game->spectateID == -1)
 		{
-			if (i->getKeyInfo(GLFW_KEY_G))
-			{
-				force3rd = true;
-				camPos = camPos - (camDir * 5.0f);
-				cam->setCam(camPos);
-
-				if (game->freecam == false)
+			if (tmp_player->getLockedControls() == false)
+				if (i->getKeyInfo(GLFW_KEY_G))
 				{
-					tmp_player->resetRotation();
-					tmp_player->rotatePlayer(vec3(0, 0, 1), camDir);
+					force3rd = true;
+					camPos = camPos - (camDir * 5.0f);
+					cam->setCam(camPos);
+
+					if (game->freecam == false)
+					{
+						tmp_player->resetRotation();
+						tmp_player->rotatePlayer(vec3(0, 0, 1), camDir);
+					}
 				}
-			}
 		}
 
 		glm::vec3 tmpEyePos = camPos;
