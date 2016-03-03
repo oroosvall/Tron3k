@@ -34,6 +34,8 @@ shared uint nextEmitIndex;
 shared uint arrayLenght;
 shared uint passCount;
 
+shared int maxemit;
+
 const uint threadCount = (WORKGROUP_SIZE * WORKGROUP_SIZE);
 
 layout (local_size_x = WORKGROUP_SIZE, local_size_y = WORKGROUP_SIZE) in;
@@ -42,7 +44,7 @@ void main()
 	// shared setup
 	if(gl_LocalInvocationIndex == 0)
 	{
-		emit = emission;
+		maxemit = emit = emission;
 		//nextEmitIndex = p[iter].pos.w; // ??
 		arrayLenght = p.length();
 		passCount = (arrayLenght + threadCount - 1) / threadCount;
@@ -87,8 +89,10 @@ void main()
 				if(old > 0)
 				{
 					p[iter].dir = p[iter].initialDir;
-					p[iter].pos.xyz = initialPos;
+					float dist = (old / maxemit);
+					p[iter].pos.xyz = initialPos + vel* force;
 					p[iter].dir.w = lifetime;
+					
 				}
 			}
 		}
@@ -105,7 +109,8 @@ void main()
 				if(old > 0)
 				{
 					p[iter].dir = p[iter].initialDir;
-					p[iter].pos.xyz = initialPos;
+					float dist = (old / maxemit);
+					p[iter].pos.xyz = initialPos + vel * force;
 					p[iter].dir.w = lifetime;
 				}
 			}

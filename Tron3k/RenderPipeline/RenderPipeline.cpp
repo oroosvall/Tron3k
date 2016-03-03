@@ -1308,8 +1308,9 @@ void RenderPipeline::removeMappedParticleEffect(int id)
 	{
 		if (mappedparticleSystems[i].id == id)
 		{
-			mappedparticleSystems[i].pSys.Release();
-			mappedparticleSystems.erase(mappedparticleSystems.begin() + i);
+			mappedparticleSystems[i].pSys.startDying();
+			//mappedparticleSystems[i].pSys.Release();
+			//mappedparticleSystems.erase(mappedparticleSystems.begin() + i);
 		}
 	}
 }

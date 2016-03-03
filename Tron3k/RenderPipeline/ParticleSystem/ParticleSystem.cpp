@@ -131,9 +131,12 @@ void ParticleSystem::Update(float dT)
 			}
 		}
 
-		if (m_counter == m_data.maxparticles && m_currentEmission < 0.0f)
+		timer += dT;
+
+		if (m_counter >= m_data.maxparticles && m_currentEmission < 0.0f)
 		{
-			m_alive = true;
+			if(timer > (m_data.lifetime + m_data.emission* m_data.maxparticles))
+				m_alive = true;
 		}
 
 		glProgramUniform1f(*m_program, m_loc->lifetime, m_data.lifetime);
@@ -187,4 +190,11 @@ void ParticleSystem::Release()
 void ParticleSystem::setSpawnPos(glm::vec3 pos)
 {
 	m_pos = pos;
+}
+
+void ParticleSystem::startDying()
+{
+	m_data.continuous = false;
+	m_counter = 0;
+	timer = 0;
 }

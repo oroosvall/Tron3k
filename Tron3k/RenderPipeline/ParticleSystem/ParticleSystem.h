@@ -17,6 +17,8 @@ public:
 
 	void setSpawnPos(glm::vec3 pos);
 
+	void startDying();
+
 	glm::vec2 m_size;
 	glm::vec3 m_color;
 
@@ -39,6 +41,8 @@ private:
 	glm::vec3 m_pos;
 
 	float m_currentEmission;
+
+	float timer;
 
 	//Uniforms
 	GLuint* m_program;	//shaders
