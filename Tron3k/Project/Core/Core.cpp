@@ -1108,7 +1108,8 @@ void Core::upClient(float dt)
 									{
 										if (pteam->at(c) == game->GetLocalPlayerId())
 										{
-											game->spectateID = pteam->at(c);
+											if (game->getPlayer(pteam->at(c)) != nullptr)
+												game->spectateID = pteam->at(c);
 										}
 									}
 
@@ -1116,10 +1117,14 @@ void Core::upClient(float dt)
 									{
 										if (c < pteam->size() - 1)
 										{
-											game->spectateID = pteam->at(c + 1);
+											if (game->getPlayer(pteam->at(c + 1)) != nullptr)
+												game->spectateID = pteam->at(c + 1);
 										}
 										else
-											game->spectateID = pteam->at(0);
+										{
+											if (game->getPlayer(pteam->at(0)) != nullptr)
+												game->spectateID = pteam->at(0);
+										}
 
 										if (game->spectateID == game->GetLocalPlayerId())
 											game->spectateID = -1;
