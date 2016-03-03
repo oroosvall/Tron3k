@@ -138,7 +138,6 @@ void Role::loadRoleSpecifics(int _role)
 			mobility->init();
 			consumable = new Consumable();
 			consumable->init(CONSUMABLE_TYPE::THERMITEGRENADE);
-			consumable->init(CONSUMABLE_TYPE::THERMITEGRENADE);
 			this->size = glm::vec3(0.6, 0.85, 0.6);
 			break;
 		case MANIPULATOR:
