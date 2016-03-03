@@ -1108,26 +1108,26 @@ void Core::upClient(float dt)
 								bool stopthis = false;
 								for (int c = 0; c < pteam->size() && !stopthis; c++)
 								{
-									if (game->spectateID == -1)
+									if (game->spectateID == -1) //We're not observing anything, set our spectateID to the local player
 									{
 										if (pteam->at(c) == game->GetLocalPlayerId())
 										{
 											if (game->getPlayer(pteam->at(c)) != nullptr)
-												game->spectateID = pteam->at(c);
+												game->spectateID = pteam->at(c); //This won't last because of the next part
 										}
 									}
 
-									if (pteam->at(c) == game->spectateID)
+									if (pteam->at(c) == game->spectateID) //If we're looking at the team slot we're currently spectating (can be ourselves according to above)
 									{
 										if (c < pteam->size() - 1)
 										{
 											if (game->getPlayer(pteam->at(c + 1)) != nullptr)
-												game->spectateID = pteam->at(c + 1);
+												game->spectateID = pteam->at(c + 1); //Step to next player
 										}
 										else
 										{
 											if (game->getPlayer(pteam->at(0)) != nullptr)
-												game->spectateID = pteam->at(0);
+												game->spectateID = pteam->at(0); //If we're about to step out of the array, instead jump to start
 										}
 
 										if (game->spectateID == game->GetLocalPlayerId())
