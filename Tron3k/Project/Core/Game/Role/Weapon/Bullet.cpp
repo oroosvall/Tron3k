@@ -4,6 +4,9 @@ Bullet::~Bullet()
 {
 	if (part)
 		part->dead = true;
+
+	if (part2)
+		part2->dead = true;
 }
 
 void Bullet::updateWorldMat()

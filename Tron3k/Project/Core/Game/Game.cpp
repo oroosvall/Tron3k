@@ -1346,6 +1346,8 @@ void Game::addBulletToList(int conID, int teamId, int bulletId, BULLET_TYPE bt, 
 		b = new GrapplingHook(pos, dir, conID, bulletId, teamId);
 	}
 	b->part = 0;
+	b->part2 = 0;
+
 	bullets[bt].push_back(b);
 
 
@@ -1366,6 +1368,25 @@ void Game::addBulletToList(int conID, int teamId, int bulletId, BULLET_TYPE bt, 
 
 		b->part = mp;
 		allMovableParticles.push_back(mp);
+
+		if (mp->bt == BULLET_TYPE::FUSION_SHOT)
+		{
+			mp = new MovableParticle();
+			mp->bt = BULLET_TYPE::SHOTGUN_PELLET;
+			mp->id = 0;
+			mp->created = false;
+			mp->dead = false;
+			mp->allowRemove = false;
+			mp->pPos = b->getPosPtr();
+			mp->dir = -b->getDir();
+			if (teamId == 1)
+				mp->color = TEAMONECOLOR;
+			if (teamId == 2)
+				mp->color = TEAMTWOCOLOR;
+
+			b->part2 = mp;
+			allMovableParticles.push_back(mp);
+		}
 	}
 }
 

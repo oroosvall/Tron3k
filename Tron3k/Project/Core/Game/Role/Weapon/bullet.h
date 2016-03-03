@@ -36,6 +36,8 @@ public:
 	void getId(int &player, int &bullet) { player = playerId; bullet = bulletId; };
 
 	MovableParticle* part;
+	MovableParticle* part2;
+
 
 	glm::vec3* getPosPtr() { return &pos; }
 	glm::vec3 getPos() { return pos; };
