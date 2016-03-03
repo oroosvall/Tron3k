@@ -49,6 +49,18 @@ bool Input::PLUS = false;
 bool Input::APOSTROPHE = false;
 bool Input::DASH = false;
 bool Input::TAB = false;
+bool Input::F1 = false;
+bool Input::F2 = false;
+bool Input::F3 = false;
+bool Input::F4 = false;
+bool Input::F5 = false;
+bool Input::F6 = false;
+bool Input::F7 = false;
+bool Input::F8 = false;
+bool Input::F9 = false;
+bool Input::F10 = false;
+bool Input::F11 = false;
+bool Input::F12 = false;
 
 bool Input::pQ = false;
 bool Input::pW = false;
@@ -99,6 +111,18 @@ bool Input::pPLUS = false;
 bool Input::pAPOSTROPHE = false;
 bool Input::pDASH = false;
 bool Input::pTAB = false;
+bool Input::pF1 = false;
+bool Input::pF2 = false;
+bool Input::pF3 = false;
+bool Input::pF4 = false;
+bool Input::pF5 = false;
+bool Input::pF6 = false;
+bool Input::pF7 = false;
+bool Input::pF8 = false;
+bool Input::pF9 = false;
+bool Input::pF10 = false;
+bool Input::pF11 = false;
+bool Input::pF12 = false;
 
 bool Input::LMB = false;
 bool Input::RMB = false;
@@ -549,6 +573,91 @@ void Input::callbackKeyboard(GLFWwindow* wnd, int key, int scancode, int action,
 			keyPressedThisFrame = true;
 		}
 		break;
+	case GLFW_KEY_F1:
+		F1 = (bool)action;
+		if (action == GLFW_PRESS)
+		{
+			pF1 = true;
+			keyPressedThisFrame = true;
+		}
+	case GLFW_KEY_F2:
+		F2 = (bool)action;
+		if (action == GLFW_PRESS)
+		{
+			pF2 = true;
+			keyPressedThisFrame = true;
+		}
+	case GLFW_KEY_F3:
+		F3 = (bool)action;
+		if (action == GLFW_PRESS)
+		{
+			pF3 = true;
+			keyPressedThisFrame = true;
+		}
+	case GLFW_KEY_F4:
+		F4 = (bool)action;
+		if (action == GLFW_PRESS)
+		{
+			pF4 = true;
+			keyPressedThisFrame = true;
+		}
+	case GLFW_KEY_F5:
+		F5 = (bool)action;
+		if (action == GLFW_PRESS)
+		{
+			pF5 = true;
+			keyPressedThisFrame = true;
+		}
+	case GLFW_KEY_F6:
+		F6 = (bool)action;
+		if (action == GLFW_PRESS)
+		{
+			pF6 = true;
+			keyPressedThisFrame = true;
+		}
+	case GLFW_KEY_F7:
+		F7 = (bool)action;
+		if (action == GLFW_PRESS)
+		{
+			pF7 = true;
+			keyPressedThisFrame = true;
+		}
+	case GLFW_KEY_F8:
+		F8 = (bool)action;
+		if (action == GLFW_PRESS)
+		{
+			pF8 = true;
+			keyPressedThisFrame = true;
+		}
+	case GLFW_KEY_F9:
+		F9 = (bool)action;
+		if (action == GLFW_PRESS)
+		{
+			pF9 = true;
+			keyPressedThisFrame = true;
+		}
+	case GLFW_KEY_F10:
+		F10 = (bool)action;
+		if (action == GLFW_PRESS)
+		{
+			pF10 = true;
+			keyPressedThisFrame = true;
+		}
+	case GLFW_KEY_F11:
+		F11 = (bool)action;
+		if (action == GLFW_PRESS)
+		{
+			pF11 = true;
+			keyPressedThisFrame = true;
+		}
+	case GLFW_KEY_F12:
+		F12 = (bool)action;
+		if (action == GLFW_PRESS)
+		{
+			pF12 = true;
+			keyPressedThisFrame = true;
+		}
+		break;
 	}
 }
 
@@ -709,6 +818,30 @@ bool Input::getKeyInfo(int key)
 		return DASH;
 	case GLFW_KEY_TAB:
 		return TAB;
+	case GLFW_KEY_F1:
+		return F1;
+	case GLFW_KEY_F2:
+		return F2;
+	case GLFW_KEY_F3:
+		return F3;
+	case GLFW_KEY_F4:
+		return F4;
+	case GLFW_KEY_F5:
+		return F5;
+	case GLFW_KEY_F6:
+		return F6;
+	case GLFW_KEY_F7:
+		return F7;
+	case GLFW_KEY_F8:
+		return F8;
+	case GLFW_KEY_F9:
+		return F9;
+	case GLFW_KEY_F10:
+		return F10;
+	case GLFW_KEY_F11:
+		return F11;
+	case GLFW_KEY_F12:
+		return F12;
 
 	case GLFW_MOUSE_BUTTON_LEFT:
 		return LMB;
@@ -831,6 +964,31 @@ bool Input::justPressed(int key)
 		case GLFW_KEY_TAB: //Dash/Underscore
 			return pTAB;
 
+		case GLFW_KEY_F1:
+			return pF1;
+		case GLFW_KEY_F2:
+			return pF2;
+		case GLFW_KEY_F3:
+			return pF3;
+		case GLFW_KEY_F4:
+			return pF4;
+		case GLFW_KEY_F5:
+			return pF5;
+		case GLFW_KEY_F6:
+			return pF6;
+		case GLFW_KEY_F7:
+			return pF7;
+		case GLFW_KEY_F8:
+			return pF8;
+		case GLFW_KEY_F9:
+			return pF9;
+		case GLFW_KEY_F10:
+			return pF10;
+		case GLFW_KEY_F11:
+			return pF11;
+		case GLFW_KEY_F12:
+			return pF12;
+
 		case GLFW_MOUSE_BUTTON_LEFT:
 			return pLMB;
 		case GLFW_MOUSE_BUTTON_RIGHT:
@@ -897,6 +1055,19 @@ void Input::clearOnPress()
 		pNUM8 = false;
 		pNUM9 = false;
 		pNUM0 = false;
+
+		pF1 = false;
+		pF2 = false;
+		pF3 = false;
+		pF4 = false;
+		pF5 = false;
+		pF6 = false;
+		pF7 = false;
+		pF8 = false;
+		pF9 = false;
+		pF10 = false;
+		pF11 = false;
+		pF12 = false;
 
 		pLMB = false;
 		pRMB = false;
