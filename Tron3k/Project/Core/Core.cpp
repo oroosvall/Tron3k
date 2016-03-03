@@ -3293,11 +3293,28 @@ void Core::inGameUIUpdate() //Ingame ui update
 			{
 				int tDiff = int(koth->getTimer()) - oldTime;
 				tDiff = tDiff % 15;
-				uiManager->HUD.ticketLostTimer = tDiff;
+				uiManager->HUD.ticketLostTimer -= tDiff;
 
-				uiManager->scaleBar(scaleAndText::LoseTicketsMeter, (float)(uiManager->HUD.ticketLostTimer) / (float)(uiManager->HUD.loseTicketPer), true, InGameUI::GUI);
-				uiManager->HUD.ticketLostTimer -= 1;
+				if (uiManager->HUD.ticketLostTimer < 0)
+				{
+					tDiff = uiManager->HUD.ticketLostTimer;
+					tDiff *= -1;
+					tDiff = 15 - tDiff;
+					uiManager->HUD.ticketLostTimer = tDiff;
 
+					uiManager->scaleBar(scaleAndText::LoseTicketsMeter, (float)(uiManager->HUD.ticketLostTimer) / (float)(uiManager->HUD.loseTicketPer), true, InGameUI::GUI);
+					uiManager->HUD.ticketLostTimer -= 1;
+				}
+				else if (uiManager->HUD.ticketLostTimer == 0)
+				{
+					uiManager->HUD.ticketLostTimer = uiManager->HUD.loseTicketPer;
+					uiManager->scaleBar(scaleAndText::LoseTicketsMeter, (float)(uiManager->HUD.ticketLostTimer) / (float)(uiManager->HUD.loseTicketPer), true, InGameUI::GUI);
+				}
+				else
+				{
+					uiManager->scaleBar(scaleAndText::LoseTicketsMeter, (float)(uiManager->HUD.ticketLostTimer) / (float)(uiManager->HUD.loseTicketPer), true, InGameUI::GUI);
+					uiManager->HUD.ticketLostTimer -= 1;
+				}
 				calcTimer = false;
 			}
 			else if (!uiManager->HUD.firstSecondEachRound) //If it isn't the first second of the round
