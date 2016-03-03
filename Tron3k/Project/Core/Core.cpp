@@ -2624,6 +2624,7 @@ void Core::renderWorld(float dt)
 		//temp set to see anims in 3p 
 		CameraInput* cam = CameraInput::getCam();
 		vec3 camPos = cam->getPos();
+		vec3 oldPos = camPos;
 		vec3 camDir = cam->getDir();
 		bool force3rd = false;
 
@@ -2664,8 +2665,12 @@ void Core::renderWorld(float dt)
 				force3rd = true;
 				camPos = camPos - (camDir * 5.0f);
 				cam->setCam(camPos);
-				tmp_player->resetRotation();
-				tmp_player->rotatePlayer(vec3(0,0,1), camDir);
+
+				if (game->freecam == false)
+				{
+					tmp_player->resetRotation();
+					tmp_player->rotatePlayer(vec3(0, 0, 1), camDir);
+				}
 			}
 		}
 
@@ -3048,7 +3053,7 @@ void Core::renderWorld(float dt)
 
 			//viewing 3rd person anims in roam
 			if (i->getKeyInfo(GLFW_KEY_G))
-				cam->setCam(camPos);
+				cam->setCam(oldPos);
 			//if (i->getKeyInfo(GLFW_KEY_L))
 			//	cam->setCam(camPos, camDir);
 
