@@ -2363,20 +2363,20 @@ void  RenderPipeline::renderHelp(int id)
 	glUseProgram(uiShader);
 	//uniformlocation set texture 0  it defaults to 0 so not needed
 	uiQuad.BindVertData();
-
+	
 	glActiveTexture(GL_TEXTURE0);
-
+	
 	if(id == 1)
 		glBindTexture(GL_TEXTURE_2D, contMan.help1);
 	else if(id == 2)
 		glBindTexture(GL_TEXTURE_2D, contMan.help2);
 	else if (id == 3)
 		glBindTexture(GL_TEXTURE_2D, contMan.help3);
-
+	
 	glProgramUniform1i(uiShader, ui_Texture, 0);
-
+	
 	mat4 renderMat = mat4();
-
+	
 	vec3 piv(0);
 	glProgramUniformMatrix4fv(uiShader, ui_World, 1, GL_FALSE, &renderMat[0][0]);
 	glProgramUniform3fv(uiShader, uniformPivotLocation, 1, &piv[0]);
