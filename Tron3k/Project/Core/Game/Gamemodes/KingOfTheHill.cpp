@@ -97,6 +97,7 @@ GAMEMODE_MSG KingOfTheHill::roundScoring()
 	{
 		teamOneScore++;
 		teamTwoScore++;
+		ret = OBJECTIVE_DRAW;
 	}
 	else if (teamOnePlayersAtPoint < teamTwoPlayersAtPoint)
 	{

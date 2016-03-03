@@ -67,7 +67,7 @@ public:
 	void setReadyNeeded(int r) { playersReadyNeeded = r; };
 	void setTeamTokens(int s) { tokensPerTeam = s; };
 	void setWinScore(int w) { winScore = w; };
-	void setScorePerRound(int p) { pointsPerRound = p; overtimer = float(p + 1)*15.0f + 1.0f; };
+	void setScorePerRound(int p) { pointsPerRound = p; overtimer = float(p)*15.0f + 1.0f; };
 
 	int getMaxTokensPerTeam();
 	int getRespawnTokens(int team);
