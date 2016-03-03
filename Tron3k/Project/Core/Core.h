@@ -130,6 +130,7 @@ private:
 	bool sendChunkBoxes(int chunkID);
 	void sendCapPointBoxes();
 	void sendRoomBoxes();
+	void flamebarrelflicker();
 
 	void sendPlayerBox();
 	void sendWorldBoxes();

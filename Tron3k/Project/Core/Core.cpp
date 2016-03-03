@@ -2822,6 +2822,8 @@ void Core::renderWorld(float dt)
 			renderPipe->renderCapturePoint(koth->getCapturePoint());
 		}
 
+		flamebarrelflicker();
+
 		// render chunks
 		renderPipe->render();
 
@@ -4629,4 +4631,17 @@ void Core::trailQuadsRender(int hackedTeam)
 			renderPipe->renderTrailQUad(BULLET_TYPE::PULSE_SHOT, &pos.x, &dir.x, &crossdir.x, &color2[0]);
 		}
 	}
+}
+
+void Core::flamebarrelflicker()
+{
+	SpotLight light;
+	//push Flame barrel flickering lights
+	light.Color = { 1, 0.4f, 0.023f };
+	light.Direction = {0,0,0};
+	light.DiffuseIntensity = 2.5f + sin(timepass * 3.5f) * 0.15 + sin(timepass * 8) * 0.15f;
+	light.Position = { 0.93f, 1.23f, 17.0f };
+	light.AmbientIntensity = 1.0f;
+	light.attenuation.w = 3.5f + sin(timepass * 3.5f) * 0.15 + sin(timepass * 8) * 0.1f;
+	renderPipe->addLight(&light, 32);
 }
