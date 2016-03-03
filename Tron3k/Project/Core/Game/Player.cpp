@@ -1539,12 +1539,14 @@ void Player::fixCamera(float dt, bool freecam, bool spectating)
 {
 	if (!freecam && !spectating)
 	{
+		cam->update(dt, freecam);
 		if (!isDead)
 		{
-			cam->update(dt, freecam);
 			cam->setCam(pos);
 			rotatePlayer(oldDir, dir);
 		}
+		else
+			cam->setCam(pos, dir);
 	}
 	else if (!spectating)
 	{
