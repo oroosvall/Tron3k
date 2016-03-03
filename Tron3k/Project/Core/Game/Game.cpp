@@ -1366,25 +1366,6 @@ void Game::addBulletToList(int conID, int teamId, int bulletId, BULLET_TYPE bt, 
 
 		b->part = mp;
 		allMovableParticles.push_back(mp);
-
-		if (mp->bt == BULLET_TYPE::FUSION_SHOT)
-		{
-			MovableParticle* mp2 = new MovableParticle();
-			mp2->bt = BULLET_TYPE::PULSE_SHOT;
-			mp2->id = 0;
-			mp2->created = false;
-			mp2->dead = false;
-			mp2->allowRemove = false;
-			mp2->pPos = b->getPosPtr();
-			mp2->dir = -b->getDir();
-			if (teamId == 1)
-				mp2->color = TEAMONECOLOR;
-			if (teamId == 2)
-				mp2->color = TEAMTWOCOLOR;
-
-			b->part = mp2;
-			allMovableParticles.push_back(mp2);
-		}
 	}
 }
 
