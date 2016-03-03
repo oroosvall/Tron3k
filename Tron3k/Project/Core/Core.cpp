@@ -3647,7 +3647,7 @@ void Core::createWindow(int x, int y, bool fullscreen)
 
 	glfwMakeContextCurrent(win);
 
-	//set vsync off
+	//set vsync off f
 	glfwSwapInterval(0);
 
 	if (renderPipe)
