@@ -1246,6 +1246,9 @@ int RenderPipeline::createMappedParticleEffect(BULLET_TYPE peffect, glm::vec3 po
 	case BULLET_TYPE::FUSION_SHOT:
 		path += "fusionTrail.ps";
 		break;
+	case BULLET_TYPE::GRAPPLING_HOOK:
+		path += "grapplingTrail.ps";
+		break;
 	default:
 		path = "0"; //Använd detta för att inte läsa från fil när inget system ska skapas. Valfri metod.
 	}
