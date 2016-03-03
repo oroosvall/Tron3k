@@ -149,7 +149,7 @@ void Role::loadRoleSpecifics(int _role)
 			mobility->init();
 			consumable = new Consumable();
 			consumable->init(CONSUMABLE_TYPE::VACUUMGRENADE);
-			this->size = glm::vec3(0.63, 0.72, 0.63);
+			this->size = glm::vec3(0.59, 0.70, 0.59);
 			break;
 	}
 
