@@ -1387,6 +1387,24 @@ void Game::addBulletToList(int conID, int teamId, int bulletId, BULLET_TYPE bt, 
 			b->part2 = mp;
 			allMovableParticles.push_back(mp);
 		}
+		else if (mp->bt == BULLET_TYPE::PULSE_SHOT)
+		{
+			mp = new MovableParticle();
+			mp->bt = BULLET_TYPE::PULSE_SHOT2;
+			mp->id = 0;
+			mp->created = false;
+			mp->dead = false;
+			mp->allowRemove = false;
+			mp->pPos = b->getPosPtr();
+			mp->dir = -b->getDir();
+			if (teamId == 1)
+				mp->color = TEAMONECOLOR;
+			if (teamId == 2)
+				mp->color = TEAMTWOCOLOR;
+
+			b->part2 = mp;
+			allMovableParticles.push_back(mp);
+		}
 	}
 }
 

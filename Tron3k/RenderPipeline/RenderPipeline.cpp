@@ -1223,6 +1223,9 @@ int RenderPipeline::createMappedParticleEffect(BULLET_TYPE peffect, glm::vec3 po
 	case BULLET_TYPE::PULSE_SHOT:
 		path += "lightningTrail.ps";
 		break;
+	case BULLET_TYPE::PULSE_SHOT2:
+		path += "pulseShot.ps";
+		break;
 	case BULLET_TYPE::CLUSTER_GRENADE:
 		path += "clusterGrenadeTrail.ps";
 		break;
