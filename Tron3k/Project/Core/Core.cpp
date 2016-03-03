@@ -4,6 +4,8 @@ void Core::init()
 {
 	escActive = false;
 	inGameSettings = false;
+	justSetFullScreenMainMenu = false;
+	justSetFullScreenIngame = false;
 	justSetFullScreen = false;
 	firstTimeInWarmUp = true;
 	firstTimeInEnd = false;
@@ -57,10 +59,25 @@ void Core::init()
 	uiManager->init(&console, winX, winY);
 	uiManager->LoadNextSet(UISets::Menu, winX, winY); //Load the first set of menus.
 	uiManager->setMenu(MainMenu::StartMenu); //Set start menu as the current menu
-	optionsDataSize = 11;
+	optionsDataSize = 12;
 	optionsSavedData = new float[optionsDataSize];
-	for (int i = 0; i < optionsDataSize; i++)
-		optionsSavedData[i] = 0.5;
+	soundSavedData = new float[optionsDataSize];
+	optionsSavedData[0] = 1.0f;
+	soundSavedData[0] = 1.0f;
+	soundSavedData[1] = 0.30f;
+	for (int i = 2; i < optionsDataSize - 3; i++)
+	{
+		optionsSavedData[i] = 0.15;
+		soundSavedData[i] = 50.0f;
+	}
+	optionsSavedData[9] = 0.;
+	soundSavedData[9] = 0.0f;
+	optionsSavedData[10] = 0.15;
+	soundSavedData[10] = 0.0f;
+	optionsSavedData[11] = -0.15;
+	soundSavedData[11] = 0.0f;
+
+
 	uiManager->setOptionsSaved(optionsSavedData);
 
 	renderUI = false;
@@ -99,6 +116,11 @@ Core::~Core()
 	{
 		delete[] optionsSavedData;
 		optionsSavedData = nullptr;
+	}
+	if (soundSavedData != nullptr)
+	{
+		delete[] soundSavedData;
+		soundSavedData = nullptr;
 	}
 	if (renderPipe != nullptr)
 	{
@@ -343,7 +365,10 @@ void Core::upMenu(float dt)
 
 	if (justSetFullScreen)
 	{
-		uiManager->setMenu(MainMenu::Options);
+		//uiManager->setFirstMenuSet(false);
+		uiManager->setMenu(MainMenu::StartMenu); //Set start menu as the current menu
+		//uiManager->setMenu(MainMenu::Settings);
+		justSetFullScreenMainMenu = false;
 		justSetFullScreen = false;
 		if (fullscreen)
 			uiManager->changeTex(9, 1);
@@ -380,6 +405,10 @@ void Core::upMenu(float dt)
 		case 2: //MainMenu -> Settings
 			uiManager->setFirstMenuSet(true);
 			uiManager->setMenu(MainMenu::Settings);
+			if (fullscreen)
+				uiManager->changeTex(9, 1);
+			else
+				uiManager->changeTex(9, 0);
 			break;
 		case 3: //Exit
 			glfwSetWindowShouldClose(win, 1);
@@ -439,6 +468,23 @@ void Core::upMenu(float dt)
 		case 7: //Back
 			nameNrOfKeys = 0;
 			ipNrOfKeys = 0;
+
+			if (uiManager->getCurrentMenu() == MainMenu::Settings)
+			{
+				SoundPlayer* sound = GetSound();
+				if (sound != nullptr)
+				{
+					sound->SetMasterVolume(soundSavedData[1]); //0-1
+					sound->SetFootstepsVolume((int)soundSavedData[2]); //0-100
+					sound->SetGunsVolume((int)soundSavedData[3]); //0-100
+					sound->SetEffectVolume((int)soundSavedData[4]); //0-100
+					sound->SetAmbientVolume((int)soundSavedData[5]); //0-100
+					sound->SetAnnouncerVolume((int)soundSavedData[6]); //0-100
+					sound->setVolumeMusic((int)soundSavedData[7]); //0-100
+					//sense
+				}
+				uiManager->setOptionsSaved(optionsSavedData);
+			}
 			uiManager->setMenu(MainMenu::Back); //Last menu
 
 			if (inGameSettings)
@@ -450,7 +496,6 @@ void Core::upMenu(float dt)
 					last = tmp;
 					subState = 2;
 
-					optionsSavedData = uiManager->getOptionsSaved();
 					uiManager->LoadNextSet(UISets::InGame, winX, winY);
 					uiManager->setFirstMenuSet(false);
 					uiManager->setMenu(InGameUI::GUI);
@@ -463,20 +508,49 @@ void Core::upMenu(float dt)
 					setHUDText(InGameUI::GUI);
 				}
 			}
+			break;
+		case 8: //Settings -> confirm
+		{
+			SoundPlayer* sound = GetSound();
+			if(sound != nullptr)
+				soundSavedData = sound->GetAllSoundAsAList();//GetAllSoundAsAList();
+			sound = nullptr;
 
+			clientHandleCmds("/sens" + std::to_string(currentSense));
+			optionsSavedData = uiManager->getOptionsSaved();
+			uiManager->setMenu(MainMenu::Back);
+
+			if (justSetFullScreenIngame || justSetFullScreenMainMenu)
+			{
+				if (fullscreen)
+					fullscreen = false;
+				else
+					fullscreen = true;
+				recreate = true;
+			}
+			else if (inGameSettings)
+			{
+				if (uiManager->getCurrentMenu() == -1)
+				{
+					Gamestate tmp = current;
+					current = last;
+					last = tmp;
+					subState = 2;
+
+					uiManager->LoadNextSet(UISets::InGame, winX, winY);
+					uiManager->setFirstMenuSet(false);
+					uiManager->setMenu(InGameUI::GUI);
+					uiManager->setMenu(InGameUI::ESC);
+					renderMenu = false;
+					renderUI = true;
+					inGameSettings = false;
+
+					//Set HUD stats
+					setHUDText(InGameUI::GUI);
+				}
+			}
 			break;
-		case 8: //Settings -> Options
-			uiManager->setFirstMenuSet(true);
-			uiManager->setMenu(MainMenu::Options);
-			if (fullscreen)
-				uiManager->changeTex(9, 1);
-			else
-				uiManager->changeTex(9, 0);
-			break;
-		case 9: //Settings -> How to play
-			uiManager->setFirstMenuSet(true);
-			uiManager->setMenu(MainMenu::HowToPlay);
-			break;
+		}
 		case 10: //Ip input
 			menuIpKeyListener = true;
 			break;
@@ -488,67 +562,78 @@ void Core::upMenu(float dt)
 			SoundPlayer* sound = GetSound();
 			if(sound != nullptr)
 				sound->SetMasterVolume(newVolume);
+
 			sound = nullptr;
 			break;
 		}
 		case 13: //Footsteps sound
 		{
 			SoundPlayer* sound = GetSound();
+			int volume = newVolume * 100;
 			if (sound != nullptr)
-				sound->SetFootstepsVolume((int)newVolume);
+				sound->SetFootstepsVolume(volume);
+
 			sound = nullptr;
 			break;
 		}
 		case 14: //Weapon sound
 		{
 			SoundPlayer* sound = GetSound();
+			int volume = newVolume * 100;
 			if (sound != nullptr)
-				sound->SetGunsVolume((int)newVolume);
+				sound->SetGunsVolume(volume);//(int)newVolume * 100);
 			sound = nullptr;
 			break;
 		}
 		case 15: //Effects sound
 		{
 			SoundPlayer* sound = GetSound();
+			int volume = newVolume * 100;
 			if (sound != nullptr)
-				sound->SetEffectVolume((int)newVolume);
+				sound->SetEffectVolume(volume);
 			sound = nullptr;
 			break;
 		}
 		case 16: //Ambient sound
 		{
 			SoundPlayer* sound = GetSound();
+			int volume = newVolume * 100;
 			if (sound != nullptr)
-				sound->SetAmbientVolume((int)newVolume);
+				sound->SetAmbientVolume(volume);
 			sound = nullptr;
 			break;
 		}
-		case 17: //Announcer sound
+		case 17: //Music
 		{
 			SoundPlayer* sound = GetSound();
+			int volume = newVolume * 100;
 			if (sound != nullptr)
-				sound->SetAnnouncerVolume((int)newVolume);
+				sound->setVolumeMusic(volume);
 			sound = nullptr;
 			break;
 		}
-		case 18: //Music
+		case 18: //Announcer sound
 		{
 			SoundPlayer* sound = GetSound();
+			int volume = newVolume * 100;
 			if (sound != nullptr)
-				sound->setVolumeMusic(newVolume);
+				sound->SetAnnouncerVolume(volume);
 			sound = nullptr;
 			break;
 		}
 		case 19: //Sensitivity
-			clientHandleCmds("/sens" + std::to_string(newVolume));
+			currentSense = newVolume;
 			break;
 		case 20: //Fullscreen
-			justSetFullScreen = true;
-			if (fullscreen)
-				fullscreen = false;
+			//if (fullscreen)
+			//	fullscreen = false;
+			//else
+			//	fullscreen = true;
+			//recreate = true;
+			if (inGameSettings)
+				justSetFullScreenIngame = true;
 			else
-				fullscreen = true;
-			recreate = true;
+				justSetFullScreenMainMenu = true;
 			break;
 		default:
 			break;
@@ -3359,9 +3444,15 @@ void Core::inGameUIUpdate() //Ingame ui update
 		}
 	}
 
-
 	uiManager->renderHideAble();
 	uiManager->inGameRender();
+
+	if (justSetFullScreenIngame)
+	{
+		uiManager->setMenu(InGameUI::ESC);
+		setHUDText(InGameUI::GUI);
+		justSetFullScreenIngame = false;
+	}
 
 	double x = (0.0);
 	double y = (0.0);
@@ -3566,7 +3657,6 @@ void Core::createWindow(int x, int y, bool fullscreen)
 			renderPipe->removeTextObject(namePlates[i]);
 		}
 
-
 		if (uiManager != nullptr)
 		{
 			hoverTemp = uiManager->getHoverCheckBool();
@@ -3580,18 +3670,30 @@ void Core::createWindow(int x, int y, bool fullscreen)
 		uiManager = new UIManager();
 		initPipeline();
 		uiManager->init(&console, winX, winY);
-		if (renderMenu)
+		if (inGameSettings)
+		{
+			Gamestate tmp = current;
+			current = last;
+			last = tmp;
+			subState = 2;
+
+			renderMenu = false;
+			renderUI = true;
+			inGameSettings = false;
+			uiManager->setFirstMenuSet(false);
+			uiManager->LoadNextSet(UISets::InGame, winX, winY);
+			uiManager->setMenu(InGameUI::GUI);
+		}
+		else if (renderMenu)
 		{
 			uiManager->LoadNextSet(UISets::Menu, winX, winY); //Load the first set of menus.
-			uiManager->setFirstMenuSet(false);
-			if(!inGameSettings)
-				uiManager->setMenu(MainMenu::StartMenu); //Set start menu as the current menu
-			if(justSetFullScreen)
-				uiManager->setMenu(MainMenu::Settings);
+			uiManager->setMenu(MainMenu::StartMenu);
 
 			uiManager->setHoverCheckBool(hoverTemp);
 
 			uiManager->setOptionsSaved(optionsSavedData);
+
+			justSetFullScreen = true;
 		}
 		else
 		{
@@ -3836,7 +3938,7 @@ void Core::showTeamSelect()
 
 		if (renderMenu)
 		{
-			optionsSavedData = uiManager->getOptionsSaved();
+			//optionsSavedData = uiManager->getOptionsSaved();
 			uiManager->LoadNextSet(UISets::InGame, winX, winY);
 			renderMenu = false;
 		}
@@ -3851,7 +3953,7 @@ void Core::showTeamSelect()
 
 		if (renderMenu)
 		{
-			optionsSavedData = uiManager->getOptionsSaved();
+			//optionsSavedData = uiManager->getOptionsSaved();
 			uiManager->LoadNextSet(UISets::InGame, winX, winY);
 			renderMenu = false;
 		}
@@ -3871,6 +3973,9 @@ void Core::showClassSelect()
 
 void Core::setHUDText(int menuID)
 {
+	uiManager->clearText(scaleAndText::HP, menuID);
+	uiManager->clearText(scaleAndText::Ammo, menuID);
+
 	Player* local = game->getPlayer(game->GetLocalPlayerId());
 	KingOfTheHill* koth = (KingOfTheHill*)game->getGameMode();
 

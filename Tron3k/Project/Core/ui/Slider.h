@@ -35,6 +35,7 @@ public:
 	
 	virtual void setWorldMatrix(int id, float x, float y);
 	virtual void resetWorldMatrix(int id);
+	virtual float getWorldX();
 
 	virtual int checkCollision(glm::vec2 pos, float &newSoundProcent, float &xPos);
 

@@ -345,7 +345,7 @@ void UIManager::setMenu(int menuId)
 			currentMenu = menuId;
 			nrOfOpenedMenus++;
 
-			if (currentMenu == MainMenu::Options)
+			if (currentMenu == MainMenu::Settings && currentGroup == 0)
 				menus[currentMenu].setOptionsSaved(optionsSaved);
 		}
 	}
@@ -637,14 +637,14 @@ bool UIManager::isThereAMenuUp()
 void UIManager::setOptionsSaved(float* list)
 {
 	optionsSaved = list;
-	if(nrOfOpenedMenus >= MainMenu::Options)
-		menus[MainMenu::Options].setOptionsSaved(optionsSaved);
+	if(nrOfMenus > MainMenu::Settings)
+		menus[MainMenu::Settings].setOptionsSaved(optionsSaved);
 }
 float* UIManager::getOptionsSaved()
 {
-	if (currentMenu == MainMenu::Options)
-		if (MainMenu::Options >= nrOfMenus)
-			optionsSaved = menus[MainMenu::Options].getOptionsSaved();
+	if (currentMenu == MainMenu::Settings)
+		if (nrOfMenus > MainMenu::Settings)
+			optionsSaved = menus[MainMenu::Settings].getOptionsSaved();
 
 	return optionsSaved;
 }

@@ -14,8 +14,8 @@ enum MainMenu
 	Multiplayer,
 	Connect,
 	Settings,
-	HowToPlay,
-	Options,
+	//HowToPlay,
+	//Options,
 	Back = -1
 };
 

@@ -112,6 +112,8 @@ public:
 	virtual void SetAmbientVolume(int);
 	virtual void SetEffectVolume(int);
 	virtual void SetMasterVolume(float);
+	
+	virtual float* GetAllSoundAsAList();
 
 	virtual void stopBrute()
 	{

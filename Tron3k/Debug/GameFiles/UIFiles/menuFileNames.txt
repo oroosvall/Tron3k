@@ -1,8 +1,6 @@
-7
+5
 GameFiles/UIFiles/MainMenu.txt
 GameFiles/UIFiles/Multiplayer.txt
 GameFiles/UIFiles/Connect.txt
 GameFiles/UIFiles/Settings.txt
-GameFiles/UIFiles/HowToPlay.txt
-GameFiles/UIFiles/Options.txt
 GameFiles/UIFiles/Server.txt

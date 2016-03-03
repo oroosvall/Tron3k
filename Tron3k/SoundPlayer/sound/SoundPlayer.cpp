@@ -269,6 +269,24 @@ void SoundPlayer::SetEffectVolume(int volume)
 	this->effectVolume = volume;
 }
 
+float* SoundPlayer::GetAllSoundAsAList()
+{
+	float* temp = new float[12];
+	temp[0] = 0;
+	temp[1] = masterVolume;
+	temp[2] = footstepsVolume;
+	temp[3] = gunVolume;
+	temp[4] = effectVolume;
+	temp[5] = ambientVolume;
+	temp[6] = announcerVolume;
+	temp[7] = musicVolume;
+	temp[8] = 0;
+	temp[9] = 0;
+	temp[10] = 0;
+	temp[11] = 0;
+
+	return temp;
+}
 
 
 void SoundPlayer::SetMasterVolume(float volume)

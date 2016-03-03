@@ -22,6 +22,7 @@ public:
 
 	virtual void setWorldMatrix(int id, float x, float y) = 0;
 	virtual void resetWorldMatrix(int id) = 0;
+	virtual float getWorldX() { return 0.0f; };
 
 	virtual void changeTexUsed(int id, int wmID) = 0;
 	//virtual void changeTexUsed(int textID, int textureID) = 0;

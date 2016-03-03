@@ -109,6 +109,11 @@ void Slider::resetWorldMatrix(int id)
 	worldMatrix[id][1].w = startWMY;
 }
 
+float Slider::getWorldX()
+{
+	return worldMatrix[1][0].w;
+}
+
 int Slider::checkCollision(glm::vec2 mpos, float &newSoundProcent, float &xPos)
 {
 	int returnValue = -1;
@@ -142,26 +147,19 @@ void Slider::setWindowResolution(int winX, int winY)
 
 float Slider::calculateSoundProcent(float mposX)
 {
-	float procent = 1.0f;
-
 	float left = pos[0].x;
 	float right = pos[1].x;
+	float current = mposX;
 
-	if(left < 0)
+	if (left < 0)
 		left *= -1.0f;
-	if(right < 0)
-		right *= -1.0f;
-	if (mposX < 0)
-		mposX *= -1;
+	right += left;
+	current += left;
+	left -= left;
+	right *= 2.5f;
+	current *= 2.5;
 
-	float lenght = right + left;
-
-	float pointClicked = mposX - left;
-
-	if(lenght > 0)
-		procent = pointClicked / lenght;
-
-	return procent;
+	return current / right;
 }
 
 void Slider::renderText(int id)

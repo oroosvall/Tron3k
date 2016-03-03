@@ -58,7 +58,7 @@ bool UI::loadUI(std::string fileName, int winX, int winY)
 {
 	bool result = false;
 
-	if (fileName == "GameFiles/UIFiles/Options.txt")
+	if (fileName == "GameFiles/UIFiles/Settings.txt")
 		optionsMenu = true;
 	
 	std::ifstream myfile;
@@ -330,9 +330,9 @@ int UI::mouseCollission(glm::vec2 pos, float &newSoundProcent)
 			UiObjects[index]->changeTexUsed(1, 0);
 			UiObjects[index]->setDontChangeTexture(true);
 		}
-		else if (optionsMenu && (index > 0 && index < 10))
-			if (optionsSaved != nullptr)
-				optionsSaved[index] = tX;
+		//else if (optionsMenu && (index > 0 && index < 10))
+		//	if (optionsSaved != nullptr)
+		//		optionsSaved[index] = tX;
 	}
 
 	return hit;
@@ -431,11 +431,13 @@ void UI::setOptionsSaved(float* list)
 {
 	optionsSaved = list;
 	for (int i = 1; i < UiObjects.size() - 3; i++)
-		if(optionsSaved[i] >= -1.0f && optionsSaved[i] <= 1.0f)
-			UiObjects[i]->setWorldMatrix(1, optionsSaved[i], 0.0f);
+		//if(optionsSaved[i] >= -1.0f && optionsSaved[i] <= 1.0f)
+		UiObjects[i]->setWorldMatrix(1, optionsSaved[i], 0.0f);
 }
 float* UI::getOptionsSaved()
 {
+	for (int i = 1; i < UiObjects.size() - 2; i++)
+		optionsSaved[i] = UiObjects[i]->getWorldX();;
 	return optionsSaved;
 }
 

@@ -173,10 +173,14 @@ private:
 	//for take damage blur effect on player or spectated player
 	int lastHP_blurreffect = 0;
 
-	//Options data
+	//Settings data
+	float* soundSavedData;
 	float* optionsSavedData;
 	int optionsDataSize;
+	float currentSense;
 
+	bool justSetFullScreenMainMenu;
+	bool justSetFullScreenIngame;
 	bool justSetFullScreen;
 
 public:
