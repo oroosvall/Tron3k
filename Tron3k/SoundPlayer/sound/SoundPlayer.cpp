@@ -132,6 +132,7 @@ void SoundPlayer::init(SoundPlayer* sound, int activateSound)
 		singleton->soundList[SOUNDS::soundEffectGrapplingHook].loadFromFile("GameFiles/Sound/soundEffectGrapplingHook.ogg");
 		singleton->soundList[SOUNDS::soundEffectGrapplingShot].loadFromFile("GameFiles/Sound/soundEffectGrapplingShot.ogg");
 		singleton->soundList[SOUNDS::soundEffectGrapplingShotStereo].loadFromFile("GameFiles/Sound/soundEffectGrapplingShotStereo.ogg");
+		singleton->musicList[MUSIC::background] = "GameFiles/Sound/background.ogg";
 		initialized = true;
 	}
 }
@@ -149,6 +150,20 @@ SoundPlayer::SoundPlayer()
 SoundPlayer::~SoundPlayer()
 {
 	
+}
+
+void SoundPlayer::PlayBackground()
+{
+	background.openFromFile(musicList[MUSIC::background]);
+	
+	background.setVolume(musicVolume-10);
+	background.play();
+	background.setLoop(true);
+}
+
+void SoundPlayer::NoBackground()
+{
+	background.stop();
 }
 
 void SoundPlayer::playFields(float x, float y, float z)
@@ -485,6 +500,11 @@ void SoundPlayer::setVolumeMusic(float volume)
 {
 	musicPlayer.setVolume(volume);
 	musicVolume = volume;
+}
+
+void SoundPlayer::SetMenuVolume(float volume)
+{
+	musicPlayer.setVolume(volume);
 }
 
 void SoundPlayer::setVolumeSound(float volume)

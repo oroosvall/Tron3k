@@ -1928,6 +1928,16 @@ void Core::roamHandleCmds(std::string com)
 			GetSound()->playUserGeneratedSound(SOUNDS::announcerCleanup, CATEGORY::Announcer);
 		}
 
+		else if (token == "/background")
+		{
+			GetSound()->PlayBackground();
+		}
+
+		else if (token == "/fuckbackground")
+		{
+			GetSound()->NoBackground();
+		}
+
 		else if (token == "/role")
 		{
 			ss >> token;

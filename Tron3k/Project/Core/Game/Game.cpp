@@ -205,7 +205,7 @@ void Game::update(float dt)
 	if (GetSoundActivated() && musicVolumeForMenu > 0 && GetSound()->getFading())
 	{
 		musicVolumeForMenu--;
-		GetSound()->setVolumeMusic(musicVolumeForMenu);
+		GetSound()->SetMenuVolume(musicVolumeForMenu);
 	}
 
 	if (gamemode->getType() == GAMEMODE_TYPE::KOTH && gameState == Gamestate::SERVER)

@@ -48,6 +48,7 @@ private:
 
 	sf::Music musicPlayer;	//Streams big sound files
 	sf::Music theCantinaSong;
+	sf::Music background;
 
 	sf::SoundBuffer soundBuffer;
 
@@ -71,10 +72,14 @@ public:
 		return this->fading;
 	}
 
+	virtual void NoBackground();
+	virtual void PlayBackground();
+
 	virtual void enableSounds();
 	static bool getSoundEnabler();
 	static bool getInitialized();
 
+	virtual void SetMenuVolume(float);
 	virtual void SetFading(bool);
 	virtual float getVolumeMusic();
 	virtual void setVolumeMusic(float volume);
@@ -126,6 +131,8 @@ public:
 		playDestroyerStop(x, y, z);
 
 	}
+
+	
 
 	virtual void rotate(float deltaTime);
 
