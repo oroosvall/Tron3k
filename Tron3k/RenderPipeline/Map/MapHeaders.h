@@ -143,6 +143,7 @@ struct PortalData
 	vec3 v2;
 	vec3 v3;
 	vec3 v4;
+	int tempCounter = 0;
 
 	~PortalData()
 	{
@@ -152,6 +153,7 @@ struct PortalData
 	//init with bottom left and top right corners
 	void init(uint32_t _portalID, uint32_t room1, uint32_t room2, vec3 topleft, vec3 topright, vec3 botright, vec3 botleft)
 	{
+		tempCounter = 0;
 		query = 0;
 		available = 0;
 		passed = 0;
@@ -229,6 +231,7 @@ struct PortalData
 
 	void render(GLuint shader, GLuint worldlocation)
 	{
+		tempCounter++;
 		glProgramUniformMatrix4fv(shader, worldlocation, 1, GL_TRUE, &positionData[0][0]);
 		glBeginQuery(GL_ANY_SAMPLES_PASSED, query);
 		glDrawArrays(GL_POINTS, 0, 1);
@@ -237,23 +240,33 @@ struct PortalData
 
 	bool passedCulling()
 	{
-		glGetQueryObjectuiv(query, GL_QUERY_RESULT_AVAILABLE, &available);
+		tempCounter++;
 
-		if (available)
+		if(tempCounter > 100)
 		{
-			waiting = false;
-			glGetQueryObjectuiv(query, GL_QUERY_RESULT, &passed);
+			glGetQueryObjectuiv(query, GL_QUERY_RESULT_AVAILABLE, &available);
+
+			if (available)
+			{
+				waiting = false;
+				glGetQueryObjectuiv(query, GL_QUERY_RESULT, &passed);
 			
-			if (passed)
-			{
-				lastAvaliableState = true;
-				return true;
+				if (passed)
+				{
+					tempCounter = 0;
+					lastAvaliableState = true;
+					return true;
+				}
+				else
+				{
+					lastAvaliableState = false;
+					return false;
+				}
 			}
-			else
-			{
-				lastAvaliableState = false;
-				return false;
-			}
+		}
+		else
+		{
+			lastAvaliableState = true;
 		}
 		waiting = true;
 		return lastAvaliableState;
