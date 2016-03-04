@@ -432,14 +432,16 @@ void UI::scaleBar(int id,  float procentOfMax, bool fromRight)
 void UI::setOptionsSaved(float* list)
 {
 	optionsSaved = list;
-	for (int i = 1; i < UiObjects.size() - 4; i++)
-		//if(optionsSaved[i] >= -1.0f && optionsSaved[i] <= 1.0f)
-		UiObjects[i]->setWorldMatrix(1, optionsSaved[i], 0.0f);
+	if(optionsSaved != nullptr)
+		for (int i = 1; i < UiObjects.size() - 4; i++)
+			//if(optionsSaved[i] >= -1.0f && optionsSaved[i] <= 1.0f)
+			UiObjects[i]->setWorldMatrix(1, optionsSaved[i], 0.0f);
 }
 float* UI::getOptionsSaved()
 {
-	for (int i = 1; i < UiObjects.size() - 4; i++)
-		optionsSaved[i] = UiObjects[i]->getWorldX();;
+	if(optionsSaved != nullptr)
+		for (int i = 1; i < UiObjects.size() - 4; i++)
+			optionsSaved[i] = UiObjects[i]->getWorldX();;
 	return optionsSaved;
 }
 
