@@ -715,7 +715,7 @@ std::vector<vec4> Physics::PlayerVWorldCollision(vec3 playerPos, vec3 playerDir,
 {
 	playerBox.setPos(playerPos);
 	playerBox.setWorldSize();
-	vec3 origPos = playerPos - (playerVel * dt * 2.0f);
+	vec3 origPos = playerPos - (playerVel * dt);
 	AABBSingle box = playerBox.getAABB();
 	float rad = playerBox.getSphere().radius;
 	float abbrad = rad + 0.01f;
