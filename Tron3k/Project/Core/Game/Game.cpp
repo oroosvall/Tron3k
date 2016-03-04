@@ -2465,6 +2465,19 @@ void Game::handleBulletHitEffectEvent(BulletHitEffectInfo hi)
 	if (b != nullptr)
 	{
 		removeBullet(hi.bt, arraypos);
+		HitPosAndDirParticle hpad;
+		hpad.pos = hi.hitPos;
+		//vec3 dir = -glm::normalize(theBullet->getDir());
+		vec3 n = (hi.hitPos + hi.hitDir) - hpad.pos;
+		//hpad.dir = reflect(dir, normalize(n));
+		hpad.dir = hi.hitDir;
+		if (hi.bulletTeam == 1)
+			hpad.color = TEAMONECOLOR;
+		else if (hi.bulletTeam == 2)
+			hpad.color = TEAMTWOCOLOR;
+		else hpad.color = vec3(1.0f, 1.0f, 1.0f);
+		hpad.btype = hi.bt;
+		allBulletHitPlayerPos.push_back(hpad);
 	}
 }
 
