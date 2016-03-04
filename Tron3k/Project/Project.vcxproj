@@ -204,6 +204,13 @@
     <ClInclude Include="Network\Netlog.h" />
     <ClInclude Include="Network\Server.h" />
     <ClInclude Include="Network\Topology.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Project.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\Debug\GameFiles\Textures\Logo.ico" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{93453B35-651C-43D5-958F-5A97A3830548}</ProjectGuid>
