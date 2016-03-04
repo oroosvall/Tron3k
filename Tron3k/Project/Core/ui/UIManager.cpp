@@ -366,7 +366,10 @@ void UIManager::setMenu(int menuId)
 					currentMenu = -1;
 			}
 			else
-				console->printMsg("Error: Function setMenu in UIManager, Someone is trying to use RemoveMenu when nrOfOpenedMenus has a value of 1 or lower .", "System", 'S');
+			{
+				//console->printMsg("Error: Function setMenu in UIManager, Someone is trying to use RemoveMenu when nrOfOpenedMenus has a value of 1 or lower .", "System", 'S');
+			}
+				
 		}
 	}
 	else if (menuId == MainMenu::Back)
@@ -383,7 +386,10 @@ void UIManager::setMenu(int menuId)
 			currentMenu = -1;
 	}
 	else
-		console->printMsg("Error: Function setMenu in UIManager, menuId is invalid", "System", 'S');
+	{
+		//console->printMsg("Error: Function setMenu in UIManager, menuId is invalid", "System", 'S');
+	}
+		
 }
 void UIManager::removeAllMenus()
 {
@@ -455,7 +461,10 @@ bool UIManager::LoadNextSet(int whichMenuGroup, int winX, int winY)
 		}
 	}
 	else
-		console->printMsg("Abit meaningless load the same set of menus that you already use...","System", 'S');
+	{
+		//console->printMsg("Abit meaningless load the same set of menus that you already use...", "System", 'S');
+	}
+		
 	nrOfOpenedMenus = 0;
 
 	return true;
@@ -472,9 +481,15 @@ int UIManager::collisionCheck(glm::vec2 pos, float &newSoundProcent)
 		if (currentMenu > -1)
 			return menus[currentMenu].mouseCollission(pos, newSoundProcent);
 		else
-			console->printMsg("Error: Function collisionCheck in UIManager, currentMenu has a value lower then 0", "System", 'S');
+		{
+			//console->printMsg("Error: Function collisionCheck in UIManager, currentMenu has a value lower then 0", "System", 'S');
+		}
+			
 	else
-		console->printMsg("Error: Function collisionCheck in UIManager, nrOfOpenedMenus has a value of 0 or lower", "System", 'S');
+	{
+		//console->printMsg("Error: Function collisionCheck in UIManager, nrOfOpenedMenus has a value of 0 or lower", "System", 'S');
+	}
+		
 	return -1;
 }
 void UIManager::hoverCheck(glm::vec2 pos)
@@ -493,9 +508,15 @@ void UIManager::changeTex(int objId, int whichTex, int menu)
 		else if(currentMenu)
 			menus[currentMenu].changeTex(objId, whichTex);
 		else
-			console->printMsg("Error: Function changeTex in UIManager, currentMenu has a value lower then 0", "System", 'S');
+		{
+			//console->printMsg("Error: Function changeTex in UIManager, currentMenu has a value lower than 0", "System", 'S');
+		}
+			
 	else
-		console->printMsg("Error: Function changeTex in UIManager, nrOfOpenedMenus has a value of 0 or lower", "System", 'S');
+	{
+		//console->printMsg("Error: Function changeTex in UIManager, nrOfOpenedMenus has a value of 0 or lower", "System", 'S');
+	}
+		
 }
 
 void UIManager::scaleAndTextChangeTexture(int objId, int whichTex, int menu)
@@ -506,9 +527,15 @@ void UIManager::scaleAndTextChangeTexture(int objId, int whichTex, int menu)
 		else if(currentMenu > -1)
 			menus[currentMenu].scaleAndTextChangeTexture(objId, whichTex);
 		else
-			console->printMsg("Error: Function changeTex in UIManager, currentMenu has a value lower then 0", "System", 'S');
+		{
+			//console->printMsg("Error: Function changeTex in UIManager, currentMenu has a value lower than 0", "System", 'S');
+		}
+			
 	else
-		console->printMsg("Error: Function changeTex in UIManager, nrOfOpenedMenus has a value of 0 or lower", "System", 'S');
+	{
+		//console->printMsg("Error: Function changeTex in UIManager, nrOfOpenedMenus has a value of 0 or lower", "System", 'S');
+	}
+		
 }
 
 void UIManager::changeColorTeam()
@@ -526,9 +553,15 @@ void UIManager::setWindowResolution(int winX, int winY)
 		if (currentMenu > -1)
 			menus[currentMenu].setWindowResolution(winX, winY);
 		else
-			console->printMsg("Error: Function setWindowResolution in UIManager, currentMenu has a value lower then 0", "System", 'S');
+		{
+			//console->printMsg("Error: Function setWindowResolution in UIManager, currentMenu has a value lower then 0", "System", 'S');
+		}
+			
 	else
-		console->printMsg("Error: Function setWindowResolution in UIManager, nrOfOpenedMenus has a value of 0 or lower", "System", 'S');
+	{
+	//	console->printMsg("Error: Function setWindowResolution in UIManager, nrOfOpenedMenus has a value of 0 or lower", "System", 'S');
+	}
+		
 }
 
 void UIManager::setText(std::string text, int id, int menu)
@@ -539,9 +572,15 @@ void UIManager::setText(std::string text, int id, int menu)
 		else if(currentMenu > -1)
 			menus[currentMenu].setText(text, id);
 		else
-			console->printMsg("Error: Function setText in UIManager, currentMenu has a value lower then 0", "System", 'S');
+		{
+			//console->printMsg("Error: Function setText in UIManager, currentMenu has a value lower then 0", "System", 'S');
+		}
+			
 	else
-		console->printMsg("Error: Function setText in UIManager, nrOfOpenedMenus has a value of 0 or lower", "System", 'S');
+	{
+		//console->printMsg("Error: Function setText in UIManager, nrOfOpenedMenus has a value of 0 or lower", "System", 'S');
+	}
+		
 }
 
 std::string UIManager::getText(int id, int menu)
@@ -560,9 +599,15 @@ void UIManager::removeLastInput(int id, int menu)
 		else if(currentMenu > -1)
 			menus[currentMenu].clearText(id);
 		else
-			console->printMsg("Error: Function removeLastInput in UIManager, currentMenu has a value lower then 0", "System", 'S');
+		{
+			//console->printMsg("Error: Function removeLastInput in UIManager, currentMenu has a value lower then 0", "System", 'S');
+		}
+			
 	else
-		console->printMsg("Error: Function removeLastInput in UIManager, nrOfOpenedMenus has a value of 0 or lower", "System", 'S');
+	{
+		//console->printMsg("Error: Function removeLastInput in UIManager, nrOfOpenedMenus has a value of 0 or lower", "System", 'S');
+	}
+		
 }
 void UIManager::clearText(int id, int menu)
 {
@@ -572,9 +617,15 @@ void UIManager::clearText(int id, int menu)
 		else if(currentMenu > -1)
 			menus[currentMenu].clearText(id);
 		else
-			console->printMsg("Error: Function clearText in UIManager, currentMenu has a value lower then 0", "System", 'S');
+		{
+			//console->printMsg("Error: Function clearText in UIManager, currentMenu has a value lower than 0", "System", 'S');
+		}
+			
 	else
-		console->printMsg("Error: Function clearText in UIManager, nrOfOpenedMenus has a value of 0 or lower", "System", 'S');
+	{
+		//console->printMsg("Error: Function clearText in UIManager, nrOfOpenedMenus has a value of 0 or lower", "System", 'S');
+	}
+		
 }
 
 void UIManager::scaleBar(int id, float procentOfMax, bool fromRight, int menu)
@@ -585,9 +636,15 @@ void UIManager::scaleBar(int id, float procentOfMax, bool fromRight, int menu)
 		else if(currentMenu > -1)
 			menus[currentMenu].scaleBar(id, procentOfMax, fromRight);
 		else
-			console->printMsg("Error: Function scaleBar in UIManager, currentMenu has a value lower then 0", "System", 'S');
+		{
+			//console->printMsg("Error: Function scaleBar in UIManager, currentMenu has a value lower then 0", "System", 'S');
+		}
+			
 	else
-		console->printMsg("Error: Function scaleBar in UIManager, nrOfOpenedMenus has a value of 0 or lower", "System", 'S');
+	{
+		//console->printMsg("Error: Function scaleBar in UIManager, nrOfOpenedMenus has a value of 0 or lower", "System", 'S');
+	}
+		
 }
 
 void UIManager::setTeamColor(int team)
@@ -669,14 +726,20 @@ void UIManager::hideOrShowHideAble(int id, bool show)
 			hideAble.showObject(id);
 	}
 	else
-		console->printMsg("Function hideOrShowHideAble in UIManager, Hideablemenu isn't active", "System", 'S');
+	{
+		//console->printMsg("Function hideOrShowHideAble in UIManager, Hideablemenu isn't active", "System", 'S');
+	}
+		
 }
 void UIManager::changeTextureHideAble(int id, int wmID, int textureId)
 {
 	if (hideAbleMenuActive)
 		hideAble.changeHideAbleTexture(id, wmID, textureId);
 	else
-		console->printMsg("Function changeTextureHideAble in UIManager, Hideablemenu isn't active", "System", 'S');
+	{
+		//console->printMsg("Function changeTextureHideAble in UIManager, Hideablemenu isn't active", "System", 'S');
+	}
+		
 }
 
 void UIManager::setHideableWorldMatrix(int id, int wmId, glm::vec2 xy)
