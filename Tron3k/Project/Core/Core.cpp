@@ -2693,22 +2693,22 @@ void Core::renderWorld(float dt)
 			tmp_player->deadViewAngles();
 		}
 
-		if (game->spectateID == -1)
-		{
-			if (tmp_player->getLockedControls() == false)
-				if (i->getKeyInfo(GLFW_KEY_G))
-				{
-					force3rd = true;
-					camPos = camPos - (camDir * 5.0f);
-					cam->setCam(camPos);
-
-					if (game->freecam == false)
-					{
-						tmp_player->resetRotation();
-						tmp_player->rotatePlayer(vec3(0, 0, 1), camDir);
-					}
-				}
-		}
+		//if (game->spectateID == -1)
+		//{
+		//	if (tmp_player->getLockedControls() == false)
+		//		if (i->getKeyInfo(GLFW_KEY_G))
+		//		{
+		//			force3rd = true;
+		//			camPos = camPos - (camDir * 5.0f);
+		//			cam->setCam(camPos);
+		//
+		//			if (game->freecam == false)
+		//			{
+		//				tmp_player->resetRotation();
+		//				tmp_player->rotatePlayer(vec3(0, 0, 1), camDir);
+		//			}
+		//		}
+		//}
 
 		glm::vec3 tmpEyePos = camPos;
 
@@ -3106,8 +3106,8 @@ void Core::renderWorld(float dt)
 			renderPipe->disableBlend();
 
 			//viewing 3rd person anims in roam
-			if (i->getKeyInfo(GLFW_KEY_G))
-				cam->setCam(oldPos);
+			//if (i->getKeyInfo(GLFW_KEY_G))
+			//	cam->setCam(oldPos);
 			//if (i->getKeyInfo(GLFW_KEY_L))
 			//	cam->setCam(camPos, camDir);
 
