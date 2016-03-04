@@ -2476,7 +2476,7 @@ void Game::handleBulletHitEffectEvent(BulletHitEffectInfo hi)
 		else if (hi.bulletTeam == 2)
 			hpad.color = TEAMTWOCOLOR;
 		else hpad.color = vec3(1.0f, 1.0f, 1.0f);
-		hpad.btype = hi.bt;
+		hpad.btype = BULLET_TYPE::EFFECTIMPACT;
 		allBulletHitPlayerPos.push_back(hpad);
 	}
 }

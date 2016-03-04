@@ -1367,6 +1367,9 @@ void RenderPipeline::createTimedParticleEffect(BULLET_TYPE peffect, vec3 pos, gl
 	//	break;
 	//case NROFBULLETS:
 	//	break;
+	case EFFECTIMPACT:
+		path += "impact.ps";
+		break;
 	default:
 		path = "0";
 		break;
