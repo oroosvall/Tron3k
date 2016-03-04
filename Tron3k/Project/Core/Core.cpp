@@ -3642,8 +3642,8 @@ void Core::inGameUIUpdate() //Ingame ui update
 				uiManager->setFirstMenuSet(false);
 
 				uiManager->LoadNextSet(UISets::Menu, winX, winY);
-				uiManager->setMenu(MainMenu::Settings);
 				uiManager->setOptionsSaved(optionsSavedData);
+				uiManager->setMenu(MainMenu::Settings);
 				inGameSettings = true;
 				renderMenu = true;
 				renderUI = false;
