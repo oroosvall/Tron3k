@@ -211,6 +211,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\Debug\GameFiles\Textures\Logo.ico" />
+    <Image Include="Logo.ico" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{93453B35-651C-43D5-958F-5A97A3830548}</ProjectGuid>

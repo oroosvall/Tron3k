@@ -669,5 +669,8 @@
     <Image Include="..\Debug\GameFiles\Textures\Logo.ico">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="Logo.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
