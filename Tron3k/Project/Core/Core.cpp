@@ -3043,6 +3043,12 @@ void Core::renderWorld(float dt)
 					renderPipe->renderHelp(3);
 			}
 
+			//press F1 for help
+			renderPipe->setTextObjectText(leaderBoardTextID, "Help: F1");
+			renderPipe->setTextPos(leaderBoardTextID, vec2(1150, 720));
+			renderPipe->renderTextObject(leaderBoardTextID);
+
+
 			//spectate this playername render
 			if (game->spectateID != -1)
 			{
