@@ -516,7 +516,7 @@ bool SoundPlayer::getInitialized()
 
 void SoundPlayer::setVolumeMusic(float volume)
 {
-	musicPlayer.setVolume(volume);
+	//musicPlayer.setVolume(volume);
 	musicVolume = volume;
 }
 
