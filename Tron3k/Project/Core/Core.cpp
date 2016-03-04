@@ -86,9 +86,11 @@ void Core::init()
 	renderMenu = true;
 	menuIpKeyListener = false;
 	menuNameKeyListener = false;
+	menuSensKeyListener = false;
 
 	nameNrOfKeys = 0;
 	ipNrOfKeys = 0;
+	senseNrOfKeys = 0;
 }
 
 Core::~Core()
@@ -194,15 +196,17 @@ void Core::update(float dt)
 	glfwPollEvents();
 
 	bool otherListeners = true;
-	if ((menuNameKeyListener || menuIpKeyListener) == true)
+	if ((menuNameKeyListener || menuIpKeyListener || menuSensKeyListener) == true)
 		otherListeners = false;
 
 	if (otherListeners)
 		console.update(_name); //Updates to check for new messages and commands
 	else if (menuIpKeyListener)
 		menuIpKeyInputUpdate(); //Updates to check input for the ip window
-	else
+	else if(menuNameKeyListener)
 		menuNameKeyInputUpdate(); //Updates to check input for the name window
+	else if (menuSensKeyListener)
+		menuSensitivityKeyInputUpdate();
 
 	bool chatMode = console.getInChatMode();
 	if (chatMode && renderPipe)
@@ -382,6 +386,7 @@ void Core::upMenu(float dt)
 		float newVolume = 1.0;
 		menuIpKeyListener = false;
 		menuNameKeyListener = false;
+		menuSensKeyListener = false;
 		int eventIndex = uiManager->collisionCheck(glm::vec2((float)tX, (float)tY), newVolume);
 		switch (eventIndex)
 		{
@@ -404,13 +409,31 @@ void Core::upMenu(float dt)
 			uiManager->setMenu(MainMenu::Multiplayer);
 			break;
 		case 2: //MainMenu -> Settings
+		{
 			uiManager->setFirstMenuSet(true);
 			uiManager->setMenu(MainMenu::Settings);
 			if (fullscreen)
 				uiManager->changeTex(9, 1);
 			else
 				uiManager->changeTex(9, 0);
+
+			std::string input = std::to_string(serverCam->getSensitivity());
+			senseNrOfKeys = input.size();
+
+			uiManager->clearText(scaleAndText::Sense, MainMenu::Settings);
+
+			if (senseNrOfKeys > 4)
+			{
+				input.erase(4, input.size());
+				senseNrOfKeys = input.size();
+			}
+
+			if (senseNrOfKeys != 1)
+				uiManager->setText(input, scaleAndText::Sense, MainMenu::Settings); //Set sense object
+			else
+				uiManager->setText(input + ".", scaleAndText::Sense, MainMenu::Settings); //Set sense object
 			break;
+		}
 		case 3: //Exit
 			glfwSetWindowShouldClose(win, 1);
 			break;
@@ -469,6 +492,8 @@ void Core::upMenu(float dt)
 		case 7: //Back
 			nameNrOfKeys = 0;
 			ipNrOfKeys = 0;
+			menuSensKeyListener = false;
+			senseNrOfKeys = 0;
 
 			if (uiManager->getCurrentMenu() == MainMenu::Settings)
 			{
@@ -513,6 +538,13 @@ void Core::upMenu(float dt)
 			break;
 		case 8: //Settings -> confirm
 		{
+			menuSensKeyListener = false;
+			senseNrOfKeys = 0;
+
+			std::string temp = uiManager->getText(scaleAndText::Sense, MainMenu::Settings);
+			currentSense = std::stof(temp);
+			serverCam->setSensitivity(currentSense);
+
 			SoundPlayer* sound = GetSound();
 			if(sound != nullptr)
 				soundSavedData = sound->GetAllSoundAsAList();//GetAllSoundAsAList();
@@ -626,7 +658,8 @@ void Core::upMenu(float dt)
 			break;
 		}
 		case 19: //Sensitivity
-			currentSense = newVolume;
+			menuSensKeyListener = true;
+			//currentSense = newVolume;
 			break;
 		case 20: //Fullscreen
 			//if (fullscreen)
@@ -3599,6 +3632,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 				cursorInvisible = false;
 				break;
 			case 41: //Settings
+			{
 				last = current;
 				current = Gamestate::START;
 				subState = 1;
@@ -3614,8 +3648,25 @@ void Core::inGameUIUpdate() //Ingame ui update
 				renderMenu = true;
 				renderUI = false;
 
+				std::string input = std::to_string(serverCam->getSensitivity());
+				senseNrOfKeys = input.size();
+
+				uiManager->clearText(scaleAndText::Sense, MainMenu::Settings);
+
+				if (senseNrOfKeys > 4)
+				{
+					input.erase(4, input.size());
+					senseNrOfKeys = input.size();
+				}
+
+				if (senseNrOfKeys != 1)
+					uiManager->setText(input, scaleAndText::Sense, MainMenu::Settings); //Set sense object
+				else
+					uiManager->setText(input + ".", scaleAndText::Sense, MainMenu::Settings); //Set sense object
+
 				oldTime = int(koth->getTimer());
 				break;
+			}
 			case 42: //Quit
 				if (current == ROAM)
 					roamHandleCmds("/disconnect");
@@ -4202,6 +4253,46 @@ void Core::menuNameKeyInputUpdate()
 	{
 		uiManager->removeLastInput(scaleAndText::Name, MainMenu::Connect); //remove from ip object
 		nameNrOfKeys--;
+	}
+}
+
+void Core::menuSensitivityKeyInputUpdate()
+{
+	Input* i = Input::getInput();
+	for (int c = 0; c < VALIDKEYSENS; c++)
+	{
+		if (i->justPressed(validKeyboardInputs3[c]))
+		{
+			if (senseNrOfKeys < 4)
+			{
+				char ch = i->keyToChar(validKeyboardInputs3[c]);
+				std::string fromChar = "";
+				fromChar += ch;
+
+				uiManager->setText(fromChar, scaleAndText::Sense, MainMenu::Settings); //Set sense object
+
+				senseNrOfKeys++;
+
+				if (senseNrOfKeys == 1)
+				{
+					uiManager->setText(".", scaleAndText::Sense, MainMenu::Settings); //Set sense object
+
+					senseNrOfKeys++;
+				}
+			}
+		}
+	}
+	if (i->justPressed(GLFW_KEY_BACKSPACE))
+	{
+		uiManager->removeLastInput(scaleAndText::Sense, MainMenu::Settings); //remove from sense object
+		senseNrOfKeys--;
+		if (senseNrOfKeys < 0)
+			senseNrOfKeys = 0;
+		if (senseNrOfKeys == 1)
+		{
+			uiManager->removeLastInput(scaleAndText::Sense, MainMenu::Settings); //remove from sense object
+			senseNrOfKeys--;
+		}
 	}
 }
 

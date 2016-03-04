@@ -37,6 +37,7 @@ enum scaleAndText
 	LoseTicketsMeter, //ScaleBar
 	Wins1, //Dynamic text
 	Wins2, //Dynamic text
+	Sense  //Sensitivity
 };
 
 enum hideAbleObj
@@ -69,7 +70,7 @@ private:
 
 	//ids
 	int menuId;
-	int textIdList[11];
+	int textIdList[12];
 
 	//Hideable stuff
 	std::vector<HideAble*> hideAbleObjects;

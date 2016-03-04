@@ -45,7 +45,7 @@ void UI::init(std::string fileName, Console* console, IRenderPipeline* uiRender,
 	this->uiRender = uiRender;
 	this->console = console;
 
-	for (int i = 0; i < 11; i++)
+	for (int i = 0; i < 12; i++)
 		textIdList[i] = -1;
 
 	bool result = loadUI(fileName, winX, winY);
@@ -246,6 +246,8 @@ bool UI::loadUI(std::string fileName, int winX, int winY)
 					textIdList[9] = counter;
 				else if (textId == "wins2")
 					textIdList[10] = counter;
+				else if(textId == "Sense")
+					textIdList[11] = counter;
 
 				counter++;
 			}
@@ -353,7 +355,7 @@ void UI::changeTex(int objId, int whichTex)
 
 void UI::scaleAndTextChangeTexture(int objId, int whichTex)
 {
-	if (objId > -1 && objId < 11)
+	if (objId > -1 && objId < 12)
 		if (textIdList[objId] > -1 && textIdList[objId] < UiObjects.size())
 			UiObjects[textIdList[objId]]->changeTexUsed(whichTex, 0);
 }
@@ -395,34 +397,34 @@ void UI::setWindowResolution(int winX, int winY)
 
 void UI::setText(std::string text, int id)
 {
-	if (id > -1 && id < 11)
+	if (id > -1 && id < 12)
 		if(textIdList[id] > -1)
 			UiObjects[textIdList[id]]->setText(text);
 }
 std::string UI::getText(int id)
 {
-	if (id > -1 && id < 11)
+	if (id > -1 && id < 12)
 		if (textIdList[id] > -1)
 			return UiObjects[textIdList[id]]->getText();
 	return "";
 }
 void UI::removeLastInput(int id)
 {
-	if (id > -1 && id < 11)
+	if (id > -1 && id < 12)
 		if (textIdList[id] > -1)
 			UiObjects[textIdList[id]]->removeLastInput();
 }
 
 void UI::clearText(int id)
 {
-	if (id > -1 && id < 11)
+	if (id > -1 && id < 12)
 		if (textIdList[id] > -1)
 			UiObjects[textIdList[id]]->cleanText();
 }
 
 void UI::scaleBar(int id,  float procentOfMax, bool fromRight)
 {
-	if (id > -1 && id < 11)
+	if (id > -1 && id < 12)
 		if (textIdList[id] > -1)
 			UiObjects[textIdList[id]]->scaleBar(0, procentOfMax, fromRight);
 }
@@ -430,13 +432,13 @@ void UI::scaleBar(int id,  float procentOfMax, bool fromRight)
 void UI::setOptionsSaved(float* list)
 {
 	optionsSaved = list;
-	for (int i = 1; i < UiObjects.size() - 3; i++)
+	for (int i = 1; i < UiObjects.size() - 4; i++)
 		//if(optionsSaved[i] >= -1.0f && optionsSaved[i] <= 1.0f)
 		UiObjects[i]->setWorldMatrix(1, optionsSaved[i], 0.0f);
 }
 float* UI::getOptionsSaved()
 {
-	for (int i = 1; i < UiObjects.size() - 2; i++)
+	for (int i = 1; i < UiObjects.size() - 4; i++)
 		optionsSaved[i] = UiObjects[i]->getWorldX();;
 	return optionsSaved;
 }
