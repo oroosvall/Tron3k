@@ -272,7 +272,7 @@ public:
 	virtual void setChatHistoryText(std::string text);
 	virtual void setChatTypeMessage(std::string text);
 
-	virtual int createTextObject(std::string text, int fontSize, glm::vec2 pos);
+	virtual int createTextObject(std::string text, int fontSize, glm::vec2 pos, bool scale = false);
 	virtual void setTextObjectText(int id, std::string text);
 	virtual void setTextPos(int id, glm::vec2 pos);
 	virtual void removeTextObject(int id);

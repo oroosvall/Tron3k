@@ -101,10 +101,10 @@ bool RenderPipeline::init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 	fontTexture = loadTexture("GameFiles/Font/font16.png", false);
 
-	debugText = new Text("", 10, fontTexture, vec2(10, 24));
+	debugText = new Text("", 10, fontTexture, vec2(10, 24), true);
 	chatHistoryText = ".\n.\n.\n.\n.\n";
 	chatTypeText = "..";
-	chatText = new Text(chatHistoryText + chatTypeText, 11, fontTexture, vec2(10, 420));
+	chatText = new Text(chatHistoryText + chatTypeText, 11, fontTexture, vec2(10, 420), true);
 
 	cross = new Crosshair();
 	crossHit = new Crosshair();
@@ -1807,11 +1807,11 @@ bool* RenderPipeline::getRenderedChunks(int& get_size)
 	return contMan.renderedChunks;
 }
 
-int RenderPipeline::createTextObject(std::string text, int fontSize, glm::vec2 pos)
+int RenderPipeline::createTextObject(std::string text, int fontSize, glm::vec2 pos, bool scale)
 {
 	int id = textObjects.size();
 
-	textObjects.push_back(new Text(text, fontSize, fontTexture, pos));
+	textObjects.push_back(new Text(text, fontSize, fontTexture, pos, scale));
 
 	return id;
 }

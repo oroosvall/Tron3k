@@ -36,13 +36,18 @@ private:
 
 	vec3 centerOffset;
 
+	bool TextScale;
+
 public:
 
-	Text(std::string text, int fontsize, GLuint textureId, vec2 screenPos);
+	Text(std::string text, int fontsize, GLuint textureId, vec2 screenPos, bool scale = false);
 	~Text();
 
 	static int ScreenResWidth;
 	static int ScreenResHeight;
+
+	static int ScreenResWidthBase;
+	static int ScreenResHeightBase;
 
 	vec3 getOffset()
 	{

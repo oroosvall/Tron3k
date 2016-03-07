@@ -3,13 +3,29 @@
 int Text::ScreenResWidth = 0;
 int Text::ScreenResHeight = 0;
 
-Text::Text(std::string _text, int _fontSize, GLuint textureId, vec2 _screenPos)
+int Text::ScreenResHeightBase = 720;
+int Text::ScreenResWidthBase = 1080;
+
+Text::Text(std::string _text, int _fontSize, GLuint textureId, vec2 _screenPos, bool _scale)
 {
 	text = _text;
 	fontSize = _fontSize;
 	texture = textureId;
 
-	_screenPos.y = Text::ScreenResHeight - _screenPos.y;
+	float yScale = (float)ScreenResHeight / (float)ScreenResHeightBase;
+	float xScale = (float)ScreenResWidth / (float)ScreenResWidthBase;
+
+	TextScale = _scale;
+
+	if (TextScale)
+	{
+		_screenPos.y = Text::ScreenResHeight - (_screenPos.y * yScale);
+		_screenPos.x *= yScale;
+	}
+	else
+	{
+		_screenPos.y = Text::ScreenResHeight - _screenPos.y;
+	}
 	screenPos = _screenPos;
 
 	glGenBuffers(1, &vbo);
@@ -41,7 +57,18 @@ Text::~Text()
 
 void Text::setPos(vec2 _screenPos)
 {
-	_screenPos.y = Text::ScreenResHeight - _screenPos.y;
+	float yScale = (float)ScreenResHeight / (float)ScreenResHeightBase;
+	float Scale = (float)ScreenResWidth / (float)ScreenResWidthBase;
+
+	if (TextScale)
+	{
+		_screenPos.y = Text::ScreenResHeight - (_screenPos.y * yScale);
+		_screenPos.x *= yScale;
+	}
+	else
+	{
+		_screenPos.y = Text::ScreenResHeight - _screenPos.y;
+	}
 	screenPos = _screenPos;
 	fillBuffer();
 }
@@ -66,6 +93,10 @@ void Text::setText(std::string _text)
 
 void Text::fillBuffer()
 {
+	float xScale = 1.0f;
+	if(TextScale)
+		xScale = (float)ScreenResWidth / (float)ScreenResWidthBase;
+
 	vec2 vertex_up_right;
 	vec2 vertex_down_right;
 	vec2 vertex_up_left;
@@ -81,7 +112,7 @@ void Text::fillBuffer()
 	int nrOfLineBreaks = 0;
 	int lineBreakPos = 0;
 
-	int size = fontSize;
+	int size = fontSize * xScale;
 
 	float scale = 1.0f;
 	

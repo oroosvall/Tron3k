@@ -35,8 +35,8 @@ void Core::init()
 	recreate = false;
 	fullscreen = false;
 	//winX = winY = 1000;
-	winX = 1280; winY = 720;
-	//winX = 1920, winY = 1080;
+	//winX = 1280; winY = 720;
+	winX = 1920, winY = 1080;
 	//winX = 1600, winY = 900;
 
 	createWindow(winX, winY, fullscreen);
@@ -3882,8 +3882,8 @@ void Core::initPipeline()
 			namePlates[i] = renderPipe->createTextObject("", 128, vec2(winX / 2, winY / 2));
 		}
 
-		leaderBoardTextID = renderPipe->createTextObject("", 20, vec2(winX / 2, winY / 2));
-		leaderBoardSmallTextID = renderPipe->createTextObject("", 15, vec2(winX / 2, winY / 2));
+		leaderBoardTextID = renderPipe->createTextObject("", 20, vec2(winX / 2, winY / 2), true);
+		leaderBoardSmallTextID = renderPipe->createTextObject("", 15, vec2(winX / 2, winY / 2), true);
 
 	}
 
