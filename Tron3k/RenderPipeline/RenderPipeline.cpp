@@ -2018,10 +2018,16 @@ void RenderPipeline::renderMinimap(float* yourPos, float* yourdir, float* teamma
 		minimapRenderMat[0].w = 0.432f;
 		minimapRenderMat[1].w = -0.05f;
 	}
-	else
+	else if(activeCap == 1)
 	{
 		minimapRenderMat[0].w = -0.363f;
 		minimapRenderMat[1].w = -0.105f;	
+	}
+	else
+	{
+		//way outside the screen
+		minimapRenderMat[0].w = -363.0f;
+		minimapRenderMat[1].w = -105.0f;
 	}
 
 	//scale

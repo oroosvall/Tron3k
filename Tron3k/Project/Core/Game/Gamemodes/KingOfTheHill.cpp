@@ -187,6 +187,8 @@ GAMEMODE_MSG KingOfTheHill::update(float dt)
 				teamTwoPlayers.push_back(teamTwo->at(c));
 			}
 		}
+		else
+			capturePoint = 255;
 		break;
 
 		//PREROUND is the period where people pick their classes and wait for the round to begin
