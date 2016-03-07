@@ -281,13 +281,14 @@ void Core::update(float dt)
 				//cam->setPlaybackSpeed(playbackSpeed);
 			}
 			if (i->justPressed(GLFW_KEY_0))
-			{
 				playbackSpeed = 0.0f;
-			}
+
 			if (i->justPressed(GLFW_KEY_9))
-			{
 				playbackSpeed = 1.0f;
-			}
+
+			if (renderPipe)
+				if (i->justPressed(GLFW_KEY_8))
+					renderPipe->reloadShaders();
 		}
 	}
 
@@ -302,14 +303,6 @@ void Core::update(float dt)
 	case CLIENT:	upClient(dt);	break;
 	case SERVER:	upServer(dt);	break;
 	default:						break;
-	}
-
-	if (renderPipe)
-	{
-		if (i->justPressed(GLFW_KEY_8))
-		{
-			renderPipe->reloadShaders();
-		}
 	}
 
 	i->clearOnPress();
