@@ -476,10 +476,12 @@ PLAYERMSG Player::update(float dt, bool freecam, bool spectatingThisPlayer, bool
 			}
 
 			if (!lockControls)
+				if (i->getKeyInfo(controls.dance))
+					animOverideIfPriority(anim_third_current, AnimationState::dance);
+
+			if (!lockControls && !dancing)
 			{
 				//dance key
-				if (i->getKeyInfo(GLFW_KEY_G))
-					animOverideIfPriority(anim_third_current, AnimationState::dance);
 
 				//If freecam or spectating dont take player move input
 				if (freecam == false && isDead == false)
@@ -1537,19 +1539,22 @@ bool Player::allahuAkhbar()
 
 void Player::fixCamera(float dt, bool freecam, bool spectating)
 {
-	if (!freecam && !spectating)
-	{
-		cam->update(dt, freecam);
-		if (!isDead)
+		if (!freecam && !spectating)
 		{
-			cam->setCam(pos);
-			rotatePlayer(oldDir, dir);
+			cam->update(dt, freecam);
+			if (!isDead)
+			{
+				cam->setCam(pos);
+				if (!dancing)
+					rotatePlayer(oldDir, dir);
+				else
+					cam->setCam(pos, dir);
+			}
+			else
+				cam->setCam(pos, dir);
 		}
-		else
-			cam->setCam(pos, dir);
-	}
-	else if (!spectating)
-	{
-		cam->update(dt, freecam);
-	}
+		else if (!spectating)
+		{
+			cam->update(dt, freecam);
+		}
 }

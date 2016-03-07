@@ -43,6 +43,7 @@ struct PlayerControlSettings
 	int special = GLFW_KEY_E;
 	int minimap = GLFW_KEY_F;
 	int scorescreen = GLFW_KEY_TAB;
+	int dance = GLFW_KEY_G;
 };
 
 class Player : public GameObject
@@ -51,7 +52,7 @@ private:
 	//Physics* physics;
 	Role role;
 	bool lockControls = false;
-	bool noclip = false;
+	bool dancing = false;
 
 	bool ready = false; //Ready to start a game mode
 
@@ -141,6 +142,8 @@ public:
 
 	bool getLockedControls(){ return lockControls; };
 	void setLockedControls(bool lockControls) { this->lockControls = lockControls; };
+
+	void DANCEMAGICDANCE(bool b) { dancing = b; };
 
 	bool isReady() { return ready; };
 	void setReady() { ready = true; };

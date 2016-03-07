@@ -2606,6 +2606,8 @@ void Core::loadControls()
 				p->controls.minimap = i->getGLFWkeyFromString(in2);
 			else if (in == "Scorescreen:")
 				p->controls.scorescreen = i->getGLFWkeyFromString(in2);
+			else if (in == "Dance:")
+				p->controls.dance = i->getGLFWkeyFromString(in2);
 			else if (in == "Allchat:")
 				console.setChatKey(i->getGLFWkeyFromString(in2), true);
 			else if (in == "Teamchat:")
@@ -2689,18 +2691,23 @@ void Core::renderWorld(float dt)
 		if (game->spectateID == -1)
 		{
 			if (tmp_player->getLockedControls() == false)
-				if (i->getKeyInfo(GLFW_KEY_G))
+			{
+				if (i->getKeyInfo(tmp_player->controls.dance))
 				{
-					force3rd = true;
-					camPos = camPos - (camDir * 5.0f);
-					cam->setCam(camPos);
-		
-					if (game->freecam == false)
+					tmp_player->DANCEMAGICDANCE(true); //You remind me of the babe
+					force3rd = true; //What babe?
+					camPos = camPos - (camDir * 5.0f); //The babe with the power
+					cam->setCam(camPos); //What power?
+
+					if (game->freecam == false) //The power of voodoo!
 					{
-						tmp_player->resetRotation();
-						tmp_player->rotatePlayer(vec3(0, 0, 1), camDir);
+						tmp_player->resetRotation(); //Who do?
+						tmp_player->rotatePlayer(vec3(0, 0, 1), camDir); //You do!
 					}
 				}
+				else //Do what?
+					tmp_player->DANCEMAGICDANCE(false); //REMIND ME OF THE BABE
+			}		
 		}
 
 		glm::vec3 tmpEyePos = camPos;
@@ -3092,13 +3099,14 @@ void Core::renderWorld(float dt)
 
 			renderPipe->disableBlend();
 
+			Player* localplayer = game->getPlayer(game->GetLocalPlayerId());
 			//viewing 3rd person anims in roam
-			if (i->getKeyInfo(GLFW_KEY_G))
+			if (i->getKeyInfo(localplayer->controls.dance))
 				cam->setCam(oldPos);
 			//if (i->getKeyInfo(GLFW_KEY_L))
 			//	cam->setCam(camPos, camDir);
 
-			if (game->getPlayer(game->GetLocalPlayerId())->getLockedControls() == false)
+			if (localplayer->getLockedControls() == false)
 			{
 				if (game->freecam)
 				{
