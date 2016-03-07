@@ -8,6 +8,7 @@ void AnimData::load(std::string fileName)
 {
 	header.jointCount = 0;
 	header.keyCount = 0;
+	initialized = false;
 
 	std::ifstream file;
 	file.open(fileName, ios::in | ios::binary);
@@ -23,6 +24,8 @@ void AnimData::load(std::string fileName)
 			keyFrames[i].jointTransform = new glm::mat4[header.jointCount];
 			file.read((char*)&keyFrames[i].jointTransform[0], sizeof(glm::mat4)*header.jointCount);
 		}
+
+		initialized = true;
 
 		file.close();
 	}

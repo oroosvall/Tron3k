@@ -21,6 +21,8 @@ struct AnimData
 	AnimDataHeader header;
 	KeyFrame* keyFrames;
 
+	bool initialized;
+
 	void load(std::string fileName);
 	void release();
 };
