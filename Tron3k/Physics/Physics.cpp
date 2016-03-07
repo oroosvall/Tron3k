@@ -558,7 +558,7 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb, vec3 backDir, bo
 	}
 	//if we found a line intersection it will always be closer
 	//than all the corner intersections
-	if (closest.w < FLT_MAX)
+	if (closest.w - FLT_EPSILON <= rad + FLT_EPSILON)
 		return closest;
 
 	vec3 test;
@@ -592,7 +592,7 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb, vec3 backDir, bo
 	if (closest.w + FLT_EPSILON > rad - FLT_EPSILON)
 		closest.w = FLT_MAX;
 
-	if (closest.w < FLT_MAX)
+	if (closest.w - FLT_EPSILON <= rad + FLT_EPSILON)
 		return closest;
 	//return vec4(FLT_MAX);
 
@@ -610,7 +610,7 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb, vec3 backDir, bo
 	{
 		//Are we inside the obb?
 		//ood
-		vec3 p = (obb->planes[n].p[0] + obb->planes[n].p[2]) * 0.5f;
+		vec3 p = (obb->planes[n].p[0]);// +obb->planes[n].p[2]) * 0.5f;
 		vec3 dir = p - pos;
 		//d = dot(dir, obb->planes[n].n);
 
@@ -620,7 +620,7 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb, vec3 backDir, bo
 			planeN = n;
 		}
 
-		if (dot(normalize(dir), obb->planes[n].n) > 0.0f) //pointing the same way as normal, point is "behind" the plane
+		if (dot(normalize(dir), obb->planes[n].n) >= 0.0f - FLT_EPSILON) //pointing the same way as normal, point is "behind" the plane
 		{
 			//behind plane
 			//do stuff
@@ -639,7 +639,7 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb, vec3 backDir, bo
 	{
 		smallest = obb->planes[planeN].n;
 		vec3 p = obb->planes[planeN].p[0];
-		//l = length(p - pos);
+		l = length(p - pos);
 	}
 	/*
 	int ThisIsMyCode = 1;

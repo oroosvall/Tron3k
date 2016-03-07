@@ -310,6 +310,15 @@ struct OBB
 		lines[9].init(corners[5], corners[7], planes[3].n, planes[2].n);
 		lines[10].init(corners[7], corners[6], planes[5].n, planes[2].n);
 		lines[11].init(corners[6], corners[4], planes[1].n, planes[2].n);
+
+		cornerNorms[0] = normalize(planes[0].n + planes[1].n + planes[5].n);
+		cornerNorms[1] = normalize(planes[0].n + planes[3].n + planes[5].n);
+		cornerNorms[2] = normalize(planes[0].n + planes[1].n + planes[4].n);
+		cornerNorms[3] = normalize(planes[0].n + planes[3].n + planes[4].n);
+		cornerNorms[4] = normalize(planes[1].n + planes[2].n + planes[4].n);
+		cornerNorms[5] = normalize(planes[2].n + planes[3].n + planes[4].n);
+		cornerNorms[6] = normalize(planes[1].n + planes[2].n + planes[5].n);
+		cornerNorms[7] = normalize(planes[2].n + planes[3].n + planes[5].n);
 	}
 };
 
