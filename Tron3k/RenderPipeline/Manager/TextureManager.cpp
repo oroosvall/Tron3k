@@ -48,6 +48,18 @@ void TextureManager::release()
 
 	textureStreamingThread.join();
 
+	typedef std::map<GLuint*, StreamedData>::iterator it_type;
+
+	for (auto iterator = streamingQueue.begin(); iterator != streamingQueue.end(); iterator++)
+	{
+		streamingQueue.erase(iterator);
+	}
+
+	for (it_type iterator = dataQueue.begin(); iterator != dataQueue.end(); iterator++) {
+		
+		delete[] (char*)iterator->second.data;
+
+	}
 }
 
 void TextureManager::update(float dt)
