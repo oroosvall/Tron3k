@@ -717,11 +717,6 @@ int RenderPipeline::portalIntersection(float* pos1, float* pos2, int in_chunk)
 
 void RenderPipeline::setCullingCurrentChunkID(int roomID)
 {
-	if (roomID == 0)
-		contMan.f_portal_culling = false;
-	else
-		contMan.f_portal_culling = true;
-
 	contMan.setRoomID(roomID);
 }
 

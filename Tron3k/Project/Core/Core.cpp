@@ -5091,8 +5091,8 @@ void Core::renderIntoFly(float dt)
 
 			switch (introFlyIndex)
 			{
-			case 0: startFly = vec3(5.4f, 1.6f, 107.0f); endFly = vec3(5.4f, 1.6f, 72.0f); flyCamDir = vec3(0, 0.4f, -0.9f); introFlyTimerStart = 5.0f; break;
-			case 1: startFly = vec3(98.0f, 9.0f, 35.0f); endFly = vec3(53.0f, 9.0f, 21.0f); flyCamDir = vec3(-0.33f, -0.025f, 0.94f); introFlyTimerStart = 5.0f; break;
+			case 0: startFly = vec3(5.4f, 1.6f, 107.0f); endFly = vec3(5.4f, 1.6f, 72.0f); flyCamDir = vec3(0, 0.4f, -0.9f); introFlyTimerStart = 15.0f; renderPipe->setCullingCurrentChunkID(10); break;
+			case 1: startFly = vec3(98.0f, 9.0f, 35.0f); endFly = vec3(53.0f, 9.0f, 21.0f); flyCamDir = vec3(-0.33f, -0.025f, 0.94f); introFlyTimerStart = 15.0f; renderPipe->setCullingCurrentChunkID(15); break;
 			}
 
 			introFlyTimer = introFlyTimerStart;
@@ -5116,7 +5116,7 @@ void Core::renderIntoFly(float dt)
 
 		//Culling
 		//handleCulling();
-		renderPipe->setCullingCurrentChunkID(0);
+		
 
 		flamebarrelflicker();
 
