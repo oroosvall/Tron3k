@@ -4,11 +4,11 @@ layout (location = 0) in float interpolDist;
 
 layout(location = 1)out vec4 fragment_color;
 
-
 uniform int spotlightID;
 uniform vec3 eyepos;
 
 uniform float universalInten;
+uniform vec2 gScreenSize;
 
 uniform sampler2D Position;
 uniform sampler2D Diffuse;
@@ -30,8 +30,6 @@ layout (std140) uniform Light
 { 
 	SpotLight lights[500];
 };
-
-vec2 gScreenSize = vec2(1280, 720);
 
 vec3 Position0;
 vec4 Normal0;

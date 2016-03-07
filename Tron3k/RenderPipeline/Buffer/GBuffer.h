@@ -44,6 +44,7 @@ public:
 	GLuint spotvol_Diffuse;
 	GLuint spotvol_Normal;
 	GLuint spotvol_GlowMap;
+	GLuint spotvol_Res;
 
 	//spotLight Buffers
 	GLuint spotVolBuffer;
@@ -59,6 +60,7 @@ public:
 	GLuint pointvol_Diffuse;
 	GLuint pointvol_Normal;
 	GLuint pointvol_GlowMap;
+	GLuint pointvol_Res;
 
 	//pointlight Buffers
 	GLuint pointVolBuffer;

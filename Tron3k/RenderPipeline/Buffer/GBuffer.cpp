@@ -115,6 +115,7 @@ void Gbuffer::init(int x, int y, int nrTex, bool depth)
 	spotvol_Diffuse = glGetUniformLocation(spotVolShader, "Diffuse");
 	spotvol_Normal = glGetUniformLocation(spotVolShader, "Normal");
 	spotvol_GlowMap = glGetUniformLocation(spotVolShader, "GlowMap");
+	spotvol_Res = glGetUniformLocation(pointVolShader, "gScreenSize");
 
 	glProgramUniform1i(spotVolShader, spotvol_Position, 1);
 	glProgramUniform1i(spotVolShader, spotvol_Diffuse, 2);
@@ -130,6 +131,7 @@ void Gbuffer::init(int x, int y, int nrTex, bool depth)
 	pointvol_Diffuse = glGetUniformLocation(pointVolShader, "Diffuse");
 	pointvol_Normal = glGetUniformLocation(pointVolShader, "Normal");
 	pointvol_GlowMap = glGetUniformLocation(pointVolShader, "GlowMap");
+	pointvol_Res = glGetUniformLocation(pointVolShader, "gScreenSize");
 
 	glProgramUniform1i(pointVolShader, pointvol_Position, 1);
 	glProgramUniform1i(pointVolShader, pointvol_Diffuse, 2);
@@ -146,6 +148,10 @@ void Gbuffer::init(int x, int y, int nrTex, bool depth)
 	glProgramUniform1f(*shaderPtr, blightlightUniversalInten, 1.0f);
 	glProgramUniform1f(spotVolShader, spotVolUniversalInten, 1.0f);
 	glProgramUniform1f(pointVolShader, pointVolUniversalInten, 1.0f);
+
+
+	glProgramUniform2f(pointVolShader, pointvol_Res, xres, yres);
+	glProgramUniform2f(spotVolShader, spotvol_Res, xres, yres);
 
 
 	setGlowSamplingDist(1.0f);

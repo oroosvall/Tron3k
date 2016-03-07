@@ -13,6 +13,8 @@ uniform sampler2D Normal;
 uniform sampler2D GlowMap;
 
 uniform float universalInten;
+uniform vec2 gScreenSize;
+
 
 struct SpotLight
 {
@@ -29,8 +31,6 @@ layout (std140) uniform Light
 { 
 	SpotLight lights[500];
 };
-
-vec2 gScreenSize = vec2(1280, 720);
 
 vec3 Position0;
 vec4 Normal0;
