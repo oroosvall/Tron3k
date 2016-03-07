@@ -2,6 +2,7 @@
 
 void Core::init()
 {
+	round = 0;
 	calcTimer = false;
 	escActive = false;
 	inGameSettings = false;
@@ -80,12 +81,13 @@ void Core::init()
 
 	uiManager->HUD.skipBannerUpdate = true;
 	uiManager->HUD.activeBanner = -1;
-	uiManager->HUD.nrOfBanners = 4;
+	uiManager->HUD.nrOfBanners = 5;
 	uiManager->HUD.bannerCounter = 0;
 	uiManager->HUD.bannerMaxTime.push_back(3);
 	uiManager->HUD.bannerMaxTime.push_back(10);
 	uiManager->HUD.bannerMaxTime.push_back(3);
 	uiManager->HUD.bannerMaxTime.push_back(3);
+	uiManager->HUD.bannerMaxTime.push_back(99);
 
 
 	uiManager->setOptionsSaved(optionsSavedData);
@@ -973,6 +975,7 @@ void Core::upClient(float dt)
 			me->setName(_name);
 			game->getPlayer(game->GetLocalPlayerId())->setLockedControls(true);
 			showTeamSelect();
+			uiManager->stopRendering(5, false, InGameUI::ClassSelect);
 			renderMenu = false;
 			renderUI = true;
 
@@ -1050,6 +1053,8 @@ void Core::upClient(float dt)
 				{
 					GAMEMODE_MSG tMode = k->getLastMsg();
 					int tTeam = camPlayer->getTeam();
+
+					round = 0;
 
 					if (tMode == GAMEMODE_MSG::MATCH_WIN_TEAM1)
 					{
@@ -1198,7 +1203,7 @@ void Core::upClient(float dt)
 				{
 					if (uiManager->getCurrentMenu() == 0)
 					{
-						uiManager->hideOrShowHideAble(hideAbleObj::Banner, false);
+						uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
 						uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam1, false);
 						uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam2, false);
 						uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam1, false);
@@ -1238,6 +1243,10 @@ void Core::upClient(float dt)
 						//uiManager->setText("0", scaleAndText::Wins2); //wins2
 
 						firstTimeInWarmUp = false;
+						uiManager->changeTextureHideAble(hideAbleObj::Banner, 0, BannerTextureIDs::WarmUp);
+						uiManager->HUD.activeBanner = ActiveBannerID::WarmUpRound;
+						uiManager->HUD.skipBannerUpdate = true;
+						uiManager->HUD.bannerCounter = 0;
 					}
 				}
 
@@ -1347,13 +1356,26 @@ void Core::upClient(float dt)
 		{
 			if (tmp == KOTHSTATE::PREROUND)
 			{
+				round++;
+
 				if (localp->getRole()->getRole() == ROLES::NROFROLES)
 				{
 					top->command_role_change(top->getConId(), 1);
 				}
+
+				uiManager->hideOrShowHideAble(hideAbleObj::Banner, false);
+
 				//dont show class select when in spectate
 				if (localp->getTeam() != 0)
 					showClassSelect();
+
+				if (round > -1)
+				{
+					uiManager->changeTex(5, round - 1, InGameUI::ClassSelect);
+					uiManager->stopRendering(5, true, InGameUI::ClassSelect);
+				}
+				else
+					uiManager->stopRendering(5, false, InGameUI::ClassSelect);
 
 				uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam1, false);
 				uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam2, false);
@@ -3706,6 +3728,7 @@ void Core::inGameUIUpdate() //Ingame ui update
 				}
 				else
 					clientHandleCmds("/team 2");
+				uiManager->stopRendering(5, false, InGameUI::ClassSelect);
 				break;
 			case 22: //Team 2
 				if (current == ROAM)
@@ -3715,6 +3738,15 @@ void Core::inGameUIUpdate() //Ingame ui update
 				}
 				else
 					clientHandleCmds("/team 1");
+				uiManager->stopRendering(5, false, InGameUI::ClassSelect);
+				break;
+			case 23: //Spectate
+					game->freecam = true;
+					uiManager->setMenu(InGameUI::GUI);
+				break;
+			case 24: //cancle
+				uiManager->setFirstMenuSet(false);
+				uiManager->setMenu(InGameUI::GUI);
 				break;
 			case 30: //Class 1
 				if (current == ROAM)

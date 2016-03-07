@@ -331,7 +331,7 @@ int UI::mouseCollission(glm::vec2 pos, float &newSoundProcent)
 	{
 		if (hit == 30 || hit == 32 || hit == 33 || hit == 34)
 		{
-			for (int i = 0; i < UiObjects.size(); i++)
+			for (int i = 0; i < UiObjects.size() - 1; i++)
 				UiObjects[i]->changeTexUsed(0, 0);
 			UiObjects[index]->changeTexUsed(1, 0);
 			UiObjects[index]->setDontChangeTexture(true);
@@ -346,7 +346,7 @@ int UI::mouseCollission(glm::vec2 pos, float &newSoundProcent)
 
 void UI::mouseHover(glm::vec2 pos)
 {
-	for (int i = 0; i < nrOfObjects; i++)
+	for (int i = 0; i < UiObjects.size(); i++)
 		UiObjects[i]->hoverCheck(pos);
 }
 

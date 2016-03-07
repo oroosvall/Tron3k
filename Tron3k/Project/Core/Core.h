@@ -191,6 +191,8 @@ private:
 	int optionsDataSize;
 	float currentSense;
 
+	int round;
+
 	bool calcTimer;
 	bool justSetFullScreenMainMenu;
 	bool justSetFullScreenIngame;

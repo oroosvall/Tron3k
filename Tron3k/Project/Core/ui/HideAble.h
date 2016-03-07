@@ -20,7 +20,8 @@ enum BannerTextureIDs
 	MarketActive,
 	HoldYourGround,
 	FinalAssult,
-	EndOfRound
+	EndOfRound,
+	WarmUp
 };
 
 enum ScoreAdderTextureIDs

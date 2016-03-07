@@ -45,7 +45,8 @@ enum ActiveBannerID
 	VictoryDefeat,
 	ActiveCapturePoint,
 	OverTime,
-	RoundEnd
+	RoundEnd,
+	WarmUpRound
 };
 
 class UIManager
