@@ -40,6 +40,14 @@ enum TeamColors
 	TeamTwo = 2
 };
 
+enum ActiveBannerID
+{
+	VictoryDefeat,
+	ActiveCapturePoint,
+	OverTime,
+	RoundEnd
+};
+
 class UIManager
 {
 private:
@@ -165,6 +173,10 @@ public:
 		int loseTicketPer;
 		bool firstSecondEachRound;
 		int bannerCounter;
+		vector<int> bannerMaxTime;
+		int nrOfBanners;
+		int activeBanner;
+		bool skipBannerUpdate;
 	}HUD;
 
 	struct HUDTimeValues

@@ -166,7 +166,7 @@ void UIManager::init(Console* console, int winX, int winY)
 	texturePaths.push_back("GameFiles/Textures/UITextures/Banners/pointgain_1_green.png"); //41
 	texturePaths.push_back("GameFiles/Textures/UITextures/Banners/pointgain_2_green.png"); //42
 	texturePaths.push_back("GameFiles/Textures/UITextures/Banners/pointgain_3_green.png"); //43
-	texturePaths.push_back("GameFiles/Textures/UITextures/Banners/end_of_round.png"); //44
+	texturePaths.push_back("GameFiles/Textures/UITextures/Banners/banner_end_of_round.png"); //44
 
 	//New HUD
 	texturePaths.push_back("GameFiles/Textures/UITextures/PlainHUD/NewVersion/bot_background.png"); //45

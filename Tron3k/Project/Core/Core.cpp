@@ -78,6 +78,15 @@ void Core::init()
 	optionsSavedData[11] = -0.15;
 	soundSavedData[11] = 0.0f;
 
+	uiManager->HUD.skipBannerUpdate = true;
+	uiManager->HUD.activeBanner = -1;
+	uiManager->HUD.nrOfBanners = 4;
+	uiManager->HUD.bannerCounter = 0;
+	uiManager->HUD.bannerMaxTime.push_back(3);
+	uiManager->HUD.bannerMaxTime.push_back(10);
+	uiManager->HUD.bannerMaxTime.push_back(3);
+	uiManager->HUD.bannerMaxTime.push_back(3);
+
 
 	uiManager->setOptionsSaved(optionsSavedData);
 
@@ -1023,6 +1032,8 @@ void Core::upClient(float dt)
 							uiManager->changeTextureHideAble(hideAbleObj::Banner, 0, BannerTextureIDs::Defeat);
 							uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
 						}
+						uiManager->HUD.activeBanner = ActiveBannerID::VictoryDefeat;
+						uiManager->HUD.skipBannerUpdate = false;
 						uiManager->HUD.bannerCounter = 0;
 						firstTimeInEnd = false;
 					}
@@ -1038,6 +1049,8 @@ void Core::upClient(float dt)
 							uiManager->changeTextureHideAble(hideAbleObj::Banner, 0, BannerTextureIDs::Victory);
 							uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
 						}
+						uiManager->HUD.activeBanner = ActiveBannerID::VictoryDefeat;
+						uiManager->HUD.skipBannerUpdate = false;
 						uiManager->HUD.bannerCounter = 0;
 						firstTimeInEnd = false;
 					}
@@ -1045,6 +1058,8 @@ void Core::upClient(float dt)
 					{
 						uiManager->changeTextureHideAble(hideAbleObj::Banner, 0, BannerTextureIDs::Victory);
 						uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
+						uiManager->HUD.activeBanner = ActiveBannerID::VictoryDefeat;
+						uiManager->HUD.skipBannerUpdate = false;
 						uiManager->HUD.bannerCounter = 0;
 						firstTimeInEnd = false;
 					}
@@ -1077,6 +1092,8 @@ void Core::upClient(float dt)
 					{
 						uiManager->changeTextureHideAble(hideAbleObj::Banner, 0, BannerTextureIDs::EndOfRound);
 						uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
+						uiManager->HUD.activeBanner = ActiveBannerID::RoundEnd;
+						uiManager->HUD.skipBannerUpdate = false;
 						uiManager->HUD.bannerCounter = 0;
 					}
 
@@ -1085,14 +1102,6 @@ void Core::upClient(float dt)
 					uiManager->HUDTime.movePointAdder1 = false;
 					uiManager->HUDTime.movePointAdder2 = false;
 					uiManager->HUDTime.moveTokenReducer1 = false;
-					uiManager->HUDTime.moveTokenReducer2 = false;
-					uiManager->HUD.firstSecondEachRound = false;
-					//uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam1, false);
-					//uiManager->hideOrShowHideAble(hideAbleObj::ScoreAdderTeam2, false);
-					//uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam1, false);
-					//uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam2, false);
-
-					uiManager->scaleAndTextChangeTexture(scaleAndText::Wins1, 0, InGameUI::GUI);
 					uiManager->scaleAndTextChangeTexture(scaleAndText::Wins2, 0, InGameUI::GUI);
 
 					uiManager->hideOrShowHideAble(hideAbleObj::TicketReducerTeam1, false);
@@ -1108,6 +1117,8 @@ void Core::upClient(float dt)
 					{
 						uiManager->changeTextureHideAble(hideAbleObj::Banner, 0, BannerTextureIDs::FinalAssult);
 						uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
+						uiManager->HUD.activeBanner = ActiveBannerID::OverTime;
+						uiManager->HUD.skipBannerUpdate = false;
 						uiManager->HUD.bannerCounter = 0;
 						lowTicketsFirstTime = false;
 					}
@@ -1123,6 +1134,8 @@ void Core::upClient(float dt)
 							uiManager->changeTextureHideAble(hideAbleObj::Banner, 0, BannerTextureIDs::HoldYourGround);
 							uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
 						}
+						uiManager->HUD.activeBanner = ActiveBannerID::OverTime;
+						uiManager->HUD.skipBannerUpdate = false;
 						uiManager->HUD.bannerCounter = 0;
 						lowTicketsFirstTime = false;
 					}
@@ -1138,6 +1151,8 @@ void Core::upClient(float dt)
 							uiManager->changeTextureHideAble(hideAbleObj::Banner, 0, BannerTextureIDs::HoldYourGround);
 							uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
 						}
+						uiManager->HUD.activeBanner = ActiveBannerID::OverTime;
+						uiManager->HUD.skipBannerUpdate = false;
 						uiManager->HUD.bannerCounter = 0;
 						lowTicketsFirstTime = false;
 					}
@@ -1389,6 +1404,8 @@ void Core::upClient(float dt)
 					uiManager->changeTextureHideAble(hideAbleObj::Banner, 0, BannerTextureIDs::MarketActive);
 				uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
 				uiManager->HUD.bannerCounter = 0;
+				uiManager->HUD.activeBanner = ActiveBannerID::ActiveCapturePoint;
+				uiManager->HUD.skipBannerUpdate = false;
 
 				firstTimeInWarmUp = true;
 				firstTimeInEnd = true;
@@ -3416,15 +3433,19 @@ void Core::inGameUIUpdate() //Ingame ui update
 			uiManager->scaleBar(scaleAndText::LoseTicketsMeter, 1.0f, true, InGameUI::GUI);
 		}
 
-		//Counters
-		if (uiManager->HUD.bannerCounter == 3)
+		if (!uiManager->HUD.skipBannerUpdate)
 		{
-			uiManager->hideOrShowHideAble(hideAbleObj::Banner, false);
-			uiManager->HUD.bannerCounter = 4;
-			uiManager->resetHidableWorldMatrix(hideAbleObj::Banner, 0); //The 0 is WorldMatrix index since it lies in a vector
+			//Counters
+			if (uiManager->HUD.bannerCounter == uiManager->HUD.bannerMaxTime[uiManager->HUD.activeBanner])
+			{
+				uiManager->hideOrShowHideAble(hideAbleObj::Banner, false);
+				uiManager->HUD.bannerCounter = 0;
+				uiManager->HUD.skipBannerUpdate = true;
+				uiManager->resetHidableWorldMatrix(hideAbleObj::Banner, 0); //The 0 is WorldMatrix index since it lies in a vector
+			}
+			else
+				uiManager->HUD.bannerCounter++;
 		}
-		else
-			uiManager->HUD.bannerCounter++;
 		if (uiManager->HUDTime.counterListScore1.size() > 0)
 		{
 			for (int i = 0; i < uiManager->HUDTime.counterListScore1.size(); i++)
@@ -3789,6 +3810,16 @@ void Core::createWindow(int x, int y, bool fullscreen)
 		uiManager = new UIManager();
 		initPipeline();
 		uiManager->init(&console, winX, winY);
+
+		uiManager->HUD.skipBannerUpdate = true;
+		uiManager->HUD.activeBanner = -1;
+		uiManager->HUD.nrOfBanners = 4;
+		uiManager->HUD.bannerCounter = 0;
+		uiManager->HUD.bannerMaxTime.push_back(3);
+		uiManager->HUD.bannerMaxTime.push_back(10);
+		uiManager->HUD.bannerMaxTime.push_back(3);
+		uiManager->HUD.bannerMaxTime.push_back(3);
+
 		if (inGameSettings)
 		{
 			Gamestate tmp = current;
