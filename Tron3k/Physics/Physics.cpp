@@ -260,7 +260,7 @@ glm::vec4 Physics::checkSpherevOBBlwCollision(Sphere mesh1, OBB mesh2) //mesh 1 
 {
 
 	vec4 t = glm::vec4(0);
-	vec3 collisionNormal = vec3(0, 0, 0);
+
 	mesh2.setPlanes();
 
 	//printf("%d %d \n", i, j); // test for abbs so they register
@@ -705,8 +705,9 @@ vec3 Physics::checkPlayerVPlayerCollision(vec3 playerPos1, vec3 playerPos2)
 	return vec3(0, 0, 0);
 }
 
-vec3 Physics::checkPlayerVBulletCollision(vec3 playerPos, vec3 bulletPos, vec3 size, vec3 bulletDir, vec3 bulletVel, float dt, float bModifier)
+vec3 Physics::checkPlayerVBulletCollision(vec3 playerPos, vec3 bulletPos, vec3 size, vec3 bulletDir, vec3 bulletVel, float dt, bool &collided, float bModifier)
 {
+	collided = false;
 	playerBox.setPos(playerPos);
 	playerBox.setPlayerSize(size);
 	//TEMPORARY
@@ -720,8 +721,10 @@ vec3 Physics::checkPlayerVBulletCollision(vec3 playerPos, vec3 bulletPos, vec3 s
 	vec3 collide = vec3(0, 0, 0);// checkAABBCollision(playerBox, bulletBox);
 
 	if (checkAABBvAABBCollision(playerBox.getAABB(), box))
+	{
+		collided = true;
 		return normalize(bulletPos - playerPos);
-
+	}
 	return collide;
 }
 
@@ -1144,10 +1147,10 @@ vec4 Physics::BulletVWorldCollision(vec3 &bulletPos, vec3 bulletVel, vec3 bullet
 	return vec4(-1, -1, -1, -1);
 }
 
-vec4 Physics::checkPlayerVEffectCollision(glm::vec3 playerPos, unsigned int eType, int eid)
+vec4 Physics::checkPlayerVEffectCollision(glm::vec3 playerPos, unsigned int eType, int eid, bool &col)
 {
 	glm::vec4 collided = vec4(0);
-
+	col = false;
 	playerBox.setPos(playerPos);
 	playerBox.setWorldSize();
 	AABBSingle box = playerBox.getAABB();
@@ -1168,18 +1171,25 @@ vec4 Physics::checkPlayerVEffectCollision(glm::vec3 playerPos, unsigned int eTyp
 					if (eType == 0)//Lightwall, aka OBB
 					{
 						collided = checkSpherevOBBlwCollision(sphere, *effectBoxes[i]->getOBB());
+						if (collided != vec4(0, 0, 0, 0))
+							col = true;
 					}
 					else if (eType == 1)//ThunderDome aka sphere
 					{
 						collided = checkSpherevSpheretdCollision(sphere, effectBoxes[i]->getSphere());
+						if (collided != vec4(0, 0, 0, 0))
+							col = true;
 					}
-					else if (eType > 11)//False box, no collision
+					else if (eType > 10 || eType < 0)//False box, no collision
 					{
 						collided = vec4(0);
+						col = false;
 					}
 					else //evrything else is a sphere, if not, not my goddamn problem
 					{
 						collided = checkSpherevSphereCollision(sphere, effectBoxes[i]->getSphere());
+						if (collided != vec4(0, 0, 0, 0))
+							col = true;
 					}
 				}
 			}

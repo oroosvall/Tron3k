@@ -111,10 +111,10 @@ public:
 	virtual bool removeEffect(int eid, int pid, unsigned int eType); //SKRIV EN FUNKTIONSFAN
 	
 	virtual glm::vec3 checkPlayerVPlayerCollision(glm::vec3 playerPos1, glm::vec3 playerPos2);
-	virtual glm::vec3 checkPlayerVBulletCollision(glm::vec3 playerPos, glm::vec3 bulletPos, vec3 size, vec3 bulletDir, vec3 bulletVel, float dt, float bModifier = 1);
+	virtual glm::vec3 checkPlayerVBulletCollision(glm::vec3 playerPos, glm::vec3 bulletPos, vec3 size, vec3 bulletDir, vec3 bulletVel, float dt, bool &collided, float bModifier = 1);
 	virtual std::vector<glm::vec4> PlayerVWorldCollision(glm::vec3 playerPos, vec3 playerDir, vec3 playerVel, float dt);
 	virtual glm::vec4 BulletVWorldCollision(glm::vec3 &bulletPos, vec3 bulletVel, vec3 bulletDir, float dt);
-	virtual glm::vec4 checkPlayerVEffectCollision(glm::vec3 playerPos, unsigned int eType, int eid);
+	virtual glm::vec4 checkPlayerVEffectCollision(glm::vec3 playerPos, unsigned int eType, int eid, bool &col);
 	virtual glm::vec4 checkBulletVEffectCollision(glm::vec3 &bulletPos, vec3 bulletVel, vec3 bulletDir, unsigned int eType, int eid, float dt);
 	virtual bool checkEffectVEffectCollision(unsigned int eType1, unsigned int eType2, int eid1, int eid2, int pid1, int pid2);
 	virtual bool checkPlayerVCaptureCollision(vec3 playerPos, int capID);

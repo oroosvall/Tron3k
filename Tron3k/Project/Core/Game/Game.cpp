@@ -696,6 +696,7 @@ void Game::checkPvPCollision()
 void Game::checkPlayerVEffectCollision()
 {
 	glm::vec4 collNormals = vec4(0, 0, 0, 0);
+	bool cold = false;
 	if (gameState == Gamestate::ROAM || gameState == Gamestate::CLIENT)
 	{
 		Player* local = playerList[localPlayerId];
@@ -711,9 +712,10 @@ void Game::checkPlayerVEffectCollision()
 			effects[EFFECT_TYPE::LIGHT_WALL][c]->getId(pid, eid);
 			if (((LightwallEffect*)effects[EFFECT_TYPE::LIGHT_WALL][c])->getCollidable() || localPlayerId != pid)
 			{
-				collNormalWalls = physics->checkPlayerVEffectCollision(local->getPos(), EFFECT_TYPE::LIGHT_WALL, eid);
-				if (collNormalWalls != vec4(0, 0, 0, 0))
-					playerList[localPlayerId]->addCollisionNormal(collNormalWalls);
+				collNormalWalls = physics->checkPlayerVEffectCollision(local->getPos(), EFFECT_TYPE::LIGHT_WALL, eid, cold);
+				if (cold)
+					if (collNormalWalls != vec4(0, 0, 0, 0))
+						playerList[localPlayerId]->addCollisionNormal(collNormalWalls);
 			}
 
 		}
@@ -722,9 +724,10 @@ void Game::checkPlayerVEffectCollision()
 		{
 			int eid = -1, pid = -1;
 			effects[EFFECT_TYPE::THUNDER_DOME][c]->getId(pid, eid);
-			collNormalDomes = physics->checkPlayerVEffectCollision(local->getPos(), EFFECT_TYPE::THUNDER_DOME, eid);
-			if (collNormalDomes != vec4(0, 0, 0, 0))
-				playerList[localPlayerId]->addCollisionNormal(collNormalDomes);
+			collNormalDomes = physics->checkPlayerVEffectCollision(local->getPos(), EFFECT_TYPE::THUNDER_DOME, eid, cold);
+			if (cold)
+				if (collNormalDomes != vec4(0, 0, 0, 0))
+					playerList[localPlayerId]->addCollisionNormal(collNormalDomes);
 			//this is to be changed, we need to calculate a proper normal for the dome
 
 			//vec3 n = vec3(collNormalDomes[0]);
@@ -756,42 +759,43 @@ void Game::checkPlayerVEffectCollision()
 						{
 							if (effects[t][i]->getTeam() != playerList[j]->getTeam())
 							{
-								collNormals = physics->checkPlayerVEffectCollision(playerList[j]->getPos(), t, eid);
-								if (collNormals != vec4(0, 0, 0, 0))
-								{
-									if (effects[t][i]->getType() == EFFECT_TYPE::HSCPICKUP || effects[t][i]->getType() == EFFECT_TYPE::DOUBLEDAMAGEPICKUP)
+								collNormals = physics->checkPlayerVEffectCollision(playerList[j]->getPos(), t, eid, cold);
+								if (cold)
+									if (collNormals != vec4(0, 0, 0, 0))
 									{
-										if (effects[t][i]->getType() == EFFECT_TYPE::HSCPICKUP)
+										if (effects[t][i]->getType() == EFFECT_TYPE::HSCPICKUP || effects[t][i]->getType() == EFFECT_TYPE::DOUBLEDAMAGEPICKUP)
 										{
-											HSCPickup* temp = (HSCPickup*)effects[t][i];
-											if (temp->onCooldown())
+											if (effects[t][i]->getType() == EFFECT_TYPE::HSCPICKUP)
 											{
-												notDoingWrongThings = false;
+												HSCPickup* temp = (HSCPickup*)effects[t][i];
+												if (temp->onCooldown())
+												{
+													notDoingWrongThings = false;
+												}
+											}
+											if (effects[t][i]->getType() == EFFECT_TYPE::DOUBLEDAMAGEPICKUP)
+											{
+												DoubleDamagePickup* temp = (DoubleDamagePickup*)effects[t][i];
+												if (temp->onCooldown())
+												{
+													notDoingWrongThings = false;
+												}
 											}
 										}
-										if (effects[t][i]->getType() == EFFECT_TYPE::DOUBLEDAMAGEPICKUP)
+										if (notDoingWrongThings)
 										{
-											DoubleDamagePickup* temp = (DoubleDamagePickup*)effects[t][i];
-											if (temp->onCooldown())
-											{
-												notDoingWrongThings = false;
-											}
+											effects[t][i]->thisPlayerHit(j);
+											EffectHitPlayerInfo hi;
+											hi.playerHit = j;
+											hi.effectPID = pid;
+											hi.effectID = eid;
+											hi.et = EFFECT_TYPE(t);
+											hi.hitPos = effects[t][i]->getPos();
+											hi.playerPos = playerList[j]->getPos();
+											hi.newHPtotal = -1;
+											allEffectHitsOnPlayers.push_back(hi);
 										}
 									}
-									if (notDoingWrongThings)
-									{
-										effects[t][i]->thisPlayerHit(j);
-										EffectHitPlayerInfo hi;
-										hi.playerHit = j;
-										hi.effectPID = pid;
-										hi.effectID = eid;
-										hi.et = EFFECT_TYPE(t);
-										hi.hitPos = effects[t][i]->getPos();
-										hi.playerPos = playerList[j]->getPos();
-										hi.newHPtotal = -1;
-										allEffectHitsOnPlayers.push_back(hi);
-									}
-								}
 							}
 						}
 					}
@@ -850,38 +854,40 @@ void Game::checkPlayerVBulletCollision(float dt)
 										modifier = 2.5f;
 									if (b == BULLET_TYPE::MELEE_ATTACK)
 										modifier = 1.5f;
-									collides = physics->checkPlayerVBulletCollision(playerList[i]->getPos() - (vec3(0, playerList[i]->getRole()->getBoxModifier(), 0)), bullets[b][j]->getPos(), this->playerList[i]->getRole()->GetSize(), bullets[b][j]->getDir(), bullets[b][j]->getVel(), dt, modifier);
+									bool col = false;
+									collides = physics->checkPlayerVBulletCollision(playerList[i]->getPos() - (vec3(0, playerList[i]->getRole()->getBoxModifier(), 0)), bullets[b][j]->getPos(), this->playerList[i]->getRole()->GetSize(), bullets[b][j]->getDir(), bullets[b][j]->getVel(), dt, col, modifier);
+									if (col)
+									{
+										if (collides != glm::vec3(0, 0, 0))
+										{
+											//Code for player on bullet collision goes here
+											/*
 
+											Spara undan player som blev träffad (dvs i), bulletId (pID och bID) och BULLET_TYPE. Även dir.
+											Lägg förslagsvis i en vector<struct> som kan skickas till Core. Core matar in alla träffade spelare i ett NET_EVENT (conID, bID, pID, bt).
+											NET_EVENT eftersom allt detta sker endast på servern
+											Tas emot av klienterna, Core->Game. Game hanterar sina bullethits när paketet tas emot.
+
+											Servern gör givetvis samma beräkning för bullethits (speed/position-data pga knockbacks antingen görs inte eller görs och sedan discardas pga client->server update)
+											direkt när kollisionen sker, dvs.
+
+											*/
+											BulletHitPlayerInfo hit;
+											hit.bt = BULLET_TYPE(b);
+											hit.playerHit = i;
+											bullets[b][j]->getId(hit.bulletPID, hit.bulletBID);
+											hit.newHPtotal = -1;
+											hit.hitDir = bullets[b][j]->getDir();
+											allBulletHitsOnPlayers.push_back(hit);
+										}
+									}
 								}
-							}
-							if (collides != glm::vec3(0, 0, 0))
-							{
-								//Code for player on bullet collision goes here
-								/*
-
-								Spara undan player som blev träffad (dvs i), bulletId (pID och bID) och BULLET_TYPE. Även dir.
-								Lägg förslagsvis i en vector<struct> som kan skickas till Core. Core matar in alla träffade spelare i ett NET_EVENT (conID, bID, pID, bt).
-								NET_EVENT eftersom allt detta sker endast på servern
-								Tas emot av klienterna, Core->Game. Game hanterar sina bullethits när paketet tas emot.
-
-								Servern gör givetvis samma beräkning för bullethits (speed/position-data pga knockbacks antingen görs inte eller görs och sedan discardas pga client->server update)
-								direkt när kollisionen sker, dvs.
-
-								*/
-								BulletHitPlayerInfo hit;
-								hit.bt = BULLET_TYPE(b);
-								hit.playerHit = i;
-								bullets[b][j]->getId(hit.bulletPID, hit.bulletBID);
-								hit.newHPtotal = -1;
-								hit.hitDir = bullets[b][j]->getDir();
-								allBulletHitsOnPlayers.push_back(hit);
 							}
 						}
 					}
 				}
 			}
 		}
-
 	}
 }
 
@@ -1838,7 +1844,7 @@ void Game::addEffectToList(int conID, int teamId, int effectId, EFFECT_TYPE et, 
 		break;
 	case EFFECT_TYPE::DOUBLEDAMAGEPICKUP:
 		e = new DoubleDamagePickup();
-		
+
 	}
 	e->init(conID, effectId, pos);
 	e->setTeam(teamId);
@@ -1857,7 +1863,7 @@ void Game::addEffectToList(int conID, int teamId, int effectId, EFFECT_TYPE et, 
 				ep.color = TEAMONECOLOR;
 			else
 				ep.color = TEAMTWOCOLOR;
-		}	
+		}
 		else if (teamId == 2)
 		{
 			if (et != EFFECT_TYPE::HEALTHPACK)
@@ -1867,9 +1873,9 @@ void Game::addEffectToList(int conID, int teamId, int effectId, EFFECT_TYPE et, 
 		}
 		else
 		{
-			if(et == EFFECT_TYPE::BATTERY_SLOW)
+			if (et == EFFECT_TYPE::BATTERY_SLOW)
 				ep.color = SLOWBUBBLECOLOR;
-			if(et == EFFECT_TYPE::BATTERY_SPEED)
+			if (et == EFFECT_TYPE::BATTERY_SPEED)
 				ep.color = SPEEDBUBBLECOLOR;
 		}
 		allEffectParticleSpawn.push_back(ep);
@@ -1976,9 +1982,9 @@ int Game::handleBulletHitPlayerEvent(BulletHitPlayerInfo hi)
 			vec3 n = hpad.pos - p->getPos();
 			//hpad.dir = reflect(dir, normalize(n));
 			hpad.dir = hi.hitDir;
-			if(p->getTeam() == 1)
+			if (p->getTeam() == 1)
 				hpad.color = TEAMONECOLOR;
-			else if(p->getTeam() == 2)
+			else if (p->getTeam() == 2)
 				hpad.color = TEAMTWOCOLOR;
 			else hpad.color = vec3(1.0f, 1.0f, 1.0f);
 			hpad.btype = hi.bt;
