@@ -3854,7 +3854,7 @@ void Core::handleCulling()
 			if (cam->roomID != interarr[0])
 			{
 				cam->roomID = interarr[0];
-				printf("RoomIntersect Cam setRoomID %d", interarr[0]);
+				//printf("RoomIntersect Cam setRoomID %d", interarr[0]);
 			}
 		}
 		//else
