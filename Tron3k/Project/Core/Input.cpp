@@ -1373,7 +1373,7 @@ int Input::getGLFWkeyFromString(string n)
 	return 0;
 }
 
-void Input::centerCursor(int centerx, int centeryr)
+void Input::centerCursor(int centerx, int centery)
 {
-	glfwSetCursorPos(window, centerx, centeryr);
+	glfwSetCursorPos(window, centerx, centery);
 }

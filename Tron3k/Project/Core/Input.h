@@ -25,8 +25,6 @@ private:
 	double scrollLastFrame = 0.0;
 	Input();
 
-	
-
 	static bool Q,W,E,R,T,Y,U,I,O,P,A,S,D,F,G,H,J,K,L,Z,X,C,V,B,N,M,
 		SHIFT,CTRL,ALT,SPACE,ESC,ENTER,
 		NUM1,NUM2,NUM3,NUM4,NUM5,NUM6,NUM7,NUM8,NUM9,NUM0,
@@ -49,7 +47,6 @@ private:
 
 	static double scrollVal; //Scroll up = Positive, scroll down = Negative. Value = Speed of scrolling (useless?)
 	static void callbackScroll(GLFWwindow* wnd, double xOffset, double yOffset);
-
 
 	GLFWwindow* window;
 

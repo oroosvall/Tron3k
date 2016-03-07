@@ -65,8 +65,8 @@ private:
 	glm::vec3 dir; //Current viewing direction
 	glm::vec3 vel; //Our velocity i.e. in which direction we're moving
 	glm::vec3 airVelocity; //Saves the velocity we hold in the air
-	float maxVelocityXZ = 1.6f;
-	float maxVelocityY = 12.0f;
+	float maxVelocityXZ = 2.4f;
+	float maxVelocityY = 14.0f;
 
 	float maxspeed = 5.0f;
 
