@@ -635,7 +635,7 @@ public:
 			{
 
 			}
-			else //Too many people in team
+			else if (p->getTeam() != team) //Too many people in team and we are not already ON the team
 			{
 				Packet* out = new Packet();
 				*out << Uint8(NET_INDEX::COMMAND) << Uint8(NET_COMMAND::TEAM_CHANGE) << p_conID << Uint8(9); //9 is a good error code, whatever

@@ -161,7 +161,7 @@ private:
 
 	std::vector<string> fragMessages;
 
-	int maxTeamSize = 5;
+	int maxTeamSize = 1;
 	int maxSpec = 5;
 	void removeConIDfromTeams(int conID);
 
