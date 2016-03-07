@@ -118,8 +118,8 @@ private:
 
 	void disconnect();
 
-	int introFlyIndex;
-	float introFlyTimer;
+	int introFlyIndex = -1;
+	float introFlyTimer = 0;
 	float introFlyTimerStart;
 	vec3 startFly;
 	vec3 endFly;

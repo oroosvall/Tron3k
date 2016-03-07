@@ -160,9 +160,11 @@ glm::mat4 CameraInput::getSkyboxMat()
 	ret[1].y = 550;
 	ret[2].z = 550;
 
-	glm::mat4 rot = mat4(cos(-1.74533), 0.0f, -sin(-1.74533), 0.0f,
+	float rota = -96.5f * 0.0174533f;
+
+	glm::mat4 rot = mat4(cos(rota), 0.0f, -sin(rota), 0.0f,
 		0.0f, 1.0f, 0.0f, 0.0f,
-		sin(-1.74533), 0.0f, cos(-1.74533), 0.0f,
+		sin(rota), 0.0f, cos(rota), 0.0f,
 		0.0f, 0.0f, 0.0f, 0.0f);
 
 	ret *= rot;

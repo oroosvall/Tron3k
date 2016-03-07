@@ -3854,7 +3854,7 @@ void Core::handleCulling()
 			if (cam->roomID != interarr[0])
 			{
 				cam->roomID = interarr[0];
-				//printf("RoomIntersect Cam setRoomID %d", interarr[0]);
+				printf("RoomIntersect Cam setRoomID %d", interarr[0]);
 			}
 		}
 		//else
@@ -5126,8 +5126,9 @@ void Core::renderIntoFly(float dt)
 
 			switch (introFlyIndex)
 			{
-			case 0: startFly = vec3(5.4f, 1.6f, 107.0f); endFly = vec3(5.4f, 1.6f, 72.0f); flyCamDir = vec3(0, 0.4f, -0.9f); introFlyTimerStart = 15.0f; renderPipe->setCullingCurrentChunkID(10); break;
-			case 1: startFly = vec3(98.0f, 9.0f, 35.0f); endFly = vec3(53.0f, 9.0f, 21.0f); flyCamDir = vec3(-0.33f, -0.025f, 0.94f); introFlyTimerStart = 15.0f; renderPipe->setCullingCurrentChunkID(15); break;
+			// coast case 1: startFly = vec3(88,-1.3f, 31); endFly = vec3(28, -3.1f, 31); flyCamDir = vec3(0,0,-1); introFlyTimerStart = 15.0f; renderPipe->setCullingCurrentChunkID(1); break;
+			case 0: startFly = vec3(98.0f, 9.0f, 35.0f); endFly = vec3(53.0f, 9.0f, 21.0f); flyCamDir = vec3(-0.33f, -0.025f, 0.94f); introFlyTimerStart = 15.0f; renderPipe->setCullingCurrentChunkID(15); break;
+			case 1: startFly = vec3(-95.8, 5.6, 66.4); endFly = vec3(-85, 5.6, 81.5); flyCamDir = vec3(0.8, 0, -0.57); introFlyTimerStart = 15.0f; renderPipe->setCullingCurrentChunkID(31); break;
 			}
 
 			introFlyTimer = introFlyTimerStart;
@@ -5160,6 +5161,8 @@ void Core::renderIntoFly(float dt)
 
 		// render effects
 		//effectsRender(-1);
+		renderPipe->enableDepthTest();
+		renderPipe->enableDepthMask();
 
 		renderPipe->enableBlend(false);
 
