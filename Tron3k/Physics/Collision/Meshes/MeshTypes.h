@@ -212,6 +212,7 @@ struct PLANE
 struct OBB
 {
 	AABBSingle aabb; //aabb that encapsulates the obb.
+	glm::vec3 pos;
 
 	glm::vec3 corners[8];
 	glm::vec3 cornerNorms[8];
@@ -245,6 +246,10 @@ struct OBB
 		}
 		aabb.max.x = maxX; aabb.max.y = maxY; aabb.max.z = maxZ;
 		aabb.min.x = minX; aabb.min.y = minY; aabb.min.z = minZ;
+		aabb.pos.x = (maxX + minX) / 2;
+		aabb.pos.y = (maxY + minY) / 2;
+		aabb.pos.z = (maxZ + minZ) / 2;
+		pos = aabb.pos;
 
 		//init planes
 		planes[0].init(corners[2], corners[3], corners[1], corners[0]);

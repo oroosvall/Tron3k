@@ -336,7 +336,7 @@ vec3 Physics::checkLinevPlaneCollision(vec3 l1, vec3 l2, vec3 p1, vec3 p2, vec3 
 			{
 				return inter;
 			}
-		}	
+		}
 	}
 
 	return vec3(0);
@@ -601,6 +601,11 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb, vec3 backDir, bo
 	int planeN = -1;
 	float l = 0.0f;
 	//float d = 99;
+
+	vec3 pDir = pos - obb->pos;
+	pDir = normalize(pDir);
+	float dotVal = -2;
+
 	for (int n = 0; n < 6 && !outside; n++)
 	{
 		//Are we inside the obb?
@@ -608,6 +613,13 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb, vec3 backDir, bo
 		vec3 p = (obb->planes[n].p[0] + obb->planes[n].p[2]) * 0.5f;
 		vec3 dir = p - pos;
 		//d = dot(dir, obb->planes[n].n);
+
+		if (dot(pDir, obb->planes[n].n) > dotVal)
+		{
+			dotVal = dot(pDir, obb->planes[n].n);
+			planeN = n;
+		}
+
 		if (dot(normalize(dir), obb->planes[n].n) > 0.0f) //pointing the same way as normal, point is "behind" the plane
 		{
 			//behind plane
@@ -615,7 +627,7 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb, vec3 backDir, bo
 			if (length(smallest) > length(dir))
 			{
 				smallest = dir;
-				planeN = n;
+			//	planeN = n;
 			}
 			if (l < length(dir))
 				l = length(dir);
@@ -634,8 +646,10 @@ vec4 Physics::getSpherevOBBNorms(vec3 pos, float rad, OBB* obb, vec3 backDir, bo
 	while (ThisIsMyCode)
 		printf("My Code Is Amazing!\n");
 		*/
-	if (!outside && backDir != vec3(0))// && l < rad)
-		closest = vec4(normalize(backDir), -l);
+	if (!outside && backDir != vec3(0) && dotVal >= 0.0f)// && l < rad)
+	{
+		closest = vec4(smallest, l);
+	}
 	else
 		return vec4(FLT_MAX);
 
