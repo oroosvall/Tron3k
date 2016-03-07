@@ -1243,6 +1243,8 @@ void Core::upClient(float dt)
 						//uiManager->setText("0", scaleAndText::Wins2); //wins2
 
 						firstTimeInWarmUp = false;
+						uiManager->resetHidableWorldMatrix(hideAbleObj::Banner, 0);
+						uiManager->setHideableWorldMatrix(hideAbleObj::Banner, 0, vec2(0.0, 1.0));
 						uiManager->changeTextureHideAble(hideAbleObj::Banner, 0, BannerTextureIDs::WarmUp);
 						uiManager->HUD.activeBanner = ActiveBannerID::WarmUpRound;
 						uiManager->HUD.skipBannerUpdate = true;
@@ -1363,6 +1365,7 @@ void Core::upClient(float dt)
 					top->command_role_change(top->getConId(), 1);
 				}
 
+				uiManager->resetHidableWorldMatrix(hideAbleObj::Banner, 0);
 				uiManager->hideOrShowHideAble(hideAbleObj::Banner, false);
 
 				//dont show class select when in spectate
