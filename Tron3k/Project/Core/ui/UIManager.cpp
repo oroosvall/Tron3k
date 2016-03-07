@@ -58,6 +58,17 @@ UIManager::~UIManager()
 		delete textureRes;
 	if (openedMenus != nullptr)
 		delete[] openedMenus;
+	HUD.bannerMaxTime.clear();
+	
+	HUDTime.wmIdListTicket1.clear();
+	HUDTime.wmIdListTicket2.clear();
+	HUDTime.wmIdListScore1.clear();
+	HUDTime.wmIdListScore2.clear();
+	HUDTime.counterListTicket1.clear();
+	HUDTime.counterListTicket2.clear();
+	HUDTime.counterListScore1.clear();
+	HUDTime.counterListScore2.clear();
+
 
 	optionsSaved = nullptr;
 }
@@ -224,6 +235,18 @@ void UIManager::init(Console* console, int winX, int winY)
 	texturePaths.push_back("GameFiles/Textures/UITextures/Settings/settings_back_hover.png"); //87
 	texturePaths.push_back("GameFiles/Textures/UITextures/Settings/settings_confirmed.png"); //88
 	texturePaths.push_back("GameFiles/Textures/UITextures/Settings/settings_confirmed_hover.png"); //89
+
+	texturePaths.push_back("GameFiles/Textures/UITextures/Icons/cluster.png"); //90 Consumable
+	texturePaths.push_back("GameFiles/Textures/UITextures/Icons/dart.png"); //91 Consumable
+	texturePaths.push_back("GameFiles/Textures/UITextures/Icons/thermite.png"); //92 Consumable
+	texturePaths.push_back("GameFiles/Textures/UITextures/Icons/vortex.png"); //93 Consumable
+	texturePaths.push_back("GameFiles/Textures/UITextures/Icons/discgun.png"); //94 Weaponds
+	texturePaths.push_back("GameFiles/Textures/UITextures/Icons/tail.png"); //95
+	texturePaths.push_back("GameFiles/Textures/UITextures/Icons/plasmacannon.png"); //96
+	texturePaths.push_back("GameFiles/Textures/UITextures/Icons/batteryshots.png"); //97
+	texturePaths.push_back("GameFiles/Textures/UITextures/Icons/shotgun.png"); //98
+	texturePaths.push_back("GameFiles/Textures/UITextures/Icons/nadelauncher.png"); //99
+	texturePaths.push_back("GameFiles/Textures/UITextures/Icons/pulserifle.png"); //100
 
 
 	loadInTexture();
@@ -505,7 +528,7 @@ void UIManager::changeTex(int objId, int whichTex, int menu)
 	if (nrOfOpenedMenus > 0)
 		if (menu > -1)
 			menus[menu].changeTex(objId, whichTex);
-		else if(currentMenu)
+		else if(currentMenu > -1)
 			menus[currentMenu].changeTex(objId, whichTex);
 		else
 		{
@@ -758,4 +781,12 @@ int UIManager::addNewWM(int id)
 void UIManager::deleteOldestWM(int id)
 {
 	hideAble.deleteOldestWM(id);
+}
+
+void UIManager::stopRendering(int id, bool r, int menu)
+{
+	if (menu > -1)
+		menus[menu].stopRendering(id, r);
+	else if (currentMenu > -1)
+		menus[currentMenu].stopRendering(id, r);
 }

@@ -47,6 +47,8 @@ public:
 
 	virtual float calculateSoundProcent(float mposX) { return 0; };
 
+	virtual void dontRender(bool dont) {};
+
 	//virtual uiVertex* returnPosAUv(int id) = 0;
 };
 

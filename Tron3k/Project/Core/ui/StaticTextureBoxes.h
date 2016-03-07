@@ -22,6 +22,25 @@
 //	ScoreAdder3
 //};
 
+enum consumables
+{
+	Cluster,
+	Dart,
+	Thermite,
+	Vortex
+};
+
+enum weapons
+{
+	Discgun,
+	Tail,
+	FusionCannon,
+	BatteryShots,
+	Shotgun,
+	GranadeLauncher,
+	PulseRifle
+};
+
 class StaticTextureBoxes : public UIElements
 {
 private:
@@ -40,6 +59,7 @@ private:
 	int winY;
 	float startWMX;
 	float startWMY;
+	bool show;
 
 public:
 	StaticTextureBoxes();
@@ -74,6 +94,8 @@ public:
 	virtual std::string getText();
 	virtual void removeLastInput();
 	virtual void cleanText();
+
+	virtual void dontRender(bool dont);
 };
 
 #endif

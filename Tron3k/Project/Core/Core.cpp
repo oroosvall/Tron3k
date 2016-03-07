@@ -801,6 +801,33 @@ void Core::upRoam(float dt)
 			std::string nText = hudTextOutPutManager(false, uiManager->HUD.ammo, p->getMaxAmmo());//std::to_string(p->getAmmo()) + "/" + std::to_string(p->getMaxAmmo());
 			uiManager->clearText(scaleAndText::Ammo, InGameUI::GUI);
 			uiManager->setText(nText, scaleAndText::Ammo, InGameUI::GUI);
+
+			switch (wt)
+			{
+			case 0: //Pulse Rifle
+				uiManager->scaleAndTextChangeTexture(scaleAndText::weapon, weapons::PulseRifle);
+				break;
+			case 2: //Disc Gun
+				uiManager->scaleAndTextChangeTexture(scaleAndText::weapon, weapons::Discgun);
+				break;
+			case 3: //Melee
+				uiManager->scaleAndTextChangeTexture(scaleAndText::weapon, weapons::Tail);
+				break;
+			case 4: //Battery slow, manipulator
+			case 5: //Battery speed
+				uiManager->scaleAndTextChangeTexture(scaleAndText::weapon, weapons::BatteryShots);
+				break;
+			case 6: //Fusion Cannon
+				uiManager->scaleAndTextChangeTexture(scaleAndText::weapon, weapons::FusionCannon);
+				break;
+			case 9: //Grenade Launcher
+				uiManager->scaleAndTextChangeTexture(scaleAndText::weapon, weapons::GranadeLauncher);
+				break;
+			case 10: //Shotgun
+				uiManager->scaleAndTextChangeTexture(scaleAndText::weapon, weapons::Shotgun);
+				break;
+			}
+
 		}
 
 		if (game->fireEventReady())
@@ -813,6 +840,7 @@ void Core::upRoam(float dt)
 		if (game->consumableReady())
 		{
 			game->getConsumableUsed(0);
+
 		}
 
 		if (game->specialActivationReady())
@@ -1480,6 +1508,32 @@ void Core::upClient(float dt)
 				std::string nText = hudTextOutPutManager(false, uiManager->HUD.ammo, local->getMaxAmmo());//= std::to_string(local->getAmmo()) + "/" + std::to_string(local->getMaxAmmo());
 				uiManager->clearText(scaleAndText::Ammo);
 				uiManager->setText(nText, scaleAndText::Ammo); //ammo
+
+				switch (ws)
+				{
+				case 0: //Pulse Rifle
+					uiManager->scaleAndTextChangeTexture(scaleAndText::weapon, weapons::PulseRifle);
+					break;
+				case 2: //Disc Gun
+					uiManager->scaleAndTextChangeTexture(scaleAndText::weapon, weapons::Discgun);
+					break;
+				case 3: //Melee
+					uiManager->scaleAndTextChangeTexture(scaleAndText::weapon, weapons::Tail);
+					break;
+				case 4: //Battery slow, manipulator
+				case 5: //Battery speed
+					uiManager->scaleAndTextChangeTexture(scaleAndText::weapon, weapons::BatteryShots);
+					break;
+				case 6: //Fusion Cannon
+					uiManager->scaleAndTextChangeTexture(scaleAndText::weapon, weapons::FusionCannon);
+					break;
+				case 9: //Grenade Launcher
+					uiManager->scaleAndTextChangeTexture(scaleAndText::weapon, weapons::GranadeLauncher);
+					break;
+				case 10: //Shotgun
+					uiManager->scaleAndTextChangeTexture(scaleAndText::weapon, weapons::Shotgun);
+					break;
+				}
 			}
 
 			if (game->specialActivationReady())
@@ -2118,6 +2172,50 @@ void Core::roamHandleCmds(std::string com)
 				uiManager->scaleBar(scaleAndText::AbilityMeter, 1.0f, true, InGameUI::GUI);
 
 				uiManager->setHoverCheckBool(false);
+
+				Player* p = game->getPlayer(0);
+				Weapon* w = p->getPlayerCurrentWeapon();
+				WEAPON_TYPE wt = w->getType();
+				switch (wt)
+				{
+				case 0: //Pulse Rifle
+					uiManager->scaleAndTextChangeTexture(scaleAndText::weapon, weapons::PulseRifle);
+					break;
+				case 2: //Disc Gun
+					uiManager->scaleAndTextChangeTexture(scaleAndText::weapon, weapons::Discgun);
+					break;
+				case 3: //Melee
+					uiManager->scaleAndTextChangeTexture(scaleAndText::weapon, weapons::Tail);
+					break;
+				case 4: //Battery slow, manipulator
+				case 5: //Battery speed
+					uiManager->scaleAndTextChangeTexture(scaleAndText::weapon, weapons::BatteryShots);
+					break;
+				case 6: //Fusion Cannon
+					uiManager->scaleAndTextChangeTexture(scaleAndText::weapon, weapons::FusionCannon);
+					break;
+				case 9: //Grenade Launcher
+					uiManager->scaleAndTextChangeTexture(scaleAndText::weapon, weapons::GranadeLauncher);
+					break;
+				case 10: //Shotgun
+					uiManager->scaleAndTextChangeTexture(scaleAndText::weapon, weapons::Shotgun);
+					break;
+				}
+				switch (role)
+				{
+				case 1:
+					uiManager->scaleAndTextChangeTexture(scaleAndText::consumable, consumables::Cluster);
+					break;
+				case 3:
+					uiManager->scaleAndTextChangeTexture(scaleAndText::consumable, consumables::Dart);
+					break;
+				case 4:
+					uiManager->scaleAndTextChangeTexture(scaleAndText::consumable, consumables::Thermite);
+					break;
+				case 5:
+					uiManager->scaleAndTextChangeTexture(scaleAndText::consumable, consumables::Vortex);
+					break;
+				}
 			}
 			else
 				console.printMsg("Invalid role. Use /role <1-5>", "System", 'S');
@@ -2303,7 +2401,6 @@ void Core::clientHandleCmds(std::string com)
 
 				}
 			
-		
 				int role = stoi(token);
 				top->command_role_change(top->getConId(), role);
 			}
@@ -3184,6 +3281,13 @@ void Core::inGameUIUpdate() //Ingame ui update
 
 	if (playerExist)
 	{
+		bool used = local->getRole()->getConsumable()->checkIfUsed();
+
+		if (used)
+			uiManager->stopRendering(7, false, InGameUI::GUI);
+		else
+			uiManager->stopRendering(7, true, InGameUI::GUI);
+
 		if (local->getHP() != uiManager->HUD.HP) //Health
 		{
 			uiManager->HUD.HP = local->getHP();

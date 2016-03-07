@@ -45,7 +45,7 @@ void UI::init(std::string fileName, Console* console, IRenderPipeline* uiRender,
 	this->uiRender = uiRender;
 	this->console = console;
 
-	for (int i = 0; i < 12; i++)
+	for (int i = 0; i < 14; i++)
 		textIdList[i] = -1;
 
 	bool result = loadUI(fileName, winX, winY);
@@ -197,8 +197,12 @@ bool UI::loadUI(std::string fileName, int winX, int winY)
 						textIdList[7] = counter;
 					else if (textId == "loseTicketsMeter")
 						textIdList[8] = counter;
-					else if(textId == "consumable")
+					else if (textId == "consumable")
 						twoColoredHUDObjects.push_back(counter);
+					else if (textId == "consumableIcons")
+						textIdList[12] = counter;
+					else if (textId == "weapon")
+						textIdList[13] = counter;
 
 					UiObjects.push_back(new StaticTextureBoxes(xy, textureArray, tmpCounter, uiRender, textureRes[0]));
 					textureIdList[counter] = textureArray[0];
@@ -355,7 +359,7 @@ void UI::changeTex(int objId, int whichTex)
 
 void UI::scaleAndTextChangeTexture(int objId, int whichTex)
 {
-	if (objId > -1 && objId < 12)
+	if (objId > -1 && objId < 14)
 		if (textIdList[objId] > -1 && textIdList[objId] < UiObjects.size())
 			UiObjects[textIdList[objId]]->changeTexUsed(whichTex, 0);
 }
@@ -397,34 +401,34 @@ void UI::setWindowResolution(int winX, int winY)
 
 void UI::setText(std::string text, int id)
 {
-	if (id > -1 && id < 12)
+	if (id > -1 && id < 14)
 		if(textIdList[id] > -1)
 			UiObjects[textIdList[id]]->setText(text);
 }
 std::string UI::getText(int id)
 {
-	if (id > -1 && id < 12)
+	if (id > -1 && id < 14)
 		if (textIdList[id] > -1)
 			return UiObjects[textIdList[id]]->getText();
 	return "";
 }
 void UI::removeLastInput(int id)
 {
-	if (id > -1 && id < 12)
+	if (id > -1 && id < 14)
 		if (textIdList[id] > -1)
 			UiObjects[textIdList[id]]->removeLastInput();
 }
 
 void UI::clearText(int id)
 {
-	if (id > -1 && id < 12)
+	if (id > -1 && id < 14)
 		if (textIdList[id] > -1)
 			UiObjects[textIdList[id]]->cleanText();
 }
 
 void UI::scaleBar(int id,  float procentOfMax, bool fromRight)
 {
-	if (id > -1 && id < 12)
+	if (id > -1 && id < 14)
 		if (textIdList[id] > -1)
 			UiObjects[textIdList[id]]->scaleBar(0, procentOfMax, fromRight);
 }
@@ -521,4 +525,10 @@ void UI::deleteOldestWM(int id)
 {
 	if (id > -1 && id < hideAbleObjects.size())
 		hideAbleObjects[id]->deleteOldestWM();
+}
+
+void UI::stopRendering(int id, bool r)
+{
+	if (id > -1 && id < UiObjects.size())
+		UiObjects[id]->dontRender(r);
 }

@@ -148,6 +148,8 @@ public:
 	void setOptionsSaved(float* list);
 	float* getOptionsSaved();
 
+	void stopRendering(int id, bool r, int menu = -1);
+
 	//hideAble exclusive
 	void renderHideAble();
 	void hideOrShowHideAble(int id, bool show);

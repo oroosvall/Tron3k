@@ -19,6 +19,7 @@ StaticTextureBoxes::StaticTextureBoxes()
 	winY = 0;
 	startWMX = 0;
 	startWMY = 0;
+	show = true;
 }
 StaticTextureBoxes::StaticTextureBoxes(glm::vec2 center, int* textureId1, int nrOfTextures, IRenderPipeline* uiRender, std::vector<glm::vec2>  textRes)
 {
@@ -62,6 +63,8 @@ StaticTextureBoxes::StaticTextureBoxes(glm::vec2 center, int* textureId1, int nr
 
 	//Start WM for the objects.
 	originalWM = worldMatrix[0];
+
+	show = true;
 }
 StaticTextureBoxes::~StaticTextureBoxes() 
 {
@@ -80,8 +83,9 @@ void StaticTextureBoxes::renderText(int id)
 void StaticTextureBoxes::renderQuad(int id)
 {
 	//uiRender->ui_renderQuad((float*)&worldMatrix[0][0], (float*)&pivot.x, textureInUse, 1.0f, id);
-	for (int i = 0; i < worldMatrix.size(); i++)
-		uiRender->ui_renderQuad((float*)&worldMatrix[i][0], (float*)&pivot.x, textureInUse, 1.0f, id);
+	if(show)
+		for (int i = 0; i < worldMatrix.size(); i++)
+			uiRender->ui_renderQuad((float*)&worldMatrix[i][0], (float*)&pivot.x, textureInUse, 1.0f, id);
 }
 
 void StaticTextureBoxes::setWorldMatrix(int id, float x, float y)
@@ -215,4 +219,9 @@ void StaticTextureBoxes::removeLastInput()
 void StaticTextureBoxes::cleanText()
 {
 
+}
+
+void StaticTextureBoxes::dontRender(bool dont)
+{
+	show = dont;
 }

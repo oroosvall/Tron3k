@@ -876,6 +876,49 @@ public:
 
 				uiPtr->setHoverCheckBool(false);
 			}
+			Player* p = gamePtr->getPlayer(0);
+			Weapon* w = p->getPlayerCurrentWeapon();
+			WEAPON_TYPE wt = w->getType();
+			switch (wt)
+			{
+			case 0: //Pulse Rifle
+				uiPtr->scaleAndTextChangeTexture(scaleAndText::weapon, weapons::PulseRifle);
+				break;
+			case 2: //Disc Gun
+				uiPtr->scaleAndTextChangeTexture(scaleAndText::weapon, weapons::Discgun);
+				break;
+			case 3: //Melee
+				uiPtr->scaleAndTextChangeTexture(scaleAndText::weapon, weapons::Tail);
+				break;
+			case 4: //Battery slow, manipulator
+			case 5: //Battery speed
+				uiPtr->scaleAndTextChangeTexture(scaleAndText::weapon, weapons::BatteryShots);
+				break;
+			case 6: //Fusion Cannon
+				uiPtr->scaleAndTextChangeTexture(scaleAndText::weapon, weapons::FusionCannon);
+				break;
+			case 9: //Grenade Launcher
+				uiPtr->scaleAndTextChangeTexture(scaleAndText::weapon, weapons::GranadeLauncher);
+				break;
+			case 10: //Shotgun
+				uiPtr->scaleAndTextChangeTexture(scaleAndText::weapon, weapons::Shotgun);
+				break;
+			}
+			switch (role)
+			{
+			case 1:
+				uiPtr->scaleAndTextChangeTexture(scaleAndText::consumable, consumables::Cluster);
+				break;
+			case 3:
+				uiPtr->scaleAndTextChangeTexture(scaleAndText::consumable, consumables::Dart);
+				break;
+			case 4:
+				uiPtr->scaleAndTextChangeTexture(scaleAndText::consumable, consumables::Thermite);
+				break;
+			case 5:
+				uiPtr->scaleAndTextChangeTexture(scaleAndText::consumable, consumables::Vortex);
+				break;
+			}
 		}
 	}
 

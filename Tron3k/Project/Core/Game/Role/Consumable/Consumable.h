@@ -16,6 +16,8 @@ public:
 	bool use();
 	void reset() { used = false; };
 
+	bool checkIfUsed() { return used; };
+
 	CONSUMABLE_TYPE getType() { return type; };
 };
 #endif
