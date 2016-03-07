@@ -103,6 +103,7 @@ private:
 	void serverHandleCmds();
 
 	void renderWorld(float dt);
+	void renderIntoFly(float dt);
 	void inGameUIUpdate();
 	void handleCulling();
 	void scoreboardRender();
@@ -116,6 +117,13 @@ private:
 	void initPipeline();
 
 	void disconnect();
+
+	int introFlyIndex;
+	float introFlyTimer;
+	float introFlyTimerStart;
+	vec3 startFly;
+	vec3 endFly;
+	vec3 flyCamDir;
 
 	//load from file
 	IpAddress _addrs;

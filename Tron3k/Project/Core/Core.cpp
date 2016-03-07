@@ -350,6 +350,9 @@ void Core::upStart(float dt)
 	case 1:
 		//start console commands
 		startHandleCmds();
+
+		renderIntoFly(dt);
+
 		if (renderMenu)
 			upMenu(dt);
 		break;
@@ -3729,7 +3732,7 @@ void Core::handleCulling()
 		{
 			//will set local players roomID to same as cam in player update
 		}
-		else if (current != Gamestate::SERVER) // if we are in freecam, spectatiing some one eles or what not. need to update our player's roomid
+		else if (current != Gamestate::SERVER && current != Gamestate::START) // if we are in freecam, spectatiing some one eles or what not. need to update our player's roomid
 		{
 			Player* p = nullptr;
 			if (current == Gamestate::ROAM)
@@ -4965,4 +4968,65 @@ void Core::flamebarrelflicker()
 	renderPipe->addLight(&light, 6);
 
 
+}
+
+void Core::renderIntoFly(float dt)
+{
+	if (renderPipe)
+	{
+		//temp set to see anims in 3p 
+		CameraInput* cam = CameraInput::getCam();
+
+		introFlyTimer -= dt;
+
+		if (introFlyTimer < 0)
+		{
+			introFlyIndex++;
+			if (introFlyIndex > 1)
+				introFlyIndex = 0;
+
+			switch (introFlyIndex)
+			{
+			case 0: startFly = vec3(5.4f, 1.6f, 107.0f); endFly = vec3(5.4f, 1.6f, 72.0f); flyCamDir = vec3(0, 0.4f, -0.9f); introFlyTimerStart = 5.0f; break;
+			case 1: startFly = vec3(98.0f, 9.0f, 35.0f); endFly = vec3(53.0f, 9.0f, 21.0f); flyCamDir = vec3(-0.33f, -0.025f, 0.94f); introFlyTimerStart = 5.0f; break;
+			}
+
+			introFlyTimer = introFlyTimerStart;
+		}
+
+		float interpol = introFlyTimer / introFlyTimerStart;
+		vec3 camPos = interpol * startFly + (1 - interpol) * endFly;
+
+		cam->setCam(camPos, flyCamDir);
+
+		glm::vec3 tmpEyePos = camPos;
+
+		renderPipe->update(tmpEyePos.x, tmpEyePos.y, tmpEyePos.z, dt); // sets the view/proj matrix
+		renderPipe->renderIni();
+
+		SpotLight light;
+
+		vec3 dgColor(0);
+		//render skybox
+		renderPipe->renderMISC(-3, (void*)&(CameraInput::getCam()->getSkyboxMat()), &dgColor.x, 1);
+
+		//Culling
+		//handleCulling();
+		renderPipe->setCullingCurrentChunkID(0);
+
+		flamebarrelflicker();
+
+		// render chunks
+		renderPipe->render();
+
+		// render effects
+		//effectsRender(-1);
+
+		renderPipe->enableBlend(false);
+
+		renderPipe->finalizeRender();
+
+		renderPipe->disableDepthTest();
+		renderPipe->enableBlend(false);
+	}
 }

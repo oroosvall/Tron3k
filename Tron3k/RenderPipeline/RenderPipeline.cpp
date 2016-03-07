@@ -717,6 +717,11 @@ int RenderPipeline::portalIntersection(float* pos1, float* pos2, int in_chunk)
 
 void RenderPipeline::setCullingCurrentChunkID(int roomID)
 {
+	if (roomID == 0)
+		contMan.f_portal_culling = false;
+	else
+		contMan.f_portal_culling = true;
+
 	contMan.setRoomID(roomID);
 }
 
@@ -744,7 +749,7 @@ void RenderPipeline::render()
 {
 	int chunkRender = startTimer("Chunks (render)");
 
-	glProgramUniform1f(regularShader, uniformGlowTrail[0], 0.0f);
+	glProgramUniform1f(regularShader, uniformGlowTrail[0], 1.0f);
 
 	contMan.renderChunks(regularShader, worldMat[0], uniformTextureLocation[0], uniformNormalLocation[0], uniformGlowSpecLocation[0], uniformDynamicGlowColorLocation[0], uniformStaticGlowIntensityLocation[0],  *gBuffer->portal_shaderPtr, gBuffer->portal_model, portalShaderV2, portal_World);
 	
@@ -1691,7 +1696,7 @@ void RenderPipeline::setChatTypeMessage(std::string text)
 void RenderPipeline::ui_initRender()
 {
 	//glBindFramebuffer(GL_FRAMEBUFFER, NULL);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glUseProgram(uiShader);
 	//uniformlocation set texture 0  it defaults to 0 so not needed
