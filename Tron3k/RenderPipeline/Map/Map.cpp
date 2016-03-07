@@ -316,31 +316,34 @@ void Map::renderChunk(GLuint shader, GLuint shaderLocation, GLuint diffuseLocati
 
 void Map::renderCapturePoint(GLuint shader,GLuint shaderLocation, GLuint diffuseLocation, GLuint normalLocation, GLuint glowLocation, int capturePointID)
 {
-	glActiveTexture(GL_TEXTURE0);
-	glProgramUniform1i(shader, diffuseLocation, 0);
-	tm->bindDefaultOnly(DIFFUSE_FB);
-
-	glActiveTexture(GL_TEXTURE1);
-	glProgramUniform1i(shader, normalLocation, 1);
-	tm->bindDefaultOnly(NORMAL_FULL_FB);
-
-	glActiveTexture(GL_TEXTURE2);
-	glProgramUniform1i(shader, glowLocation, 2);
-	tm->bindDefaultOnly(GLOW_FB);
-	
-	if (capturePointID < capCount && capturePoints[capturePointID].meshCount != 0)
+	if (capturePointID != 255)
 	{
-		for (int i = 0; i < capturePoints[capturePointID].meshCount; i++)
+		glActiveTexture(GL_TEXTURE0);
+		glProgramUniform1i(shader, diffuseLocation, 0);
+		tm->bindDefaultOnly(DIFFUSE_FB);
+
+		glActiveTexture(GL_TEXTURE1);
+		glProgramUniform1i(shader, normalLocation, 1);
+		tm->bindDefaultOnly(NORMAL_FULL_FB);
+
+		glActiveTexture(GL_TEXTURE2);
+		glProgramUniform1i(shader, glowLocation, 2);
+		tm->bindDefaultOnly(GLOW_FB);
+
+		if (capturePointID < capCount && capturePoints[capturePointID].meshCount != 0)
 		{
-			glBindVertexArray(capturePoints[capturePointID].meshes[i].vertexArray);
-			glBindBuffer(GL_ARRAY_BUFFER, capturePoints[capturePointID].meshes[i].vertexBuffer);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, capturePoints[capturePointID].meshes[i].indexBuffer);
+			for (int i = 0; i < capturePoints[capturePointID].meshCount; i++)
+			{
+				glBindVertexArray(capturePoints[capturePointID].meshes[i].vertexArray);
+				glBindBuffer(GL_ARRAY_BUFFER, capturePoints[capturePointID].meshes[i].vertexBuffer);
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, capturePoints[capturePointID].meshes[i].indexBuffer);
 
-			glProgramUniformMatrix4fv(shader, shaderLocation, 1, GL_FALSE, (GLfloat*)&capturePoints[capturePointID].mats[i][0][0]);
+				glProgramUniformMatrix4fv(shader, shaderLocation, 1, GL_FALSE, (GLfloat*)&capturePoints[capturePointID].mats[i][0][0]);
 
-			glDrawElements(GL_TRIANGLES, capturePoints[capturePointID].meshes[i].indexCount, GL_UNSIGNED_INT, 0);
+				glDrawElements(GL_TRIANGLES, capturePoints[capturePointID].meshes[i].indexCount, GL_UNSIGNED_INT, 0);
+			}
+
 		}
-		
 	}
 }
 
