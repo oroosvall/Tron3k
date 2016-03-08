@@ -126,7 +126,7 @@ void ContentManager::init()
 
 	//Skybox
 	skybox.init(0, 0, 0);
-	skybox.load("GameFiles/TestFiles/Skybox.v");
+	skybox.load("GameFiles/maps/Skybox.v");
 
 	testMap.init(&tm);
 

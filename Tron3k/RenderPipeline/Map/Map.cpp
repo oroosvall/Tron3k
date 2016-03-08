@@ -52,8 +52,7 @@ void Map::init(TextureManager* _tm)
 	spB = 0;
 	spFFA = 0;
 
-	//loadMap("GameFiles/TestFiles/PortalTest.bin");
-	loadMap("GameFiles/TestFiles/tron3k_map.bin");
+	loadMap("GameFiles/maps/tron3k_map.bin");
 	for (int i = 0; i < meshCount; i++)
 	{
 		meshes[i].stream();

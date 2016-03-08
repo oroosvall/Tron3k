@@ -139,6 +139,12 @@ void ParticleSystem::Update(float dT)
 				m_alive = true;
 		}
 
+		// force removal
+		if (timer > 100.0f)
+		{
+			m_alive = true;
+		}
+
 		glProgramUniform1f(*m_program, m_loc->lifetime, m_data.lifetime);
 		glProgramUniform1f(*m_program, m_loc->force, m_data.force);
 		glProgramUniform1f(*m_program, m_loc->drag, m_data.drag);
