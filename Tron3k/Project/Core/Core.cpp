@@ -3918,10 +3918,10 @@ void Core::createWindow(int x, int y, bool fullscreen)
 	}
 	if (!fullscreen)
 		win = glfwCreateWindow(
-			x, y, "ASUM PROJECT", NULL, NULL);
+			x, y, title.c_str(), NULL, NULL);
 	else
 		win = glfwCreateWindow(
-			x, y, "ASUM PROJECT", glfwGetPrimaryMonitor(), NULL);
+			x, y, title.c_str(), glfwGetPrimaryMonitor(), NULL);
 
 	i->setupCallbacks(win);
 
@@ -4062,14 +4062,14 @@ void Core::setfps(int fps)
 {
 	if (win != nullptr)
 	{
-		if (game != nullptr)
-		{
-			CameraInput* cam = CameraInput::getCam();
-			string print("X: " + to_string(cam->getPos().x) + "  Y: " + to_string(cam->getPos().y) + "  Z: " + to_string(cam->getPos().z) + "  FPS: " + to_string(fps));
-			glfwSetWindowTitle(win, print.c_str());
-		}
-		else
-			glfwSetWindowTitle(win, to_string(fps).c_str());
+		//if (game != nullptr)
+		//{
+		//	CameraInput* cam = CameraInput::getCam();
+		//	string print("X: " + to_string(cam->getPos().x) + "  Y: " + to_string(cam->getPos().y) + "  Z: " + to_string(cam->getPos().z) + "  FPS: " + to_string(fps));
+		//	glfwSetWindowTitle(win, print.c_str());
+		//}
+		//else
+			glfwSetWindowTitle(win, (title + " " + to_string(fps)).c_str());
 	}
 
 }

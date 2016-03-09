@@ -30,6 +30,8 @@ class Core
 {
 private:
 
+	const std::string title = "Neon Dawn";
+
 	bool settingsLoaded = false;
 	bool controlsLoaded = false;
 	int uitmpcounter;
