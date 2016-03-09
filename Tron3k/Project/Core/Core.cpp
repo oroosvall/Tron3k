@@ -3744,8 +3744,16 @@ void Core::inGameUIUpdate() //Ingame ui update
 				uiManager->stopRendering(5, false, InGameUI::ClassSelect);
 				break;
 			case 23: //Spectate
+				if (current == CLIENT)
+				{
 					game->freecam = true;
+					uiManager->setFirstMenuSet(false);
 					uiManager->setMenu(InGameUI::GUI);
+					if (current == ROAM)
+						roamHandleCmds("/team 0");
+					else
+						clientHandleCmds("/team 0");
+				}
 				break;
 			case 24: //cancle
 				uiManager->setFirstMenuSet(false);
