@@ -5036,7 +5036,6 @@ void Core::trailQuadsRender(int hackedTeam)
 	renderPipe->initRenderTrailQuad();
 
 	vec3 campos = CameraInput::getCam()->getPos();
-
 	vec3 color(1);
 	vec3 pos;
 	vec3 dir;
@@ -5141,22 +5140,17 @@ void Core::renderIntoFly(float dt)
 
 		glm::vec3 tmpEyePos = camPos;
 
+		
+
+		vec3 dgColor(0);
+
 		renderPipe->update(tmpEyePos.x, tmpEyePos.y, tmpEyePos.z, dt); // sets the view/proj matrix
 		renderPipe->renderIni();
 
-		SpotLight light;
-
-		vec3 dgColor(0);
-		//render skybox
-		renderPipe->renderMISC(-3, (void*)&(CameraInput::getCam()->getSkyboxMat()), &dgColor.x, 1);
-
-		//Culling
-		//handleCulling();
-		
-
 		flamebarrelflicker();
 
-		// render chunks
+		renderPipe->renderMISC(-3, (void*)&(CameraInput::getCam()->getSkyboxMat()), &dgColor.x, 1);
+		renderPipe->disableBlend();
 		renderPipe->render();
 
 		// render effects
