@@ -2640,7 +2640,10 @@ void Core::saveSettings()
 			file << "Fullscreen: 0" << endl;
 
 		float sens = serverCam->getSensitivity();
-		file << "Sensitivity: " << sens;
+		file << "Sensitivity: " << sens << endl;
+
+		file << "WinX: " << winX << endl;
+		file << "WinY: " << winY << endl;
 
 		file.close();
 	}
@@ -2696,6 +2699,24 @@ void Core::loadSettings()
 					sens = 0.2f;
 				}
 				serverCam->setSensitivity(sens);
+			}
+			else if (in == "WinX:")
+			{
+				int x = atoi(in2.c_str());
+				if (x != winX)
+				{
+					recreate = true;
+					winX = x;
+				}
+			}
+			else if (in == "WinY:")
+			{
+				int y = atoi(in2.c_str());
+				if (y != winY)
+				{
+					recreate = true;
+					winY = y;
+				}
 			}
 		}
 		file.close();
@@ -3922,7 +3943,11 @@ void Core::createWindow(int x, int y, bool fullscreen)
 
 	if (win != 0)
 	{
-		removeWindow();
+		glfwMakeContextCurrent(NULL);
+		glfwHideWindow(win);
+		glfwDestroyWindow(win);
+		win = nullptr;
+		//removeWindow();
 	}
 	if (!fullscreen)
 		win = glfwCreateWindow(
