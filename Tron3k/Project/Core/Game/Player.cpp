@@ -20,7 +20,8 @@ void Player::init(std::string pName, glm::vec3 initPos, bool isLocal)
 	name = pName;
 	pos = initPos;
 	vel = glm::vec3(0, 0, 0);
-	dir = cam->getDir();
+	dir = vec3(0, 0, -1);
+	//dir = cam->getDir();
 
 	anim_first_current = AnimationState::first_primary_idle;
 	anim_first_framePeak = AnimationState::first_primary_idle;
