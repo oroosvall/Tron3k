@@ -876,11 +876,12 @@ public:
 
 				uiPtr->setHoverCheckBool(false);
 			}
-			Player* p = gamePtr->getPlayer(0);
+			//Player* p = gamePtr->getPlayer(0);
 			WEAPON_TYPE wt;
-			if (p != nullptr && p->getTeam() != 5)
+			Weapon* w = nullptr;
+			if (p != nullptr && role != 0)
 			{
-				Weapon* w = p->getPlayerCurrentWeapon();
+				w = p->getPlayerCurrentWeapon();
 				wt = w->getType();
 
 				switch (wt)
@@ -924,6 +925,7 @@ public:
 					break;
 				}
 			}
+			w = nullptr;
 		}
 	}
 

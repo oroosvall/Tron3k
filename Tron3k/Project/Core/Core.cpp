@@ -3,6 +3,7 @@
 void Core::init()
 {
 	round = 0;
+	warmUpBannerActive = false;
 	calcTimer = false;
 	escActive = false;
 	inGameSettings = false;
@@ -540,6 +541,18 @@ void Core::upMenu(float dt)
 
 					//Set HUD stats
 					setHUDText(InGameUI::GUI);
+
+					if (warmUpBannerActive)
+					{
+						uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
+						uiManager->resetHidableWorldMatrix(hideAbleObj::Banner, 0);
+						uiManager->setHideableWorldMatrix(hideAbleObj::Banner, 0, vec2(0.0, 1.0));
+						uiManager->changeTextureHideAble(hideAbleObj::Banner, 0, BannerTextureIDs::WarmUp);
+						uiManager->HUD.activeBanner = ActiveBannerID::WarmUpRound;
+						uiManager->HUD.skipBannerUpdate = true;
+						uiManager->HUD.bannerCounter = 0;
+					}
+					playerIconsSet();
 				}
 			}
 			break;
@@ -590,6 +603,18 @@ void Core::upMenu(float dt)
 
 					//Set HUD stats
 					setHUDText(InGameUI::GUI);
+
+					if (warmUpBannerActive)
+					{
+						uiManager->hideOrShowHideAble(hideAbleObj::Banner, true);
+						uiManager->resetHidableWorldMatrix(hideAbleObj::Banner, 0);
+						uiManager->setHideableWorldMatrix(hideAbleObj::Banner, 0, vec2(0.0, 1.0));
+						uiManager->changeTextureHideAble(hideAbleObj::Banner, 0, BannerTextureIDs::WarmUp);
+						uiManager->HUD.activeBanner = ActiveBannerID::WarmUpRound;
+						uiManager->HUD.skipBannerUpdate = true;
+						uiManager->HUD.bannerCounter = 0;
+					}
+					playerIconsSet();
 				}
 			}
 			break;
@@ -1249,6 +1274,7 @@ void Core::upClient(float dt)
 						uiManager->HUD.activeBanner = ActiveBannerID::WarmUpRound;
 						uiManager->HUD.skipBannerUpdate = true;
 						uiManager->HUD.bannerCounter = 0;
+						warmUpBannerActive = true;
 					}
 				}
 
@@ -1367,6 +1393,7 @@ void Core::upClient(float dt)
 
 				uiManager->resetHidableWorldMatrix(hideAbleObj::Banner, 0);
 				uiManager->hideOrShowHideAble(hideAbleObj::Banner, false);
+				warmUpBannerActive = false;
 
 				//dont show class select when in spectate
 				if (localp->getTeam() != 0)
@@ -4008,6 +4035,17 @@ void Core::createWindow(int x, int y, bool fullscreen)
 			uiManager->setFirstMenuSet(false);
 			uiManager->LoadNextSet(UISets::InGame, winX, winY);
 			uiManager->setMenu(InGameUI::GUI);
+
+			if (warmUpBannerActive)
+			{
+				uiManager->resetHidableWorldMatrix(hideAbleObj::Banner, 0);
+				uiManager->setHideableWorldMatrix(hideAbleObj::Banner, 0, vec2(0.0, 1.0));
+				uiManager->changeTextureHideAble(hideAbleObj::Banner, 0, BannerTextureIDs::WarmUp);
+				uiManager->HUD.activeBanner = ActiveBannerID::WarmUpRound;
+				uiManager->HUD.skipBannerUpdate = true;
+				uiManager->HUD.bannerCounter = 0;
+			}
+			playerIconsSet();
 		}
 		else if (renderMenu)
 		{
@@ -4026,6 +4064,16 @@ void Core::createWindow(int x, int y, bool fullscreen)
 			uiManager->LoadNextSet(UISets::InGame, winX, winY);
 			uiManager->setMenu(InGameUI::GUI);
 			uiManager->HUD.maxSpecialMeter = 100.0f;
+			if (warmUpBannerActive)
+			{
+				uiManager->resetHidableWorldMatrix(hideAbleObj::Banner, 0);
+				uiManager->setHideableWorldMatrix(hideAbleObj::Banner, 0, vec2(0.0, 1.0));
+				uiManager->changeTextureHideAble(hideAbleObj::Banner, 0, BannerTextureIDs::WarmUp);
+				uiManager->HUD.activeBanner = ActiveBannerID::WarmUpRound;
+				uiManager->HUD.skipBannerUpdate = true;
+				uiManager->HUD.bannerCounter = 0;
+			}
+			playerIconsSet();
 		}
 
 		if(top != nullptr)
@@ -4294,6 +4342,61 @@ void Core::showClassSelect()
 	cursorInvisible = false;
 	uiManager->setFirstMenuSet(true);
 	uiManager->setMenu(InGameUI::ClassSelect);
+}
+
+void Core::playerIconsSet()
+{
+	Player* p = game->getPlayer(game->GetLocalPlayerId());
+	Weapon* w = p->getPlayerCurrentWeapon();
+	WEAPON_TYPE wt = w->getType();
+	Role* r = p->getRole();
+
+	if (p != nullptr && r->getRole() != 5)
+	{
+		switch (wt)
+		{
+		case 0: //Pulse Rifle
+			uiManager->scaleAndTextChangeTexture(scaleAndText::weapon, weapons::PulseRifle, InGameUI::GUI);
+			break;
+		case 2: //Disc Gun
+			uiManager->scaleAndTextChangeTexture(scaleAndText::weapon, weapons::Discgun, InGameUI::GUI);
+			break;
+		case 3: //Melee
+			uiManager->scaleAndTextChangeTexture(scaleAndText::weapon, weapons::Tail, InGameUI::GUI);
+			break;
+		case 4: //Battery slow, manipulator
+		case 5: //Battery speed
+			uiManager->scaleAndTextChangeTexture(scaleAndText::weapon, weapons::BatteryShots, InGameUI::GUI);
+			break;
+		case 6: //Fusion Cannon
+			uiManager->scaleAndTextChangeTexture(scaleAndText::weapon, weapons::FusionCannon, InGameUI::GUI);
+			break;
+		case 9: //Grenade Launcher
+			uiManager->scaleAndTextChangeTexture(scaleAndText::weapon, weapons::GranadeLauncher, InGameUI::GUI);
+			break;
+		case 10: //Shotgun
+			uiManager->scaleAndTextChangeTexture(scaleAndText::weapon, weapons::Shotgun, InGameUI::GUI);
+			break;
+		}
+		switch (r->getRole())
+		{
+		case 0:
+			uiManager->scaleAndTextChangeTexture(scaleAndText::consumable, consumables::Cluster, InGameUI::GUI);
+			break;
+		case 2:
+			uiManager->scaleAndTextChangeTexture(scaleAndText::consumable, consumables::Dart, InGameUI::GUI);
+			break;
+		case 3:
+			uiManager->scaleAndTextChangeTexture(scaleAndText::consumable, consumables::Thermite, InGameUI::GUI);
+			break;
+		case 4:
+			uiManager->scaleAndTextChangeTexture(scaleAndText::consumable, consumables::Vortex, InGameUI::GUI);
+			break;
+		}
+	}
+	p = nullptr;
+	w = nullptr;
+	r = nullptr;
 }
 
 void Core::setHUDText(int menuID)

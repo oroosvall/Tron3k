@@ -149,6 +149,7 @@ private:
 	//Show Menus
 	void showTeamSelect();
 	void showClassSelect();
+	void playerIconsSet();
 
 	//Set menu text
 	void setHUDText(int menuID);
@@ -168,6 +169,7 @@ private:
 	bool shitBool = false;
 	bool justAFrameCounterActivated = false;
 	int justAFrameCounter = 0;
+	bool warmUpBannerActive;
 
 	//time
 	int oldTime;
