@@ -101,5 +101,5 @@ void main()
 	if(lightToSurfaceAngle > cosCone)
 		fragment_color += vec4(lights[spotlightID].Color, 1) * pow(interpolDist, 5) * pow(lightToSurfaceAngle, 10); // * universalInten;
 
-	//fragment_color += vec4(0.1, 0.0, 0.0, 0.0);
+	//fragment_color += vec4(lights[spotlightID].Color, 1) * 0.1f;
 }
