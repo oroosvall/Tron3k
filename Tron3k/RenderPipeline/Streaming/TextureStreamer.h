@@ -12,6 +12,8 @@ struct StreamedData
 	int format;
 	int size;
 
+	std::string fileName;
+
 	void* data;
 };
 

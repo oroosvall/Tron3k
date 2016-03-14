@@ -268,7 +268,7 @@
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(SolutionDir)\Dependencies\SFML;$(SolutionDir)\Dependencies\GLFW\include;$(SolutionDir)\Dependencies\glm;$(SolutionDir)\Dependencies\vld;$(SolutionDir)\Dependencies\glew-1.11.0\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\Dependencies\SFML\lib;$(SolutionDir)\Debug;$(SolutionDir)\Dependencies\GLFW\lib-vc2015;$(SolutionDir)\Dependencies\glew-1.11.0\lib\Release\Win32;$(LibraryPath)</LibraryPath>
-    <TargetName>NeonDawn</TargetName>
+    <TargetName>NeonDawn_debug</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -298,7 +298,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glew32.lib;SoundPlayer.lib;RenderPipeline.lib;Physics.lib;sfml-system-d.lib;sfml-network-d.lib;glfw3.lib;sfml-audio-d.lib;ogg.lib;openal32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;SoundPlayer_debug.lib;RenderPipeline_debug.lib;Physics_debug.lib;sfml-system-d.lib;sfml-network-d.lib;glfw3.lib;sfml-audio-d.lib;ogg.lib;openal32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>MSVCRT</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>

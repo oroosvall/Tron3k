@@ -236,9 +236,7 @@ void Core::update(float dt)
 	{
 		renderPipe->setChatHistoryText(console.getHistory());
 	}
-
-
-
+	
 	if (game)
 	{
 		if (current != SERVER)

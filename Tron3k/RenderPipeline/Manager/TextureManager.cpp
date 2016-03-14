@@ -98,6 +98,7 @@ void TextureManager::update(float dt)
 				textureList[i].timeNotUsed = 0.0f;
 			}
 		}
+		textureList[i].timeNotUsed = 0.0f;
 	}
 
 
@@ -110,6 +111,9 @@ unsigned int TextureManager::createTexture(std::string path)
 
 	ti.lastTextureSlot = GL_TEXTURE0;
 	ti.state = TEXTURE_UNLOADED;
+//#ifndef _DEBUG
+//	ti.state = TEXTURE_LOADED;
+//#endif
 	ti.textureID = 0;
 	ti.timeNotUsed = 0.0f;
 
@@ -120,6 +124,10 @@ unsigned int TextureManager::createTexture(std::string path)
 	bool found = false;
 
 	ti.streamingID = retVal;
+
+//#ifndef _DEBUG
+//	ti.textureID = loadTexture(path);
+//#endif
 
 	for (size_t i = 0; i < textureList.size() && !found; i++)
 	{

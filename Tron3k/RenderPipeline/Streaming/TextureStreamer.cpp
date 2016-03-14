@@ -42,6 +42,7 @@ void streamingThread()
 			data.y = y;
 			data.format = format;
 			data.size = size;
+			data.fileName = it->second;
 
 			data.data = textureData;
 
@@ -91,6 +92,7 @@ GLuint uploadStreamedData(unsigned int &texturePos)
 			std::map<GLuint *, StreamedData>::iterator it = dataQueue.begin();
 
 			printf("Streaming texture %d\n", *it->first);
+			printf("Texture name %s\n\n", it->second.fileName.c_str());
 
 			texturePos = *it->first;
 
@@ -121,6 +123,7 @@ GLuint uploadStreamedData(unsigned int &texturePos)
 			//glGenerateMipmap(GL_TEXTURE_2D);
 
 			delete[](char*)it->second.data;
+			it->second.data = nullptr;
 
 			dataQueue.erase(it);
 			dataQueueEmpty = dataQueue.empty();

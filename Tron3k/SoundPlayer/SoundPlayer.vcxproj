@@ -73,6 +73,7 @@
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(SolutionDir)\Dependencies\SFML;$(SolutionDir)\Dependencies\vld;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\Dependencies\SFML\lib;$(SolutionDir)\Debug;$(LibraryPath)</LibraryPath>
+    <TargetName>$(ProjectName)_debug</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>

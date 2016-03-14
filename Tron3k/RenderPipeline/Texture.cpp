@@ -170,7 +170,8 @@ void* loadTextureData(std::string texturePath, int &format, int &xres, int &yres
 		format = GL_COMPRESSED_RGBA;
 		printf("Texture size: %d\n", size);
 
-		stbi_image_free(image);
+		if(image)
+			stbi_image_free(image);
 
 		return data;
 	}

@@ -94,6 +94,7 @@
     <LinkIncremental>true</LinkIncremental>
     <LibraryPath>$(SolutionDir)\Debug;$(LibraryPath)</LibraryPath>
     <IncludePath>$(SolutionDir)\Dependencies\vld;$(IncludePath)</IncludePath>
+    <TargetName>$(ProjectName)_debug</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
