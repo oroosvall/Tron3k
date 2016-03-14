@@ -58,8 +58,13 @@ void TextureManager::release()
 	for (it_type iterator = dataQueue.begin(); iterator != dataQueue.end(); iterator++) {
 		
 		delete[] (char*)iterator->second.data;
-
 	}
+
+	streamingQueue.clear();
+	dataQueue.clear();
+
+	dataQueueEmpty = dataQueue.empty();
+
 }
 
 void TextureManager::update(float dt)
@@ -110,7 +115,7 @@ unsigned int TextureManager::createTexture(std::string path)
 	TextureInfo ti;
 
 	ti.lastTextureSlot = GL_TEXTURE0;
-	ti.state = TEXTURE_LOADED;
+	ti.state = TEXTURE_UNLOADED;
 	ti.textureID = 0;
 	ti.timeNotUsed = 0.0f;
 
@@ -122,7 +127,7 @@ unsigned int TextureManager::createTexture(std::string path)
 
 	ti.streamingID = retVal;
 
-	ti.textureID = loadTexture(path);
+	//ti.textureID = loadTexture(path);
 
 	for (size_t i = 0; i < textureList.size() && !found; i++)
 	{
