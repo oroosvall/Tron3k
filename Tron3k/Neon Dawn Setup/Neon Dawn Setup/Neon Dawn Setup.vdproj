@@ -1671,6 +1671,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_576ADB2D09274F01A6910CA595B48A4B"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_57948BF24F2B413383664565A082AB0C"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -2170,6 +2176,12 @@
         "Entry"
         {
         "MsmKey" = "8:_721DD1AAFCC74967B117CC13554F7333"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_725F6F321F9D4C0780E3E3E365FF8561"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -4934,6 +4946,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.5"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.5 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.5"
+                    }
+                }
             }
         }
         "Release"
@@ -10508,6 +10528,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_576ADB2D09274F01A6910CA595B48A4B"
+            {
+            "SourcePath" = "8:..\\..\\Debug\\GameFiles\\Textures\\UITextures\\o.png"
+            "TargetName" = "8:o.png"
+            "Tag" = "8:"
+            "Folder" = "8:_26D859343E024E2A96068BAF5AE7B6F0"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_57948BF24F2B413383664565A082AB0C"
             {
             "SourcePath" = "8:..\\..\\Debug\\GameFiles\\Textures\\Map\\Carpark_normal.dds"
@@ -12174,6 +12214,26 @@
             "TargetName" = "8:anim_Shanker_Third_primary_wallJump_left.bin"
             "Tag" = "8:"
             "Folder" = "8:_5300C14221C7401D8BB526134425FCA9"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_725F6F321F9D4C0780E3E3E365FF8561"
+            {
+            "SourcePath" = "8:..\\..\\Debug\\GameFiles\\Textures\\UITextures\\r.png"
+            "TargetName" = "8:r.png"
+            "Tag" = "8:"
+            "Folder" = "8:_26D859343E024E2A96068BAF5AE7B6F0"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
