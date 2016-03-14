@@ -470,6 +470,9 @@ void Core::upMenu(float dt)
 			glfwSwapBuffers(win);
 			renderPipe->clearBothBuffers();
 
+			fullscreen = false;
+			createWindow(640, 420, fullscreen);
+
 			renderMenu = false;
 			renderUI = false;
 			break;
@@ -2649,6 +2652,9 @@ void Core::serverHandleCmds()
 
 void Core::saveSettings()
 {
+	if (current == Gamestate::SERVER)
+		return;
+
 	fstream file;
 	file.open("GameFiles/Config/player.ini", fstream::trunc | fstream::out);
 
