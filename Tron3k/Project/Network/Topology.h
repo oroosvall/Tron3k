@@ -984,6 +984,16 @@ public:
 			delete out;
 		}
 	}
+
+	string getLocalIP()
+	{
+		return sf::IpAddress::getLocalAddress().toString();
+	}
+
+	string getPublicIP()
+	{
+		return sf::IpAddress::getPublicAddress().toString();
+	}
 };
 
 #endif

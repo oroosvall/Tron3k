@@ -1677,7 +1677,19 @@ void Core::upServer(float dt)
 		//load map
 
 		top->setGamePtr(game);
-
+		console.printMsg("        ", "", ' ');
+		console.printMsg("Local IP : " + top->getLocalIP(), "", ' ');
+		console.printMsg("Public IP : " + top->getPublicIP(), "", ' ');
+		console.printMsg("        ", "", ' ');
+		console.printMsg("Console commands", "", ' ');
+		console.printMsg("/players : List all connected players", "", ' ');
+		console.printMsg("/setready : How many players need to /ready before the game starts", "", ' ');
+		console.printMsg("/settokens : How many respawntokens the teams start with", "", ' ');
+		console.printMsg("/restart : Take a match into Warmup-mode", "", ' ');
+		console.printMsg("/help : show this text", "", ' ');
+		console.printMsg("        ", "", ' ');
+		console.printMsg("To type commands, press the server window (not console)", "", ' ');
+		console.printMsg("Press T/Y to go into chat mode and then Enter to send the command", "", ' ');
 		subState++;
 		break;
 	}
@@ -2561,11 +2573,19 @@ void Core::serverHandleCmds()
 		ss >> token;
 		if (token == "/help")
 		{
+			console.printMsg("        ", "", ' ');
+			console.printMsg("Local IP : " + top->getLocalIP(), "", ' ');
+			console.printMsg("Public IP : " + top->getPublicIP(), "", ' ');
+			console.printMsg("        ", "", ' ');
 			console.printMsg("Console commands", "", ' ');
 			console.printMsg("/players : List all connected players", "", ' ');
 			console.printMsg("/setready : How many players need to /ready before the game starts", "", ' ');
 			console.printMsg("/settokens : How many respawntokens the teams start with", "", ' ');
 			console.printMsg("/restart : Take a match into Warmup-mode", "", ' ');
+			console.printMsg("/help : show this text", "", ' ');
+			console.printMsg("        ", "", ' ');
+			console.printMsg("To type commands, press the server window (not console)", "", ' ');
+			console.printMsg("Press T/Y to go into chat mode and then Enter to send the command", "", ' ');
 
 			//console.printMsg("/disconnect", "", ' ');
 		}
