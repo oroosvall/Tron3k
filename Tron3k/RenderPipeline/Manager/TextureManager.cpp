@@ -110,10 +110,7 @@ unsigned int TextureManager::createTexture(std::string path)
 	TextureInfo ti;
 
 	ti.lastTextureSlot = GL_TEXTURE0;
-	ti.state = TEXTURE_UNLOADED;
-//#ifndef _DEBUG
-//	ti.state = TEXTURE_LOADED;
-//#endif
+	ti.state = TEXTURE_LOADED;
 	ti.textureID = 0;
 	ti.timeNotUsed = 0.0f;
 
@@ -125,9 +122,7 @@ unsigned int TextureManager::createTexture(std::string path)
 
 	ti.streamingID = retVal;
 
-//#ifndef _DEBUG
-//	ti.textureID = loadTexture(path);
-//#endif
+	ti.textureID = loadTexture(path);
 
 	for (size_t i = 0; i < textureList.size() && !found; i++)
 	{

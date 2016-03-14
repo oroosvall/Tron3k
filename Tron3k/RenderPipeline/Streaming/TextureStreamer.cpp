@@ -31,11 +31,11 @@ void streamingThread()
 			int size = 0;
 			int format = 0;
 
-			printf("Loading texture %s from streaming thread\n", it->second.c_str());
+			printf("LOADER: Loading texture %s from streaming thread\n", it->second.c_str());
 
 			void* textureData = loadTextureData(it->second, format, x, y, size);
 
-			printf("Loading texture done\n");
+			printf("LOADER: Loading texture done\n");
 
 			StreamedData data;
 			data.x = x;
@@ -91,25 +91,30 @@ GLuint uploadStreamedData(unsigned int &texturePos)
 		{
 			std::map<GLuint *, StreamedData>::iterator it = dataQueue.begin();
 
-			printf("Streaming texture %d\n", *it->first);
-			printf("Texture name %s\n\n", it->second.fileName.c_str());
+			StreamedData s = it->second;
+
+			printf("UPLOAD: Streaming texture %d\n", *it->first);
+			printf("UPLOAD: Texture name %s\n", s.fileName.c_str());
 
 			texturePos = *it->first;
 
+			dataQueue.erase(it);
+			dataQueueEmpty = dataQueue.empty();
+
 			glGenTextures(1, &texID);
 
-			if (!(it->second.format == GL_COMPRESSED_RGBA || it->second.format == GL_RGBA))
+			if (!(s.format == GL_COMPRESSED_RGBA || s.format == GL_RGBA))
 			{
 				glBindTexture(GL_TEXTURE_2D, texID);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 1);
-				glCompressedTexImage2D(GL_TEXTURE_2D, 0, it->second.format, it->second.x, it->second.y, 0, it->second.size, it->second.data);
+				glCompressedTexImage2D(GL_TEXTURE_2D, 0, s.format,s.x, s.y, 0, s.size, s.data);
 
 			}
 			else
 			{
 				glBindTexture(GL_TEXTURE_2D, texID);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 1);
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA, it->second.x, it->second.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, it->second.data);
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA, s.x, s.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, s.data);
 
 
 			}
@@ -122,17 +127,14 @@ GLuint uploadStreamedData(unsigned int &texturePos)
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_LOD, 0.0f);
 			//glGenerateMipmap(GL_TEXTURE_2D);
 
-			delete[](char*)it->second.data;
-			it->second.data = nullptr;
-
-			dataQueue.erase(it);
-			dataQueueEmpty = dataQueue.empty();
+			delete[](char*)s.data;
+			s.data = nullptr;
 
 			dataQMutex.unlock();
 
 		}
 		unsigned int t2 = clock();
-		printf("streaming time %d\n", t2 - t1);
+		printf("UPLOAD: streaming time %d\n\n", t2 - t1);
 
 	}
 

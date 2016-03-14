@@ -124,7 +124,7 @@ bool DDSTexture::uploadTexture(GLuint &id)
 void* loadTextureData(std::string texturePath, int &format, int &xres, int &yres, int &size)
 {
 
-	printf("Loading texture %s\n", texturePath.c_str());
+	printf("LOADER: Loading texture %s\n", texturePath.c_str());
 
 	int x;
 	int y;
@@ -138,7 +138,7 @@ void* loadTextureData(std::string texturePath, int &format, int &xres, int &yres
 
 		DDSTexture tex;
 		tex.load(texturePath);
-		printf("Texture size: %d\n", size);
+		printf("LOADER: Texture size: %d\n", size);
 
 		return tex.getDataPtr(size, xres, yres, format);
 
@@ -168,7 +168,7 @@ void* loadTextureData(std::string texturePath, int &format, int &xres, int &yres
 			ZeroMemory(data, size);
 
 		format = GL_COMPRESSED_RGBA;
-		printf("Texture size: %d\n", size);
+		printf("LOADER: Texture %s size: %d\n", texturePath.c_str(), size);
 
 		if(image)
 			stbi_image_free(image);

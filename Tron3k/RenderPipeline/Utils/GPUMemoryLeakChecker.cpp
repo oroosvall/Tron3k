@@ -333,7 +333,7 @@ void glTexImage2D_D(GLenum target, GLint level, GLint internalFormat, GLsizei wi
 		newSize = newW * newH * internalComponentSize;
 	}
 
-	printf("Texture size %d bytes\n", newSize);
+	printf("UPLOAD: Texture size %d bytes\n", newSize);
 
 	memusageTex += (newSize - oldSize);
 	memusageT += (newSize - oldSize);
