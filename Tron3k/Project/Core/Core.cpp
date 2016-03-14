@@ -2559,8 +2559,12 @@ void Core::serverHandleCmds()
 		if (token == "/help")
 		{
 			console.printMsg("Console commands", "", ' ');
-			console.printMsg("/players", "", ' ');
-			console.printMsg("/disconnect", "", ' ');
+			console.printMsg("/players : List all connected players", "", ' ');
+			console.printMsg("/setready : How many players need to /ready before the game starts", "", ' ');
+			console.printMsg("/settokens : How many respawntokens the teams start with", "", ' ');
+			console.printMsg("/restart : Take a match into Warmup-mode", "", ' ');
+
+			//console.printMsg("/disconnect", "", ' ');
 		}
 		else if (token == "/players")
 		{
