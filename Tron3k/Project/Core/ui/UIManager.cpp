@@ -185,10 +185,10 @@ void UIManager::init(Console* console, int winX, int winY)
 	texturePaths.push_back("GameFiles/Textures/UITextures/ClassSelect/manipulator.png"); //68
 	texturePaths.push_back("GameFiles/Textures/UITextures/ClassSelect/manipulator_selected.png"); //69
 
-	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/Options.png"); //70
+	texturePaths.push_back("GameFiles/Textures/UITextures/r.png"); //70
 	texturePaths.push_back("GameFiles/Textures/UITextures/Banners/banner_warmup.png"); //71
 	texturePaths.push_back("GameFiles/Textures/UITextures/ClassSelect/class_select_chooseYourClass.png"); //72
-	texturePaths.push_back("GameFiles/Textures/UITextures/TempTextures/GlobalIP.png"); //73
+	texturePaths.push_back("GameFiles/Textures/UITextures/o.png"); //73
 	texturePaths.push_back("GameFiles/Textures/UITextures/Settings/settings_background.png"); //74
 	texturePaths.push_back("GameFiles/Textures/UITextures/Settings/settings_slider.png"); //75
 	texturePaths.push_back("GameFiles/Textures/UITextures/Settings/settings_marker.png"); //76
